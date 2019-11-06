@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GivenFmModelWhenConnectingToOutputThenCorrectRetentionFeatureIsAdded()
         {
             //Setup network
@@ -155,6 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GivenFmModelWhenConnectingToOutputThenCorrectPumpFeatureIsAdded()
         {
             //Setup network
@@ -328,6 +330,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithSimpleNetwork()
         {
             // create simplest network
@@ -477,6 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestSimpleModelWithMultipleCrossSection()
         {
             // create simplest network
@@ -582,6 +586,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunDemoModelTest()
         {
             // use a valid network for the calculation
@@ -614,6 +619,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestSobekLogIsRetrievedAfterModelRun()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -645,6 +651,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunDemoModelRemoteTest()
         {
             // use a valid network for the calculation
@@ -676,6 +683,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSimpleModelAddBranchAndLateralRunAgainTools20417()
         {
             using (var flow = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -739,6 +747,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunDemoModelWithWeirTest()
         {
             // Create waterFlowModel1D
@@ -823,6 +832,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunModelAndSetPreviousOutputAsInitialCondition()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -845,6 +855,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunModelWithNegativeDischargeLateralSourceHasCorrectOutputDischargeWithJustTwoGridpoints()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -1060,6 +1071,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunModelAndShowResultsOnMapUsingFeatureCoverage()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -1104,6 +1116,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunModelWithObservationPointShouldSetCoordinateSystemOnOutputWaterLevel()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -1139,6 +1152,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunDemoModelWithConstantHOnNodeThatIsConnectedToMultipleBranches()
         {
             // Use a valid network for the calculation
@@ -1172,6 +1186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunDemoModelWithHTimeSeriesOnNodeThatIsConnectedToMultipleBranches()
         {
             // Use a valid network for the calculation
@@ -1222,6 +1237,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithLateralSources()
         {
             // create L shaped network
@@ -1288,6 +1304,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)] //TOOLS-4869
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithLateralSourcesFirstTimeStepShouldNotBeZero()
         {
             // create L shaped network
@@ -1347,6 +1364,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithLateralSourceCheckOutputSettingsLateralSourceWaterLevel()
         {
             // create L shaped network
@@ -1511,6 +1529,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithSimpleNetworkMultipleTimes()
         {
             for (int i = 0; i < 5; i++)
@@ -1540,6 +1559,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithEmptyBoundaryConditions()
         {
             INode inflowNode;
@@ -2337,6 +2357,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CloneIncludesOutput()
         {
             // use a valid network for the calculation
@@ -2489,6 +2510,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void AddingStructureWhenStructuresOutputIsEnabledResizesOutputFeatureCoverages()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -2517,6 +2539,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void AddingComputationalPointsAddsLocationsToTheOutputNetworkCoverages()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())
@@ -2594,6 +2617,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunModelWithStructureOutputTwice()
         {
             for (int i = 0; i < 2; i++)
@@ -2620,6 +2644,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithThatcherHarlemanDispersion()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
@@ -2690,6 +2715,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [TestCase(false)]
         [TestCase(true)]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteAndCheckSalinityParametersFileGeneratedIfF4HasValues(bool f4HasValues)
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
@@ -2918,6 +2944,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void PointLateralBetweenCalculationGridPointsTools7106()
         {
             const double branchlength = 1000.0;
@@ -2955,6 +2982,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceOverSingleCalculationGridPointTools7106()
         {
             const double branchlength = 1000.0;
@@ -2992,6 +3020,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceOverMultipleCalculationGridPointsTools7106()
         {
             const double branchlength = 1000.0;
@@ -3029,6 +3058,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceBetweenCalculationGridPointsLeftOfSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3066,6 +3096,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceBetweenCalculationGridPointsRightOfSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3103,6 +3134,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceBetweenCalculationGridPointsOverSegmentMidpointTools7106()
         {
             const double branchlength = 1000.0;
@@ -3140,6 +3172,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DiffuseLateralSourceBetweenCalculationGridPointsShouldInduceWaterForPositiveQTools7106()
         {
             const double branchlength = 1000.0;
@@ -3402,6 +3435,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ValuesAtObservationPointShouldBeInterpolated()
         {
             // Interpolation in cf.dll was adjusted such that output coverage values at observation
@@ -3559,6 +3593,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ObservationPointsLinearOrNearest_Jira_Tools_8102()
         {
             var network = new HydroNetwork();
@@ -3793,6 +3828,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void OutputSettingsPropertyChangedTest_Tools7980()
         {
             using (var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())

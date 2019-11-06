@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
     public class WaterFlowModel1DDataAccessListenerTest
     {
         [Test]
+        [Ignore("Flow1D has changed migration nhibernate mappings (hbm.xml) but not backwards compatible.")]
         public void TestOnPostLoad_CrossSectionDefinitionsWithNoSectionsFix()
         {
             var testProjectPath = TestHelper.GetTestFilePath(@"DataAccess\MissingCrossSectionDefinitionSections.dsproj");
@@ -67,6 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D has changed migration nhibernate mappings (hbm.xml) but not backwards compatible.")]
         public void TestOnPostLoad_SyncAggregationOptionsForExistingOutputCoverages_ResultsPumps()
         {
             var testProjectPath = TestHelper.GetTestFilePath(@"DataAccess\OutOfSyncAggregationOptions.dsproj");

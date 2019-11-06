@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
             definition.AddProperty(RetentionRegion.Name.Key, retention.LongName ?? retention.Name, RetentionRegion.Name.Description);
 
             definition.AddProperty(RetentionRegion.BranchId.Key, retention.Branch.Name, RetentionRegion.BranchId.Description);
-            if (retention.Chainage > 0)
+            if (retention.Chainage > 0 && retention.Geometry?.Coordinate != null)
             {
                 definition.AddProperty(RetentionRegion.X.Key, retention.Geometry.Coordinate.X, RetentionRegion.BranchId.Description);
                 definition.AddProperty(RetentionRegion.Y.Key, retention.Geometry.Coordinate.Y, RetentionRegion.BranchId.Description);

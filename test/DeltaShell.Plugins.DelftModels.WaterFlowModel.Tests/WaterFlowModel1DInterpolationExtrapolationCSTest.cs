@@ -39,6 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void YZ_ExtrapolateOver3BranchesBasedOn1CS()
         {
             var flowModel1D = GetModelWith3BranchesInARowA100Meter();
@@ -173,6 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void YZ_ExtrapolateOver2BranchesAndDoNotInterpolateOver3Branches()
         {
             var flowModel1D = GetModelWith3BranchesInARowA100Meter();
@@ -243,6 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ZW_ExtrapolateOver3BranchesBasedOn1CS()
         {
             var flowModel1D = GetModelWith3BranchesInARowA100Meter();
@@ -368,6 +371,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ZW_ExtrapolateOver2BranchesAndDoNotInterpolateOver3Branches()
         {
             var flowModel1D = GetModelWith3BranchesInARowA100Meter();

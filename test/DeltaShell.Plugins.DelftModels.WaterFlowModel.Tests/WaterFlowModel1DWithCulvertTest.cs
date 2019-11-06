@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteModelWithSiphon()
         {
             // Add a culvert
@@ -112,6 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteModelWithInverseSiphon()
         {
             // Add a culvert

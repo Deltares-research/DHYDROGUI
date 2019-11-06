@@ -274,6 +274,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestDispersionParameter()
         {
             var startTime = new DateTime(2000, 1, 1);

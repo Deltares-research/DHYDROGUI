@@ -184,8 +184,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(100, storages[1], 0.1d);
             Assert.AreEqual(1000, storages[2], 0.1d);
 
-            var interpolate = retention.ReadProperty<int>(RetentionRegion.Interpolate.Key);
-            Assert.AreEqual(0, interpolate);
+            var interpolate = retention.ReadProperty<string>(RetentionRegion.Interpolate.Key);
+            Assert.AreEqual("linear", interpolate);
             
             retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(4);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
@@ -221,8 +221,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(200, storages[1], 0.1d);
             Assert.AreEqual(2000, storages[2], 0.1d);
 
-            interpolate = retention.ReadProperty<int>(RetentionRegion.Interpolate.Key);
-            Assert.AreEqual(1, interpolate);
+            interpolate = retention.ReadProperty<string>(RetentionRegion.Interpolate.Key);
+            Assert.AreEqual("block", interpolate);
         }
 
         [Test]

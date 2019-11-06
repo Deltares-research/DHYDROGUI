@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSimpleWithAndWithoutWindModel()
         {
             var startTime = new DateTime(2000, 1, 1);
@@ -79,6 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSimpleWithDifferentWindDirectionModel()
         {
             var startTime = new DateTime(2000, 1, 1);
@@ -135,6 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSimpleWithAndWithoutShieldingModel()
         {
             var startTime = new DateTime(2000, 1, 1);

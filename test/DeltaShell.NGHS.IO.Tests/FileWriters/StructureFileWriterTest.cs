@@ -278,14 +278,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.PUMP_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
-
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Pump, idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Direction.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.PUMP_CONTROL_DIRECTION).ToString(), idProperty.Value);
+            Assert.AreEqual("deliverySide", idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.NrStages.Key);
             Assert.AreEqual("1", idProperty.Value); // default value in DefinitionGenerator
@@ -336,7 +333,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(11, content.Properties.Count);
+            Assert.AreEqual(8, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_ID.ToString(), idProperty.Value);
@@ -350,9 +347,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
-
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Weir, idProperty.Value);
 
@@ -361,15 +355,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.DischargeCoeff.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF.ToString(StructureRegion.DischargeCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LatDisCoeff.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF.ToString(StructureRegion.LatDisCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION).ToString(), idProperty.Value);
         }
 
         [Test]
@@ -395,7 +380,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(13, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_ID.ToString(), idProperty.Value);
@@ -409,14 +394,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
-
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.UniversalWeir, idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.UNI_WEIR_FLOW_DIRECTION).ToString(), idProperty.Value);
+            Assert.AreEqual("both", idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelsCount.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_Y_VALUES.Count.ToString(), idProperty.Value);
@@ -432,9 +414,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DischargeCoeff.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.UNI_WEIR_DISCHARGE_COEFF.ToString(StructureRegion.DischargeCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.FreeSubmergedFactor.Key);
-            Assert.AreEqual("0.667", idProperty.Value); // default value in DefinitionGenerator
         }
 
         [Test]
@@ -466,7 +445,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(18, content.Properties.Count);
+            Assert.AreEqual(17, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_ID.ToString(), idProperty.Value);
@@ -479,9 +458,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.RIVER_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.RiverWeir, idProperty.Value);
@@ -553,7 +529,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(17, content.Properties.Count);
+            Assert.AreEqual(16, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_ID.ToString(), idProperty.Value);
@@ -566,9 +542,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ADV_WEIR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.AdvancedWeir, idProperty.Value);
@@ -636,7 +609,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(16, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_ID.ToString(), idProperty.Value);
@@ -650,42 +623,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
-
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Orifice, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.ORIFICE_FLOW_DIRECTION).ToString(), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.OpenLevel.Key);
-            Assert.AreEqual((StructureFileWriterTestHelper.ORIFICE_GATE_OPENING + StructureFileWriterTestHelper.ORIFICE_CREST_LEVEL)
-                .ToString(StructureRegion.OpenLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.ContractionCoeff.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF.ToString(StructureRegion.ContractionCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LatContrCoeff.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF.ToString(StructureRegion.LatContrCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseLimitFlowPos.Key);
-            Assert.AreEqual(Convert.ToInt32(StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS).ToString(), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LimitFlowPos.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS.ToString(StructureRegion.LimitFlowPos.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.UseLimitFlowNeg.Key);
-            Assert.AreEqual(Convert.ToInt32(StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG).ToString(), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LimitFlowNeg.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_NEG.ToString(StructureRegion.LimitFlowNeg.Format, CultureInfo.InvariantCulture), idProperty.Value);
         }
 
         [Test]
@@ -729,7 +674,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(28, content.Properties.Count);
+            Assert.AreEqual(27, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(), idProperty.Value);
@@ -742,9 +687,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.GeneralStructure, idProperty.Value);
@@ -859,7 +801,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(28, content.Properties.Count);
+            Assert.AreEqual(27, content.Properties.Count);
             
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.ExtraResistance.Key);
             const double expectedExtraResistance = 0.0;
@@ -898,7 +840,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(22, content.Properties.Count);
+            Assert.AreEqual(21, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_ID.ToString(), idProperty.Value);
@@ -911,9 +853,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Culvert, idProperty.Value);
@@ -1000,7 +939,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(23, content.Properties.Count);
+            Assert.AreEqual(22, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(), idProperty.Value);
@@ -1013,9 +952,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.InvertedSiphon, idProperty.Value);
@@ -1062,7 +998,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(25, content.Properties.Count);
+            Assert.AreEqual(24, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_ID.ToString(), idProperty.Value);
@@ -1075,9 +1011,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Siphon, idProperty.Value);
@@ -1119,7 +1052,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(16, content.Properties.Count);
+            Assert.AreEqual(15, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_ID.ToString(), idProperty.Value);
@@ -1132,9 +1065,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.Bridge, idProperty.Value);
@@ -1194,7 +1124,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_ID.ToString(), idProperty.Value);
@@ -1207,9 +1137,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.BridgePillar, idProperty.Value);
@@ -1248,7 +1175,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(8, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_ID.ToString(), idProperty.Value);
@@ -1261,9 +1188,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.EXTRA_RESISTANCE_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Compound.Key);
-            Assert.AreEqual("0", idProperty.Value); // Determined in Mock Class (by order of structure)
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.ExtraResistanceStructure, idProperty.Value);

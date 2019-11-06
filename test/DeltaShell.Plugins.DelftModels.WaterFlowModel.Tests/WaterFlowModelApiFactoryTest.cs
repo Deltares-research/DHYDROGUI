@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestGetVarShape()
         {
             // arrays cannot be declared by out, only by ref.
@@ -25,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestGetVarType()
         {
             // testing a simple call to the RPC without crashing.
@@ -33,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestGetVar()
         {
             Array result = new int[0];

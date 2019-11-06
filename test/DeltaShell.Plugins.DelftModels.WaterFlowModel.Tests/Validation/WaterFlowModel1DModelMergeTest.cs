@@ -693,6 +693,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.Validation
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void Given2ModelWithNetworkWithOutputCreatedOnSourceModelWhenMergeThenAfterMergeNodeMoveShouldNotCrash()
         {
             sourceWFM1D.NetworkDiscretization = WaterFlowModel1DModelMergeTestHelper.SetupUniformNetworkDiscretization(sourceWFM1D.Network, 11);

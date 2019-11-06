@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -102,7 +103,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             catchment1.Expect(c => c.Links).Return(links).Repeat.Any();
 
             var basin = mocks.PartialMock<DrainageBasin>();
-            var catchments = new EventedList<Catchment>() { catchment1 };
+            var catchmentsList = new List<Catchment>{catchment1};
+            var catchments = mocks.DynamicMock<IEventedList<Catchment>>();
+
+            catchments.Expect(c => c.GetEnumerator()).Return(catchmentsList.GetEnumerator());
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
             ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();

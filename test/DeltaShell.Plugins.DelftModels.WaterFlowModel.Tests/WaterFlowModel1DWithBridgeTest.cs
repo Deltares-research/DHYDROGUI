@@ -44,6 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteSimplerWithBridge()
         {
             // be sure SetBridge is not commented out in WaterFlowModel1D.SetStructure!!!
@@ -54,6 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecutePillarBridge()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -89,6 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestIfRoughnessHasEffect()
         {
             WaterFlowModel1D model02 = RunModelWithRoughness(0.2);

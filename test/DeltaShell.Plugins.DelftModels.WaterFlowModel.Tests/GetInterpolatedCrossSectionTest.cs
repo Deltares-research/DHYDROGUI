@@ -100,6 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void FindNearestCrossSectionTest()
         {
             AddCrossSections(CrossSectionType.ZW);
@@ -159,6 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GetDistancesToNearestCrossSections()
         {
             //local setup for this test

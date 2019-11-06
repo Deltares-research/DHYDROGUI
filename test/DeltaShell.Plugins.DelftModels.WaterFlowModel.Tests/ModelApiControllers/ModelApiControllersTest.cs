@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
     {
         #region RemoteModelApiWrapperTest
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GetRemoteModelApiWrapperTest()
         {
             var environmentVariable = Environment.GetEnvironmentVariable("PATH");
@@ -26,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
 
         #region ModelApi
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GetModelApiWrapperTest()
         {
             var apiWrapper = new ModelApi();
@@ -33,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModelApiWrapperLoggingTest()
         {
             var apiWrapper = new ModelApi();
@@ -46,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ModelApiController
         #region WaterFlowModelApiFactory
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CreateApiForWaterFlowModelApiFactoryTest()
         {
             try

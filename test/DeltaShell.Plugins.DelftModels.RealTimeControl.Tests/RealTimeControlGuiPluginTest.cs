@@ -30,8 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 var activityRunner = mocks.DynamicMock<IActivityRunner>();
                 var application = mocks.DynamicMock<IApplication>();
                 var project = new Project();
-
-                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] {mapView});
+                Expect.Call(documentViews.ActiveView).Return(mapView);
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
                 Expect.Call(application.ActivityRunner).Return(activityRunner).Repeat.Any();

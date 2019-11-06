@@ -45,6 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestSimpleWeirFormula()
         {
             // init weir
@@ -88,6 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithSimpleWeir()
         {
             // init weir
@@ -116,6 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithRiverWeir()
         {
             var submergeReduction = FunctionHelper.Get1DFunction<double, double>("submergereductionpos", "S", "R");
@@ -156,6 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithPierWeir()
         {
             // init weir
@@ -194,6 +198,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithGatedWeir()
         {
             // init weir
@@ -230,6 +235,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithGeneralStructure()
         {
             // init weir
@@ -275,6 +281,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ExecuteWithFreeFormWeir()
         {
             double[] y = new[] { 0.0, 3.1, 6.2, 7.3, 9.4 };
