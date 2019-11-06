@@ -10,7 +10,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
 {
     [TestFixture]
     public class MultiIEventedListAdapterTest

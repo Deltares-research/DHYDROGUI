@@ -1,7 +1,7 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 {
     [TestFixture]
     public class BoundaryLineMapFeatureProviderTest
