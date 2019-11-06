@@ -1,4 +1,6 @@
-﻿using SharpMap.Data.Providers;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 {
@@ -17,9 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     /// </remarks>
     public class BoundaryLineMapFeatureProvider : Feature2DCollection
     {
-        public BoundaryLineMapFeatureProvider()
-        {
+        private readonly IBoundaryContainer boundaryContainer;
 
+        public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer)
+        {
+            this.boundaryContainer = boundaryContainer ?? 
+                                     throw new ArgumentNullException(nameof(boundaryContainer));
         }
     }
 }
