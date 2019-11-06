@@ -1661,6 +1661,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         // Load 2D, create 1D, create links 1D-2D, save them to file for later processing
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
         [NUnit.Framework.Category("CreateNetInputFile")]
         public void CreateNetInputFile()
         {
@@ -2088,6 +2089,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         // Test: get only 1d network using get mesh geom
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Get1dNetworkUsingGetMeshGeom()
         {
@@ -2154,6 +2156,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         // Test: get only 1d network using get mesh geom
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Put2dMeshUsingPutMeshGeom()
         {
@@ -2211,6 +2214,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         // Test: get only 1d network using get mesh geom
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Put2dMeshUsingPutMeshGeomPutNodeZ()
         {
