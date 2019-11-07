@@ -3,6 +3,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
+using DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions;
+using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
@@ -14,7 +16,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DefinitionGeneratorFactory));
 
-        public static IDefinitionReader GetDefinitionReaderCrossSection(string type)
+        public static IDefinitionReader<ICrossSectionDefinition> GetDefinitionReaderCrossSection(string type)
         {
             switch (type)
             {
@@ -67,7 +69,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
             return definitionGeneratorCrossSectionDefinition;
         }
-      
 
         public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature)
         {
@@ -148,47 +149,36 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
         }
 
-        public static IDefinitionReader GetDefinitionReaderStructure(StructureType structureType)
+        public static IStructureDefinitionReader GetDefinitionReaderStructure(StructureType structureType)
         {
             switch (structureType)
             {
-                case StructureType.Unknown:
-                    break;
                 case StructureType.Bridge:
-                    break;
                 case StructureType.BridgePillar:
-                    break;
-                case StructureType.CompositeBranchStructure:
-                    break;
+                    return new BridgeDefinitionReader();
                 case StructureType.Culvert:
-                    break;
                 case StructureType.InvertedSiphon:
-                    break;
                 case StructureType.Siphon:
-                    break;
+                    return new CulvertDefinitionReader();
                 case StructureType.ExtraResistance:
-                    break;
-                case StructureType.Gate:
-                    break;
+                    return new ExtraResistanceDefinitionReader();
                 case StructureType.Pump:
-                    break;
+                    return new PumpDefinitionReader();
                 case StructureType.Weir:
-                    return new WeirDefinitionReader();
                 case StructureType.UniversalWeir:
-                    break;
                 case StructureType.RiverWeir:
-                    break;
                 case StructureType.AdvancedWeir:
-                    break;
                 case StructureType.Orifice:
-                    break;
                 case StructureType.GeneralStructure:
-                    break;
+                    return new WeirDefinitionReader();
+                case StructureType.CompositeBranchStructure:
+                    return new CompositeBranchStructureDefinitionReader();
+                case StructureType.Unknown:
+                case StructureType.Gate:
+                    return null;
                 default:
                     return null;
             }
-            return null;
-
         }
     }
 }

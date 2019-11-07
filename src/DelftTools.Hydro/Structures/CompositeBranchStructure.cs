@@ -203,5 +203,10 @@ namespace DelftTools.Hydro.Structures
         }
 
         public virtual NetworkFeatureType NetworkFeatureType { get; set; } = NetworkFeatureType.Branch;
+
+        /// <summary>
+        /// Placeholder for meta data
+        /// </summary>
+        public virtual object Tag { get; set; }
     }
 }

@@ -4,9 +4,12 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders 
 {
@@ -35,6 +38,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
 
+            FilterCompositeStructureSubStructures(structures);
+
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
 
@@ -43,6 +48,32 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
                 throw new FileReadingException(string.Format("While reading structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
+        }
+
+        private static void FilterCompositeStructureSubStructures(IList<IStructure1D> structures)
+        {
+            var compositeBranchStructures = structures.OfType<ICompositeBranchStructure>().ToList();
+            compositeBranchStructures.ForEach(comp =>
+            {
+                var structureIds = comp.Tag as string;
+                if (string.IsNullOrWhiteSpace(structureIds))
+                {
+                    return;
+                }
+
+                // todo : think about caching structures and name as a lookup
+
+                structureIds.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(sId => structures.FirstOrDefault(st => st.Name == sId))
+                    .Where(s => s != null)
+                    .ForEach(s =>
+                    {
+                        s.ParentStructure = comp;
+                        comp.Structures.Add(s);
+                    });
+
+                //subStructures.ForEach(s => structures.Remove(s));
+            });
         }
 
         private static void AddStructuresToNetwork(IList<IStructure1D> structures)
@@ -106,49 +137,69 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories,
             IList<ICrossSectionDefinition> crossSectionDefinitions, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
         {
-            IList<IStructure1D> structureDefinitions = new List<IStructure1D>();
+            IList<IStructure1D> structure1Ds = new List<IStructure1D>();
+            var branchLookup = network.Branches.Where(b => b.Name != null).ToDictionary(b => b.Name);
+            var structureNameLookup = new HashSet<string>();
 
             foreach (var structureDefinitionCategory in structuresCategories.Where(category => category.Name == StructureRegion.Header))
             {
                 try
                 {
-                    var structureDefinition = ReadStructureDefinition(structureDefinitionCategory);
+                    var branchId = structureDefinitionCategory.ReadProperty<string>(StructureRegion.BranchId.Key, true);
+                    if (string.IsNullOrWhiteSpace(branchId) || !branchLookup.TryGetValue(branchId, out var branch))
+                    {
+                        continue;
+                    }
 
-                    if (structureDefinitions.Contains(structureDefinition) ||
-                        structureDefinitions.FirstOrDefault(csd => csd.Name == structureDefinition.Name) != null)
-
+                    var structure1D = ReadStructureDefinition(structureDefinitionCategory, crossSectionDefinitions, branch);
+                    if (structure1D == null)
+                    {
+                        continue;
+                    }
+                    
+                    if (structureNameLookup.Contains(structure1D.Name))
+                    {
                         throw new FileReadingException(string.Format(
-                            "cross section definition with id {0} is already read, id's CAN NOT be duplicates!",
-                            structureDefinition.Name));
+                            "Structure with id {0} is already read, id's CAN NOT be duplicates!",
+                            structure1D.Name));
+                    }
 
-                    structureDefinitions.Add(structureDefinition);
+                    structureNameLookup.Add(structure1D.Name);
+                    structure1Ds.Add(structure1D);
                 }
                 catch (FileReadingException fileReadingException)
                 {
-                    fileReadingExceptions.Add(new FileReadingException("Could not read cross section definition for structures",
+                    fileReadingExceptions.Add(new FileReadingException("Could not structure.",
                         fileReadingException));
                 }
             }
 
-            return structureDefinitions;
+            return structure1Ds;
         }
 
-        private static IStructure1D ReadStructureDefinition(IDelftIniCategory definitionCategory)
+        private static IStructure1D ReadStructureDefinition(DelftIniCategory definitionCategory, IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
         {
             var type = definitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
 
             if (!Enum.TryParse(type, true, out StructureType structureType))
             {
-                throw new FileReadingException(string.Format("Couldn't parse this type '{0}' to an element of the structure type enum", type));
+                if (type == "compound")
+                {
+                    structureType = StructureType.CompositeBranchStructure;
+                }
+                else
+                {
+                    throw new FileReadingException(string.Format("Couldn't parse this type '{0}' to an element of the structure type enum", type));
+                }
             }
 
             var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderStructure(structureType);
             if (definitionReader == null)
             {
-                throw new FileReadingException(string.Format("No definition reader available for this structure definition: {0}",type));
+                throw new FileReadingException(string.Format("No definition reader available for this structure definition: {0}", type));
             }
 
-            return definitionReader.ReadStructureDefinition(definitionCategory);
+            return definitionReader.ReadDefinition(definitionCategory, crossSectionDefinitions, branch);
         }
     }
 }

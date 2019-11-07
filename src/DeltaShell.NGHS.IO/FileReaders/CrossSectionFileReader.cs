@@ -117,7 +117,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(errorMessage);
             }
 
-            var readCrossSectionDefinition = definitionReader.ReadCrossSectionDefinition(crossSectionDefinitionCategory);
+            var readCrossSectionDefinition = definitionReader.ReadDefinition(crossSectionDefinitionCategory);
             SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network);
             //groundlayer??
             return readCrossSectionDefinition;

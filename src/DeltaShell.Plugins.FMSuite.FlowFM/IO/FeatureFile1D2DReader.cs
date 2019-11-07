@@ -46,9 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var crLocFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
             crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
             if (!File.Exists(crLocFile)) return;
+
             var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile =IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             if (!File.Exists(crDefFile)) return;
+
             CrossSectionFileReader.ReadFile(crLocFile,crDefFile, fmModel.Network);
         }
 
@@ -57,10 +59,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             if (!File.Exists(crDefFile)) return;
+
             var structureFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
             structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
             if (!File.Exists(structureFile)) return;
-            //StructureFileReader.ReadFile(structureFile, crDefFile , fmModel.Network);
+
+            StructureFileReader.ReadFile(structureFile, crDefFile , fmModel.Network);
         }
 
         private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)

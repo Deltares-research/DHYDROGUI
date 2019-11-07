@@ -88,9 +88,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public static readonly ConfigurationSetting BottomWidth = new ConfigurationSetting(key: "baseWidth", description: "Bottom width of trapezium (m)");
 
         public static readonly ConfigurationSetting IsShared = new ConfigurationSetting(key: "IsShared", description: "(Optional, default=false=0) if is shared set to true=1");
-        
-
-
-        
     }
 }
