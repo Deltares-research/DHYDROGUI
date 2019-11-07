@@ -12,6 +12,8 @@ using Rhino.Mocks.Interfaces;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
+    [NUnit.Framework.Category("UGRIDTests")]
+    [Ignore("why do we need unit tests in deltashell for a kernel??")]
     public class GridApiTests
     {
         private const string ApiVarName = "api";
@@ -45,6 +47,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionWithNullOrEmptyStringFileNameTest()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -79,6 +83,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionFailsButSucceedInFallBackTest()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -100,6 +106,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionFailsAndFailsInFallBackTest()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -123,6 +131,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionAgainViaLegacyWay()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -147,6 +157,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionClosingFails()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -168,6 +180,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionWithToLowConvensionNumber()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -192,6 +206,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConvention()
         {
             GridApiDataSet.DataSetConventions convention;
@@ -220,6 +236,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionTestWithoutFilename()
         {
             DoWithMockedGridApi(
@@ -235,6 +253,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetConventionTestWithoutFilename_2()
         {
             DoWithMockedGridApi(
@@ -382,6 +402,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 //        }
 //        
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void OpenWithErrorTest()
         {
             DoWithMockedGridApi(
@@ -415,6 +437,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void OpenInRemoteWithErrorTest()
         {
             DoWithMockedGridApi(
@@ -448,6 +472,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CloseUninitializedTest()
         {
             DoWithMockedGridApi(
@@ -472,6 +498,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CloseTest()
         {
             DoWithMockedGridApi(
@@ -502,6 +530,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CloseWithErrorTest()
         {
             DoWithMockedGridApi(
@@ -532,6 +562,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CloseInRemoteWithErrorTest()
         {
             DoWithMockedGridApi(
@@ -560,6 +592,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetMeshCountUninitializedTest()
         {
             int numberOfMeshes;
@@ -591,6 +625,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetMeshCountTest()
         {
             int numberOfMeshes;
@@ -625,6 +661,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetMeshCountWithExceptionTest()
         {
             DoWithMockedGridApi(
@@ -658,6 +696,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetMeshCountInRemoteWithExceptionTest()
         {
             DoWithMockedGridApi(
@@ -687,6 +727,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetCoordinateSystemCodeUninitializedTest()
         {
             int coordinateSystemCode;
@@ -723,6 +765,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetCoordinateSystemCodeTest()
         {
             int coordinateSystemCode;
@@ -759,6 +803,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetCoordinateSystemCodeWithExceptionTest()
         {
             DoWithMockedGridApi(
@@ -794,6 +840,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetCoordinateSystemCodeInRemoteWithExceptionTest()
         {
             DoWithMockedGridApi(
@@ -826,6 +874,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void GetVersionTest()
         {
             DoWithMockedGridApi(
@@ -850,6 +900,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [TestCase(0, false)]
         [TestCase(1, true)]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void InitializeTest(int id, bool expectation)
         {
             DoWithMockedGridApi(
@@ -865,6 +917,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
         
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CreateEmptyNetCdfFileTest()
         {
             DoWithMockedGridApi(
@@ -897,6 +951,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         
         [Test]
         [ExpectedException(typeof(AccessViolationException))]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CreateFileNullExceptionTest()
         {
             DoWithMockedGridApi(
@@ -918,6 +974,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [TestCase(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR)]
         [TestCase(GridApiDataSet.GridConstants.GENERAL_ARRAY_LENGTH_FATAL_ERR)]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CreateFileFailedTest(int apiCallReturnValue)
         {
             DoWithMockedGridApi(

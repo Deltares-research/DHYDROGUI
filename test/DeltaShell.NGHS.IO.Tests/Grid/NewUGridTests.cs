@@ -13,7 +13,8 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
-    [Ignore("should be in unit test of io_netcdf kernel")]
+    [NUnit.Framework.Category("UGRIDTests")]
+    [Ignore("why do we need unit tests in deltashell for a kernel??")]
     public class NewUGridTests
     {
         //Constructor loads the library
@@ -750,6 +751,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         ////// read the netcdf file created in the test above
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void read1dUGRIDNetcdf()
         {
             IntPtr c_meshidsfromnetworkid = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)));
@@ -903,6 +905,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //// and clones the 2d mesh data read from a file produced by RGFgrid. 
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void Clones2dMesh()
         {
             var wrapper = new IoNetcdfLibWrapper();
@@ -1159,6 +1162,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // Create a standalone network
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void create1dNetwork()
         {
             // Create a netcdf file 
@@ -1237,6 +1241,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // read the standalone network
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void read1dNetwork()
         {
             // Open a netcdf file (file from test data, but actually created previously)
@@ -1368,6 +1373,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         */
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void LargeSewerSystem()
         {
             int stackSize = 1024 * 1024 * 16; //LC: in C# the default stack size is 1 MB, increase it to something larger for this test!
@@ -1661,8 +1667,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         // Load 2D, create 1D, create links 1D-2D, save them to file for later processing
         [Test]
-        [NUnit.Framework.Category("UGRIDTests")]
         [NUnit.Framework.Category("CreateNetInputFile")]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void CreateNetInputFile()
         {
 
@@ -2090,6 +2097,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // Test: get only 1d network using get mesh geom
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Get1dNetworkUsingGetMeshGeom()
         {
@@ -2157,6 +2165,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // Test: get only 1d network using get mesh geom
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Put2dMeshUsingPutMeshGeom()
         {
@@ -2215,6 +2224,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // Test: get only 1d network using get mesh geom
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         [NUnit.Framework.Category("Read1dNetworkUsingGetMeshGeom")]
         public void Put2dMeshUsingPutMeshGeomPutNodeZ()
         {
@@ -2351,6 +2361,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         //open a file test
         [Test]
         [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void openAfile()
         {
             var wrapper = new IoNetcdfLibWrapper();

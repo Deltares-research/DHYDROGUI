@@ -21,10 +21,13 @@ using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
+    [NUnit.Framework.Category("UGRIDTests")]
     [Ignore("why do we need unit tests in deltashell for a kernel??")]
     public class LUCAGridTests
     {
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void ReadWritegrid()
         {
             DimrApiDataSet.SetSharedPath();
@@ -37,6 +40,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         }
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void ReadWritenetworkanddiscrandgridandlinks()
         {
             DimrApiDataSet.SetSharedPath();
@@ -61,6 +66,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         }
         [Test]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void Writenetworkanddiscr2()
         {
             var network = new HydroNetwork();
@@ -104,7 +111,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         }
         [Test]
-        [Ignore]
+        [NUnit.Framework.Category("UGRIDTests")]
+        [Ignore("why do we need unit tests in deltashell for a kernel??")]
         public void Runnetworkanddiscr()
         {
             var network = new HydroNetwork();
