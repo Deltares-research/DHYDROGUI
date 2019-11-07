@@ -1,6 +1,0 @@
-TP_1.0
-NODE id 'PMNI_NOM_63' nm '' px 199663.709722876 py 413985.149730686 node
-NODE id 'PMNI_NOM_64' nm '' px 199300.219996405 py 413818.603013651 node
-NODE id 'PMNI_NOM_58' nm '' px 199249.079996321 py 413901.897997314 node
-BRCH id 'PMNI_NOM_62' nm '' bn 'PMNI_NOM_63' en 'PMNI_NOM_64' al 423.713907958279 vc_opt 1 vc_equi -1 vc_len 500 brch
-BRCH id 'PMNI_NOM_63' nm '' bn 'PMNI_NOM_58' en 'PMNI_NOM_64' al 98.1030661981136 vc_opt 1 vc_equi -1 vc_len 500 brch

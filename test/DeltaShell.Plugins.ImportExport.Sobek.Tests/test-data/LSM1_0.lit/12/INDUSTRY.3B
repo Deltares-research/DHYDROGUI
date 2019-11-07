@@ -1,8 +1,0 @@
-INDU id 'AWZI Schiphol' co 1 rf 1 ds 'P07_1' dm 'P07_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'Heineken' co 1 rf 1 ds 'P07_2' dm 'P07_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'uitl_BBpolder' co 1 rf 1 ds 'P07_3' dm 'P07_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'uitl_Nieuwk&Nrd' co 1 rf 1 ds 'P07_4' dm 'P07_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'AWZI Schiphol' co 1 rf 1 ds 'P09_1' dm 'P09_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'Heineken' co 1 rf 1 ds 'P09_2' dm 'P09_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'uitl_BBpolder' co 1 rf 1 ds 'P09_3' dm 'P09_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu
-INDU id 'uitl_Nieuwk&Nrd' co 1 rf 1 ds 'P09_4' dm 'P09_1' sc 0 redrf 1 redow 1 redlv -999 redbnlv -999 indu

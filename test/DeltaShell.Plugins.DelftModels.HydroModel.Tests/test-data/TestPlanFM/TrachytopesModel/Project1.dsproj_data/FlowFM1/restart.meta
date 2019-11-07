@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<SerializableStatesInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <OutStates>
-    <StateInfo>
-      <Name>FlowFM1: 2001-01-02 00:00:00</Name>
-      <ZipPath>D:\sluis_pa\Documents\test_dir\withOutput\Project1.dsproj_data\state_FlowFM1_2001-01-02_00-00-00-9f4698df-b881-4345-8c2e-293b84561dc7.zip</ZipPath>
-    </StateInfo>
-  </OutStates>
-</SerializableStatesInfo>
