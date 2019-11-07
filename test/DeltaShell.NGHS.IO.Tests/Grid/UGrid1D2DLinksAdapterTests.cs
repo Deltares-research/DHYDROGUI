@@ -61,6 +61,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Ignore]
         public void SaveAndLoadNo1D2DLinks_ShouldNotGiveAnError()
         {
             var testFilePath = TestHelper.GetTestFilePath(@"ugrid\Ugrid_Network_mesh1D_mesh2D_noLinks.nc");
