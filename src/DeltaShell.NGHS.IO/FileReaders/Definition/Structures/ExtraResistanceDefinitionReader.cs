@@ -19,7 +19,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Branch = branch,
                 Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
             };
-            
 
             var levels = category.ReadProperty<string>(StructureRegion.Levels.Key).ToDoubleArray();
             var ksi = category.ReadProperty<string>(StructureRegion.Ksi.Key).ToDoubleArray();

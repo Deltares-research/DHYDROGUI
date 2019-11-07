@@ -21,19 +21,22 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 ? (FlowDirection) Enum.Parse(typeof(FlowDirection), allowedFlowDirValue, true)
                 : 0;
 
-            return new Weir
+            var weir = new Weir
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
-                WeirFormula = ReadFormulaFromDefinition(category)
+                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key)
             };
+
+            weir.WeirFormula = ReadFormulaFromDefinition(category, weir);
+
+            return weir;
         }
 
-        private static IWeirFormula ReadFormulaFromDefinition(IDelftIniCategory category)
+        private static IWeirFormula ReadFormulaFromDefinition(IDelftIniCategory category, Weir weir)
         {
             var type = (StructureType) Enum.Parse(typeof(StructureType),
                 category.ReadProperty<string>(StructureRegion.DefinitionType.Key), true);
@@ -43,9 +46,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 case StructureType.Weir:
                     return new SimpleWeirFormula
                     {
-                        DischargeCoefficient =
-                            category.ReadProperty<double>(StructureRegion.CorrectionCoeff
-                                .Key) // formula.DischargeCoefficient*formula.LateralContraction
+                        DischargeCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key),
+                        LateralContraction = 1
                     };
                 case StructureType.UniversalWeir:
                     var readFormulaFromDefinition = new FreeFormWeirFormula
@@ -98,12 +100,9 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 case StructureType.Orifice:
                     return new GatedWeirFormula
                     {
-                        GateOpening =
-                            category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel
-                                .Key), // weir.CrestLevel + formula.GateOpening
-                        ContractionCoefficient =
-                            category.ReadProperty<double>(StructureRegion.CorrectionCoeff
-                                .Key), //formula.ContractionCoefficient*formula.LateralContraction
+                        GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key) - weir.CrestLevel,
+                        ContractionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key),
+                        LateralContraction = 1
                     };
                 case StructureType.GeneralStructure:
                     var extraResistance = category.ReadProperty<double>(StructureRegion.ExtraResistance.Key);
@@ -150,9 +149,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
                     if (Math.Abs(generalStructureWeirFormula.GateOpening) < tolerance)
                     {
-                        generalStructureWeirFormula.GateOpening =
-                            category.ReadProperty<double>(StructureRegion.GateHeight
-                                .Key); //weir.CrestLevel + formula.GateOpening
+                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key) - weir.CrestLevel;
                     }
 
                     return generalStructureWeirFormula;

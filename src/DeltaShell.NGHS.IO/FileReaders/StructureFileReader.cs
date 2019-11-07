@@ -31,14 +31,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", csdFilename));
 
             var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, fileReadingExceptions);
-            
             if (fileReadingExceptions.Count > 0)
             {
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
                 throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
 
-            FilterCompositeStructureSubStructures(structures);
+            AddSubStructuresToCompositeStructures(structures);
 
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
@@ -50,7 +49,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static void FilterCompositeStructureSubStructures(IList<IStructure1D> structures)
+        private static void AddSubStructuresToCompositeStructures(IList<IStructure1D> structures)
         {
             var compositeBranchStructures = structures.OfType<ICompositeBranchStructure>().ToList();
             compositeBranchStructures.ForEach(comp =>
@@ -62,7 +61,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
 
                 // todo : think about caching structures and name as a lookup
-
                 structureIds.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(sId => structures.FirstOrDefault(st => st.Name == sId))
                     .Where(s => s != null)
@@ -71,8 +69,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         s.ParentStructure = comp;
                         comp.Structures.Add(s);
                     });
-
-                //subStructures.ForEach(s => structures.Remove(s));
             });
         }
 
@@ -89,13 +85,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static IList<DelftIniCategory> ReadStructureDelftIniCategories(string structureFilename)
         {
             if (!File.Exists(structureFilename))
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.",
-                    structureFilename));
+                throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", structureFilename));
 
             var structuresCategories = new DelftIniReader().ReadDelftIniFile(structureFilename);
             if (structuresCategories.Count == 0)
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty",
-                    structureFilename));
+                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
 
             return structuresCategories;
         }
