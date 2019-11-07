@@ -666,6 +666,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void SplitChannelForgetCrossSectionAndSave()
         {
             //reproduces issue 5277
@@ -827,6 +828,7 @@ namespace Sobek.IntegrationTests
   
         [Test]
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void DragOutputCoverageToExternalMapSaveRemoveMapAndSaveAgainShouldNotCrash()
         {
             using (var gui = GetRunningGuiWithFlowPlugins())
@@ -896,6 +898,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void SaveAsModelTwiceWithOpenCoverageViewShouldNotGiveException()
         {
             using (var gui = GetRunningGuiWithFlowPlugins())
@@ -928,6 +931,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void Issue1252LoadModelWithNetworkAndWaterLevelShouldNotFail()
         {
             const string path = @"Issue1252LoadModel.dsproj";
@@ -1095,6 +1099,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ImportAndExportShouldPreserveOutputCoverages()
         {
             var path = "qq.dsproj"; //using short filename, because path based on testname became too long.
@@ -1135,6 +1140,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ImportModelShouldNotTriggerClearingOfOutput()
         {
             var path = "ImportClearsOutput.dsproj";
@@ -1202,6 +1208,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RetrievingComputationalGridAfterLoadDoesNotClearOutput()
         {
             //relates to issue 4966
@@ -1271,6 +1278,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunTwoModels()
         {
             using (var app = GetRunningAppWithFlowPlugins())

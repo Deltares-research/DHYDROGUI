@@ -256,6 +256,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Integration)]
         [Category("DIMR_Introduction")]
         [Category(TestCategory.WorkInProgress)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunFlowAloneAndThenFlowAndRRCombinedTools9662()
         {
             RainfallRunoffModel rr;
@@ -286,6 +287,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunRRAndFlowParallel()
         {
             RainfallRunoffModel rr;
@@ -657,6 +659,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ImportRunAndCloneDWAQ_AC1()
         {
             string path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"DWAQ_AC1.lit\14\NETWORK.TP");
@@ -827,6 +830,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D has changed migration nhibernate mappings (hbm.xml) but not backwards compatible.")]
         public void WorkDirectoriesAreCreatedInsideProjectFolder_HydroModelFlowRtcWaq()
         {
             //

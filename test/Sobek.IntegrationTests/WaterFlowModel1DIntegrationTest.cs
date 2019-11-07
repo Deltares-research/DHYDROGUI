@@ -91,6 +91,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ShowSideViewForProblematicRoute()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
@@ -188,6 +189,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunImportedAndCopiedModel()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
@@ -214,6 +216,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void Run105Model()
         {
 
@@ -419,6 +422,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void SobekOutput_RunLegacyModelAndSave_CoveragesUseNewOutputFilesAndArePersisted()
         {
             // Make copy of legacy project
@@ -513,6 +517,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void SobekOutput_RunAndSaveLegacyModelTwice_DoesNotThrowException()
         {
             // Make copy of legacy project
@@ -893,6 +898,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSobekModel105_010_case9_Performance()
         {
             using (var waterFlowModel1D = ImportSobekModel_105_010_case9())
@@ -906,6 +912,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunSobekModel_245_000_case3_Performance()
         {
             var hydroModel = ImportSobekModel_245_000_case3();
@@ -989,6 +996,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ChangesInSummerdikeDataShouldChangesResult()
         {
             var modelImporter = new SobekWaterFlowModel1DImporter();
@@ -1036,6 +1044,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void AddCompoundStructureToFeatureCoverage()
         {
             using (var waterFlowModel1D = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork())

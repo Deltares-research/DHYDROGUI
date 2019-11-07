@@ -306,6 +306,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void SaveProjectWithDeletedModelAndOpenCoverageViews()
         {
             //otherwise path is very long

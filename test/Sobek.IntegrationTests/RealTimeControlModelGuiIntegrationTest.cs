@@ -402,6 +402,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunRealTimeControlModelWithFlowModelShouldNotMarkFlowOutputOutOfSync_Issue7002()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
@@ -463,6 +464,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.WindowsForms)]
         [Category(TestCategory.Jira)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CopyPasteImportedRtcAndFlowModelAfterRunShouldNotCrash_Issue7010()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");

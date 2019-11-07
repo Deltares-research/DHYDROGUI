@@ -86,6 +86,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModelOutputIsClearedOnCrossSectionMoveAfterSave()
         {
             var model = (WaterFlowModel1D)app.Project.RootFolder.Models.First();
@@ -141,6 +142,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModelOutputIsUpdatedAfterBranchIsDeletedAndProjectIsSavedTools7319()
         {
             // save

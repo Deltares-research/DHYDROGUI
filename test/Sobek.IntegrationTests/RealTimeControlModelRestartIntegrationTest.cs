@@ -102,6 +102,7 @@ namespace Sobek.IntegrationTests
 
         [TestCase(24, 24, 4, 0, TestName = "GivenAnIntegratedModelWithAPidRuleWithStateSavesFor1DAndRTCMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
         [TestCase(24, 16, 4, 4, TestName = "GivenAnIntegratedModelWithAPidRuleWithStateSavesFor1DAndRTCMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GivenAnIntegratedModelWithAPidRuleWithStateSavesFor1DAndRTCWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
         {
             const string projectName = "TestRTC1D.dsproj";
@@ -272,6 +273,7 @@ namespace Sobek.IntegrationTests
 
         [TestCase(24, 24, 4, 0, TestName = "GivenAnIntegratedModelWithATimeRuleWithStateSavesFor1DAndRTCMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
         [TestCase(24, 16, 4, 4, TestName = "GivenAnIntegratedModelWithATimeRuleWithStateSavesFor1DAndRTCMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GivenAnIntegratedModelWithATimeRuleWithStateSavesFor1DAndRTCWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
         {
             const string projectName = "TestRTC1D.dsproj";

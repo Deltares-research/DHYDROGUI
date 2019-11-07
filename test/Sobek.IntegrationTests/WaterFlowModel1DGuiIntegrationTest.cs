@@ -413,6 +413,7 @@ namespace Sobek.IntegrationTests
         [Test]
         [Category((TestCategory.Jira))]
         [Category(TestCategory.DataAccess)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ErrorInOutputCoveragesAfterLoadingModelWithItsOutputCleared_Tools7337()
         {
             const string path = "ErrorInOutputCoverages.dsproj";
@@ -554,6 +555,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CopyPasteDemoModelInApplicationAndRun()
         {
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();
@@ -687,6 +689,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void RunCopyPasteRunDemoModelInApplication()
         {
             var model = WaterFlowModel1DDemoModelTestHelper.CreateModelWithDemoNetwork();
@@ -1198,6 +1201,7 @@ namespace Sobek.IntegrationTests
         }
         
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CopyPasteModelWithOutputInNetcdf()
         {
             // since gui is created in setup - dispose it first

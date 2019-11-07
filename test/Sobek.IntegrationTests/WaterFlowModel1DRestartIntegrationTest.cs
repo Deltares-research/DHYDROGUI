@@ -368,6 +368,7 @@ namespace Sobek.IntegrationTests
 
         [TestCase(24, 24, 4, 0, TestName = "GivenASimpleFlowModelWithAStateSaveMatchingTheRunPeriodWhenThisModelRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
         [TestCase(24, 16, 4, 4, TestName = "GivenASimpleFlowModelWithAStateSaveMatchingASubsetOfTheRunPeriodWhenThisRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun")]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void GivenASimpleFlowModelWhenThisModelIsRunAndRerunThenTheResultsOfTheRerunAreEqualToTheInitialRun(int runLengthInHours, int runLengthSaveStateInHours, int intervalSaveStateInHours, int offsetSaveStateInHours)
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>

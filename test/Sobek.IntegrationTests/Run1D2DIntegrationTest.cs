@@ -64,6 +64,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void VerifyThat1D2DModelRunsCorrectly_AfterRenamingModels()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })

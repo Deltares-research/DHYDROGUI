@@ -327,6 +327,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void AddNewModelAddBranchAddCrossSectionGenerateGridUndoAllRedoAllAndRunShouldNotCrash()
         {
             onBeforeUndoRedoOn = () => project.RootFolder.Items.Remove(model);
@@ -396,6 +397,7 @@ namespace Sobek.IntegrationTests
         
         [Test]
         [Category(TestCategory.Slow)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void UndoRedoAddModelAndRunShouldNotCrash()
         {
             onBeforeUndoRedoOn = () => project.RootFolder.Items.Remove(model);

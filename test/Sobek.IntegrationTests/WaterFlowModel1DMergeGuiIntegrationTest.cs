@@ -29,6 +29,7 @@ namespace Sobek.IntegrationTests
     public class WaterFlowModel1DMergeGuiIntegrationTest
     {
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestMergeTwoFlow1DModelsRequiringBranchRefittingAndWithOutputDataOnSourceModelDoesNotThrowException()
         {
             /*
@@ -65,6 +66,7 @@ namespace Sobek.IntegrationTests
         }
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void Given2ModelWithNetworkWithOutputCreatedOnSourceModelWhenMergeThenAfterMergeObservationPointDeleteShouldNotCrash()
         {
             using (var gui = new DeltaShellGui())
