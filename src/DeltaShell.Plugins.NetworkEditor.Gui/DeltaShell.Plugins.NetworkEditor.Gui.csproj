@@ -218,6 +218,12 @@
     </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewModelDesignerDataContext.cs" />
     <Compile Include="Helpers\FeatureCollectionViewInfoHelper.cs" />
+    <Compile Include="Forms\AreaStructureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\AreaStructureView.Designer.cs">
+      <DependentUpon>AreaStructureView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisView.cs" />
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisView.Designer.cs">
       <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
@@ -684,6 +690,10 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\AreaStructureView.resx">
+      <DependentUpon>AreaStructureView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\CaseAnalysis\CoverageAnalysisView.resx">
       <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
     </EmbeddedResource>

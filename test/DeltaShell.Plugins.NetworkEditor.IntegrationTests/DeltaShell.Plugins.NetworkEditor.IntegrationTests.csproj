@@ -209,6 +209,7 @@
   <ItemGroup>
     <Compile Include="CaseAnalysisGuiIntegrationTest.cs" />
     <Compile Include="DeltaShellNetworkEditorIntegrationTest.cs" />
+    <Compile Include="HydroAreaGuiIntegrationTest.cs" />
     <Compile Include="HydroNetworkCopyAndPasteHelperTest.cs" />
     <Compile Include="ImportExport\CrossSectionXYZCsvExportImportTest.cs" />
     <Compile Include="ImportExport\CrossSectionYZCsvExportImportTest.cs" />
