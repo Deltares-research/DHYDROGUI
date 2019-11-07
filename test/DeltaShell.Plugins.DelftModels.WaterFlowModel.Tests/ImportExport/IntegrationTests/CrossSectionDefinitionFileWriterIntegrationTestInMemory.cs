@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestIntegrationFileWriterCrossSectionDefinitions()
         {
 
@@ -140,6 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Integ
         
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestIntegrationFileReaderCrossSection()
         {
             var path = "Sobek_FB_Read.dsproj";

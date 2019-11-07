@@ -2398,6 +2398,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void CreatedOutputCoverageDataItemsAreNotCopyable()
         {
             //because of problems with copying coverages in netcdf this functionality has been disabled
@@ -2800,6 +2801,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
         # region Input / Output sync tests
 
         [Test]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         [Category((TestCategory.Integration))]
         public void ModifyingBranchesCollectionShouldClearOutputCoverages()
         {
@@ -2809,6 +2811,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category((TestCategory.Integration))]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModifyingBranchGeometryShouldClearOutputCoverages()
         {
             Assert.AreEqual(EffectOnOutput.Cleared,
@@ -2820,6 +2823,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category((TestCategory.Integration))]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModifyingBranchFeatureGeometryShouldClearOutputCoverages()
         {
             Assert.AreEqual(EffectOnOutput.Cleared,
@@ -2840,6 +2844,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category((TestCategory.Integration))]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void ModifyingBranchFeatureCollectionShouldClearOutputCoverages()
         {
             Assert.AreEqual(EffectOnOutput.Cleared,
@@ -2856,6 +2861,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void OutputDataIsClearedIfModelNetworkChanges()
         {
             Assert.AreEqual(EffectOnOutput.Cleared,
@@ -2864,6 +2870,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category((TestCategory.Integration))]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void OutputDataIsMarkedAsDisconnectedIfNetworkRouteIsAdded()
         {
             Assert.AreEqual(EffectOnOutput.Disconnected,
@@ -2885,6 +2892,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void OutputDataIsMarkedAsDisconnectedIfModelChanges()
         {
             Assert.AreEqual(EffectOnOutput.Disconnected,
@@ -2893,6 +2901,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void OutputDataIsMarkedAsDisconnectedIfModelOutputSettingChanges()
         {
             Assert.AreEqual(EffectOnOutput.Disconnected,
