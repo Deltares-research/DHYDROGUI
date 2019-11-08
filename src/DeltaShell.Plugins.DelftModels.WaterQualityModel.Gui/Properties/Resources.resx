@@ -403,4 +403,10 @@
   <data name="LoadsDataWizard_Welcome_message" xml:space="preserve">
     <value>This wizard will import a Loads File.</value>
   </data>
+  <data name="BoundaryDataWizardPage_Open_Boundary_Data_File" xml:space="preserve">
+    <value>Open Boundary Data File</value>
+  </data>
+  <data name="LoadsDataWizardPage_Open_Loads_Data_File" xml:space="preserve">
+    <value>Open Loads Data File</value>
+  </data>
 </root>

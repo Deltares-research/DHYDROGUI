@@ -188,27 +188,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file);
+            ContainsValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
         }
-
-        [Test]
-        public void GivenWaveModelNotCoupledToFlowModelAndWriteComFileIsTrueButComFilePathIsNotEmpty_WhenValidatingCoupling_ThenValidationErrorIsReturned()
-        {
-            // Given
-            var waveModel = new WaveModel
-            {
-                IsCoupledToFlow = false
-            };
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = false;
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = "somePath";
-
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file);
-        }
-
+        
         [TestCase(UsageFromFlowType.UseAndExtend)]
         [TestCase(UsageFromFlowType.UseDoNotExtend)]
         public void GivenWaveModelNotCoupledToFlowModelWithBedLevelUsageNotEqualToDoNotUse_WhenValidatingCoupling_ThenValidationErrorIsReturned(UsageFromFlowType usageType)

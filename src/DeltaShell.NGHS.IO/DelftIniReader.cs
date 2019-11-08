@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Properties;
@@ -67,14 +68,14 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Parses a line expecting a key-value-comment pattern.
         /// </summary>
-        /// <param name="line">Line to be parsed.</param>
+        /// <param name="lineContent">Line to be parsed.</param>
         /// <returns>A size 3 array of strings, where first item is the key, second the value and third the comment.</returns>
-        /// <exception cref="FormatException">When <paramref name="line"/> does not match to <see cref="KeyValueCommentPattern"/>.</exception>
-        protected virtual string[] GetKeyValueComment(string line)
+        /// <exception cref="FormatException">When <paramref name="lineContent"/> does not match to <see cref="KeyValueCommentPattern"/>.</exception>
+        protected virtual string[] GetKeyValueComment(string lineContent)
         {
             var result = new string[3];
 
-            var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+            MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, lineContent);
             if(matches.Count == 0) throw new FormatException(string.Format(Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_, 
                                                                            LineNumber, InputFilePath));
 
@@ -100,7 +101,7 @@ namespace DeltaShell.NGHS.IO
                 int endIndex = line.LastIndexOf("]", StringComparison.Ordinal);
                 if (endIndex < 3)
                 {
-                    throw new FormatException(String.Format("Invalid group on line {0} in file {1}", LineNumber, InputFilePath));
+                    throw new FormatException(string.Format(Resources.DelftIniReader_Invalid_group_on_line__0__in_file__1_, LineNumber, InputFilePath));
                 }
                 newCategory = line.Substring(1, endIndex - 1).Trim();
                 return true;

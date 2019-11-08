@@ -118,10 +118,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private static string ValidateCoupledTime(object waveModelObject, object dateTimeObject)
         {
-            WaveModel waveModel = (WaveModel) waveModelObject;
-            DateTime dateTime = (DateTime) dateTimeObject;
+            var waveModel = (WaveModel) waveModelObject;
+            var dateTime = (DateTime) dateTimeObject;
 
-            if (waveModel.StartTime < dateTime || waveModel.IsCoupledToFlow == false)
+            if (waveModel.StartTime < dateTime || !waveModel.IsCoupledToFlow)
             {
                 return string.Empty;
             }

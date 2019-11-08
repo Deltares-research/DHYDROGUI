@@ -82,14 +82,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return observationPoints;
         }
 
-        public void Write(string path, IEnumerable<T> features)
+        public void Write(string filePath, IEnumerable<T> features)
         {
-            Write(path, features, true);
+            Write(filePath, features, true);
         }
 
-        public IList<T> Read(string path)
+        public IList<T> Read(string filePath)
         {
-            return Read(path, true);
+            return Read(filePath, true);
         }
     }
 }

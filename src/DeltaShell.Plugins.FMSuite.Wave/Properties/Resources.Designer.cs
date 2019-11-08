@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -239,11 +239,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stand-alone wave model cannot use COM-file.
+        ///   Looks up a localized string similar to Stand-alone wave model cannot write COM-file.
         /// </summary>
-        public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file {
+        public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file {
             get {
-                return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file", resourceCulture);
+                return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file", resourceCulture);
             }
         }
         

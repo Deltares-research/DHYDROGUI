@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
             else
             {
-                if (model.WriteCOM || !string.IsNullOrEmpty(comFilePath))
+                if (model.WriteCOM)
                 {
                     issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
                                                    Resources
-                                                       .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file,
+                                                       .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file,
                                                    model));
                 }
 
