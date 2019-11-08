@@ -220,8 +220,8 @@
   <data name="WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file" xml:space="preserve">
     <value>Coupled wave model must use COM-file</value>
   </data>
-  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use_COM_file" xml:space="preserve">
-    <value>Stand-alone wave model cannot use COM-file</value>
+  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file" xml:space="preserve">
+    <value>Stand-alone wave model cannot write COM-file</value>
   </data>
   <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_" xml:space="preserve">
     <value>Stand-alone wave model cannot use {0}</value>

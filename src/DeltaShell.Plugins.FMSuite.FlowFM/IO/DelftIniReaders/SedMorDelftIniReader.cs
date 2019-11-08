@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
 {
     public class SedMorDelftIniReader : DelftIniReader
     {
@@ -30,14 +30,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
             @"\s*=\s*" +       // =
             @"(?<value>.*)";   // value
 
-        protected override string[] GetKeyValueComment(string line)
+        protected override string[] GetKeyValueComment(string lineContent)
         {
             var result = new string[3];
             if (LineNumber < 5) // in header (assume fixed header)
             {
                 // it's a bit crude, but the first few lines (eg, the header) in the .sed & .mor file have a 
                 // different parse format
-                MatchCollection matches = RegularExpression.GetMatches(KeyValuePattern, line);
+                MatchCollection matches = RegularExpression.GetMatches(KeyValuePattern, lineContent);
                 if (matches.Count == 0)
                 {
                     throw new FormatException(string.Format("Invalid key-value line on line {0} in file {1}",
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Readers
             }
             else
             {
-                MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+                MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, lineContent);
                 if (matches.Count == 0)
                 {
                     throw new FormatException(string.Format("Invalid key-value-comment line on line {0} in file {1}",

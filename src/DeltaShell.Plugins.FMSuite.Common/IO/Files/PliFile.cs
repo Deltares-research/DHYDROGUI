@@ -59,16 +59,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// <summary>
         /// Writes a polyline file for the collection of features <see cref="features" />
         /// </summary>
-        /// <param name="pliFilePath"> The target file path to write the .pli file to. </param>
+        /// <param name="filePath"> The target file path to write the .pli file to. </param>
         /// <param name="features">
         /// The features of type <typeparamref name="T" /> that are used to write data to file
-        /// at path <paramref name="pliFilePath" />
+        /// at path <paramref name="filePath" />
         /// </param>
-        public virtual void Write(string pliFilePath, IEnumerable<T> features)
+        public virtual void Write(string filePath, IEnumerable<T> features)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                OpenOutputFile(pliFilePath);
+                OpenOutputFile(filePath);
                 try
                 {
                     foreach (T feature2D in features)
@@ -124,30 +124,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// <summary>
         /// Reads a polyline file and creates a collection of features of type <typeparamref name="T" />.
         /// </summary>
-        /// <param name="pliFilePath"> File path to the .pli file that is being read. </param>
+        /// <param name="filePath"> File path to the .pli file that is being read. </param>
         /// <returns> A collection of features of type <typeparamref name="T" />. </returns>
-        public virtual IList<T> Read(string pliFilePath)
+        public virtual IList<T> Read(string filePath)
         {
-            return Read(pliFilePath, null);
+            return Read(filePath, null);
         }
 
         /// <summary>
         /// Reads a polyline file and creates a collection of features of type <typeparamref name="T" /> and optionally
         /// reports reading progress information to the user.
         /// </summary>
-        /// <param name="pliFilePath"> File path to the .pli file that is being read. </param>
+        /// <param name="filePath"> File path to the .pli file that is being read. </param>
         /// <param name="progress">
         /// Action that is invoked when reading a line in the .pli file.
         /// This informs the user about the reading progress.
         /// </param>
         /// <returns> A collection of features of type <typeparamref name="T" />. </returns>
-        public virtual IList<T> Read(string pliFilePath, Action<string, int, int> progress)
+        public virtual IList<T> Read(string filePath, Action<string, int, int> progress)
         {
             var features = new EventedList<T>();
 
-            OpenInputFile(pliFilePath);
+            OpenInputFile(filePath);
             var lineCount = 0;
-            int numberOfLines = File.ReadLines(pliFilePath).Count();
+            int numberOfLines = File.ReadLines(filePath).Count();
             try
             {
                 string line = GetNextLine();
@@ -169,14 +169,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     if (line == null)
                     {
                         throw new FormatException(
-                            $"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {pliFilePath}");
+                            $"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {filePath}");
                     }
 
                     var lineFields = (IList<string>) SplitLine(line).ToList();
                     if (lineFields.Count < 2)
                     {
                         throw new FormatException(
-                            $"Invalid numpoints/numcolums on line {LineNumber} in file {pliFilePath}");
+                            $"Invalid numpoints/numcolums on line {LineNumber} in file {filePath}");
                     }
 
                     int numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         if (line == null)
                         {
                             throw new FormatException(
-                                $"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {pliFilePath}");
+                                $"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {filePath}");
                         }
 
                         lineFields = SplitLine(line).ToList();
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             lineFields.Count > numColumns + 1)
                         {
                             throw new FormatException(
-                                $"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {pliFilePath}");
+                                $"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {filePath}");
                         }
 
                         double x = GetDouble(lineFields[0]);
@@ -223,13 +223,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             {
                                 T feature = CreateFeature2D(featureName + "-" + ++subFeatureCounter, points,
                                                             numColumns, columnNumericalValuesList,
-                                                            columnStringValuesList, locationNames, pliFilePath);
+                                                            columnStringValuesList, locationNames, filePath);
                                 features.Add(feature);
                             }
                             catch (Exception e)
                             {
                                 throw new FormatException(
-                                    $"Failed feature construction for {featureName} on line {LineNumber} in file {pliFilePath}: {e.Message}");
+                                    $"Failed feature construction for {featureName} on line {LineNumber} in file {filePath}: {e.Message}");
                             }
 
                             points.Clear();
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                                 catch (Exception e)
                                 {
                                     throw new FormatException(
-                                        $"Invalid placement of string value '{lineFields[j]}' on line {LineNumber} in file {pliFilePath}: {e.Message}");
+                                        $"Invalid placement of string value '{lineFields[j]}' on line {LineNumber} in file {filePath}: {e.Message}");
                                 }
                             }
 
@@ -281,13 +281,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                         {
                             T feature = CreateFeature2D(actualFeatureName, points, numColumns,
                                                         columnNumericalValuesList, columnStringValuesList,
-                                                        locationNames, pliFilePath);
+                                                        locationNames, filePath);
                             features.Add(feature);
                         }
                         catch (Exception e)
                         {
                             throw new FormatException(
-                                $"Failed feature construction for {actualFeatureName} on line {LineNumber} in file {pliFilePath}: {e.Message}");
+                                $"Failed feature construction for {actualFeatureName} on line {LineNumber} in file {filePath}: {e.Message}");
                         }
 
                         points.Clear();
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
                 if (maxColumns > NumericColumnAttributesKeys.Length + StringColumnAttributesKeys.Length + 2)
                 {
-                    Log.WarnFormat("In file {0}: columns {1} to {2} will be ignored.", pliFilePath,
+                    Log.WarnFormat("In file {0}: columns {1} to {2} will be ignored.", filePath,
                                    NumericColumnAttributesKeys.Length + StringColumnAttributesKeys.Length + 3,
                                    maxColumns);
                 }

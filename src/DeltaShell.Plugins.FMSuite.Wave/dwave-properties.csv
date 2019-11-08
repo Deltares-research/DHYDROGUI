@@ -83,8 +83,8 @@ Output,WriteSpec1D,Output,Tables,1D spectra,true|false,,,,,WriteTable,,,,,Write 
 Output,WriteSpec2D,Output,Tables,2D spectra,true|false,,,,,WriteTable,,,,,Write 2D spectra for output locations,
 Output,LocationFile,Output,Tables,Location file,FileName,,,,,WriteTable,,,,,File name of output locations,
 Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
+Output,COMFile,Output,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
 Output,WriteCOM,Output,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
-Output,COMFile,Output,Communication,Communication file,FileName,,,,,WriteCOM,,,,,Wave communication file (*_com.nc) for coupling,
 Output,COMWriteInterval,Output,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
 Output,AppendCOM,Output,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
 Output,MassFluxToCOM,Output,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),

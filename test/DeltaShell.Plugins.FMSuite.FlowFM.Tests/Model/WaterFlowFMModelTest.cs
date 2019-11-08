@@ -1878,6 +1878,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
+        [TestCase("C:\\project\\modelA\\modelA.mdu", "C:\\project\\modelB\\input\\modelB.mdu")]
+        [TestCase("C:\\modelA\\project\\modelA\\input\\modelA.mdu", "C:\\modelA\\project\\modelB\\input\\modelB.mdu")]
+        public void GetMduSavePath_WhenModelIsRenamedButFilesAndFolderStillHaveOldNames_ThenCorrectPathIsReturned(string mduFilePath, string expectedMduSavePath)
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel(mduFilePath))
+            {
+                model.Name = "modelB";
+
+                // Precondition
+                Assert.That(model.MduFilePath, Is.EqualTo(mduFilePath), "Precondition failed.");
+
+                // Call
+                string mduSavePath = model.MduSavePath;
+
+                // Assert
+                Assert.That(mduSavePath, Is.EqualTo(expectedMduSavePath),
+                            $"After renaming the model, the {nameof(model.MduSavePath)} should return the correct path.");
+            }
+        }
+
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
             var feature = new Weir2D()

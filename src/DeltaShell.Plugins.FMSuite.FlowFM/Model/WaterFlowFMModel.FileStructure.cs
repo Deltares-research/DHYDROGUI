@@ -81,8 +81,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return Name;
             }
 
+            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
             var modelDir = new DirectoryInfo(MduFilePath);
-            while (modelDir != null && modelDir.Name != Name)
+            while (modelDir != null && modelDir.Name != modelDirectoryName)
             {
                 modelDir = modelDir.Parent;
             }

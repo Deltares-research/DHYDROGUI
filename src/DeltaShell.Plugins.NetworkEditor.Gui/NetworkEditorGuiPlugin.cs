@@ -335,6 +335,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     } 
             };
 
+            yield return new ViewInfo<IStructure1D, AreaStructureView>()
+            {
+                AdditionalDataCheck = o => o.Branch == null,
+                Description = "Structure Editor"
+            };
+
             yield return new ViewInfo<Route, CoverageTableView>
             {
                 Description = "Map (spatial data)",

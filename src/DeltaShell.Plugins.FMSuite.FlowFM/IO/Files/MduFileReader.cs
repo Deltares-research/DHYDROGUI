@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <remarks> The stream is implicitly disposed. </remarks>
         public static void Read(Stream stream, string filePath, WaterFlowFMModelDefinition definition)
         {
-            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(stream, filePath);
+            IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(stream, filePath);
 
             RemoveRedundantProperties(categories, definition);
             UpdateLegacyNames(categories);

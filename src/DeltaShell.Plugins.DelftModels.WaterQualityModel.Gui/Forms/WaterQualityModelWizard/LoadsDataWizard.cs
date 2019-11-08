@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Controls.Swf;
+﻿using DelftTools.Controls.Swf;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
 {
-    class LoadsDataWizard: WizardDialog, IConfigureDialog
+    /// <summary>
+    /// Wizard for importing loads data from a csv file.
+    /// </summary>
+    internal class LoadsDataWizard : WizardDialog, IConfigureDialog
     {
-        private LoadsDataTableImporter loadsDataItemFileImporter;
         private readonly LoadsDataWizardPage loadsDataWizardPage;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="LoadsDataWizard"/>.
+        /// </summary>
         public LoadsDataWizard()
         {
             Height = 700;
@@ -27,10 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     Resources.LoadsDataWizardPage_Description);
         }
 
-        public void Configure(object targetItemFileImporter)
+        public void Configure(object model)
         {
-            loadsDataItemFileImporter = (LoadsDataTableImporter)targetItemFileImporter;
-            loadsDataItemFileImporter.FilePath = loadsDataWizardPage.CsvLoadsPath;
+            var importer = (LoadsDataTableImporter) model;
+            importer.FilePath = loadsDataWizardPage.CsvFilePath;
         }
     }
 }

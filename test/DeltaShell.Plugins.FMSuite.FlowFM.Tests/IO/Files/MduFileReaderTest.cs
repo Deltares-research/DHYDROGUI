@@ -165,18 +165,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         }
 
         [Test]
-        public void Read_EmptyPropertyName_ThenNewPropertyValueIsAddedWithEmptyValue()
+        [TestCaseSource(nameof(GetMultiValuedPropertiesFileContents))]
+        public void Read_MultiValuedProperty_ThenNewPropertyValueIsAddedWithMultipleValues(string fileContent)
         {
-            string fileContent = "[Geometry]"
-                                 + Environment.NewLine
-                                 + "DryPointsFile = myPoints1_dry.pol myPoints2_dry.pol # Dry points files";
-
             ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("DryPointsFile");
                 AssertPropertyValues(property, "geometry", new List<string> { "myPoints1_dry.pol", "myPoints2_dry.pol" }, 
                                      "Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)");
             });
+        }
+
+        private IEnumerable<string> GetMultiValuedPropertiesFileContents()
+        {
+            yield return "[Geometry]"
+                         + Environment.NewLine
+                         + "DryPointsFile = myPoints1_dry.pol myPoints2_dry.pol # Dry points files";
+
+            yield return "[Geometry]"
+                         + Environment.NewLine
+                         + @"DryPointsFile = myPoints1_dry.pol \"
+                         + Environment.NewLine
+                         + "myPoints2_dry.pol # Dry points files";
         }
 
         [Test]
@@ -223,14 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, string propertyValue, string propertyComment)
-        {
-            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
-            Assert.That(property.Value, Is.EqualTo(propertyValue));
-            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
-        }
-
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, IReadOnlyCollection<string> propertyValue, string propertyComment)
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
         {
             Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
             Assert.That(property.Value, Is.EqualTo(propertyValue));

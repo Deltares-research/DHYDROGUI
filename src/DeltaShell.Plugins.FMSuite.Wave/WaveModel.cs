@@ -51,41 +51,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
-
+        
         /// <summary>
-        /// Mwaaah...
+        /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
+        /// to a FM model.
         /// </summary>
-        public bool IsCoupledToFlow
-        {
-            get => isCoupledToFlow;
-            set
-            {
-                isCoupledToFlow = value;
-                if (!isCoupledToFlow)
-                {
-                    DeCoupleFromFlow();
-                }
-            }
-        }
-
-        [EditAction]
-        private void DeCoupleFromFlow()
-        {
-            ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM)
-                           .SetValueAsString("false");
-            foreach (WaveDomainData waveDomainData in WaveDomainHelper.GetAllDomains(OuterDomain))
-            {
-                waveDomainData.HydroFromFlowData.BedLevelUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.WaterLevelUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.VelocityUsage = UsageFromFlowType.DoNotUse;
-                waveDomainData.HydroFromFlowData.WindUsage = UsageFromFlowType.DoNotUse;
-            }
-
-            ModelDefinition.DefaultBedLevelUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultWaterLevelUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultVelocityUsage = UsageFromFlowType.DoNotUse;
-            ModelDefinition.DefaultWindUsage = UsageFromFlowType.DoNotUse;
-        }
+        /// <value>
+        ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
+        /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
+        /// </value>
+        public bool IsCoupledToFlow { get; set; }
 
         public int SimulationMode
         {
@@ -633,13 +608,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 {
                     BeginEdit(new DefaultEditAction("Switching write COM"));
                     WriteCOM = WriteCOM;
-                    if (!WriteCOM)
-                    {
-                        ModelDefinition
-                            .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
-                            .SetValueAsString("");
-                    }
-
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WriteTable,
@@ -1570,8 +1538,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private string path;
         private WaveModelDefinition modelDefinition;
-        private bool isCoupledToFlow;
-
         private DateTime startTime;
 
         private DateTime stopTime;

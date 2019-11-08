@@ -5,11 +5,16 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
 {
-    class BoundaryDataWizard: WizardDialog, IConfigureDialog
+    /// <summary>
+    /// Wizard for importing boundary data from a csv file.
+    /// </summary>
+    internal class BoundaryDataWizard : WizardDialog, IConfigureDialog
     {
-        private BoundaryDataTableImporter boundaryDataItemFileImporter;
         private readonly BoundaryDataWizardPage boundaryDataWizardPage;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="BoundaryDataWizard"/>.
+        /// </summary>
         public BoundaryDataWizard()
         {
             Height = 700;
@@ -22,10 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     Resources.BoundaryDataWizardPage_Description);
         }
 
-        public void Configure(object targetItemFileImporter)
+        public void Configure(object model)
         {
-            boundaryDataItemFileImporter = (BoundaryDataTableImporter)targetItemFileImporter;
-            boundaryDataItemFileImporter.FilePath = boundaryDataWizardPage.CsvBoundaryPath;
+            var importer = (BoundaryDataTableImporter) model;
+            importer.FilePath = boundaryDataWizardPage.CsvFilePath;
         }
     }
 }
