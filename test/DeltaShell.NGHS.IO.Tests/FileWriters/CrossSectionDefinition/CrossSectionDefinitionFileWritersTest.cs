@@ -86,50 +86,56 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
             
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Yz, typeValue);
-            
+
+            var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
+            Assert.AreEqual("50.000", thalwegValue);
+
             var yzCountValue = content.GetPropertyValue(DefinitionPropertySettings.YZCount.Key);
             Assert.AreEqual("6", yzCountValue);
 
-            var yValuesValue = content.GetPropertyValue(DefinitionPropertySettings.YValues.Key);
-            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yValuesValue);
+            var yCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
+            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yCoordsValue);
 
-            var zValuesValue = content.GetPropertyValue(DefinitionPropertySettings.ZValues.Key);
-            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zValuesValue);
-            
-            var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("50.000", thalwegValue);
-            
-            var deltaZStorageValue = content.GetPropertyValue(DefinitionPropertySettings.DeltaZStorage.Key);
-            Assert.AreEqual("0.000 0.000 0.000 0.000 0.000 0.000", deltaZStorageValue);
+            var zCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
+            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zCoordsValue);
+
+            var sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
+            Assert.AreEqual("3", sectionCountValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionIds.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionPositions.Key));
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Yz, typeValue);
 
-            yzCountValue = content.GetPropertyValue(DefinitionPropertySettings.YZCount.Key);
-            Assert.AreEqual("6", yzCountValue);
-
-            yValuesValue = content.GetPropertyValue(DefinitionPropertySettings.YValues.Key);
-            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yValuesValue);
-
-            zValuesValue = content.GetPropertyValue(DefinitionPropertySettings.ZValues.Key);
-            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zValuesValue);
-
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("50.000", thalwegValue);
 
-            deltaZStorageValue = content.GetPropertyValue(DefinitionPropertySettings.DeltaZStorage.Key);
-            Assert.AreEqual("0.000 0.000 0.000 0.000 0.000 0.000", deltaZStorageValue);
+            yzCountValue = content.GetPropertyValue(DefinitionPropertySettings.YZCount.Key);
+            Assert.AreEqual("6", yzCountValue);
+
+            yCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
+            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yCoordsValue);
+
+            zCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
+            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zCoordsValue);
+
+            sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
+            Assert.AreEqual("3", sectionCountValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionIds.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionPositions.Key));
         }
 
         [Test]
@@ -157,7 +163,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -178,18 +184,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             var zCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
             Assert.AreEqual("10.000 6.500 2.500 2.500 6.500 10.000", zCoorsValue);
-            
-            var yValuesValue = content.GetPropertyValue(DefinitionPropertySettings.YValues.Key);
-            Assert.AreEqual("0.000 47.170 94.340 141.510 188.680 235.850", yValuesValue);
 
-            var zValuesValue = content.GetPropertyValue(DefinitionPropertySettings.ZValues.Key);
-            Assert.AreEqual("10.000 6.500 2.500 2.500 6.500 10.000", zValuesValue);
+            var sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
+            Assert.AreEqual("3", sectionCountValue);
 
-            var deltaZStorageValue = content.GetPropertyValue(DefinitionPropertySettings.DeltaZStorage.Key);
-            Assert.AreEqual("0.000 0.000 0.000 0.000 0.000 0.000", deltaZStorageValue);
-            
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionIds.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionPositions.Key));
+
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(10, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -210,15 +213,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             zCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
             Assert.AreEqual("10.500 7.000 3.000 3.000 7.000 10.500", zCoorsValue);
-            
-            yValuesValue = content.GetPropertyValue(DefinitionPropertySettings.YValues.Key);
-            Assert.AreEqual("0.000 47.170 94.340 141.510 188.680 235.850", yValuesValue);
 
-            zValuesValue = content.GetPropertyValue(DefinitionPropertySettings.ZValues.Key);
-            Assert.AreEqual("10.500 7.000 3.000 3.000 7.000 10.500", zValuesValue);
+            sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
+            Assert.AreEqual("3", sectionCountValue);
 
-            deltaZStorageValue = content.GetPropertyValue(DefinitionPropertySettings.DeltaZStorage.Key);
-            Assert.AreEqual("0.000 0.000 0.000 0.000 0.000 0.000", deltaZStorageValue);
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionIds.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FrictionPositions.Key));
 
         }
 
@@ -423,7 +423,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(6, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -431,8 +431,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Rectangle, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
             var widthValue = content.GetPropertyValue(DefinitionPropertySettings.RectangleWidth.Key);
             Assert.AreEqual("100.000", widthValue);
 
@@ -442,7 +445,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(6, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -479,40 +482,62 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Elliptical, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Elliptical, template);
+
             var widthValue = content.GetPropertyValue(DefinitionPropertySettings.EllipseWidth.Key);
             Assert.AreEqual("100.000", widthValue);
 
             var heightValue = content.GetPropertyValue(DefinitionPropertySettings.EllipseHeight.Key);
             Assert.AreEqual("80.000", heightValue);
 
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
+
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(7, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Elliptical, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Elliptical, template);
+
             widthValue = content.GetPropertyValue(DefinitionPropertySettings.EllipseWidth.Key);
             Assert.AreEqual("200.000", widthValue);
 
             heightValue = content.GetPropertyValue(DefinitionPropertySettings.EllipseHeight.Key);
             Assert.AreEqual("160.000", heightValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
         }
@@ -536,7 +561,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(5, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
@@ -546,13 +571,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("0.000", thalwegValue);
 
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
             var diameterValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
             Assert.AreEqual("100.000", diameterValue);
 
             CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(5, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
@@ -561,6 +589,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
 
             diameterValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
             Assert.AreEqual("200.000", diameterValue);
@@ -587,34 +618,62 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Egg, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
-            var eggWidthValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
-            Assert.AreEqual("100.000", eggWidthValue);
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Egg, template);
+
+            var widthValue = content.GetPropertyValue(DefinitionPropertySettings.EggWidth.Key);
+            Assert.AreEqual("100.000", widthValue);
+
+            var heightValue = content.GetPropertyValue(DefinitionPropertySettings.EggHeight.Key);
+            Assert.AreEqual("150.000", heightValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Egg, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
-            eggWidthValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
-            Assert.AreEqual("200.000", eggWidthValue);
+            Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Egg, template);
+
+            widthValue = content.GetPropertyValue(DefinitionPropertySettings.EggWidth.Key);
+            Assert.AreEqual("200.000", widthValue);
+
+            heightValue = content.GetPropertyValue(DefinitionPropertySettings.EggHeight.Key);
+            Assert.AreEqual("300.000", heightValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
         }
@@ -638,15 +697,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(8, content.Properties.Count);
+            Assert.AreEqual(12, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Arch, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
             
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Arch, template);
 
             var widthValue = content.GetPropertyValue(DefinitionPropertySettings.ArchCrossSectionWidth.Key);
             Assert.AreEqual("100.000", widthValue);
@@ -657,18 +722,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var archHeightValue = content.GetPropertyValue(DefinitionPropertySettings.ArchHeight.Key);
             Assert.AreEqual("150.000", archHeightValue);
 
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
+
             CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(8, content.Properties.Count);
+            Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Arch, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Arch, template);
 
             widthValue = content.GetPropertyValue(DefinitionPropertySettings.ArchCrossSectionWidth.Key);
             Assert.AreEqual("200.000", widthValue);
@@ -680,12 +756,19 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("300.000", archHeightValue);
 
             CheckCrossSectionStandardPropertyValues(content);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
+
         }
 
         private static void CheckCrossSectionStandardPropertyValues(DelftIniCategory category)
         {
-            var closedValue = category.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
-            Assert.That(closedValue, Is.EqualTo("1"));
+            //closed key is not used anymore in fm 1d rural or urban... is part of branch attribute list, not of cs def
+            //var closedValue = category.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
+            //Assert.That(closedValue, Is.EqualTo("1"));
         }
 
         [Test]
@@ -707,36 +790,65 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
+
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Cunette, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Mouth, template);
+
             var widthValue = content.GetPropertyValue(DefinitionPropertySettings.CunetteWidth.Key);
             Assert.AreEqual("100.000", widthValue);
+
+            var heightValue = content.GetPropertyValue(DefinitionPropertySettings.CunetteHeight.Key);
+            Assert.AreEqual("63.400", heightValue);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Cunette, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Mouth, template);
+
             widthValue = content.GetPropertyValue(DefinitionPropertySettings.CunetteWidth.Key);
             Assert.AreEqual("200.000", widthValue);
 
+            heightValue = content.GetPropertyValue(DefinitionPropertySettings.CunetteHeight.Key);
+            Assert.AreEqual("126.800", heightValue);
+
             CheckCrossSectionStandardPropertyValues(content);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
         }
 
         [Test]
@@ -758,16 +870,22 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(12, content.Properties.Count);
+            Assert.AreEqual(16, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.SteelCunette, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.SteelMouth, template);
+
             var heightValue = content.GetPropertyValue(DefinitionPropertySettings.SteelCunetteHeight.Key);
             Assert.AreEqual("100.000", heightValue);
 
@@ -789,19 +907,30 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var a1Value = content.GetPropertyValue(DefinitionPropertySettings.SteelCunetteA1.Key);
             Assert.AreEqual("135.000", a1Value);
 
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
+
             CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(12, content.Properties.Count);
+            Assert.AreEqual(16, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.SteelCunette, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
+            Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.SteelMouth, template);
+
             heightValue = content.GetPropertyValue(DefinitionPropertySettings.SteelCunetteHeight.Key);
             Assert.AreEqual("200.000", heightValue);
 
@@ -823,6 +952,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             a1Value = content.GetPropertyValue(DefinitionPropertySettings.SteelCunetteA1.Key);
             Assert.AreEqual("120.000", a1Value);
 
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
+
             CheckCrossSectionStandardPropertyValues(content);
         }
         
@@ -833,7 +967,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.NotNull(branch, "No branched added to the network");
 
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 1, 30.0, 100.0, 200.0, 150.0);
-
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 2, 40.0, 200.0, 400.0, 300.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
@@ -845,46 +978,68 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(8, content.Properties.Count);
+            Assert.AreEqual(12, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Trapezium, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
-            var widthValue = content.GetPropertyValue(DefinitionPropertySettings.Slope.Key);
-            Assert.AreEqual("100.000", widthValue);
+            Assert.AreEqual("0.000", thalwegValue);
+
+            var frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            var template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Trapezium, template);
+
+            var slopeValue = content.GetPropertyValue(DefinitionPropertySettings.Slope.Key);
+            Assert.AreEqual("100.000", slopeValue);
 
             var heightValue = content.GetPropertyValue(DefinitionPropertySettings.MaximumFlowWidth.Key);
             Assert.AreEqual("200.000", heightValue);
 
-            var archHeightValue = content.GetPropertyValue(DefinitionPropertySettings.BottomWidth.Key);
-            Assert.AreEqual("150.000", archHeightValue);
+            var baseWidth = content.GetPropertyValue(DefinitionPropertySettings.BottomWidth.Key);
+            Assert.AreEqual("150.000", baseWidth);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(8, content.Properties.Count);
+            Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
-            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Trapezium, typeValue);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
 
             thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
-            Assert.AreEqual("0.000", thalwegValue); 
-            
-            widthValue = content.GetPropertyValue(DefinitionPropertySettings.Slope.Key);
-            Assert.AreEqual("200.000", widthValue);
+            Assert.AreEqual("0.000", thalwegValue);
+
+            frictionId = content.GetPropertyValue(DefinitionPropertySettings.FrictionId.Key);
+            Assert.AreEqual("Main", frictionId);
+
+            template = content.GetPropertyValue(DefinitionPropertySettings.Template.Key);
+            Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Trapezium, template);
+
+            slopeValue = content.GetPropertyValue(DefinitionPropertySettings.Slope.Key);
+            Assert.AreEqual("200.000", slopeValue);
 
             heightValue = content.GetPropertyValue(DefinitionPropertySettings.MaximumFlowWidth.Key);
             Assert.AreEqual("400.000", heightValue);
 
-            archHeightValue = content.GetPropertyValue(DefinitionPropertySettings.BottomWidth.Key);
-            Assert.AreEqual("300.000", archHeightValue);
+            baseWidth = content.GetPropertyValue(DefinitionPropertySettings.BottomWidth.Key);
+            Assert.AreEqual("300.000", baseWidth);
+
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
+            Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
             CheckCrossSectionStandardPropertyValues(content);
         }

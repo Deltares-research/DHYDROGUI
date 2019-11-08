@@ -19,7 +19,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         protected override void AddCommonProperties(ICrossSectionDefinition crossSectionDefinition)
         {
             base.AddCommonProperties(crossSectionDefinition);
-            IniCategory.AddProperty(DefinitionPropertySettings.Closed, 1);
         }
 
         protected override void AddShapeMeasurementProperties(ICrossSectionStandardShape shape)
