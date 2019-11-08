@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
@@ -69,6 +70,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         protected virtual void ReconnectOutputFiles(string outputDirectory, bool switchTo = false)
         {
             var outputDirInfo = new DirectoryInfo(outputDirectory);
+            if (!outputDirInfo.Exists)
+            {
+                return;
+            }
 
             FileInfo[] files = outputDirInfo.GetFiles();
             string mapFilePath = FindFileThatEndsWith(files, FileConstants.MapFileExtension);
