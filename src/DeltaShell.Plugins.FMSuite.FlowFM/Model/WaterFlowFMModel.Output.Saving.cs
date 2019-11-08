@@ -81,16 +81,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            string waqOutputDir = Path.Combine(PersistentOutputDirectoryPath, DelwaqOutputDirectoryName);
-            string snappedOutputDir = Path.Combine(PersistentOutputDirectoryPath, FileConstants.SnappedFeaturesDirectoryName);
-            ReconnectOutputFiles(MapFilePath, HisFilePath, ClassMapFilePath, waqOutputDir, snappedOutputDir, true);
-
             if (sourceIsWorkingDir)
             {
                 CleanDirectory(WorkingDirectoryPath);
             }
 
-            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+            currentOutputDirectoryPath = targetOutputDirectoryPath;
+
+            ReconnectOutputFiles(currentOutputDirectoryPath, true);
         }
 
         private void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -65,27 +66,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             OutputSnappedFeaturesPath = null;
         }
 
-        protected virtual void ReconnectOutputFiles(string outputDirectory)
+        protected virtual void ReconnectOutputFiles(string outputDirectory, bool switchTo = false)
         {
-            string mapFilePath = Path.Combine(outputDirectory, ModelDefinition.MapFileName);
-            string hisFilePath = Path.Combine(outputDirectory, ModelDefinition.HisFileName);
-            string classMapFilePath = Path.Combine(outputDirectory, ModelDefinition.ClassMapFileName);
-            string waqFilePath = Path.Combine(outputDirectory, DelwaqOutputDirectoryName);
-            string snappedFolderPath = Path.Combine(outputDirectory, FileConstants.SnappedFeaturesDirectoryName);
+            var outputDirInfo = new DirectoryInfo(outputDirectory);
 
-            ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqFilePath, snappedFolderPath);
+            FileInfo[] files = outputDirInfo.GetFiles();
+            string mapFilePath = FindFileThatEndsWith(files, FileConstants.MapFileExtension);
+            string hisFilePath = FindFileThatEndsWith(files, FileConstants.HisFileExtension);
+            string classMapFilePath = FindFileThatEndsWith(files, FileConstants.ClassMapFileExtension);
+
+            DirectoryInfo[] directories = outputDirInfo.GetDirectories();
+            string waqOutputDir = directories
+                                  .FirstOrDefault(d => d.Name.StartsWith(FileConstants.PrefixDelwaqDirectoryName, StringComparison.Ordinal))?
+                                  .FullName;
+            string snappedOutputDir = directories
+                                      .FirstOrDefault(d => d.Name.Equals(FileConstants.SnappedFeaturesDirectoryName))?
+                                      .FullName;
+
+            ReconnectOutputFiles(mapFilePath, hisFilePath, classMapFilePath, waqOutputDir, snappedOutputDir, switchTo);
+        }
+
+        private static string FindFileThatEndsWith(IEnumerable<FileInfo> files, string extension)
+        {
+            return files
+                   .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                   .FullName;
         }
 
         private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string classMapFilePath,
                                           string waqFolderPath, string snappedFolderPath, bool switchTo = false)
         {
-            bool existsMapFile = File.Exists(mapFilePath);
-            bool existsHisFile = File.Exists(hisFilePath);
-            bool existsClassMapFile = File.Exists(classMapFilePath);
-            bool existsWaqFolder = Directory.Exists(waqFolderPath);
-            bool existsSnappedFolder = Directory.Exists(snappedFolderPath);
-
-            if (!existsMapFile && !existsHisFile && !existsClassMapFile && !existsWaqFolder && !existsSnappedFolder)
+            if (mapFilePath == null &&
+                hisFilePath == null && 
+                classMapFilePath == null &&
+                waqFolderPath == null &&
+                snappedFolderPath == null)
             {
                 return;
             }
@@ -94,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
-            if (existsMapFile)
+            if (mapFilePath != null)
             {
                 ReportProgressText("Reading map file");
                 ICoordinateSystem cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
@@ -118,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            if (existsHisFile)
+            if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
                 FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
@@ -132,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            if (existsClassMapFile)
+            if (classMapFilePath != null)
             {
                 ReportProgressText("Reading class map file");
                 FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
@@ -146,12 +161,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            if (existsWaqFolder)
+            if (waqFolderPath != null)
             {
                 DelwaqOutputDirectoryPath = waqFolderPath;
             }
 
-            if (existsSnappedFolder)
+            if (snappedFolderPath != null)
             {
                 OutputSnappedFeaturesPath = snappedFolderPath;
             }
