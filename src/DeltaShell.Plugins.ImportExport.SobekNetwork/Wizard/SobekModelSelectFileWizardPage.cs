@@ -38,7 +38,6 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard
                 }
                 return fileName;
             }
-            set {}
         }
 
         private string CaseListFileName

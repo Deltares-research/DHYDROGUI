@@ -177,7 +177,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers
             this.selectLandUseFileControl.BackColor = System.Drawing.Color.Transparent;
             this.selectLandUseFileControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.selectLandUseFileControl.FileDescription = "Filename";
-            this.selectLandUseFileControl.FileName = null;
             this.selectLandUseFileControl.Filter = "Shape files |*.shp";
             this.selectLandUseFileControl.Location = new System.Drawing.Point(20, 0);
             this.selectLandUseFileControl.Name = "selectLandUseFileControl";

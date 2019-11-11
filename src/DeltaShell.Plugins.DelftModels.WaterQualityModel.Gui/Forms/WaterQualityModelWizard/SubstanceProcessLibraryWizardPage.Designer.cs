@@ -273,7 +273,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             this.customLibraryPanel.BackColor = System.Drawing.Color.Transparent;
             this.customLibraryPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.customLibraryPanel.FileDescription = "Sub file";
-            this.customLibraryPanel.FileName = null;
             this.customLibraryPanel.Filter = "Sub files|*.sub";
             this.customLibraryPanel.Location = new System.Drawing.Point(3, 3);
             this.customLibraryPanel.Name = "customLibraryPanel";

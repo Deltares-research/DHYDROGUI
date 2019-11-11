@@ -30,11 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             var timerCategory = waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.StartTime).PropertyDefinition.Category;
             var baseTimeIssues = base.ValidateModelTimers(model, outputTimeStep, viewData).ToList();
-            if (timerCategory != null)
-            {
-                baseTimeIssues.ForEach(i => i.Subject = timerCategory);
-            }
-            
+            baseTimeIssues = baseTimeIssues.Select(bti => new ValidationIssue(timerCategory, bti.Severity, bti.Message, bti.ViewData)).ToList();
+
             foreach (var issue in baseTimeIssues)
                 yield return issue;
 
