@@ -54,38 +54,35 @@ namespace DeltaShell.NGHS.IO.FileReaders
             {
                 try
                 {
-                    var crossSectionLocationInfo = csIniLocations.FirstOrDefault(csIniLocation =>
+                    
+                    var crossSectionLocationInfos = csIniLocations.Where(csIniLocation =>
                     {
                         var crossSectionLocationDefinitionId =
                             csIniLocation.ReadProperty<string>(CrossSectionRegion.Definition.Key);
                         return crossSectionLocationDefinitionId == crossSectionDefinition.Name;
-                    });
+                    }).ToArray();
 
-                    if (crossSectionLocationInfo == null)
+                    if (!crossSectionLocationInfos.Any())
                         continue;
-                        //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
+                    //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
 
+                    
+                    var crossSectionLocationInfo = crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Id.Key).Equals(crossSectionDefinition.Name));
                     var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(CrossSectionRegion.Shift.Key);
                     crossSectionDefinition.ShiftLevel(shiftLevel);
 
-                    var branchId = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.BranchId.Key);
-                    var chainage = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Chainage.Key);
-                    var crossSectionName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Id.Key);
-
-                    /*optional err message needs to be handled*/
-                    var crossSectionLongName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Name.Key, true);
-
-                    var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
-                    if (branch == null)
-                        throw new FileReadingException(string.Format("The read cross section '{0}' has a branch id ({1}) which is not available in the model.", crossSectionName, branchId));
+                    var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
+                    var crossSection = AddCrossSectionToNetwork(network, crossSectionLocationInfo, crossSectionDefinition);
                     
-                    var crossSection = new CrossSection(crossSectionDefinition)
+                    if (isSharedCrossSection)
                     {
-                        Name = crossSectionName,
-                        LongName = crossSectionLongName,
-                        Chainage = chainage
-                    };
-                    branch.BranchFeatures.Add(crossSection);
+                        crossSection.ShareDefinitionAndChangeToProxy();
+                        
+                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Where(cslInfo => !cslInfo.ReadProperty<string>(LocationRegion.Id.Key).Equals(crossSectionDefinition.Name)))
+                        {
+                            AddCrossSectionToNetwork(network, sectionLocationInfo, (ICrossSectionDefinition)crossSection.Definition.Clone());
+                        }
+                    }
                 }
                 catch (FileReadingException fileReadingException)
                 {
@@ -103,6 +100,32 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     $"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}"
                     );
             }
+        }
+
+        private static CrossSection AddCrossSectionToNetwork(IHydroNetwork network, DelftIniCategory crossSectionLocationInfo,
+            ICrossSectionDefinition crossSectionDefinition)
+        {
+            var branchId = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.BranchId.Key);
+            var chainage = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Chainage.Key);
+            var crossSectionName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Id.Key);
+
+            /*optional err message needs to be handled*/
+            var crossSectionLongName = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.Name.Key, true);
+
+            var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
+            if (branch == null)
+                throw new FileReadingException(string.Format(
+                    "The read cross section '{0}' has a branch id ({1}) which is not available in the model.", crossSectionName,
+                    branchId));
+
+            var crossSection = new CrossSection(crossSectionDefinition)
+            {
+                Name = crossSectionName,
+                LongName = crossSectionLongName,
+                Chainage = chainage
+            };
+            branch.BranchFeatures.Add(crossSection);
+            return crossSection;
         }
 
         public static ICrossSectionDefinition TransformDefinitionCategoryIntoCrossSectionDefinition(IDelftIniCategory crossSectionDefinitionCategory, IHydroNetwork network)

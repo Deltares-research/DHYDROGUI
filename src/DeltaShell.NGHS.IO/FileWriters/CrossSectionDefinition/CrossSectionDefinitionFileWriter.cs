@@ -59,7 +59,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                         definitionRegion = AddGroundLayer(definitionRegion, groundLayer);
                         break;
                 }
-                if (sharedCrossSectionDefinitions.Contains(crossSectionDefinition)) definitionRegion.AddProperty(DefinitionPropertySettings.IsShared.Key, 1, DefinitionPropertySettings.IsShared.Description);
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
             }
