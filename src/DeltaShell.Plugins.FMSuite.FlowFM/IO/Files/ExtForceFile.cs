@@ -6,6 +6,7 @@ using System.Security;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -907,6 +908,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
              * This is only meant for SedimentConcentration */
             IEnumerable<string> sedConcSpatiallyVarying =
                 modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
+
+            LogHandler log = new LogHandler("Ext force warning handler");
+
             foreach (string spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
                 IList<ISpatialOperation> spatialOperations =
@@ -926,7 +930,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             spatiallyVaryingSedimentPropertyName);
                     }
 
-                    log.Warn(warnMsg);
+                    log.ReportWarning(warnMsg);
+ 
                     continue;
                 }
 
@@ -946,6 +951,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 extForceFileItems.AddRange(forceFileItems);
             }
+
+            log.LogReport();
 
             return extForceFileItems;
         }
