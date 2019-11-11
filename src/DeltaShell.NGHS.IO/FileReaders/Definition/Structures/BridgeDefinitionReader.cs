@@ -17,14 +17,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var crossSectionDefinitionId = category.ReadProperty<string>(StructureRegion.CsDefId.Key);
             var definition = crossSectionDefinitions.FirstOrDefault(cd => cd.Name.ToLower() == crossSectionDefinitionId);
 
+            var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
+
             return new Bridge
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 Branch = branch,
                 Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                BridgeType = GetBridgeTypeFromShapeType(standardCrossSectionDefinition?.ShapeType),
                 FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key),
                 BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key),
-                //CrossSectionDefinition = definition, 
+                TabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition(), 
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key),
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
@@ -32,6 +35,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 PillarWidth = category.ReadProperty<double>(StructureRegion.PillarWidth.Key, true),
                 ShapeFactor = category.ReadProperty<double>(StructureRegion.FormFactor.Key, true),
             };
+        }
+
+        private static BridgeType GetBridgeTypeFromShapeType(CrossSectionStandardShapeType? shapeType)
+        {
+            switch (shapeType)
+            {
+                case CrossSectionStandardShapeType.Rectangle:
+                    return BridgeType.Rectangle;
+                case null:
+                    return BridgeType.Pillar;
+                default:
+                    return BridgeType.Tabulated;
+            }
         }
     }
 }
