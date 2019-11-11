@@ -6,7 +6,7 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using log4net;
 
@@ -263,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (BcQuantityData quantity in block.Quantities)
             {
-                WriteKeyValuePairLine(QuantityKey, quantity.Quantity);
+                WriteKeyValuePairLine(QuantityKey, quantity.QuantityName);
                 if (quantity.Unit != null)
                 {
                     WriteKeyValuePairLine(UnitKey, quantity.Unit);
@@ -412,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (split.Length == 2)
                     {
-                        quantityData = new BcQuantityData {Quantity = split[1]};
+                        quantityData = new BcQuantityData {QuantityName = split[1]};
                     }
                 }
 

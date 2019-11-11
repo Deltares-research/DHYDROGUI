@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using GeoAPI.Geometries;
@@ -18,6 +19,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class BcFileFlowBoundaryDataBuilderTest
     {
+        private BcFileFlowBoundaryDataBuilder builder;
+
+        [SetUp]
+        public void Setup()
+        {
+            builder = new BcFileFlowBoundaryDataBuilder();
+        }
+
+        [Test]
+        public void GivenTracerBlockData_WhenInsertingBoundaryData_ThenTracerNameIsUpdatedCorrectlyAndInsertWasSuccessful()
+        {
+            // Given
+            const string supportPointName = "boundary_0001";
+            const string tracerName = "MyTracer";
+            IEnumerable<BoundaryConditionSet> boundaryConditionSets = CreateBoundaryConditionSets(supportPointName);
+
+            var blockData = new BcBlockData
+            {
+                SupportPoint = supportPointName,
+                FunctionType = "timeseries",
+                Quantities = new List<BcQuantityData>
+                {
+                    new BcQuantityData
+                    {
+                        QuantityName = "tracerbnd" + tracerName
+                    }
+                }
+            };
+
+            // When
+            bool insertWasSuccessful = builder.InsertBoundaryData(boundaryConditionSets, blockData);
+
+            // Then
+            Assert.That(insertWasSuccessful, Is.True);
+            Assert.That(blockData.Quantities.Single().TracerName, Is.EqualTo(tracerName));
+
+        }
+
+        private static IEnumerable<BoundaryConditionSet> CreateBoundaryConditionSets(string supportPointName)
+        {
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                }),
+                Attributes = new DictionaryFeatureAttributeCollection
+                {
+                    {
+                        "Locations", new List<string>
+                        {
+                            supportPointName
+                        }
+                    }
+                }
+            };
+
+            return new[]
+            {
+                new BoundaryConditionSet
+                {
+                    Feature = feature
+                }
+            };
+        }
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ImportTwoAstroWaterLevelBoundaryConditions()
@@ -33,8 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
             var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
-
-            var builder = new BcFileFlowBoundaryDataBuilder();
 
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(1));
@@ -69,8 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
-
-            var builder = new BcFileFlowBoundaryDataBuilder();
 
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks.ElementAt(0));
 
@@ -118,8 +182,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
             var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
-
-            var builder = new BcFileFlowBoundaryDataBuilder();
 
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
@@ -196,8 +258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();
 
-            var builder = new BcFileFlowBoundaryDataBuilder();
-
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
             Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
@@ -268,8 +328,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();
 
-            var builder = new BcFileFlowBoundaryDataBuilder();
-
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
             Assert.AreEqual(1, boundaryConditionSet.BoundaryConditions.Count);
@@ -335,7 +393,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
-            var builder = new BcFileFlowBoundaryDataBuilder();
 
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
@@ -412,8 +469,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
-            var builder = new BcFileFlowBoundaryDataBuilder();
-
             builder.InsertBoundaryData(new[] {boundaryConditionSet}, dataBlocks);
 
             var correctionDataBlocks = fileReader.Read(corrFilePath);
@@ -478,7 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             boundaryConditionSet.BoundaryConditions.Add(dischargeBc);
 
-            var blockData = new BcFileFlowBoundaryDataBuilder().CreateBlockData(dischargeBc,
+            var blockData = builder.CreateBlockData(dischargeBc,
                 boundaryConditionSet.SupportPointNames, startTime).ToList();
 
             Assert.AreEqual(1, blockData.Count);
@@ -519,8 +574,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var fileReader = new BcFile();
             var dataBlocks = fileReader.Read(filePath).ToList();
-
-            var builder = new BcFileFlowBoundaryDataBuilder();
 
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
@@ -596,8 +649,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             boundaryConditionSet.BoundaryConditions.Clear();
 
-            var builder = new BcFileFlowBoundaryDataBuilder();
-
             builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlocks);
 
             Assert.AreEqual(3, boundaryConditionSet.BoundaryConditions.Count);
@@ -647,7 +698,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var dataBlock = CreateBcBlockDataSediment(boundaryName, boundaryConditionSet.SupportPointNames.First(), secondSedimentFractionName);
 
             // When
-            new BcFileFlowBoundaryDataBuilder().InsertBoundaryData(new[] {boundaryConditionSet}, dataBlock);
+            builder.InsertBoundaryData(new[] {boundaryConditionSet}, dataBlock);
 
             // Then
             var boundaryConditions = boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
@@ -684,7 +735,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // When
             void testAction()
             {
-                new BcFileFlowBoundaryDataBuilder().InsertBoundaryData(new[] { boundaryConditionSet }, dataBlock);
+                builder.InsertBoundaryData(new[] { boundaryConditionSet }, dataBlock);
             }
 
             // Then
@@ -740,14 +791,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var timeQuantity = new BcQuantityData
             {
-                Quantity = "time",
+                QuantityName = "time",
                 Unit = timeUnit
             };
             timeQuantity.Values.AddRange(new[] { "0", "43200", "86400" });
 
             var fractionQuantity = new BcQuantityData
             {
-                Quantity = quantity,
+                QuantityName = quantity,
                 Unit = valUnit
             };
             fractionQuantity.Values.AddRange(new[] { "1", "2", "3" });

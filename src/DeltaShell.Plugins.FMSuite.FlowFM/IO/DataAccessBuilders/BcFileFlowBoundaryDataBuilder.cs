@@ -14,7 +14,7 @@ using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
     // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
@@ -325,9 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 
                 foreach (BcQuantityData quantityData in dataBlock.Quantities)
                 {
-                    string quantityName = quantityData.Quantity.ToLower();
-
-                    quantityName = CorrectQuantityNameIfTracer(quantityName, quantityData);
+                    string quantityName = GetQuantityName(quantityData);
 
                     // if it's an argument quantity, add it to the argVariables and continue
                     if (forcingTypeDefinition.ArgumentDefinitions.Contains(quantityName))
@@ -343,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
                     // if we haven't match the quantity, give a warning and continue
                     if (quantityName == null)
                     {
-                        LogWarningParsePropertyFailed(dataBlock, "quantity", quantityData.Quantity);
+                        LogWarningParsePropertyFailed(dataBlock, "quantity", quantityData.QuantityName);
                         continue;
                     }
 
@@ -367,10 +365,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 
                             List<string> existingQuantities = compVariables
                                                               .Where(v => v.Key.Item1 == quantityKeyValuePair.Value)
-                                                              .Select(v => v.Value.Quantity)
+                                                              .Select(v => v.Value.QuantityName)
                                                               .Distinct().ToList();
 
-                            int quantityIndex = existingQuantities.IndexOf(quantityData.Quantity);
+                            int quantityIndex = existingQuantities.IndexOf(quantityData.QuantityName);
                             if (quantityIndex == -1)
                             {
                                 quantityIndex = existingQuantities.Count;
@@ -448,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
                                 timelag = TimeSpan.FromSeconds(timelagdouble);
                             }
 
-                            boundaryCondition = CreateNewBoundaryCondition(quantity.Value.Quantity, flowQuantityEnum,
+                            boundaryCondition = CreateNewBoundaryCondition(quantity.Value.QuantityName, flowQuantityEnum,
                                                                            forcingTypeDefinition.ForcingType,
                                                                            matchingBoundaryConditionSet.Feature,
                                                                            timelag, quantityGroup);
@@ -663,20 +661,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
             return quantityName;
         }
 
-        private static string CorrectQuantityNameIfTracer(string quantityName, BcQuantityData quantityData)
+        private static string GetQuantityName(BcQuantityData quantityData)
         {
-            if (quantityName.StartsWith("tracerbnd_"))
+            string quantityName = quantityData.QuantityName;
+            if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound + "_"))
             {
                 quantityData.TracerName = quantityName.Substring(10);
-                quantityName = "tracerbnd";
+                quantityName = ExtForceQuantNames.TracerAtBound;
             }
-            else if (quantityName.StartsWith("tracerbnd"))
+            else if (quantityName.StartsWith(ExtForceQuantNames.TracerAtBound))
             {
                 quantityData.TracerName = quantityName.Substring(9);
-                quantityName = "tracerbnd";
+                quantityName = ExtForceQuantNames.TracerAtBound;
             }
 
-            return quantityName;
+            return quantityName.ToLower();
         }
 
         private static bool IsCorrectionDataType(ForcingTypeDefinition forcingTypeDefinition)
@@ -755,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
         {
             return quantityGroup.Key == FlowBoundaryQuantityType.MorphologyBedLoadTransport
                        ? quantityGroup.Select(qg => qg.Value).Select(q =>
-                                                                         q.Quantity.Replace(
+                                                                         q.QuantityName.Replace(
                                                                              BcmFileFlowBoundaryDataBuilder
                                                                                  .BedLoadAtBound, string.Empty))
                        : Enumerable.Empty<string>();
@@ -774,7 +773,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
             {
                 case FlowBoundaryQuantityType.Tracer when quantityData.TracerName != bc.TracerName:
                 case FlowBoundaryQuantityType.SedimentConcentration
-                    when GetFractionNameFromQuantityName(quantityData.Quantity) != bc.SedimentFractionName:
+                    when GetFractionNameFromQuantityName(quantityData.QuantityName) != bc.SedimentFractionName:
                     return false;
             }
 
@@ -1254,7 +1253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
 
                 dataBlock.Quantities.Add(new BcQuantityData
                 {
-                    Quantity = quantityString,
+                    QuantityName = quantityString,
                     Unit = component.Unit.Symbol,
                     VerticalPosition = verticalProfile == null ? null : layerIndex.ToString(),
                     Values = PrintValues(component, null, null).ToList()
@@ -1332,7 +1331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
         {
             return new BcQuantityData
             {
-                Quantity = quantity,
+                QuantityName = quantity,
                 Unit = unit,
                 Values = PrintValues(argument, referenceTime, converter).ToList()
             };
