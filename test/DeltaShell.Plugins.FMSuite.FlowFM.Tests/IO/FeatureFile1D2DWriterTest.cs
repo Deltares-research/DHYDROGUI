@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var manhole = new Manhole("myManhole")
             {
-                Compartments = new EventedList<Compartment> { new Compartment("myCompartment") }
+                Compartments = new EventedList<ICompartment> { new Compartment("myCompartment") }
             };
             fmModel.Network.Nodes.Add(manhole);
 

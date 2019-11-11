@@ -439,7 +439,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var sourceCompartment2 = new Compartment { Geometry = sourceGeometry };
             var sourceManhole = new Manhole("SourceManhole")
             {
-                Compartments = new EventedList<Compartment> { sourceCompartment1, sourceCompartment2 }
+                Compartments = new EventedList<ICompartment> { sourceCompartment1, sourceCompartment2 }
             };
             var sewerConnection = new SewerConnection {SourceCompartment = null};
 
@@ -452,7 +452,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         {
             var initialSource = new Manhole("initialManhole")
             {
-                Compartments = new EventedList<Compartment> { new Compartment { Name = "initialSourceCompartment", Geometry = new Point(0, 33) } }
+                Compartments = new EventedList<ICompartment> { new Compartment { Name = "initialSourceCompartment", Geometry = new Point(0, 33) } }
             };
             var sewerConnection = new SewerConnection { Source = initialSource };
 
@@ -461,7 +461,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var newSourceCompartment2 = new Compartment { Name = "cmp2", Geometry = newSourceGeometry };
             var newSourceManhole = new Manhole("NewSourceManhole")
             {
-                Compartments = new EventedList<Compartment> { newSourceCompartment1, newSourceCompartment2 }
+                Compartments = new EventedList<ICompartment> { newSourceCompartment1, newSourceCompartment2 }
             };
 
             sewerConnection.Source = newSourceManhole;
@@ -477,7 +477,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var sourceCompartment2 = new Compartment { Name = "compartment2", Geometry = sourceGeometry };
             var sourceManhole = new Manhole("SourceManhole")
             {
-                Compartments = new EventedList<Compartment> { sourceCompartment1, sourceCompartment2 }
+                Compartments = new EventedList<ICompartment> { sourceCompartment1, sourceCompartment2 }
             };
             var sewerConnection = new SewerConnection { SourceCompartment = sourceCompartment2 };
 
@@ -494,7 +494,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var targetCompartment2 = new Compartment { Geometry = targetGeometry };
             var targetManhole = new Manhole("TargetManhole")
             {
-                Compartments = new EventedList<Compartment> { targetCompartment1, targetCompartment2 }
+                Compartments = new EventedList<ICompartment> { targetCompartment1, targetCompartment2 }
             };
 
             var sewerConnection = new SewerConnection {TargetCompartment = null};
@@ -507,7 +507,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         {
             var initialTarget = new Manhole("initialManhole")
             {
-                Compartments = new EventedList<Compartment> { new Compartment { Name = "initialTargetCompartment", Geometry = new Point(0, 33) } }
+                Compartments = new EventedList<ICompartment> { new Compartment { Name = "initialTargetCompartment", Geometry = new Point(0, 33) } }
             };
             var sewerConnection = new SewerConnection { Target = initialTarget };
 
@@ -516,7 +516,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var newTargetCompartment2 = new Compartment { Name = "cmp2", Geometry = newTargetGeometry };
             var newTargetManhole = new Manhole("NewTargetManhole")
             {
-                Compartments = new EventedList<Compartment> { newTargetCompartment1, newTargetCompartment2 }
+                Compartments = new EventedList<ICompartment> { newTargetCompartment1, newTargetCompartment2 }
             };
 
             sewerConnection.Target = newTargetManhole;
@@ -532,7 +532,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var targetCompartment = new Compartment { Name = "compartment2", Geometry = targetGeometry };
             var targetManhole = new Manhole("TargetManhole")
             {
-                Compartments = new EventedList<Compartment> { otherCompartment, targetCompartment }
+                Compartments = new EventedList<ICompartment> { otherCompartment, targetCompartment }
             };
             var sewerConnection = new SewerConnection { TargetCompartment = targetCompartment };
 
@@ -553,12 +553,12 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var sourceCompartment = new Compartment { Geometry = sourceGeometry};
             var sourceManhole = new Manhole("SourceManhole")
             {
-                Compartments = new EventedList<Compartment> { sourceCompartment }
+                Compartments = new EventedList<ICompartment> { sourceCompartment }
             };
             var targetCompartment = new Compartment { Geometry = targetGeometry };
             var targetManhole = new Manhole("TargetManhole")
             {
-                Compartments = new EventedList<Compartment> { targetCompartment }
+                Compartments = new EventedList<ICompartment> { targetCompartment }
             };
             var sewerConnection = new SewerConnection("mySewerConnection")
             {
@@ -576,14 +576,14 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         [Test]
         public void GivenSewerConnection_WhenAddingSourceManholeWithoutCompartment_ThenSourceHasNotBeenAddedToSewerConnection()
         {
-            var sewerConnection = new SewerConnection {Source = new Manhole("myManhole") { Compartments = new EventedList<Compartment>()}};
+            var sewerConnection = new SewerConnection {Source = new Manhole("myManhole") { Compartments = new EventedList<ICompartment>()}};
             Assert.IsNull(sewerConnection.Source);
         }
 
         [Test]
         public void GivenSewerConnection_WhenAddingTargetManholeWithoutCompartment_ThenTargetHasNotBeenAddedToSewerConnection()
         {
-            var sewerConnection = new SewerConnection { Target = new Manhole("myManhole") { Compartments = new EventedList<Compartment>() } };
+            var sewerConnection = new SewerConnection { Target = new Manhole("myManhole") { Compartments = new EventedList<ICompartment>() } };
             Assert.IsNull(sewerConnection.Target);
         }
 
@@ -603,11 +603,11 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             };
             var sourceManhole = new Manhole("SourceManhole")
             {
-                Compartments = new EventedList<Compartment> { sourceCompartment }
+                Compartments = new EventedList<ICompartment> { sourceCompartment }
             };
             var targetManhole = new Manhole("TargetManhole")
             {
-                Compartments = new EventedList<Compartment> { targetCompartment }
+                Compartments = new EventedList<ICompartment> { targetCompartment }
             };
 
             var sewerConnection = new SewerConnection("mySewerConnection")
@@ -632,8 +632,8 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
             var sourceCompartment = new Compartment { Geometry = sourceGeometry};
             var targetCompartment = new Compartment { Geometry = targetGeometry};
-            var sourceManhole = new Manhole("sourceManhole") {Compartments = new EventedList<Compartment> {sourceCompartment}};
-            var targetManhole = new Manhole("targetManhole") {Compartments = new EventedList<Compartment> {targetCompartment}};
+            var sourceManhole = new Manhole("sourceManhole") {Compartments = new EventedList<ICompartment> {sourceCompartment}};
+            var targetManhole = new Manhole("targetManhole") {Compartments = new EventedList<ICompartment> {targetCompartment}};
 
             var sewerConnection = new SewerConnection
             {
@@ -675,13 +675,13 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var compartmentOne = new Compartment("compartmentOne") { Geometry = new Point(1, 3) };
             var sourceManhole = new Manhole("sourceManhole")
             {
-                Compartments = new EventedList<Compartment> {compartmentOne}
+                Compartments = new EventedList<ICompartment> {compartmentOne}
             };
 
             var compartmentTwo = new Compartment("compartmentTwo") {Geometry = new Point(10, 7)};
             var targetManhole = new Manhole("targetManhole")
             {
-                Compartments = new EventedList<Compartment> {compartmentTwo}
+                Compartments = new EventedList<ICompartment> {compartmentTwo}
             };
 
             var sewerConnection = new SewerConnection

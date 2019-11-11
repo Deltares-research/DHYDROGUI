@@ -23,8 +23,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private INode source;
         private INode target;
-        private Compartment sourceCompartment;
-        private Compartment targetCompartment;
+        private ICompartment sourceCompartment;
+        private ICompartment targetCompartment;
 
         public SewerConnection() : this(string.Empty)
         {
@@ -123,7 +123,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [DisplayName("From compartment")]
         [FeatureAttribute(ExportName = "From compartment", Order = 12)]
         [ReadOnly(true)]
-        public Compartment SourceCompartment
+        public ICompartment SourceCompartment
         {
             get { return sourceCompartment; }
             set
@@ -151,7 +151,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [DisplayName("To compartment")]
         [FeatureAttribute(ExportName = "To compartment", Order = 13)]
         [ReadOnly(true)]
-        public Compartment TargetCompartment
+        public ICompartment TargetCompartment
         {
             get { return targetCompartment; }
             set
@@ -227,21 +227,21 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        private void UpdateTarget(Compartment compartment)
+        private void UpdateTarget(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
             if (this.IsInternalConnection()) return;
-            if ((Manhole) Target != parent)
+            if ((IManhole) Target != parent)
             {
                 Target = parent;
             }
         }
 
-        private void UpdateSource(Compartment compartment)
+        private void UpdateSource(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
             if (this.IsInternalConnection()) return;
-            if ((Manhole) Source != parent)
+            if ((IManhole) Source != parent)
             {
                 Source = parent;
             }

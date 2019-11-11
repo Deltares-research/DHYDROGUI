@@ -16,8 +16,8 @@ namespace DelftTools.Hydro.Tests.Structures
         {
             var sourceCompartment = new Compartment { Geometry = new Point(point1X, point1Y) };
             var targetCompartment = new Compartment { Geometry = new Point(point2X, point2Y) };
-            var sourceManhole = new Manhole("1") {Compartments = new EventedList<Compartment> {sourceCompartment}};
-            var targetManhole = new Manhole("2") {Compartments = new EventedList<Compartment> {targetCompartment}};
+            var sourceManhole = new Manhole("1") {Compartments = new EventedList<ICompartment> {sourceCompartment}};
+            var targetManhole = new Manhole("2") {Compartments = new EventedList<ICompartment> {targetCompartment}};
             var sewerConnection = new SewerConnection
             {
                 SourceCompartment = sourceCompartment,

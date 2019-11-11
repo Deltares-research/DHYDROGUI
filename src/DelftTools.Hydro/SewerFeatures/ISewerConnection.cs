@@ -1,4 +1,5 @@
-﻿using GeoAPI.Extensions.Networks;
+﻿using DelftTools.Hydro.Structures;
+using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
@@ -12,13 +13,14 @@ namespace DelftTools.Hydro.SewerFeatures
 
         SewerConnectionWaterType WaterType { get; set; }
 
-        Compartment SourceCompartment { get; set; }
+        ICompartment SourceCompartment { get; set; }
 
-        Compartment TargetCompartment { get; set; }
+        ICompartment TargetCompartment { get; set; }
 
         string SourceCompartmentName { get; set; }
 
         string TargetCompartmentName { get; set; }
+
         void UpdateBranchFeatureGeometries();
     }
 }

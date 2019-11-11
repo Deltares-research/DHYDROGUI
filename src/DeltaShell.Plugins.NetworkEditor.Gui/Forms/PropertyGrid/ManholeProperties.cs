@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -136,13 +137,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
-        private string GetStringPropertyFromCompartmentAtIndex(int index, Func<Compartment, string> function)
+        private string GetStringPropertyFromCompartmentAtIndex(int index, Func<ICompartment, string> function)
         {
             var compartments = data.Compartments;
             return compartments.Count > index ? function(compartments[index]) : string.Empty;
         }
 
-        private double GetDoublePropertyFromCompartmentAtIndex(int index, Func<Compartment, double> function)
+        private double GetDoublePropertyFromCompartmentAtIndex(int index, Func<ICompartment, double> function)
         {
             var compartments = data.Compartments;
             return compartments.Count > index ? function(compartments[index]) : double.NaN;

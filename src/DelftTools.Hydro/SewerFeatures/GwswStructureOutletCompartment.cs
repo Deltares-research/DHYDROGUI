@@ -1,8 +1,10 @@
-﻿namespace DelftTools.Hydro.SewerFeatures
+﻿using DelftTools.Hydro.Structures;
+
+namespace DelftTools.Hydro.SewerFeatures
 {
     public class GwswStructureOutletCompartment : OutletCompartment
     {
-        protected override void CopyExistingCompartmentPropertyValuesToNewCompartment(Compartment existingCompartment)
+        protected override void CopyExistingCompartmentPropertyValuesToNewCompartment(ICompartment existingCompartment)
         {
             ManholeLength = existingCompartment.ManholeLength;
             ManholeWidth = existingCompartment.ManholeWidth;

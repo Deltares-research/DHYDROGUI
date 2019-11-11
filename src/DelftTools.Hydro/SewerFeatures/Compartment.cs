@@ -13,8 +13,7 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class Compartment : IPointFeature, ICompartment
     {
-        private static ILog Log = LogManager.GetLogger(typeof(Compartment));
-        private Manhole parentManhole;
+        private IManhole parentManhole;
         private string name;
 
         public Compartment() : this("compartment")
@@ -48,7 +47,7 @@ namespace DelftTools.Hydro.SewerFeatures
         /// The manhole that contains this compartment.
         /// </summary>
         [NoNotifyPropertyChange]
-        public Manhole ParentManhole
+        public IManhole ParentManhole
         {
             get { return parentManhole; }
             set
@@ -171,31 +170,31 @@ namespace DelftTools.Hydro.SewerFeatures
                 ParentManholeName = HydroNetworkHelper.GetUniqueManholeIdInNetwork(network);
         }
 
-        protected void ReplaceCompartmentInManhole(Compartment oldCompartment, IManhole manhole)
+        protected void ReplaceCompartmentInManhole(ICompartment oldCompartment, IManhole manhole)
         {
             manhole.Compartments.Remove(oldCompartment);
             manhole.Compartments.Add(this);
         }
 
-        protected void ReconnectSewerConnections(Compartment oldCompartment, IHydroNetwork network)
+        protected void ReconnectSewerConnections(ICompartment oldCompartment, IHydroNetwork network)
         {
             ReconnectSources(oldCompartment, network);
             ReconnectTargets(oldCompartment, network);
         }
 
-        private void ReconnectSources(Compartment oldCompartment, IHydroNetwork network)
+        private void ReconnectSources(ICompartment oldCompartment, IHydroNetwork network)
         {
             var sewerConnectionsToReconnectToSource = network.SewerConnections.Where(sc => sc.SourceCompartment != null && sc.SourceCompartment.Equals(oldCompartment));
             sewerConnectionsToReconnectToSource.ForEach(sc => sc.SourceCompartment = this);
         }
 
-        private void ReconnectTargets(Compartment oldCompartment, IHydroNetwork network)
+        private void ReconnectTargets(ICompartment oldCompartment, IHydroNetwork network)
         {
             var sewerConnectionsToReconnectToTarget = network.SewerConnections.Where(sc => sc.TargetCompartment != null && sc.TargetCompartment.Equals(oldCompartment));
             sewerConnectionsToReconnectToTarget.ForEach(sc => sc.TargetCompartment = this);
         }
 
-        protected virtual void CopyExistingCompartmentPropertyValuesToNewCompartment(Compartment existingCompartment)
+        protected virtual void CopyExistingCompartmentPropertyValuesToNewCompartment(ICompartment existingCompartment)
         {
         }
 

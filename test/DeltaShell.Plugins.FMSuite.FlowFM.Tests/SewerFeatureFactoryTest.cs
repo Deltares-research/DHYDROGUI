@@ -282,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork("myPipe");
             var pipe = network.Pipes.FirstOrDefault();
             Assert.IsNotNull(pipe);
-            var sourceCompartment = pipe.SourceCompartment;
+            var sourceCompartment = (Compartment) pipe.SourceCompartment;
             sourceCompartment.ManholeLength = manholeLength;
             sourceCompartment.ManholeWidth = manholeWidth;
             sourceCompartment.Shape = compartmentShape;
@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = TestNetworkAndDiscretisationProvider.CreateSimpleSewerNetwork("myPipe");
             var pipe = network.Pipes.FirstOrDefault();
             Assert.IsNotNull(pipe);
-            var sourceCompartment = pipe.SourceCompartment;
+            var sourceCompartment = (Compartment) pipe.SourceCompartment;
             sourceCompartment.ManholeLength = manholeLength;
             sourceCompartment.ManholeWidth = manholeWidth;
             sourceCompartment.Shape = compartmentShape;

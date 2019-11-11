@@ -171,7 +171,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (network.Nodes != null)
             {
                 
-                var compartments = new List<Compartment>();
+                var compartments = new List<ICompartment>();
                 network.Manholes.ForEach(m =>
                 {
                     compartments.AddRange(m.Compartments);

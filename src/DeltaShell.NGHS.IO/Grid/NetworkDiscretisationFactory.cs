@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using GeoAPI.Extensions.Coverages;
@@ -124,7 +125,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     };
 
                     if (existingManhole != null) existingManhole.Compartments.Add(compartment);
-                    else node = new Manhole(compartmentProperties.ManholeId) { Compartments = new EventedList<Compartment> { compartment } };
+                    else node = new Manhole(compartmentProperties.ManholeId) { Compartments = new EventedList<ICompartment> { compartment } };
                 }
                 else
                 {

@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
@@ -201,14 +202,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var manhole2 = new Manhole("myManhole2")
             {
                 Geometry = new Point(12, 15),
-                Compartments = new EventedList<Compartment> { new Compartment("cmp11"), new Compartment("cmp12") }
+                Compartments = new EventedList<ICompartment> { new Compartment("cmp11"), new Compartment("cmp12") }
             };
             network.Nodes.Add(manhole2);
 
             var manhole3 = new Manhole("myManhole3")
             {
                 Geometry = new Point(8, 8),
-                Compartments = new EventedList<Compartment> { new Compartment("cmp21") }
+                Compartments = new EventedList<ICompartment> { new Compartment("cmp21") }
             };
             network.Nodes.Add(manhole3);
 

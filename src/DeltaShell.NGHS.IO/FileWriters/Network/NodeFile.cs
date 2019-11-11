@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
@@ -12,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class NodeFile
     {
-        public static void Write(string filePath, IEnumerable<Compartment> compartments, IEnumerable<IRetention> retentions)
+        public static void Write(string filePath, IEnumerable<ICompartment> compartments, IEnumerable<IRetention> retentions)
         {
 
             var categories = new List<DelftIniCategory>();
@@ -44,7 +45,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             return category;
         }
 
-        private static DelftIniCategory CreateCompartmentIniCategory(Compartment compartment)
+        private static DelftIniCategory CreateCompartmentIniCategory(ICompartment compartment)
         {
             var iniCategory = new DelftIniCategory("StorageNode");
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));

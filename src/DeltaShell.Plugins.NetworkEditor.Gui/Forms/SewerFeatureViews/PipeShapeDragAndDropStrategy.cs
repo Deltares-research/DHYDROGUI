@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             newCompartmentShape = null;
         }
 
-        private Compartment GetCompartmentFromCompartmentShape(CompartmentShape compartmentShape)
+        private ICompartment GetCompartmentFromCompartmentShape(CompartmentShape compartmentShape)
         {
             return compartmentShape?.Compartment;
         }

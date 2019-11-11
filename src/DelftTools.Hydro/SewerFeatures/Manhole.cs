@@ -13,13 +13,13 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
-    public class Manhole : Node, IManhole, ICompositeNetworkPointFeature, ISewerFeature
+    public class Manhole : Node, IManhole, ISewerFeature
     {
-        private IEventedList<Compartment> compartments;
+        private IEventedList<ICompartment> compartments;
 
         public Manhole(string manholeId) : base(manholeId)
         {
-            Compartments = new EventedList<Compartment>();
+            Compartments = new EventedList<ICompartment>();
             Links = new EventedList<HydroLink>();
             Geometry = new Point(0, 0);
         }
@@ -50,7 +50,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        public IEventedList<Compartment> Compartments
+        public IEventedList<ICompartment> Compartments
         {
             get { return compartments; }
             set
@@ -73,7 +73,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        public Compartment GetCompartmentByName(string compartmentName)
+        public ICompartment GetCompartmentByName(string compartmentName)
         {
             return Compartments.FirstOrDefault(c => c.Name.Equals(compartmentName));
         }
@@ -86,7 +86,7 @@ namespace DelftTools.Hydro.SewerFeatures
         public IEnumerable<IFeature> GetPointFeatures()
         {
             var branchFeatures = this.InternalStructures();
-            var outletCompartments = compartments.Where(c => c is OutletCompartment);
+            var outletCompartments = compartments.OfType<IFeature>().Where(c => c is OutletCompartment);
 
             var features = new List<IFeature>();
             features.AddRange(branchFeatures);

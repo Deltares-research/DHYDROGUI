@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -7,9 +8,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     [Entity]
     public class CompartmentShape : DrawingShape
     {
-        private Compartment compartment;
+        private ICompartment compartment;
 
-        public Compartment Compartment
+        public ICompartment Compartment
         {
             get { return compartment; }
             set

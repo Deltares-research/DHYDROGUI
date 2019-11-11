@@ -691,7 +691,7 @@ namespace DelftTools.Hydro.Helpers
 
         public static string CreateUniqueCompartmentNameInNetwork(IHydroNetwork network)
         {
-            var compartments = new List<Compartment>();
+            var compartments = new List<ICompartment>();
             if (network != null)
                 compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
 
