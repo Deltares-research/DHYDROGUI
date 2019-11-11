@@ -47,7 +47,7 @@ namespace DeltaShell.Dimr.Gui
 
         private bool IsActiveViewMapViewWithRegion()
         {
-            var mapView = Gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
+            var mapView = Gui?.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
 
             if (mapView == null || mapView.Map == null)
             {

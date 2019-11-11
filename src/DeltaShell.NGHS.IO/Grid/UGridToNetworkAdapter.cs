@@ -105,11 +105,12 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             Func<int[], int> func = networkIds =>
             {
-                if (!networkIds.Contains(networkId))
+                if (networkId > 0 && !networkIds.Contains(networkId))
                 {
                     throw new Exception("The provided network ID is not present in the NetCDF file, can't load the network.");
                 }
-                return networkId;
+                return networkId == 0 && networkIds.Any() ? networkIds[0] :  networkId;
+
             };
 
             return LoadNetwork(netFilePath, func);
