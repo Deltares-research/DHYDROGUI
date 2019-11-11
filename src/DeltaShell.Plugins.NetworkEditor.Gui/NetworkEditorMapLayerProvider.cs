@@ -575,16 +575,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                         return newFeature;
                     };
-
-                    return new VectorLayer(HydroArea.GullyName)
+                    return new VisibilityVectorLayer(HydroArea.GullyName)
                     {
-                        NameIsReadOnly = true,
                         Style = AreaLayerStyles.Gulliestyle,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        NameIsReadOnly = true,
                         DataSource = ds,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
                         CanBeRemovedByUser = true,
-                        Selectable = true
-                    };
+                        Selectable = true,
+                        MaxVisible = MaxVisibilityLayerValue
+                    }; ; 
                 }
             }
 
