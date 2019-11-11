@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.IO;
@@ -220,7 +219,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
 
                 CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
@@ -269,7 +268,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
                 Assert.IsNotNull(structureCategory);
-                Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
+                Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
 
                 CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
@@ -436,7 +435,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             var expectedCategoryName = "Structure";
             var gateName = "myGate";
-            var timFileName = $"{gateName}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
+            var timFileName = $"{gateName}_{StructureRegion.GateLowerEdgeLevel.Key}.tim";
 
             var fmModel = new WaterFlowFMModel
             {
@@ -472,7 +471,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             var expectedCategoryName = "Structure";
             var gateName = "myGate";
-            var timFileName = $"{gateName}_{KnownStructureProperties.GateOpeningWidth}.tim";
+            var timFileName = $"{gateName}_{StructureRegion.GateOpeningWidth.Key}.tim";
 
             var fmModel = new WaterFlowFMModel
             {
