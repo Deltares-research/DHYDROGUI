@@ -63,6 +63,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46511\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.Scripting">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46511\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46511\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
@@ -95,6 +99,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46511\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46511\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -107,12 +115,20 @@
     <Compile Include="Builders\BridgeBuilder.cs" />
     <Compile Include="Builders\ChannelStructureBuilder.cs" />
     <Compile Include="Builders\CulvertBuilder.cs" />
+    <Compile Include="ControlGroupBuilder.cs" />
+    <Compile Include="DataTableHelper.cs" />
     <Compile Include="GeometryHelper.cs" />
     <Compile Include="Builders\IBranchStructureBuilder.cs" />
     <Compile Include="Importers\PartialSobekImporterBase.cs" />
+    <Compile Include="Importers\SobekBoundaryConditionsImporter.cs" />
+    <Compile Include="Importers\SobekComputationalGridImporter.cs" />
+    <Compile Include="Importers\SobekControllersTriggersImporter.cs" />
+    <Compile Include="Importers\SobekLateralSourcesDataImporter.cs" />
     <Compile Include="Importers\SobekLateralSourcesImporter.cs" />
     <Compile Include="Importers\SobekLinkageNodeImporter.cs" />
+    <Compile Include="Importers\SobekMeasurementStationsImporter.cs" />
     <Compile Include="Importers\SobekRetentionImporter.cs" />
+    <Compile Include="Importers\SobekRoughnessImporter.cs" />
     <Compile Include="Importers\SobekStructuresImporter.cs" />
     <Compile Include="Importers\ToDictionaryExtensions.cs" />
     <Compile Include="IPartialSobekImporter.cs" />
@@ -127,13 +143,28 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SobekHydroModelImporter.cs" />
     <Compile Include="SobekImportApplicationPlugin.cs" />
     <Compile Include="SobekImportGuiPlugin.cs" />
+    <Compile Include="SobekLocationType.cs" />
     <Compile Include="SobekNetworkImporter.cs" />
     <Compile Include="Builders\WeirBuilder.cs" />
     <Compile Include="SobekNetworkToNetworkImporter.cs" />
+    <Compile Include="Model1DBoundaryNodeDataBuilder.cs" />
+    <Compile Include="SobekWaterFlowFMModelImporter.cs" />
+    <Compile Include="SobekWaterFlowModel1DToModelImporter.cs" />
+    <Compile Include="TimeSeriesHelper.cs" />
     <Compile Include="Wizard\ImportPartialSobekWizardDialog.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizard\ImportSobekHydroModelWizardDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizard\SelectSobekModelsWizardPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Wizard\SelectSobekModelsWizardPage.Designer.cs">
+      <DependentUpon>SelectSobekModelsWizardPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Wizard\SelectSobekPartsWizardPage.cs">
       <SubType>UserControl</SubType>
@@ -154,9 +185,34 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
+      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
+      <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
@@ -178,6 +234,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\ImportPartialSobekWizardDialog.resx">
       <DependentUpon>ImportPartialSobekWizardDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\SelectSobekModelsWizardPage.resx">
+      <DependentUpon>SelectSobekModelsWizardPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\SelectSobekPartsWizardPage.resx">
       <DependentUpon>SelectSobekPartsWizardPage.cs</DependentUpon>

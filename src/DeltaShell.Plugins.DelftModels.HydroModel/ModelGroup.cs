@@ -9,6 +9,7 @@
         Empty,
         SobekModels,
         FMWaveRtcModels,
-        OverLandFlow1D2D
+        OverLandFlow1D2D,
+        RHUModels
     }
 }

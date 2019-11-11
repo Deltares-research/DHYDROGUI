@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Sobek.Readers;
@@ -192,6 +194,10 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
                 }
 
             }
+            if (TargetObject is Project)
+            {
+                return ((Project) TargetObject).RootFolder.GetAllModelsRecursive().OfType<T>().FirstOrDefault();
+            }
             return null;
         }
 
@@ -251,6 +257,18 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
             if (TargetObject is IModel)
             {
                 return GetNetworkOfModel((IModel)TargetObject);
+            }
+
+            if (TargetObject is Project)
+            {
+                foreach (var model in ((Project)TargetObject).RootFolder.GetAllModelsRecursive())
+                {
+                    var network = GetNetworkOfModel(model);
+                    if (network != null)
+                    {
+                        return network;
+                    }
+                }
             }
 
             return null;

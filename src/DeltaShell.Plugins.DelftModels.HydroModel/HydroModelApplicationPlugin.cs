@@ -131,6 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
                     {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
                     {ModelGroup.SobekModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_Integrated_Model},
+                    {ModelGroup.RHUModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)"},
                     {ModelGroup.OverLandFlow1D2D, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model}
                 };
 

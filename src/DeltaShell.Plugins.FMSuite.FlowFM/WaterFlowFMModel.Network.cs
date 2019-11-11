@@ -466,6 +466,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             dataItemSet.DataItems.Remove(dataItem);
         }
 
+        /// <summary>
+        /// Replaces an existing boundary condition by <paramref name="boundaryNodeData"/>
+        /// </summary>
+        public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
+        {
+            if (boundaryNodeData == null) return;
+
+            var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag);
+            var currentDataItem = dataItemSet.DataItems.FirstOrDefault(di => ((Model1DBoundaryNodeData) di.Value).Feature == boundaryNodeData.Feature);
+            if (currentDataItem == null) return;
+            var insertIndex = dataItemSet.DataItems.IndexOf(currentDataItem);
+
+            dataItemSet.DataItems.RemoveAt(insertIndex);
+            dataItemSet.DataItems.Insert(insertIndex, new DataItem(boundaryNodeData));
+        }
         private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
             if (lateralSourceData == null) return;

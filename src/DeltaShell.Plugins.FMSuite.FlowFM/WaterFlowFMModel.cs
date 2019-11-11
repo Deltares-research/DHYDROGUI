@@ -1089,7 +1089,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
+                var boundaryCondition1DDataItems = BoundaryConditions1D.Select(bc => bc.SeriesDataItem);
+                var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
+
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
             }
         }
 

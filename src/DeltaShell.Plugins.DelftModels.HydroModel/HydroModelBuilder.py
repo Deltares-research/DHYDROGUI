@@ -60,6 +60,7 @@ class ModelGroups:
     SobekModels = 1
     FMWaveRtcModels = 2
     OverLandFlow1D2D = 3
+    RHUModels = 5
     All = 4
 
 class HydroModelBuilder(object):
@@ -79,6 +80,10 @@ class HydroModelBuilder(object):
             
         if modelGroup == ModelGroups.SobekModels:
             if flow1DPlugin.loaded and (rrPlugin.loaded or rtcPlugin.loaded):
+                return True
+                
+        if modelGroup == ModelGroups.RHUModels:
+            if fmPlugin.loaded and (rrPlugin.loaded or rtcPlugin.loaded):
                 return True
                 
         if modelGroup == ModelGroups.FMWaveRtcModels:
@@ -132,7 +137,7 @@ class HydroModelBuilder(object):
                 flow = WaterFlowModel1D(Name=self.FLOW_MODEL_NAME)
                 model.Activities.Add(flow)
 
-        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.RHUModels or modelGroup == ModelGroups.All):
 
             if hydroPlugin.loaded and rrPlugin.loaded:
                 # build basin
@@ -143,18 +148,21 @@ class HydroModelBuilder(object):
                 rr = RainfallRunoffModel(Name=self.RR_MODEL_NAME)
                 model.Activities.Add(rr)
                 
-        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.RHUModels  or modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.All):
 
             if rtcPlugin.loaded:
                 rtc = RealTimeControlModel(Name=self.RTC_MODEL_NAME)
                 model.Activities.Add(rtc)
 
-        if (modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.RHUModels  or modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
 
             if hydroPlugin.loaded and fmPlugin.loaded:
                 # build area
                 area = HydroArea(Name="Area")
                 model.Region.SubRegions.Add(area)
+                # build network
+                network = HydroNetwork(Name="Network")
+                model.Region.SubRegions.Add(network)
 
             if fmPlugin.loaded:
                 flowfm = WaterFlowFMModel(Name=self.DFLOW_FM_MODEL_NAME)

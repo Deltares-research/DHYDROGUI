@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.SobekNetwork.Importers;
 
 namespace DeltaShell.Plugins.ImportExport.SobekNetwork
@@ -50,9 +55,47 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 return BuildHydroNetworkImporter(networkFilePath, network);
             }
 
+            var basin = obj as DrainageBasin;
+            if (basin != null)
+            {
+                return BuildDrainageBasinImporter(networkFilePath, basin);
+            }
+
+            var hydroModel = obj as HydroModel;
+            if (hydroModel != null)
+            {
+                return BuildHydroModelImporter(networkFilePath, hydroModel);
+            }
+
+            var waterFlowFMModel = obj as WaterFlowFMModel;
+            if (waterFlowFMModel != null)
+            {
+                return BuildWaterFlowFMModelImporter(networkFilePath, waterFlowFMModel);
+            }
+
+            var realTimeControlModel = obj as RealTimeControlModel;
+            if (realTimeControlModel != null)
+            {
+                return BuildRealTimeControlModelImporter(networkFilePath, realTimeControlModel);
+            }
+
+            var rainfallRunoffModel = obj as RainfallRunoffModel;
+            if (rainfallRunoffModel != null)
+            {
+                return BuildRainfallRunoffModelImporter(networkFilePath, rainfallRunoffModel);
+            }
+
             throw new NotImplementedException(String.Format("No partial sobekimporter has been found for object type {0}.", obj.GetType()));
         }
+        private static IPartialSobekImporter BuildDrainageBasinImporter(string sobekPath, DrainageBasin basin)
+        {
+            var importers = new List<IPartialSobekImporter>
+            {
+                //new SobekRRDrainageBasinImporter(),
+            };
 
+            return BuildPartialSobekImporter(sobekPath, basin, importers);
+        }
         private static IPartialSobekImporter BuildHydroNetworkImporter(string sobekPath, HydroNetwork network)
         {
             return BuildPartialSobekImporter(sobekPath, network, GetHydroNetworkImporters());
@@ -71,7 +114,31 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 };
             return importers;
         }
+        private static IPartialSobekImporter BuildHydroModelImporter(string sobekPath, HydroModel hydroModel)
+        {
+            var importers = new List<IPartialSobekImporter>();
 
+            if (hydroModel.Activities.OfType<WaterFlowFMModel>().Any())
+            {
+                importers.AddRange(GetWaterFlowFMModelImporters());
+            }
+            else if (hydroModel.Region.SubRegions.OfType<HydroNetwork>().Any())
+            {
+                importers.AddRange(GetHydroNetworkImporters());
+            }
+            if (hydroModel.Activities.OfType<RealTimeControlModel>().Any())
+            {
+                importers.AddRange(GetRealTimeControlModelImporters());
+            }
+            if (hydroModel.Activities.OfType<RainfallRunoffModel>().Any())
+            {
+                importers.AddRange(GetRainfallRunoffModelImporters());
+            }
+
+            return BuildPartialSobekImporter(sobekPath, hydroModel,
+                importers.Distinct(new ImporterTypeComparer()).
+                    ToList());
+        }
         private class ImporterTypeComparer : IEqualityComparer<IPartialSobekImporter>
         {
             public bool Equals(IPartialSobekImporter x, IPartialSobekImporter y)
@@ -98,6 +165,61 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                                 };
 
             return BuildPartialSobekImporter(sobekPath, region, importers);
+        }
+        private static IPartialSobekImporter BuildWaterFlowFMModelImporter(string sobekPath, WaterFlowFMModel waterFlowFMModel)
+        {
+            return BuildPartialSobekImporter(sobekPath, waterFlowFMModel, GetWaterFlowFMModelImporters());
+        }
+
+        private static IPartialSobekImporter BuildRealTimeControlModelImporter(string sobekPath, RealTimeControlModel realTimeControlModel)
+        {
+            return BuildPartialSobekImporter(sobekPath, realTimeControlModel, GetRealTimeControlModelImporters());
+        }
+
+        private static SobekControllersTriggersImporter[] GetRealTimeControlModelImporters()
+        {
+            return new[] { new SobekControllersTriggersImporter() };
+        }
+
+        private static IPartialSobekImporter BuildRainfallRunoffModelImporter(string sobekPath, RainfallRunoffModel rainfallRunoffModel)
+        {
+            return BuildPartialSobekImporter(sobekPath, rainfallRunoffModel, GetRainfallRunoffModelImporters());
+        }
+
+        private static IEnumerable<IPartialSobekImporter> GetWaterFlowFMModelImporters()
+        {
+            return new List<IPartialSobekImporter>
+            {
+                new SobekBranchesImporter(),
+                new SobekCrossSectionsImporter(),
+                new SobekStructuresImporter(),
+                new SobekLateralSourcesImporter(),
+                new SobekMeasurementStationsImporter(),
+                new SobekRoughnessImporter(),
+                //new SobekInitialConditionsImporter(),
+                new SobekBoundaryConditionsImporter(),
+                new SobekLateralSourcesDataImporter(),
+                new SobekComputationalGridImporter(),
+                new SobekLinkageNodeImporter(),
+                //new SobekSettingsImporter(),
+                //new SobekSaltImporter(),
+                new SobekRetentionImporter()
+            };
+        }
+
+        private static IEnumerable<IPartialSobekImporter> GetRainfallRunoffModelImporters()
+        {
+            return new List<IPartialSobekImporter>
+            {
+                //new SobekRRDrainageBasinImporter(),
+                //new SobekRRSettingsImporter(),
+                //new SobekRRPavedImporter(),
+                //new SobekRRUnpavedImporter(),
+                //new SobekRRGreenhouseImporter(),
+                //new SobekRRSacramentoImporter(),
+                //new SobekRRMeteoDataImporter(),
+                //new SobekRRBoundaryConditionsImporter(),
+            };
         }
     }
 }

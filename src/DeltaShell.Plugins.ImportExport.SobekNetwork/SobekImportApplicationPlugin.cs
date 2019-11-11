@@ -42,6 +42,9 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
         
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
+            yield return new SobekHydroModelImporter();
+            yield return new SobekWaterFlowModel1DToModelOnRootImporter();
+            yield return new SobekWaterFlowModel1DToModelImporter();
             yield return new SobekNetworkImporter();
             yield return new SobekNetworkToNetworkImporter();
         }
