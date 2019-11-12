@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using NUnit.Framework;
@@ -35,6 +36,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(1, controlGroup.Conditions.Count);
             Assert.AreEqual(2, controlGroup.Rules.Count);
             Assert.AreNotEqual(controlGroup.Conditions[0].FalseOutputs, controlGroup.Conditions[0].TrueOutputs);
+        }
+
+        [Test]
+        public void CreateControlGroupWithTwoRulesOnOneOutput_ThenCorrectControlGroupIsCreated()
+        {
+            // Call
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateControlGroupWithTwoRulesOnOneOutput();
+
+            // Assert
+            Output output = controlGroup.Outputs.Single();
+
+            IEventedList<RuleBase> rules = controlGroup.Rules;
+            Assert.That(rules.Count, Is.EqualTo(2));
+            Assert.That(rules.All(rule => rule.Outputs.Single().Equals(output)));
+
+            IEventedList<ConditionBase> conditions = controlGroup.Conditions;
+            Assert.That(conditions.Count, Is.EqualTo(2));
+            Assert.That(conditions[0].TrueOutputs.Single().Equals(rules[0]));
+            Assert.That(conditions[1].TrueOutputs.Single().Equals(rules[1]));
         }
     }
 }

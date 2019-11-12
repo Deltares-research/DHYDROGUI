@@ -5,7 +5,6 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Feature;
@@ -73,14 +72,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 {
                     exceptions.Add(new ValidationException(string.Format("Output item at index {0} in control group '{1}' is not connected.",
                         controlGroup.Outputs.IndexOf(output), controlGroup.Name)));
-                }
-                var starts = ControlGroupHelper.StartObjectsForOutput(controlGroup, output);
-                if (starts.Count > 1)
-                {
-                    var names = "";
-                    starts.ForEach(s => names += s.Name + ", ");
-                    exceptions.Add(new ValidationException(string.Format("Output item at index {0} in control group '{1}' has multiple Active Condition Paths {2}.", 
-                        controlGroup.Outputs.IndexOf(output), controlGroup.Name, names)));
                 }
             }
 
