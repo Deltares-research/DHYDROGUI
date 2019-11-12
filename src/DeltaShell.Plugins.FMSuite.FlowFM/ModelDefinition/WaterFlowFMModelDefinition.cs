@@ -612,6 +612,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {
                     timeUnitInSeconds = 3600d;
                 }
+                else if (unitString.ToLower().Equals("d"))
+                {
+                    timeUnitInSeconds = 86400d;
+                }
             }
             var ticks = (long)(TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
             var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
@@ -632,6 +636,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 else if (unitString.ToLower().Equals("h"))
                 {
                     numSecondsInTimeStep = 3600;
+                }
+                else if (unitString.ToLower().Equals("d"))
+                {
+                    numSecondsInTimeStep = 86400;
                 }
             }
             var referenceDate = (DateTime)GetModelProperty(KnownProperties.RefDate).Value;
