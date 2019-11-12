@@ -170,9 +170,8 @@
     <Reference Include="Nini">
       <HintPath>.\Nini.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="nunit.framework, Version=2.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.2.7.0\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
@@ -224,6 +223,7 @@
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
     <Compile Include="IO\Exporters\WaterFlowFmAndF1DFileExporterTests.cs" />
     <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
+    <Compile Include="IO\WaterFlowFMModelReadAndWriteTestBenchTests.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="Api\Grid1d2dTest.cs" />

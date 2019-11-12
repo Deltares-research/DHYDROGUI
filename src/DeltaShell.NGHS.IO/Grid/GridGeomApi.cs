@@ -99,23 +99,6 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
-        public int Get1D2DLinksFrom2DBoundaryCellsTo1D(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea, IList<bool> filter1DMesh)
-        {
-            var points = networkDiscretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
-
-            if (points.Count > 2)
-            {
-                if (selectedArea == null)
-                {
-                    selectedArea = GetSelectAllArea(points);
-                }
-
-                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, Make1D2DLateralLinks, selectedArea, LinkType.Lateral, filter1DMesh);
-            }
-            return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
-        }
-
-
         private int Make1D2DRoofLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> roofs)
         {
             IntPtr intPtrXValuesRoofs = IntPtr.Zero;
@@ -224,91 +207,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
             return GridApiDataSet.GridConstants.NOERR;
         }
-
-        private int Make1D2DLateralLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> filterMesh2D)
-        {
-            IntPtr intPtrXValuesSelectedArea = IntPtr.Zero;
-            IntPtr intPtrYValuesSelectedArea = IntPtr.Zero;
-            IntPtr intPtrZValuesSelectedArea = IntPtr.Zero;
-            IntPtr intPtrfilterMesh1DPoints = IntPtr.Zero;
-            IntPtr intPtrXValuesFilterMesh2D = IntPtr.Zero;
-            IntPtr intPtrYValuesFilterMesh2D = IntPtr.Zero;
-            IntPtr intPtrZValuesFilterMesh2D = IntPtr.Zero;
-
-            try
-            {
-                var coordinatesSelectedArea = selectedArea.Coordinates.ToList();
-                coordinatesSelectedArea.Add(new Coordinate(missingValue, missingValue, missingValue)); //add separator
-                int nCoordinatesSelectedArea = coordinatesSelectedArea.Count;
-
-                IList<Coordinate> coordinatesFilterMesh2D = GetCoordinatesAndSeparators(filterMesh2D);
-                var nCoordinatesFilterMesh2D = coordinatesFilterMesh2D.Count;
-
-                int nFilterMesh1DPoints = filterMesh1DPoints.Count;
-                intPtrXValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesSelectedArea);
-                intPtrYValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesSelectedArea);
-                intPtrZValuesSelectedArea = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesSelectedArea);
-                intPtrfilterMesh1DPoints = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * nFilterMesh1DPoints);
-                intPtrXValuesFilterMesh2D = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesFilterMesh2D);
-                intPtrYValuesFilterMesh2D = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesFilterMesh2D);
-                intPtrZValuesFilterMesh2D = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nCoordinatesFilterMesh2D);
-
-                var selectedAreaXCoords = coordinatesSelectedArea.Select(c => c.X).ToArray();
-                var selectedAreaYCoords = coordinatesSelectedArea.Select(c => c.Y).ToArray();
-                var selectedAreaZCoords = Enumerable.Repeat<double>(0.0, nCoordinatesSelectedArea).ToArray();
-                var filterMesh1DPointsArray = filterMesh1DPoints.Select(b => b ? 1 : 0).ToArray();
-                var filterMesh2DXCoords = coordinatesFilterMesh2D.Select(c => c.X).ToArray();
-                var filterMesh2DYCoords = coordinatesFilterMesh2D.Select(c => c.Y).ToArray();
-                var filterMesh2DZCoords = coordinatesFilterMesh2D.Select(c => c.Z).ToArray();
-
-                Marshal.Copy(selectedAreaXCoords, 0, intPtrXValuesSelectedArea, nCoordinatesSelectedArea);
-                Marshal.Copy(selectedAreaYCoords, 0, intPtrYValuesSelectedArea, nCoordinatesSelectedArea);
-                Marshal.Copy(selectedAreaZCoords, 0, intPtrZValuesSelectedArea, nCoordinatesSelectedArea);
-                Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPoints);
-                Marshal.Copy(filterMesh2DXCoords, 0, intPtrXValuesSelectedArea, nCoordinatesFilterMesh2D);
-                Marshal.Copy(filterMesh2DYCoords, 0, intPtrYValuesSelectedArea, nCoordinatesFilterMesh2D);
-                Marshal.Copy(filterMesh2DZCoords, 0, intPtrZValuesSelectedArea, nCoordinatesFilterMesh2D);
-
-                var ierr = geomWrapper.Make1D2DLateralInternalNetlinks(ref nCoordinatesSelectedArea, ref intPtrXValuesSelectedArea,
-                    ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-            }
-            catch
-            {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-            }
-            finally
-            {
-                if (intPtrXValuesSelectedArea != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrXValuesSelectedArea);
-                intPtrXValuesSelectedArea = IntPtr.Zero;
-                if (intPtrYValuesSelectedArea != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrYValuesSelectedArea);
-                intPtrYValuesSelectedArea = IntPtr.Zero;
-                if (intPtrZValuesSelectedArea != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrZValuesSelectedArea);
-                intPtrZValuesSelectedArea = IntPtr.Zero;
-                if (intPtrfilterMesh1DPoints != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrfilterMesh1DPoints);
-                intPtrfilterMesh1DPoints = IntPtr.Zero;
-                if (intPtrXValuesFilterMesh2D != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrXValuesFilterMesh2D);
-                intPtrXValuesFilterMesh2D = IntPtr.Zero;
-                if (intPtrYValuesFilterMesh2D != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrYValuesFilterMesh2D);
-                intPtrYValuesFilterMesh2D = IntPtr.Zero;
-                if (intPtrZValuesFilterMesh2D != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(intPtrZValuesFilterMesh2D);
-                intPtrZValuesFilterMesh2D = IntPtr.Zero;
-            }
-
-            return GridApiDataSet.GridConstants.NOERR;
-        }
-
-
 
         private int Make1D2DLinksFromMesh1D(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> dummy = null)
         {

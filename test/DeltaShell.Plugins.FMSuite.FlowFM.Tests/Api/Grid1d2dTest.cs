@@ -440,7 +440,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }
                 else
                 {
-                    ierr = gridGeomWrapper.Make1D2DLateralInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    Assert.True(false,"No lateral 1D2D links method in gridgeom implemented yet");
+                    ierr = gridGeomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                         ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                     Assert.That(ierr, Is.EqualTo(0));
                 }

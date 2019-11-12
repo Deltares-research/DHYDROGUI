@@ -182,9 +182,8 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46639-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="nunit.framework, Version=2.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.2.7.0\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="OpenMI.Standard2">
       <HintPath>..\..\..\..\Products\NGHS\src\DelftTools.OpenMI2\lib\OpenMI.Standard2.dll</HintPath>
