@@ -110,6 +110,6 @@ orifice,crestWidth,Crest width,Double,,,,,Crest width
 orifice,gateLowerEdgeLevel,Lower edge level,Steerable,,,,,Lower edge level
 orifice,corrCoef,Correction coefficient,Double,1,,,,Correction coefficient
 orifice,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Velocity height flag
-compoundstructure,type,Type,String,compound,,,,Type
-compoundstructure,numStructures,Number of structures,int,,,,,Number of structures
-compoundstructure,structureIds,Structure ids,String,,,,,Structure ids
+compound,type,Type,String,compound,,,,Type
+compound,numStructures,Number of structures,int,,,,,Number of structures
+compound,structureIds,Structure ids,String,,,,,Structure ids
