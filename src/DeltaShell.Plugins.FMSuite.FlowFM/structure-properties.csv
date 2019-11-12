@@ -1,42 +1,65 @@
 StructureType,attributeName,Caption,Type,Default,Min,Max,StructureFileOnly,Description
 structure,type,Type:Weir|Pump|Gate|GeneralStructure|LeveeBreach,weir|pump|gate|generalstructure|dambreak,,,,TRUE,Type of structure
-structure,id,Name,String,,,,FALSE,Name of the structure
-structure,x,X,Double,,,,FALSE,X coordinate for a 1D structure
-structure,y,Y,Double,,,,FALSE,Y coordinate for a 1D structure
-structure,polylinefile,Polyline filepath,FileName,,,,TRUE,*.pli; Polyline geometry definition for 2D structure
-weir,crest_level,Crest level,Steerable,,,,FALSE,Weir crest height (in [m])
-weir,crest_width,Crest width,Double,,,,FALSE,Weir crest width (in [m])
-weir,lat_contr_coeff,Lateral contraction coefficient,Double,1,,,FALSE,Lateral contraction coefficient
+structure,id,Id,String,,,,FALSE,Unique structure id
+structure,name,Name,String,,,,,Given name in the user interface
+structure,branchId,Branch id,String,,,,,(optional) Branch on which the structure is lcoated.
+structure,chainage,Chainage,Double,,,,,(optional) Chainage on the branch (m).
+structure,numCoordinates,Number of coordinates,int,,,,,(optional) Number of values in xCoordinates and yCoordinates. This value should be greater or equal 2.
+structure,xCoordinates,X,Double,,,,FALSE,X coordinate for a 1D structure
+structure,yCoordinates,Y,Double,,,,FALSE,Y coordinate for a 1D structure
+structure,polylinefile,Polyline filepath,FileName,,,,TRUE,*.pli
+weir,type,Type,String,weir,,,,"Structure type, must read weir."
+weir,crestLevel,Crest level,Steerable,,,,FALSE,Weir crest height (in [m])
+weir,crestWidth,Crest width,Double,,,,FALSE,Weir crest width (in [m])
+weir,corrCoef,Correction coefficient,Double,1,,,FALSE,Correction coefficient (-)
+weir,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Flag indicates whether the velocity height is to be calculated or not.
+pump,type,Type,String,pump,,,,"Structure type, must read pump."
+pump,orientation,Orientation,String,positive,,,,Pump orientation. Possible values: positive, negative.
+pump,controlSide,Control side,String,,,,,On which side(s) built-in pump triggering is active. Only required/used when numStages > 0. Possible values: suctionSide: Suction side control. deliverySide: Delivery side control. both: Suction and Delivery side control.
+pump,numStages,Number of trigger stages,Int,0,,,,Number of trigger stages in pump. Set to 0 to disable built-in triggering.
 pump,capacity,Capacity,Steerable,,,,FALSE,Pump capacity (in [m3/s])
-gate,sill_level,Sill level,Steerable,,,,FALSE,Gate sill level (in [m])
-gate,lower_edge_level,Lower edge level,Steerable,,,,FALSE,Gate lower edge level (in [m])
-gate,opening_width,Opening width,Steerable,,,,FALSE,Gate opening width (in [m])
-gate,door_height,Door height,Double,1,,,FALSE,Gate door height (in [m])
-gate,horizontal_opening_direction,Horizontal opening direction:Symmetric|From Left|From Right,symmetric|from_left|from_right,symmetric,,,FALSE,Horizontal direction of the opening doors
-gate,sill_width,Sill width,Double,,,,FALSE,Gate sill width (in [m])
-generalstructure,widthleftW1,Width left 1,Double,,,,FALSE,Width left side of structure (m)
-generalstructure,widthleftWsdl,Width left 2,Double,,,,FALSE,Width structure left side (m)
-generalstructure,widthcenter,Width center,Double,,,,FALSE,Width structure centre (m)
-generalstructure,widthrightWsdr,Width right 1,Double,,,,FALSE,Width structure right side (m)
-generalstructure,widthrightW2,Width right 2,Double,,,,FALSE,Width right side of structure (m)
-generalstructure,levelleftZb1,Bed level left of structure,Double,,,,False,Bed level left side of structure (m AD)
-generalstructure,levelleftZbsl,Bed level left,Double,,,,FALSE,Bed level left side structure (m AD)
-generalstructure,levelcenter,Bed level center,Double,,,,FALSE,Bed level at centre of structure (m AD)
-generalstructure,levelrightZbsr,Bed level right,Double,,,,FALSE,Bed level right side structure (m AD)
-generalstructure,levelrightZb2,Bed level right of structure,Double,,,,FALSE,Bed level right side of structure (m AD)
-generalstructure,gateheight,Gate height,Double,,,,FALSE,Gate lower edge level (m AD)
-generalstructure,pos_freegateflowcoeff,Postive free gate flow,Double,,,,FALSE,Positive free gate flow (-)
-generalstructure,pos_drowngateflowcoeff,Postive drown gate flow,Double,,,,FALSE,Positive drowned gate flow (-)
-generalstructure,pos_freeweirflowcoeff,Positive free weir flow,Double,,,,FALSE,Positive free weir flow (-)
-generalstructure,pos_drownweirflowcoeff,Positive drown weir flow,Double,,,,FALSE,Positive drowned weir flow (-)
-generalstructure,pos_contrcoeffreegate,Positvie flow contraction,Double,,,,FALSE,Positive flow contraction coefficient (-)
-generalstructure,neg_freegateflowcoeff,Negative free gate flow,Double,,,,FALSE,Negative free gate flow (-)
-generalstructure,neg_drowngateflowcoeff,Negative drown gate flow,Double,,,,FALSE,Negative drowned gate flow (-)
-generalstructure,neg_freeweirflowcoeff,Negative free weir flow,Double,,,,FALSE,Negative free weir flow (-)
-generalstructure,neg_drownweirflowcoeff,Negative drown weir flow,Double,,,,FALSE,Negative drowned weir flow (-)
-generalstructure,neg_contrcoeffreegate,Negative flow contraction,Double,,,,FALSE,Negative flow contraction coefficient (-)
-generalstructure,extraresistance,Extra resistance,Double,,,,FALSE,Extra resistance (-)
-generalstructure,gatedoorheight,Gate door height,Double,,,,FALSE,Gate opening height (m)
+pump,startLevelSuctionSide,Start level of suction side,Double[],,,,,Start level suction side (m AD). (number of values = numStages)
+pump,stopLevelSuctionSide,Stop level of suction side,Double[],,,,,Stop level suction side (m AD). (number of values = numStages)
+pump,startLevelDeliverySide,Start level of delivery side,Double[],,,,,Start level suction side (m AD). (number of values = numStages)
+pump,stopLevelDeliverySide,Stop level of delivery side,Double[],,,,,Stop level suction side (m AD). (number of values = numStages)
+pump,numReductionLevels,Number of reduction levels,Int,0,,,,Number of levels in reduction table.
+pump,head,Head,Double[],,,,,Head, the difference in waterlevel (delivery side - suction side) (m). (number of values = numReductionLevels)
+pump,reductionFactor,Reduction factor,Double[],,,,,Reduction factor (-). (number of values = numReductionLevels)
+gate,type,Type,String,gate,,,,"Structure type, must read gate."
+gate,crestLevel,Crest level,Steerable,,,,,Filename of a <*.pli> file containing x-/y-points of the gate's position. (2D only)
+gate,crestWidth,Crest width,Double,,,,,Crest width. (m)
+gate,gateLowerEdgeLevel,Lower edge level,Steerable,,,,FALSE,Gate lower edge level (in [m])
+gate,gateHeight,Door height,Double,1,,,FALSE,Gate door height (in [m])
+gate,gateOpeningWidth,Opening width,Steerable,0,,,FALSE,Gate opening width (in [m])
+gate,gateOpeningHorizontalDirection,Horizontal opening direction:Symmetric|From Left|From Right,symmetric|fromLeft|fromRight,symmetric,,,FALSE,Horizontal direction of the opening doors
+generalstructure,type,Type,String,generalStructure,,,,"Structure type, must read generalStructure."
+generalstructure,upstream1Width,Upstream width 1,Double,10,,,,Type
+generalstructure,upstream1Level,Upstream level 1,Double,0,,,,Upstream width 1
+generalstructure,upstream2Width,Upstream width 2,Double,10,,,,Upstream level 1
+generalstructure,upstream2Level,Upstream level 2,Double,0,,,,Upstream width 2
+generalstructure,crestWidth,Crest width,Double,10,,,,Upstream level 2
+generalstructure,crestLevel,Crest level,Double,0,,,,Crest width
+generalstructure,crestLength,Crest length,Double,0,,,,Crest level
+generalstructure,downstream1Width,Downstream width 1,Double,10,,,,Crest length
+generalstructure,downstream1Level,Downstream level 1,Double,0,,,,Downstream width 1
+generalstructure,downstream2Width,Downstream width 2,Double,10,,,,Downstream level 1
+generalstructure,downstream2Level,Downstream level 2,Double,0,,,,Downstream width 2
+generalstructure,gateLowerEdgeLevel,Gate lower edge level,Double,11,,,,Downstream level 2
+generalstructure,posFreeGateFlowCoeff,Positive free gate flow corr. coeff.,Double,1,,,,Gate lower edge level
+generalstructure,posDrownGateFlowCoeff,Positive drowned gate flow corr. coeff.,Double,1,,,,Positive drowned gate flow corr. coeff.
+generalstructure,posFreeWeirFlowCoeff,Postive free weir flow corr. coeff.,Double,1,,,,Postive free weir flow corr. coeff.
+generalstructure,posDrownWeirFlowCoeff,Positive drowned weir flow corr. coeff.,Double,1,,,,Positive drowned weir flow corr. coeff.
+generalstructure,posContrCoefFreeGate,Positive gate flow contraction coefficient.,Double,1,,,,Positive gate flow contraction coefficient.
+generalstructure,negFreeGateFlowCoeff,Negative free gate flow corr. coeff.,Double,1,,,,Negative free gate flow corr. coeff.
+generalstructure,negDrownGateFlowCoeff,Negative drowned gate flow corr. coeff.,Double,1,,,,Negative drowned gate flow corr. coeff.
+generalstructure,negFreeWeirFlowCoeff,Negative free weir flow corr. coeff.,Double,1,,,,Negative free weir flow corr. coeff.
+generalstructure,negDrownWeirFlowCoeff,Negative drowned weir flow corr. coeff.,Double,1,,,,Negative drowned weir flow corr. coeff.
+generalstructure,negContrCoefFreeGate,Negative gate flow contraction coefficient.,Double,1,,,,Negative gate flow contraction coefficient.
+generalstructure,extraResistance,Extra resistance,Double,0,,,FALSE,Extra resistance (-)
+generalstructure,gateHeight,Gate height,Double,1d10,,,,Gate height
+generalstructure,gateOpeningWidth,Gate opening width,Double,0,,,,Gate opening width
+generalstructure,gateOpeningHorizontalDirection,Gate opening horizontal direction,String,symmetric,,,,Gate opening horizontal direction
+generalstructure,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Velocity height flag
 dambreak,StartLocationX,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
 dambreak,StartLocationY,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
 dambreak,Algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined
@@ -49,12 +72,44 @@ dambreak,F2,Factor 2,Double,,,,FALSE,Factor 2, Beta [-]
 dambreak,Ucrit,Critical flow velocity,Double,,,,FALSE,Critical flow velocity [m/s]
 dambreak,T0,Breach start time,Double,,,,FALSE,Start time of the breach (in seconds) [s]
 dambreak,State,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set via BMI)
-dambreak,DambreakLevelsAndWidths,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach 
-
-
-
-
-
-
-
-
+dambreak,DambreakLevelsAndWidths,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach
+universalweir,type,Type,String,universalWeir,,,,"Structure type, must read universalWeir."
+universalweir,allowedFlowDir,Allowed flow direction,String,,,,,Possible values: both, positive, negative, none.
+universalweir,numLevels,Number of yz-values,Int,,,,,Number of yz-values.
+universalweir,yValues,Y,Double[],,,,,y-values of the cross section (m). (number of values = numLevels)
+universalweir,zValues,Z,Double[],,,,,z-values of the cross section (m). (number of values = numLevels)
+universalweir,crestLevel,Crest level,Double,,,,,Crest level of weir (m AD).
+universalweir,dischargeCoeff,Discharge coefficient,Double,,,,,Discharge coefficient
+culvert,type,Type,String,culvert,,,,Type
+culvert,allowedFlowDir,Allowed flow direction,String,,,,,Allowed flow direction
+culvert,leftLevel,Left level,Double,,,,,Left level
+culvert,rightLevel,Right level,Double,,,,,Right level
+culvert,csDefId,Id of cross section definition,String,,,,,Id of cross section definition
+culvert,length,Length,Double,,,,,Length
+culvert,inletLossCoeff,Inlet loss coefficient,Double,,,,,Inlet loss coefficient
+culvert,outletLossCoeff,Outlet loss coefficient,Double,,,,,Outlet loss coefficient
+culvert,valveOnOff,Valve,Int,,,,,Valve
+culvert,valveOpeningHeight,Valve opening height,Steerable,,,,,Valve opening height
+culvert,numLossCoeff,Number of loss coefficients,Int,,,,,Number of loss coefficients
+culvert,relOpening,Relative valve opening,Double[],,,,,Relative valve opening
+culvert,lossCoeff,Loss coefficients,Double[],,,,,Loss coefficients
+culvert,bedFrictionType,Friction type,String,,,,,Friction type
+culvert,bedFriction,Friction value,Double,,,,,Friction value
+bridge,type,Type,String,bridge,,,,Type
+bridge,allowedFlowDir,Allowed flow direction,String,,,,,Allowed flow direction
+bridge,csDefId,Id of cross section definition,String,,,,,Id of cross section definition
+bridge,bedLevel,Bed level,Double,,,,,Bed level
+bridge,inletLossCoeff,Inlet loss coefficient,Double,,,,,Inlet loss coefficient
+bridge,outletLossCoeff,Outlet loss coefficient,Double,,,,,Outlet loss coefficient
+bridge,frictionType,Friction type,String,,,,,Friction type
+bridge,friction,Friction value,Double,,,,,Friction value
+bridge,length,Length,Double,,,,,Length
+orifice,type,Type,String,orifice,,,,Type
+orifice,crestLevel,Crest level,Double,,,,,Crest level
+orifice,crestWidth,Crest width,Double,,,,,Crest width
+orifice,gateLowerEdgeLevel,Lower edge level,Steerable,,,,,Lower edge level
+orifice,corrCoef,Correction coefficient,Double,1,,,,Correction coefficient
+orifice,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Velocity height flag
+compoundstructure,type,Type,String,compound,,,,Type
+compoundstructure,numStructures,Number of structures,int,,,,,Number of structures
+compoundstructure,structureIds,Structure ids,String,,,,,Structure ids
