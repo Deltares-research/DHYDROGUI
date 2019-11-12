@@ -9,6 +9,7 @@ namespace DelftTools.Hydro
         [Description("weir")] Weir,
         [Description("generalstructure")] GeneralStructure,
         [Description("dambreak")] LeveeBreach,
+        [Description("bridge")] Bridge,
         InvalidType
     }
 }
