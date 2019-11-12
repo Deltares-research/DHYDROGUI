@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -21,6 +22,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -897,6 +899,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             WaterFlowFMModel loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
             Assert.IsNotNull(loadedModel);
+        }
+
+        [Test]
+        public void GivenASavedModelWithOutput_WhenRenamingTheModelAndSaving_ThenOutputFilesAreRelinked()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                try
+                {
+                    // Arrange
+                    app.IsProjectCreatedInTemporaryDirectory = true;
+                    app.Run();
+
+                    using (WaterFlowFMModel model = CreatedModelWithOutputInProject())
+                    {
+                        app.SaveProjectAs(Path.Combine(tempDirectory.Path, "project.dsproj"));
+
+                        // Precondition
+                        Assert.That(File.Exists(model.OutputMapFileStore.Path),
+                                    "Precondition violated: before renaming, the model should refer to an existing map file.");
+
+                        // Act: rename model and save
+                        model.Name = "new_name";
+                        app.SaveProject();
+
+                        // Assert
+                        Assert.That(File.Exists(model.OutputMapFileStore.Path),
+                                    "Output file path does not exist: output should be correctly relinked.");
+                    }
+                }
+                finally
+                {
+                    app.CloseProject();
+                }
+            }
+        }
+
+        private WaterFlowFMModel CreatedModelWithOutputInProject()
+        {
+            var model = new WaterFlowFMModel();
+
+            app.Project.RootFolder.Add(model);
+
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2);
+            model.ReloadGrid(true, true);
+
+            Assert.AreEqual(0, model.Validate().AllErrors.Count(),
+                            "Precondition violated: there are errors in the model.");
+            app.RunActivity(model);
+            Assert.AreEqual(ActivityStatus.Cleaned, model.Status,
+                            "Precondition violated: model run failed.");
+
+            return model;
         }
 
         [Test]
