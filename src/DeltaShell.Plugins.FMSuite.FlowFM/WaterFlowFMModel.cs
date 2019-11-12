@@ -147,14 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // q's supplied by externals
             AddInflowsDataItem();
 
-            var boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
+            boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
             {
                 ValueType = typeof(FeatureData<IFunction, INode>)
             };
-            dataItems.Add(boundaryNodeDataItemSet);
-
-            var lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
-            dataItems.Add(lateralSourceDataItemSet);
+            
+            lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
         }
 
         private void AddAreaToModel()
@@ -1635,8 +1633,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
             {
                 var bc = sender as Model1DBoundaryNodeData;
-                var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag);
-                var bcDataItem = dataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
+                
+                var bcDataItem = boundaryNodeDataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
                 bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
             }
         }

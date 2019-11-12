@@ -335,9 +335,9 @@ class HydroModelBuilder(object):
         
         # remove rr -> fm
         # remove fm -> rr
-        if ((activityBeingRemoved == rr and fm) or (activityBeingRemoved == fm and rr)):
-            self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
-            self.links_from_fm_to_rr(model, fm, rr, remove=True)
+        #if ((activityBeingRemoved == rr and fm) or (activityBeingRemoved == fm and rr)):
+            #self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
+            #self.links_from_fm_to_rr(model, fm, rr, remove=True)
         
     # Note: we no longer want to remove the area from a region when fm model is removed from hydro model
     # I've left this function stub here as we may want to use it for other things in future - RP    
@@ -368,9 +368,9 @@ class HydroModelBuilder(object):
 
         # remove rr -> fm
         # remove fm -> rr
-        if (rr and fm):
-            self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
-            self.links_from_fm_to_rr(model, fm, rr, remove=True)
+        #if (rr and fm):
+            #self.links_from_rr_to_flowfm(model, rr, fm, remove=True)
+            #self.links_from_fm_to_rr(model, fm, rr, remove=True)
 
         # rebuild
         for activity in model.Activities:
@@ -550,11 +550,11 @@ class HydroModelBuilder(object):
                 self.links_from_flow_to_rr(model, flow, rr)
 
         # rr or fm
-        if fm and rr and (rr == child or fm == child): # rr or fm is added and fm or rr exists
-            self.links_from_rr_to_flowfm(model, rr, fm)
+        #if fm and rr and (rr == child or fm == child): # rr or fm is added and fm or rr exists
+            #self.links_from_rr_to_flowfm(model, rr, fm)
 
-            if (rr in CompositeActivityExtensions.GetActivitiesRunningSimultaneous(model, fm)):
-                self.links_from_fm_to_rr(model, fm, rr)
+            #if (rr in CompositeActivityExtensions.GetActivitiesRunningSimultaneous(model, fm)):
+                #self.links_from_fm_to_rr(model, fm, rr)
 
         # wave added and fm already or v.v.
         if wave and fm and (wave == child or fm == child):

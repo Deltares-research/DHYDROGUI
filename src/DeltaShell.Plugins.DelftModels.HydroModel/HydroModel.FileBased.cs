@@ -26,11 +26,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual void SaveLinks()
         {
-            IModel flowModel, rtcModel;
-            if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
+            if (TryGetFmAndRtcModel(out var flowModel1, out var rtcModel))
             {
                 modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, false));
+                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel1, rtcModel, false));
+            }
+
+            if (TryGetFmAndRRModel(out var flowModel2, out var rrModel))
+            {
+                modelExchangeInfos.Clear();
+                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel2, rrModel, false));
             }
         }
 
@@ -45,6 +50,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 modelExchangeInfos.Clear();
                 modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, true));
+            }
+
+            if (TryGetFmAndRRModel(out var flowModel2, out var rrModel))
+            {
+                modelExchangeInfos.Clear();
+                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel2, rrModel, true));
             }
         }
 
@@ -110,6 +121,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             return flowModel != null && rtcModel != null;
+        }
+
+        private bool TryGetFmAndRRModel(out IModel flowModel, out IModel rrModel)
+        {
+            flowModel = null;
+            rrModel = null;
+
+            foreach (var model in Models)
+            {
+                if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))
+                {
+                    flowModel = model;
+                }
+                else if (model.GetEntityType().Name.Equals("RainfallRunoffModel"))
+                {
+                    rrModel = model;
+                }
+            }
+
+            return flowModel != null && rrModel != null;
         }
 
         public static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)

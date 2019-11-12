@@ -95,6 +95,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private IHydroNetwork observedNetwork;
+        private DataItemSet boundaryNodeDataItemSet;
+        private DataItemSet lateralSourceDataItemSet;
 
         public virtual void UnSubscribeFromNetwork()
         {
@@ -412,15 +414,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D
         {
-            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag).AsEventedList<Model1DBoundaryNodeData>(); }
-            private set { GetDataItemByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag).Value =  value; }
+            get { return boundaryNodeDataItemSet.AsEventedList<Model1DBoundaryNodeData>(); }
+            private set { boundaryNodeDataItemSet.Value =  value; }
         }
         /// <summary>
         /// Gets the boundary conditions data item set for this model
         /// </summary>
         public virtual IDataItemSet BoundaryConditions1DDataItemSet
         {
-            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag); }
+            get { return boundaryNodeDataItemSet; }
         }
 
         /// <summary>
@@ -429,7 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void AddBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             var dataItem = new DataItem(boundaryNodeData) { Hidden = (boundaryNodeData.DataType == Model1DBoundaryNodeDataType.None) };
-            GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag).DataItems.Add(dataItem);
+            boundaryNodeDataItemSet.DataItems.Add(dataItem);
         }
         private void UpdateBoundaryCondition(NotifyCollectionChangedEventArgs e)
         {
@@ -458,12 +460,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
-            var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag);
-            var dataItem = dataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, boundaryNodeData));
-
+            var dataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, boundaryNodeData));
             if (dataItem == null) return;
 
-            dataItemSet.DataItems.Remove(dataItem);
+            boundaryNodeDataItemSet.DataItems.Remove(dataItem);
         }
 
         /// <summary>
@@ -473,13 +473,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (boundaryNodeData == null) return;
 
-            var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.BoundaryConditionsTag);
-            var currentDataItem = dataItemSet.DataItems.FirstOrDefault(di => ((Model1DBoundaryNodeData) di.Value).Feature == boundaryNodeData.Feature);
+            var currentDataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di => ((Model1DBoundaryNodeData) di.Value).Feature == boundaryNodeData.Feature);
             if (currentDataItem == null) return;
-            var insertIndex = dataItemSet.DataItems.IndexOf(currentDataItem);
+            var insertIndex = boundaryNodeDataItemSet.DataItems.IndexOf(currentDataItem);
 
-            dataItemSet.DataItems.RemoveAt(insertIndex);
-            dataItemSet.DataItems.Insert(insertIndex, new DataItem(boundaryNodeData));
+            boundaryNodeDataItemSet.DataItems.RemoveAt(insertIndex);
+            boundaryNodeDataItemSet.DataItems.Insert(insertIndex, new DataItem(boundaryNodeData));
         }
         private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
@@ -487,7 +486,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             lateralSourceData.UseSalt = UseSalinity;
             lateralSourceData.UseTemperature = UseTemperature;
 
-            GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag).DataItems.Add(new DataItem(lateralSourceData));
+            lateralSourceDataItemSet.DataItems.Add(new DataItem(lateralSourceData));
         }
         private void UpdateLateralSource(NotifyCollectionChangedEventArgs e)
         {
@@ -516,7 +515,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void RemoveLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
-            var dataItemSet = GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag);
+            var dataItemSet = lateralSourceDataItemSet;
             var dataItem = dataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, lateralSourceData));
 
             if (dataItem == null) return;
@@ -525,19 +524,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void ClearLateralSourceData()
         {
-            GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag).DataItems.Clear();
+            lateralSourceDataItemSet.DataItems.Clear();
         }
         private void ClearBoundaryConditions()
         {
-            GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag).DataItems.Clear();
+            boundaryNodeDataItemSet.DataItems.Clear();
         }
         /// <summary>
         /// Gets the lateral source data for this model
         /// </summary>
         public virtual IEventedList<Model1DLateralSourceData> LateralSourcesData
         {
-            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag).AsEventedList<Model1DLateralSourceData>(); }
-            private set { GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag).Value = value; ; }
+            get { return lateralSourceDataItemSet.AsEventedList<Model1DLateralSourceData>(); }
+            private set { lateralSourceDataItemSet.Value = value; ; }
         }
 
         /// <summary>
@@ -545,24 +544,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public virtual IDataItemSet LateralSourcesDataItemSet
         {
-            get { return GetDataItemSetByTag(WaterFlowFMModelDataSet.LateralSourcesDataTag); }
+            get { return lateralSourceDataItemSet; }
         }
 
         [NoNotifyPropertyChange]
         public virtual IFeatureCoverage Inflows
         {
-            //get { return inflows; }
-            //private set { inflows = value; }
-            get { return (IFeatureCoverage)GetDataItemValueByTag(WaterFlowFMModelDataSet.InflowsTag); }
-            private set { GetDataItemByTag(WaterFlowFMModelDataSet.InflowsTag).Value = value;  }
+            get { return inflows; }
+            private set { inflows = value; }
         }
+
         private void AddInflowsDataItem()
         {
-            var inflows = new FeatureCoverage("Inflows");
+            inflows = new FeatureCoverage("Inflows");
             inflows.Arguments.Add(new Variable<DateTime>()); //time variable
             inflows.Arguments.Add(new Variable<IFeature> { IsAutoSorted = false }); //feature variable
             inflows.Components.Add(new Variable<double>("Inflows", new Unit("Discharge", "m³/s"))); //component
-            AddDataItem(inflows, DataItemRole.Input, WaterFlowFMModelDataSet.InflowsTag);
         }
         public virtual INetworkCoverage OutputWaterLevel1D
         {
