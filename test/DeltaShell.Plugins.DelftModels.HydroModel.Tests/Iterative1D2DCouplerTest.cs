@@ -31,32 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     public class Iterative1D2DCouplerTest
     {
         [Test]
-        public void Iterative1D2DCouplerSetFlagsInFlow2DModel()
-        {
-            var twoDimModel = new WaterFlowFMModel();
-            var oneDimModel = MockRepository.GenerateStrictMock<ITimeDependentModel>();
-
-            oneDimModel.Expect(m => m.AllDataItems).Return(Enumerable.Empty<IDataItem>());
-            var isPartOf1D2DModelGuiProperty = twoDimModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
-            isPartOf1D2DModelGuiProperty.Value = false;
-
-            twoDimModel.DisableFlowNodeRenumbering = false;
-
-            Assert.IsFalse((bool)isPartOf1D2DModelGuiProperty.Value);
-            Assert.IsFalse(twoDimModel.DisableFlowNodeRenumbering);
-
-            var coupler = new Iterative1D2DCoupler
-            {
-                Name = "testCoupling",
-                Flow1DModel = oneDimModel,
-                Flow2DModel = twoDimModel,
-            };
-
-            Assert.IsTrue((bool)isPartOf1D2DModelGuiProperty.Value);
-            Assert.IsTrue(twoDimModel.DisableFlowNodeRenumbering);
-        }
-
-        [Test]
         public void Iterative1D2DCouplerAsksFlow2DModelForLinkOutput()
         {
             var twoDimModel = (ITimeDependentModel) MockRepository.GenerateStrictMock(typeof(ITimeDependentModel), new[] {typeof(IDimrModel),typeof(INotifyPropertyChanged)});

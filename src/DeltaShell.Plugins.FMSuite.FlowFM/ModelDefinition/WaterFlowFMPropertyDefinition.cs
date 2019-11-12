@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string SpecifyWaqOutputStopTime = "SpecifyWaqOutputStopTime";
         public const string WaqOutputStopTime = "WaqOutputStopTime";
         public const string UseMorSed = "UseMorSed";
-        public const string PartOf1D2DModel = "PartOf1D2DModel";
         public const string WriteSnappedFeatures = "WriteSnappedFeatures";
 
         public const string TargetMduPath = "TargetMduPath";

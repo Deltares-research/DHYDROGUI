@@ -170,9 +170,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
                 }
-                var isPartOf1D2DModel = (bool)ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-
-                var newGrid = ReadGridFromNetFile(NetFilePath, isPartOf1D2DModel); //may throw...
+                
+                var newGrid = UnstructuredGridFileHelper.LoadFromFile(NetFilePath); //may throw...
                 if (newGrid == null)
                 {
                     Grid = new UnstructuredGrid();
@@ -469,25 +468,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             FunctionHelper.SetValuesRaw(result.Components[0], values);
 
             return result;
-        }
-
-        private static UnstructuredGrid ReadGridFromNetFile(string netFilePath, bool is1D2DModel)
-        {
-            if (is1D2DModel)
-            {
-                try
-                {
-                    // Try to import the grid after an init step from FM kernel, in order to get the renumbered grid.
-                    return GridHelper.CreateUnstructuredGridFromNetCdfFor1D2DLinks(netFilePath);
-                }
-                catch (Exception e)
-                {
-                    // Log exception but continue.
-                    Log.WarnFormat(Resources.WaterFlowFMModel_ReadGridFromNetFile_Error_when_reading_grid_after_1d2d_initialisation_step_in_the_D_FLow_FM_kernel___0_, e.Message);
-                }
-            }
-
-            return UnstructuredGridFileHelper.LoadFromFile(netFilePath);
         }
 
         // Can be further optimized by letting InsertGrid accept lists of coverages

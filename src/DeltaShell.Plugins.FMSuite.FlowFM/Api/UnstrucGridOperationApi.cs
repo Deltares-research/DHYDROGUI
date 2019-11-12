@@ -105,8 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // Overwrite existing mdu to ignore the properties with adjusted properties
             var mduFile = new MduFile();
-            var isPartOf1D2DModel = (bool)model.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel).Value;
-            mduFile.WriteProperties(mduFilePath, fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties, fullExport, fullExport, useNetCDFMapFormat: isPartOf1D2DModel, disableFlowNodeRenumbering: model.DisableFlowNodeRenumbering);
+            mduFile.WriteProperties(mduFilePath, fullExport ? model.ModelDefinition.Properties.ToList() : adjustedMduProperties, fullExport, fullExport, useNetCDFMapFormat: false, disableFlowNodeRenumbering: model.DisableFlowNodeRenumbering);
 
             TryInitializeApi();
         }

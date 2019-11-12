@@ -131,15 +131,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteGateTimeSeriesFiles(string timFilePath, DateTime referenceDateTime, IGate gate)
         {
-            if (gate.UseSillLevelTimeSeries)
+            if (gate.UseSillLevelTimeSeries && timFilePath.Contains($"{gate.Name}_{StructureRegion.GateCrestLevel.Key}.tim"))
             {
                 new TimFile().Write(timFilePath, gate.SillLevelTimeSeries, referenceDateTime);
             }
-            if (gate.UseLowerEdgeLevelTimeSeries)
+            if (gate.UseLowerEdgeLevelTimeSeries && timFilePath.Contains($"{gate.Name}_{StructureRegion.GateLowerEdgeLevel.Key}.tim"))
             {
                 new TimFile().Write(timFilePath, gate.LowerEdgeLevelTimeSeries, referenceDateTime);
             }
-            if (gate.UseOpeningWidthTimeSeries)
+            if (gate.UseOpeningWidthTimeSeries && timFilePath.Contains($"{gate.Name}_{StructureRegion.GateOpeningWidth.Key}.tim"))
             {
                 new TimFile().Write(timFilePath, gate.OpeningWidthTimeSeries, referenceDateTime);
             }

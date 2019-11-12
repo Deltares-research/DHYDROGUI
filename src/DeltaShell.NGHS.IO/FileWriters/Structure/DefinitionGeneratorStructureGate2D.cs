@@ -26,11 +26,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (gate.UseSillLevelTimeSeries)
             {
                 var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateCrestLevel.Key}.tim";
-                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, timeSeriesFileName, StructureRegion.GateSillLevel.Description);
+                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, timeSeriesFileName, StructureRegion.GateCrestLevel.Description);
             }
             else
             {
-                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, gate.SillLevel, StructureRegion.GateSillLevel.Description, StructureRegion.GateSillLevel.Format);
+                IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, gate.SillLevel, StructureRegion.GateCrestLevel.Description, StructureRegion.GateCrestLevel.Format);
             }
         }
 
@@ -49,7 +49,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddOpeningWidthProperty(IGate gate)
         {
-            IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, gate.OpeningWidth, StructureRegion.GateOpeningWidth.Description, StructureRegion.GateOpeningWidth.Format);
+            if (gate.UseOpeningWidthTimeSeries)
+            {
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateOpeningWidth.Key}.tim";
+                IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, timeSeriesFileName, StructureRegion.GateOpeningWidth.Description);
+            }
+            else
+            {
+                IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, gate.OpeningWidth, StructureRegion.GateOpeningWidth.Description, StructureRegion.GateOpeningWidth.Format);
+            }
         }
 
         private void AddHorizontalDirectionProperty(IGate gate)
@@ -77,7 +85,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (gate.SillWidth > 0.0)
             {
-                IniCategory.AddProperty(StructureRegion.GateSillWidth.Key, gate.SillWidth, StructureRegion.GateSillWidth.Description);
+                IniCategory.AddProperty(StructureRegion.GateCrestWidth.Key, gate.SillWidth, StructureRegion.GateCrestWidth.Description);
             }
         }
     }

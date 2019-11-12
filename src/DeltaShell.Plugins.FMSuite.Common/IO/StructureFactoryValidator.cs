@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
@@ -129,8 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             #region Geometry related properties
 
-            var xProperty = structure.GetProperty(KnownStructureProperties.X);
-            var yProperty = structure.GetProperty(KnownStructureProperties.Y);
+            var xProperty = structure.GetProperty(StructureRegion.XCoordinates.Key);
+            var yProperty = structure.GetProperty(StructureRegion.YCoordinates.Key);
             var polylineProperty = structure.GetProperty(KnownStructureProperties.PolylineFile);
             if (xProperty == null && yProperty == null)
             {

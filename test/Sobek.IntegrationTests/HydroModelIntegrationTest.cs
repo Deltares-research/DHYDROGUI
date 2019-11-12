@@ -1375,7 +1375,7 @@ namespace Sobek.IntegrationTests
         [Category(TestCategory.Integration)]
         public void Given1D2DHydroModelWhenUseMorSedValueSetToTrueThenMapFormatEqualToNetCdfMapFormatType()
         {
-            var hydroModel = GetHydroModelWithFmSubModel(true);
+            var hydroModel = GetHydroModelWithFmSubModel();
 
             var fmSubModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault();
             if (fmSubModel == null) throw new Exception("Integrated model was not of type WaterFlowFMModel");
@@ -1391,7 +1391,7 @@ namespace Sobek.IntegrationTests
         [Test]
         public void GivenNon1D2DHydroModelWhenUseMorSedValueSetToTrueThenMapFormatEqualToUGridMapFormatType()
         {
-            var hydroModel = GetHydroModelWithFmSubModel(false);
+            var hydroModel = GetHydroModelWithFmSubModel();
 
             var fmSubModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault();
             if (fmSubModel == null) throw new Exception("Integrated model was not of type WaterFlowFMModel");
@@ -1404,7 +1404,7 @@ namespace Sobek.IntegrationTests
             Assert.That(fmSubModel.ModelDefinition.MapFormat, Is.EqualTo(MapFormatType.Ugrid));
         }
 
-        private static HydroModel GetHydroModelWithFmSubModel(bool isPartOf1D2DModel)
+        private static HydroModel GetHydroModelWithFmSubModel()
         {
             var fmModel = new WaterFlowFMModel
             {
@@ -1413,9 +1413,7 @@ namespace Sobek.IntegrationTests
                     MapFormat = MapFormatType.NetCdf
                 }
             };
-            var isPartOf1D2DModelGuiProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.PartOf1D2DModel);
-            isPartOf1D2DModelGuiProperty.Value = isPartOf1D2DModel;
-
+            
             var hydroModel = new HydroModel()
             {
                 Activities = {fmModel}

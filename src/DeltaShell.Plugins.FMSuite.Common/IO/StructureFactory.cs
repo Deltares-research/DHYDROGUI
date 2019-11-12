@@ -10,7 +10,9 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
@@ -63,12 +65,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 structure.Name = property.GetValueAsString();
             }
 
-            property = structure2D.GetProperty(KnownStructureProperties.X);
+            property = structure2D.GetProperty(StructureRegion.XCoordinates.Key);
             if (property != null)
             {
-                var xCoordinate = DataTypeValueParser.FromString<double>(property.GetValueAsString());
-                var yCoordinate = DataTypeValueParser.FromString<double>(structure2D.GetProperty(KnownStructureProperties.Y).GetValueAsString());
-                structure.Geometry = new Point(xCoordinate, yCoordinate);
+                var xCoordinates = DataTypeValueParser.FromString<IList<Double>>(property.GetValueAsString()).ToArray();
+                var yCoordinates = DataTypeValueParser.FromString<IList<Double>>(structure2D.GetProperty(StructureRegion.YCoordinates.Key).GetValueAsString());
+                var coordinates = new Coordinate[xCoordinates.Length];
+                for (var i = 0; i < coordinates.Length; i++)
+                    coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i]);
+                structure.Geometry = new LineString(coordinates); 
             }
 
             property = structure2D.GetProperty(KnownStructureProperties.PolylineFile);
@@ -495,28 +500,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var gate = new Gate2D();
 
-            var sillWidthProperty = structure2D.GetProperty(KnownStructureProperties.GateSillWidth);
+            var sillWidthProperty = structure2D.GetProperty(StructureRegion.GateCrestWidth.Key);
             var sillWidthString = sillWidthProperty == null ? null : sillWidthProperty.GetValueAsString();
             gate.SillWidth = string.IsNullOrEmpty(sillWidthString) ? 0.0 : DataTypeValueParser.FromString<double>(sillWidthString);
-            gate.DoorHeight =
+            /*gate.DoorHeight =
                 DataTypeValueParser.FromString<double>(
-                    structure2D.GetProperty(KnownStructureProperties.GateDoorHeight).GetValueAsString());
-            var openingDirectionProperty =
-                structure2D.GetProperty(KnownStructureProperties.GateHorizontalOpeningDirection);
-            var openingDirectionValue =
-                (Enum)
-                    DataTypeValueParser.FromString(openingDirectionProperty.GetValueAsString(),
-                        openingDirectionProperty.PropertyDefinition.DataType);
+                    structure2D.GetProperty(KnownStructureProperties.GateDoorHeight).GetValueAsString());*/
+            var openingDirectionProperty = structure2D.GetProperty(StructureRegion.GateHorizontalOpeningDirection.Key);
+            var openingDirectionValue = (Enum) DataTypeValueParser.FromString(openingDirectionProperty.GetValueAsString(), openingDirectionProperty.PropertyDefinition.DataType);
             var displayName = openingDirectionValue.GetDisplayName();
             switch (displayName)
             {
                 case "symmetric":
                     gate.HorizontalOpeningDirection = GateOpeningDirection.Symmetric;
                     break;
-                case "from_left":
+                case "fromLeft":
                     gate.HorizontalOpeningDirection = GateOpeningDirection.FromLeft;
                     break;
-                case "from_right":
+                case "fromRight":
                     gate.HorizontalOpeningDirection = GateOpeningDirection.FromRight;
                     break;
                 default:
@@ -524,7 +525,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             SetTimeSeriesProperty(structure2D,
-                KnownStructureProperties.GateSillLevel,
+                StructureRegion.GateCrestLevel.Key,
                 path, refDate,
                 gate,
                 TypeUtils.GetMemberName(() => gate.UseSillLevelTimeSeries),
@@ -532,7 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 gate.SillLevelTimeSeries);
 
             SetTimeSeriesProperty(structure2D,
-                KnownStructureProperties.GateLowerEdgeLevel,
+                StructureRegion.GateLowerEdgeLevel.Key,
                 path, refDate,
                 gate,
                 TypeUtils.GetMemberName(() => gate.UseLowerEdgeLevelTimeSeries),
@@ -540,7 +541,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 gate.LowerEdgeLevelTimeSeries);
 
             SetTimeSeriesProperty(structure2D,
-                KnownStructureProperties.GateOpeningWidth,
+                StructureRegion.GateOpeningWidth.Key,
                 path, refDate,
                 gate,
                 TypeUtils.GetMemberName(() => gate.UseOpeningWidthTimeSeries),

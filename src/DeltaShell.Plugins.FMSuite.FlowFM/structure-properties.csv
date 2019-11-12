@@ -4,27 +4,27 @@ structure,id,Id,String,,,,FALSE,Unique structure id
 structure,name,Name,String,,,,,Given name in the user interface
 structure,branchId,Branch id,String,,,,,(optional) Branch on which the structure is lcoated.
 structure,chainage,Chainage,Double,,,,,(optional) Chainage on the branch (m).
-structure,numCoordinates,Number of coordinates,int,,,,,(optional) Number of values in xCoordinates and yCoordinates. This value should be greater or equal 2.
-structure,xCoordinates,X,Double,,,,FALSE,X coordinate for a 1D structure
-structure,yCoordinates,Y,Double,,,,FALSE,Y coordinate for a 1D structure
+structure,numCoordinates,Number of coordinates,integer,,,,,(optional) Number of values in xCoordinates and yCoordinates. This value should be greater or equal 2.
+structure,xCoordinates,X,DoubleArray,,,,FALSE,X coordinate for a 1D structure
+structure,yCoordinates,Y,DoubleArray,,,,FALSE,Y coordinate for a 1D structure
 structure,polylinefile,Polyline filepath,FileName,,,,TRUE,*.pli
 weir,type,Type,String,weir,,,,"Structure type, must read weir."
 weir,crestLevel,Crest level,Steerable,,,,FALSE,Weir crest height (in [m])
 weir,crestWidth,Crest width,Double,,,,FALSE,Weir crest width (in [m])
 weir,corrCoef,Correction coefficient,Double,1,,,FALSE,Correction coefficient (-)
-weir,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Flag indicates whether the velocity height is to be calculated or not.
+weir,useVelocityHeight,Velocity height flag,0|1,1,,,,Flag indicates whether the velocity height is to be calculated or not.
 pump,type,Type,String,pump,,,,"Structure type, must read pump."
 pump,orientation,Orientation,String,positive,,,,Pump orientation. Possible values: positive, negative.
 pump,controlSide,Control side,String,,,,,On which side(s) built-in pump triggering is active. Only required/used when numStages > 0. Possible values: suctionSide: Suction side control. deliverySide: Delivery side control. both: Suction and Delivery side control.
-pump,numStages,Number of trigger stages,Int,0,,,,Number of trigger stages in pump. Set to 0 to disable built-in triggering.
+pump,numStages,Number of trigger stages,integer,0,,,,Number of trigger stages in pump. Set to 0 to disable built-in triggering.
 pump,capacity,Capacity,Steerable,,,,FALSE,Pump capacity (in [m3/s])
-pump,startLevelSuctionSide,Start level of suction side,Double[],,,,,Start level suction side (m AD). (number of values = numStages)
-pump,stopLevelSuctionSide,Stop level of suction side,Double[],,,,,Stop level suction side (m AD). (number of values = numStages)
-pump,startLevelDeliverySide,Start level of delivery side,Double[],,,,,Start level suction side (m AD). (number of values = numStages)
-pump,stopLevelDeliverySide,Stop level of delivery side,Double[],,,,,Stop level suction side (m AD). (number of values = numStages)
-pump,numReductionLevels,Number of reduction levels,Int,0,,,,Number of levels in reduction table.
-pump,head,Head,Double[],,,,,Head, the difference in waterlevel (delivery side - suction side) (m). (number of values = numReductionLevels)
-pump,reductionFactor,Reduction factor,Double[],,,,,Reduction factor (-). (number of values = numReductionLevels)
+pump,startLevelSuctionSide,Start level of suction side,DoubleArray,,,,,Start level suction side (m AD). (number of values = numStages)
+pump,stopLevelSuctionSide,Stop level of suction side,DoubleArray,,,,,Stop level suction side (m AD). (number of values = numStages)
+pump,startLevelDeliverySide,Start level of delivery side,DoubleArray,,,,,Start level suction side (m AD). (number of values = numStages)
+pump,stopLevelDeliverySide,Stop level of delivery side,DoubleArray,,,,,Stop level suction side (m AD). (number of values = numStages)
+pump,numReductionLevels,Number of reduction levels,integer,0,,,,Number of levels in reduction table.
+pump,head,Head,DoubleArray,,,,,Head, the difference in waterlevel (delivery side - suction side) (m). (number of values = numReductionLevels)
+pump,reductionFactor,Reduction factor,DoubleArray,,,,,Reduction factor (-). (number of values = numReductionLevels)
 gate,type,Type,String,gate,,,,"Structure type, must read gate."
 gate,crestLevel,Crest level,Steerable,,,,,Filename of a <*.pli> file containing x-/y-points of the gate's position. (2D only)
 gate,crestWidth,Crest width,Double,,,,,Crest width. (m)
@@ -59,7 +59,7 @@ generalstructure,extraResistance,Extra resistance,Double,0,,,FALSE,Extra resista
 generalstructure,gateHeight,Gate height,Double,1d10,,,,Gate height
 generalstructure,gateOpeningWidth,Gate opening width,Double,0,,,,Gate opening width
 generalstructure,gateOpeningHorizontalDirection,Gate opening horizontal direction,String,symmetric,,,,Gate opening horizontal direction
-generalstructure,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Velocity height flag
+generalstructure,useVelocityHeight,Velocity height flag,0|1,1,,,,Velocity height flag
 dambreak,StartLocationX,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
 dambreak,StartLocationY,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
 dambreak,Algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined
@@ -75,9 +75,9 @@ dambreak,State,State of the growth,1|0,,,,FALSE,0 = off 1 = on (typically set vi
 dambreak,DambreakLevelsAndWidths,Path to the user defined breach,String,,,,FALSE,Path to the user defined breach
 universalweir,type,Type,String,universalWeir,,,,"Structure type, must read universalWeir."
 universalweir,allowedFlowDir,Allowed flow direction,String,,,,,Possible values: both, positive, negative, none.
-universalweir,numLevels,Number of yz-values,Int,,,,,Number of yz-values.
-universalweir,yValues,Y,Double[],,,,,y-values of the cross section (m). (number of values = numLevels)
-universalweir,zValues,Z,Double[],,,,,z-values of the cross section (m). (number of values = numLevels)
+universalweir,numLevels,Number of yz-values,integer,,,,,Number of yz-values.
+universalweir,yValues,Y,DoubleArray,,,,,y-values of the cross section (m). (number of values = numLevels)
+universalweir,zValues,Z,DoubleArray,,,,,z-values of the cross section (m). (number of values = numLevels)
 universalweir,crestLevel,Crest level,Double,,,,,Crest level of weir (m AD).
 universalweir,dischargeCoeff,Discharge coefficient,Double,,,,,Discharge coefficient
 culvert,type,Type,String,culvert,,,,Type
@@ -88,11 +88,11 @@ culvert,csDefId,Id of cross section definition,String,,,,,Id of cross section de
 culvert,length,Length,Double,,,,,Length
 culvert,inletLossCoeff,Inlet loss coefficient,Double,,,,,Inlet loss coefficient
 culvert,outletLossCoeff,Outlet loss coefficient,Double,,,,,Outlet loss coefficient
-culvert,valveOnOff,Valve,Int,,,,,Valve
+culvert,valveOnOff,Valve,integer,,,,,Valve
 culvert,valveOpeningHeight,Valve opening height,Steerable,,,,,Valve opening height
-culvert,numLossCoeff,Number of loss coefficients,Int,,,,,Number of loss coefficients
-culvert,relOpening,Relative valve opening,Double[],,,,,Relative valve opening
-culvert,lossCoeff,Loss coefficients,Double[],,,,,Loss coefficients
+culvert,numLossCoeff,Number of loss coefficients,integer,,,,,Number of loss coefficients
+culvert,relOpening,Relative valve opening,DoubleArray,,,,,Relative valve opening
+culvert,lossCoeff,Loss coefficients,DoubleArray,,,,,Loss coefficients
 culvert,bedFrictionType,Friction type,String,,,,,Friction type
 culvert,bedFriction,Friction value,Double,,,,,Friction value
 bridge,type,Type,String,bridge,,,,Type
@@ -109,7 +109,7 @@ orifice,crestLevel,Crest level,Double,,,,,Crest level
 orifice,crestWidth,Crest width,Double,,,,,Crest width
 orifice,gateLowerEdgeLevel,Lower edge level,Steerable,,,,,Lower edge level
 orifice,corrCoef,Correction coefficient,Double,1,,,,Correction coefficient
-orifice,useVelocityHeight,Velocity height flag,logical,TRUE,,,,Velocity height flag
+orifice,useVelocityHeight,Velocity height flag,0|1,1,,,,Velocity height flag
 compound,type,Type,String,compound,,,,Type
-compound,numStructures,Number of structures,int,,,,,Number of structures
+compound,numStructures,Number of structures,integer,,,,,Number of structures
 compound,structureIds,Structure ids,String,,,,,Structure ids

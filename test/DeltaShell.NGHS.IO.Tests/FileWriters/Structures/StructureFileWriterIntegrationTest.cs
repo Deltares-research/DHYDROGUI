@@ -378,8 +378,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(8));
 
                 CheckCommon2DDelftIniProperties(structureCategory, gateName, expectedType, expectedPliFileName);
-                CheckKeyValuePair(structureCategory, StructureRegion.GateSillLevel.Key, expectedSillLevel);
-                CheckKeyValuePair(structureCategory, StructureRegion.GateSillWidth.Key, expectedSillWidth);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, expectedSillLevel);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateCrestWidth.Key, expectedSillWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateOpeningWidth.Key, expectedOpeningWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateHorizontalOpeningDirection.Key, expectedHorizontalOpeningDirection);
@@ -418,7 +418,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
-                CheckKeyValuePair(structureCategory, StructureRegion.GateSillLevel.Key, timFileName);
+                CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, timFileName);
             }
             finally
             {

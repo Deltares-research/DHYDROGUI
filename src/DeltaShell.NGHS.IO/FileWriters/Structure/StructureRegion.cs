@@ -112,8 +112,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting GateCrestLevel = new ConfigurationSetting(key: "crestLevel", description: "");
         public static readonly ConfigurationSetting GateCrestWidth = new ConfigurationSetting(key: "crestWidth", description: "");
         public static readonly ConfigurationSetting GateLowerEdgeLevel = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "");
-        public static readonly ConfigurationSetting GateOpeningWidth = new ConfigurationSetting(key: "OpeningWidth", description: "");
-        public static readonly ConfigurationSetting GateHorizontalOpeningDirection = new ConfigurationSetting(key: "HorizontalOpeningDirection", description: "");
+        public static readonly ConfigurationSetting GateOpeningWidth = new ConfigurationSetting(key: "gateOpeningWidth", description: "");
+        public static readonly ConfigurationSetting GateHorizontalOpeningDirection = new ConfigurationSetting(key: "gateOpeningHorizontalDirection", description: "");
 
         #endregion
 
