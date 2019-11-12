@@ -331,8 +331,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel);
 
-            var roughnessModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.RoughnessFile);
-            Assert.Contains(sewerRoughnessFileName, roughnessModelProperty.GetValueAsString().Split(';'));
+            var frictionProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
+            Assert.Contains(sewerRoughnessFileName, frictionProperty.GetValueAsString().Split(';'));
         }
     }
 }

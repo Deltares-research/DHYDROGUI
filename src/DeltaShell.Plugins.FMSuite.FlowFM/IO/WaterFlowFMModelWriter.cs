@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
-            modelDefinition.SetModelProperty(KnownProperties.RoughnessFile, string.Join(";", roughnessFileNames));
+            modelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
         }
 
         private static WaterFlowFMModelWriterData CreateWriterData(WaterFlowFMModel model)

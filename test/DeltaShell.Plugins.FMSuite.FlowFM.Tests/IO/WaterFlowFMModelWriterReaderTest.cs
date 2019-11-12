@@ -104,8 +104,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var expectedRoughnessFilePath = Path.Combine(directory, sewerRoughnessFileName);
             Assert.IsTrue(File.Exists(expectedRoughnessFilePath));
 
-            var roughnessModelProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.RoughnessFile);
-            var roughnessFileNames = roughnessModelProperty.GetValueAsString().Split(' ');
+            var frictionProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
+            var roughnessFileNames = frictionProperty.GetValueAsString().Split(' ');
             Assert.That(roughnessFileNames.Contains(sewerRoughnessFileName));
         }
 
