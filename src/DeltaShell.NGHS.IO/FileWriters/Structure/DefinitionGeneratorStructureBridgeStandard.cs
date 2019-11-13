@@ -6,11 +6,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureBridgeStandard : DefinitionGeneratorStructureBridge
     {
-        public DefinitionGeneratorStructureBridgeStandard(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Bridge);

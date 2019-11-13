@@ -7,11 +7,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureExtraResistance : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureExtraResistance(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.ExtraResistanceStructure);

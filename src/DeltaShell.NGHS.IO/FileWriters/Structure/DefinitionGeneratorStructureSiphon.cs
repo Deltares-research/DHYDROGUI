@@ -6,11 +6,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureSiphon : DefinitionGeneratorStructureInvertedSiphon
     {
-        public DefinitionGeneratorStructureSiphon(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Siphon);

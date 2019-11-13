@@ -27,6 +27,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             AddCoordinates(crossSectionDefinition);
             AddFrictionData(crossSectionDefinition);
 
+            var yzCrossSectionDefinition = crossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition as CrossSectionDefinitionYZ : crossSectionDefinition as CrossSectionDefinitionYZ;
+            if (yzCrossSectionDefinition == null) return IniCategory;
+            var deltaZStorage = yzCrossSectionDefinition.YZDataTable.Select(row => row.DeltaZStorage);
+            IniCategory.AddProperty(DefinitionPropertySettings.DeltaZStorage, deltaZStorage);
+
             return IniCategory;
         }
 

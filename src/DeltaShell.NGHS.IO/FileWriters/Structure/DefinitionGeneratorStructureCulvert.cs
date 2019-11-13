@@ -8,11 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public class DefinitionGeneratorStructureCulvert : DefinitionGeneratorStructure
     {
-        public DefinitionGeneratorStructureCulvert(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Culvert);

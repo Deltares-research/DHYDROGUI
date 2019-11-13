@@ -33,8 +33,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
                 shift = ((CrossSectionDefinitionProxy)crossSection.Definition).LevelShift;
             }
             
-            IniCategory.AddProperty(CrossSectionRegion.Shift.Key, shift, CrossSectionRegion.Shift.Description, CrossSectionRegion.Shift.Format);
-            IniCategory.AddProperty(CrossSectionRegion.Definition.Key, crossSection.Definition.Name, CrossSectionRegion.Definition.Description);
+            IniCategory.AddProperty(LocationRegion.Shift.Key, shift, LocationRegion.Shift.Description, LocationRegion.Shift.Format);
+            IniCategory.AddProperty(LocationRegion.Definition.Key, crossSection.Definition.Name, LocationRegion.Definition.Description);
 
             yield return IniCategory;
         }

@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsEmpty(errorMessages, string.Join("\r\n", errorMessages));
             
             //write
-            WaterFlowFMModelWriter.Write(model);
+            WaterFlowFMModelWriter.Write(pathWrite, model);
         }
 
         [Test]
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             waterFlowModel1D.RoughnessSections.ForEach(rs => model.RoughnessSections.Add(rs));
 
             //write
-            WaterFlowFMModelWriter.Write(model);
+            WaterFlowFMModelWriter.Write(pathWrite, model);
         }
     }
 }

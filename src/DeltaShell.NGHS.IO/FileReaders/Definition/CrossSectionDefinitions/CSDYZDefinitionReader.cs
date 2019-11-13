@@ -12,8 +12,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
             SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
 
-            var yList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YValues.Key);
-            var zList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZValues.Key);
+            var yList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
+            var zList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
             var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.DeltaZStorage.Key);
 
             var yzCount = category.ReadProperty<int>(DefinitionPropertySettings.YZCount.Key);

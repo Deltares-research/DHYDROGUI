@@ -9,11 +9,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
     public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorStructure
     {
         
-        public DefinitionGeneratorStructureUniversalWeir(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.UniversalWeir);

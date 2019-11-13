@@ -10,7 +10,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.GeneralStructure);
 
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
+            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure();
             var generalStructureCategory = structureGenerator.CreateStructureRegion(hydroObject);
             generalStructureCategory.Properties.ForEach(p => IniCategory.Properties.Add(p));
 

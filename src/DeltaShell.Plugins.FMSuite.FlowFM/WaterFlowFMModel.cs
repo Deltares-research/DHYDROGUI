@@ -113,6 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!string.IsNullOrEmpty(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
+                LoadNetworkAndDiscretisation();
+
+                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, this);
+
+                LoadLinks();
 
                 FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
                 var modelDataItems = AddSpatialDataItems();

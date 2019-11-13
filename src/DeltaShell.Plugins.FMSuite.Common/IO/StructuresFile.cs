@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
-            foreach (var category in categories)
+            foreach (var category in categories.Where(c => c.GetPropertyValue(StructureRegion.BranchId.Key) == null)) // only write 2d features
             {
                 // Filter out unexpected .ini categories:
                 if (category.Name.ToLower() != StructureCategoryName.ToLower())
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var errorMessage = StructureFactoryValidator.Validate(structure2D);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    Log.ErrorFormat("Failed to convert .ini structure definition to actual structure: {0}.",
+                    Log.WarnFormat("Failed to convert .ini structure definition to actual structure: {0}.",
                                     errorMessage);
                     continue;
                 }
@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
                     e is FormatException)
                 {
-                    Log.ErrorFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
+                    Log.WarnFormat("Failed to convert .ini structure definition '{0}' to actual structure: {1}.",
                                     structure.Name, e.Message);
                     return null;
                 }
@@ -430,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure1D structure)
         {
-            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure(new CompoundStructureInfo(0, string.Empty));
+            var structureGenerator = new DefinitionGeneratorStructureGeneralStructure();
             var generalStructureCategory = structureGenerator.CreateStructureRegion(structure);
             return generalStructureCategory.Properties;
         }

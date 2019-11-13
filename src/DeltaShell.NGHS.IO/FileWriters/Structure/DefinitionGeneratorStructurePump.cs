@@ -13,11 +13,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         private const double DEFAULT_HEAD = 0.0;
         private const double DEFAULT_REDUCTION_FACTOR = 1.0;
 
-        public DefinitionGeneratorStructurePump(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Pump);

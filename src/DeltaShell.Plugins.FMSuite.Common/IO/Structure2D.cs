@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 Structure2DType =  (Structure2DType)typeof(Structure2DType).GetEnumValueFromDescription(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
             }
-            catch(ArgumentException e)
+            catch(Exception e)
             {
                 Structure2DType = Structure2DType.InvalidType;
                 InvalidStructureType = type;

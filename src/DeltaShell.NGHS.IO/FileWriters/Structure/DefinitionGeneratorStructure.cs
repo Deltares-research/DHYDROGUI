@@ -6,13 +6,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructure : IDefinitionGeneratorStructure
     {
-        private readonly CompoundStructureInfo compoundStructureInfo;
         protected DelftIniCategory IniCategory { get; private set; }
-
-        protected DefinitionGeneratorStructure(CompoundStructureInfo compoundStructureInfo):this()
-        {
-            this.compoundStructureInfo = compoundStructureInfo;
-        }
 
         protected DefinitionGeneratorStructure()
         {

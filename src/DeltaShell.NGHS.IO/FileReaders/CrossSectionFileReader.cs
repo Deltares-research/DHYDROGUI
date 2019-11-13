@@ -57,8 +57,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     
                     var crossSectionLocationInfos = csIniLocations.Where(csIniLocation =>
                     {
-                        var crossSectionLocationDefinitionId =
-                            csIniLocation.ReadProperty<string>(CrossSectionRegion.Definition.Key);
+                        var crossSectionLocationDefinitionId = csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key);
                         return crossSectionLocationDefinitionId == crossSectionDefinition.Name;
                     }).ToArray();
 
@@ -67,8 +66,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
 
                     
-                    var crossSectionLocationInfo = crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Id.Key).Equals(crossSectionDefinition.Name));
-                    var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(CrossSectionRegion.Shift.Key);
+                    var crossSectionLocationInfo = crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Definition.Key).Equals(crossSectionDefinition.Name));
+                    if (crossSectionLocationInfo == null)
+                    {
+                        fileReadingExceptions.Add(new FileReadingException("Could not find the location for cross section definition : " + crossSectionDefinition.Name));
+                        continue;
+                    }
+
+                    var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
                     crossSectionDefinition.ShiftLevel(shiftLevel);
 
                     var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
@@ -78,7 +83,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     {
                         crossSection.ShareDefinitionAndChangeToProxy();
                         
-                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Where(cslInfo => !cslInfo.ReadProperty<string>(LocationRegion.Id.Key).Equals(crossSectionDefinition.Name)))
+                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Where(cslInfo => !cslInfo.ReadProperty<string>(LocationRegion.Definition.Key).Equals(crossSectionDefinition.Name)))
                         {
                             AddCrossSectionToNetwork(network, sectionLocationInfo, (ICrossSectionDefinition)crossSection.Definition.Clone());
                         }
@@ -150,29 +155,29 @@ namespace DeltaShell.NGHS.IO.FileReaders
         {
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.RoughnessNames.Key,true,';');
-                if (roughnessNames.Count < 0 )
+                var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key,true,';');
+                if (frictionIds.Count < 0 )
                     throw new FileReadingException("reading error");
 
-                var roughnessPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.RoughnessPositions.Key);
-                if (roughnessPositions.Count < 0)
+                var frictionPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FrictionPositions.Key);
+                if (frictionPositions.Count < 0)
                     throw new FileReadingException("reading error");
 
-                if (roughnessPositions.Count  != roughnessNames.Count+1)
+                if (frictionPositions.Count  != frictionIds.Count+1)
                     throw new FileReadingException("reading error");
 
 
                 readCrossSectionDefinition.Sections.Clear();
                 
-                for (int index = 0; index < roughnessNames.Count; index++)
+                for (int index = 0; index < frictionIds.Count; index++)
                 {
-                    var networkSectionType = GetCrossSectionSectionType(roughnessNames[index], network);
+                    var networkSectionType = GetCrossSectionSectionType(frictionIds[index], network);
 
                     readCrossSectionDefinition.Sections.Add(new CrossSectionSection
                     {
                         SectionType = networkSectionType,
-                        MinY = roughnessPositions[index],
-                        MaxY = roughnessPositions[index+1]
+                        MinY = frictionPositions[index],
+                        MaxY = frictionPositions[index+1]
                     });
                 }
             }
@@ -199,13 +204,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
             {
-                var roughnessNames = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.RoughnessNames.Key, true,';');
-                if (roughnessNames == null ) return;
+                var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key, true,';');
+                if (frictionIds == null ) return;
                 
-                if (roughnessNames.Count != 1)
+                if (frictionIds.Count != 1)
                     throw new FileReadingException("reading error");
 
-                var sectionTypeName = roughnessNames.FirstOrDefault();
+                var sectionTypeName = frictionIds.FirstOrDefault();
                 if (sectionTypeName == null)
                     throw new FileReadingException("reading error");
 

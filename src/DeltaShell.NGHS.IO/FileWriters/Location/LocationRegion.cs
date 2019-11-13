@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "BranchId", description: "Unique pipe id");
         public static readonly ConfigurationSetting PipeChainage = new ConfigurationSetting(key: "Chainage", description: "Location on the branch (m)");
         public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "Shift", description: "Level shift of the cross section definition (m)");
-        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "Definition", description: "Id of cross section definition");
+        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "DefinitionId", description: "Id of cross section definition");
     }
 
     public static class LateralSourceLocationRegion
@@ -65,8 +65,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
 
             public const string Trapezium = "trapezium";
         }
-
-        public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "shift", description: "Level shift of the cross section definition(m)");
-        public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "definitionid", description: "Id of cross section definition");
     }
 }

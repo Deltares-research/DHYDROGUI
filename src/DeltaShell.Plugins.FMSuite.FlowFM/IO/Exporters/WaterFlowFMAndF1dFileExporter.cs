@@ -38,10 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
             {
                 fullPath = Path.Combine(path, waterFlowFMModel.Name + ".mdu");
             }
-            var exportingFMModel = (WaterFlowFMModel)waterFlowFMModel.DeepClone();
-            exportingFMModel.MduFilePath = fullPath;
-
-            return WaterFlowFMModelWriter.Write(exportingFMModel, false);
+           return WaterFlowFMModelWriter.Write(fullPath, waterFlowFMModel);
         }
 
         public IEnumerable<Type> SourceTypes()

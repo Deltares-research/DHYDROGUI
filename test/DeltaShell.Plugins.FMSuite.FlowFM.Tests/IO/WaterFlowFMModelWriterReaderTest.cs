@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             SewerFactory.AddDefaultPipeToNetwork(pipe, model.Network);
 
-            WaterFlowFMModelWriter.Write(model);
+            WaterFlowFMModelWriter.Write(mduPath, model);
 
             var ugridPath = Path.Combine(tempDirectory, model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString());
             Assert.True(File.Exists(ugridPath));
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEachAndOneOrifice()
             };
 
-            WaterFlowFMModelWriter.Write(fmModel);
+            WaterFlowFMModelWriter.Write(mduFilePath, fmModel);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // add functions
             sewerRoughness.AddHRoughnessFunctionToBranch(branch1, waterLevelfunction);
             
-            WaterFlowFMModelWriter.Write(fmModel);
+            WaterFlowFMModelWriter.Write(mduFilePath, fmModel);
             var directory = Path.GetDirectoryName(fmModel.MduFilePath);
             Assert.IsNotNull(directory);
 
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //2d pump 
             fmModel.Area.Pumps.Add(new Pump2D("pump3") {Geometry = new LineString(new [] {new Coordinate(0, 20), new Coordinate(100, 20)})});
             
-            WaterFlowFMModelWriter.Write(fmModel);
+            WaterFlowFMModelWriter.Write(mduFilePath, fmModel);
 
             var fileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
             var structureFile = Path.Combine(tempDirectory, fileProperty.GetValueAsString());

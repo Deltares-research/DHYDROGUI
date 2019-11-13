@@ -15,36 +15,43 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             var lastCompositeStructureId = 0;
             var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>().ToList();
             
-            foreach (var composite in compositeStructures) // Note: In DeltaShell all Structures belong to a CompositeBranchStructure, even if they are alone
+            foreach (var structure in compositeStructures.SelectMany(composite => composite.Structures).Concat(network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure)))
             {
-                var currentCompositeStructureId = composite.Structures.Count > 1 ? ++lastCompositeStructureId : 0;
-                foreach (var structure in composite.Structures)
-                {
-                    var structureType = structure.GetStructureType();
-                    var compositeStructureInfo = new CompoundStructureInfo(currentCompositeStructureId, composite.Name);
-                    var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structureType, compositeStructureInfo);
+                yield return ExtractStructureCategory(structure);
+            }
 
-                    var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
-                    var structurefrictionData = structure as IFrictionData;
-                    if (structurefrictionData != null)
-                    {
-                        if (structure is IBridge)
-                        {
-                            //key is bedfriction
-                            AddFrictionData(
-                                structureCategory,
-                                structurefrictionData.FrictionDataType,
-                                structurefrictionData.Friction);
-                        }
-                        else
-                        {
-                            //key is friction
-                            AddBedFrictionData(
-                                structureCategory,
-                                structurefrictionData.FrictionDataType,
-                                structurefrictionData.Friction);
-                        }
-                    }/*var structureGroundLayerData = structure as IGroundLayer;
+            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1))
+            {
+                yield return new DefinitionGeneratorCompound().CreateStructureRegion(compositeStructure);
+            }
+        }
+
+        private static DelftIniCategory ExtractStructureCategory(IStructure1D structure)
+        {
+            var structureType = structure.GetStructureType();
+            var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structureType);
+
+            var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
+            var structurefrictionData = structure as IFrictionData;
+            if (structurefrictionData != null)
+            {
+                if (structure is IBridge)
+                {
+                    //key is bedfriction
+                    AddFrictionData(
+                        structureCategory,
+                        structurefrictionData.FrictionDataType,
+                        structurefrictionData.Friction);
+                }
+                else
+                {
+                    //key is friction
+                    AddBedFrictionData(
+                        structureCategory,
+                        structurefrictionData.FrictionDataType,
+                        structurefrictionData.Friction);
+                }
+            } /*var structureGroundLayerData = structure as IGroundLayer;
                     if (structurefrictionData != null && structureGroundLayerData != null)
                     {
                         if(structure is IBridge)
@@ -67,14 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                         }
                     }*/
 
-                    yield return structureCategory;
-                }
-            }
-
-            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1))
-            {
-                yield return new DefinitionGeneratorCompound().CreateStructureRegion(compositeStructure);
-            }
+            return structureCategory;
         }
 
         private static void AddFrictionAndGroundLayerData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)

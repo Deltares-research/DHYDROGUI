@@ -4,11 +4,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
     public abstract class DefinitionGeneratorStructureBridge : DefinitionGeneratorStructure
     {
-        protected DefinitionGeneratorStructureBridge(CompoundStructureInfo compoundStructureInfo)
-            : base(compoundStructureInfo)
-        {
-        }
-
         protected void AddCommonBridgeElements(IBridge bridge)
         {
             IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, (int)bridge.FlowDirection, StructureRegion.AllowedFlowDir.Description);

@@ -12,15 +12,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public static readonly ConfigurationSetting LevelCount = new ConfigurationSetting(key: "levelsCount");
 
         public static readonly ConfigurationSetting XYZCount = new ConfigurationSetting(key: "xyzCount", description: "Number of XYZ-coordinates");
-        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition");
-        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition");
-        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition");
+        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition", format: "F5");
+        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition", format: "F5");
+        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition", format: "F5");
 
         public static readonly ConfigurationSetting SingleValuedZ = new ConfigurationSetting(key: "singleValuedZ", description: "", defaultValue:"1");
         public static readonly ConfigurationSetting YZCount = new ConfigurationSetting(key: "yzCount", description: "Number of YZ-coordinates");
-        public static readonly ConfigurationSetting YValues = new ConfigurationSetting(key: "yValues", description: "y-values as used in the computational core (m)");
-        public static readonly ConfigurationSetting ZValues = new ConfigurationSetting(key: "zValues", description: "z-values as used in the computational core (m)");
-
+        
         public static readonly ConfigurationSetting Thalweg = new ConfigurationSetting(key: "Thalweg", description: "(GUI ONLY)");
         public static readonly ConfigurationSetting DeltaZStorage = new ConfigurationSetting(key: "deltaZStorage", description: "(GUI ONLY)");
 
@@ -48,13 +46,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public static readonly ConfigurationSetting FrictionPositions = new ConfigurationSetting(key: "frictionPositions", description: "Location where the roughness sections start and end. Always one location more than sectionCount. The first value should equal 0 and the last value should equal the crosssection length. Keyword may be skipped if sectionCount = 1.");
         public static readonly ConfigurationSetting FrictionIds = new ConfigurationSetting(key: "frictionIds", description: "Names of the friction sections.");
         public static readonly ConfigurationSetting FrictionId = new ConfigurationSetting(key: "frictionId", description: "Names of the friction section.");
-        public static readonly ConfigurationSetting RoughnessNames = new ConfigurationSetting(key: "RoughnessNames", description: "Names of the roughness sections.");
-        public static readonly ConfigurationSetting RoughnessPositions = new ConfigurationSetting(key: "roughnessPositions", description: "Locations where the roughness section start and end.");
-        public static readonly ConfigurationSetting RoughnessTypesPos = new ConfigurationSetting(key: "roughnessTypesPos", description: "Temporary array: Roughness type for each roughness section in positive direction");
-        public static readonly ConfigurationSetting RoughnessValuesPos = new ConfigurationSetting(key: "roughnessValuesPos", description: "Temporary array: Roughness value for each roughness section in positive direction");
-        public static readonly ConfigurationSetting RoughnessTypesNeg = new ConfigurationSetting(key: "roughnessTypesNeg", description: "Temporary array: Roughness type for each roughness section in negative direction");
-        public static readonly ConfigurationSetting RoughnessValuesNeg = new ConfigurationSetting(key: "roughnessValuesNeg", description: "Temporary array: Roughness value for each roughness section in negative direction");
-        
+
         public static readonly ConfigurationSetting Diameter = new ConfigurationSetting(key: "Diameter", description: "Diameter of the circle (m)");
         public static readonly ConfigurationSetting EllipseHeight = new ConfigurationSetting(key: "Height", description: "Height of the ellipse (m)");
         public static readonly ConfigurationSetting EllipseWidth = new ConfigurationSetting(key: "Width", description: "Height of the ellipse (m)");

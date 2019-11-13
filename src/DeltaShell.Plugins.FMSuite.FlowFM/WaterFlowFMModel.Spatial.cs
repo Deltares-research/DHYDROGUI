@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private double[] BedLevelZValues
+        public double[] BedLevelZValues
         {
             get
             {
@@ -251,7 +251,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     .Select(v => double.IsNaN(v) ? -999.0 : v).ToArray();
             }
         }
-        private UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
+
+        public UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
         {
             get
             {
