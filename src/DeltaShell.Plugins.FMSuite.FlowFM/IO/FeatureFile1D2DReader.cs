@@ -18,29 +18,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            //ReadNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
             ReadCrossSectionFiles(targetMduFilePath, fmModel);
             ReadStructuresFiles(targetMduFilePath, fmModel);
             //ReadRoughnessFiles(targetMduFilePath, fmModel);
         }
-
-        private static void ReadNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
-        {
-            var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NODE_FILE_NAME);
-            FileUtils.DeleteIfExists(nodeFilePath);
-
-            var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
-            if (compartments.Any() || network.Retentions.Any())
-            {
-                modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, NODE_FILE_NAME);
-                NodeFile.Write(nodeFilePath, compartments, network.Retentions);
-            }
-            else
-            {
-                modelDefinition.SetModelProperty(KnownProperties.NodeFile, string.Empty);
-            }
-        }
-
+        
         private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             var crLocFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();

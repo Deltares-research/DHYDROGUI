@@ -121,12 +121,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
 
+                var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path);
 
-
-                var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisationInOnce(Path);
-
-                outputNetwork = outputNetworkAndDiscretization.Item1;
-                outputDiscretization = outputNetworkAndDiscretization.Item2;
+                outputNetwork = outputNetworkAndDiscretization.Network as IHydroNetwork;
+                outputDiscretization = outputNetworkAndDiscretization;
                 foreach (var hydroObject in outputNetwork.AllHydroObjects)
                 {
                     hydroObject.Name = hydroObject.Name + "_output";

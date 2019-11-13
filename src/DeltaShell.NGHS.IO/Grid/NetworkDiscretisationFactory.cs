@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public static class NetworkDiscretisationFactory
     {
-        public static IHydroNetwork CreateHydroNetwork(NetworkUGridDataModel dataModel, IEnumerable<BranchFile.BranchProperties> branchProperties = null, IEnumerable<NodeFile.CompartmentProperties> compartmentProperties = null)
+        public static IHydroNetwork CreateHydroNetwork(NetworkUGridDataModel dataModel, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
         {
             var network = new HydroNetwork
             {
@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 CoordinateSystem = dataModel.CoordinateSystem
             };
 
-            var nodes = CreateNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions, compartmentProperties);
+            var nodes = CreateNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions, compartmentProperties).ToList();
 
             var branches = CreateNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
                 dataModel.BranchLengths,
@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (network?.Branches == null)
             {
-                return null;
+                return new Discretization();
             }
 
             var discretisation = new Discretization
@@ -61,7 +61,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (branchIndices.Length != offset.Length
                 || branchIndices.Length != discretisationPointIds.Length)
             {
-                return null;// throw new Exception(string.Format("Can't reconstruct the network discretisation because the "));
+                return discretisation;// throw new Exception(string.Format("Can't reconstruct the network discretisation because the "));
             }
 
             // make int[] of unique branch indices
@@ -93,9 +93,8 @@ namespace DeltaShell.NGHS.IO.Grid
             return discretisation;
         }
 
-        private static IEnumerable<INode> CreateNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions, IEnumerable<NodeFile.CompartmentProperties> propertiesPerCompartment)
+        private static IEnumerable<INode> CreateNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions, ICollection<NodeFile.CompartmentProperties> propertiesPerCompartment)
         {
-            
             var numberOfNodes = nodesX.Length;
             if (numberOfNodes <= 0)
             {
@@ -109,37 +108,51 @@ namespace DeltaShell.NGHS.IO.Grid
                 throw new InvalidOperationException("The arrays are not the same length");
             }
 
+            var propertiesLookup = propertiesPerCompartment?.ToDictionary(p => p.CompartmentId);
+            var manHoleLookup = network.Manholes.ToDictionary(m => m.Name);
+
             for (var i = 0; i < numberOfNodes; ++i)
             {
                 INode node = null;
-                var compartmentProperties = propertiesPerCompartment?.FirstOrDefault(p => p.CompartmentId.Equals(nodesNames[i]));
-                if (compartmentProperties != null)
+
+                var nodeName = nodesNames[i];
+                if (propertiesLookup != null && propertiesLookup.TryGetValue(nodeName, out var compartmentProperties))
                 {
-                    var existingManhole = (Manhole) network.Manholes.FirstOrDefault(m => m.Name.Equals(compartmentProperties.ManholeId));
+                    var manholeWidth = Math.Sqrt(compartmentProperties.Area);
                     var compartment = new Compartment(compartmentProperties.CompartmentId)
                     {
-                        BottomLevel = compartmentProperties.BottomLevel,
+                        BottomLevel = compartmentProperties.BedLevel,
                         SurfaceLevel = compartmentProperties.StreetLevel,
-                        ManholeLength = Math.Sqrt(compartmentProperties.Area),
-                        ManholeWidth = Math.Sqrt(compartmentProperties.Area)
+                        FloodableArea = compartmentProperties.StreetStorageArea,
+                        ManholeLength = manholeWidth,
+                        ManholeWidth = manholeWidth
                     };
 
-                    if (existingManhole != null) existingManhole.Compartments.Add(compartment);
-                    else node = new Manhole(compartmentProperties.ManholeId) { Compartments = new EventedList<ICompartment> { compartment } };
+                    if (manHoleLookup.TryGetValue(compartmentProperties.ManholeId, out var existingManhole))
+                    {
+                        existingManhole.Compartments.Add(compartment);
+                        continue;
+                    }
+
+                    node = new Manhole(compartmentProperties.ManholeId)
+                    {
+                        Compartments = new EventedList<ICompartment> {compartment}
+                    };
+                    manHoleLookup[node.Name] = (IManhole) node;
                 }
                 else
                 {
                     node = new HydroNode
                     {
-                        Name = nodesNames[i] == "" ? null : nodesNames[i],
+                        Name = nodeName == "" ? null : nodeName,
                         LongName = nodesDescriptions[i] == "" ? null : nodesDescriptions[i]
                     };
                 }
 
-                if (node == null) continue;
                 node.Description = nodesDescriptions[i] == "" ? null : nodesDescriptions[i];
                 node.Geometry = new Point(nodesX[i], nodesY[i]);
                 node.Network = network;
+
                 yield return node;
             }
         }

@@ -19,50 +19,112 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public const string BranchGuiFileName = "branches.gui";
 
+        /// <summary>
+        /// Always returns a new <see cref="IDiscretization"/> (containing Network) filled with the
+        /// information from the <paramref name="netFilePath"/>
+        /// </summary>
+        /// <param name="netFilePath">Path to the net file</param>
+        /// <param name="nodeData">Data about the nodes (nodeFile.ini) not contained in the net file (manhole <-> compartment mapping etc.)</param>
+        public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath, List<NodeFile.CompartmentProperties> nodeData = null)
+        {
+            var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
+            if (discretisationDataModel == null)
+            {
+                // no discretisation is found. Return null and try to get the network in another call
+                return new Discretization();
+            }
+
+            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId, nodeData);
+            return loadedNetwork != null
+                ? NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel)
+                : new Discretization();
+        }
+
+        // only used in tests => todo make private
+        public static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath)
+        {
+            Func<int[], int> getFirstNetworkId = networkIds => networkIds.Any() ? networkIds[0] : 0;
+
+            return ReadNetworkDataModelFromUGrid(netFilePath, getFirstNetworkId);
+        }
+
+        public static void SaveGrid(string netFilePath, GridUGridDataModel gridDataModel, UGridGlobalMetaData metaData, ICoordinateSystem coordinateSystem)
+        {
+            try
+            {
+                using (var uGridGrid = new UGridMesh2D(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                {
+                    uGridGrid.CreateFile();
+                    uGridGrid.Initialize();
+                    uGridGrid.CreateGridInFile(gridDataModel.Dimensions, gridDataModel.Data);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
+
+        public static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)
+        {
+            try
+            {
+                using (var uGridNetwork = new UGridNetwork(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                {
+                    uGridNetwork.CreateFile();
+                    uGridNetwork.Initialize();
+
+                    int networkId;
+                    uGridNetwork.CreateNetworkInFile(
+                        networkDataModel.NumberOfNodes,
+                        networkDataModel.NumberOfBranches,
+                        networkDataModel.NumberOfGeometryPoints,
+                        out networkId);
+
+                    networkDataModel.NetworkId = networkId;
+
+                    uGridNetwork.WriteNetworkNodes(networkDataModel.NodesX, networkDataModel.NodesY,
+                        networkDataModel.NodesNames, networkDataModel.NodesDescriptions);
+
+                    uGridNetwork.WriteNetworkBranches(networkDataModel.SourceNodeIds,
+                        networkDataModel.TargedNodesIds,
+                        networkDataModel.BranchLengths,
+                        networkDataModel.NumberOfGeometryPointsPerBranch,
+                        networkDataModel.BranchNames,
+                        networkDataModel.BranchDescriptions,
+                        networkDataModel.BranchOrderNumbers);
+
+                    uGridNetwork.WriteNetworkGeometry(networkDataModel.GeopointsX, networkDataModel.GeopointsY);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
+
+        public static void SaveNetworkDiscretisation(string netFilePath, NetworkDiscretisationUGridDataModel discretisationDataModel)
+        {
+            try
+            {
+                using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                {
+                    uGridNetworkDiscretisation.Initialize();
+                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges);
+                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointsX, discretisationDataModel.DiscretisationPointsY, discretisationDataModel.EdgeIdx,discretisationDataModel.EdgeChainage, discretisationDataModel.EdgePointsX, discretisationDataModel.EdgePointsY, discretisationDataModel.EdgeNodes, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
+
         private static int GetNetworkId(Func<int[], int> func, UGridNetwork uGridNetwork)
         {
             var networkIds = uGridNetwork.GetNetworkIds();
             var networkId = func(networkIds);
             return networkId;
-        }
-
-        public static Tuple<IHydroNetwork, IDiscretization> LoadNetworkAndDiscretisationInOnce(string netFilePath)
-        {
-            var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
-            if (discretisationDataModel == null)
-            {
-                // no discretisation is found. Return null and try to get the network in another call
-                return null;
-            }
-
-            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId);
-            if (loadedNetwork == null)
-            {
-                return null;
-            }
-
-            var networkDiscretisation = NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel);
-
-            return new Tuple<IHydroNetwork, IDiscretization>(loadedNetwork, networkDiscretisation);
-        }
-        public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath)
-        {
-            var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
-            if (discretisationDataModel == null)
-            {
-                // no discretisation is found. Return null and try to get the network in another call
-                return null;
-            }
-
-            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId);
-            if (loadedNetwork == null)
-            {
-                return null;
-            }
-            
-            var networkDiscretisation = NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel);
-            
-            return networkDiscretisation;
         }
 
         public static NetworkDiscretisationUGridDataModel LoadNetworkDiscretisationDataModel(string netFilePath)
@@ -101,7 +163,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId) 
+        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties)
         {
             Func<int[], int> func = networkIds =>
             {
@@ -109,15 +171,10 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     throw new Exception("The provided network ID is not present in the NetCDF file, can't load the network.");
                 }
-                return networkId == 0 && networkIds.Any() ? networkIds[0] :  networkId;
+                return networkId == 0 && networkIds.Any() ? networkIds[0] : networkId;
 
             };
 
-            return LoadNetwork(netFilePath, func);
-        }
-
-        private static IHydroNetwork LoadNetwork(string netFilePath, Func<int[], int> func)
-        {
             try
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath))
@@ -125,7 +182,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     var propertiesPerBranch = ReadPropertiesPerBranchFromFile(netFilePath);
 
                     var networkUGridDataModel = ImportNetworkFromUgridAndCreateNetworkDataModel(uGridNetwork, func);
-                    var network = NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, propertiesPerBranch);
+                    var network = NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, propertiesPerBranch, compartmentProperties);
                     return network;
                 }
             }
@@ -141,13 +198,6 @@ namespace DeltaShell.NGHS.IO.Grid
             var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
             var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath) : null;
             return propertiesPerBranch;
-        }
-
-        public static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath)
-        {
-            Func<int[], int> getFirstNetworkId = networkIds => networkIds.Any() ? networkIds[0] : 0;
-
-            return ReadNetworkDataModelFromUGrid(netFilePath, getFirstNetworkId);
         }
 
         private static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath, Func<int[], int> func)
@@ -222,23 +272,6 @@ namespace DeltaShell.NGHS.IO.Grid
             return networkUGridDataModel;
         }
 
-        public static void SaveGrid(string netFilePath, GridUGridDataModel gridDataModel, UGridGlobalMetaData metaData, ICoordinateSystem coordinateSystem)
-        {
-            try
-            {
-                using (var uGridGrid = new UGridMesh2D(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
-                {
-                    uGridGrid.CreateFile();
-                    uGridGrid.Initialize();
-                    uGridGrid.CreateGridInFile(gridDataModel.Dimensions, gridDataModel.Data);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
-        }
-
         private static void SetCoordinateSystem(string netFilePath, ICoordinateSystem coordinateSystem)
         {
             var file = NetCdfFile.OpenExisting(netFilePath, true);
@@ -265,61 +298,6 @@ namespace DeltaShell.NGHS.IO.Grid
             finally
             {
                 file.Close();
-            }
-        }
-
-        public static void SaveNetwork(string netFilePath, NetworkUGridDataModel networkDataModel, UGridGlobalMetaData metaData)
-        {
-            try
-            {
-                using (var uGridNetwork = new UGridNetwork(netFilePath, metaData, GridApiDataSet.NetcdfOpenMode.nf90_write))
-                {
-                    uGridNetwork.CreateFile();
-                    uGridNetwork.Initialize();
-
-                    int networkId;
-                    uGridNetwork.CreateNetworkInFile(
-                        networkDataModel.NumberOfNodes,
-                        networkDataModel.NumberOfBranches,
-                        networkDataModel.NumberOfGeometryPoints,
-                        out networkId);
-
-                    networkDataModel.NetworkId = networkId;
-
-                    uGridNetwork.WriteNetworkNodes(networkDataModel.NodesX, networkDataModel.NodesY,
-                        networkDataModel.NodesNames, networkDataModel.NodesDescriptions);
-
-                    uGridNetwork.WriteNetworkBranches(networkDataModel.SourceNodeIds,
-                        networkDataModel.TargedNodesIds,
-                        networkDataModel.BranchLengths,
-                        networkDataModel.NumberOfGeometryPointsPerBranch,
-                        networkDataModel.BranchNames,
-                        networkDataModel.BranchDescriptions,
-                        networkDataModel.BranchOrderNumbers);
-
-                    uGridNetwork.WriteNetworkGeometry(networkDataModel.GeopointsX, networkDataModel.GeopointsY);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
-        }
-
-        public static void SaveNetworkDiscretisation(string netFilePath, NetworkDiscretisationUGridDataModel discretisationDataModel)
-        {
-            try
-            {
-                using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
-                {
-                    uGridNetworkDiscretisation.Initialize();
-                    uGridNetworkDiscretisation.CreateNetworkDiscretisationInFile(discretisationDataModel.NumberOfDiscretisationPoints, discretisationDataModel.NumberOfMeshEdges);
-                    uGridNetworkDiscretisation.WriteNetworkDiscretisationPoints(discretisationDataModel.BranchIdx, discretisationDataModel.Offsets, discretisationDataModel.DiscretisationPointsX, discretisationDataModel.DiscretisationPointsY, discretisationDataModel.EdgeIdx,discretisationDataModel.EdgeChainage, discretisationDataModel.EdgePointsX, discretisationDataModel.EdgePointsY, discretisationDataModel.EdgeNodes, discretisationDataModel.DiscretisationPointIds, discretisationDataModel.DiscretisationPointDescriptions);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
             }
         }
     }

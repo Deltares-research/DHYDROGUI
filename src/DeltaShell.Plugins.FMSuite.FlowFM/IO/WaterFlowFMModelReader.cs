@@ -16,11 +16,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static WaterFlowFMModel Read(string mduPath)
         {
             var waterFlowFmModelReaderData = ReadFiles(mduPath);
-            var waterFlowFmModel = WaterFlowFMModelFactory.CreateModelFromReaderData(waterFlowFmModelReaderData);
 
+            var waterFlowFmModel = new WaterFlowFMModel
+            {
+                Network = NetworkDiscretisationFactory.CreateHydroNetwork(waterFlowFmModelReaderData.NetworkDataModel,
+                    waterFlowFmModelReaderData.PropertiesPerBranch, waterFlowFmModelReaderData.PropertiesPerCompartment)
+            };
+            
+            waterFlowFmModel.NetworkDiscretization = NetworkDiscretisationFactory.CreateNetworkDiscretisation(waterFlowFmModel.Network, waterFlowFmModelReaderData.NetworkDiscretisationDataModel);
+            
             return waterFlowFmModel;
         }
-
+        
         private static WaterFlowFMModelReaderData ReadFiles(string mduPath)
         {
             var modelName = Path.GetFileNameWithoutExtension(mduPath);

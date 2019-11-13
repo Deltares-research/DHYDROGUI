@@ -18,7 +18,9 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -386,27 +388,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void LoadNetwork()
-        {
-            if (!File.Exists(NetFilePath)) return;
-            var loadedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(NetFilePath));
-            if (loadedNetwork == null) return;
-            Network = loadedNetwork;
-        }
-
         private void LoadNetworkAndDiscretisation()
         {
             if (!File.Exists(NetFilePath)) return;
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath);
-            if (loadedNetworkDiscretisation != null)
-            {
-                NetworkDiscretization = loadedNetworkDiscretisation;
-                Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
-                return;
-            }
 
-            LoadNetwork();
+            var nodeData = File.Exists(StorageNodeFilePath) 
+                ? NodeFile.Read(StorageNodeFilePath) 
+                : null;
 
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath, nodeData);
+
+            NetworkDiscretization = loadedNetworkDiscretisation;
+            Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
         }
 
         /// <summary>

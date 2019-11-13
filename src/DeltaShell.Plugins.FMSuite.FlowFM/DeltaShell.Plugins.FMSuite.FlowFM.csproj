@@ -166,7 +166,6 @@
     <Compile Include="IO\ImportRasterSamplesSpatialOperationExtension.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\StructureFile.cs" />
-    <Compile Include="IO\WaterFlowFMModelFactory.cs" />
     <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Importers\GwswAttribute.cs" />

@@ -2013,6 +2013,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
+        public string StorageNodeFilePath
+        {
+            get
+            {
+                if (MduFilePath != null && ModelDefinition.ContainsProperty(KnownProperties.StorageNodeFile))
+                    return MduFileHelper.GetSubfilePath(MduFilePath,
+                        ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+                return null;
+            }
+        }
+
         private string MapFilePath
         {
             get

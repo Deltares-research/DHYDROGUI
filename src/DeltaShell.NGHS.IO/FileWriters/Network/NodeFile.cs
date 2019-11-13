@@ -49,10 +49,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         {
             var iniCategory = new DelftIniCategory("StorageNode");
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.ParentManhole.Name, string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
+
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
@@ -68,22 +69,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public static List<CompartmentProperties> Read(string filePath)
         {
-            var propertiesPerCompartment = new List<CompartmentProperties>();
             var categories = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
-            foreach (var category in categories)
-            {
-                var compartmentProperties = new CompartmentProperties
-                {
-                    CompartmentId = category.GetPropertyValue(KnownPropertyNames.NodeId),
-                    ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
-                    BottomLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
-                    Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
-                    StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category)
-                };
-                propertiesPerCompartment.Add(compartmentProperties);
-            }
 
-            return propertiesPerCompartment;
+            return categories
+                .Skip(1) // skip version info
+                .Select(category => new CompartmentProperties
+                {
+                    CompartmentId = category.GetPropertyValue(KnownPropertyNames.Id),
+                    Name = category.GetPropertyValue(KnownPropertyNames.Name),
+                    NodeId = category.GetPropertyValue(KnownPropertyNames.NodeId),
+                    ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
+                    UseTable = false, // use category.GetPropertyValue(KnownPropertyNames.UseTable)
+                    BedLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
+                    Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
+                    StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
+                    StorageType = category.GetPropertyValue(KnownPropertyNames.StorageType),
+                    StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
+                })
+                .ToList();
         }
 
         private static double GetPropertyValueAsDouble(string propertyName, IDelftIniCategory category)
@@ -107,11 +110,25 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public class CompartmentProperties
         {
-            public string CompartmentId;
-            public string ManholeId;
-            public double BottomLevel;
-            public double StreetLevel;
-            public double Area;
+            public string CompartmentId { get; set; }
+
+            public string Name { get; set; }
+
+            public string NodeId { get; set; }
+
+            public string ManholeId { get; set; }
+
+            public bool UseTable { get; set; }
+
+            public double BedLevel { get; set; }
+
+            public double Area { get; set; }
+
+            public double StreetLevel { get; set; }
+
+            public string StorageType { get; set; }
+
+            public double StreetStorageArea { get; set; }
         }
     }
 }

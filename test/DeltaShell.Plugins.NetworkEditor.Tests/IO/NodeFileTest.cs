@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             var compartmentProperties = propertiesPerCompartment[0];
             Assert.That(compartmentProperties.CompartmentId, Is.EqualTo(compartment.Name));
             Assert.That(compartmentProperties.ManholeId, Is.EqualTo(compartment.ParentManhole.Name));
-            Assert.That(compartmentProperties.BottomLevel, Is.EqualTo(0.33));
+            Assert.That(compartmentProperties.BedLevel, Is.EqualTo(0.33));
 
             var area = compartment.ManholeLength * compartment.ManholeWidth;
             Assert.That(compartmentProperties.Area, Is.EqualTo(area));

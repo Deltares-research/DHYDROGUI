@@ -27,12 +27,12 @@ namespace DeltaShell.NGHS.IO.Grid
     {
         public UGridNetwork(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, mode)
         {
-            GridApi = GridApiFactory.CreateNewNetwork();
+            GridApi = GridApiFactory.CreateNewNetworkApi();
         }
 
         public UGridNetwork(string file, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write) : base(file, globalMetaData, mode)
         {
-            GridApi = GridApiFactory.CreateNewNetwork();
+            GridApi = GridApiFactory.CreateNewNetworkApi();
         }
 
         #region Write network
