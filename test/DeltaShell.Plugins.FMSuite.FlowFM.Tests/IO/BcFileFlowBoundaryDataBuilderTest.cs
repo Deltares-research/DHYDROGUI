@@ -28,12 +28,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        public void GivenTracerBlockData_WhenInsertingBoundaryData_ThenTracerNameIsUpdatedCorrectlyAndInsertWasSuccessful()
+        public void InsertBoundaryData_WithTracerTypedBlockData_ThenCreatedFlowBoundaryConditionHasTracerQuantityTypeAndHasExpectedTracerName()
         {
-            // Given
+            // Setup
             const string supportPointName = "boundary_0001";
             const string tracerName = "MyTracer";
-            IEnumerable<BoundaryConditionSet> boundaryConditionSets = CreateBoundaryConditionSets(supportPointName);
+            BoundaryConditionSet[] boundaryConditionSets = CreateBoundaryConditionSet(supportPointName);
 
             var blockData = new BcBlockData
             {
@@ -48,42 +48,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             };
 
-            // When
+            // Call
             bool insertWasSuccessful = builder.InsertBoundaryData(boundaryConditionSets, blockData);
 
-            // Then
+            // Assert
             Assert.That(insertWasSuccessful, Is.True);
             Assert.That(blockData.Quantities.Single().TracerName, Is.EqualTo(tracerName));
 
-        }
+            var flowBoundaryCondition = (FlowBoundaryCondition)boundaryConditionSets.Single().BoundaryConditions.Single();
+            Assert.That(flowBoundaryCondition.FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.Tracer));
+            Assert.That(flowBoundaryCondition.TracerName, Is.EqualTo(tracerName));
 
-        private static IEnumerable<BoundaryConditionSet> CreateBoundaryConditionSets(string supportPointName)
-        {
-            var feature = new Feature2D
-            {
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(1, 1)
-                }),
-                Attributes = new DictionaryFeatureAttributeCollection
-                {
-                    {
-                        "Locations", new List<string>
-                        {
-                            supportPointName
-                        }
-                    }
-                }
-            };
-
-            return new[]
-            {
-                new BoundaryConditionSet
-                {
-                    Feature = feature
-                }
-            };
         }
 
         [Test]
@@ -694,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             const string boundaryName = "boundary";
-            var boundaryConditionSet = CreateBoundaryConditionSet(boundaryName, firstSedimentFractionName);
+            var boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, firstSedimentFractionName);
             var dataBlock = CreateBcBlockDataSediment(boundaryName, boundaryConditionSet.SupportPointNames.First(), secondSedimentFractionName);
 
             // When
@@ -730,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string quantity = "waterlevelbnd";
 
             BcBlockData dataBlock = CreateBcBlockData(boundaryName, "support", timeUnit, valUnit, quantity);
-            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSet(boundaryName, "sand");
+            BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithFlowBoundaryCondition(boundaryName, "sand");
 
             // When
             void testAction()
@@ -747,7 +722,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             return $"There was no boundary condition with sediment fraction '{sedimentFractionName}'.";
         }
 
-        private static BoundaryConditionSet CreateBoundaryConditionSet(string boundaryName, string sedimentFractionName)
+        private static BoundaryConditionSet[] CreateBoundaryConditionSet(string supportPointName)
+        {
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                }),
+                Attributes = new DictionaryFeatureAttributeCollection
+                {
+                    {
+                        "Locations", new List<string>
+                        {
+                            supportPointName
+                        }
+                    }
+                }
+            };
+
+            return new[]
+            {
+                new BoundaryConditionSet
+                {
+                    Feature = feature
+                }
+            };
+        }
+
+        private static BoundaryConditionSet CreateBoundaryConditionSetWithFlowBoundaryCondition(string boundaryName, string sedimentFractionName)
         {
             var feature = new Feature2D
             {
