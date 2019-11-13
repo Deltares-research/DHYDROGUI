@@ -31,6 +31,7 @@ using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
@@ -798,6 +799,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             };
             return (VectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
         }
+        
         private static VisibilityVectorLayer CreateNetworkVisibilityVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, double maxVisible, Func<object, bool> refreshForChangedItem = null)
         {
             var layer = new VisibilityVectorLayer(name)
@@ -824,6 +826,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             return (VisibilityVectorLayer)AddSnappingRulesToLayer<TFeature>(layer);
         }
+        
         private static ILayer AddSnappingRulesToLayer<TFeature>(ILayer layer)
         {
             var snapRules = GetSnapRule<TFeature>(layer);
@@ -1036,6 +1039,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (type == typeof(LateralSource))
             {
                 return new List<IFeatureRenderer> {new DiffuseLateralSourceRenderer()};
+            }
+
+            if (type.Implements(typeof(IPipe)))
+            {
+                return new List<IFeatureRenderer>{new ArrowLineStringAdornerRenderer{ Orientation = Orientation.Forward , Opacity = 1}};
             }
 
             return new List<IFeatureRenderer>();

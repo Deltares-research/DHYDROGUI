@@ -141,6 +141,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                            };
             }
 
+            if (networkObjects is IEnumerable<IPipe>)
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.Black, 2)
+                };
+            }
+
             if (networkObjects is IEnumerable<ISewerConnection>)
             {
                 return new VectorStyle
@@ -240,29 +249,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DimGray, lineWidth),
-                    EnableOutline = false
+                    Line = new Pen(Color.DimGray, lineWidth)
                 };
 
                  var stormWaterConnectionStyle = new VectorStyle
                     {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.RoyalBlue, lineWidth),
-                    EnableOutline = false
+                    Line = new Pen(Color.RoyalBlue, lineWidth)
                 };
 
                 var dryWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.IndianRed, lineWidth),
-                    EnableOutline = false
+                    Line = new Pen(Color.IndianRed, lineWidth)
                 };
 
                 var combinedWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
                     Line = new Pen(Color.DarkSlateGray, lineWidth),
-                    EnableOutline = false,
                 };
 
                 return new CategorialTheme
@@ -285,7 +290,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     GeometryType = typeof(ILineString),
                     Line = new Pen(Color.Pink, lineWidth),
-                    EnableOutline = false,
                 };
 
                 var pumpStyle = new VectorStyle
@@ -295,7 +299,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         DashStyle = DashStyle.Dash
                     },
-                    EnableOutline = false,
                 };
 
                 var weirStyle = new VectorStyle
@@ -305,7 +308,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         DashStyle = DashStyle.Dash
                     },
-                    EnableOutline = false,
                 };
                 
                 return new CategorialTheme

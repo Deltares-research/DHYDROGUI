@@ -5,12 +5,13 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
+using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
@@ -69,7 +70,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             }
 
             DrawPolygon(feature, g, layer, compositePointFeature);
-            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Branch;
+            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Branch; 
         }
 
         public virtual IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
@@ -79,7 +80,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             foreach (IFeature feature in layer.DataSource.Features)
             {
                 IGeometry geometry = GetRenderedFeatureGeometry(feature, layer);
-                if (geometry.EnvelopeInternal.Intersects(box))
+                var envelope = geometry?.EnvelopeInternal?.Copy();
+                envelope?.ExpandBy(layer.Map.PixelSize * 5);
+
+                if (envelope != null && envelope.Intersects(box))
                 {
                     intersectedFeatures.Add(feature);
                 }
@@ -95,6 +99,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
             var compositeStructure = (ICompositeNetworkPointFeature) feature;
+            if (IsNodeWithoutFeatures(compositeStructure))
+            {
+                return feature.Geometry;
+            }
+
             IGeometry geometry;
 
             if (!customGeometries.ContainsKey(feature))
