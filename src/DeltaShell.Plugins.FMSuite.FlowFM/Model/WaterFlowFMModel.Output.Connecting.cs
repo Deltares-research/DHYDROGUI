@@ -93,8 +93,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             public bool ContainsOutput => File.Exists(MapFilePath)
                                           || File.Exists(HisFilePath)
                                           || File.Exists(ClassMapFilePath)
-                                          || File.Exists(WaqOutputDirectory)
-                                          || File.Exists(SnappedOutputDirectory);
+                                          || File.Exists(WaqOutputDirectoryPath)
+                                          || File.Exists(SnappedOutputDirectoryPath);
 
             /// <summary>
             /// The file path to the map file.
@@ -114,12 +114,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             /// <summary>
             /// The path to the waq output directory.
             /// </summary>
-            public string WaqOutputDirectory => GetDirectoryPathStartingWith(FileConstants.PrefixDelwaqDirectoryName);
+            public string WaqOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.PrefixDelwaqDirectoryName);
 
             /// <summary>
             /// The path to the snapped output directory.
             /// </summary>
-            public string SnappedOutputDirectory => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
+            public string SnappedOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
 
             private string GetDirectoryPathStartingWith(string directoryNameStart)
             {
@@ -152,72 +152,93 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 
+            ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
+            ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
+            ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
+            ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
+            ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
+
+            OutputIsEmpty = false;
+
+            EndEdit();
+        }
+
+        private void ReconnectMapFile(string mapFilePath, bool switchTo)
+        {
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
-            if (outputDirectory.MapFilePath != null)
+            if (mapFilePath != null)
             {
                 ReportProgressText("Reading map file");
-                ICoordinateSystem cs = UnstructuredGridFileHelper.GetCoordinateSystem(outputDirectory.MapFilePath);
+                ICoordinateSystem cs = UnstructuredGridFileHelper.GetCoordinateSystem(mapFilePath);
 
                 // update map file coordinate system:
                 if (CoordinateSystem != null && cs != CoordinateSystem)
                 {
-                    NetFile.WriteCoordinateSystem(outputDirectory.MapFilePath, CoordinateSystem);
+                    NetFile.WriteCoordinateSystem(mapFilePath, CoordinateSystem);
                 }
 
                 if (switchTo && OutputMapFileStore != null)
                 {
-                    OutputMapFileStore.Path = outputDirectory.MapFilePath;
+                    OutputMapFileStore.Path = mapFilePath;
                 }
                 else
                 {
                     OutputMapFileStore = new FMMapFileFunctionStore(this);
                     // don't change this to a property setter, because the timing is of great importance.
                     // elsewise, there will be no subscription to the read and Path triggers the Read().
-                    OutputMapFileStore.Path = outputDirectory.MapFilePath;
+                    OutputMapFileStore.Path = mapFilePath;
                 }
             }
+        }
 
-            if (outputDirectory.HisFilePath != null)
+        private void ReconnectHistoryFile(string hisFilePath, bool switchTo)
+        {
+            if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
                 FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
-                    OutputHisFileStore.Path = outputDirectory.HisFilePath;
+                    OutputHisFileStore.Path = hisFilePath;
                 }
                 else
                 {
-                    OutputHisFileStore = new FMHisFileFunctionStore(outputDirectory.HisFilePath, CoordinateSystem, Area);
+                    OutputHisFileStore = new FMHisFileFunctionStore(hisFilePath, CoordinateSystem, Area);
                 }
             }
+        }
 
-            if (outputDirectory.ClassMapFilePath != null)
+        private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
+        {
+            if (classMapFilePath != null)
             {
                 ReportProgressText("Reading class map file");
                 FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
                 if (switchTo && OutputClassMapFileStore != null)
                 {
-                    OutputClassMapFileStore.Path = outputDirectory.ClassMapFilePath;
+                    OutputClassMapFileStore.Path = classMapFilePath;
                 }
                 else
                 {
-                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(outputDirectory.ClassMapFilePath);
+                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
                 }
             }
+        }
 
-            if (outputDirectory.WaqOutputDirectory != null)
+        private void ReconnectWaterQualityOutputDirectory(string waqOutputDirectoryPath)
+        {
+            if (waqOutputDirectoryPath != null)
             {
-                DelwaqOutputDirectoryPath = outputDirectory.WaqOutputDirectory;
+                DelwaqOutputDirectoryPath = waqOutputDirectoryPath;
             }
+        }
 
-            if (outputDirectory.SnappedOutputDirectory != null)
+        private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)
+        {
+            if (snappedOutputDirectoryPath != null)
             {
-                OutputSnappedFeaturesPath = outputDirectory.SnappedOutputDirectory;
+                OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
             }
-
-            OutputIsEmpty = false;
-
-            EndEdit();
         }
 
         #endregion
