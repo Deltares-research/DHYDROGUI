@@ -99,41 +99,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             /// <summary>
             /// The file path to the map file.
             /// </summary>
-            public string MapFilePath => FindFileThatEndsWith(outputDirectoryInfo.GetFiles(), FileConstants.MapFileExtension);
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string MapFilePath => FindFileThatEndsWith(FileConstants.MapFileExtension);
 
             /// <summary>
             /// The file path to the his file.
             /// </summary>
-            public string HisFilePath => FindFileThatEndsWith(outputDirectoryInfo.GetFiles(), FileConstants.HisFileExtension);
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string HisFilePath => FindFileThatEndsWith(FileConstants.HisFileExtension);
 
             /// <summary>
             /// The file path to the class map file.
             /// </summary>
-            public string ClassMapFilePath => FindFileThatEndsWith(outputDirectoryInfo.GetFiles(), FileConstants.ClassMapFileExtension);
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string ClassMapFilePath => FindFileThatEndsWith(FileConstants.ClassMapFileExtension);
 
             /// <summary>
             /// The path to the waq output directory.
             /// </summary>
+            /// <remarks> Returns null in case the directory was not found. </remarks>
             public string WaqOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.PrefixDelwaqDirectoryName);
 
             /// <summary>
             /// The path to the snapped output directory.
             /// </summary>
+            /// <remarks> Returns null in case the directory was not found. </remarks>
             public string SnappedOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
 
             private string GetDirectoryPathStartingWith(string directoryNameStart)
             {
-                return Directories.FirstOrDefault(d => d.Name.StartsWith(directoryNameStart, StringComparison.Ordinal))?.FullName;
+                return outputDirectoryInfo.EnumerateDirectories()
+                                          .FirstOrDefault(d => d.Name.StartsWith(directoryNameStart, StringComparison.Ordinal))?
+                                          .FullName;
             }
 
-            private static string FindFileThatEndsWith(IEnumerable<FileInfo> files, string extension)
+            private string FindFileThatEndsWith(string extension)
             {
-                return files
-                       .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
-                       .FullName;
+                return outputDirectoryInfo.EnumerateFiles()
+                                          .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                                          .FullName;
             }
-
-            private IEnumerable<DirectoryInfo> Directories => outputDirectoryInfo.GetDirectories();
         }
 
         protected virtual void ReconnectOutputFiles(string outputDirectoryPath, bool switchTo = false)
