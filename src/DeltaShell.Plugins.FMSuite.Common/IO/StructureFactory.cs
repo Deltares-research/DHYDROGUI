@@ -332,7 +332,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     Log.WarnFormat("Property [{0}] is not supported and is skipped.", property);
                 else
                 {
-                    gsWeirFormula.SetPropertyValue(property, DataTypeValueParser.FromString<double>(structureproperty.GetValueAsString()));
+                    if (property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection)
+                        gsWeirFormula.GateOpeningHorizontalDirection = (GateOpeningDirection)DataTypeValueParser.FromString(structureproperty.GetValueAsString(), typeof(GateOpeningDirection));
+                    else
+                        gsWeirFormula.SetPropertyValue(property,
+                            DataTypeValueParser.FromString<double>(structureproperty.GetValueAsString()));
                 }
             }
 

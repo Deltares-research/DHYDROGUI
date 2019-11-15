@@ -110,17 +110,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     var tolerance = 1e-10;
                     var generalStructureWeirFormula = new GeneralStructureWeirFormula
                     {
-                        WidthLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.WidthLeftW1.Key),
-                        WidthStructureLeftSide = category.ReadProperty<double>(StructureRegion.WidthLeftWsdl.Key),
-                        WidthStructureCentre = category.ReadProperty<double>(StructureRegion.WidthCenter.Key),
-                        WidthStructureRightSide = category.ReadProperty<double>(StructureRegion.WidthRightWsdr.Key),
-                        WidthRightSideOfStructure = category.ReadProperty<double>(StructureRegion.WidthRightW2.Key),
+                        WidthLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Width.Key),
+                        WidthStructureLeftSide = category.ReadProperty<double>(StructureRegion.Upstream2Width.Key),
+                        WidthStructureCentre = category.ReadProperty<double>(StructureRegion.CrestWidth.Key),
+                        WidthStructureRightSide = category.ReadProperty<double>(StructureRegion.Downstream1Width.Key),
+                        WidthRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Width.Key),
 
-                        BedLevelLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.LevelLeftZb1.Key),
-                        BedLevelLeftSideStructure = category.ReadProperty<double>(StructureRegion.LevelLeftZbsl.Key),
-                        BedLevelStructureCentre = category.ReadProperty<double>(StructureRegion.LevelCenter.Key),
-                        BedLevelRightSideStructure = category.ReadProperty<double>(StructureRegion.LevelRightZbsr.Key),
-                        BedLevelRightSideOfStructure = category.ReadProperty<double>(StructureRegion.LevelRightZb2.Key),
+                        BedLevelLeftSideOfStructure = category.ReadProperty<double>(StructureRegion.Upstream1Level.Key),
+                        BedLevelLeftSideStructure = category.ReadProperty<double>(StructureRegion.Upstream2Level.Key),
+                        BedLevelStructureCentre = category.ReadProperty<double>(StructureRegion.CrestLevel.Key),
+                        BedLevelRightSideStructure = category.ReadProperty<double>(StructureRegion.Downstream1Level.Key),
+                        BedLevelRightSideOfStructure = category.ReadProperty<double>(StructureRegion.Downstream2Level.Key),
 
                         PositiveFreeGateFlow = category.ReadProperty<double>(StructureRegion.PosFreeGateFlowCoeff.Key),
                         PositiveDrownedGateFlow =
@@ -144,12 +144,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                         ExtraResistance = extraResistance,
                         UseExtraResistance = Math.Abs(extraResistance) > tolerance,
 
-                        GateOpening = category.ReadProperty<double>(StructureRegion.GateDoorHeight.Key, true)
+                        GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true),
                     };
 
                     if (Math.Abs(generalStructureWeirFormula.GateOpening) < tolerance)
                     {
-                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key) - weir.CrestLevel;
+                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key) - weir.CrestLevel;
                     }
 
                     return generalStructureWeirFormula;

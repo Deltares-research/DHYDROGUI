@@ -321,10 +321,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var generalStructureDataItems = new List<string>
             {
                 KnownStructureProperties.CrestLevel,
-                KnownGeneralStructureProperties.GateHeight.GetDescription(),
+                KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
                 KnownStructureProperties.GateLowerEdgeLevel,
-                KnownGeneralStructureProperties.WidthCenter.GetDescription(),
-                KnownGeneralStructureProperties.LevelCenter.GetDescription()
+                KnownGeneralStructureProperties.CrestWidth.GetDescription(),
+                KnownGeneralStructureProperties.CrestLevel.GetDescription()
             };
             Assert.That(generalStructureDataItems.Count == dataItems.Count);
 

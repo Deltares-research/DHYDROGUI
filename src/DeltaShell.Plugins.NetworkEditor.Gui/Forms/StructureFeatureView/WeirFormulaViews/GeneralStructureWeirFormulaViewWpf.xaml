@@ -18,6 +18,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -77,8 +79,20 @@
         <TextBox Grid.Row="2" Grid.Column="9" Text="{Binding WidthRightSideOfStructure}"/>
 
         <StackPanel Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="3" Orientation="Horizontal">
-            <CheckBox IsChecked="{Binding UseExtraResistance}" Content="Extra resistance" Margin="0,0,2,0" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding UseExtraResistance}" Margin="0,0,2,0" VerticalAlignment="Center"/>
+            <Label Content="Extra resistance"></Label>
             <TextBox Width="100" Text="{Binding ExtraResistance}" IsEnabled="{Binding UseExtraResistance}"/>
         </StackPanel>
+
+        <Label Grid.Row="6" Grid.Column="0" Content="Crest length"/>
+        <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CrestLength}"></TextBox>
+
+        <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding UseVelocityHeight}" VerticalAlignment="Center"></CheckBox>
+            <Label Content="Use velocity Height"></Label>
+        </StackPanel>
+        
+
+
     </Grid>
 </UserControl>

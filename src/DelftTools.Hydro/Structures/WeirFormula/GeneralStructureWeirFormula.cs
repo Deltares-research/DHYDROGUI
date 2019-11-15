@@ -12,29 +12,32 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     {
         private readonly Dictionary<KnownGeneralStructureProperties, Action<GeneralStructureWeirFormula, double>> SetKnownGeneralStructureProperty = new Dictionary<KnownGeneralStructureProperties, Action<GeneralStructureWeirFormula, double>>
         {
-            { KnownGeneralStructureProperties.WidthLeftW1, (f, v) => f.WidthLeftSideOfStructure = v },
-            { KnownGeneralStructureProperties.WidthLeftWsdl, (f, v) => f.WidthStructureLeftSide = v },
-            { KnownGeneralStructureProperties.WidthCenter, (f, v) => f.WidthStructureCentre = v },
-            { KnownGeneralStructureProperties.WidthRightWsdr, (f, v) => f.WidthStructureRightSide = v },
-            { KnownGeneralStructureProperties.WidthRightW2, (f, v) => f.WidthRightSideOfStructure = v },
-            { KnownGeneralStructureProperties.LevelLeftZb1, (f, v) => f.BedLevelLeftSideOfStructure = v },
-            { KnownGeneralStructureProperties.LevelLeftZbsl, (f, v) => f.BedLevelLeftSideStructure = v },
-            { KnownGeneralStructureProperties.LevelCenter, (f, v) => f.BedLevelStructureCentre = v },
-            { KnownGeneralStructureProperties.LevelRightZbsr, (f, v) => f.BedLevelRightSideStructure = v },
-            { KnownGeneralStructureProperties.LevelRightZb2, (f, v) => f.BedLevelRightSideOfStructure = v },
-            { KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, (f, v) => f.PositiveFreeGateFlow = v },
-            { KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, (f, v) => f.PositiveDrownedGateFlow = v },
-            { KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, (f, v) => f.PositiveFreeWeirFlow = v },
-            { KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient, (f, v) => f.PositiveDrownedWeirFlow = v },
-            { KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate, (f, v) => f.PositiveContractionCoefficient = v },
-            { KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient, (f, v) => f.NegativeFreeGateFlow = v },
-            { KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient, (f, v) => f.NegativeDrownedGateFlow = v },
-            { KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient, (f, v) => f.NegativeFreeWeirFlow = v },
-            { KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, (f, v) => f.NegativeDrownedWeirFlow = v },
-            { KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, (f, v) => f.NegativeContractionCoefficient = v },
-            { KnownGeneralStructureProperties.ExtraResistance, (f, v) => { f.ExtraResistance = v; if (v == 0.0) f.UseExtraResistance = false; } },
-            { KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, (f, v) => f.GateOpening = v },
-            { KnownGeneralStructureProperties.GateHeight, (f, v) => {/* do nothing */} }
+            { KnownGeneralStructureProperties.Upstream1Width, (f, v) => f.WidthLeftSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream2Width, (f, v) => f.WidthStructureLeftSide = v },
+            { KnownGeneralStructureProperties.CrestWidth, (f, v) => f.WidthStructureCentre = v },
+            { KnownGeneralStructureProperties.Downstream1Width, (f, v) => f.WidthStructureRightSide = v },
+            { KnownGeneralStructureProperties.Downstream2Width, (f, v) => f.WidthRightSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream1Level, (f, v) => f.BedLevelLeftSideOfStructure = v },
+            { KnownGeneralStructureProperties.Upstream2Level, (f, v) => f.BedLevelLeftSideStructure = v },
+            { KnownGeneralStructureProperties.CrestLevel, (f, v) => f.BedLevelStructureCentre = v },
+            { KnownGeneralStructureProperties.Downstream1Level, (f, v) => f.BedLevelRightSideStructure = v },
+            { KnownGeneralStructureProperties.Downstream2Level, (f, v) => f.BedLevelRightSideOfStructure = v },
+            { KnownGeneralStructureProperties.PosFreeGateFlowCoeff, (f, v) => f.PositiveFreeGateFlow = v },
+            { KnownGeneralStructureProperties.PosDrownGateFlowCoeff, (f, v) => f.PositiveDrownedGateFlow = v },
+            { KnownGeneralStructureProperties.PosFreeWeirFlowCoeff, (f, v) => f.PositiveFreeWeirFlow = v },
+            { KnownGeneralStructureProperties.PosDrownWeirFlowCoeff, (f, v) => f.PositiveDrownedWeirFlow = v },
+            { KnownGeneralStructureProperties.PosContrCoefFreeGate, (f, v) => f.PositiveContractionCoefficient = v },
+            { KnownGeneralStructureProperties.NegFreeGateFlowCoeff, (f, v) => f.NegativeFreeGateFlow = v },
+            { KnownGeneralStructureProperties.NegDrownGateFlowCoeff, (f, v) => f.NegativeDrownedGateFlow = v },
+            { KnownGeneralStructureProperties.NegFreeWeirFlowCoeff, (f, v) => f.NegativeFreeWeirFlow = v },
+            { KnownGeneralStructureProperties.NegDrownWeirFlowCoeff, (f, v) => f.NegativeDrownedWeirFlow = v },
+            { KnownGeneralStructureProperties.NegContrCoefFreeGate, (f, v) => f.NegativeContractionCoefficient = v },
+            { KnownGeneralStructureProperties.ExtraResistance, (f, v) => { f.ExtraResistance = v; if (v == 0.0) f.UseExtraResistance = false; }},
+            { KnownGeneralStructureProperties.GateHeight, (f, v) => f.GateOpening = v },
+            { KnownGeneralStructureProperties.GateLowerEdgeLevel, (f, v) => {/* do nothing */} },
+            { KnownGeneralStructureProperties.GateOpeningWidth, (f, v) => f.GateOpeningWidth = v },
+            { KnownGeneralStructureProperties.CrestLength, (f, v) => f.CrestLength = v },
+            { KnownGeneralStructureProperties.UseVelocityHeight, (f, v) => f.UseVelocityHeight = Convert.ToBoolean(v) },
         };
 
         public GeneralStructureWeirFormula()
@@ -60,6 +63,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             ExtraResistance = 0.0;
 
             GateOpening = 1.0;
+            GateOpeningWidth = 0.0;
+            CrestLength = 0.0;
+            GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
         }
 
         public virtual object Clone()
@@ -92,7 +98,10 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
                     UseExtraResistance = UseExtraResistance,
                     ExtraResistance = ExtraResistance,
-                    GateOpening = GateOpening
+                    GateOpening = GateOpening,
+                    GateOpeningWidth = GateOpeningWidth,
+                    CrestLength = CrestLength,
+                    GateOpeningHorizontalDirection = GateOpeningHorizontalDirection
                 };
             return clone;
         }
@@ -226,6 +235,16 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Gateopening = GateHeight (gle) - level at crest
         /// </summary>
         public virtual double GateOpening { get; set; }
+
+        public virtual double GateOpeningWidth { get; set; }
+
+        public virtual double CrestLength { get; set; }
+
+        public virtual bool UseVelocityHeight { get; set; }
+
+
+        public virtual GateOpeningDirection GateOpeningHorizontalDirection { get; set; }
+
 
         public virtual void SetPropertyValue(KnownGeneralStructureProperties propertyName, double value)
         {

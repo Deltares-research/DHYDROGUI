@@ -691,39 +691,39 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
             Assert.AreEqual(StructureRegion.StructureTypeName.GeneralStructure, idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthLeftW1.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1.ToString(StructureRegion.WidthLeftW1.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Upstream1Width.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_W1.ToString(StructureRegion.Upstream1Width.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthLeftWsdl.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL.ToString(StructureRegion.WidthLeftWsdl.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Upstream2Width.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_LEFT_WSDL.ToString(StructureRegion.Upstream2Width.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthCenter.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER.ToString(StructureRegion.WidthCenter.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestWidth.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_CENTER.ToString(StructureRegion.CrestWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthRightWsdr.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR.ToString(StructureRegion.WidthRightWsdr.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Downstream1Width.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_WSDR.ToString(StructureRegion.Downstream1Width.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.WidthRightW2.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2.ToString(StructureRegion.WidthRightW2.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Downstream2Width.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_WIDTH_RIGHT_W2.ToString(StructureRegion.Downstream2Width.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelLeftZb1.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1.ToString(StructureRegion.LevelLeftZb1.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Upstream1Level.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZB1.ToString(StructureRegion.Upstream1Level.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelLeftZbsl.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL.ToString(StructureRegion.LevelLeftZbsl.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Upstream2Level.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_LEFT_ZBSL.ToString(StructureRegion.Upstream2Level.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelCenter.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER.ToString(StructureRegion.LevelCenter.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.CrestLevel.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER.ToString(StructureRegion.CrestLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelRightZbsr.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR.ToString(StructureRegion.LevelRightZbsr.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Downstream1Level.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR.ToString(StructureRegion.Downstream1Level.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.LevelRightZb2.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2.ToString(StructureRegion.LevelRightZb2.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Downstream2Level.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2.ToString(StructureRegion.Downstream2Level.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.GateHeight.Key);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.GateLowerEdgeLevel.Key);
             Assert.AreEqual((StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING + StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER)
-                .ToString(StructureRegion.GateHeight.Format, CultureInfo.InvariantCulture), idProperty.Value);
+                .ToString(StructureRegion.GateLowerEdgeLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.PosFreeGateFlowCoeff.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS.ToString(StructureRegion.PosFreeGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);

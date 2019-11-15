@@ -3010,10 +3010,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
                 if (weirFormula != null)
                 {
-                    yield return KnownGeneralStructureProperties.GateHeight.GetDescription();
+                    yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
                     yield return KnownStructureProperties.GateLowerEdgeLevel;
-                    yield return KnownGeneralStructureProperties.WidthCenter.GetDescription();
-                    yield return KnownGeneralStructureProperties.LevelCenter.GetDescription();
+                    yield return KnownGeneralStructureProperties.CrestWidth.GetDescription();
+                    yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
                 }
             }
 

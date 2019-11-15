@@ -59,7 +59,7 @@ generalstructure,extraResistance,Extra resistance,Double,0,,,FALSE,Extra resista
 generalstructure,gateHeight,Gate height,Double,1d10,,,,Gate height
 generalstructure,gateOpeningWidth,Gate opening width,Double,0,,,,Gate opening width
 generalstructure,gateOpeningHorizontalDirection,Gate opening horizontal direction,String,symmetric,,,,Gate opening horizontal direction
-generalstructure,useVelocityHeight,Velocity height flag,0|1,1,,,,Velocity height flag
+generalstructure,useVelocityHeight,Velocity height flag,0|1,1,,,FALSE,Velocity height flag
 dambreak,StartLocationX,Breach start location-X,Double,,,,FALSE,X-position of the breach growth
 dambreak,StartLocationY,Breach start location-Y,Double,,,,FALSE,Y-position of the breach growth
 dambreak,Algorithm,Algorithm:Verheij - vd Knaap (2002)|User defined breach,2|3,,,,FALSE,0 = unknown 2 = Verheij - vd Knaap (2002) 3 = User defined

@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             return Enum.GetValues(enumType)
                 .Cast<Enum>()
-                .FirstOrDefault(value => value.GetDisplayName() == displayNameString);
+                .FirstOrDefault(value => string.Equals(value.GetDisplayName(), displayNameString, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

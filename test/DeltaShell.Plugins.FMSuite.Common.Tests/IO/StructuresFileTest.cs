@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructure = structures.First(s => s.Name == "gs_01");
             Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
             Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
-            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.WidthCenter).GetValueAsString(), Is.EqualTo("2.3"));
+            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.CrestWidth).GetValueAsString(), Is.EqualTo("2.3"));
 
             var leveeBreach = structures.FirstOrDefault(s => s.Name == "lb_01");
             Assert.NotNull(leveeBreach);

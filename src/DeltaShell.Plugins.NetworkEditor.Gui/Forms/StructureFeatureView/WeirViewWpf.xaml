@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:weirFormula="clr-namespace:DelftTools.Hydro.Structures.WeirFormula;assembly=DelftTools.Hydro"
-             xmlns:sturctures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Converters"
              xmlns:views="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews"
@@ -18,13 +18,19 @@
         <ObjectDataProvider x:Key="CrestShapes" MethodName="GetValues"
                             ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="sturctures:CrestShape"/>
+                <x:Type TypeName="structures:CrestShape"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="WeirTypes" MethodName="GetValues" 
                             ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="structureFeatureView:SelectableWeirFormulaType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="GateOpeningDirection" MethodName="GetValues" 
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="structures:GateOpeningDirection"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
@@ -120,6 +126,7 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition SharedSizeGroup="A"/>
@@ -136,9 +143,19 @@
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding GateOpeningHeight, Mode=TwoWay}"/>
                         <Label Grid.Row="1" Grid.Column="2" Content="m"/>
 
-                        <!--<Label Grid.Row="2" Grid.Column="0" Content="Gate door height"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding GateDoorHeight, Mode=TwoWay}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Content="m"/>-->
+                        <Label Grid.Row="2" Grid.Column="0" Content="Gate opening width"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding GateOpeningWidth, Mode=TwoWay}"/>
+                        <Label Grid.Row="2" Grid.Column="2" Content="m"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Gate opening horizontal direction"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Source={StaticResource GateOpeningDirection}}" SelectedItem="{Binding SelectedGateOpeningHorizontalDirection}" Grid.ColumnSpan="2">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <ContentPresenter Content="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        </ComboBox>
+
                     </Grid>
                 </GroupBox>
             </Grid>

@@ -111,7 +111,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting GateSillWidth = new ConfigurationSetting(key: "GateSillLevel", description: "");
         public static readonly ConfigurationSetting GateCrestLevel = new ConfigurationSetting(key: "crestLevel", description: "");
         public static readonly ConfigurationSetting GateCrestWidth = new ConfigurationSetting(key: "crestWidth", description: "");
-        public static readonly ConfigurationSetting GateLowerEdgeLevel = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "");
+        public static readonly ConfigurationSetting GateLowerEdgeLevel = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "Gate lower edge level (m AD)");
         public static readonly ConfigurationSetting GateOpeningWidth = new ConfigurationSetting(key: "gateOpeningWidth", description: "");
         public static readonly ConfigurationSetting GateHorizontalOpeningDirection = new ConfigurationSetting(key: "gateOpeningHorizontalDirection", description: "");
 
@@ -160,29 +160,31 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region General Structure Elements
-        public static readonly ConfigurationSetting WidthLeftW1 = new ConfigurationSetting(key: KnownGeneralStructureProperties.WidthLeftW1.GetDescription(), description: "Width left side of structure (m)");
-        public static readonly ConfigurationSetting WidthLeftWsdl = new ConfigurationSetting(key: KnownGeneralStructureProperties.WidthLeftWsdl.GetDescription(), description: "Width structure left side (m)");
-        public static readonly ConfigurationSetting WidthCenter = new ConfigurationSetting(key: KnownGeneralStructureProperties.WidthCenter.GetDescription(), description: "Width structure centre (m)");
-        public static readonly ConfigurationSetting WidthRightWsdr = new ConfigurationSetting(key: KnownGeneralStructureProperties.WidthRightWsdr.GetDescription(), description: "Width structure right side (m)");
-        public static readonly ConfigurationSetting WidthRightW2 = new ConfigurationSetting(key: KnownGeneralStructureProperties.WidthRightW2.GetDescription(), description: "Width right side of structure (m)");
-        public static readonly ConfigurationSetting LevelLeftZb1 = new ConfigurationSetting(key: KnownGeneralStructureProperties.LevelLeftZb1.GetDescription(), description: "Bed level left side of structure (m AD)");
-        public static readonly ConfigurationSetting LevelLeftZbsl = new ConfigurationSetting(key: KnownGeneralStructureProperties.LevelLeftZbsl.GetDescription(), description: "Bed level left side structure (m AD)");
-        public static readonly ConfigurationSetting LevelCenter = new ConfigurationSetting(key: KnownGeneralStructureProperties.LevelCenter.GetDescription(), description: "Bed level at centre of structure (m AD)");
-        public static readonly ConfigurationSetting LevelRightZbsr = new ConfigurationSetting(key: KnownGeneralStructureProperties.LevelRightZbsr.GetDescription(), description: "Bed level right side structure (m AD)");
-        public static readonly ConfigurationSetting LevelRightZb2 = new ConfigurationSetting(key: KnownGeneralStructureProperties.LevelRightZb2.GetDescription(), description: "Bed level right side of structure (m AD)");
-        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: KnownGeneralStructureProperties.GateHeight.GetDescription(), description: "Gate lower edge level (m AD)");
-        public static readonly ConfigurationSetting PosFreeGateFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription(), description: "Positive free gate flow (-)");
-        public static readonly ConfigurationSetting PosDrownGateFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription(), description: "Positive drowned gate flow (-)");
-        public static readonly ConfigurationSetting PosFreeWeirFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription(), description: "Positive free weir flow (-)");
-        public static readonly ConfigurationSetting PosDrownWeirFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription(), description: "Positive drowned weir flow (-)");
-        public static readonly ConfigurationSetting PosContrCoefFreeGate = new ConfigurationSetting(key: KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate.GetDescription(), description: "Positive flow contraction coefficient (-)");
-        public static readonly ConfigurationSetting NegFreeGateFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription(), description: "Negative free gate flow (-)");
-        public static readonly ConfigurationSetting NegDrownGateFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription(), description: "Negative drowned gate flow (-)");
-        public static readonly ConfigurationSetting NegFreeWeirFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription(), description: "Negative free weir flow (-)");
-        public static readonly ConfigurationSetting NegDrownWeirFlowCoeff = new ConfigurationSetting(key: KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription(), description: "Negative drowned weir flow (-)");
-        public static readonly ConfigurationSetting NegContrCoefFreeGate = new ConfigurationSetting(key: KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate.GetDescription(), description: "Negative flow contraction coefficient (-)");
-        public static readonly ConfigurationSetting ExtraResistance = new ConfigurationSetting(key: KnownGeneralStructureProperties.ExtraResistance.GetDescription(), description: "Extra resistance (-)");
-        public static readonly ConfigurationSetting GateDoorHeight = new ConfigurationSetting(key: KnownGeneralStructureProperties.GateDoorHeightGeneralStructure.GetDescription(), description: "Gate opening height (m)");
+        public static readonly ConfigurationSetting Upstream1Width = new ConfigurationSetting(key: "upstream1Width", description: "");
+        public static readonly ConfigurationSetting Upstream2Width = new ConfigurationSetting(key: "upstream2Width", description: "");
+        //public static readonly ConfigurationSetting WidthCenter = new ConfigurationSetting(key: "crestWidth", description: "");
+        public static readonly ConfigurationSetting Downstream1Width = new ConfigurationSetting(key: "downstream1Width", description: "");
+        public static readonly ConfigurationSetting Downstream2Width = new ConfigurationSetting(key: "downstream2Width", description: "");
+        public static readonly ConfigurationSetting Upstream1Level = new ConfigurationSetting(key: "upstream1Level", description: "");
+        public static readonly ConfigurationSetting Upstream2Level = new ConfigurationSetting(key: "upstream2Level", description: "");
+        //public static readonly ConfigurationSetting LevelCenter = new ConfigurationSetting(key: "crestLevel", description: "");
+        public static readonly ConfigurationSetting Downstream1Level = new ConfigurationSetting(key: "downstream1Level", description: "");
+        public static readonly ConfigurationSetting Downstream2Level = new ConfigurationSetting(key: "downstream2Level", description: "");
+        //public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "Gate lower edge level (m AD)");
+        public static readonly ConfigurationSetting PosFreeGateFlowCoeff = new ConfigurationSetting(key: "posFreeGateFlowCoeff", description: "Positive free gate flow (-)");
+        public static readonly ConfigurationSetting PosDrownGateFlowCoeff = new ConfigurationSetting(key: "posDrownGateFlowCoeff", description: "Positive drowned gate flow (-)");
+        public static readonly ConfigurationSetting PosFreeWeirFlowCoeff = new ConfigurationSetting(key: "posFreeWeirFlowCoeff", description: "Positive free weir flow (-)");
+        public static readonly ConfigurationSetting PosDrownWeirFlowCoeff = new ConfigurationSetting(key: "posDrownWeirFlowCoeff", description: "Positive drowned weir flow (-)");
+        public static readonly ConfigurationSetting PosContrCoefFreeGate = new ConfigurationSetting(key: "posContrCoefFreeGate", description: "Positive flow contraction coefficient (-)");
+        public static readonly ConfigurationSetting NegFreeGateFlowCoeff = new ConfigurationSetting(key: "negFreeGateFlowCoeff", description: "Negative free gate flow (-)");
+        public static readonly ConfigurationSetting NegDrownGateFlowCoeff = new ConfigurationSetting(key: "negDrownGateFlowCoeff", description: "Negative drowned gate flow (-)");
+        public static readonly ConfigurationSetting NegFreeWeirFlowCoeff = new ConfigurationSetting(key: "negFreeWeirFlowCoeff", description: "Negative free weir flow (-)");
+        public static readonly ConfigurationSetting NegDrownWeirFlowCoeff = new ConfigurationSetting(key: "negDrownWeirFlowCoeff", description: "Negative drowned weir flow (-)");
+        public static readonly ConfigurationSetting NegContrCoefFreeGate = new ConfigurationSetting(key: "negContrCoefFreeGate", description: "Negative flow contraction coefficient (-)");
+        public static readonly ConfigurationSetting ExtraResistance = new ConfigurationSetting(key: "extraResistance", description: "Extra resistance (-)");
+        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateHeight", description: "Gate opening height (m)");
+        public static readonly ConfigurationSetting UseVelocityHeight = new ConfigurationSetting(key: "useVelocityHeight", description: "");
+        public static readonly ConfigurationSetting CrestLength = new ConfigurationSetting(key: "crestLength", description: "");
         #endregion
 
         #region Common Culvert Elements

@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             foreach (var knownProperty in knownProperties)
             {
                 var property = (KnownGeneralStructureProperties) knownProperty;
-                if (property == KnownGeneralStructureProperties.GateHeight) continue;
+                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel) continue;
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
                 generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
@@ -159,27 +159,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
             {
-                {KnownGeneralStructureProperties.WidthLeftW1, weirFormula.WidthLeftSideOfStructure},
-                {KnownGeneralStructureProperties.WidthLeftWsdl, weirFormula.WidthStructureLeftSide},
-                {KnownGeneralStructureProperties.WidthCenter, weirFormula.WidthStructureCentre },
-                {KnownGeneralStructureProperties.WidthRightWsdr, weirFormula.WidthStructureRightSide},
-                {KnownGeneralStructureProperties.WidthRightW2, weirFormula.WidthRightSideOfStructure},
-                {KnownGeneralStructureProperties.LevelLeftZb1, weirFormula.BedLevelLeftSideOfStructure},
-                {KnownGeneralStructureProperties.LevelLeftZbsl, weirFormula.BedLevelLeftSideStructure },
-                {KnownGeneralStructureProperties.LevelCenter, weirFormula.BedLevelStructureCentre },
-                {KnownGeneralStructureProperties.LevelRightZbsr, weirFormula.BedLevelRightSideStructure },
-                {KnownGeneralStructureProperties.LevelRightZb2, weirFormula.BedLevelRightSideOfStructure },
-                {KnownGeneralStructureProperties.GateDoorHeightGeneralStructure, weirFormula.GateOpening},
-                {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
-                {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
-                {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, weirFormula.PositiveFreeWeirFlow},
-                {KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient, weirFormula.PositiveDrownedWeirFlow},
-                {KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate, weirFormula.PositiveContractionCoefficient},
-                {KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient, weirFormula.NegativeFreeGateFlow},
-                {KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient, weirFormula.NegativeDrownedGateFlow},
-                {KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient, weirFormula.NegativeFreeWeirFlow},
-                {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, weirFormula.NegativeDrownedWeirFlow},
-                {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, weirFormula.NegativeContractionCoefficient},
+                {KnownGeneralStructureProperties.Upstream1Width, weirFormula.WidthLeftSideOfStructure},
+                {KnownGeneralStructureProperties.Upstream2Width, weirFormula.WidthStructureLeftSide},
+                {KnownGeneralStructureProperties.CrestWidth, weirFormula.WidthStructureCentre },
+                {KnownGeneralStructureProperties.Downstream1Width, weirFormula.WidthStructureRightSide},
+                {KnownGeneralStructureProperties.Downstream2Width, weirFormula.WidthRightSideOfStructure},
+                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.BedLevelLeftSideOfStructure},
+                {KnownGeneralStructureProperties.Upstream2Level, weirFormula.BedLevelLeftSideStructure },
+                {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre },
+                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure },
+                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure },
+                {KnownGeneralStructureProperties.GateHeight, weirFormula.GateOpening},
+                {KnownGeneralStructureProperties.PosFreeGateFlowCoeff, weirFormula.PositiveFreeGateFlow},
+                {KnownGeneralStructureProperties.PosDrownGateFlowCoeff, weirFormula.PositiveDrownedGateFlow},
+                {KnownGeneralStructureProperties.PosFreeWeirFlowCoeff, weirFormula.PositiveFreeWeirFlow},
+                {KnownGeneralStructureProperties.PosDrownWeirFlowCoeff, weirFormula.PositiveDrownedWeirFlow},
+                {KnownGeneralStructureProperties.PosContrCoefFreeGate, weirFormula.PositiveContractionCoefficient},
+                {KnownGeneralStructureProperties.NegFreeGateFlowCoeff, weirFormula.NegativeFreeGateFlow},
+                {KnownGeneralStructureProperties.NegDrownGateFlowCoeff, weirFormula.NegativeDrownedGateFlow},
+                {KnownGeneralStructureProperties.NegFreeWeirFlowCoeff, weirFormula.NegativeFreeWeirFlow},
+                {KnownGeneralStructureProperties.NegDrownWeirFlowCoeff, weirFormula.NegativeDrownedWeirFlow},
+                {KnownGeneralStructureProperties.NegContrCoefFreeGate, weirFormula.NegativeContractionCoefficient},
                 {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance}
             };
             return dictionary;

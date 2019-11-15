@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private static readonly ILog Log = LogManager.GetLogger(typeof(WeirViewModel));
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
+        private GateOpeningDirection selectedGateOpeningHorizontalDirection;
 
         private double lowerEdgeLevel;
         private double previousCrestLevel;
@@ -47,9 +48,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.HasWeir));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningWidth));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
+                    OnPropertyChanged(nameof(SelectedGateOpeningHorizontalDirection));
 
                     ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
                     ((INotifyPropertyChanged)weir.WeirFormula).PropertyChanged += WeirFormulaPropertyChanged;
@@ -96,6 +99,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
+        public double GateOpeningWidth
+        {
+            get
+            {
+                if (!HasWeir) return 0;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null) return 0;
+
+                return gatedWeirFormula.GateOpeningWidth;
+            }
+            set
+            {
+                if (!HasWeir) return;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null) return;
+                if (gatedWeirFormula.GateOpeningWidth != value)
+                {
+                    gatedWeirFormula.GateOpeningWidth = value;
+
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningWidth));
+                }
+
+            }
+        }
+
         public SelectableWeirFormulaType SelectedWeirType
         {
             get
@@ -125,7 +153,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 selectedWeirType = value;
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedWeirType));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningHeight));
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.GateOpeningWidth));
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
+            }
+        }
+
+        public GateOpeningDirection SelectedGateOpeningHorizontalDirection
+        {
+            get
+            {
+                if (!HasWeir) return 0;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null) return 0;
+
+                return gatedWeirFormula.GateOpeningHorizontalDirection;
+            }
+            set
+            {
+                if (!HasWeir || weir.WeirFormula == null) return;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null) return;
+                if (gatedWeirFormula.GateOpeningHorizontalDirection != value)
+                {
+                    gatedWeirFormula.GateOpeningHorizontalDirection = value;
+
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.SelectedGateOpeningHorizontalDirection));
+                }
+                
             }
         }
 
