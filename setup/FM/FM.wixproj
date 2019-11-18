@@ -167,6 +167,9 @@
     <EmbeddedResource Include="..\RealTimeControl\Localization\RTCNames.wxl">
       <Link>Localization\RTCNames.wxl</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\Sobek\Localization\SobekNames.wxl">
+      <Link>Localization\SobekNames.wxl</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\Waq\Localization\WaqNames.wxl">
       <Link>Localization\WaqNames.wxl</Link>
     </EmbeddedResource>

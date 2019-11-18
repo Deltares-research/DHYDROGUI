@@ -13,6 +13,7 @@
   <?include ..\Wave\WavePlugin.wxi?>
 
   <?include ..\RealTimeControl\RealTimeControlPlugin.wxi?>
+  <?include ..\Sobek\RainfallRunoffModelPlugin.wxi?>
 
   <?ifndef var.NOWAQ?>
   <?include ..\Waq\WaterQualityModelPlugin.wxi?>
