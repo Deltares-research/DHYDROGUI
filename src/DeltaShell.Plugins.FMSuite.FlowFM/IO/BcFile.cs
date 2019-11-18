@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
+using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using log4net;
@@ -19,12 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string Extension = ".bc";
 
         public const string BlockKey = "[forcing]";
+        public const string ForcingKey = "forcing";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
         public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
-        //private const string TimeInterpolationKey = "Time-interpolation";
+        
         private const string TimeInterpolationKey = "timeInterpolation";
         private const string VerticalIntepolationKey = "Vertical interpolation";
         private const string VerticalPositionTypeKey = "Vertical position type";
@@ -443,6 +447,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         Factor = factor,
                         Quantities = quantityDataList
                     };
+        }
+
+        public void Write(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string file, string path)
+        {
+            var delftBcWriter = new DelftBcWriter();
+            switch (MultiFileMode)
+            {
+                case WriteMode.SingleFile:
+                {
+                    var filename = Path.Combine(path, file);
+                    WriteBc1DFile(generateModel1DNodeBoundaryDelftIniCategories, filename, delftBcWriter);
+                    break;
+                }
+                case WriteMode.FilePerQuantity:
+                {
+                    //werkt nog niet!
+                    var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories as IDelftIniCategory[] ?? generateModel1DNodeBoundaryDelftIniCategories.ToArray();
+                    var quantityNameWithBoundaryDataDictionary = model1DNodeBoundaryDelftIniCategories
+                            .GroupBy(GetQuantityNameFromDelftIniCategory).ToDictionary(grp => grp.Key,
+                                grp => { return GetSubListOfItemsOfThisQuantity(grp.FirstOrDefault(), model1DNodeBoundaryDelftIniCategories).ToList(); });
+
+                    foreach (var quantityNameWithBoundaryData in quantityNameWithBoundaryDataDictionary)
+                    {
+                        var filename = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + "_" + quantityNameWithBoundaryData.Key + Path.GetExtension(file));
+                        WriteBc1DFile(quantityNameWithBoundaryData.Value,filename, delftBcWriter);
+                    }
+
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            
+        }
+
+        private static void WriteBc1DFile(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string filename, DelftBcWriter delftBcWriter)
+        {
+            var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories as IDelftIniCategory[] ?? generateModel1DNodeBoundaryDelftIniCategories.ToArray();
+            if (!File.Exists(filename))
+            {
+                var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                    GeneralRegion.FileTypeName.BoundaryConditions);
+                new IniFileWriter().WriteIniFile(new[] {generalRegion}, filename);
+            }
+            else
+            {
+                var existing = new DelftBcReader().ReadDelftBcFile(filename);
+                foreach (var delftBcCategory in existing)
+                {
+                    model1DNodeBoundaryDelftIniCategories.RemoveAllWhere(dic =>
+                        dic.GetPropertyValue(BoundaryRegion.Name.Key) ==
+                        delftBcCategory.GetPropertyValue(BoundaryRegion.Name.Key));
+                }
+            }
+
+            delftBcWriter.WriteBcFile(model1DNodeBoundaryDelftIniCategories, filename);
+        }
+
+        private IEnumerable<IDelftIniCategory> GetSubListOfItemsOfThisQuantity(IDelftIniCategory dic, IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories)
+        {
+            var q = GetQuantityNameFromDelftIniCategory(dic);
+            var subListOfItemsOfThisQuantity = generateModel1DNodeBoundaryDelftIniCategories.Where( d => GetQuantityNameFromDelftIniCategory(dic) != q).ToList();
+            return subListOfItemsOfThisQuantity;
+        }
+
+
+        private string GetQuantityNameFromDelftIniCategory(IDelftIniCategory delftIniCategory)
+        {
+            var quantityName = string.Empty;
+            var function = delftIniCategory.GetPropertyValue(BoundaryRegion.Function.Key);
+            if (function == BoundaryRegion.FunctionStrings.QhTable)
+                quantityName = BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency;
+            else
+            {
+                var delftBcCategory = delftIniCategory as IDelftBcCategory;
+                if (delftBcCategory == null) return quantityName;
+                var delftBcQuantityData = delftBcCategory.Table.LastOrDefault();
+                quantityName = delftBcQuantityData?.Quantity?.Value;
+            }
+
+            return quantityName;
         }
     }
 }

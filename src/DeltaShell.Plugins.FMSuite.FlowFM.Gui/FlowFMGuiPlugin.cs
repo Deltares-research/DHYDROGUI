@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1D, () => Gui);
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
 
             // Heat flux model

@@ -7,7 +7,7 @@ namespace DeltaShell.NGHS.IO
     {
         public void WriteBcFile(IEnumerable<IDelftIniCategory> categories, string iniFile)
         {
-            OpenOutputFile(iniFile);
+            OpenOutputFile(iniFile,true);
             try
             {
                 foreach (var category in categories)

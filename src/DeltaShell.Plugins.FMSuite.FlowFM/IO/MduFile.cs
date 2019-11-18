@@ -337,26 +337,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ExternalForcingsFile = new ExtForceFile();
             }
 
-            var newFormatBoundaryConditions =
-                modelDefinition.BoundaryConditions.Except(ExternalForcingsFile.ExistingBoundaryConditions).Any();
+            var newBoundaryConditions = modelDefinition.BoundaryConditions.Except(ExternalForcingsFile.ExistingBoundaryConditions);
+            var newBoundaries = modelDefinition.Boundaries.Except(ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
+                .Select(bc => bc.Feature));
 
-            var newBoundaries =
-                modelDefinition.Boundaries.Except(
-                    ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
-                        .Select(bc => bc.Feature)).Any();
+            var newFormatBoundaryConditions = newBoundaryConditions.Any();
+            var hasNewBoundaries = newBoundaries.Any();
 
+            var hasModel1dBoundaryConditions = modelDefinition.BoundaryConditions1D.Any();
             // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
 
             // will check if indeed the file is written)
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
-                !(newFormatBoundaryConditions || newBoundaries));
+                !(newFormatBoundaryConditions || hasNewBoundaries ));
 
-            if (newFormatBoundaryConditions || newBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || modelDefinition.BoundaryConditions1D.Any())
+            if (newFormatBoundaryConditions || hasNewBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || hasModel1dBoundaryConditions)
             {
-                var bndExtFileName =
-                    modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
+                var bndExtFileName = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
                 if (string.IsNullOrEmpty(bndExtFileName))
                     bndExtFileName = System.IO.Path.GetFileNameWithoutExtension(extFileName) + "_bnd" +
                                      ExtForceFile.Extension;

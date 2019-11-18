@@ -13,15 +13,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
         public static class TimeInterpolationStrings
         {
-            public const string LinearAndExtrapolate = "linear-extrapolate";
-            public const string BlockFrom = "block-from";
-            public const string BlockTo = "block-to"; // used when reading only?
+            public const string LinearAndExtrapolate = "linear";
+            public const string BlockFrom = "blockfrom";
+            public const string BlockTo = "blockto"; // used when reading only?
         }
 
         public static class QuantityStrings
         {
-            public const string WaterDischarge = "water_discharge";
-            public const string WaterLevel = "water_level";
+            public const string QHDischargeWaterLevelDependency = "qhbnd";
+            public const string QHWaterLevelDependencyKey = "waterlevel";
+            public const string QHDischargeDependencyKey = "discharge";
+            public const string WaterDischarge = "dischargebnd";
+            public const string WaterLevel = "waterlevelbnd";
             public const string Time = "time";
             public const string WaterSalinity = "water_salinity";
             public const string WaterTemperature = "water_temperature";
@@ -59,7 +62,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             "TimeSeries, " +
             "QHTable" );
 
-        public static readonly ConfigurationSetting Interpolation = new ConfigurationSetting(key: "time-interpolation", description:
+        public static readonly ConfigurationSetting Interpolation = new ConfigurationSetting(key: "timeInterpolation", description:
             "Possible values: " +
             "linear, " +
             "block-from (value holds from specified time step), " +

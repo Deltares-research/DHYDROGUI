@@ -163,9 +163,11 @@
     <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
     <Compile Include="FileReaders\StructureFileReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
+    <Compile Include="FileWriters\Boundary\BoundaryFileWriterHelper.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
     <Compile Include="FileReaders\Definition\Structures\CompositeBranchStructureDefinitionReader.cs" />
+    <Compile Include="FileWriters\Boundary\Model1DBoundaryFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionInvertedEgg.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionStandardTemplate.cs" />

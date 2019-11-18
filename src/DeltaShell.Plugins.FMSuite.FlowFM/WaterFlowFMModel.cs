@@ -154,10 +154,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
             {
-                ValueType = typeof(FeatureData<IFunction, INode>)
+                //ValueType = typeof(FeatureData<IFunction, INode>),
+                Owner = this
             };
             
-            lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData));
+            lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData))
+            {
+                Owner = this
+            };
         }
 
         private void AddAreaToModel()
@@ -209,6 +213,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (modelDefinition != null)
                 {
                     ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged -= OnModelDefinitionPropertyChanged;
+                    modelDefinition.BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
+                    ((INotifyPropertyChanged) (modelDefinition.BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
                 }
 
                 modelDefinition = value;
@@ -218,6 +224,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (modelDefinition != null)
                 {
                     ((INotifyPropertyChange) (modelDefinition.Properties)).PropertyChanged += OnModelDefinitionPropertyChanged;
+                    modelDefinition.BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
+                    ((INotifyPropertyChanged)(modelDefinition.BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
+                }
+            }
+        }
+        private void BoundaryConditions1DOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
+            {
+                var bc = sender as Model1DBoundaryNodeData;
+                var bcDataItem = boundaryNodeDataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
+                bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
+            }
+        }
+
+        private void BoundaryConditions1DOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var modelDefinitionBoundaryConditions1D = sender as IEventedList<Model1DBoundaryNodeData>;
+            if (modelDefinitionBoundaryConditions1D != null)
+            {
+                var model1DBoundaryNode = e.GetRemovedOrAddedItem() as Model1DBoundaryNodeData;
+                if (model1DBoundaryNode == null) return;
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        if (BoundaryConditions1DDataItemSet.DataItems.Where(di => di.Value is Model1DBoundaryNodeData).All(di => di.Value as Model1DBoundaryNodeData != model1DBoundaryNode))
+                        {
+                            BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(model1DBoundaryNode){Hidden = model1DBoundaryNode?.DataType == Model1DBoundaryNodeDataType.None});
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        var existingDataItem = BoundaryConditions1DDataItemSet.DataItems
+                            .Where(di => di.Value is Model1DBoundaryNodeData).FirstOrDefault(di =>
+                                di.Value as Model1DBoundaryNodeData == model1DBoundaryNode);
+                        if (existingDataItem != null)
+                        {
+                            BoundaryConditions1DDataItemSet.DataItems.Remove(existingDataItem);
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        BoundaryConditions1DDataItemSet.DataItems.Clear();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -519,7 +569,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void SynchronizeModelDefinitions()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
-            BoundaryConditions1D = ModelDefinition.BoundaryConditions1D;
             LateralSourcesData = ModelDefinition.LateralSourcesData;
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;

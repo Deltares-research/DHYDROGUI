@@ -407,9 +407,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D
         {
-            get { return boundaryNodeDataItemSet.AsEventedList<Model1DBoundaryNodeData>(); }
-            private set { boundaryNodeDataItemSet.Value =  value; }
+            get { return modelDefinition.BoundaryConditions1D; }
         }
+
         /// <summary>
         /// Gets the boundary conditions data item set for this model
         /// </summary>
@@ -423,8 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         private void AddBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
-            var dataItem = new DataItem(boundaryNodeData) { Hidden = (boundaryNodeData.DataType == Model1DBoundaryNodeDataType.None) };
-            boundaryNodeDataItemSet.DataItems.Add(dataItem);
+            BoundaryConditions1D.Add(boundaryNodeData);
         }
         private void UpdateBoundaryCondition(NotifyCollectionChangedEventArgs e)
         {
@@ -453,10 +452,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
-            var dataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, boundaryNodeData));
-            if (dataItem == null) return;
-
-            boundaryNodeDataItemSet.DataItems.Remove(dataItem);
+           BoundaryConditions1D.Remove(boundaryNodeData);
         }
 
         /// <summary>
@@ -465,14 +461,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             if (boundaryNodeData == null) return;
-
-            var currentDataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di => ((Model1DBoundaryNodeData) di.Value).Feature == boundaryNodeData.Feature);
-            if (currentDataItem == null) return;
-            var insertIndex = boundaryNodeDataItemSet.DataItems.IndexOf(currentDataItem);
-
-            boundaryNodeDataItemSet.DataItems.RemoveAt(insertIndex);
-            boundaryNodeDataItemSet.DataItems.Insert(insertIndex, new DataItem(boundaryNodeData));
+            var currentBC1DNode = BoundaryConditions1D.FirstOrDefault(bc1d => bc1d.Feature == boundaryNodeData.Feature);
+            if (currentBC1DNode != null)
+            {
+                var currentIndex = BoundaryConditions1D.IndexOf(boundaryNodeData);
+                BoundaryConditions1D.RemoveAt(currentIndex);
+                BoundaryConditions1D.Insert(currentIndex, boundaryNodeData);
+            }
         }
+
         private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
             if (lateralSourceData == null) return;

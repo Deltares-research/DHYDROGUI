@@ -61,11 +61,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
         protected static IList<IDelftBcQuantityData> GenerateTableForDischargeWaterLevelData(IFunction data)
         {
-            var levelQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.WaterLevel, BoundaryRegion.Quantity.Description);
+            var levelQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHWaterLevelDependencyKey, BoundaryRegion.Quantity.Description);
             var levelUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterLevel, BoundaryRegion.Unit.Description);
             var levelData = ((MultiDimensionalArray<double>)(data.Arguments[0].Values)).ToList();
 
-            var dischargeQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.WaterDischarge, BoundaryRegion.Quantity.Description);
+            var dischargeQuantity = new DelftIniProperty(BoundaryRegion.Quantity.Key, BoundaryRegion.QuantityStrings.QHDischargeWaterLevelDependency + " " + BoundaryRegion.QuantityStrings.QHDischargeDependencyKey, BoundaryRegion.Quantity.Description);
             var dischargeUnit = new DelftIniProperty(BoundaryRegion.Unit.Key, BoundaryRegion.UnitStrings.WaterDischarge, BoundaryRegion.Unit.Description);
             var dischargeData = ((MultiDimensionalArray<double>)(data.Components[0].Values)).ToList();
             if (levelData.Count == 0 && dischargeData.Count == 0)
@@ -76,7 +76,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
             return new List<IDelftBcQuantityData>()
             {
-                new DelftBcQuantityData(levelQuantity, levelUnit, levelData), new DelftBcQuantityData(dischargeQuantity, dischargeUnit, dischargeData)
+                new DelftBcQuantityData(dischargeQuantity, dischargeUnit, dischargeData), new DelftBcQuantityData(levelQuantity, levelUnit, levelData) 
             };
         }
  

@@ -14,12 +14,14 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -67,6 +69,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(model.SnapVersion, Is.EqualTo(0));
             Assert.IsTrue(model.ValidateBeforeRun);
+        }
+
+        [Test]
+        public void PropertyChanged()
+        {
+            var project = new Project();
+            var model = new WaterFlowFMModel();
+
+            var model1DBoundaryNodeData = new Model1DBoundaryNodeData();
+            model.ModelDefinition.BoundaryConditions1D.Add(model1DBoundaryNodeData);
+            project.RootFolder.Add(model);
+/*
+
+            var dataItem = new DataItem{
+                Value = model1DBoundaryNodeData,
+                ValueType = typeof(Model1DBoundaryNodeData),
+                Hidden = true};
+            model.BoundaryConditions1DDataItemSet.DataItems.Add(dataItem);*/
+
+            project.PropertyChanged += (sender, args) =>
+            {
+                Console.WriteLine($"Sender {sender}, Arg {args}");
+            };
+
+            model1DBoundaryNodeData.DataType = Model1DBoundaryNodeDataType.FlowConstant;
+
         }
 
         [Test]

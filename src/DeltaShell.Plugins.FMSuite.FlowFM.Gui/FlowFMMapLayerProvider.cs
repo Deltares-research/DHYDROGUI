@@ -15,6 +15,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -367,7 +368,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (model != null)
             {
                 yield return model.Network;
-                yield return model.BoundaryConditions1D;
+                yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
                 yield return model.LateralSourcesData;
 
                 var rootModel = GetRootModel(model);
