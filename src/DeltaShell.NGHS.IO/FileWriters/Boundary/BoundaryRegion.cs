@@ -54,6 +54,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         }
 
         public const string BcBoundaryHeader = "Boundary";
+        public const string BcForcingHeader = "forcing";
         public const string BcLateralHeader = "LateralDischarge";
 
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Name of the boundary location (node id)");

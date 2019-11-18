@@ -49,14 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
 
-                UnSubscribeFromNetwork();
-
+                
                 GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).Value = value;
 
-                SubscribeToNetwork();
-
-                // refresh data
-                RefreshNetworkRelatedData();
+                
             }
         }
         public IDiscretization NetworkDiscretization {
@@ -82,33 +78,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if(((Discretization)sender).IsEditing) return;
             RefreshMappings();
         }
-
-        private void SubscribeToNetwork()
-        {
-            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            var networkValue = networkDataItem.Value;
-            if (networkValue != null)
-            {
-                ((INotifyCollectionChange)networkValue).CollectionChanged += NetworkCollectionChanged;
-                ((INotifyPropertyChanged)networkValue).PropertyChanged += NetworkPropertyChanged;
-                ((INotifyPropertyChanged)networkValue).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
-            }
-            observedNetwork = (IHydroNetwork)networkValue;
-        }
-
+        
         private IHydroNetwork observedNetwork;
         private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 
-        public virtual void UnSubscribeFromNetwork()
-        {
-            if (observedNetwork != null)
-            {
-                ((INotifyCollectionChange)observedNetwork).CollectionChanged -= NetworkCollectionChanged;
-                ((INotifyPropertyChanged)observedNetwork).PropertyChanged -= NetworkPropertyChanged;
-                ((INotifyPropertyChanged)observedNetwork).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
-            }
-        }
         public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
         public bool UseReverseRoughness { get; set; }
         public bool UseReverseRoughnessInCalculation { get; set; }
@@ -155,12 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [EditAction]
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // when node is added or removed - check if boundary conditions are updated
-            if (e.GetRemovedOrAddedItem() is INode)
-            {
-                UpdateBoundaryCondition(e);
-            }
-            else if (e.GetRemovedOrAddedItem() is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
+            if (e.GetRemovedOrAddedItem() is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
             {
                 UpdateLateralSource(e);
             }
@@ -275,43 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RoughnessSections.Add(roughnessSection);
         }
 
-        /// <summary>
-        /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [EditAction]
-        private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is IDataItem && ((IDataItem)sender).Value is IHydroNetwork)
-            {
-                if (e.PropertyName == nameof(IDataItem.Value))
-                {
-                    RefreshNetworkRelatedData();
-                }
-            }
-
-            if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
-                !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
-            {
-                OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
-            }
-        }
-        /// <summary>
-        /// - Synchronize the coordinate system in the model with the network coordinate system
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         
-        private void NetworkCoordinateSystemPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
-            {
-                CoordinateSystem = Network.CoordinateSystem;
-                Network.UpdateGeodeticDistancesOfChannels();
-            }
-        }
-
         /// <summary>
         /// Called when a network is inserted into or linked to the model
         /// </summary>
@@ -319,23 +252,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();
-            if (NetworkDiscretization != null && NetworkDiscretization.Network != Network)
-            {
-                NetworkDiscretization.Network = Network;
-                NetworkDiscretization.Clear();
-                if (string.IsNullOrEmpty(NetworkDiscretization.Name))
-                    NetworkDiscretization.Name = DiscretizationObjectName;
-            }
-            // update boundary conditions
             ClearBoundaryConditions();
-            if (Network != null)
-            {
-                foreach (var node in Network.Nodes)
-                {
-                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, UseSalinity, UseTemperature));
-                }
-            }
-
+            ModelDefinition.RefreshNetworkRelatedData();
             // update laterals
             ClearLateralSourceData();
             if (Network != null)
@@ -366,28 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void OnEndingBranchSplit(BranchSplitAction splitAction)
-        {
-            var locations = (splitAction.NewBranch.Source == splitAction.SplittedBranch.Target
-                ? new[]
-                {
-                    new NetworkLocation(splitAction.SplittedBranch, splitAction.SplittedBranch.Length)
-                    {
-                        // reset chainage to realy put the chainage to the end of the branch (this is not done via the contructor)
-                        Chainage = splitAction.SplittedBranch.Length
-                    },
-                    new NetworkLocation(splitAction.NewBranch, 0)
-                }
-                : null);
-
-            if (locations != null)
-            {
-                NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
-                NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
-                NetworkDiscretization.EndEdit();
-            }
-        }
-
+        
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
@@ -405,55 +302,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         /// <summary>
-        /// Gets the boundary conditions data item set for this model
-        /// </summary>
-        private void AddBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
-        {
-            BoundaryConditions1D.Add(boundaryNodeData);
-        }
-        private void UpdateBoundaryCondition(NotifyCollectionChangedEventArgs e)
-        {
-            var node = (INode)e.GetRemovedOrAddedItem();
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException();
-
-                case NotifyCollectionChangedAction.Add:
-                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, UseSalinity, UseTemperature));
-                    break;
-
-                case NotifyCollectionChangedAction.Remove:
-                    RemoveBoundaryCondition(node);
-                    break;
-            }
-        }
-        private void RemoveBoundaryCondition(INode hydroNode)
-        {
-            var boundaryCondition = BoundaryConditions1D.FirstOrDefault(bc => bc.Feature == hydroNode);
-            if (boundaryCondition == null) return;
-
-            RemoveBoundaryCondition(boundaryCondition);
-        }
-        private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
-        {
-           BoundaryConditions1D.Remove(boundaryNodeData);
-        }
-
-        /// <summary>
         /// Replaces an existing boundary condition by <paramref name="boundaryNodeData"/>
         /// </summary>
         public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
-            if (boundaryNodeData == null) return;
-            var currentBC1DNode = BoundaryConditions1D.FirstOrDefault(bc1d => bc1d.Feature == boundaryNodeData.Feature);
-            if (currentBC1DNode != null)
-            {
-                var currentIndex = BoundaryConditions1D.IndexOf(boundaryNodeData);
-                BoundaryConditions1D.RemoveAt(currentIndex);
-                BoundaryConditions1D.Insert(currentIndex, boundaryNodeData);
-            }
+            ModelDefinition.ReplaceBoundaryCondition(boundaryNodeData);
         }
 
         private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)

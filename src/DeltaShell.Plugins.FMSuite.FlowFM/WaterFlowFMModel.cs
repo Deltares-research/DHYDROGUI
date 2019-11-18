@@ -144,8 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // network
             var network = new HydroNetwork { Name = NetworkObjectName };
             AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
-            SubscribeToNetwork();
-
+            
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             
             // q's supplied by externals
@@ -446,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             set { UseLocalApi = !value; }
         }
 
-       protected override void OnAfterDataItemsSet()
+        protected override void OnAfterDataItemsSet()
         {
             base.OnAfterDataItemsSet();
 
@@ -456,7 +455,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
-            SubscribeToNetwork();
         }
 
         protected override void OnBeforeDataItemsSet()
@@ -469,7 +467,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
-            UnSubscribeFromNetwork();
         }
 
         protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)

@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -299,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         public IEnumerable<DelftIniCategory> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IList<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
         {
-            var generateModel1DNodeBoundaryDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryDelftIniCategories(refDate, boundaryConditions1D, false, false, BcFile.ForcingKey);
+            var generateModel1DNodeBoundaryDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryDelftIniCategories(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
             var filename = AddExtension(modelDefinitionModelName+"_boundaryconditions1d", BcFile.Extension);
             // now generate bc files with the data
             var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories as IDelftIniCategory[] ?? generateModel1DNodeBoundaryDelftIniCategories.ToArray();
@@ -711,7 +712,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
 
             var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
-         
+
             foreach (var delftIniCategory in bndBlocks)
             {
                 var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
@@ -723,20 +724,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (quantityKey == ExtForceQuantNames.Precipitation)
                 {
-                    FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames.FirstOrDefault(pair => pair.Value == quantityKey).Key;
+                    FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames
+                        .FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
                     var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
                     if (string.IsNullOrEmpty(locationTypeKey))
                     {
-                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data", locationTypeKey);
+                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data",
+                            locationTypeKey);
                         continue;
                     }
 
-                    FmMeteoLocationType locationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames.FirstOrDefault(pair => pair.Value == locationTypeKey).Key;
+                    FmMeteoLocationType locationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames
+                        .FirstOrDefault(pair => pair.Value == locationTypeKey).Key;
                     if (locationType != FmMeteoLocationType.Global)
                     {
                         //because we don't allow for the others we do this stupid quick implementation fix
-                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location data", locationTypeKey);
+                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location data",
+                            locationTypeKey);
                         continue;
                     }
 
@@ -754,11 +759,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         OverwriteExistingData = true,
                         CanCreateNewBoundaryCondition = true,
                     };
-                    
+
 
 
                     var meteoPliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-                    
+
 
                     if (locationType != FmMeteoLocationType.Global)
                     {
@@ -771,10 +776,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var meteoFeature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == meteoPliFile).Key;
                         if (meteoFeature != null)
                         {
-                            var meteoField = modelDefinition.FmMeteoFields.FirstOrDefault(mf => mf.FmMeteoLocationType == FmMeteoLocationType.Polygon && mf.FeatureData.Feature == meteoFeature);
-                            if(meteoField == null) continue;
+                            var meteoField = modelDefinition.FmMeteoFields.FirstOrDefault(mf =>
+                                mf.FmMeteoLocationType == FmMeteoLocationType.Polygon &&
+                                mf.FeatureData.Feature == meteoFeature);
+                            if (meteoField == null) continue;
                             meteobuilder.InsertBoundaryData(meteoField, dataBlocks);
                         }
+
                         continue;
                     }
 
@@ -782,7 +790,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))
                     {
-                        Log.WarnFormat("Could parse fm meteo data {0} into a valid meteo location data, but this type already exists in the model. We have overwritten it's data", fmMeteoField.Name);
+                        Log.WarnFormat(
+                            "Could parse fm meteo data {0} into a valid meteo location data, but this type already exists in the model. We have overwritten it's data",
+                            fmMeteoField.Name);
                         modelDefinition.FmMeteoFields.Remove(fmMeteoField);
                     }
 
@@ -794,13 +804,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var timelagString = delftIniCategory.GetPropertyValue(ThatcherHarlemanTimeLagKey);
 
-                if (!string.IsNullOrEmpty(quantityKey) && !ExtForceQuantNames.TryParseBoundaryQuantityType(quantityKey, out quantity))
+                if (!string.IsNullOrEmpty(quantityKey) &&
+                    !ExtForceQuantNames.TryParseBoundaryQuantityType(quantityKey, out quantity))
                 {
                     if (quantityKey != ExtForceQuantNames.EmbankmentBnd)
                     {
-                        Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition", quantityKey);
+                        Log.WarnFormat("Could not parse quantity {0} into a valid flow boundary condition",
+                            quantityKey);
                     }
+
                     continue;
+                }
+
+                var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
+                if (nodeId != null)
+                {
+                    var node = modelDefinition.Network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                    if (node != null)
+                    {
+                        var forcingfile = delftIniCategory.GetPropertyValue(ForcingFileKey);
+                        if (forcingfile != null)
+                        {
+                            BoundaryFileReader.ReadFile(GetFullPath(forcingfile), modelDefinition.BoundaryConditions1D, modelDefinition.LateralSourcesData, null);
+                        }
+
+                        continue;
+                    }
                 }
 
                 var pliFile = delftIniCategory.GetPropertyValue(LocationFileKey);

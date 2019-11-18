@@ -167,7 +167,6 @@
     <Compile Include="FiniteVolumeDiscretizationProvider.cs" />
     <Compile Include="FiniteVolumeDiscretizationType.cs" />
     <Compile Include="Flow1DBasicModelInterface.cs" />
-    <Compile Include="ImportExport\BoundaryFileReader.cs" />
     <Compile Include="ImportExport\WaterFlowModel1DBoundaryFileWriter.cs" />
     <Compile Include="ImportExport\BoundaryLocationFileWriter.cs" />
     <Compile Include="ImportExport\Flow1DParameterGenerator.cs" />

@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string Extension = ".bc";
 
         public const string BlockKey = "[forcing]";
-        public const string ForcingKey = "forcing";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
@@ -485,7 +484,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void WriteBc1DFile(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string filename, DelftBcWriter delftBcWriter)
         {
-            var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories as IDelftIniCategory[] ?? generateModel1DNodeBoundaryDelftIniCategories.ToArray();
+            var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories.ToList();
             if (!File.Exists(filename))
             {
                 var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(

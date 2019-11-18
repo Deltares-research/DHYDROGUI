@@ -137,6 +137,7 @@
     <Compile Include="DelftBcWriter.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="FileReaders\BoundaryFileReader.cs" />
     <Compile Include="FileReaders\CrossSectionFileReader.cs" />
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CrossSectionDefinitionReaderBase.cs" />
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CSDArchDefinitionReader.cs" />

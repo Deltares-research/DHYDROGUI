@@ -22,17 +22,21 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
+using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -110,7 +114,164 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
-        public IHydroNetwork Network { get; set; }
+        public IHydroNetwork Network
+        {
+            get { return network; }
+            set
+            {
+                if(network != null)
+                    UnSubscribeFromNetwork();
+                network = value;
+                if (network != null)
+                    SubscribeToNetwork();
+                RefreshNetworkRelatedData();
+            }
+        }
+
+        public virtual void UnSubscribeFromNetwork()
+        {
+            ((INotifyCollectionChange) network).CollectionChanged -= NetworkCollectionChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
+        }
+
+        private void SubscribeToNetwork()
+        {
+            ((INotifyCollectionChange) network).CollectionChanged += NetworkCollectionChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
+
+        }
+        /// <summary>
+        /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EditAction]
+        private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is IDataItem && ((IDataItem)sender).Value is IHydroNetwork)
+            {
+                if (e.PropertyName == nameof(IDataItem.Value))
+                {
+                    RefreshNetworkRelatedData();
+                }
+            }
+
+            if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
+                !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
+            {
+                OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
+            }
+        }
+        private void OnEndingBranchSplit(BranchSplitAction splitAction)
+        {
+            var locations = (splitAction.NewBranch.Source == splitAction.SplittedBranch.Target
+                ? new[]
+                {
+                    new NetworkLocation(splitAction.SplittedBranch, splitAction.SplittedBranch.Length)
+                    {
+                        // reset chainage to realy put the chainage to the end of the branch (this is not done via the contructor)
+                        Chainage = splitAction.SplittedBranch.Length
+                    },
+                    new NetworkLocation(splitAction.NewBranch, 0)
+                }
+                : null);
+
+            if (locations != null)
+            {
+                NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
+                NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
+                NetworkDiscretization.EndEdit();
+            }
+        }
+
+        /// <summary>
+        /// - Synchronize the coordinate system in the model with the network coordinate system
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void NetworkCoordinateSystemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
+            {
+                CoordinateSystem = Network.CoordinateSystem;
+                Network.UpdateGeodeticDistancesOfChannels();
+            }
+        }
+
+        public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
+        {
+            if (boundaryNodeData == null) return;
+            var currentBC1DNode = BoundaryConditions1D.FirstOrDefault(bc1d => bc1d.Feature == boundaryNodeData.Feature);
+            if (currentBC1DNode != null)
+            {
+                var currentIndex = BoundaryConditions1D.IndexOf(boundaryNodeData);
+                BoundaryConditions1D.RemoveAt(currentIndex);
+                BoundaryConditions1D.Insert(currentIndex, boundaryNodeData);
+            }
+        }
+        /// <summary>
+        /// Gets the boundary conditions data item set for this model
+        /// </summary>
+        private void AddBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
+        {
+            BoundaryConditions1D.Add(boundaryNodeData);
+        }
+        private void UpdateBoundaryCondition(NotifyCollectionChangedEventArgs e)
+        {
+            var node = (INode)e.GetRemovedOrAddedItem();
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    throw new NotImplementedException();
+
+                case NotifyCollectionChangedAction.Add:
+                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node,  false, false));
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveBoundaryCondition(node);
+                    break;
+            }
+        }
+        private void RemoveBoundaryCondition(INode hydroNode)
+        {
+            var boundaryCondition = BoundaryConditions1D.FirstOrDefault(bc => bc.Feature == hydroNode);
+            if (boundaryCondition == null) return;
+
+            RemoveBoundaryCondition(boundaryCondition);
+        }
+        private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
+        {
+            BoundaryConditions1D.Remove(boundaryNodeData);
+        }
+
+        /// <summary>
+        /// Called when a network is inserted into or linked to the model
+        /// </summary>
+        [EditAction]
+        public void RefreshNetworkRelatedData()
+        {
+            if (NetworkDiscretization != null && NetworkDiscretization.Network != Network)
+            {
+                NetworkDiscretization.Network = Network;
+                NetworkDiscretization.Clear();
+                if (string.IsNullOrEmpty(NetworkDiscretization.Name))
+                    NetworkDiscretization.Name = WaterFlowFMModel.DiscretizationObjectName;
+            }
+
+            // update boundary conditions
+            if (Network != null)
+            {
+                foreach (var node in Network.Nodes)
+                {
+                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, false, false));
+                }
+            }
+        }
 
         public IDiscretization NetworkDiscretization { get; set; }
 
@@ -294,6 +455,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             KnownProperties.Wrishp_src,
             KnownProperties.Wrishp_pump
         };
+
+        private IHydroNetwork network;
 
         private void OnWriteSnappedFeaturesPropertyChanged(WaterFlowFMProperty prop)
         {
@@ -939,6 +1102,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_, messageKey, key);
 
             return String.Empty;
+        }
+
+        /// <summary>
+        /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property
+        ///   can be set/reset while the node was not part of the network it is necessary to monitor additions and removals.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EditAction]
+        private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // when node is added or removed - check if boundary conditions are updated
+            if (e.GetRemovedOrAddedItem() is INode)
+            {
+                UpdateBoundaryCondition(e);
+            }
         }
     }
 }

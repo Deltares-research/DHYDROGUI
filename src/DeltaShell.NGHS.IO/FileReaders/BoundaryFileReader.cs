@@ -4,14 +4,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Feature;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
+namespace DeltaShell.NGHS.IO.FileReaders
 {
     // TODO: currently this class cannot handle Salt entries in the BcFile
 
@@ -20,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
     //       The same is true of LateralSources
     public static class BoundaryFileReader
     {
-        public static void ReadFile(string filename, WaterFlowModel1D model)
+        public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IFunction wind)
         {
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
             var categories = new DelftBcReader().ReadDelftBcFile(filename);
@@ -28,17 +26,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
-            foreach (var boundaryCategory in categories.Where(category => category.Name == BoundaryRegion.BcBoundaryHeader))
+            foreach (var boundaryCategory in categories.Where(category => category.Name == BoundaryRegion.BcBoundaryHeader || category.Name == BoundaryRegion.BcForcingHeader ))
             {
                 try
                 {
                     var name = boundaryCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
                     if (name == FunctionAttributes.StandardFeatureNames.ModelWide)
                     {
-                        ReadModelWideBoundaryCondition(model, boundaryCategory);
+                        ReadModelWideBoundaryCondition(wind, boundaryCategory);
                         continue;
                     }
-                    var waterFlowModel1DBoundaryNodeData = model.BoundaryConditions.FirstOrDefault(bc => bc.Feature.Name == name);
+                    var waterFlowModel1DBoundaryNodeData = boundaryConditions.FirstOrDefault(bc => bc.Feature.Name == name);
                     if (waterFlowModel1DBoundaryNodeData == null)
                         throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
 
@@ -61,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 try
                 {
                     var name = lateralCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
-                    var waterFlowModel1DLateralSourceData = model.LateralSourceData.FirstOrDefault(ls => ls.Feature.Name == name);
+                    var waterFlowModel1DLateralSourceData = Enumerable.FirstOrDefault<Model1DLateralSourceData>(lateralSourcesData, ls => ls.Feature.Name == name);
                     if (waterFlowModel1DLateralSourceData == null)
                         throw new LateralDischargeReadingException(string.Format("Node ({0}) where the lateral discharge should be put on is not available in the model", name));
 
@@ -80,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             }
         }
 
-        private static void ReadModelWideBoundaryCondition(WaterFlowModel1D model, IDelftBcCategory boundaryCategory)
+        private static void ReadModelWideBoundaryCondition(IFunction Wind, IDelftBcCategory boundaryCategory)
         {
             var functionType = boundaryCategory.ReadProperty<string>(BoundaryRegion.Function.Key);
             switch (functionType)
@@ -99,17 +97,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                         {
                             case BoundaryRegion.QuantityStrings.WindSpeed:
                             {
-                                InitializeFunctionArguments(boundaryCategory, model.Wind);
+                                /*
+                                InitializeFunctionArguments(boundaryCategory, Wind);
                                 var functionValues = ConvertStringsToDoubles(boundaryCategory.Table[1]);
-                                model.Wind.Velocity.SetValues(functionValues);
+                                Wind.Velocity.SetValues(functionValues);
+                                */
                                 break;
+                                
                             }
 
                             case BoundaryRegion.QuantityStrings.WindDirection:
                             {
-                                InitializeFunctionArguments(boundaryCategory, model.Wind);
+                                /*
+                                InitializeFunctionArguments(boundaryCategory, Wind);
                                 var functionValues = ConvertStringsToDoubles(boundaryCategory.Table[1]);
-                                model.Wind.Direction.SetValues(functionValues);
+                                Wind.Direction.SetValues(functionValues);
+                                */
                                 break;
                             }
                         }

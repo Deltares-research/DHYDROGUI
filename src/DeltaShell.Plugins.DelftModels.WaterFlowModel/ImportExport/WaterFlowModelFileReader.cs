@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
                 LocationFileReader.ReadFileLateralDischargeLocations(fileName.LateralDischarge, model.Network);
                 
                 reportProgress(String.Format("Reading boundary conditions and lateral sources from {0} file.", fileName.BoundaryConditions), 4, totalSteps); 
-                BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model);
+                BoundaryFileReader.ReadFile(fileName.BoundaryConditions, model.BoundaryConditions, model.LateralSourceData, model.Wind);
 
                 reportProgress(String.Format("Reading observation points from {0} file.", fileName.ObservationPoints), 5, totalSteps);
                 LocationFileReader.ReadFileObservationPointLocations(fileName.ObservationPoints, model.Network);
