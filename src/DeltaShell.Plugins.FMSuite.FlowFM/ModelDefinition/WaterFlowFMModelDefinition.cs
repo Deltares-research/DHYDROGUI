@@ -110,6 +110,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
+        public IHydroNetwork Network { get; set; }
+
+        public IDiscretization NetworkDiscretization { get; set; }
+
         public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D { get; private set; }
         public IEventedList<Model1DLateralSourceData> LateralSourcesData { get; private set; }
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
@@ -206,6 +210,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
+            Network = new HydroNetwork();
+            NetworkDiscretization = new Discretization { Network = Network, Name = WaterFlowFMModel.DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             Inflows = new FeatureCoverage("Inflows");
             Inflows.Arguments.Add(new Variable<DateTime>()); //time variable
             Inflows.Arguments.Add(new Variable<IFeature> { IsAutoSorted = false }); //feature variable

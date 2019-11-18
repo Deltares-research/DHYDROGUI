@@ -388,20 +388,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void LoadNetworkAndDiscretisation()
-        {
-            if (!File.Exists(NetFilePath)) return;
-
-            var nodeData = File.Exists(StorageNodeFilePath) 
-                ? NodeFile.Read(StorageNodeFilePath) 
-                : null;
-
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(NetFilePath, nodeData);
-
-            NetworkDiscretization = loadedNetworkDiscretisation;
-            Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
-        }
-
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>

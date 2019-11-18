@@ -11,12 +11,14 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -899,6 +901,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     bridgePillar.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
                 }
             }
+            
+            LoadNetworkAndDiscretisation(filePath, modelDefinition);
 
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
@@ -932,7 +936,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
+        private void LoadNetworkAndDiscretisation(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
+        {
+            string netFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
+            string storageNodeFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+            if (!File.Exists(netFilePath)) return;
 
+            var nodeData = File.Exists(storageNodeFilePath)
+                ? NodeFile.Read(storageNodeFilePath)
+                : null;
+
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, nodeData);
+
+            modelDefinition.NetworkDiscretization = loadedNetworkDiscretisation;
+            modelDefinition.Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
+        }
+
+        
         private static void LoadAttributeIntoDataColumn(GeometryPointsSyncedList<double> loadedData, IDataColumn dataColumn)
         {
             // Just a refactor of the setter.

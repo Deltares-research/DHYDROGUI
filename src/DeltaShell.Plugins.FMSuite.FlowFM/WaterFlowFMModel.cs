@@ -113,8 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (!string.IsNullOrEmpty(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
-                LoadNetworkAndDiscretisation();
-
+                
                 FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, this);
 
                 LoadLinks();
@@ -568,6 +567,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SynchronizeModelDefinitions()
         {
+            Network = ModelDefinition.Network;
+            NetworkDiscretization = ModelDefinition.NetworkDiscretization;
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
             LateralSourcesData = ModelDefinition.LateralSourcesData;
             Boundaries = ModelDefinition.Boundaries;
@@ -2262,6 +2263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 isLoading = true;
                 mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
+
                 isLoading = false;
                 SyncModelTimesWithBase();
             }
@@ -2388,8 +2390,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             LoadStateFromMdu(mduPath);
             
-            LoadNetworkAndDiscretisation();
-
             FeatureFile1D2DReader.Read1D2DFeatures(mduPath, this);
 
             LoadLinks();
