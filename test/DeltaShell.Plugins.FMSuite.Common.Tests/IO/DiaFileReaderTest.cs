@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using NUnit.Framework;
@@ -8,21 +12,40 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     [TestFixture]
     public class DiaFileReaderTest
     {
+        private const string errorLine = "** ERROR  :     this is an error!";
+
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void CollectAllCutOffErrorMessages()
+        [TestCaseSource(nameof(GetFileContents))]
+        public void CollectAllErrorMessages_WithCutOffLine_ThenReadsAndReturnsLinesAsOneLine(string fileContent)
         {
-            //arrange
-            var diaFileWhereXyzFileNameIsCutOff = TestHelper.GetTestFilePath(@"diaFile\FileWithCutOffMessage.dia");
+            // Setup
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
 
-            File.Exists(diaFileWhereXyzFileNameIsCutOff);
-          
-            //act
-            var result = DiaFileReader.CollectAllErrorMessages(diaFileWhereXyzFileNameIsCutOff);
+            // Call
+            string[] result = DiaFileReader.GetAllErrorMessages(stream).ToArray();
 
-            //assert
-            Assert.NotNull(result);
-            Assert.True(result.Contains("** ERROR ERROR: RDMORLYR Error reading samples (not covering full grid) f_IniSedThick.xyz .") );
+            // Assert
+            Assert.That(result.Length, Is.EqualTo(1));
+            Assert.That(result.Single(), Is.EqualTo(errorLine));
+        }
+
+        private static IEnumerable<string> GetFileContents()
+        {
+            yield return errorLine;
+
+            yield return "** WARNING  :  This is a warning!"
+                         + Environment.NewLine
+                         + errorLine;
+
+            yield return "** ERROR  :     this is a" 
+                         + Environment.NewLine
+                         + "n error!";
+
+            yield return "** ERROR  :     this is a"
+                         + Environment.NewLine
+                         + "n error!"
+                         + Environment.NewLine
+                         + "** WARNING  :  This is a warning!";
         }
     }
 }

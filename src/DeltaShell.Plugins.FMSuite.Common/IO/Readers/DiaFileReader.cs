@@ -1,54 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
+    /// <summary>
+    /// Reader for diagnostics files (*.dia).
+    /// </summary>
     public static class DiaFileReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DiaFileReader));
-
         public static string Read(string diaFilePath)
         {
-            string diaFileContent = File.ReadAllText(diaFilePath);
-
-            return diaFileContent;
+            return File.ReadAllText(diaFilePath);
         }
 
-        public static List<string> CollectAllErrorMessages(string diaFile)
+        /// <summary>
+        /// Collects and returns all error messages from a given <see cref="Stream"/>.
+        /// </summary>
+        /// <param name="stream"> The stream object </param>
+        /// <returns> A collection of error messages. </returns>
+        /// <remarks>
+        /// 1. A line containing the text 'ERROR' is seen as an error message.
+        /// 2. Error messages can be split up on multiple consecutive lines. They will be read as one error message.
+        ///    An error message stops when the next line starts with the character '*'.
+        /// </remarks>
+        public static IEnumerable<string> GetAllErrorMessages(Stream stream)
         {
-            string errorLine = string.Empty;
-            var lineCount = 0;
-            var errorMessages = new List<string>();
-
-            using (var reader = new StreamReader(diaFile))
+            using (var reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-
-                    if (!string.IsNullOrEmpty(line) && (line.Contains("ERROR") || !string.IsNullOrEmpty(errorLine)))
+                    if (string.IsNullOrEmpty(line) || !line.Contains("ERROR"))
                     {
-                        if (!line.Contains("FATAL"))
-                        {
-                            if (line.StartsWith(""))
-                            {
-                                line = line.Substring(1);
-                            }
-
-                            errorLine += line;
-                        }
-                        else
-                        {
-                            errorMessages.Add(errorLine);
-                        }
+                        continue;
                     }
+
+                    string errorLine = line;
+                    while((line = reader.ReadLine()) != null && !line.StartsWith("*"))
+                    {
+                        errorLine += line;
+                    }
+
+                    yield return errorLine;
                 }
-
-                reader.Close();
             }
-
-            return errorMessages;
         }
     }
 }

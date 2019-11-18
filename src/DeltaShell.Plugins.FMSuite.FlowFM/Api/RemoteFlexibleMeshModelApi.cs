@@ -150,7 +150,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
         {
-            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia");
+            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia", SearchOption.AllDirectories);
+
 
             if (diaFiles.Length <= 0)
             {
@@ -162,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             try
             {
-                errorMessages = DiaFileReader.CollectAllErrorMessages(diaFile);
+                errorMessages = DiaFileReader.GetAllErrorMessages(new FileStream(diaFile, FileMode.Open)).ToList();
 
                 errorMessages.AddRange(File.ReadAllLines(diaFile).Where(line => line.Contains("FATAL")));
             }
