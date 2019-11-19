@@ -201,7 +201,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boundaries\BoundaryContainerTest.cs" />
+    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelperTest.cs" />
+    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
+    <Compile Include="Boundaries\GridBoundaryTestHelper.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinateTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateTest.cs" />
