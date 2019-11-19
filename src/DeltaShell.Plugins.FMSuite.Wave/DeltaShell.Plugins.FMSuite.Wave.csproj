@@ -128,6 +128,7 @@
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculator.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinate.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinate.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparer.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSide.cs" />
