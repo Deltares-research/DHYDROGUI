@@ -674,7 +674,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(27, content.Properties.Count);
+            Assert.AreEqual(32, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_ID.ToString(), idProperty.Value);

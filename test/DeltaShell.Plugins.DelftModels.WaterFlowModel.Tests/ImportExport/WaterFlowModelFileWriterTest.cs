@@ -79,6 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         }
 
         [Test, Category(TestCategory.Integration)]
+        [Ignore("Flow1D (cf_dll) kernel is not in dimr set any more")]
         public void TestFileWriterCrossSectionDefinitions()
         {
             using (var waterFlowModel1D = new WaterFlowModel1D()

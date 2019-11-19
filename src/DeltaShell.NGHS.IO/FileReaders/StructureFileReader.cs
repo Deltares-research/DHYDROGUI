@@ -10,6 +10,10 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.NGHS.IO.FileReaders 
 {
@@ -28,7 +32,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             var structuresCategories = ReadStructureDelftIniCategories(structureFilename);
             if (structuresCategories.Count == 0)
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", csdFilename));
+                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
 
             var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, fileReadingExceptions);
             if (fileReadingExceptions.Count > 0)
@@ -37,10 +41,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
 
-            AddSubStructuresToCompositeStructures(structures);
+            AddSubStructuresToCompositeStructuresOrAddNew(structures);
 
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
+
+            // update geometry based on branch chainage
+            structures.ForEach(s => s.Geometry = GetStructureGeometry(s));
 
             if (fileReadingExceptions.Count > 0)
             {
@@ -49,7 +56,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static void AddSubStructuresToCompositeStructures(IList<IStructure1D> structures)
+        private static IGeometry GetStructureGeometry(IStructure1D structure1D)
+        {
+            var lengthIndexedLine = new LengthIndexedLine(structure1D.Branch.Geometry);
+            var mapOffset = NetworkHelper.MapChainage(structure1D.Branch, structure1D.Chainage);
+            return new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
+        }
+
+        private static void AddSubStructuresToCompositeStructuresOrAddNew(IList<IStructure1D> structures)
         {
             var compositeBranchStructures = structures.OfType<ICompositeBranchStructure>().ToList();
             compositeBranchStructures.ForEach(comp =>
@@ -66,9 +80,29 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     .Where(s => s != null)
                     .ForEach(s =>
                     {
+                        s.Geometry = comp.Geometry;
                         s.ParentStructure = comp;
                         comp.Structures.Add(s);
                     });
+            });
+
+            // generate composite structures for single structures
+            var singleStructures = structures.Where(s => s.ParentStructure == null).ToList();
+
+            singleStructures.ForEach((s, i) =>
+            {
+                var compositeStructure = new CompositeBranchStructure
+                {
+                    Name = $"Composite structure generated {i}",
+                    Branch = s.Branch,
+                    Chainage = s.Chainage,
+                    Geometry = s.Geometry
+                };
+
+                structures.Add(compositeStructure);
+
+                compositeStructure.Structures.Add(s);
+                s.ParentStructure = compositeStructure;
             });
         }
 
@@ -97,7 +131,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static IList<ICrossSectionDefinition> GetCrossSectionDefinitions(IHydroNetwork network,string csdFilename, IList<FileReadingException> fileReadingExceptions)
         {
             if (!File.Exists(csdFilename))
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", csdFilename));
+            {
+                return new List<ICrossSectionDefinition>();
+            }
+            //throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", csdFilename));
 
             var csdCategories = new DelftIniReader().ReadDelftIniFile(csdFilename);
 

@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             var lastCompositeStructureId = 0;
             var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>().ToList();
             
-            foreach (var structure in compositeStructures.SelectMany(composite => composite.Structures).Concat(network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure)))
+            foreach (var structure in compositeStructures.SelectMany(composite => composite.Structures).Concat(network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure)).Distinct())
             {
                 yield return ExtractStructureCategory(structure);
             }

@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "All structures with the same compound id are considered to be elements of the same compound structure.");
         public static readonly ConfigurationSetting CompoundName = new ConfigurationSetting(key: "compoundName", description: "Type of structure");
         public static readonly ConfigurationSetting DefinitionType = new ConfigurationSetting(key: "type", description: "");
-        public static readonly ConfigurationSetting AllowedFlowDir = new ConfigurationSetting(key: "allowedflowdir", description: "0=Both, 1=Positive, 2=Negative, 3=None");
+        public static readonly ConfigurationSetting AllowedFlowDir = new ConfigurationSetting(key: "allowedFlowDir", description: "0=Both, 1=Positive, 2=Negative, 3=None");
         // [Common Culvert and Common Bridge]
         public static readonly ConfigurationSetting CsDefId = new ConfigurationSetting(key: "csDefId", description: "Id of Cross-Section Definition");
         // [Common Culvert and Standard Bridge]
@@ -94,7 +94,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #region Common Weir Elements
         // [Simple Weir & Universal Weir & Orifice]
         public static readonly ConfigurationSetting CorrectionCoeff = new ConfigurationSetting(key: "corrCoeff", description: "Correction coefficient (-)", defaultValue:"1");
-        public static readonly ConfigurationSetting DischargeCoeff = new ConfigurationSetting(key: "dischargecoeff", description: "Discharge coefficient (-)");
+        public static readonly ConfigurationSetting DischargeCoeff = new ConfigurationSetting(key: "dischargeCoeff", description: "Discharge coefficient (-)");
         // [Simple Weir & River Weir & Advanced Weir & Orifice]
         public static readonly ConfigurationSetting CrestWidth = new ConfigurationSetting(key: "crestWidth", description: "Width of weir (m)");
         // [Simple Weir & Universal Weir & River Weir & Advanced Weir & Orifice]

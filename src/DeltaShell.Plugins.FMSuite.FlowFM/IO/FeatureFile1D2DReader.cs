@@ -8,11 +8,14 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public static class FeatureFile1D2DReader
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
+
         public const string NODE_FILE_NAME = "nodeFile.ini";
         public const string STRUCTURES_FILE_NAME = "structures.ini";
 
@@ -40,8 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
-            if (!File.Exists(crDefFile)) return;
-
+            
             var structureFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
             structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
             if (!File.Exists(structureFile)) return;

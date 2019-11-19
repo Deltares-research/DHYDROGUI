@@ -367,7 +367,7 @@ namespace DelftTools.Hydro.Structures
                     break;
                 default:
                     crossSectionDefinition = tabulatedCrossSectionDefinition;
-                    if(crossSectionDefinition.Name != Name)
+                    if(crossSectionDefinition != null && crossSectionDefinition.Name != Name)
                         crossSectionDefinition.Name = Name;
                     break;
             }
