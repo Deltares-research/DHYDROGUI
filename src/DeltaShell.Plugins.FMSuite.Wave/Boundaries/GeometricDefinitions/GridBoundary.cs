@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -27,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     {
         private readonly IDiscreteGridPointCoverage observedGrid;
         private readonly IDictionary<GridSide, IReadOnlyList<GridCoordinate>> boundaries;
-
 
         /// <summary>
         /// Creates a new instance of the <see cref="GridBoundary"/>.
@@ -56,10 +56,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             observedGrid = grid;
             boundaries = new Dictionary<GridSide, IReadOnlyList<GridCoordinate>>
             {
-                {GridSide.West,  GetBoundaryAtSide(GridSide.West).ToList()  },
-                {GridSide.North, GetBoundaryAtSide(GridSide.North).ToList() },
-                {GridSide.East,  GetBoundaryAtSide(GridSide.East).ToList()  },
-                {GridSide.South, GetBoundaryAtSide(GridSide.South).ToList() },
+                {GridSide.West,  GetGridCoordinatesAtSide(GridSide.West).ToList()  },
+                {GridSide.North, GetGridCoordinatesAtSide(GridSide.North).ToList() },
+                {GridSide.East,  GetGridCoordinatesAtSide(GridSide.East).ToList()  },
+                {GridSide.South, GetGridCoordinatesAtSide(GridSide.South).ToList() },
             };
         }
 
@@ -76,15 +76,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// The set of <see cref="GridCoordinate"/> specifying the boundary of
         /// the grid at the specified <paramref name="gridSide"/>.
         /// </returns>
-        public IReadOnlyList<GridCoordinate> this[GridSide gridSide] => boundaries[gridSide];
+        public IEnumerable<GridBoundaryCoordinate> this[GridSide gridSide] =>
+            Enumerable.Range(0, boundaries[gridSide].Count).Select(x => new GridBoundaryCoordinate(gridSide, x));
 
         /// <summary>
-        /// Gets the grid envelope.
+        /// Gets the grid envelope starting from the west side, in a clock-wise fashion.
         /// </summary>
         /// <returns>
-        /// The envelope of this <see cref="GridBoundary"/>.
+        /// The envelope of this <see cref="GridBoundary"/> starting from the west side
+        /// in a clock-wise fashion.
         /// </returns>
-        public IEnumerable<GridCoordinate> GetGridEnvelope()
+        public IEnumerable<GridBoundaryCoordinate> GetGridEnvelope()
         {
             GridSide[] sides =
             {
@@ -94,10 +96,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 GridSide.South
             };
 
-            return sides.SelectMany(x => this[x]).Distinct(new GridCoordinateValueComparer());
+            return sides.SelectMany(x => this[x]);
         }
 
-        private IEnumerable<GridCoordinate> GetBoundaryAtSide(GridSide side)
+        /// <summary>
+        /// Gets the world coordinate from boundary coordinate.
+        /// </summary>
+        /// <param name="boundaryCoordinate">The boundary coordinate.</param>
+        /// <returns>
+        /// The world coordinate location corresponding with <paramref name="boundaryCoordinate"/>
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="boundaryCoordinate"/> is <c>null</c>.
+        /// </exception>
+        public Coordinate GetWorldCoordinateFromBoundaryCoordinate(GridBoundaryCoordinate boundaryCoordinate)
+        {
+            if (boundaryCoordinate == null)
+            {
+                throw new ArgumentNullException(nameof(boundaryCoordinate));
+            }
+
+            GridCoordinate gridCoordinate = boundaries[boundaryCoordinate.GridSide]
+                                                      [boundaryCoordinate.Index];
+            return GetWorldCoordinate(gridCoordinate);
+        }
+
+        private Coordinate GetWorldCoordinate(GridCoordinate coordinate)
+        {
+            double x = observedGrid.X.Values[coordinate.X, coordinate.Y];
+            double y = observedGrid.Y.Values[coordinate.X, coordinate.Y];
+            return new Coordinate(x, y);
+        }
+
+        private IEnumerable<GridCoordinate> GetGridCoordinatesAtSide(GridSide side)
         {
             int sizeM = observedGrid.Size1;
             int sizeN = observedGrid.Size2;
