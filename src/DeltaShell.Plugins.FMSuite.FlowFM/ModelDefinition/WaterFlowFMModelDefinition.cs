@@ -6,6 +6,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
@@ -113,6 +116,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public HeatFluxModel HeatFluxModel { get; private set; }
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
+
+        public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
 
         public IHydroNetwork Network
         {
@@ -360,6 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             BoundaryConditions1D = new EventedList<Model1DBoundaryNodeData>();
             LateralSourcesData = new EventedList<Model1DLateralSourceData>();
+            RoughnessSections = new EventedList<RoughnessSection>();
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
             WindFields = new EventedList<IWindField>();
@@ -1117,6 +1123,93 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             if (e.GetRemovedOrAddedItem() is INode)
             {
                 UpdateBoundaryCondition(e);
+            }
+            else if (Equals(sender, Network.Branches) && e.GetRemovedOrAddedItem() is ISewerConnection)
+            {
+                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
+                if (sewerConnection?.Length > 0)
+                {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Add:
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
+                            break;
+                    }
+                }
+            }
+            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
+            {
+                UpdateRoughnessSectionsEvent(e);
+            }
+        }
+        private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
+        {
+            if (!NetworkDiscretization.Locations.Values.Any(l =>
+                l.Geometry.Coordinate.Equals(toLocation.Geometry.Coordinate)))
+            {
+                NetworkDiscretization.Locations.AddValues(new[] { toLocation });
+            }
+        }
+        private void UpdateRoughnessSectionsEvent(NotifyCollectionChangedEventArgs e)
+        {
+            var sectionType = (CrossSectionSectionType)e.GetRemovedOrAddedItem();
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    AddNewRoughnessSection(sectionType);
+                    break;
+            }
+        }
+
+        private void AddNewRoughnessSection(CrossSectionSectionType crossSectionSectionType)
+        {
+            var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+            RoughnessSections.Add(roughnessSection);
+        }
+        private void SynchronizeRoughnessSectionsWithNetwork()
+        {
+            if (Network == null) return;
+            RoughnessSections = null;
+            RoughnessSections = new EventedList<RoughnessSection>();
+            foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
+            {
+                var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+                RoughnessSections.Add(roughnessSection);
+            }
+        }
+
+        private void AddSewerRoughnessIfNecessary()
+        {
+            var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName);
+            if (roughnessSection != null)
+            {
+                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+                roughnessSection.SetDefaultRoughnessValue(0.003);
+                return;
+            }
+
+            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
+            if (csSectionType == null)
+            {
+                csSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.SewerSectionTypeName };
+                Network.CrossSectionSectionTypes.Add(csSectionType);
+            }
+            roughnessSection = new RoughnessSection(csSectionType, Network);
+            roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+            roughnessSection.SetDefaultRoughnessValue(0.003);
+
+            RoughnessSections.Insert(0, roughnessSection);
+        }
+        public virtual void UpdateRoughnessSections()
+        {
+            if (RoughnessSections != null) RoughnessSections.ForEach(rs => rs.Network = null);
+
+            if (Network != null)
+            {
+                SynchronizeRoughnessSectionsWithNetwork();
+                AddSewerRoughnessIfNecessary();
             }
         }
     }

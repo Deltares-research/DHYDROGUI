@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
 
             var fmModel = target as WaterFlowFMModel;
-            var network = fmModel?.Network;
+            var network = fmModel?.ModelDefinition?.Network;
 
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database"));
 

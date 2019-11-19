@@ -135,8 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 RenameSubFilesIfApplicable();
             }
 
-            SynchronizeRoughnessSectionsWithNetwork();
-            AddSewerRoughnessIfNecessary();
+            ModelDefinition.UpdateRoughnessSections();
         }
 
         private void AddNetworkToModel()

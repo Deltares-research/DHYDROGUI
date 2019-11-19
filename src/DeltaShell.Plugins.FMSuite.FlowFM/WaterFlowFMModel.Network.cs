@@ -83,43 +83,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 
-        public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
+        public IEventedList<RoughnessSection> RoughnessSections
+        {
+            get { return ModelDefinition?.RoughnessSections; }
+        }
         public bool UseReverseRoughness { get; set; }
         public bool UseReverseRoughnessInCalculation { get; set; }
-        private void SynchronizeRoughnessSectionsWithNetwork()
-        {
-            if (Network == null) return;
-            RoughnessSections = null;
-            RoughnessSections = new EventedList<RoughnessSection>();
-            foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
-            {
-                var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
-                RoughnessSections.Add(roughnessSection);
-            }
-        }
         
-        private void AddSewerRoughnessIfNecessary()
-        {
-            var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName);
-            if ( roughnessSection != null )
-            {
-                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-                roughnessSection.SetDefaultRoughnessValue(0.003);
-                return;
-            }
-            
-            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
-            if (csSectionType == null)
-            {
-                csSectionType = new CrossSectionSectionType {Name = RoughnessDataSet.SewerSectionTypeName};
-                Network.CrossSectionSectionTypes.Add(csSectionType);
-            }roughnessSection = new RoughnessSection(csSectionType, Network);
-            roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-            roughnessSection.SetDefaultRoughnessValue(0.003);
-
-            RoughnessSections.Insert(0, roughnessSection);
-        }
-
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property
         ///   can be set/reset while the node was not part of the network it is necessary to monitor additions and removals.
@@ -157,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             }
                             break;
                         case NotifyCollectionChangedAction.Add:
-                        
+
                             var channel = (IChannel)e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
@@ -168,82 +138,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     ClearOutput();
                 }
-            }
-            else if (Equals(sender, Network.Branches) && e.GetRemovedOrAddedItem() is ISewerConnection)
-            {
-                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
-                if (sewerConnection?.Length > 0)
+                // check if removed item is used in the child data items
+                else if (e.GetRemovedOrAddedItem() is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    switch (e.Action)
+                    var asNetworkFeature = e.GetRemovedOrAddedItem() as INetworkFeature;
+                    if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
                     {
-                        case NotifyCollectionChangedAction.Add:
-                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
-                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
-                            break;
+                        return;
+                    }
+
+                    var childDataItems =
+                        AllDataItems.Where(
+                            di =>
+                                di.Parent != null && di.ValueConverter != null &&
+                                di.ValueConverter.OriginalValue == e.GetRemovedOrAddedItem()).ToList();
+
+                    foreach (var childDataItem in childDataItems)
+                    {
+                        // unlink all consumers
+                        foreach (var targetDataItem in childDataItem.LinkedBy.ToArray())
+                        {
+                            targetDataItem.Unlink();
+                        }
+
+                        // remove item from parent
+                        childDataItem.Parent.Children.Remove(childDataItem);
                     }
                 }
             }
-            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
-            {
-                UpdateRoughnessSectionsEvent(e);
-            }
-
-            // check if removed item is used in the child data items
-            if (e.GetRemovedOrAddedItem() is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                var asNetworkFeature = e.GetRemovedOrAddedItem() as INetworkFeature;
-                if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
-                {
-                    return;
-                }
-
-                var childDataItems =
-                    AllDataItems.Where(
-                        di =>
-                            di.Parent != null && di.ValueConverter != null &&
-                            di.ValueConverter.OriginalValue == e.GetRemovedOrAddedItem()).ToList();
-
-                foreach (var childDataItem in childDataItems)
-                {
-                    // unlink all consumers
-                    foreach (var targetDataItem in childDataItem.LinkedBy.ToArray())
-                    {
-                        targetDataItem.Unlink();
-                    }
-
-                    // remove item from parent
-                    childDataItem.Parent.Children.Remove(childDataItem);
-                }
-            }
         }
 
-        private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
-        {
-            if (!NetworkDiscretization.Locations.Values.Any(l =>
-                l.Geometry.Coordinate.Equals(toLocation.Geometry.Coordinate)))
-            {
-                NetworkDiscretization.Locations.AddValues(new[] {toLocation});
-            }
-        }
-
-        private void UpdateRoughnessSectionsEvent(NotifyCollectionChangedEventArgs e)
-        {
-            var sectionType = (CrossSectionSectionType)e.GetRemovedOrAddedItem();
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    AddNewRoughnessSection(sectionType);
-                    break;
-            }
-        }
-
-        private void AddNewRoughnessSection(CrossSectionSectionType crossSectionSectionType)
-        {
-            var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
-            RoughnessSections.Add(roughnessSection);
-        }
-
+        
         
         /// <summary>
         /// Called when a network is inserted into or linked to the model
@@ -270,20 +195,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 .Select(di => di.Value)
                 .Cast<INetworkCoverage>()
                 .ForEach(c => c.Network = Network);
-            UpdateRoughnessSections();
+            ModelDefinition.UpdateRoughnessSections();
         }
-
-        public virtual void UpdateRoughnessSections()
-        {
-            if (RoughnessSections != null) RoughnessSections.ForEach(rs => rs.Network = null);
-
-            if (Network != null)
-            {
-                SynchronizeRoughnessSectionsWithNetwork();
-                AddSewerRoughnessIfNecessary();
-            }
-        }
-
         
         /// <summary>
         /// Gets the boundary conditions for this model
