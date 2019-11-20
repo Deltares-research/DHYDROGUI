@@ -11,6 +11,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Remoting;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.xsd;
 using log4net;
@@ -46,12 +47,12 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi != null)
+                if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
                 {
                     dimrApi.ProcessMessages();
                     dimrApi.Dispose();
-                    dimrApi = null;
                 }
+                dimrApi = null;
             }
         }
 
@@ -120,12 +121,12 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi != null)
+                if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
                 {
                     dimrApi.ProcessMessages();
                     dimrApi.Dispose();
-                    dimrApi = null;
                 }
+                dimrApi = null;
             }
         }
         public void OnFinish()
@@ -138,11 +139,11 @@ namespace DeltaShell.Dimr
         }
         public void OnCleanup()
         {
-            if (dimrApi != null)
+            if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
             {
                 dimrApi.Dispose();
-                dimrApi = null;
             }
+            dimrApi = null;
             var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
 

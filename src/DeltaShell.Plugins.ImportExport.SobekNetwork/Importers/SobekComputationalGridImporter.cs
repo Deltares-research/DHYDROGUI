@@ -5,6 +5,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
@@ -40,7 +42,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
 
             try
             {
-                waterFlowFMModel.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
+                waterFlowFMModel.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
                 waterFlowFMModel.NetworkDiscretization.Clear();
                 ImportCalculationGrids(waterFlowFMModel.NetworkDiscretization, channels);
                 ImportFixedGridPointData(waterFlowFMModel.NetworkDiscretization);
@@ -112,7 +114,10 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
                         locations.AddRange(branchLocations);
                     }
                 }
-
+                //change stupid duplicate names of locations
+                //NamingHelper.MakeNamesUnique(locations.GroupBy(l => l.Name).Where(g => g.Count() > 1).SelectMany(g => g));
+                NamingHelper.MakeNamesUnique(locations);
+                NamingHelper.MakeNamesUnique(locations);
                 networkDiscretization.Locations.SetValues(locations);
             }
             else

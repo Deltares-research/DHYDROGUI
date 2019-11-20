@@ -357,14 +357,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
-            var coverageViewInfo = new ViewInfo<ICoverage, CoverageTableView>
+            var networkDiscretizationCoverageViewInfo = new ViewInfo<ICoverage, CoverageTableView>
             {
                 Description = "Network Discretization",
                 AdditionalDataCheck = o => o is IDiscretization,
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => FlowModels.FirstOrDefault(m => m.NetworkDiscretization.Equals(o)),
             };
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(coverageViewInfo, o => o.Data);
+            yield return networkDiscretizationCoverageViewInfo;
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(networkDiscretizationCoverageViewInfo, o => o.Data);
             // Heat flux model
             yield return new ViewInfo<HeatFluxModel, HeatFluxModelView>
             {

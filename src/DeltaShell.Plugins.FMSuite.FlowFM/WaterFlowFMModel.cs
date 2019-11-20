@@ -3415,11 +3415,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual void ConnectOutput(string outputPath)
         {
             ReconnectOutputFiles(outputPath);
-            ReadDiaFile(outputPath);
         }
 
-        private void ReadDiaFile(string outputDirectory)
+        private void ReadDiaFile()
         {
+            var validPath = ExplicitWorkingDirectory ?? Path.GetDirectoryName(OutputSnappedFeaturesPath);
+            if (!Directory.Exists(validPath)) return;
+
+            var outputDirectory = Path.Combine(validPath, DirectoryName);
+            if (!Directory.Exists(outputDirectory)) return;
+
             ReportProgressText("Reading dia file");
             var diaFileName = string.Format("{0}.dia", Name);
             var diaFilePath = Path.Combine(outputDirectory, Path.GetDirectoryName(ModelDefinition.RelativeMapFilePath)??string.Empty, diaFileName);
@@ -3522,10 +3527,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             ReportProgressText("Exporting to mdu file");
             ExportTo(mduPath, false);
-            InitializeRunTimeGridOperationApi();
-
+            
             ReportProgressText("Initializing");
             runner.OnInitialize();
+            InitializeRunTimeGridOperationApi();
 
             ReportProgressText();
         }
@@ -3550,6 +3555,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             snapApiInErrorMode = false;
             base.OnCleanup();
             runner.OnCleanup();
+            ReadDiaFile();
 
             ReportProgressText();
         }
