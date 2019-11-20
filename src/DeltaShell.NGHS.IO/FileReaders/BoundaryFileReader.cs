@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
     //       The same is true of LateralSources
     public static class BoundaryFileReader
     {
-        public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IFunction wind)
+        public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions, IFunction wind = null)
         {
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
             var categories = new DelftBcReader().ReadDelftBcFile(filename);
@@ -36,9 +36,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         ReadModelWideBoundaryCondition(wind, boundaryCategory);
                         continue;
                     }
-                    var waterFlowModel1DBoundaryNodeData = boundaryConditions.FirstOrDefault(bc => bc.Feature.Name == name);
+
+                    var model1DBoundaryNodeDatas = boundaryConditions as Model1DBoundaryNodeData[] ?? boundaryConditions.ToArray();
+                    var waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == name);
                     if (waterFlowModel1DBoundaryNodeData == null)
-                        throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
+                        continue; //throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
 
                     ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundaryCategory);
                 }
@@ -52,16 +54,23 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
                 throw new FileReadingException(string.Format("While reading boundary conditions an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
+        }
+        public static void ReadFile(string filename, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
+        {
+            if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
+            var categories = new DelftBcReader().ReadDelftBcFile(filename);
+            if (categories.Count == 0) throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", filename));
 
-
-            foreach (var lateralCategory in categories.Where(category => category.Name == BoundaryRegion.BcLateralHeader))
+            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
+            var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
+            foreach (var lateralCategory in categories.Where(category => category.Name == BoundaryRegion.BcLateralHeader || category.Name == BoundaryRegion.BcForcingHeader))
             {
                 try
                 {
                     var name = lateralCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
-                    var waterFlowModel1DLateralSourceData = Enumerable.FirstOrDefault<Model1DLateralSourceData>(lateralSourcesData, ls => ls.Feature.Name == name);
+                    var waterFlowModel1DLateralSourceData = model1DLateralSourceDatas.FirstOrDefault<Model1DLateralSourceData>(ls => ls.Feature.Name == name);
                     if (waterFlowModel1DLateralSourceData == null)
-                        throw new LateralDischargeReadingException(string.Format("Node ({0}) where the lateral discharge should be put on is not available in the model", name));
+                        continue;//throw new LateralDischargeReadingException(string.Format("Node ({0}) where the lateral discharge should be put on is not available in the model", name));
 
                     ReadLateralSource(waterFlowModel1DLateralSourceData, lateralCategory);
                 }

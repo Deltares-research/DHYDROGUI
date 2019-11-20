@@ -126,7 +126,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             var readModel = BoundaryFileReaderTestHelper.GetSimpleModel();
             
-            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.BoundaryConditions, readModel.LateralSourceData, readModel.Wind);
+            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.BoundaryConditions, readModel.Wind);
+            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.LateralSourceData);
 
             Assert.AreEqual(originalModel.BoundaryConditions.Count, readModel.BoundaryConditions.Count);
             for (var i = 0; i < originalModel.BoundaryConditions.Count; i++)
@@ -159,7 +160,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Bound
 
             var readModel = BoundaryFileReaderTestHelper.GetSimpleModel();
 
-            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.BoundaryConditions, readModel.LateralSourceData, readModel.Wind);
+            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.BoundaryConditions, readModel.Wind);
+            BoundaryFileReader.ReadFile(FileWriterTestHelper.ModelFileNames.BoundaryConditions, readModel.LateralSourceData);
 
             Assert.AreEqual(originalModel.BoundaryConditions.Count, readModel.BoundaryConditions.Count);
             for (var i = 0; i < originalModel.BoundaryConditions.Count; i++)

@@ -56,7 +56,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static IGeometry GetStructureGeometry(IStructure1D structure1D)
+        public static IGeometry GetStructureGeometry(IStructure1D structure1D)
         {
             var lengthIndexedLine = new LengthIndexedLine(structure1D.Branch.Geometry);
             var mapOffset = NetworkHelper.MapChainage(structure1D.Branch, structure1D.Chainage);

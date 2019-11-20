@@ -17,8 +17,13 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -755,85 +760,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (string.IsNullOrEmpty(quantityKey))
                 {
                     Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
-                    continue;
+                    //continue;
                 }
-
-                if (quantityKey == ExtForceQuantNames.Precipitation)
+                else
                 {
-                    FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames
-                        .FirstOrDefault(pair => pair.Value == quantityKey).Key;
-
-                    var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
-                    if (string.IsNullOrEmpty(locationTypeKey))
+                    if (quantityKey == ExtForceQuantNames.Precipitation)
                     {
-                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data",
-                            locationTypeKey);
-                        continue;
-                    }
+                        FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames
+                            .FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
-                    FmMeteoLocationType locationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames
-                        .FirstOrDefault(pair => pair.Value == locationTypeKey).Key;
-                    if (locationType != FmMeteoLocationType.Global)
-                    {
-                        //because we don't allow for the others we do this stupid quick implementation fix
-                        Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location data",
-                            locationTypeKey);
-                        continue;
-                    }
-
-                    if (!IFMMeteoFieldGenerator.ContainsKey(meteoQuantity))
-                    {
-                        Log.WarnFormat("Could not parse quantity {0} into a valid meteo data", locationTypeKey);
-                        continue;
-                    }
-
-                    var fmMeteoField = IFMMeteoFieldGenerator[meteoQuantity](locationType);
-
-                    BcMeteoFileDataBuilder meteobuilder;
-                    meteobuilder = new BcMeteoFileDataBuilder
-                    {
-                        OverwriteExistingData = true,
-                        CanCreateNewBoundaryCondition = true,
-                    };
-
-
-
-                    var meteoPliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
-
-
-                    if (locationType != FmMeteoLocationType.Global)
-                    {
-                        if (locationType != FmMeteoLocationType.Polygon)
+                        var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
+                        if (string.IsNullOrEmpty(locationTypeKey))
                         {
-                            Log.DebugFormat("Can't read polygon of fm location type: '{0}'", locationTypeKey);
+                            Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data",
+                                locationTypeKey);
                             continue;
                         }
 
-                        var meteoFeature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == meteoPliFile).Key;
-                        if (meteoFeature != null)
+                        FmMeteoLocationType locationType = BcMeteoFileDataBuilder.FmMeteoLocationKernelNames
+                            .FirstOrDefault(pair => pair.Value == locationTypeKey).Key;
+                        if (locationType != FmMeteoLocationType.Global)
                         {
-                            var meteoField = modelDefinition.FmMeteoFields.FirstOrDefault(mf =>
-                                mf.FmMeteoLocationType == FmMeteoLocationType.Polygon &&
-                                mf.FeatureData.Feature == meteoFeature);
-                            if (meteoField == null) continue;
-                            meteobuilder.InsertBoundaryData(meteoField, dataBlocks);
+                            //because we don't allow for the others we do this stupid quick implementation fix
+                            Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location data",
+                                locationTypeKey);
+                            continue;
                         }
 
+                        if (!IFMMeteoFieldGenerator.ContainsKey(meteoQuantity))
+                        {
+                            Log.WarnFormat("Could not parse quantity {0} into a valid meteo data", locationTypeKey);
+                            continue;
+                        }
+
+                        var fmMeteoField = IFMMeteoFieldGenerator[meteoQuantity](locationType);
+
+                        BcMeteoFileDataBuilder meteobuilder;
+                        meteobuilder = new BcMeteoFileDataBuilder
+                        {
+                            OverwriteExistingData = true,
+                            CanCreateNewBoundaryCondition = true,
+                        };
+
+
+
+                        var meteoPliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
+
+
+                        if (locationType != FmMeteoLocationType.Global)
+                        {
+                            if (locationType != FmMeteoLocationType.Polygon)
+                            {
+                                Log.DebugFormat("Can't read polygon of fm location type: '{0}'", locationTypeKey);
+                                continue;
+                            }
+
+                            var meteoFeature = existingPolylineFiles.FirstOrDefault(kvp => kvp.Value == meteoPliFile)
+                                .Key;
+                            if (meteoFeature != null)
+                            {
+                                var meteoField = modelDefinition.FmMeteoFields.FirstOrDefault(mf =>
+                                    mf.FmMeteoLocationType == FmMeteoLocationType.Polygon &&
+                                    mf.FeatureData.Feature == meteoFeature);
+                                if (meteoField == null) continue;
+                                meteobuilder.InsertBoundaryData(meteoField, dataBlocks);
+                            }
+
+                            continue;
+                        }
+
+                        meteobuilder.InsertBoundaryData(fmMeteoField, dataBlocks);
+
+                        if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))
+                        {
+                            Log.WarnFormat(
+                                "Could parse fm meteo data {0} into a valid meteo location data, but this type already exists in the model. We have overwritten it's data",
+                                fmMeteoField.Name);
+                            modelDefinition.FmMeteoFields.Remove(fmMeteoField);
+                        }
+
+                        modelDefinition.FmMeteoFields.Add(fmMeteoField);
                         continue;
                     }
-
-                    meteobuilder.InsertBoundaryData(fmMeteoField, dataBlocks);
-
-                    if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))
-                    {
-                        Log.WarnFormat(
-                            "Could parse fm meteo data {0} into a valid meteo location data, but this type already exists in the model. We have overwritten it's data",
-                            fmMeteoField.Name);
-                        modelDefinition.FmMeteoFields.Remove(fmMeteoField);
-                    }
-
-                    modelDefinition.FmMeteoFields.Add(fmMeteoField);
-                    continue;
                 }
 
                 var quantity = FlowBoundaryQuantityType.WaterLevel;
@@ -849,7 +857,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             quantityKey);
                     }
 
-                    continue;
+                    //continue;
                 }
 
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
@@ -861,10 +869,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         var forcingfile = delftIniCategory.GetPropertyValue(ForcingFileKey);
                         if (forcingfile != null)
                         {
-                            BoundaryFileReader.ReadFile(GetFullPath(forcingfile), modelDefinition.BoundaryConditions1D, modelDefinition.LateralSourcesData, null);
+                            BoundaryFileReader.ReadFile(GetFullPath(forcingfile), modelDefinition.BoundaryConditions1D);
                         }
 
-                        continue;
+                        //continue;
+                    }
+                }
+
+                var id = delftIniCategory.GetPropertyValue("id");
+                if (id != null)
+                {
+                    var name = delftIniCategory.GetPropertyValue("name");
+                    IBranch branch = null;
+                    var chainage = 0.0d;
+                    nodeId = delftIniCategory.GetPropertyValue("nodeId");
+                    if (nodeId != null)
+                    {
+                        var node = modelDefinition.Network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                        branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Source == node);
+                        
+                        if (branch == null)
+                        {
+                            branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Target == node);
+                            chainage = branch.Length;
+                        }
+                    }
+                    var branchId = delftIniCategory.GetPropertyValue("branchId");
+                    if (branchId != null)
+                    {
+                        branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Name == branchId);
+                        chainage = delftIniCategory.ReadProperty<double>("chainage");
+                    }
+                    var lateralSource = new LateralSource() { Branch = branch, Chainage = chainage, Name = id, LongName = name };
+                    var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
+                    var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
+                    lateralSource.Geometry =  new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
+                    modelDefinition.LateralSourcesData.Add(new Model1DLateralSourceData() { Feature = lateralSource });
+                    var forcingfile = delftIniCategory.GetPropertyValue("discharge");
+                    if (forcingfile != null)
+                    {
+                        var fullPath = GetFullPath(forcingfile);
+                        if(File.Exists(fullPath))
+                            BoundaryFileReader.ReadFile(fullPath, modelDefinition.LateralSourcesData);
                     }
                 }
 
