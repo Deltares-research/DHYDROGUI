@@ -269,6 +269,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, false, false));
                 }
             }
+            // update laterals
+            if (Network != null)
+            {
+                foreach (var lateralSource in Network.LateralSources)
+                {
+                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource });
+                }
+            }
+
         }
 
         public IDiscretization NetworkDiscretization { get; set; }
@@ -1118,6 +1127,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 UpdateBoundaryCondition(e);
             }
+            else if (e.GetRemovedOrAddedItem() is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
+            {
+                UpdateLateralSource(e);
+            }
+            else if (e.GetRemovedOrAddedItem() is IChannel)
+            {
+                if (Equals(sender, Network.Branches))
+                {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Remove:
+                            {
+                                var channel = (IChannel)e.GetRemovedOrAddedItem();
+                                foreach (var lateralSource in channel.BranchSources)
+                                {
+                                    RemoveLateralSourceData(lateralSource);
+                                }
+                                break;
+                            }
+                        case NotifyCollectionChangedAction.Add:
+                            {
+                                var channel = (IChannel)e.GetRemovedOrAddedItem();
+                                foreach (var lateralSource in channel.BranchSources)
+                                {
+                                    AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
             else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection)
             {
                 var sewerConnection = removedOrAddedItem as SewerConnection;
@@ -1213,6 +1253,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 SynchronizeRoughnessSectionsWithNetwork();
                 AddSewerRoughnessIfNecessary();
             }
+        }
+        private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
+        {
+            if (lateralSourceData == null) return;
+            lateralSourceData.UseSalt = false;
+            lateralSourceData.UseTemperature = false;
+
+            LateralSourcesData.Add(lateralSourceData);
+        }
+        private void UpdateLateralSource(NotifyCollectionChangedEventArgs e)
+        {
+            var lateralSource = (LateralSource)e.GetRemovedOrAddedItem();
+            if (lateralSource.IsBeingMoved()) return;
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    throw new NotImplementedException();
+
+                case NotifyCollectionChangedAction.Add:
+                    AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    RemoveLateralSourceData(lateralSource);
+                    break;
+            }
+        }
+        private void RemoveLateralSourceData(LateralSource lateralSource)
+        {
+            var lateralSourceData = LateralSourcesData?.FirstOrDefault(ls => ls.Feature == lateralSource);
+            if (lateralSourceData == null) return;
+
+            RemoveLateralSourceData(lateralSourceData);
+        }
+        private void RemoveLateralSourceData(Model1DLateralSourceData lateralSourceData)
+        {
+            LateralSourcesData.Remove(lateralSourceData);
         }
     }
 }

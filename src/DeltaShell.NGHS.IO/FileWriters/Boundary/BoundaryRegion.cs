@@ -33,6 +33,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             public const string MeteoDataHumidity = "humidity";
             public const string MeteoDataAirTemperature = "air_temperature";
             public const string MeteoDataCloudiness = "cloudiness";
+            public const string LateralDischarge = "lateral_discharge";
         }
 
         public static class UnitStrings

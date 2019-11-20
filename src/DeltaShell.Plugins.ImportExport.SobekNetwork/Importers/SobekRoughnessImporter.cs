@@ -512,8 +512,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
         {
             var waterFlowFMModel = GetModel<WaterFlowFMModel>();
 
-            RoughnessSection roughnessSection =
-                waterFlowFMModel.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, HydroNetwork));
+            var roughnessSection = waterFlowFMModel.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
 
             if(roughnessSection != null)
             {
@@ -523,12 +522,20 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
             var crossSectionSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(cst => cst.Name == sectionTypeName);
             if (crossSectionSectionType == null)
             {
+                /*
                 log.WarnFormat("Roughness section type {0} is not available in network. The import of the roughness spatial data has been skipped.", sectionTypeName);
-                return null;
+                return null;*/
+                crossSectionSectionType = new CrossSectionSectionType(){Name = sectionTypeName};
+                HydroNetwork.CrossSectionSectionTypes.Add(crossSectionSectionType);
             }
 
-            roughnessSection = new RoughnessSection(crossSectionSectionType, HydroNetwork);
-            waterFlowFMModel.RoughnessSections.Add(roughnessSection);
+            roughnessSection = waterFlowFMModel.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            if (roughnessSection == null)
+            {
+                roughnessSection = new RoughnessSection(crossSectionSectionType, waterFlowFMModel.Network);
+                waterFlowFMModel.RoughnessSections.Add(roughnessSection);
+            }
+
             return roughnessSection;
         }
 

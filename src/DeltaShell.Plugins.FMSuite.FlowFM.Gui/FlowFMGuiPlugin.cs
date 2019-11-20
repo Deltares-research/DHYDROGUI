@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesData, () => Gui);
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
             var networkDiscretizationCoverageViewInfo = new ViewInfo<ICoverage, CoverageTableView>
             {
                 Description = "Network Discretization",

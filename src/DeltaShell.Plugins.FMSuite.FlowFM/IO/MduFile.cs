@@ -347,6 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var hasNewBoundaries = newBoundaries.Any();
 
             var hasModel1dBoundaryConditions = modelDefinition.BoundaryConditions1D.Any();
+            var hasLateralSourcesData = modelDefinition.LateralSourcesData.Any();
             // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
@@ -355,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
                 !(newFormatBoundaryConditions || hasNewBoundaries ));
 
-            if (newFormatBoundaryConditions || hasNewBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || hasModel1dBoundaryConditions)
+            if (newFormatBoundaryConditions || hasNewBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || hasModel1dBoundaryConditions || hasLateralSourcesData)
             {
                 var bndExtFileName = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
                 if (string.IsNullOrEmpty(bndExtFileName))

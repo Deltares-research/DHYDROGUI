@@ -166,7 +166,7 @@
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriterHelper.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
-    <Compile Include="FileWriters\Boundary\DefinitionGeneratorBoundary.cs" />
+    <Compile Include="FileWriters\Boundary\DefinitionGeneratorLateral.cs" />
     <Compile Include="FileReaders\Definition\Structures\CompositeBranchStructureDefinitionReader.cs" />
     <Compile Include="FileWriters\Boundary\Model1DBoundaryFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWriter.cs" />

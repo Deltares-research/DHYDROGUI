@@ -211,6 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged -= OnModelDefinitionPropertyChanged;
                     modelDefinition.BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
+                    modelDefinition.LateralSourcesData.CollectionChanged -= LateralSourceDatasOnCollectionChanged;
                     ((INotifyPropertyChanged) (modelDefinition.BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
                 }
 
@@ -222,6 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     ((INotifyPropertyChange) (modelDefinition.Properties)).PropertyChanged += OnModelDefinitionPropertyChanged;
                     modelDefinition.BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
+                    modelDefinition.LateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
                     ((INotifyPropertyChanged)(modelDefinition.BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
                 }
             }
@@ -262,6 +264,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         break;
                     case NotifyCollectionChangedAction.Reset:
                         BoundaryConditions1DDataItemSet.DataItems.Clear();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        private void LateralSourceDatasOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var model1DLateralSourceDatas = sender as IEventedList<Model1DLateralSourceData>;
+            if (model1DLateralSourceDatas != null)
+            {
+                var model1DLateralSourceData = e.GetRemovedOrAddedItem() as Model1DLateralSourceData;
+                if (model1DLateralSourceData == null) return;
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        if (LateralSourcesDataItemSet.DataItems.Where(di => di.Value is Model1DLateralSourceData).All(di => di.Value as Model1DLateralSourceData != model1DLateralSourceData))
+                        {
+                            LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        var existingDataItem = LateralSourcesDataItemSet.DataItems
+                            .Where(di => di.Value is Model1DLateralSourceData).FirstOrDefault(di =>
+                                di.Value as Model1DLateralSourceData == model1DLateralSourceData);
+                        if (existingDataItem != null)
+                        {
+                            LateralSourcesDataItemSet.DataItems.Remove(existingDataItem);
+                        }
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        LateralSourcesDataItemSet.DataItems.Clear();
+                        break;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -566,7 +601,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Network = ModelDefinition.Network;
             NetworkDiscretization = ModelDefinition.NetworkDiscretization;
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
-            LateralSourcesData = ModelDefinition.LateralSourcesData;
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
             WindFields = ModelDefinition.WindFields;

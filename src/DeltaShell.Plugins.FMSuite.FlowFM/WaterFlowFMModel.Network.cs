@@ -133,11 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [EditAction]
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.GetRemovedOrAddedItem() is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
-            {
-                UpdateLateralSource(e);
-            }
-            else if (e.GetRemovedOrAddedItem() is IChannel)
+            if (e.GetRemovedOrAddedItem() is IChannel)
             {
                 if (Equals(sender, Network.Branches))
                 {
@@ -145,12 +141,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         case NotifyCollectionChangedAction.Remove:
                         {
-                            var channel = (IChannel) e.GetRemovedOrAddedItem();
-                            foreach (var lateralSource in channel.BranchSources)
-                            {
-                                RemoveLateralSourceData(lateralSource);
-                            }
-
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
                             var networkDataItem = GetDataItemByValue(Network);
@@ -165,16 +155,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                     dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
                                     networkDataItem.Children.Remove(dataItem);
                                 }
-                            }
-
-                            break;
-                        }
-                        case NotifyCollectionChangedAction.Add:
-                        {
-                            var channel = (IChannel) e.GetRemovedOrAddedItem();
-                            foreach (var lateralSource in channel.BranchSources)
-                            {
-                                AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource});
                             }
 
                             break;
@@ -223,17 +203,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ClearOutput();
             ClearBoundaryConditions();
-            ModelDefinition.RefreshNetworkRelatedData();
-            // update laterals
             ClearLateralSourceData();
-            if (Network != null)
-            {
-                foreach (var lateralSource in Network.LateralSources)
-                {
-                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource });
-                }
-            }
-
+            ModelDefinition.RefreshNetworkRelatedData();
+            
             // update network in output coverages
             DataItems
                 .Where(di => (di.Role & DataItemRole.Output) == DataItemRole.Output && di.Value is INetworkCoverage)
@@ -248,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D
         {
-            get { return modelDefinition.BoundaryConditions1D; }
+            get { return ModelDefinition.BoundaryConditions1D; }
         }
 
         /// <summary>
@@ -266,49 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ModelDefinition.ReplaceBoundaryCondition(boundaryNodeData);
         }
-
-        private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
-        {
-            if (lateralSourceData == null) return;
-            lateralSourceData.UseSalt = UseSalinity;
-            lateralSourceData.UseTemperature = UseTemperature;
-
-            lateralSourceDataItemSet.DataItems.Add(new DataItem(lateralSourceData));
-        }
-        private void UpdateLateralSource(NotifyCollectionChangedEventArgs e)
-        {
-            var lateralSource = (LateralSource)e.GetRemovedOrAddedItem();
-            if (lateralSource.IsBeingMoved()) return;
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException();
-
-                case NotifyCollectionChangedAction.Add:
-                    AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    RemoveLateralSourceData(lateralSource);
-                    break;
-            }
-        }
-        private void RemoveLateralSourceData(LateralSource lateralSource)
-        {
-            var lateralSourceData = LateralSourcesData?.FirstOrDefault(ls => ls.Feature == lateralSource);
-            if (lateralSourceData == null) return;
-
-            RemoveLateralSourceData(lateralSourceData);
-        }
-        private void RemoveLateralSourceData(Model1DLateralSourceData lateralSourceData)
-        {
-            var dataItemSet = lateralSourceDataItemSet;
-            var dataItem = dataItemSet.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, lateralSourceData));
-
-            if (dataItem == null) return;
-
-            dataItemSet.DataItems.Remove(dataItem);
-        }
         private void ClearLateralSourceData()
         {
             lateralSourceDataItemSet.DataItems.Clear();
@@ -322,8 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public virtual IEventedList<Model1DLateralSourceData> LateralSourcesData
         {
-            get { return lateralSourceDataItemSet.AsEventedList<Model1DLateralSourceData>(); }
-            private set { lateralSourceDataItemSet.Value = value; ; }
+            get { return ModelDefinition.LateralSourcesData; }
         }
 
         /// <summary>
