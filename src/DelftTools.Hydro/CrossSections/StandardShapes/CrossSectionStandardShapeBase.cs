@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
@@ -37,14 +38,14 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         [EditAction]
         public virtual void AddToHydroNetwork(IHydroNetwork network)
         {
-            var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => css.Name == RoughnessDataSet.SewerSectionTypeName);
+            var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             var crossSectionDefinitionToAdd = new CrossSectionDefinitionStandard(this)
             {
                 Name = Name,
                 Sections = { new CrossSectionSection{ SectionType = sewerSectionType } }
             };
 
-            var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => p.CrossSectionDefinitionName == Name);
+            var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
             pipesWithSameCrossSectionDefinitionId.ForEach(p =>
             {
                 p.CrossSectionDefinition = crossSectionDefinitionToAdd;
@@ -53,7 +54,7 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
 
             });
             
-            network.SharedCrossSectionDefinitions.RemoveAllWhere(d => d.Name == Name);
+            network.SharedCrossSectionDefinitions.RemoveAllWhere(d =>string.Equals(d.Name, Name, StringComparison.InvariantCultureIgnoreCase));
             network.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
         }
     }

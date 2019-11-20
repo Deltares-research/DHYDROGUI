@@ -513,7 +513,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
             var waterFlowFMModel = GetModel<WaterFlowFMModel>();
 
             RoughnessSection roughnessSection =
-                waterFlowFMModel.RoughnessSections.FirstOrDefault(rs => rs.Name == sectionTypeName);
+                waterFlowFMModel.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, HydroNetwork));
 
             if(roughnessSection != null)
             {

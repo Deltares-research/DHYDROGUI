@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 var hydroNetwork = Network as IHydroNetwork;
                 if (hydroNetwork != null)
                 {
-                    var crossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.MainSectionTypeName);
+                    var crossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst =>string.Equals(csst.Name, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
                     if (crossSectionSectionType != null)
                     {
                         crossSection.Definition.Sections.Add(

@@ -548,7 +548,8 @@ namespace DelftTools.Hydro.Helpers
             csDef.ZWDataTable.Set(heightWidthFlowStorage);
 
             var mainSection = branch.HydroNetwork.CrossSectionSectionTypes
-                .FirstOrDefault(cst => cst.Name == RoughnessDataSet.MainSectionTypeName) ?? 
+                .FirstOrDefault(cst => string.Equals(cst.Name, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase)) 
+                ?? 
                 new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName };
 
             csDef.AddSection(mainSection, csDef.FlowWidth());

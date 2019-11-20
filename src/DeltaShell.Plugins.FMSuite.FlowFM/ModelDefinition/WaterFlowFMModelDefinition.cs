@@ -9,6 +9,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
@@ -155,14 +156,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         [EditAction]
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is IDataItem && ((IDataItem)sender).Value is IHydroNetwork)
-            {
-                if (e.PropertyName == nameof(IDataItem.Value))
-                {
-                    RefreshNetworkRelatedData();
-                }
-            }
-
             if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
                 !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
             {
@@ -212,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var currentBC1DNode = BoundaryConditions1D.FirstOrDefault(bc1d => bc1d.Feature == boundaryNodeData.Feature);
             if (currentBC1DNode != null)
             {
-                var currentIndex = BoundaryConditions1D.IndexOf(boundaryNodeData);
+                var currentIndex = BoundaryConditions1D.IndexOf(currentBC1DNode);
                 BoundaryConditions1D.RemoveAt(currentIndex);
                 BoundaryConditions1D.Insert(currentIndex, boundaryNodeData);
             }
@@ -1120,13 +1113,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // when node is added or removed - check if boundary conditions are updated
-            if (e.GetRemovedOrAddedItem() is INode)
+            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            if (removedOrAddedItem is INode)
             {
                 UpdateBoundaryCondition(e);
             }
-            else if (Equals(sender, Network.Branches) && e.GetRemovedOrAddedItem() is ISewerConnection)
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection)
             {
-                var sewerConnection = e.GetRemovedOrAddedItem() as SewerConnection;
+                var sewerConnection = removedOrAddedItem as SewerConnection;
                 if (sewerConnection?.Length > 0)
                 {
                     switch (e.Action)
@@ -1138,9 +1132,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     }
                 }
             }
-            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
+            else if (removedOrAddedItem is CrossSectionSectionType)
             {
                 UpdateRoughnessSectionsEvent(e);
+            }
+
+            if (removedOrAddedItem is IPipe || removedOrAddedItem is IManhole)
+            {
+                AddSewerRoughnessIfNecessary();
             }
         }
         private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
@@ -1165,6 +1164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void AddNewRoughnessSection(CrossSectionSectionType crossSectionSectionType)
         {
+            if (RoughnessSections.Any(rs => string.Equals(rs.CrossSectionSectionType.Name, crossSectionSectionType.Name, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network))) return;
             var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
             RoughnessSections.Add(roughnessSection);
         }
@@ -1175,6 +1175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             RoughnessSections = new EventedList<RoughnessSection>();
             foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
             {
+                if (RoughnessSections.Any(rs => string.Equals(rs.CrossSectionSectionType.Name, crossSectionSectionType.Name, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network))) continue;
                 var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
                 RoughnessSections.Add(roughnessSection);
             }
@@ -1182,7 +1183,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void AddSewerRoughnessIfNecessary()
         {
-            var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName);
+            if (!Network.Manholes.Any() && !Network.Pipes.Any()) return;
+            var roughnessSection = RoughnessSections.FirstOrDefault(rs =>string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network));
             if (roughnessSection != null)
             {
                 roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
@@ -1190,7 +1192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 return;
             }
 
-            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
+            var csSectionType = Network.CrossSectionSectionTypes.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             if (csSectionType == null)
             {
                 csSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.SewerSectionTypeName };
@@ -1204,7 +1206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
         public virtual void UpdateRoughnessSections()
         {
-            if (RoughnessSections != null) RoughnessSections.ForEach(rs => rs.Network = null);
+            RoughnessSections?.ForEach(rs => rs.Network = null);
 
             if (Network != null)
             {

@@ -49,10 +49,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
 
-                
+                UnSubscribeFromNetwork();
                 GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).Value = value;
+                SubscribeToNetwork();
 
-                
+                // refresh data
+                //moet dit ? RefreshNetworkRelatedData();
+
+            }
+        }
+        private void SubscribeToNetwork()
+        {
+            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            var networkValue = networkDataItem.Value;
+            if (networkValue != null)
+            {
+                ((INotifyCollectionChange)networkValue).CollectionChanged += NetworkCollectionChanged;
+                ((INotifyPropertyChanged)networkValue).PropertyChanged += NetworkPropertyChanged;
+            }
+            observedNetwork = (IHydroNetwork)networkValue;
+        }
+        public virtual void UnSubscribeFromNetwork()
+        {
+            if (observedNetwork != null)
+            {
+                ((INotifyCollectionChange)observedNetwork).CollectionChanged -= NetworkCollectionChanged;
+                ((INotifyPropertyChanged)observedNetwork).PropertyChanged -= NetworkPropertyChanged;
+            }
+        }
+        [EditAction]
+        private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //is dit nodig?
+            if (sender is IDataItem && ((IDataItem)sender).Value is IHydroNetwork)
+            {
+                if (e.PropertyName == nameof(IDataItem.Value))
+                {
+                    RefreshNetworkRelatedData();
+                }
             }
         }
         public IDiscretization NetworkDiscretization {
@@ -110,11 +144,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     switch (e.Action)
                     {
                         case NotifyCollectionChangedAction.Remove:
+                        {
+                            var channel = (IChannel) e.GetRemovedOrAddedItem();
+                            foreach (var lateralSource in channel.BranchSources)
+                            {
+                                RemoveLateralSourceData(lateralSource);
+                            }
+
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
                             var networkDataItem = GetDataItemByValue(Network);
 
-                            if (networkDataItem != null) // TODO: temporary fix while we do not have a DataItem for Network in FM Model
+                            if (networkDataItem != null)
                             {
                                 dataItemsToRemove.AddRange(networkDataItem.Children);
 
@@ -125,15 +166,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                     networkDataItem.Children.Remove(dataItem);
                                 }
                             }
-                            break;
-                        case NotifyCollectionChangedAction.Add:
 
-                            var channel = (IChannel)e.GetRemovedOrAddedItem();
+                            break;
+                        }
+                        case NotifyCollectionChangedAction.Add:
+                        {
+                            var channel = (IChannel) e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
-                                AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
+                                AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource});
                             }
+
                             break;
+                        }
                     }
 
                     ClearOutput();

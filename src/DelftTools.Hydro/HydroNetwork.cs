@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -207,9 +208,9 @@ namespace DelftTools.Hydro
             Routes = new EventedList<Route>();
 
             var section = new CrossSectionSectionType
-                              {
-                                  Name = "Main"
-                              };
+            {
+                Name = RoughnessDataSet.MainSectionTypeName
+            };
             
             CrossSectionSectionTypes.Add(section);
 
@@ -305,6 +306,10 @@ namespace DelftTools.Hydro
             foreach (var node in HydroNodes)
             {
                 yield return node;
+            }
+            foreach (var manhole in Manholes)
+            {
+                yield return manhole;
             }
             foreach (var crossSectionSectionType in CrossSectionSectionTypes)
             {

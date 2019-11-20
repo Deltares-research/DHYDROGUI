@@ -41,10 +41,10 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (hydroNetwork == null) return;
 
-            var sewerCrossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name == RoughnessDataSet.SewerSectionTypeName);
+            var sewerCrossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             if (sewerCrossSectionSectionType != null && CrossSectionDefinition != null)
             {
-                CrossSectionDefinition.Sections.Add(new CrossSectionSection { SectionType = sewerCrossSectionSectionType });
+                CrossSectionDefinition.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
             }
         }
 
