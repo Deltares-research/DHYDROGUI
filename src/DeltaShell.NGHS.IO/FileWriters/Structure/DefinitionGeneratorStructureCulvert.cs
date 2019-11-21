@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         protected void AddCommonCulvertElements(ICulvert culvert)
         {
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, (int)culvert.FlowDirection, StructureRegion.AllowedFlowDir.Description);
+            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, culvert.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
             IniCategory.AddProperty(StructureRegion.LeftLevel.Key, culvert.InletLevel, StructureRegion.LeftLevel.Description, StructureRegion.LeftLevel.Format);
             IniCategory.AddProperty(StructureRegion.RightLevel.Key, culvert.OutletLevel, StructureRegion.RightLevel.Description, StructureRegion.RightLevel.Format);
             IniCategory.AddProperty(StructureRegion.CsDefId.Key, culvert.CrossSectionDefinition.Name, StructureRegion.CsDefId.Description);

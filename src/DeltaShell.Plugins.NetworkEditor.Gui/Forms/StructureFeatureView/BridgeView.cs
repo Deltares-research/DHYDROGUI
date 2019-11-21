@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 
@@ -98,6 +99,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetTableData()
         {
+            if (bridge.TabulatedCrossSectionDefinition == null)
+            {
+                //todo think about this.... new cs zw?
+                return;
+            }
+
             tableViewTabulatedData.Data = bridge.TabulatedCrossSectionDefinition.ZWDataTable;
             tableViewTabulatedData.EditableObject = bridge.TabulatedCrossSectionDefinition;
             tableViewTabulatedData.FocusedRowChanged += OnTableViewTabulatedDataOnFocusedRowChanged;

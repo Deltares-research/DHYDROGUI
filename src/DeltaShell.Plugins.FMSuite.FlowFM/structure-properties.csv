@@ -11,7 +11,7 @@ structure,polylinefile,Polyline filepath,FileName,,,,TRUE,*.pli
 weir,type,Type,String,weir,,,,"Structure type, must read weir."
 weir,crestLevel,Crest level,Steerable,,,,FALSE,Weir crest height (in [m])
 weir,crestWidth,Crest width,Double,,,,FALSE,Weir crest width (in [m])
-weir,corrCoef,Correction coefficient,Double,1,,,FALSE,Correction coefficient (-)
+weir,corrCoeff,Correction coefficient,Double,1,,,FALSE,Correction coefficient (-)
 weir,useVelocityHeight,Velocity height flag,0|1,1,,,,Flag indicates whether the velocity height is to be calculated or not.
 pump,type,Type,String,pump,,,,"Structure type, must read pump."
 pump,orientation,Orientation,String,positive,,,,Pump orientation. Possible values: positive, negative.

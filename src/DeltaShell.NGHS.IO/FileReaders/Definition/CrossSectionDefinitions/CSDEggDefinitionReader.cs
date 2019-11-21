@@ -19,4 +19,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             return crossSectionDefinition;
         }
     }
+    class CSDInvertedEggDefinitionReader : CrossSectionDefinitionReaderBase
+    {
+        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        {
+
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.EggWidth.Key);
+
+            var shape = new CrossSectionStandardShapeInvertedEgg { Width = width };
+            var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+
+            return crossSectionDefinition;
+        }
+    }
 }

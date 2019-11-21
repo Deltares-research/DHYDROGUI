@@ -18,6 +18,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             DischargeCoefficient = 1.0;
             LateralContraction = 1.0;
+            UseVelocityHeight = true;
         }
 
         #region IWeirFormula Members
@@ -51,12 +52,15 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double LateralContraction { get; set; }
 
+        public virtual bool UseVelocityHeight { get; set; }
+
         public virtual object Clone()
         {
             return new SimpleWeirFormula
                 {
                     DischargeCoefficient = DischargeCoefficient,
-                    LateralContraction = LateralContraction
+                    LateralContraction = LateralContraction,
+                    UseVelocityHeight = UseVelocityHeight
                 };
         }
     }

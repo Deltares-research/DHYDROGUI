@@ -17,6 +17,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             AddOpeningWidthProperty(gate);
             AddHorizontalDirectionProperty(gate);
             AddSillWidthProperty(gate);
+            AddGateHeightProperty(gate);
+            
 
             return IniCategory;
         }
@@ -86,6 +88,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (gate.SillWidth > 0.0)
             {
                 IniCategory.AddProperty(StructureRegion.GateCrestWidth.Key, gate.SillWidth, StructureRegion.GateCrestWidth.Description);
+            }
+        }
+
+        private void AddGateHeightProperty(IGate gate)
+        {
+            if (gate.DoorHeight > 0.0)
+            {
+                IniCategory.AddProperty(StructureRegion.GateHeight.Key, gate.DoorHeight, StructureRegion.GateHeight.Description, StructureRegion.GateHeight.Format);
             }
         }
     }

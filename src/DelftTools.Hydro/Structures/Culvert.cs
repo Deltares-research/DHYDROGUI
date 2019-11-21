@@ -98,10 +98,14 @@ namespace DelftTools.Hydro.Structures
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEllipse(Width, Height);
                     case CulvertGeometryType.Egg:
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEgg(Width);
+                    case CulvertGeometryType.InvertedEgg:
+                        return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromInvertedEgg(Width);
                     case CulvertGeometryType.Arch:
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromArch(Width, Height, ArcHeight);
                     case CulvertGeometryType.Cunette:
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width, Height);
+                    case CulvertGeometryType.UShape:
+                        return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromUShape(Width, Height,ArcHeight);
                     case CulvertGeometryType.SteelCunette:
                         return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromSteelCunette(Height, Radius, Radius1,
                                             Radius2, Radius3, Angle, Angle1);

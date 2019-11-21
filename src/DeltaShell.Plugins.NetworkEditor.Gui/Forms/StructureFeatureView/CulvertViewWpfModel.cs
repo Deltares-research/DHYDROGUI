@@ -109,99 +109,128 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 IsEgg = value == CulvertGeometryType.Egg;
                 IsRound = value == CulvertGeometryType.Round;
                 IsTabulated = value == CulvertGeometryType.Tabulated;
+                IsInvertedEgg = value == CulvertGeometryType.InvertedEgg;
+                IsUShape = value == CulvertGeometryType.UShape;
 
-                GeometryHeightVisibility = IsSteelCunette || IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg;
-                GeometryWidthVisibility = IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg;
+                GeometryHeightVisibility = IsSteelCunette || IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg ||
+                                           IsInvertedEgg || IsUShape;
+                GeometryWidthVisibility = IsCunette || IsArch || IsEllipse || IsRectangle || IsEgg || IsInvertedEgg ||
+                                          IsUShape;
+                HasArcHeight = IsArch || IsUShape;
             }
         }
 
         #endregion
 
         #region Related model properties
+
         public bool IsGroundLayer
         {
             get { return culvert.GroundLayerEnabled; }
             set { culvert.GroundLayerEnabled = value; }
         }
+
         public bool IsGated
         {
             get { return culvert.IsGated; }
             set { culvert.IsGated = value; }
         }
+
         public bool FlowIsPositive
         {
-            get { return (culvert.FlowDirection == FlowDirection.Both || culvert.FlowDirection == FlowDirection.Positive); }
-            set { UpdateFlow( value, FlowIsNegative); }
+            get
+            {
+                return (culvert.FlowDirection == FlowDirection.Both || culvert.FlowDirection == FlowDirection.Positive);
+            }
+            set { UpdateFlow(value, FlowIsNegative); }
         }
+
         public bool FlowIsNegative
         {
-            get { return (culvert.FlowDirection == FlowDirection.Both || culvert.FlowDirection == FlowDirection.Negative); }
+            get
+            {
+                return (culvert.FlowDirection == FlowDirection.Both || culvert.FlowDirection == FlowDirection.Negative);
+            }
             set { UpdateFlow(FlowIsPositive, value); }
         }
+
         public double CulvertLength
         {
             get { return culvert.Length; }
             set { culvert.Length = value; }
         }
+
         public double CulvertOffsetY
         {
             get { return culvert.OffsetY; }
             set { culvert.OffsetY = value; }
         }
+
         public double InletLevel
         {
             get { return culvert.InletLevel; }
             set { culvert.InletLevel = value; }
         }
+
         public double OutletLevel
         {
             get { return culvert.OutletLevel; }
             set { culvert.OutletLevel = value; }
         }
+
         public double InletLossCoeff
         {
             get { return culvert.InletLossCoefficient; }
             set { culvert.InletLossCoefficient = value; }
         }
+
         public double OutletLossCoeff
         {
             get { return culvert.OutletLossCoefficient; }
             set { culvert.OutletLossCoefficient = value; }
         }
+
         public double BendLossCoefficient
         {
             get { return culvert.BendLossCoefficient; }
             set { culvert.BendLossCoefficient = value; }
         }
+
         public double SiphonOnLevel
         {
             get { return culvert.SiphonOnLevel; }
             set { culvert.SiphonOnLevel = value; }
         }
+
         public double SiphonOffLevel
         {
             get { return culvert.SiphonOffLevel; }
             set { culvert.SiphonOffLevel = value; }
         }
+
         public double GateInitialGateOpening
         {
             get { return culvert.GateInitialOpening; }
             set { culvert.GateInitialOpening = value; }
         }
+
         public double GateLowEdgeLevel
         {
             get { return culvert.GateLowerEdgeLevel; }
         }
+
         public double FrictionValue
         {
             get { return culvert.Friction; }
             set { culvert.Friction = value; }
         }
+
         public double GroundLayerRoughness
         {
             get { return culvert.GroundLayerRoughness; }
             set { culvert.GroundLayerRoughness = value; }
         }
+
         public double GroundLayerThickness
         {
             get { return culvert.GroundLayerThickness; }
@@ -215,51 +244,61 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return culvert.Diameter; }
             set { culvert.Diameter = value; }
         }
+
         public double GeometryWidth
         {
             get { return culvert.Width; }
             set { culvert.Width = value; }
         }
+
         public double GeometryHeight
         {
             get { return culvert.Height; }
             set { culvert.Height = value; }
         }
+
         public double GeometryArcHeight
         {
             get { return culvert.ArcHeight; }
             set { culvert.ArcHeight = value; }
         }
+
         public double GeometryRadiusR
         {
             get { return culvert.Radius; }
             set { culvert.Radius = value; }
         }
+
         public double GeometryRadiusR1
         {
             get { return culvert.Radius1; }
             set { culvert.Radius1 = value; }
         }
+
         public double GeometryRadiusR2
         {
             get { return culvert.Radius2; }
             set { culvert.Radius2 = value; }
         }
+
         public double GeometryRadiusR3
         {
             get { return culvert.Radius3; }
             set { culvert.Radius3 = value; }
         }
+
         public double GeometryAngleA
         {
             get { return culvert.Angle; }
             set { culvert.Angle = value; }
         }
+
         public double GeometryAngleA1
         {
             get { return culvert.Angle1; }
             set { culvert.Angle1 = value; }
         }
+
         #endregion
 
         #region View properties
@@ -275,12 +314,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public bool IsEllipse { get; set; }
         public bool IsRectangle { get; set; }
         public bool IsEgg { get; set; }
+        public bool IsInvertedEgg { get; set; }
+        public bool IsUShape { get; set; }
         public bool GeometryWidthVisibility { get; set; }
         public bool GeometryHeightVisibility { get; set; }
         public bool BendLossCoeffVisibility { get; set; }
         public bool NegativeFlowDirectionFlowVisibility { get; set; }
         public string GroundLayerRoughnessUnit { get; set; }
         public string GroundLayerThicknessUnit { get; set; }
+
+        public bool HasArcHeight { get; set; }
+
         #endregion
     }
 

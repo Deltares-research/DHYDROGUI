@@ -21,6 +21,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             ContractionCoefficient = 0.63;
             LateralContraction = 1.0;
             CanBeTimedependent = canBeTimeDependent;
+            UseVelocityHeight = true;
         }
 
         /// <summary>
@@ -122,6 +123,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual bool UseMaxFlowNeg { get; set; }
 
+        public virtual bool UseVelocityHeight { get; set; }
+
         public virtual object Clone()
         {
             var gatedWeirFormula = new GatedWeirFormula(CanBeTimedependent)
@@ -132,8 +135,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                     MaxFlowNeg = MaxFlowNeg, 
                     MaxFlowPos = MaxFlowPos, 
                     UseMaxFlowNeg = UseMaxFlowNeg, 
-                    UseMaxFlowPos = UseMaxFlowPos
-                };
+                    UseMaxFlowPos = UseMaxFlowPos,
+                    UseVelocityHeight = UseVelocityHeight
+            };
             if (gatedWeirFormula.CanBeTimedependent)
             {
                 gatedWeirFormula.UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries;

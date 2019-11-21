@@ -138,7 +138,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var typeProperty = crossSectionDefinitionCategory.Properties
                 .First(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.DefinitionType.Key.ToLowerInvariant());
 
-            var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty.Value);
+            var templateProperty = crossSectionDefinitionCategory.Properties
+                .FirstOrDefault(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.Template.Key.ToLowerInvariant());
+
+            var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(typeProperty.Value, templateProperty?.Value);
             if (definitionReader == null)
             {
                 var errorMessage = "No definition reader available for this cross section definition";

@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DefinitionGeneratorFactory));
 
-        public static IDefinitionReader<ICrossSectionDefinition> GetDefinitionReaderCrossSection(string type)
+        public static IDefinitionReader<ICrossSectionDefinition> GetDefinitionReaderCrossSection(string type, string template = "")
         {
             switch (type)
             {
@@ -28,21 +28,36 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new CSDZWDefinitionReader();
                 case CrossSectionRegion.CrossSectionDefinitionType.Rectangle:
                     return new CSDRectangleDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Elliptical:
-                    return new CSDEllipseDefinitionReader();
                 case CrossSectionRegion.CrossSectionDefinitionType.Circle:
                     return new CSDCircleDefinitionReader();
+                case CrossSectionRegion.CrossSectionDefinitionType.Zw_Template:
+                    return GetStandardDefinitionReaderCrossSection(template);
+                default :
+                    return null;
+            }
+        }
+
+        private static IDefinitionReader<ICrossSectionDefinition> GetStandardDefinitionReaderCrossSection(string template)
+        {
+            switch (template)
+            {
+                case CrossSectionRegion.CrossSectionDefinitionType.Elliptical:
+                    return new CSDEllipseDefinitionReader();
                 case CrossSectionRegion.CrossSectionDefinitionType.Egg:
                     return new CSDEggDefinitionReader();
+                case CrossSectionRegion.CrossSectionDefinitionType.InvertedEgg:
+                    return new CSDInvertedEggDefinitionReader();
                 case CrossSectionRegion.CrossSectionDefinitionType.Arch:
                     return new CSDArchDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.Cunette:
+                case CrossSectionRegion.CrossSectionDefinitionType.UShape:
+                    return new CSDUShapeDefinitionReader();
+                case CrossSectionRegion.CrossSectionDefinitionType.Mouth:
                     return new CSDCunetteDefinitionReader();
-                case CrossSectionRegion.CrossSectionDefinitionType.SteelCunette:
+                case CrossSectionRegion.CrossSectionDefinitionType.SteelMouth:
                     return new CSDSteelCunetteDefinitionReader();
                 case CrossSectionRegion.CrossSectionDefinitionType.Trapezium:
                     return new CSDTrapeziumDefinitionReader();
-                default :
+                default:
                     return null;
             }
         }

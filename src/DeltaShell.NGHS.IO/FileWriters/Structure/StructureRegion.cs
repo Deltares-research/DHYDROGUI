@@ -48,9 +48,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting CsDefId = new ConfigurationSetting(key: "csDefId", description: "Id of Cross-Section Definition");
         // [Common Culvert and Standard Bridge]
         public static readonly ConfigurationSetting Length = new ConfigurationSetting(key: "length", description: "Length (m)");
-        public static readonly ConfigurationSetting InletLossCoeff = new ConfigurationSetting(key: "inletlosscoeff", description: "Inlet loss coefficient (-)");
-        public static readonly ConfigurationSetting OutletLossCoeff = new ConfigurationSetting(key: "outletlosscoeff", description: "Outlet loss coefficient (-)");
-        public static readonly ConfigurationSetting FrictionType = new ConfigurationSetting(key: "FrictionType", description:
+        public static readonly ConfigurationSetting InletLossCoeff = new ConfigurationSetting(key: "inletLossCoeff", description: "Inlet loss coefficient (-)");
+        public static readonly ConfigurationSetting OutletLossCoeff = new ConfigurationSetting(key: "outletLossCoeff", description: "Outlet loss coefficient (-)");
+        public static readonly ConfigurationSetting FrictionType = new ConfigurationSetting(key: "frictionType", description:
             "Friction type, possible values are: " +
             "Chezy = 1, " +
             "Manning = 4, " +
@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "Strickler = 6, " +
             "WhiteColebrook = 7, " +
             "BosBijkerk = 9");
-        public static readonly ConfigurationSetting Friction = new ConfigurationSetting(key: "Friction", description: "Friction Value");
+        public static readonly ConfigurationSetting Friction = new ConfigurationSetting(key: "friction", description: "Friction Value");
         public static readonly ConfigurationSetting BedFrictionType = new ConfigurationSetting(key: "bedFrictionType", description:
             "Friction type, possible values are: " +
             "Chezy = 1, " +
@@ -81,13 +81,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "3: Suction and Delivery side control");
         public static readonly ConfigurationSetting NrStages = new ConfigurationSetting(key: "numStages", description: "Number of stages in pump");
         public static readonly ConfigurationSetting Capacity = new ConfigurationSetting(key: "capacity", description: "Pump capacity (m3/s)");
-        public static readonly ConfigurationSetting StartLevelSuctionSide = new ConfigurationSetting(key: "startlevelsuctionside", description: "Start level suction side (m AD)");
-        public static readonly ConfigurationSetting StopLevelSuctionSide = new ConfigurationSetting(key: "stoplevelsuctionside", description: "Stop level suction side (m AD)");
-        public static readonly ConfigurationSetting StartLevelDeliverySide = new ConfigurationSetting(key: "startleveldeliveryside", description: "Start level at delivery side (m AD)");
-        public static readonly ConfigurationSetting StopLevelDeliverySide = new ConfigurationSetting(key: "stopleveldeliveryside", description: "Stop level at delivery side (m AD)");
+        public static readonly ConfigurationSetting StartLevelSuctionSide = new ConfigurationSetting(key: "startLevelSuctionSide", description: "Start level suction side (m AD)");
+        public static readonly ConfigurationSetting StopLevelSuctionSide = new ConfigurationSetting(key: "stopLevelSuctionSide", description: "Stop level suction side (m AD)");
+        public static readonly ConfigurationSetting StartLevelDeliverySide = new ConfigurationSetting(key: "startLevelDeliverySide", description: "Start level at delivery side (m AD)");
+        public static readonly ConfigurationSetting StopLevelDeliverySide = new ConfigurationSetting(key: "stopLevelDeliverySide", description: "Stop level at delivery side (m AD)");
         public static readonly ConfigurationSetting ReductionFactorLevels = new ConfigurationSetting(key: "numReductionLevels", description: "Number of levels in reduction table");
         public static readonly ConfigurationSetting Head = new ConfigurationSetting(key: "head", description: "Head");
-        public static readonly ConfigurationSetting ReductionFactor = new ConfigurationSetting(key: "reductionfactor", description: "Reduction factor (-)");
+        public static readonly ConfigurationSetting ReductionFactor = new ConfigurationSetting(key: "reductionFactor", description: "Reduction factor (-)");
         public static readonly ConfigurationSetting PolylineFile = new ConfigurationSetting(key: "polylinefile", description: "*.pli; Polyline geometry definition for 2D structure");
         #endregion
 
@@ -207,7 +207,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Common Bridge Elements
-        public static readonly ConfigurationSetting BedLevel = new ConfigurationSetting(key: "bedlevel", description: "Lowest point of bridge profile (crest) (m AD)");
+        public static readonly ConfigurationSetting BedLevel = new ConfigurationSetting(key: "bedLevel", description: "Lowest point of bridge profile (crest) (m AD)");
         #endregion
 
         #region Bridge Pillar Elements

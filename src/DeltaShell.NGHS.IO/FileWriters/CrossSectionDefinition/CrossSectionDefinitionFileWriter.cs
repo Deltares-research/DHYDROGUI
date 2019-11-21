@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
@@ -11,8 +12,12 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
-    public class CrossSectionDefinitionFileWriter
+    public static class CrossSectionDefinitionFileWriter
     {
+        public static bool ContainsAnyCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return GetNetworkCrossSectionDefinitions(network).Any();
+        }
         public static void WriteFile(string targetFile, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections)
         {
             var crossSections = GetNetworkCrossSectionDefinitions(network);
@@ -21,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             WriteFile(targetFile, crossSections, sharedCrossSectionDefinitions, roughnessSections.ToList(), network.Structures);
         }
 
-        protected static void WriteFile(string targetFile, IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, IEnumerable<ICrossSectionDefinition> sharedCrossSectionDefinitions, IList<RoughnessSection> roughnessSections, IEnumerable<IStructure> structures)
+        private static void WriteFile(string targetFile, IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, IEnumerable<ICrossSectionDefinition> sharedCrossSectionDefinitions, IList<RoughnessSection> roughnessSections, IEnumerable<IStructure> structures)
         {
             if (File.Exists(targetFile)) File.Delete(targetFile);
 
@@ -144,21 +149,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             return roughnessSection;
         }
 
-        private static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(IHydroNetwork network)
+        private static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(this IHydroNetwork network)
         {
-            var crossSections = GetNetworkCrossSections(network);
-            var crossSectionDefinitions = crossSections.Select(GetCrossSectionDefinition).ToList();
-            crossSectionDefinitions.AddRange(network.Pipes.Select(p => p.CrossSectionDefinition));
-            return crossSectionDefinitions;
+            return network.GetNetworkCrossSections().Select(GetCrossSectionDefinition);
         }
 
-        private static IEnumerable<ICrossSection> GetNetworkCrossSections(IHydroNetwork network)
+        private static IEnumerable<ICrossSection> GetNetworkCrossSections(this IHydroNetwork network)
         {
-            var crossSections = network.CrossSections.ToList();
-            AddCulvertCrossSectionDefinitions(crossSections, network);
-            AddBridgeCrossSectionDefinitions(crossSections, network);
-
-            return crossSections;
+            return network.CrossSections.Concat(network.CulvertCrossSections()).Concat(network.BridgeCrossSections().Concat(network.PipeCrossSections()));
         }
 
         private static ICrossSectionDefinition GetCrossSectionDefinition(ICrossSection crossSection)
@@ -169,17 +167,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 : crossSectionDefinition;
             return definition;
         }
-
-        private static void AddBridgeCrossSectionDefinitions(List<ICrossSection> crossSections, IHydroNetwork network)
+        
+        private static IEnumerable<ICrossSection> BridgeCrossSections(this IHydroNetwork network)
         {
-            var bridgeCrossSectionDefinitions = network.Bridges.Where(b => b.CrossSectionDefinition != null).Select(b => b.CrossSectionDefinition);
-            crossSections.AddRange(bridgeCrossSectionDefinitions.Select(csd => new CrossSection(csd) { Name = csd.Name }));
+            return network.Bridges.Where(b => b.CrossSectionDefinition != null).Select(b => b.CrossSectionDefinition).Select(csd => new CrossSection(csd) { Name = csd.Name });
+        }
+        
+        private static IEnumerable<ICrossSection> CulvertCrossSections(this IHydroNetwork network)
+        {
+            return network.Culverts.Where(c => c.CrossSectionDefinition != null).Select(c => c.CrossSectionDefinition).Select(csd => new CrossSection(csd) { Name = csd.Name });
         }
 
-        private static void AddCulvertCrossSectionDefinitions(List<ICrossSection> crossSections, IHydroNetwork network)
+        private static IEnumerable<ICrossSection> PipeCrossSections(this IHydroNetwork network)
         {
-            var culvertCrossSectionDefinitions = network.Culverts.Select(c => c.CrossSectionDefinition);
-            crossSections.AddRange(culvertCrossSectionDefinitions.Select(csd => new CrossSection(csd) { Name = csd.Name }));
+            return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition).Select(csd => new CrossSection(csd) { Name = csd.Name });
         }
     }
 }

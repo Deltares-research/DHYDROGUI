@@ -146,7 +146,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 newBreachLocationPoint.Coordinates[0].X = snapResult.Location.X;
                 newBreachLocationPoint.Coordinates[0].Y = snapResult.Location.Y;
             }
-            newBreachLocationLayer.Style = MapControl.SnapTool.Failed ? errorPointFeatureStyle : pointFeatureStyle;
+
+            if (newBreachLocationLayer != null)
+                newBreachLocationLayer.Style = MapControl.SnapTool.Failed ? errorPointFeatureStyle : pointFeatureStyle;
         }
 
         private void MoveBreachLocation(Coordinate worldPosition, MouseEventArgs mouseEventArgs)

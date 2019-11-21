@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_DEFINITION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
 
-            if (fmModel.Network.CrossSections.Any() || fmModel.Network.Pipes.Any(p => p.CrossSectionDefinition != null))
+            if (fmModel.Network.ContainsAnyCrossSectionDefinitions())
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
                 CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network, fmModel.RoughnessSections);

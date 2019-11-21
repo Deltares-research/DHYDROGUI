@@ -18,10 +18,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if (formula == null) return IniCategory;
             
             IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+            if (weir.CrestWidth > 0)
+            {
+                IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth,StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+            }
+
             //Jan Noort : weir.DischargeCoof gebruiken?
             IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, formula.DischargeCoefficient*formula.LateralContraction, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
-            
+            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, formula.UseVelocityHeight.ToString().ToLower());
+
             return IniCategory;
         }
     }

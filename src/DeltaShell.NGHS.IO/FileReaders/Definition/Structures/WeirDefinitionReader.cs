@@ -87,15 +87,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     return new PierWeirFormula
                     {
                         NumberOfPiers = category.ReadProperty<int>(StructureRegion.NPiers.Key),
-                        UpstreamFacePos = category.ReadProperty<int>(StructureRegion.PosHeight.Key),
-                        DesignHeadPos = category.ReadProperty<int>(StructureRegion.PosDesignHead.Key),
-                        PierContractionPos = category.ReadProperty<int>(StructureRegion.PosPierContractCoef.Key),
-                        AbutmentContractionPos = category.ReadProperty<int>(StructureRegion.PosAbutContractCoef.Key),
+                        UpstreamFacePos = category.ReadProperty<double>(StructureRegion.PosHeight.Key),
+                        DesignHeadPos = category.ReadProperty<double>(StructureRegion.PosDesignHead.Key),
+                        PierContractionPos = category.ReadProperty<double>(StructureRegion.PosPierContractCoef.Key),
+                        AbutmentContractionPos = category.ReadProperty<double>(StructureRegion.PosAbutContractCoef.Key),
 
-                        UpstreamFaceNeg = category.ReadProperty<int>(StructureRegion.NegHeight.Key),
-                        DesignHeadNeg = category.ReadProperty<int>(StructureRegion.NegDesignHead.Key),
-                        PierContractionNeg = category.ReadProperty<int>(StructureRegion.NegPierContractCoef.Key),
-                        AbutmentContractionNeg = category.ReadProperty<int>(StructureRegion.NegAbutContractCoef.Key)
+                        UpstreamFaceNeg = category.ReadProperty<double>(StructureRegion.NegHeight.Key),
+                        DesignHeadNeg = category.ReadProperty<double>(StructureRegion.NegDesignHead.Key),
+                        PierContractionNeg = category.ReadProperty<double>(StructureRegion.NegPierContractCoef.Key),
+                        AbutmentContractionNeg = category.ReadProperty<double>(StructureRegion.NegAbutContractCoef.Key)
                     };
                 case StructureType.Orifice:
                     return new GatedWeirFormula

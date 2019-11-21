@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -16,7 +17,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
         {
             var crossSectionDefinitionId = category.ReadProperty<string>(StructureRegion.CsDefId.Key);
-            var definition = crossSectionDefinitions.FirstOrDefault(cd => cd.Name.ToLower() == crossSectionDefinitionId);
+            var definition = crossSectionDefinitions.FirstOrDefault(cd => string.Equals(cd.Name, crossSectionDefinitionId, StringComparison.InvariantCultureIgnoreCase));
 
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
             
@@ -26,8 +27,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Branch = branch,
                 Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
                 GeometryType = GetGeometryType(standardCrossSectionDefinition?.ShapeType),
-                TabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition(),
-                FlowDirection = (FlowDirection) category.ReadProperty<int>(StructureRegion.AllowedFlowDir.Key),
+                TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW ? definition as CrossSectionDefinitionZW : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? new CrossSectionDefinitionZW(),
+                FlowDirection = (FlowDirection) category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
                 InletLevel = category.ReadProperty<double>(StructureRegion.LeftLevel.Key),
                 OutletLevel = category.ReadProperty<double>(StructureRegion.RightLevel.Key),
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key),
@@ -40,18 +41,96 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key, true),
             };
 
+            SetCulvertDimensionsBasedOnProfile(culvert, definition);
+
             var relOpening = category.ReadProperty<string>(StructureRegion.RelativeOpening.Key).ToDoubleArray();
             var lossCoeff = category.ReadProperty<string>(StructureRegion.LossCoefficient.Key).ToDoubleArray();
 
             culvert.GateOpeningLossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
 
-            culvert.CulvertType = category.Properties.Any(p => p.Name == StructureRegion.BendLossCoef.Key)
+            culvert.CulvertType = category.Properties.All(p => p.Name != StructureRegion.BendLossCoef.Key)
                 ? CulvertType.Culvert
                 : category.Properties.Any(p => p.Name == StructureRegion.TurnOnLevel.Key)
                     ? CulvertType.Siphon
                     : CulvertType.InvertedSiphon;
             
             return culvert;
+        }
+
+        private void SetCulvertDimensionsBasedOnProfile(ICulvert culvert, ICrossSectionDefinition definition)
+        {
+            switch (culvert.GeometryType)
+            {
+                case CulvertGeometryType.Round:
+                {
+                    var stdDef = definition as CrossSectionDefinitionStandard;
+                    if (stdDef != null)
+                    {
+                        var round = stdDef.Shape as CrossSectionStandardShapeCircle;
+                        if (round != null)
+                            culvert.Diameter = round.Diameter;
+                    }
+
+                    break;
+                }
+                case CulvertGeometryType.Egg:
+                case CulvertGeometryType.InvertedEgg:
+                case CulvertGeometryType.Rectangle:
+                case CulvertGeometryType.Cunette:
+                case CulvertGeometryType.Ellipse:
+                {
+                    var stdDef = definition as CrossSectionDefinitionStandard;
+                    if (stdDef != null)
+                    {
+                        var heightbase = stdDef.Shape as CrossSectionStandardShapeWidthHeightBase;
+                        if (heightbase != null)
+                        {
+                            culvert.Width = heightbase.Width;
+                            culvert.Height = heightbase.Height;
+                        }
+                    }
+                }
+                    break;
+                case CulvertGeometryType.Arch:
+                case CulvertGeometryType.UShape:
+                {
+                    var stdDef = definition as CrossSectionDefinitionStandard;
+                    if (stdDef != null)
+                    {
+                        var arch = stdDef.Shape as CrossSectionStandardShapeArch;
+                        if (arch != null)
+                        {
+                            culvert.Width = arch.Width;
+                            culvert.Height = arch.Height;
+                            culvert.ArcHeight = arch.ArcHeight;
+                        }
+                    }
+                }
+                    break;
+                case CulvertGeometryType.SteelCunette:
+                {
+                    var stdDef = definition as CrossSectionDefinitionStandard;
+                    if (stdDef != null)
+                    {
+                        var steelcunette = stdDef.Shape as CrossSectionStandardShapeSteelCunette;
+                        if (steelcunette != null)
+                        {
+                            culvert.Angle = steelcunette.AngleA;
+                            culvert.Angle1 = steelcunette.AngleA1;
+                            culvert.Height = steelcunette.Height;
+                            culvert.Radius = steelcunette.RadiusR;
+                            culvert.Radius1 = steelcunette.RadiusR1;
+                            culvert.Radius2 = steelcunette.RadiusR2;
+                            culvert.Radius3 = steelcunette.RadiusR3;
+                        }
+                    }
+                }
+                    break;
+                case CulvertGeometryType.Tabulated:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private CulvertGeometryType GetGeometryType(CrossSectionStandardShapeType? standardCrossSectionDefinition)

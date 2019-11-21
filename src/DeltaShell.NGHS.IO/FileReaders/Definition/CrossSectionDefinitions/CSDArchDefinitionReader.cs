@@ -21,4 +21,20 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             return crossSectionDefinition;
         }
     }
+    class CSDUShapeDefinitionReader : CrossSectionDefinitionReaderBase
+    {
+        public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
+        {
+
+            var archHeight = category.ReadProperty<double>(DefinitionPropertySettings.ArchHeight.Key);
+            var height = category.ReadProperty<double>(DefinitionPropertySettings.ArchCrossSectionHeight.Key);
+            var width = category.ReadProperty<double>(DefinitionPropertySettings.ArchCrossSectionWidth.Key);
+
+            var shape = new CrossSectionStandardShapeUShape { ArcHeight = archHeight, Width = width, Height = height};
+            var crossSectionDefinition = new CrossSectionDefinitionStandard(shape);
+            SetCommonCrossSectionDefinitionsProperties(crossSectionDefinition, category);
+
+            return crossSectionDefinition;
+        }
+    }
 }

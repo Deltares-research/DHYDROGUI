@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public bool IsCrestLevelConstantTime { get { return !weir.UseCrestLevelTimeSeries; } }
+        public bool IsCrestLevelConstantTime { get { return weir!= null && !weir.UseCrestLevelTimeSeries; } }
 
         private bool previousCrestLevelTimeSeriesValue;
 
