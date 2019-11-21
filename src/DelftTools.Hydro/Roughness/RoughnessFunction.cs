@@ -6,7 +6,7 @@ namespace DelftTools.Hydro.Roughness
     {
         [Description("Constant")]
         Constant,
-        [Description("Discharge")]
+        [Description("absDischarge")]
         FunctionOfQ,
         [Description("Waterlevel")]
         FunctionOfH

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
@@ -48,7 +50,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                         break;
                 }
             }
-            
+            /*
             // Add definitions
             foreach (var branch in branches)
             {
@@ -74,7 +76,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                         }
                     }
                 }
-            }
+            }*/
             if (File.Exists(filename)) File.Delete(filename);
             new IniFileWriter().WriteIniFile(categories, filename);
         }
@@ -141,22 +143,76 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             }
         }
 
-        private static DelftIniCategory GenerateBranchProperties(RoughnessSection roughnessSection, IBranch branch, RoughnessFunction roughnessFunctionType)
+        private static DelftIniCategory GenerateBranchProperties(RoughnessSection roughnessSection, IBranch branch,
+            RoughnessFunction roughnessFunctionType)
         {
 
             var branchProperties = new DelftIniCategory(RoughnessDataRegion.BranchPropertiesIniHeader);
-            branchProperties.AddProperty(SpatialDataRegion.BranchId.Key, branch.Name, SpatialDataRegion.BranchId.Description);
-            var roughnessType = (int)FrictionTypeConverter.ConvertFrictionType(roughnessSection.EvaluateRoughnessType(new NetworkLocation(branch, 0))); // TODO are we sure about this? 0 can be not set in UI
-            branchProperties.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType, RoughnessDataRegion.RoughnessType.Description);
+            branchProperties.AddProperty(SpatialDataRegion.BranchId.Key, branch.Name,
+                SpatialDataRegion.BranchId.Description);
+            var roughnessType =
+                FrictionTypeConverter.ConvertFrictionType(
+                    roughnessSection.EvaluateRoughnessType(new NetworkLocation(branch,
+                        0))); // TODO are we sure about this? 0 can be not set in UI
+            branchProperties.AddProperty(RoughnessDataRegion.RoughnessType.Key, roughnessType.GetDisplayName(),
+                RoughnessDataRegion.RoughnessType.Description);
 
-            branchProperties.AddProperty(RoughnessDataRegion.FunctionType.Key, (int)roughnessFunctionType, RoughnessDataRegion.FunctionType.Description);
+            branchProperties.AddProperty(RoughnessDataRegion.FunctionType.Key, roughnessFunctionType.GetDescription(),
+                RoughnessDataRegion.FunctionType.Description);
+
 
             var levels = GetLevels(roughnessSection, branch);
-            if (levels == null) return branchProperties;
 
-            branchProperties.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, levels.Count, RoughnessDataRegion.NumberOfLevels.Description);
-            branchProperties.AddProperty(RoughnessDataRegion.Levels.Key, levels, null, RoughnessDataRegion.Levels.Format);
+            if (roughnessFunctionType != RoughnessFunction.Constant && levels != null)
+            {
+                branchProperties.AddProperty(RoughnessDataRegion.NumberOfLevels.Key, levels.Count, RoughnessDataRegion.NumberOfLevels.Description);
+                branchProperties.AddProperty(RoughnessDataRegion.Levels.Key, levels, null, RoughnessDataRegion.Levels.Format);
+            }
 
+            var locations = GetLocations(roughnessSection, branch);
+            if (locations != null)
+            {
+                // Write functions of Discharge or Water level
+                branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key,locations.Count);
+                var nrOfLevels = levels != null ? levels.Count : 1;
+                var values = new double[nrOfLevels][];
+                for (int j = 0; j < nrOfLevels; j++)
+                {
+                    values[j] = new double[locations.Count];
+                }
+                for (int i = 0; i < locations.Count; i++)
+                {
+                    var branchFricValuesPerLevel = GetValues(roughnessSection, branch, locations[i], levels).ToArray();
+                    for (int j = 0; j < nrOfLevels; j++)
+                    {
+                        values[j][i] = branchFricValuesPerLevel[j]; 
+                    }
+                }
+
+                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, locations, null, SpatialDataRegion.Chainage.Format);
+                var valuesAsString = string.Empty;
+                for (int j = 0; j < nrOfLevels; j++)
+                {
+                    valuesAsString += string.Join(" ", values[j].Select(v => v.ToString(RoughnessDataRegion.Values.Format, CultureInfo.InvariantCulture)));
+                    valuesAsString += Environment.NewLine;
+                }
+                
+                branchProperties.AddProperty(RoughnessDataRegion.Values.Key, valuesAsString);
+            }
+            else
+            {
+                // Write constant
+                branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key,0);
+                var networkLocation = roughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(branch).FirstOrDefault();
+                if(networkLocation != null)
+                {
+                    var roughnessValues =
+                        roughnessSection.RoughnessNetworkCoverage.GetValues<double>(
+                            new VariableValueFilter<INetworkLocation>(
+                                roughnessSection.RoughnessNetworkCoverage.Locations, networkLocation)).ToArray();
+                    branchProperties.AddProperty(RoughnessDataRegion.Values.Key, roughnessValues,RoughnessDataRegion.Values.Description,RoughnessDataRegion.Values.Format);
+                }
+            }
             return branchProperties;
         }
 

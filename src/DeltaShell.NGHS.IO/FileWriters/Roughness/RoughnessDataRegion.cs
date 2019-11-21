@@ -18,11 +18,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             description:"Type of roughness definition, possible values: Chezy = 1, Manning = 4, Nikuradse = 5, Strickler = 6, WhiteColebrook = 7, BosBijkerk = 9");
         public static readonly ConfigurationSetting GlobalValue = new ConfigurationSetting(key: "globalValue", description: "The global default value for this section");
 
-        public const string BranchPropertiesIniHeader = "BranchProperties";
+        public const string BranchPropertiesIniHeader = "Branch";
         //do not use this branchid but the one of the base classs SpatialDataRegion!!
         //public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "The name of the branch");
 
-        public static readonly ConfigurationSetting RoughnessType = new ConfigurationSetting(key: "roughnessType",
+        public static readonly ConfigurationSetting RoughnessType = new ConfigurationSetting(key: "frictionType",
             description: "Type of roughness definition, possible values: Chezy = 1, Manning = 4, Nikuradse = 5, Strickler = 6, WhiteColebrook = 7, BosBijkerk = 9");
 
         public static readonly ConfigurationSetting FunctionType = new ConfigurationSetting(key: "functionType",
@@ -31,11 +31,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
         public static readonly ConfigurationSetting NumberOfLevels = new ConfigurationSetting(key: "numLevels", description: "Number of levels in table");
         public static readonly ConfigurationSetting Levels = new ConfigurationSetting(key: "levels");
 
+        public static readonly ConfigurationSetting NumberOfLocations = new ConfigurationSetting(key: "numLocations", description: "Number of locations in branch");
+
         public const string DefinitionIniHeader = "Definition";
         //Use the one of the base classs SpatialDataRegion!!
         //public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "");
         //public static readonly ConfigurationSetting Value = new ConfigurationSetting(key: "value", description: "");
-        public static readonly ConfigurationSetting Values = new ConfigurationSetting(key: "values", description: "", format:"F5");
+        public static readonly ConfigurationSetting Values = new ConfigurationSetting(key: "frictionValues", description: "", format:"F5");
 
         
     }
