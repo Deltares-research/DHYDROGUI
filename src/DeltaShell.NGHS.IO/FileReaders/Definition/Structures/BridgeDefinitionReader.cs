@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
         public IStructure1D ReadDefinition(IDelftIniCategory category, IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
         {
             var crossSectionDefinitionId = category.ReadProperty<string>(StructureRegion.CsDefId.Key, true); // pillar does not need cs def
-            var definition = crossSectionDefinitionId == default ? null : crossSectionDefinitions.FirstOrDefault(cd => string.Equals(cd.Name, crossSectionDefinitionId, StringComparison.CurrentCultureIgnoreCase));
+            var definition = crossSectionDefinitionId == default(string) ? null : crossSectionDefinitions.FirstOrDefault(cd => string.Equals(cd.Name, crossSectionDefinitionId, StringComparison.CurrentCultureIgnoreCase));
 
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
