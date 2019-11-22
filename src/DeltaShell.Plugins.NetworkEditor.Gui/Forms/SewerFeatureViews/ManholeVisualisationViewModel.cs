@@ -148,6 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        [InvokeRequired]
         private void UpdateShapeDimensions()
         {
             if (!Shapes.Any() || isUpdating) return;
