@@ -35,9 +35,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string BoundaryBlockKey = "[boundary]";
         public const string LateralBlockKey = "[Lateral]";
         public const string QuantityKey = "quantity";
-        public const string NodeIdKey = "nodeid";
         public const string BranchIdKey = "branchId";
-        public const string ChainageKey = "chainageId";
+        public const string ChainageIdKey = "chainageId";
+        public const string IdKey = "id";
+        public const string NameKey = "name";
+        public const string TypeKey = "type";
+        public const string ChainageKey = "chainage";
+        public const string NodeIdKey = "nodeId";
+        public const string DischargeKey = "discharge";
         
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
@@ -77,9 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (lateralSourceForcingDefinition != null)
             {
-                block.AddProperty("id", lateralSourceForcingDefinition.Name);
-                block.AddProperty("name", lateralSourceForcingDefinition.LongName);
-                block.AddProperty("type", lateralSourceForcingDefinition.Type);
+                block.AddProperty(IdKey, lateralSourceForcingDefinition.Name);
+                block.AddProperty(NameKey, lateralSourceForcingDefinition.LongName);
+                block.AddProperty(TypeKey, lateralSourceForcingDefinition.Type);
                 
                 if (lateralSourceForcingDefinition.NumCoordinates >= 3)
                 {
@@ -87,24 +92,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
                 else if (!string.IsNullOrEmpty(lateralSourceForcingDefinition.BranchId))
                 {
-                    block.AddProperty("branchId", lateralSourceForcingDefinition.BranchId);
-                    block.AddProperty("chainage", lateralSourceForcingDefinition.Chainage);
+                    block.AddProperty(BranchIdKey, lateralSourceForcingDefinition.BranchId);
+                    block.AddProperty(ChainageKey, lateralSourceForcingDefinition.Chainage);
                 }else if (!string.IsNullOrEmpty(lateralSourceForcingDefinition.NodeId))
                 {
-                    block.AddProperty("nodeId", lateralSourceForcingDefinition.NodeId);
+                    block.AddProperty(NodeIdKey, lateralSourceForcingDefinition.NodeId);
                 }
 
                 if (lateralSourceForcingDefinition.RealTime)
                 {
-                    block.AddProperty("discharge", "realtime");
+                    block.AddProperty(DischargeKey, "realtime");
                 }
                 else if (!string.IsNullOrEmpty(lateralSourceForcingDefinition.DischargeForcingFile))
                 {
-                    block.AddProperty("discharge", lateralSourceForcingDefinition.DischargeForcingFile);
+                    block.AddProperty(DischargeKey, lateralSourceForcingDefinition.DischargeForcingFile);
                 }
                 else
                 {
-                    block.AddProperty("discharge", lateralSourceForcingDefinition.Discharge);
+                    block.AddProperty(DischargeKey, lateralSourceForcingDefinition.Discharge);
                 }
             }
             return block;
@@ -356,22 +361,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
 
-                    string id = bndExtForceFileItem.GetPropertyValue("id");
+                    string id = bndExtForceFileItem.GetPropertyValue(IdKey);
                     if (id != null)
                     {
                         WriteLine(LateralBlockKey);
-                        WriteLine("id" + "=" + id);
-                        WriteLine("name" + "=" + bndExtForceFileItem.GetPropertyValue("name"));
-                        var branchId = bndExtForceFileItem.GetPropertyValue("branchId");
+                        WriteLine(IdKey + "=" + id);
+                        WriteLine(NameKey + "=" + bndExtForceFileItem.GetPropertyValue(NameKey));
+                        var branchId = bndExtForceFileItem.GetPropertyValue(BranchIdKey);
                         if (branchId != null)
                         {
-                            WriteLine("branchId" + "=" + branchId);
-                            WriteLine("chainage" + "=" + bndExtForceFileItem.GetPropertyValue("chainage"));
+                            WriteLine(BranchIdKey + "=" + branchId);
+                            WriteLine(ChainageKey + "=" + bndExtForceFileItem.GetPropertyValue(ChainageKey));
                         }
 
-                        var nodeId = bndExtForceFileItem.GetPropertyValue("nodeId");
+                        var nodeId = bndExtForceFileItem.GetPropertyValue(NodeIdKey);
                         if (nodeId != null)
-                            WriteLine("nodeId" + "=" + nodeId);
+                            WriteLine(NodeIdKey + "=" + nodeId);
 
                         var type = bndExtForceFileItem.GetPropertyValue("type");
                         if (type != null)
@@ -381,9 +386,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         if (locationType != null)
                             WriteLine("locationType" + "=" + locationType);
 
-                        var discharge = bndExtForceFileItem.GetPropertyValue("discharge");
+                        var discharge = bndExtForceFileItem.GetPropertyValue(DischargeKey);
                         if (discharge != null)
-                            WriteLine("discharge" + "=" + discharge);
+                            WriteLine(DischargeKey + "=" + discharge);
 
                     }
                 }
