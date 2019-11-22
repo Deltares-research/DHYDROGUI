@@ -87,7 +87,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             });
 
             // generate composite structures for single structures
-            var singleStructures = structures.Where(s => s.ParentStructure == null).ToList();
+            var singleStructures = structures.Where(s => s.ParentStructure == null && !(s is ICompositeBranchStructure)).ToList();
 
             singleStructures.ForEach((s, i) =>
             {
