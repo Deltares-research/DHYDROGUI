@@ -503,7 +503,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static IGate CreateGateCore(Structure2D structure2D, string path, DateTime refDate)
         {
             var gate = new Gate2D();
-
+            gate.DoorHeight = DataTypeValueParser.FromString<double>(structure2D.GetProperty(StructureRegion.GateHeight.Key).GetValueAsString());
             var sillWidthProperty = structure2D.GetProperty(StructureRegion.GateCrestWidth.Key);
             var sillWidthString = sillWidthProperty == null ? null : sillWidthProperty.GetValueAsString();
             gate.SillWidth = string.IsNullOrEmpty(sillWidthString) ? 0.0 : DataTypeValueParser.FromString<double>(sillWidthString);

@@ -50,15 +50,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
             IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
-
-            if (((IBranchFeature)hydroObject).Branch == null)
-            {
-                /* for FM, add the GateDoorHeight for a general structure. 
-                 * Checking if it is 1D or 2D by checking the structure branch == null is not the most awesome way to do this.
-                 * Refactoring and splitting 1D/2D functionality is recommended.*/
-                IniCategory.AddProperty(StructureRegion.GateHeight.Key, formula.GateOpening, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
-                IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, formula.GateOpeningWidth, StructureRegion.GateOpeningWidth.Description , StructureRegion.GateOpeningWidth.Format);
-            }
+            
+            IniCategory.AddProperty(StructureRegion.GateHeight.Key, formula.GateOpening, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
+            IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, formula.GateOpeningWidth, StructureRegion.GateOpeningWidth.Description , StructureRegion.GateOpeningWidth.Format);
 
             // switch the horizontal direction, because enums aren't used very nicely in the csv file (structure definition).
             string horizontalDirection;
