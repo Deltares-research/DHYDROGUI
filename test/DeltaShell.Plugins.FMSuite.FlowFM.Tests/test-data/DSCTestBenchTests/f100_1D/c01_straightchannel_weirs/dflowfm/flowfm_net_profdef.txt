@@ -1,0 +1,1 @@
+PROFNR=1     TYPE=2             WIDTH=100

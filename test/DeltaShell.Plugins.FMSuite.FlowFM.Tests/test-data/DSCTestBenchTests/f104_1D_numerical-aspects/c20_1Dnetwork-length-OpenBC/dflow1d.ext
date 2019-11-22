@@ -1,0 +1,14 @@
+[General]
+fileVersion = 1.00
+fileType    = ExtForceFileNew
+
+[boundary]
+quantity    = dischargebnd
+nodeId      = Node_Southwest
+forcingfile = BoundaryConditions.bc
+
+[boundary]
+quantity    = dischargebnd
+nodeId      = Node_Northeast
+forcingfile = BoundaryConditions.bc
+

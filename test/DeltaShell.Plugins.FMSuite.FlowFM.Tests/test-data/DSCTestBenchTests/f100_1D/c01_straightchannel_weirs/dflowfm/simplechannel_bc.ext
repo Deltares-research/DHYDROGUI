@@ -1,0 +1,9 @@
+[boundary]
+quantity=waterlevelbnd
+locationfile=east_wlev.pli
+forcingfile=fmbnd.bc
+
+[boundary]
+quantity=dischargebnd
+locationfile=west_dis.pli
+forcingfile=fmbnd.bc

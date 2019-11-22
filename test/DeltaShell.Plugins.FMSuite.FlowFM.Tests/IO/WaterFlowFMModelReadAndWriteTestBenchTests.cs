@@ -23,7 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             TestFixtureDirectory = FileUtils.CreateTempDirectory();
             PathTestBench = Path.Combine(TestHelper.GetTestDataDirectory(), "DSCTestBenchTests");
-            PathTestBench = Path.Combine(PathTestBench, "DSCTestBenchTests");
 
             //Ensure we do not accidentally incorporate previous results
             //FileUtils.DeleteIfExists("");
@@ -51,32 +50,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         #region TestBanchCasesTests
 
-//        [Test]
-//        [TestCase(@"f100_1D\c01_straightchannel_weirs\dflowfm\flowfm.mdu", TestName = "c01_straightchannel_weirs")]
-//        [TestCase(@"f100_1D\c02_retention\flowfm.mdu", TestName = "c02_retention")]
-//        [TestCase(@"f100_1D\c03_orifice\flowfm.mdu", TestName = "c03_orifice")]
-//        [TestCase(@"f100_1D\c04_closed_channel_circle\flowfm.mdu", TestName = "c04_closed_channel_circle")]
-//        [TestCase(@"f100_1D\c05_closed_channel_rectangle\flowfm.mdu", TestName = "c05_closed_channel_rectangle")]
-//        [TestCase(@"f100_1D\c06_closed_channel_egg\flowfm.mdu", TestName = "c06_closed_channel_egg")]
-//        //[TestCase(@"f100_1D\c07_pipe_circle_weirs\flowfm.mdu", TestName = "c07_pipe_circle_weirs")]
-//        [TestCase(@"f101_1D-boundaries\c01_steady-state-flow\Boundary.mdu", TestName = "c01_steady-state-flow")]
-//        [TestCase(@"f102_lateral-flows\c01_straightchannel_weirs\dflowfm\flowfm.mdu", TestName = "c01_straightchannel_weirs")]
-//        [TestCase(@"f100_1D\c02_1d-precipitation\model1.mdu", TestName = "c02_1d-precipitation")]
-//        [TestCase(@"f105_cross-sections\c03_zw-closed-egg-profile\flow1d.mdu", TestName = "c03_zw-closed-egg-profile")]
-//        [TestCase(@"f105_cross-sections\c04_rectangular-profile\flow1d.mdu", TestName = "c04_rectangular-profile")]
-//        [TestCase(@"f105_cross-sections\c07_tabulated-profile-zw\flow1d.mdu", TestName = "c07_tabulated-profile-zw")]
-//        [TestCase(@"f105_cross-sections\c08_YZ-profile-storage\YZ_Storage.mdu", TestName = "c08_YZ-profile-storage")]
-//        [TestCase(@"f105_cross-sections\c11_rectangular-profile-storage\rectangular_storage.mdu", TestName = "c11_rectangular-profile-storage")]
-//        [TestCase(@"f105_cross-sections\c14_tabulated-profile-zw-storage\ZW_Storage.mdu", TestName = "c14_tabulated-profile-zw-storage")]
-//        [TestCase(@"f105_cross-sections\c16_YZ-profile_lumped\Lumped_YZ_flow_area.mdu", TestName = "c16_YZ-profile_lumped")]
-//        public void WaterFlowFMModel_CompareReadWriteTest(string relativeMduFilePath, string TestName)
-//        {
-//            var mduPathTestBench = Path.Combine(PathTestBench,relativeMduFilePath);
-//            var mduPathToWrite = relativeMduFilePath + "";
-//            var model = WaterFlowFMModelReader.Read(mduPathTestBench);
-//            model.ExportTo(mduPathToWrite);
-//            CompareFiles(mduPathTestBench, mduPathToWrite, TestName);
-//        }
+        [Test]
+        [TestCase(@"f100_1D\c01_straightchannel_weirs\dflowfm\flowfm.mdu", "c01_straightchannel_weirs")]
+        [TestCase(@"f100_1D\c02_retention\flowfm.mdu", "c02_retention")]
+        [TestCase(@"f100_1D\c03_orifice\flowfm.mdu", "c03_orifice")]
+        [TestCase(@"f100_1D\c04_closed_channel_circle\flowfm.mdu", "c04_closed_channel_circle")]
+        [TestCase(@"f100_1D\c05_closed_channel_rectangle\flowfm.mdu", "c05_closed_channel_rectangle")]
+        [TestCase(@"f100_1D\c06_closed_channel_egg\flowfm.mdu", "c06_closed_channel_egg")]
+        //[TestCase(@"f100_1D\c07_pipe_circle_weirs\flowfm.mdu", "c07_pipe_circle_weirs")]
+        [TestCase(@"f101_1D-boundaries\c01_steady-state-flow\Boundary.mdu", "c01_steady-state-flow")]
+        [TestCase(@"f102_lateral-flows\c01_straightchannel_weirs\dflowfm\flowfm.mdu", "c01_straightchannel_weirs")]
+        [TestCase(@"f100_1D\c02_1d-precipitation\model1.mdu", "c02_1d-precipitation")]
+        [TestCase(@"f105_cross-sections\c03_zw-closed-egg-profile\flow1d.mdu", "c03_zw-closed-egg-profile")]
+        [TestCase(@"f105_cross-sections\c04_rectangular-profile\flow1d.mdu", "c04_rectangular-profile")]
+        [TestCase(@"f105_cross-sections\c07_tabulated-profile-zw\flow1d.mdu", "c07_tabulated-profile-zw")]
+        [TestCase(@"f105_cross-sections\c08_YZ-profile-storage\YZ_Storage.mdu", "c08_YZ-profile-storage")]
+        [TestCase(@"f105_cross-sections\c11_rectangular-profile-storage\rectangular_storage.mdu", "c11_rectangular-profile-storage")]
+        [TestCase(@"f105_cross-sections\c14_tabulated-profile-zw-storage\ZW_Storage.mdu", "c14_tabulated-profile-zw-storage")]
+        [TestCase(@"f105_cross-sections\c16_YZ-profile_lumped\Lumped_YZ_flow_area.mdu", "c16_YZ-profile_lumped")]
+        public void WaterFlowFMModel_CompareReadWriteTest(string relativeMduFilePath, string testname)
+        {
+            var mduPathTestBench = Path.Combine(PathTestBench,relativeMduFilePath);
+            var mduPathToWrite = relativeMduFilePath + "";
+            var model = WaterFlowFMModelReader.Read(mduPathTestBench);
+            model.ExportTo(mduPathToWrite);
+            CompareFiles(mduPathTestBench, mduPathToWrite, testname);
+        }
 
         #endregion
 
