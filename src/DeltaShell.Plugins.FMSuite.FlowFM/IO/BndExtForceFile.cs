@@ -223,6 +223,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void WriteMeteoExtForceFile(IEnumerable<DelftIniCategory> meteoExtForceFileItems)
         {
+            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditions);
+
+            if (!File.Exists(FilePath) || new DelftIniReader().ReadDelftIniFile(FilePath).All(c => !c.Name.Equals(GeneralRegion.IniHeader, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                new IniFileWriter().WriteIniFile(new[] { generalRegion }, FilePath);
+            }
             OpenOutputFile(FilePath, true);
             try
             {
@@ -231,10 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     WriteLine("");
                     WriteLine(MeteoBlockKey);
                     WriteLine(QuantityKey + "=" + bndExtForceFileItem.GetPropertyValue(QuantityKey));
-                    WriteLine(LocationTypeKey + "=" + bndExtForceFileItem.GetPropertyValue(LocationTypeKey));
-                    var locationFile = bndExtForceFileItem.GetPropertyValue(LocationFileKey);
-                    if (!string.IsNullOrEmpty(locationFile))
-                        WriteLine(LocationFileKey + "=" + locationFile);
+                    WriteLine("forcingFileType=bcAscii");
                     foreach (var propertyValue in bndExtForceFileItem.GetPropertyValues(ForcingFileKey))
                     {
                         WriteLine(ForcingFileKey + "=" + propertyValue);
@@ -249,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public IList<DelftIniCategory> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate)
         {
             WritePolyLinesMeteo(fmMeteoFields);
-            var bcFile = new BcFile { MultiFileMode = BcFileWriteMode };
+            var bcFile = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             var resultingItems = WriteFmMeteo(refDate, bcFile, fmMeteoFields, new BcMeteoFileDataBuilder(), modelDefinitionModelName).Distinct().ToList();
 
             return resultingItems;
@@ -436,7 +441,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     quantityName = delftBcQuantityData?.Quantity?.Value;
                 }
                 var nodeId = generateModel1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
-                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, TimeSpan.Zero);
+                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc =>bc.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
+                var thatcherHarlemanTimeLag =  m1dbnd != null && m1dbnd.UseSalt ? new TimeSpan(0,0, (int)m1dbnd.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
+                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag);
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
             bcFile.Write(model1DNodeBoundaryDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
@@ -769,7 +776,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         FmMeteoQuantity meteoQuantity = ExtForceQuantNames.MeteoQuantityNames
                             .FirstOrDefault(pair => pair.Value == quantityKey).Key;
 
-                        var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
+                        /* WAAAROM IS DIT WEG!!!???!!! logisch toch?
+                         var locationTypeKey = delftIniCategory.GetPropertyValue(LocationTypeKey);
                         if (string.IsNullOrEmpty(locationTypeKey))
                         {
                             Log.WarnFormat("Could not parse locationtype {0} into a valid meteo location type data",
@@ -792,8 +800,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             Log.WarnFormat("Could not parse quantity {0} into a valid meteo data", locationTypeKey);
                             continue;
                         }
-
-                        var fmMeteoField = IFMMeteoFieldGenerator[meteoQuantity](locationType);
+                        */
+                        // NU ALTIJD GLOBAL!!!
+                        var fmMeteoField = IFMMeteoFieldGenerator[meteoQuantity](FmMeteoLocationType.Global);
 
                         BcMeteoFileDataBuilder meteobuilder;
                         meteobuilder = new BcMeteoFileDataBuilder
@@ -803,7 +812,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         };
 
 
-
+                        /*
                         var meteoPliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
 
 
@@ -828,7 +837,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                             continue;
                         }
-
+                        */
                         meteobuilder.InsertBoundaryData(fmMeteoField, dataBlocks);
 
                         if (modelDefinition.FmMeteoFields.Contains(fmMeteoField))

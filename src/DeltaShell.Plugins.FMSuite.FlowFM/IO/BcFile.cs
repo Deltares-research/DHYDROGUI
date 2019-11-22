@@ -196,7 +196,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public virtual void Write(IEnumerable<IFmMeteoField> fmMeteoFields, string filePath, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, DateTime? refDate = null)
         {
-            OpenOutputFile(filePath);
+            var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
+                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditions);
+            new IniFileWriter().WriteIniFile(new[] { generalRegion }, filePath);
+            OpenOutputFile(filePath, true);
             try
             {
                 foreach (var fmMeteoField in fmMeteoFields)
