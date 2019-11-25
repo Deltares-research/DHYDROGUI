@@ -202,16 +202,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             else
             {
                 // Write constant
-                branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key,0);
-                var networkLocation = roughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(branch).FirstOrDefault();
-                if(networkLocation != null)
-                {
-                    var roughnessValues =
-                        roughnessSection.RoughnessNetworkCoverage.GetValues<double>(
-                            new VariableValueFilter<INetworkLocation>(
-                                roughnessSection.RoughnessNetworkCoverage.Locations, networkLocation)).ToArray();
-                    branchProperties.AddProperty(RoughnessDataRegion.Values.Key, roughnessValues,RoughnessDataRegion.Values.Description,RoughnessDataRegion.Values.Format);
-                }
+                if (roughnessSection.RoughnessNetworkCoverage == null) return branchProperties;
+                var networkLocations = roughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(branch);
+                if (networkLocations == null) return branchProperties;
+
+                branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, networkLocations.Count);
+
+                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, networkLocations.Select(nl => nl.Chainage), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
+                branchProperties.AddProperty(RoughnessDataRegion.Values.Key, networkLocations.Select(nl => roughnessSection.RoughnessNetworkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations, nl)).FirstOrDefault()), RoughnessDataRegion.Values.Description, RoughnessDataRegion.Values.Format);
             }
             return branchProperties;
         }

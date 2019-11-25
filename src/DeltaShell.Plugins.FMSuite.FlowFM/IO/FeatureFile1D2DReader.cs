@@ -1,11 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileReaders;
-using DeltaShell.NGHS.IO.FileWriters.Network;
-using DeltaShell.NGHS.IO.FileWriters.Roughness;
+using DeltaShell.NGHS.IO.FileReaders.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
@@ -15,15 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public static class FeatureFile1D2DReader
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
-
-        public const string NODE_FILE_NAME = "nodeFile.ini";
-        public const string STRUCTURES_FILE_NAME = "structures.ini";
-
+        
         public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             ReadCrossSectionFiles(targetMduFilePath, fmModel);
             ReadStructuresFiles(targetMduFilePath, fmModel);
-            //ReadRoughnessFiles(targetMduFilePath, fmModel);
+            ReadRoughnessFiles(targetMduFilePath, fmModel);
         }
         
         private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
@@ -53,24 +45,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
-            var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
+            var directoryName = Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
-            var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
+            var frictionFileNames = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
+            if(frictionFileNames == null || frictionFileNames.Length == 0) return;
+            
 
-            foreach (var roughnessSection in fmModel.RoughnessSections)
+            foreach (var frictionFileName in frictionFileNames)
             {
-                var roughnessFileName = GetRoughnessFilename(roughnessSection);
-                var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);
-
-                FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));
+                var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
+                if (!File.Exists(fileName)) return;
+                RoughnessDataFileReader.ReadFile(fileName, fmModel.ModelDefinition.Network, fmModel.ModelDefinition.RoughnessSections);
             }
-        }
-
-        private static string GetRoughnessFilename(RoughnessSection roughnessSection)
-        {
-            return "roughness-" + roughnessSection.Name + ".ini";
         }
     }
 }

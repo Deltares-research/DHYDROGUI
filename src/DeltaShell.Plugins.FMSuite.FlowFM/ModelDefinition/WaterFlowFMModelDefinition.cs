@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
-            Network = new HydroNetwork();
+            Network = new HydroNetwork(){ Name = WaterFlowFMModel.NetworkObjectName };
             NetworkDiscretization = new Discretization { Network = Network, Name = WaterFlowFMModel.DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             Inflows = new FeatureCoverage("Inflows");
             Inflows.Arguments.Add(new Variable<DateTime>()); //time variable

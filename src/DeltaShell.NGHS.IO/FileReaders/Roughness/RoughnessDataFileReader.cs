@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
@@ -30,10 +31,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             var roughnessSection = ReadRoughnessSection(network, RoughnessSections, contentSections[0], isCalibratedRoughness);
             
             var readRoughnessBranchData = ReadRoughnessBranchData(network, categories);
-
-            var definitionData = ReadDefinitionData(network, categories, readRoughnessBranchData);
-
-
+            
             //Reading went fine add to the model now!
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
             foreach (var roughnessBranchData in readRoughnessBranchData)
@@ -47,7 +45,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                         case RoughnessFunction.FunctionOfQ:
                         {
                             var function = RoughnessSection.DefineFunctionOfQ();
-                            function.FillFunctionWithTableData(definitionData, branch, roughnessBranchData);
+                            function.FillFunctionWithTableData(roughnessBranchData);
                             roughnessSection.AddQRoughnessFunctionToBranch(branch, function);
                             roughnessSection.UpdateCoverageForFunction(branch, function,
                                 roughnessBranchData.RoughnessType);
@@ -57,7 +55,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                         case RoughnessFunction.FunctionOfH:
                         {
                             var function = RoughnessSection.DefineFunctionOfH();
-                            function.FillFunctionWithTableData(definitionData, branch, roughnessBranchData);
+                            function.FillFunctionWithTableData(roughnessBranchData);
                             roughnessSection.AddHRoughnessFunctionToBranch(branch, function);
                             roughnessSection.UpdateCoverageForFunction(branch, function,
                                 roughnessBranchData.RoughnessType);
@@ -66,14 +64,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
                         case RoughnessFunction.Constant:
                         {
-                            foreach (
-                                var roughnessContantData in
-                                    definitionData.OfType<ConstantRoughnessDefinitionData>()
-                                        .Where(dd => dd.Branch == branch))
+
+                            for (int i = 0; i < roughnessBranchData.Chainages.Length; i++)
                             {
                                 roughnessSection.RoughnessNetworkCoverage[
-                                    new NetworkLocation(branch, roughnessContantData.Chainage)] = new object[]
-                                    {roughnessContantData.Value, roughnessBranchData.RoughnessType};
+                                    new NetworkLocation(branch, roughnessBranchData.Chainages[i])] = new object[]
+                                    {roughnessBranchData.Values[0][i], roughnessBranchData.RoughnessType};
                             }
                             break;
                         }
@@ -95,29 +91,26 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     (string) Resources.RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_, Environment.NewLine,
                     string.Join(Environment.NewLine, innerExceptionMessages)));
             }
-            
-            if(!isCalibratedRoughness)
-                RoughnessSections.Add(roughnessSection);
         }
 
-        private static void FillFunctionWithTableData(this IFunction function, IList<RoughnessDefinitionData> roughnessDefinitionData, IBranch branch, RoughnessBranchData roughnessBranchData)
+        private static void FillFunctionWithTableData(this IFunction function, RoughnessBranchData roughnessBranchData)
         {
-            foreach (var definitionData in roughnessDefinitionData.OfType<QorHRoughnessDefinitionData>().Where(dd => dd.Branch == branch))
-            {
+            
                 var branchData = roughnessBranchData as QorHRoughnessBranchData;
                 if (branchData == null)
                     throw new FileReadingException(Resources.RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_);
                 
                 var levels = branchData.Levels;
-                if (levels.Count != definitionData.Values.Count)
+                if (levels.Count != roughnessBranchData.Values.Length)
                     throw new FileReadingException(Resources.RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_);
                 
-                for (int index = 0; index < levels.Count; index++)
+                for (int levelIndex = 0; levelIndex < levels.Count; levelIndex++)
                 {
-                    var level = levels[index];
-                    function[definitionData.Chainage, level] = definitionData.Values[index];
+                    var level = levels[levelIndex];
+                    for(int chainageIndex =0; chainageIndex < roughnessBranchData.Chainages.Length; chainageIndex++)
+                        function[roughnessBranchData.Chainages[chainageIndex], level] = roughnessBranchData.Values[levelIndex][chainageIndex];
                 }
-            }
+            
         }
 
         private static IList<RoughnessBranchData> ReadRoughnessBranchData(INetwork network, IList<DelftIniCategory> categories)
@@ -128,21 +121,35 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             {
                 try
                 {
-                    var branchid = branchCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
-                    var branch = network.Branches.FirstOrDefault(b => b.Name == branchid);
+                    var branchId = branchCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
+                    if (branchId == null)
+                        throw new FileReadingException(string.Format((string)Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model, branchId));
+                    var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                     if (branch == null)
-                        throw new FileReadingException( string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model, branchid));
+                        throw new FileReadingException( string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model, branchId));
                     var branchRoughnessType = FrictionTypeConverter.ConvertToRoughnessFrictionType(branchCategory.ReadProperty<Friction>(RoughnessDataRegion.RoughnessType.Key));
-                    var functionType = (RoughnessFunction) branchCategory.ReadProperty<int>(RoughnessDataRegion.FunctionType.Key);
+                    RoughnessFunction functionType;
+                    var functionTypeString = branchCategory.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
+                    if(!Enum.TryParse(functionTypeString, out functionType))
+                        throw new FileReadingException(string.Format("The function type {0} is unknown!", functionTypeString));
+                    
+                    var chainage = branchCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key);
+                    var numLocations = branchCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
+                    var values = branchCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key).ToList();
+
                     switch (functionType)
                     {
                         case RoughnessFunction.Constant:
-                            branchData.Add(new RoughnessBranchData
+                            var dataDefinition = new RoughnessBranchData
                             {
                                 Branch = branch,
                                 RoughnessType = branchRoughnessType,
-                                RoughnessFunctionType = functionType
-                            });
+                                RoughnessFunctionType = functionType,
+                                Chainages = chainage.ToArray(),
+                                Values = new double[1][] 
+                            };
+                            dataDefinition.Values[0] = values.ToArray();
+                            branchData.Add(dataDefinition);
                             break;
                         case RoughnessFunction.FunctionOfQ:
                         case RoughnessFunction.FunctionOfH:
@@ -150,13 +157,19 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                             var levels = branchCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key);
                             if (levels.Count != numLevels)
                                 throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadRoughnessBranchData_The_length_of_the_number_of_levels___0___and_the_defined_number_of_levels_of_the_branch_property__1__are_not_the_same_of_branch_properties____2__,levels.Count,numLevels, branch.Name));
-                            branchData.Add(new QorHRoughnessBranchData
+                            var qorHRoughnessBranchData = new QorHRoughnessBranchData
                             {
                                 Branch = branch,
                                 RoughnessType = branchRoughnessType,
                                 RoughnessFunctionType = functionType,
-                                Levels = levels   
-                            });
+                                Levels = levels,
+                                Values = new double[numLevels][]
+                            };
+                            for (int i = 0; i < numLevels; i++)
+                            {
+                                qorHRoughnessBranchData.Values[i] =values.GetRange(i * numLocations, i * numLocations + numLocations).ToArray(); 
+                            }
+                            branchData.Add(qorHRoughnessBranchData);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -176,95 +189,48 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_While_reading_branches_for_roughness_section_an_error_occured___0___1_, Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
         }
 
-        private static IList<RoughnessDefinitionData> ReadDefinitionData(INetwork network, IList<DelftIniCategory> categories, IList<RoughnessBranchData> branchData)
-        {
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-
-            IList<RoughnessDefinitionData> definitionData = new List<RoughnessDefinitionData>();
-            foreach (var definitionCategory in categories.Where(category => category.Name == RoughnessDataRegion.DefinitionIniHeader))
-            {
-                try
-                {
-                    var branchid = definitionCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
-                    var branch = network.Branches.FirstOrDefault(b => b.Name == branchid);
-                    if (branch == null)
-                        throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model,branchid));
-
-                    var chainage = definitionCategory.ReadProperty<double>(SpatialDataRegion.Chainage.Key);
-                    var roughnessBranchData = branchData.FirstOrDefault(bd => bd.Branch == branch);
-                    if (roughnessBranchData == null)
-                        throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessBranchData_branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model,branchid));
-
-                    switch (roughnessBranchData.RoughnessFunctionType)
-                    {
-                        //read definitions for this type
-                        case RoughnessFunction.Constant:
-                            var value = definitionCategory.ReadProperty<double>(SpatialDataRegion.Value.Key);
-                            definitionData.Add(new ConstantRoughnessDefinitionData
-                            {
-                                Branch = branch,
-                                Chainage = chainage,
-                                Value = value
-                            });
-                            break;
-                        case RoughnessFunction.FunctionOfQ:
-                        case RoughnessFunction.FunctionOfH:
-                            var values = definitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
-                            definitionData.Add(new QorHRoughnessDefinitionData
-                            {
-                                Branch = branch,
-                                Chainage = chainage,
-                                Values = values
-                            });
-                            break;
-                        default:
-                            throw new FileReadingException(string.Format(Resources.RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_, roughnessBranchData.RoughnessFunctionType));
-                    }
-                }
-                catch (FileReadingException fileReadingException)
-                {
-                    fileReadingExceptions.Add(new FileReadingException(Resources.RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data, fileReadingException));
-                }
-            }
-            
-            if (fileReadingExceptions.Count == 0) return definitionData;
-            
-            var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-            throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadFile_While_reading_roughness_section_an_error_occured___0___1_, Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
-        }
-
         private static RoughnessSection ReadRoughnessSection(INetwork network, IList<RoughnessSection> roughnessSections, IDelftIniCategory contentSection, bool isCalibratedRoughness)
         {
             var sectionId = contentSection.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
-            var isReversed = contentSection.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);
-            var interpolationType = (InterpolationType)contentSection.ReadProperty<int>(RoughnessDataRegion.Interpolate.Key);
+            //var isReversed = contentSection.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);
+            var isReversed = false;
+            //var interpolationType = (InterpolationType)contentSection.ReadProperty<int>(RoughnessDataRegion.Interpolate.Key);
 
-            RoughnessType globalType = RoughnessType.Chezy; 
-            double? globalValue = null;
-            
+            RoughnessType globalType = RoughnessType.Chezy;
             RoughnessSection roughnessSection;
+            double? globalValue = null;
+            roughnessSection = !isReversed
+                ? roughnessSections.FirstOrDefault(rs => rs.Name == sectionId)
+                : roughnessSections.OfType<ReverseRoughnessSection>()
+                    .FirstOrDefault(rs => rs.NormalSection.Name == sectionId);
+
+
             if (isCalibratedRoughness)
             {
-                roughnessSection = !isReversed 
-                    ? roughnessSections.FirstOrDefault(rs => rs.Name == sectionId)
-                    : roughnessSections.OfType<ReverseRoughnessSection>().FirstOrDefault(rs => rs.NormalSection.Name == sectionId);
-
+                
                 if (roughnessSection == null)
-                    throw new FileReadingException(string.Format((string) Resources.RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model,sectionId));
+                    throw new FileReadingException(string.Format(
+                        (string) Resources
+                            .RoughnessDataFileReader_ReadRoughnessSection_Could_not_import_calibrated_roughness_section__0__because_the_calibrated_roughness_section_you_want_to_import_doesn_t_exist_in_the_model,
+                        sectionId));
+
 
                 //cleanup old roughnessdata
                 foreach (var branch in roughnessSection.Network.Branches)
                 {
                     roughnessSection.RemoveRoughnessFunctionsForBranch(branch);
                 }
+
                 roughnessSection.RoughnessNetworkCoverage.Clear();
 
+                /*
+                 need to check if ths works with FM!!
                 globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-                globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
+                globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);*/
             }
             else
             {
-                var hasGlobalType = contentSection.Properties.Any(p => p.Name == RoughnessDataRegion.GlobalType.Key);
+                var hasGlobalType = contentSection.Name.Equals(RoughnessDataRegion.GlobalIniHeader, StringComparison.InvariantCultureIgnoreCase); //contentSection.Properties.Any(p => p.Name == RoughnessDataRegion.GlobalType.Key);
 
                 if (isReversed)
                 {
@@ -281,14 +247,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                 }
                 else
                 {
-                    var crossSectionSection = new CrossSectionSectionType { Name = sectionId };
-                    roughnessSection = new RoughnessSection(crossSectionSection, network);
+                    if (roughnessSection == null)
+                    {
+                        var crossSectionSection = new CrossSectionSectionType {Name = sectionId};
+                        roughnessSection = new RoughnessSection(crossSectionSection, network);
+                        roughnessSections.Add(roughnessSection);
+                    }
                 }
 
                 if (!isReversed || hasGlobalType)
                 {
-                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);
+                    globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.FrictionType.Key));
+                    globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.FrictionValue.Key);
                 }
                 
                 roughnessSection.Name = sectionId;
@@ -303,7 +273,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             if (firstNWCArgument == null)
                 throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
             
-            firstNWCArgument.InterpolationType = interpolationType;
+            //firstNWCArgument.InterpolationType = interpolationType;
             if (globalValue.HasValue)
                 roughnessSection.SetDefaults(globalType, globalValue.Value);
 
@@ -315,25 +285,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             public IBranch Branch { get; set; }
             public RoughnessType RoughnessType { get; set; }
             public RoughnessFunction RoughnessFunctionType { get; set; }
+            public double[] Chainages { get; set; }
+            public double[][] Values { get; set; }
         }
         private class QorHRoughnessBranchData : RoughnessBranchData
         {
             public IList<double> Levels { get; set; }
         }
-
-        private abstract class RoughnessDefinitionData
-        {
-            public IBranch Branch { get; set; }
-            public double Chainage { get; set; }
-        }
-        private class ConstantRoughnessDefinitionData : RoughnessDefinitionData
-        {
-            public double Value { get; set; }
-        }
-        private class QorHRoughnessDefinitionData : RoughnessDefinitionData
-        {
-            public IList<double> Values { get; set; }
-        }
-        
     }
 }

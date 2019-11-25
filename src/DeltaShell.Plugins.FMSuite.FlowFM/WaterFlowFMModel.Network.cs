@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel : IModelWithRoughnessSections
     {
-        private const string NetworkObjectName = "Network";
+        public const string NetworkObjectName = "Network";
         private IDiscretization networkDiscretization;
         private IFeatureCoverage inflows;
 
