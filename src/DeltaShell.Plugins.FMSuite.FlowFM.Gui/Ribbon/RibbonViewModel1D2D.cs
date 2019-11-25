@@ -44,27 +44,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
             {
                 new RibbonLink
                 {
-                    Name = "Embedded",
-                    ToolTipText = "Embedded 1D2D links for polder and manholes",
-                    Type = LinkType.Embedded
+                    Name = "Embedded 1-to-1",
+                    ToolTipText = "Embedded 1D2D links for polder one to one",
+                    Type = LinkType.EmbeddedOneToOne
+                },
+                new RibbonLink
+                {
+                    Name = "Embedded 1-to-n",
+                    ToolTipText = "Embedded 1D2D links for polder one to many",
+                    Type = LinkType.EmbeddedOneToOne
                 },
                 new RibbonLink
                 {
                     Name = "Lateral",
                     ToolTipText = "Lateral 1D2D links for rivers",
                     Type = LinkType.Lateral
-                },
-                new RibbonLink
-                {
-                    Name = "Roof-sewer",
-                    ToolTipText = "Roof-sewer links for rainfall",
-                    Type = LinkType.RoofSewer
-                },
-                new RibbonLink
-                {
-                    Name = "Inhabitants",
-                    ToolTipText = "Inhabitants-sewer links for household wastewater",
-                    Type = LinkType.InhabitantsSewer
                 },
                 new RibbonLink
                 {

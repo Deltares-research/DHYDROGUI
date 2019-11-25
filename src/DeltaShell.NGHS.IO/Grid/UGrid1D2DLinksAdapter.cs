@@ -20,7 +20,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 var mesh1DPointIdx = links1D2D.Select(l => l.DiscretisationPointIndex).ToArray();
                 var mesh2DFaceIdx = links1D2D.Select(l => l.FaceIndex).ToArray();
-                var linkType = links1D2D.Select(l => (int) l.TypeOfLink).ToArray();
+                var linkType = links1D2D.Select(l =>
+                {
+                    var type = l.TypeOfLink;
+                    switch (type)
+                    {
+                        case LinkType.EmbeddedOneToOne:
+                        case LinkType.EmbeddedOneToMany:
+                        case LinkType.Lateral:
+                            return 3; //in the kernel/ugrid these links have the same type number
+                        default:
+                            return (int) LinkType.GullySewer;
+                    }
+                }).ToArray();
                 var linkIds = links1D2D.Select(l => l.Name).ToArray();
                 var linkLongNames = links1D2D.Select(l => l.LongName).ToArray();
 
@@ -71,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Grid
             else
             {
                 Log.ErrorFormat("Unknown link type ({0}) of link {1} detected. Type has been set to 'mesh1D-mesh2D', no 3.", linkType, linkId);
-                link.TypeOfLink = LinkType.Embedded;
+                link.TypeOfLink = LinkType.EmbeddedOneToOne;
             }
             return link;
         }

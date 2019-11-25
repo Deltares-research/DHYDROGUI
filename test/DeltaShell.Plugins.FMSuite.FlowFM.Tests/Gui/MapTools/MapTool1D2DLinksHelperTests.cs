@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -16,24 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
     [TestFixture]
     public class MapTool1D2DLinksHelperTests
     {
-
-        [Test]
-        public void Get_1DPointsMask_DWA()
-        {
-            var discretisation = GetTestDiscretization();
-            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.InhabitantsSewer);
-
-            Assert.AreEqual(2, filter1DPoints.Count(p => p));
-
-            Assert.IsTrue(filter1DPoints[0]);
-            Assert.IsTrue(filter1DPoints[1]);
-        }
-
         [Test]
         public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.RoofSewer);
+            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.GullySewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -44,14 +34,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         [Test]
         public void Get_Lateral1D2DLinks() 
         {
-            var grid = GetUnstructedTestGrid();
+            var linkType = LinkType.Lateral;
+            var discretisation = GetTestDiscretization();
 
-            var node1 = new HydroNode("from") {Geometry = new Point(40,-5)};
-            var node2 = new HydroNode("to") { Geometry = new Point(0, -5)};
-            var branch = new Branch("test", node1, node2 , 40.0);
-            var networkLocations = new List<INetworkLocation>();
-            networkLocations.Add(new NetworkLocation(branch,5.0) { Geometry = new Point(5.0, -5.0)});
-            networkLocations.Add(new NetworkLocation(branch, 35.0) { Geometry = new Point(35.0, -5.0) });
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"));
+            model.Network = (IHydroNetwork)discretisation.Network;
+            model.NetworkDiscretization = discretisation;
 
             var areaCoordinates = new List<Coordinate>();
             areaCoordinates.Add(new Coordinate(-1,-10));
@@ -59,59 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(35, 20));
             areaCoordinates.Add(new Coordinate(5, 20));
             areaCoordinates.Add(new Coordinate(-1, -10));
-
-            var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
-
-            var filterMesh1D = Enumerable.Repeat(true, networkLocations.Count).ToList();
-
-            var tuplesFromToIndexes = MapTool1D2DLinksHelper.TemporaryMethodGetFromToIndexesFor1D2DLinks(grid, networkLocations, area, filterMesh1D);
-
-            Assert.AreEqual(4, tuplesFromToIndexes.Count);
-            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 0 && l.Item2 == 0));
-            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 0 && l.Item2 == 1));
-            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 1 && l.Item2 == 2));
-            Assert.IsNotNull(tuplesFromToIndexes.FirstOrDefault(l => l.Item1 == 1 && l.Item2 == 3));
-
-        }
-
-        [Test]
-        public void Get_Roof1D2DLinks()
-        {
-            var linkType = LinkType.RoofSewer;
-            var discretisation = GetTestDiscretization();
-
-            var model = new WaterFlowFMModel();
-            model.Network = (IHydroNetwork)discretisation.Network;
-            model.NetworkDiscretization = discretisation;
-
-
-            var roof1Coordinates = new List<Coordinate>();
-            roof1Coordinates.Add(new Coordinate(0, 20));
-            roof1Coordinates.Add(new Coordinate(10, 20));
-            roof1Coordinates.Add(new Coordinate(10, 30));
-            roof1Coordinates.Add(new Coordinate(0, 30));
-            roof1Coordinates.Add(new Coordinate(0, 20));
-
-            var roof1 = new Polygon(new LinearRing(roof1Coordinates.ToArray()));
-
-            var roof2Coordinates = new List<Coordinate>(); //cell number 3
-            roof2Coordinates.Add(new Coordinate(30, 0));
-            roof2Coordinates.Add(new Coordinate(40, 0));
-            roof2Coordinates.Add(new Coordinate(40, 10));
-            roof2Coordinates.Add(new Coordinate(30, 10));
-            roof2Coordinates.Add(new Coordinate(30, 0));
-
-            var roof2 = new Polygon(new LinearRing(roof2Coordinates.ToArray()));
-
-            model.Area.RoofAreas.Add(new RoofArea() {Geometry = roof1});
-            model.Area.RoofAreas.Add(new RoofArea() { Geometry = roof2 });
-
-            var areaCoordinates = new List<Coordinate>(); //only roof 2
-            areaCoordinates.Add(new Coordinate(29, -1));
-            areaCoordinates.Add(new Coordinate(41, -1));
-            areaCoordinates.Add(new Coordinate(41, 11));
-            areaCoordinates.Add(new Coordinate(29, 11));
-            areaCoordinates.Add(new Coordinate(29, -1));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
 
@@ -124,70 +59,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             Assert.AreEqual(1, linksTo.Count);
             Assert.AreEqual(1, linksFrom.Count);
 
-            Assert.AreEqual(3, linksTo[0]); //2nd face number
-            Assert.AreEqual(2, linksFrom[0]); //1st discretisation point hwa
-
-        }
-
-        [Test]
-        public void Get_Inhabitants1D2DLinks()
-        {
-            var linkType = LinkType.InhabitantsSewer;
-            var discretisation = GetTestDiscretization();
-
-            var model = new WaterFlowFMModel();
-            model.Network = (IHydroNetwork)discretisation.Network;
-            model.NetworkDiscretization = discretisation;
-
-
-            var roof1Coordinates = new List<Coordinate>();
-            roof1Coordinates.Add(new Coordinate(0, 20)); //cell 8
-            roof1Coordinates.Add(new Coordinate(10, 20));
-            roof1Coordinates.Add(new Coordinate(10, 30));
-            roof1Coordinates.Add(new Coordinate(0, 30));
-            roof1Coordinates.Add(new Coordinate(0, 20));
-
-            var roof1 = new Polygon(new LinearRing(roof1Coordinates.ToArray()));
-
-            var roof2Coordinates = new List<Coordinate>(); //cell number 3
-            roof2Coordinates.Add(new Coordinate(30, 0));
-            roof2Coordinates.Add(new Coordinate(40, 0));
-            roof2Coordinates.Add(new Coordinate(40, 10));
-            roof2Coordinates.Add(new Coordinate(30, 10));
-            roof2Coordinates.Add(new Coordinate(30, 0));
-
-            var roof2 = new Polygon(new LinearRing(roof2Coordinates.ToArray()));
-
-            model.Area.RoofAreas.Add(new RoofArea() { Geometry = roof1 });
-            model.Area.RoofAreas.Add(new RoofArea() { Geometry = roof2 });
-
-            var areaCoordinates = new List<Coordinate>();
-            areaCoordinates.Add(new Coordinate(-1, -10));
-            areaCoordinates.Add(new Coordinate(41, -10));
-            areaCoordinates.Add(new Coordinate(35, 20));
-            areaCoordinates.Add(new Coordinate(5, 20));
-            areaCoordinates.Add(new Coordinate(-1, -10));
-
-            var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
-
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
-
-            Assert.AreEqual(2, linksTo.Count);
-            Assert.AreEqual(2, linksFrom.Count);
-
-            if (linksTo[0] == 3)
-            {
-                Assert.AreEqual(0, linksFrom[0]); //1st discretisation point dwa
-            }
-            else
-            {
-                Assert.AreEqual(8, linksTo[1]); //8 face number
-                Assert.AreEqual(1, linksFrom[1]); //2nd discretisation point dwa 
-            }
+            Assert.AreEqual(3, linksTo[0]); //3rd face number
+            Assert.AreEqual(3, linksFrom[0]); //2nd discretisation point hwa 
 
         }
 
@@ -197,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             var linkType = LinkType.GullySewer;
             var discretisation = GetTestDiscretization();
 
-            var model = new WaterFlowFMModel();
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"));
             model.Network = (IHydroNetwork)discretisation.Network;
             model.NetworkDiscretization = discretisation;
 
@@ -230,12 +103,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         }
 
         [Test]
-        public void Get_EmbeddedLinks()
+        public void Get_EmbeddedOneToOneLinks()
         {
-            var linkType = LinkType.GullySewer;
+            var linkType = LinkType.EmbeddedOneToOne;
             var discretisation = GetTestDiscretization();
 
-            var model = new WaterFlowFMModel
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"))
             {
                 Network = (IHydroNetwork) discretisation.Network,
                 NetworkDiscretization = discretisation
@@ -270,6 +143,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             }
         }
 
+        [Test]
+        public void Get_EmbeddedOneToManyLinks()
+        {
+            var linkType = LinkType.EmbeddedOneToOne;
+            var discretisation = GetTestDiscretization();
+
+            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath("dummy.mdu"))
+            {
+                Network = (IHydroNetwork)discretisation.Network,
+                NetworkDiscretization = discretisation
+            };
+
+            var areaCoordinates = new List<Coordinate>();
+            areaCoordinates.Add(new Coordinate(-1, -10));
+            areaCoordinates.Add(new Coordinate(41, -10));
+            areaCoordinates.Add(new Coordinate(35, 20));
+            areaCoordinates.Add(new Coordinate(5, 20));
+            areaCoordinates.Add(new Coordinate(-1, -10));
+
+            var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+
+            var linksFrom = new List<int>();
+            var linksTo = new List<int>();
+            var startIndex = 1;
+            int linksCount = 0;
+            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+
+            Assert.AreEqual(2, linksTo.Count);
+            Assert.AreEqual(2, linksFrom.Count);
+
+            if (linksFrom[0] == 4) //1st discretisation point branch
+            {
+                Assert.AreEqual(8, linksTo[0]); //cell 8
+            }
+            else //2nd discretisation point branch
+            {
+                Assert.AreEqual(5, linksFrom[1]);
+                Assert.AreEqual(11, linksTo[1]); //11 face number
+            }
+        }
 
         private static Discretization GetTestDiscretization()
         {

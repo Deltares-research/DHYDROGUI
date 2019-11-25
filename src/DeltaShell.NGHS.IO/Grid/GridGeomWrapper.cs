@@ -15,27 +15,36 @@ namespace DeltaShell.NGHS.IO.Grid
         public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, ref int startIndex);
 
         /// <summary>
-        /// Makes the 1d / 2d links (results are stored in memory)
+        /// Makes embedded 1-1 the 1d2d links 
         /// </summary>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
-        /// 1d2d links roof - 1d.
-        /// </summary>
-        /// <param name="cNin">The c nin.</param>
-        /// <param name="cXpl">The c XPL.</param>
-        /// <param name="cYpl">The c ypl.</param>
-        /// <param name="cZpl">The c ZPL.</param>
-        /// <param name="c_nOneDMask">The c n one d mask.</param>
-        /// <param name="cMesh1DIndexesMask">The c mesh1 d indexes mask.</param>
-        /// <param name="c_jsferic">The c jsferic.</param>
-        /// <param name="c_jasfer3D">The c jasfer3 d.</param>
-        /// <param name="c_jglobe">The c jglobe.</param>
+        /// Makes embedded 1-n 1d2d links. 1d-2d internal connections.With this function multiple 2d cells can be connected to 1d mesh points. all the cell crossing the 1d links will be connected to the closest 1d point.
+        /// <summary>
+        /// Please note that the gridgeom library has to be initialized before this function can be called.
+        /// c_jsferic:: 2d sferic flag (1 = spheric / 0 = cartesian)
+        ///c_jasfer3D  :: 3d sferic flag (1 = advanced spheric algorithm, 0 = default spheric algorithm )
+        /// c_nOneDMask::size of the 1d mask for mesh 1d
+        ///c_oneDmask::mask for 1d mesh points(1 = potential connection, 0 = do not connect)
         /// <returns></returns>
-        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Droofgutterpipes", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Droofgutterpipes_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dembeddedlinks", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make1D2Dembeddedlinks_dll(ref int c_jsferic, ref int c_jasfer3D, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask);
+
+        /// <summary>
+        /// Makes lateral 1d2d links. 1d-2d river connections connections.With this function multiple 2d boundary cells can be connected to 1d mesh points. 
+        ///Please note that the gridgeom library has to be initialized before this function can be called.
+        /// </summeray>
+        ///c_jsferic:: 2d sferic flag (1 = spheric / 0 = cartesian)
+        ///c_jasfer3D     :: 3d sferic flag (1 = advanced spheric algorithm, 0 = default spheric algorithm )
+        ///c_searchRadius::the search radius for making links
+        ///c_nOneDMask::size of the 1d mask for mesh points
+        ///c_oneDmask::mask for 1d mesh points(1 = potential connection, 0 = do not connect)
+        /// <returns></returns>
+        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2DRiverLinks", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ggeo_make1D2DRiverLinks_dll(ref int c_jsferic, ref int c_jasfer3D, ref int c_searchRadius, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask);
 
         /// <summary>
         /// 1d2d links gullies - 1d.
@@ -118,12 +127,39 @@ namespace DeltaShell.NGHS.IO.Grid
             return ierr;
         }
 
-        public int Make1D2DInternalNetlinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
+        public int Make1D2DEmbeddedOneToOneLinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
             int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            return ierr;
+        }
+
+        public int Make1D2DEmbeddedOneToManyLinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
+        {
+            int c_jsferic = 0;
+            int c_jasfer3D = 0;
+            int c_jglobe = 0;
+            int ierr = ggeo_make1D2Dembeddedlinks_dll(ref c_jsferic, ref c_jasfer3D, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+            return ierr;
+        }
+
+        public int Make1D2DLateralLinks(ref int c_nin, ref IntPtr c_xpl, ref IntPtr c_ypl, ref IntPtr c_zpl, ref int intnFilterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
+        {
+            int c_jsferic = 0;
+            int c_jasfer3D = 0;
+            int c_searchRadius = 100;
+            int ierr = ggeo_make1D2DRiverLinks_dll(ref c_jsferic, ref c_jasfer3D, ref c_searchRadius, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+            return ierr;
+        }
+
+        public int Make1D2DGullyLinks(ref int nCoordinatesGullies, ref IntPtr intPtrXValuesGullies, ref IntPtr intPtrYValuesGullies, ref int intnFlterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
+        {
+            int c_jsferic = 0;
+            int c_jasfer3D = 0;
+            int c_jglobe = 0;
+            int ierr = ggeo_make1D2Dstreetinletpipes_dll(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
@@ -143,24 +179,6 @@ namespace DeltaShell.NGHS.IO.Grid
         public int Get1d2dLinks(ref IntPtr arrayfrom, ref IntPtr arrayto, ref int nlinks, ref int linkType, ref int startindex)
         {
             int ierr = ggeo_get_links_dll(ref arrayfrom, ref arrayto, ref nlinks, ref linkType, ref startindex);
-            return ierr;
-        }
-
-        public int Make1D2DRoofLinks(ref int nCoordinatesRoofs, ref IntPtr intPtrXValuesRoofs, ref IntPtr intPtrYValuesRoofs, ref IntPtr intPtrZValuesRoofs, ref int intnFlterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
-        {
-            int c_jsferic = 0;
-            int c_jasfer3D = 0;
-            int c_jglobe = 0;
-            int ierr = ggeo_make1D2Droofgutterpipes_dll(ref nCoordinatesRoofs, ref intPtrXValuesRoofs, ref intPtrYValuesRoofs, ref intPtrZValuesRoofs, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
-            return ierr;
-        }
-
-        public int Make1D2DGullyLinks(ref int nCoordinatesGullies, ref IntPtr intPtrXValuesGullies, ref IntPtr intPtrYValuesGullies, ref int intnFlterMesh1DPoints, ref IntPtr intPtrfilterMesh1DPoints)
-        {
-            int c_jsferic = 0;
-            int c_jasfer3D = 0;
-            int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dstreetinletpipes_dll(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref intnFlterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
     }

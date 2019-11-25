@@ -35,8 +35,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             {
                 var links = new List<Link1D2D>
                 {
-                    new Link1D2D(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = LinkType.Embedded },
-                    new Link1D2D(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = LinkType.RoofSewer }
+                    new Link1D2D(2, 2) { Name = "link1", LongName = "link1 longname", TypeOfLink = LinkType.EmbeddedOneToOne },
+                    new Link1D2D(4, 7) { Name = "link2", LongName = "link2 longname", TypeOfLink = LinkType.EmbeddedOneToMany }
                 };
 
                 UGrid1D2DLinksAdapter.Save1D2DLinks(localCopyOfTestFile, links);

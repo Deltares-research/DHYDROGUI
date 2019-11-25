@@ -12,7 +12,7 @@ namespace DelftTools.Hydro.Link1d2d
         {
             FaceIndex = toCell;
             DiscretisationPointIndex = fromPoint;
-            TypeOfLink = LinkType.Embedded;
+            TypeOfLink = LinkType.EmbeddedOneToMany;
             if (string.IsNullOrEmpty(name))
             {
                 Name = $"1D2Dlink_{fromPoint}_{toCell}";

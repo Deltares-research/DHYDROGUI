@@ -198,7 +198,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var link1D2Ds = new List<ILink1D2D>()
             {
-                {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkType.Embedded}}
+                {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkType.EmbeddedOneToOne}}
             };
 
             UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, unstructuredGrid, hydroNetwork, networkDiscretization, link1D2Ds, "myName", "myPlugin", "myVersion", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[] { });

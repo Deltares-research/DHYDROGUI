@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var linksTo = new List<int>();
             var startIndex = 0;
             var linksCount = 0;
-            var ierr = geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+            var ierr = geomWrapper.GetEmbedded1D2DLinks(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
             Assert.AreNotEqual(0, linksCount);
             Assert.IsNotEmpty(linksFrom);
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var linksTo = new List<int>();
             var startIndex = 0;
             var linksCount = 0;
-            var ierr = geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+            var ierr = geomWrapper.GetEmbedded1D2DLinks(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             Assert.AreEqual(GridApiDataSet.GridConstants.NOERR, ierr);
             Assert.AreNotEqual(0, linksCount);
             Assert.IsNotEmpty(linksFrom);
@@ -210,37 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        public void CreateRoofLinks()
-        {
-            var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
-
-            //mesh1D coordinates
-            //meshXCoords = { -6, 5, 23, 34 };
-            //meshYCoords = { 22, 16, 16, 7 };
-            var geoX = new double[] { 10.0, 18.0, 18.0, 10.0, MissingValue, 20.0, 28.0, 28.0, 20.0, MissingValue };
-            var geoY = new double[] { 10.0, 10.0, 18.0, 10.0, MissingValue, 20.0, 20.0, 28.0, 20.0, MissingValue };
-
-            //expected links
-            var expectedLinksFrom1DIndexes = new int[] { 2 , 2};
-            var expectedLinksTo2DIndexes = new int[] { 2, 2 };
-
-            var linkIndexes = caseMaking1D2DLinks.MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(geoX, geoY, false);
-
-            //check links
-            Assert.AreEqual(expectedLinksFrom1DIndexes.Length, linkIndexes.Count);
-
-            if (linkIndexes.Count == expectedLinksFrom1DIndexes.Length)
-            {
-                for (int i = 0; i < linkIndexes.Count; i++)
-                {
-                    Assert.That(linkIndexes[i].Item1, Is.EqualTo(expectedLinksFrom1DIndexes[i]));
-                    Assert.That(linkIndexes[i].Item2, Is.EqualTo(expectedLinksTo2DIndexes[i]));
-                }
-            }
-        }
-
-        [Test]
-        [Ignore("For some reason it hangs.")]
         public void Get1d2dLinksShouldNotCrashWhenRunningTwice()
         {
             string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\2d_ugrid_net.nc");
@@ -268,8 +237,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var linksCount = 0;
             try
             {
-                geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
-                geomWrapper.Get1D2DLinksFrom1DTo2D(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+                geomWrapper.GetEmbedded1D2DLinks(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
+                geomWrapper.GetEmbedded1D2DLinks(netFilePath, testNetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount);
             }
             catch (Exception e)
             {
@@ -330,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsTrue(File.Exists(filePath));
 
                 int ioncid = 0; //file variable 
-                int mode = 0; //create in read mode
+                int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_write;
                 int iconvtype = 2;
                 double convversion = 0.0;
 
@@ -434,20 +403,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //2. generate links
                 if (bEmbedded)
                 { 
-                    ierr = gridGeomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ierr = gridGeomWrapper.Make1D2DEmbeddedOneToOneLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                         ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                     Assert.That(ierr, Is.EqualTo(0));
                 }
                 else
                 {
-                    Assert.True(false,"No lateral 1D2D links method in gridgeom implemented yet");
-                    ierr = gridGeomWrapper.Make1D2DInternalNetlinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
+                    ierr = gridGeomWrapper.Make1D2DLateralLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                         ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
                     Assert.That(ierr, Is.EqualTo(0));
                 }
 
                 //3. get the number of links
-                var linkType = (int) LinkType.Embedded;
+                var linkType = (int) LinkType.EmbeddedOneToOne;
                 int n1d2dlinks = 0;
                 ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
@@ -483,7 +451,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 return result;
             }
 
-            public IList<Tuple<int, int>> MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(double[] geometryXValues, double[] geometryYValues, bool bGully = true)
+            public IList<Tuple<int, int>> MakeGullyOrRoofLinksForAreaAndReturnFromToOfAllLInks(double[] geometryXValues, double[] geometryYValues)
             {
                 var result = new List<Tuple<int, int>>();
 
@@ -546,21 +514,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 //2. generate links
 
-                if (bGully)
-                {
-                    ierr = gridGeomWrapper.Make1D2DGullyLinks(ref nCoordinates, ref intPtrXValuesGeom,
-                        ref intPtrYValuesGeom, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
-                    Assert.That(ierr, Is.EqualTo(0));
-                }
-                else
-                {
-                    ierr = gridGeomWrapper.Make1D2DRoofLinks(ref nCoordinates, ref intPtrXValuesGeom,
-                        ref intPtrYValuesGeom, ref intPtrZValuesGeom, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
-                    Assert.That(ierr, Is.EqualTo(0));
-                }
+                ierr = gridGeomWrapper.Make1D2DGullyLinks(ref nCoordinates, ref intPtrXValuesGeom,
+                    ref intPtrYValuesGeom, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
+                Assert.That(ierr, Is.EqualTo(0));
 
                 //3. get the number of links
-                var linkType = bGully ? (int) LinkType.GullySewer : (int) LinkType.RoofSewer;
+                var linkType = (int) LinkType.GullySewer;
                 int n1d2dlinks = 0;
                 ierr = gridGeomWrapper.GetLinkCount(ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));

@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var embeddedName = LinkType.Embedded.GetDescription();
+            var embeddedName = LinkType.EmbeddedOneToOne.GetDescription();
             var embeddedStyle = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
@@ -602,11 +602,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var roofSewerName = LinkType.RoofSewer.GetDescription();
-            var roofSewerStyle = new VectorStyle
+            var embeddedMultiName = LinkType.EmbeddedOneToMany.GetDescription();
+            var embeddedMultiLink = new VectorStyle
             {
                 GeometryType = typeof(ILineString),
-                Line = new Pen(Color.RoyalBlue, lineWidth)
+                Line = new Pen(Color.ForestGreen, lineWidth)
                 {
                     CustomEndCap = linkEndCap,
                     CustomStartCap = linkEndCap
@@ -626,29 +626,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 EnableOutline = false
             };
 
-            var inhabitantsSewerName = LinkType.InhabitantsSewer.GetDescription();
-            var inhabitantsSewerStyle = new VectorStyle
-            {
-                GeometryType = typeof(ILineString),
-                Line = new Pen(Color.IndianRed, lineWidth)
-                {
-                    CustomEndCap = linkEndCap,
-                    CustomStartCap = linkEndCap
-                },
-                EnableOutline = false
-            };
-
             return new CategorialTheme
             {
                 AttributeName = "TypeOfLink",
                 DefaultStyle = embeddedStyle,
                 ThemeItems = new EventedList<IThemeItem>
                 {
-                    new CategorialThemeItem(embeddedName, embeddedStyle, null, LinkType.Embedded),
+                    new CategorialThemeItem(embeddedName, embeddedStyle, null, LinkType.EmbeddedOneToOne),
                     new CategorialThemeItem(lateralName, lateralStyle, null, LinkType.Lateral),
-                    new CategorialThemeItem(roofSewerName, roofSewerStyle, null, LinkType.RoofSewer),
+                    new CategorialThemeItem(embeddedMultiName, embeddedMultiLink, null, LinkType.EmbeddedOneToMany),
                     new CategorialThemeItem(gullySewerName, gullyWaterStyle, null, LinkType.GullySewer),
-                    new CategorialThemeItem(inhabitantsSewerName, inhabitantsSewerStyle, null, LinkType.InhabitantsSewer),
                 }
             };
 

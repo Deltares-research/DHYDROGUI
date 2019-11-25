@@ -4,17 +4,14 @@ namespace DelftTools.Hydro
 {
     public enum LinkType
     {
-        [Description("1D2D embedded")]
-        Embedded = 3,
+        [Description("1D2D embedded (1-to-1)")]
+        EmbeddedOneToOne = 3,
+
+        [Description("1D2D embedded (1-to-n)")]
+        EmbeddedOneToMany = -1,
 
         [Description("1D2D lateral")]
-        Lateral = -1,
-
-        [Description("Roof sewer")]
-        RoofSewer = 7,
-
-        [Description("Inhabitants sewer")]
-        InhabitantsSewer = -2,
+        Lateral = -2,
 
         [Description("Gully sewer")]
         GullySewer = 5

@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public Base1D2DLinksMapTool()
         {
-            LinkType = LinkType.Embedded;
+            LinkType = LinkType.EmbeddedOneToOne;
         }
 
         public LinkType LinkType { get; set; }
