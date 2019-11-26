@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public class BndExtForceFile : FMSuiteFileBase
     {
         public const string MeteoBlockKey = "[meteo]";
-        public const string LocationTypeKey = "LocationType";
+        public const string LocationTypeKey = "locationType";
 
         public const string BoundaryBlockKey = "[Boundary]";
         public const string LateralBlockKey = "[Lateral]";
@@ -380,13 +380,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         if (nodeId != null)
                             WriteLine(NodeIdKey + "=" + nodeId);
 
-                        var type = bndExtForceFileItem.GetPropertyValue("type");
+                        var type = bndExtForceFileItem.GetPropertyValue(TypeKey);
                         if (type != null)
-                            WriteLine("type" + "=" + type);
+                            WriteLine(TypeKey + "=" + type);
 
-                        var locationType = bndExtForceFileItem.GetPropertyValue("locationType");
+                        var locationType = bndExtForceFileItem.GetPropertyValue(LocationTypeKey);
                         if (locationType != null)
-                            WriteLine("locationType" + "=" + locationType);
+                            WriteLine(LocationTypeKey + "=" + locationType);
 
                         var discharge = bndExtForceFileItem.GetPropertyValue(DischargeKey);
                         if (discharge != null)
