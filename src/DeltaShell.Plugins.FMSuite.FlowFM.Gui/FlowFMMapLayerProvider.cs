@@ -367,7 +367,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model = data as WaterFlowFMModel;
             if (model != null)
             {
-                yield return model.Network;
+                if (model.GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).LinkedTo == null)
+                {
+                    yield return model.Network;
+                }
+                
                 yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
                 yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
 
