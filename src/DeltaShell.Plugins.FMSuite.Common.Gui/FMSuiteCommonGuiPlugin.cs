@@ -10,6 +10,9 @@ using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
@@ -270,6 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         private void SubscribeToProjectEvents()
         {
+            base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
         }
      
         private void SubscribeToActivityEvents()
@@ -278,10 +282,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         private void UnsubscribeToProjectEvents()
         {
+            base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
         }
 
         private void UnSubscribeToActivityEvents()
         {
+        }
+        private IList<Type> ClosedViewTypes { get; set; }
+
+        [InvokeRequired]
+        private void CloseAllViewsBeforeSaving(Project project)
+        {
+            if (project == null || project.RootFolder == null) return;
+            ClosedViewTypes = new List<Type>();
+
+            foreach (var boundaryData in project.RootFolder.GetAllItemsRecursive().OfType<Model1DBoundaryNodeData>())
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(boundaryData);
+            }
+            foreach (var lateralSourceData in project.RootFolder.GetAllItemsRecursive().OfType<Model1DLateralSourceData>())
+            {
+                Gui.CommandHandler.RemoveAllViewsForItem(lateralSourceData);
+            }
         }
     }
 }

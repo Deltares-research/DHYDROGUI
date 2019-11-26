@@ -25,6 +25,8 @@ namespace DelftTools.Hydro.SewerFeatures
         private INode target;
         private ICompartment sourceCompartment;
         private ICompartment targetCompartment;
+        private string sourceCompartmentName;
+        private string targetCompartmentName;
 
         public SewerConnection() : this(string.Empty)
         {
@@ -53,21 +55,30 @@ namespace DelftTools.Hydro.SewerFeatures
         public override INode Source
         {
             get { return source; }
-            set
+            set { SetSource(value); }
+        }
+
+        [EditAction]
+        private void SetSource(INode value)
+        {
+            if (source == value) return;
+            BeforeSetSource();
+            if (value is HydroNode)
+                source = value;
+            var manhole = value as Manhole;
+            if (manhole?.Compartments != null && manhole.Compartments.Any())
             {
-                if (source == value) return;
-                BeforeSetSource();
-                if (value is HydroNode)
-                    source = value;
-                var manhole = value as Manhole;
-                if (manhole?.Compartments != null && manhole.Compartments.Any())
+                source = value;
+                if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
                 {
-                    source = value;
-                    if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
-                        SourceCompartment = manhole.Compartments.FirstOrDefault();
+                    sourceCompartment = manhole.Compartments.FirstOrDefault();
+                    UpdateSource(sourceCompartment);
+                    UpdateSourceCompartmentId();
+                    UpdateGeometryBasedOnSourceAndTargetCompartments();
                 }
-                AfterSetSource();
             }
+
+            AfterSetSource();
         }
 
         [EditAction]
@@ -88,22 +99,31 @@ namespace DelftTools.Hydro.SewerFeatures
         public override INode Target
         {
             get { return target; }
-            set
-            {
-                if (target == value) return;
-                BeforeTargetSet();
-                if (value is HydroNode)
-                    source = value;
+            set { SetTarget(value); }
+        }
 
-                var manhole = value as IManhole;
-                if (manhole?.Compartments != null && manhole.Compartments.Any())
+        [EditAction]
+        private void SetTarget(INode value)
+        {
+            if (target == value) return;
+            BeforeTargetSet();
+            if (value is HydroNode)
+                source = value;
+
+            var manhole = value as IManhole;
+            if (manhole?.Compartments != null && manhole.Compartments.Any())
+            {
+                target = value;
+                if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
                 {
-                    target = value;
-                    if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
-                        TargetCompartment = manhole.Compartments.FirstOrDefault();
+                    targetCompartment = manhole.Compartments.FirstOrDefault();
+                    UpdateTarget(targetCompartment);
+                    UpdateTargetCompartmentId();
+                    UpdateGeometryBasedOnSourceAndTargetCompartments();
                 }
-                AfterTargetSet();
             }
+
+            AfterTargetSet();
         }
 
         [EditAction]
@@ -176,6 +196,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
+        [EditAction]
         private void UpdateGeometryBasedOnSourceAndTargetCompartments()
         {
             if (Source == null || Target == null) return;
@@ -226,35 +247,37 @@ namespace DelftTools.Hydro.SewerFeatures
                 Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, Name);
             }
         }
-
+        [EditAction]
         private void UpdateTarget(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
             if (this.IsInternalConnection()) return;
             if ((IManhole) Target != parent)
             {
-                Target = parent;
+                target = parent;
+                SetTarget(target);
             }
         }
-
+        [EditAction]
         private void UpdateSource(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
             if (this.IsInternalConnection()) return;
             if ((IManhole) Source != parent)
             {
-                Source = parent;
+                source = parent;
             }
         }
 
+        [EditAction]
         private void UpdateSourceCompartmentId()
         {
-            if(sourceCompartment != null) SourceCompartmentName = sourceCompartment.Name;
+            if(sourceCompartment != null) sourceCompartmentName = sourceCompartment.Name;
         }
-
+        [EditAction]
         private void UpdateTargetCompartmentId()
         {
-            if(targetCompartment != null) TargetCompartmentName = targetCompartment.Name;
+            if(targetCompartment != null) targetCompartmentName = targetCompartment.Name;
         }
 
         private SewerConnectionSpecialConnectionType GetConnectionType()
@@ -339,23 +362,39 @@ namespace DelftTools.Hydro.SewerFeatures
         protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
         }
-
+        [EditAction]
         private void ConnectSourceCompartment(IManhole manhole)
         {
             if(manhole == null) return;
             var sourceCompartmentToAdd = manhole.GetCompartmentByName(SourceCompartmentName);
-            SourceCompartment = sourceCompartmentToAdd;
+            sourceCompartment = sourceCompartmentToAdd;
+            UpdateSource(sourceCompartment);
+            UpdateSourceCompartmentId();
+            UpdateGeometryBasedOnSourceAndTargetCompartments();
         }
-
+        [EditAction]
         private void ConnectTargetCompartment(IManhole manhole)
         {
             if (manhole == null) return;
             var targetCompartmentToAdd = manhole.GetCompartmentByName(TargetCompartmentName);
-            TargetCompartment = targetCompartmentToAdd;
+            targetCompartment = targetCompartmentToAdd;
+            UpdateTarget(targetCompartment);
+            UpdateTargetCompartmentId();
+            UpdateGeometryBasedOnSourceAndTargetCompartments();
         }
 
-        public string SourceCompartmentName { get; set; }
-        public string TargetCompartmentName { get; set; }
+        public string SourceCompartmentName
+        {
+            get { return sourceCompartmentName; }
+            set { sourceCompartmentName = value; }
+        }
+
+        public string TargetCompartmentName
+        {
+            get { return targetCompartmentName; }
+            set { targetCompartmentName = value; }
+        }
+
         public void UpdateBranchFeatureGeometries()
         {
             if (SourceCompartment != null || TargetCompartment != null)

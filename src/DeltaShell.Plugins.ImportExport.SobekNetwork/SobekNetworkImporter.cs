@@ -11,9 +11,12 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
 {
     public class SobekNetworkImporter : IFileImporter, IPartialSobekImporter
     {
+        private object targetObject;
+        private bool targetItemHasBeenSet;
+
         public SobekNetworkImporter()
         {
-            TargetObject = CreateHydroRegion();
+            targetItemHasBeenSet = false;
         }
 
         # region IFileImporter
@@ -68,7 +71,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
             }
 
             // Configure the TargetObject of the IPartialSobekImporter part of the importer
-            TargetObject = target ?? CreateHydroRegion();
+            var targetObjectInternal = target ?? TargetObject;
 
             if (ShouldCancel)
             {
@@ -83,7 +86,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 return null;
             }
 
-            var hydroRegion = TargetObject as HydroRegion;
+            var hydroRegion = targetObjectInternal as HydroRegion;
             if (hydroRegion != null)
             {
                 var network = (HydroNetwork) hydroRegion.SubRegions[0];
@@ -94,11 +97,13 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 // skip basin if it is empty
                 if (!basin.AllHydroObjects.Any())
                 {
-                    TargetObject = network;
+                    return network;
                 }
             }
-
-            return TargetObject;
+            
+            targetObject = null;
+            targetItemHasBeenSet = false;
+            return hydroRegion;
         }
 
         # endregion
@@ -112,7 +117,18 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
             get { return null; }
         }
 
-        public object TargetObject { get; set; }
+        public object TargetObject
+        {
+            get
+            {
+                return targetObject ?? (targetObject = CreateHydroRegion()); 
+            }
+            set
+            {
+                targetObject = value;
+                targetItemHasBeenSet = true;
+            }
+        }
 
         public IPartialSobekImporter PartialSobekImporter
         {

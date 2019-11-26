@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel : IModelWithRoughnessSections
     {
-        public const string NetworkObjectName = "Network";
         private IDiscretization networkDiscretization;
         private IFeatureCoverage inflows;
 
@@ -49,34 +48,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
 
-                UnSubscribeFromNetwork();
+                UnSubscribeFromNetwork(Network);
                 GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).Value = value;
-                SubscribeToNetwork();
-
+                SubscribeToNetwork(Network);
+                
                 // refresh data
                 //moet dit ? RefreshNetworkRelatedData();
 
             }
         }
-        private void SubscribeToNetwork()
+        private void SubscribeToNetwork(IHydroNetwork network)
         {
-            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            var networkValue = networkDataItem.Value;
-            if (networkValue != null)
+            if (network != null)
             {
-                ((INotifyCollectionChange)networkValue).CollectionChanged += NetworkCollectionChanged;
-                ((INotifyPropertyChanged)networkValue).PropertyChanged += NetworkPropertyChanged;
-            }
-            observedNetwork = (IHydroNetwork)networkValue;
-        }
-        public virtual void UnSubscribeFromNetwork()
-        {
-            if (observedNetwork != null)
-            {
-                ((INotifyCollectionChange)observedNetwork).CollectionChanged -= NetworkCollectionChanged;
-                ((INotifyPropertyChanged)observedNetwork).PropertyChanged -= NetworkPropertyChanged;
+                ((INotifyCollectionChange) network).CollectionChanged += NetworkCollectionChanged;
+                ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
+                fmRegion?.SubRegions?.Add(network);
             }
         }
+
+        public virtual void UnSubscribeFromNetwork(IHydroNetwork network)
+        {
+            if (network != null)
+            {
+                ((INotifyCollectionChange) network).CollectionChanged -= NetworkCollectionChanged;
+                ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
+                fmRegion?.SubRegions?.Remove(network);
+            }
+        }
+
         [EditAction]
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RefreshMappings();
         }
         
-        private IHydroNetwork observedNetwork;
+        
         private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 

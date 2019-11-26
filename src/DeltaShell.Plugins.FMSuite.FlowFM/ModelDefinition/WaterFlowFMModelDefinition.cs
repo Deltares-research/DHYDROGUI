@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
             Embankments = new EventedList<Embankment>();
-            Network = new HydroNetwork(){ Name = WaterFlowFMModel.NetworkObjectName };
+            Network = new HydroNetwork(){ Name = WaterFlowFMModelDataSet.NetworkTag };
             NetworkDiscretization = new Discretization { Network = Network, Name = WaterFlowFMModel.DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             Inflows = new FeatureCoverage("Inflows");
             Inflows.Arguments.Add(new Variable<DateTime>()); //time variable
@@ -1182,10 +1182,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 AddSewerRoughnessIfNecessary();
             }
         }
+        [EditAction]
         private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
         {
-            if (!NetworkDiscretization.Locations.Values.Any(l =>
-                l.Geometry.Coordinate.Equals(toLocation.Geometry.Coordinate)))
+            var locations = new HashSet<Coordinate>(NetworkDiscretization.Locations.Values.Select(l => l.Geometry.Coordinate));
+            if (!locations.Contains(toLocation.Geometry.Coordinate))
             {
                 NetworkDiscretization.Locations.AddValues(new[] { toLocation });
             }
@@ -1211,6 +1212,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private void SynchronizeRoughnessSectionsWithNetwork()
         {
             if (Network == null) return;
+            RoughnessSections?.ForEach(rs =>
+            {
+                rs.RoughnessNetworkCoverage.Clear();
+                rs.RoughnessNetworkCoverage.Network = null;
+                rs.Network = null;
+            });
             RoughnessSections = null;
             RoughnessSections = new EventedList<RoughnessSection>();
             foreach (var crossSectionSectionType in Network.CrossSectionSectionTypes)
@@ -1220,7 +1227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 RoughnessSections.Add(roughnessSection);
             }
         }
-
+        [EditAction]
         private void AddSewerRoughnessIfNecessary()
         {
             if (!Network.Manholes.Any() && !Network.Pipes.Any()) return;
@@ -1246,7 +1253,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
         public virtual void UpdateRoughnessSections()
         {
-            RoughnessSections?.ForEach(rs => rs.Network = null);
+            RoughnessSections?.ForEach(rs =>
+            {
+                rs.RoughnessNetworkCoverage.Clear();
+                rs.RoughnessNetworkCoverage.Network = null;
+                rs.Network = null;
+            });
 
             if (Network != null)
             {

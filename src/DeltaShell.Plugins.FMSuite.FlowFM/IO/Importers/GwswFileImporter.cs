@@ -125,11 +125,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     continue;
                 }
 
-                ReportProgress($"Importing file {filePath}");
+                
                 var gwswElements = ImportGwswElementList(filePath);
-
-                ReportProgress("Generating network features");
-                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements);
+                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements, SetProgress);
                 
                 importedFeatureElements.AddRange(createdSewerEntities);
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, createdSewerEntities.Count);
@@ -138,19 +136,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             return importedFeatureElements;
         }
         [EditAction]
-        private static void AddSewerFeaturesToNetwork(IList<ISewerFeature> importedFeatureElements, IHydroNetwork network)
+        private void AddSewerFeaturesToNetwork(IList<ISewerFeature> importedFeatureElements, IHydroNetwork network )
         {
+            var nrOfImportedFeatureElements = importedFeatureElements.Count;
+            var stepSize = nrOfImportedFeatureElements / 20;
+            var listOfErrors = new List<string>();
             importedFeatureElements.ForEach(e =>
             {
                 try
                 {
+                    var indexOf = importedFeatureElements.IndexOf(e);
+                    
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                        SetProgress($"Adding feature to network ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
+                    
+
                     e.AddToHydroNetwork(network);
                 }
                 catch (Exception exception)
                 {
-                    Log.ErrorFormat(exception.Message);
+                    listOfErrors.Add(exception.Message+Environment.NewLine);
                 }
             });
+            if(listOfErrors.Any())
+                Log.ErrorFormat($"While adding GWSW features to network we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
 
         private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(WaterFlowFMModel fmModel)
@@ -254,23 +263,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return elementList;
             }
 
+            var nrOfRows = importedDataTable.Rows.Count;
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
-                var element = new GwswElement { ElementTypeName = elementTypeName };
+                var lineNumber = importedDataTable.Rows.IndexOf(dataRow);
+                var stepSize = (int) nrOfRows / 10;
+                if (stepSize != 0 && lineNumber % stepSize == 0)
+                    SetProgress($"Importing file {Path.GetFileName(path) ?? ("<unknown_file>")}", lineNumber, nrOfRows);
+                var element = new GwswElement {ElementTypeName = elementTypeName};
                 for (var i = 0; i < dataRow.ItemArray.Length; i++)
                 {
                     var cell = dataRow.ItemArray[i];
                     var columnName = importedDataTable.Columns[i].ColumnName;
                     var attribute = new GwswAttribute
                     {
-                        LineNumber = importedDataTable.Rows.IndexOf(dataRow),
+                        LineNumber = lineNumber,
                         ValueAsString = cell.ToString()
                     };
                     if (GwswAttributesDefinition != null)
                     {
-                        var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr => attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));
+                        var foundAttributeType = GwswAttributesDefinition.FirstOrDefault(attr =>
+                            attr.ElementName.Equals(elementTypeName) && attr.Key.Equals(columnName));
                         attribute.GwswAttributeType = foundAttributeType;
                     }
+
                     element.GwswAttributeList.Add(attribute);
                 }
 

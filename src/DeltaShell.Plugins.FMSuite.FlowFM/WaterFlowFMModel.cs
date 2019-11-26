@@ -90,8 +90,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private List<Model1DBoundaryNodeData> boundaryConditionDataList;
         private IDataItem areaDataItem;
+        private IDataItem networkDataItem;
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
+        private readonly Dictionary<IFeature, List<IDataItem>> networkDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress;
         private string progressText;
 
@@ -141,9 +143,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void AddNetworkToModel()
         {
             // network
-            var network = new HydroNetwork { Name = NetworkObjectName };
+            var network = new HydroNetwork { Name = WaterFlowFMModelDataSet.NetworkTag };
             AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
-            
+            networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            SubscribeToNetwork(network);
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             
             // q's supplied by externals
@@ -237,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
             }
         }
-
+        [EditAction]
         private void BoundaryConditions1DOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var modelDefinitionBoundaryConditions1D = sender as IEventedList<Model1DBoundaryNodeData>;
@@ -248,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        if (BoundaryConditions1DDataItemSet.DataItems.Where(di => di.Value is Model1DBoundaryNodeData).All(di => di.Value as Model1DBoundaryNodeData != model1DBoundaryNode))
+                        if (!BoundaryConditions1DDataItemSet.DataItems.Select(di =>di.Value).OfType<Model1DBoundaryNodeData>().Contains(model1DBoundaryNode))
                         {
                             BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(model1DBoundaryNode){Hidden = model1DBoundaryNode?.DataType == Model1DBoundaryNodeDataType.None});
                         }

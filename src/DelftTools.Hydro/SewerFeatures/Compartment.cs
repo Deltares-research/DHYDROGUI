@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -154,8 +155,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private Manhole GetManholeInNetworkToAddCompartmentTo(IHydroNetwork network)
         {
-            var networkManholes = network.Manholes.ToArray();
-            var manhole = networkManholes.FirstOrDefault(m => m.Name == ParentManholeName) as Manhole;
+            var networkManholes = new HashSet<IManhole>(network.Manholes);
+            var manhole = networkManholes.FirstOrDefault(m => m.Name.Equals(ParentManholeName,StringComparison.InvariantCultureIgnoreCase)) as Manhole;
             if (manhole == null)
             {
                 manhole = networkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(Name)) as Manhole;

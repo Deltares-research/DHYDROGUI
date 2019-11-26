@@ -41,9 +41,10 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
 
             RegularExpression.ClearExpressionsCache(); // prevent memory leaks
 
+            var targetItemInternal = TargetItem;
             if (!targetItemHasBeenSet)
             {
-                var hydroModel = TargetItem as HydroModel;
+                var hydroModel = targetItemInternal as HydroModel;
                 if (hydroModel != null)
                 {
                     if (hydroModel.Activities.OfType<RealTimeControlModel>().First().ControlGroups.Any())
@@ -62,7 +63,9 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 }
             }
             importer = null;
-            return TargetItem;
+            targetItem = null;
+            targetItemHasBeenSet = false;
+            return targetItemInternal;
         }
 
         public IEnumerable<Type> SupportedItemTypes
@@ -84,7 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                         Activities =
                             {
                                 new RealTimeControlModel("Real-Time Control"),
-                                new WaterFlowFMModel("Flow1D")
+                                new WaterFlowFMModel("FlowFM")
                             }
                     });
             }

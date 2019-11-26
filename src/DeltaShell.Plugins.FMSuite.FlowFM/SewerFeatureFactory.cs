@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         /// <param name="gwswElements">List of GwswElements.</param>
         /// <returns>IList of ISewerFeature objects that have been created from objects in gwswElements.<param name="gwswElements"/></returns>
-        public static IList<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements)
+        public static IList<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements, Action<string, int, int> setProgress = null)
         {
             var createdSewerFeatures = new List<ISewerFeature>();
             var elementTypesList = new List<KeyValuePair<SewerFeatureType, GwswElement>>();
@@ -39,21 +39,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var nodeTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
             if (nodeTypes.Any())
             {
-                createdSewerFeatures.AddRange(nodeTypes.Select(CreateSewerFeature));
+                var nrOfNodes = nodeTypes.Count;
+                createdSewerFeatures.AddRange(nodeTypes.Select(element =>
+                {
+                    var indexOf = nodeTypes.IndexOf(element);
+                    var stepSize = nrOfNodes / 20;
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        setProgress?.Invoke($"Generating node features", indexOf, nrOfNodes);
+                    }
+
+                    return CreateSewerFeature(element);
+                }));
             }
             
             // Cross section types
             var crossSectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Crosssection).Select(k => k.Value).ToList();
             if (crossSectionTypes.Any())
             {
-                createdSewerFeatures.AddRange(crossSectionTypes.Select(CreateSewerFeature));
+                var nrOfCrossSections = crossSectionTypes.Count;
+                createdSewerFeatures.AddRange(crossSectionTypes.Select(element =>
+                {
+                    var indexOf = nodeTypes.IndexOf(element);
+                    var stepSize = nrOfCrossSections / 20;
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        setProgress?.Invoke($"Generating cross section features", nodeTypes.IndexOf(element),
+                            nrOfCrossSections);
+                    }
+                    return CreateSewerFeature(element);
+                }));
             }
 
             // Connection types
             var connectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Connection).Select(k => k.Value).ToList();
             if (connectionTypes.Any())
             {
-                var connectionSewerFeatures = connectionTypes.Select(CreateSewerFeature);
+                var nrOfConnections = connectionTypes.Count;
+                var connectionSewerFeatures = connectionTypes.Select(element =>
+                {
+                    var indexOf = nodeTypes.IndexOf(element);
+                    var stepSize = nrOfConnections / 20;
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        setProgress?.Invoke($"Generating connection type features", connectionTypes.IndexOf(element), nrOfConnections);
+                    }
+
+                    return CreateSewerFeature(element);
+                });
                 createdSewerFeatures.AddRange(connectionSewerFeatures);
             }
             
@@ -61,7 +94,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var structureTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
             if (structureTypes.Any())
             {
-                var structureFeatures = structureTypes.Select(CreateSewerFeature).ToList();
+                var nrOfStructures = structureTypes.Count;
+                var structureFeatures = structureTypes.Select(element =>
+                {
+                    var indexOf = structureTypes.IndexOf(element);
+                    var stepSize = nrOfStructures / 20;
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        setProgress?.Invoke($"Generating sewer features", structureTypes.IndexOf(element), nrOfStructures);
+                    }
+
+                    return CreateSewerFeature(element);
+                }).ToList();
                 var pointFeatures = structureFeatures.OfType<IStructure1D>();
 
                 foreach (var pointFeature in pointFeatures)
