@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     object locationName;
                     if (attributes.TryGetValue("mesh", out meshName) && attributes.TryGetValue("location", out locationName))
                     {
-                        return b && meshName.ToString() == mesh1DName && (locationName.ToString() == "edge" || locationName.ToString() == "node");
+                        return b && meshName.ToString() == mesh1DName && (/*locationName.ToString() == "edge" || */locationName.ToString() == "node");
                     }
                     return false;
                 }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);

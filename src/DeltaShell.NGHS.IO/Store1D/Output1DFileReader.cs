@@ -128,7 +128,7 @@ namespace DeltaShell.NGHS.IO.Store1D
                             edgeNodesNameIds.Add(string.Format("{0}_{1}", list[i].ToString(), list[i+1].ToString()));
                         }
 
-                        locationIds = edgeNodesNameIds;
+                        //locationIds = edgeNodesNameIds;
                     } 
 
                     if (variableName == branchidVariableNameInNetCDFFile)
