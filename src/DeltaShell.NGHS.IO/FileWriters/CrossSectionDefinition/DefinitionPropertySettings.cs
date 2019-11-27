@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         public static readonly ConfigurationSetting Conveyance = new ConfigurationSetting(key: "conveyance", description: "No comments", defaultValue:"segmented");
         public static readonly ConfigurationSetting SectionCount = new ConfigurationSetting(key: "sectionCount", description: "Number of friction sections");
-        public static readonly ConfigurationSetting FrictionPositions = new ConfigurationSetting(key: "frictionPositions", description: "Location where the roughness sections start and end. Always one location more than sectionCount. The first value should equal 0 and the last value should equal the crosssection length. Keyword may be skipped if sectionCount = 1.");
+        public static readonly ConfigurationSetting FrictionPositions = new ConfigurationSetting(key: "frictionPositions", description: "Location where the roughness sections start and end. Always one location more than sectionCount. The first value should equal 0 and the last value should equal the crosssection length. Keyword may be skipped if sectionCount = 1.", format: "F5");
         public static readonly ConfigurationSetting FrictionIds = new ConfigurationSetting(key: "frictionIds", description: "Names of the friction sections.");
         public static readonly ConfigurationSetting FrictionId = new ConfigurationSetting(key: "frictionId", description: "Names of the friction section.");
 
