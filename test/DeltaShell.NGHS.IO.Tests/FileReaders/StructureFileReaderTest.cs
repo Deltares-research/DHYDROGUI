@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var crossSectionDefinitionFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsdef.ini");
             var structureFilePath = Path.Combine(TestHelper.GetTestDataDirectory(),@"FileReaders\StructureFileReaderTest\structures.ini");
 
-            var loadNetworkAndDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(networkFilePath);
+            var loadNetworkAndDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(networkFilePath, null);
             var network = (IHydroNetwork) loadNetworkAndDiscretisation.Network;
 
             // Act

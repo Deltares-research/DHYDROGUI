@@ -16,13 +16,15 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public static class NetworkDiscretisationFactory
     {
-        public static IHydroNetwork CreateHydroNetwork(NetworkUGridDataModel dataModel, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
+        public static IHydroNetwork CreateHydroNetwork(NetworkUGridDataModel dataModel, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null, IHydroNetwork network = null)
         {
-            var network = new HydroNetwork
+            if (network == null)
             {
-                Name = dataModel.Name,
-                CoordinateSystem = dataModel.CoordinateSystem
-            };
+                network = new HydroNetwork();
+            }
+
+            network.Name = dataModel.Name;
+            network.CoordinateSystem = dataModel.CoordinateSystem;
 
             var nodes = CreateNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions, compartmentProperties).ToList();
 

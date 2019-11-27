@@ -25,7 +25,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="netFilePath">Path to the net file</param>
         /// <param name="nodeData">Data about the nodes (nodeFile.ini) not contained in the net file (manhole <-> compartment mapping etc.)</param>
-        public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath, List<NodeFile.CompartmentProperties> nodeData = null)
+        /// <param name="network"></param>
+        public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath, IHydroNetwork network = null, List<NodeFile.CompartmentProperties> nodeData = null)
         {
             var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
             if (discretisationDataModel == null)
@@ -34,7 +35,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 return new Discretization();
             }
 
-            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId, nodeData);
+            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId, nodeData, network);
             return loadedNetwork != null
                 ? NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel)
                 : new Discretization();
@@ -163,7 +164,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties)
+        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties, IHydroNetwork network)
         {
             Func<int[], int> func = networkIds =>
             {
@@ -182,8 +183,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     var propertiesPerBranch = ReadPropertiesPerBranchFromFile(netFilePath);
 
                     var networkUGridDataModel = ImportNetworkFromUgridAndCreateNetworkDataModel(uGridNetwork, func);
-                    var network = NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, propertiesPerBranch, compartmentProperties);
-                    return network;
+                    return NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, propertiesPerBranch, compartmentProperties, network);
                 }
             }
             catch (Exception ex)
