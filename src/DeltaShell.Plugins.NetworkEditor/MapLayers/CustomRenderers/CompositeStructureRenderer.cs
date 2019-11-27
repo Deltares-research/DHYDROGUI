@@ -147,7 +147,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         private static bool IsNodeWithoutFeatures(ICompositeNetworkPointFeature compositePointFeature)
         {
-            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Node && compositePointFeature.GetPointFeatures().Count() <= 1;
+            return compositePointFeature.NetworkFeatureType == NetworkFeatureType.Node && 
+                   !compositePointFeature.GetPointFeatures().Any();
         }
 
         private static bool IsBranchWithSingleFeature(ICompositeNetworkPointFeature compositePointFeature)

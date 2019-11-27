@@ -85,13 +85,10 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public IEnumerable<IFeature> GetPointFeatures()
         {
-            var branchFeatures = this.InternalStructures();
-            var outletCompartments = compartments.OfType<IFeature>().Where(c => c is OutletCompartment);
-
-            var features = new List<IFeature>();
-            features.AddRange(branchFeatures);
-            features.AddRange(outletCompartments);
-            return features;
+            return compartments
+                .OfType<OutletCompartment>()
+                .Cast<IFeature>()
+                .Concat(this.InternalStructures());
         }
 
         public NetworkFeatureType NetworkFeatureType { get; } = NetworkFeatureType.Node;

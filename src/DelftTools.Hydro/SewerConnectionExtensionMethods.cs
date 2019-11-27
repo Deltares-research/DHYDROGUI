@@ -38,9 +38,7 @@ namespace DelftTools.Hydro
 
         public static IEnumerable<IStructure1D> GetStructuresFromBranchFeatures(this ISewerConnection sewerConnection)
         {
-            var compositeStructures = sewerConnection.BranchFeatures.OfType<CompositeBranchStructure>();
-            var structures = sewerConnection.BranchFeatures.OfType<IStructure1D>().Except(compositeStructures);
-            return structures;
+            return sewerConnection.BranchFeatures.Where(f => f is IStructure1D && !(f is ICompositeBranchStructure)).Cast<IStructure1D>();
         }
 
         public static IEnumerable<T> GetStructuresFromBranchFeatures<T>(this ISewerConnection sewerConnection)

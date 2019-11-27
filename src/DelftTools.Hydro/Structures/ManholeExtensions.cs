@@ -9,15 +9,22 @@ namespace DelftTools.Hydro.Structures
     {
         public static IEnumerable<ISewerConnection> InternalConnections(this IManhole manhole)
         {
-            var network = manhole?.Network as IHydroNetwork;
-            return network?.SewerConnections.Where(c => c.Source == manhole && c.Target == manhole) ?? new List<ISewerConnection>();
+            if (!(manhole?.Network is IHydroNetwork network)) yield break;
+
+            foreach (var connection in network.SewerConnections)
+            {
+                if (connection is IPipe) continue;
+
+                if (connection.Source == manhole && connection.Target == manhole)
+                {
+                    yield return connection;
+                }
+            }
         }
 
         public static IEnumerable<IStructure1D> InternalStructures(this IManhole manhole)
         {
-            var internalConnections = manhole.InternalConnections();
-            var structures = internalConnections.SelectMany(s => ((SewerConnection) s).GetStructuresFromBranchFeatures()); // TODO add orifice
-            return structures;
+            return manhole.InternalConnections().SelectMany(s => s.GetStructuresFromBranchFeatures());
         }
         
         public static IEnumerable<IPipe> Pipes(this IManhole manhole)
