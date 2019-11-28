@@ -137,11 +137,11 @@ namespace DeltaShell.NGHS.IO.Store1D
                     if (variableName == chainageVariableNameInNetCDFFile)
                         chainages = Parse1DNetCdfVariable<double>(path, variableName);
 
-                    if (variableName == edgeBranchidVariableNameInNetCDFFile)
+                    /*if (variableName == edgeBranchidVariableNameInNetCDFFile)
                         branchIds = Parse1DNetCdfVariable<int>(path, variableName);
                     
                     if (variableName == edgeChainageVariableNameInNetCDFFile)
-                        chainages = Parse1DNetCdfVariable<double>(path, variableName);
+                        chainages = Parse1DNetCdfVariable<double>(path, variableName);*/
 
                     
                     if (variableName == xNodeCoordinateVariableNameInNetCDFFile)
@@ -150,11 +150,11 @@ namespace DeltaShell.NGHS.IO.Store1D
                     if (variableName == yNodeCoordinateVariableNameInNetCDFFile)
                         yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
 
-                    if (variableName == xEdgeCoordinateVariableNameInNetCDFFile)
+                    /*if (variableName == xEdgeCoordinateVariableNameInNetCDFFile)
                         xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
 
                     if (variableName == yEdgeCoordinateVariableNameInNetCDFFile)
-                        yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
+                        yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);*/
                 }
 
                 return ParseLocationMetaData(locationIds, branchIds, chainages, xCoordinates, yCoordinates);
