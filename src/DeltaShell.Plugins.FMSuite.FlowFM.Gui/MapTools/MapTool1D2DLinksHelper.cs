@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static bool Get1D2DGullyLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
-            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.GullySewer);
+            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.GullySewer, selectedArea);
             var geometryGullies = fmModel.Area.Gullies.Where(r => r.Geometry.Intersects(selectedArea)).Select(r => r.Geometry);
 
             var gGeomApi = new GridGeomApi();
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static bool Get1D2DOneToOneEmbeddedLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
-            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.EmbeddedOneToOne);
+            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.EmbeddedOneToOne, selectedArea);
 
             var gGeomApi = new GridGeomApi();
             var ierr = gGeomApi.GetEmbedded1D2DLinks(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, false);
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static bool Get1D2DOneToManyEmbeddedLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
         {
-            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.EmbeddedOneToMany);
+            var filter1DMesh = GetMesh1DFilter(fmModel.NetworkDiscretization, LinkType.EmbeddedOneToMany, selectedArea);
 
             var gGeomApi = new GridGeomApi();
             var ierr = gGeomApi.GetEmbedded1D2DLinks(fmModel.NetFilePath, fmModel.NetworkDiscretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, true);
@@ -133,27 +133,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         #region sub methods
 
-        public static List<bool> GetMesh1DFilter(IDiscretization networkDiscretization, LinkType linkType)
+        public static List<bool> GetMesh1DFilter(IDiscretization networkDiscretization, LinkType linkType, IPolygon selectedArea = null)
         {
             var filterList = new List<bool>();
             var discretisationPoints = networkDiscretization.Locations.Values.ToArray();
+
             for (int i = 0; i < discretisationPoints.Length; i++)
             {
                 var discretisationPoint = discretisationPoints[i];
                 var isAvailableMesh1DPoint = false;
-                switch (linkType)
+                if (selectedArea == null || selectedArea.Intersects(discretisationPoint.Geometry))
                 {
-                    case LinkType.Lateral:
-                        isAvailableMesh1DPoint = IsLateralMesh1DPoint(discretisationPoint);
-                        break;
-                    case LinkType.EmbeddedOneToOne: //go to next case
-                    case LinkType.EmbeddedOneToMany:
-                        isAvailableMesh1DPoint = IsEmbeddedMesh1DPoint(discretisationPoint);
-                        break;
-                    case LinkType.GullySewer:
-                        isAvailableMesh1DPoint = IsStormWaterMesh1DPoint(discretisationPoint);
-                        break;
+                    switch (linkType)
+                    {
+                        case LinkType.Lateral:
+                            isAvailableMesh1DPoint = IsLateralMesh1DPoint(discretisationPoint);
+                            break;
+                        case LinkType.EmbeddedOneToOne: //go to next case
+                        case LinkType.EmbeddedOneToMany:
+                            isAvailableMesh1DPoint = IsEmbeddedMesh1DPoint(discretisationPoint);
+                            break;
+                        case LinkType.GullySewer:
+                            isAvailableMesh1DPoint = IsStormWaterMesh1DPoint(discretisationPoint);
+                            break;
+                    }
                 }
+
                 filterList.Add(isAvailableMesh1DPoint);
             }
             return filterList;

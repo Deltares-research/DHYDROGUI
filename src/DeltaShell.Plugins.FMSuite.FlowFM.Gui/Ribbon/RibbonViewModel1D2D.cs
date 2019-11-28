@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 {
                     Name = "Embedded 1-to-n",
                     ToolTipText = "Embedded 1D2D links for polder one to many",
-                    Type = LinkType.EmbeddedOneToOne
+                    Type = LinkType.EmbeddedOneToMany
                 },
                 new RibbonLink
                 {
