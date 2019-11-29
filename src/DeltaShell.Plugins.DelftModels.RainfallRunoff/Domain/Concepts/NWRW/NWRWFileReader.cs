@@ -90,10 +90,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
                         break;
                     case NWRWRegion.NumberOfSpecialAreasKey:
                         data.NumberOfSpecialAreas = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.SpecialAreas = new List<SpecialArea>();
+                        data.SpecialAreas = new List<NWRWSpecialArea>();
                         for (int j = 0; j < data.NumberOfSpecialAreas; j++)
                         {
-                            data.SpecialAreas.Add(new SpecialArea());
+                            data.SpecialAreas.Add(new NWRWSpecialArea());
                         }
                         break;
                     case NWRWRegion.SpecialAreaKey:

@@ -1,15 +1,19 @@
 ﻿using DelftTools.Hydro;
 using System.Collections.Generic;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
 {
     [Entity(FireOnCollectionChange = false)]
     public class NWRWData : CatchmentModelData
     {
+        //nhib
+        protected NWRWData()
+            : base(null) { }
+
         public NWRWData(Catchment catchment) : base(catchment)
         {
-            //throw new NotImplementedException();
         }
 
         public string NWRWDataId { get; set; }
@@ -25,13 +29,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
         public int RoofFlatStretched { get; set; }
         public int UnpavedWithSlope { get; set; }
         public int UnpavedFlat { get; set; }
-        public int UnpavedFlatStretched { get; set; }
+        public virtual int UnpavedFlatStretched { get; set; }
         public string MeteoStationId { get; set; }
         public string DryWeatherFlowId { get; set; }
         public int NumberOfPeople { get; set; }
         public int NumberOfSpecialAreas { get; set; }
-        public IList<SpecialArea> SpecialAreas { get; set; }
-        public int AreaAdjustmentFactor { get; set; }
+        public IList<NWRWSpecialArea> SpecialAreas { get; set; }
+        public double AreaAdjustmentFactor { get; set; }
 
 
     }

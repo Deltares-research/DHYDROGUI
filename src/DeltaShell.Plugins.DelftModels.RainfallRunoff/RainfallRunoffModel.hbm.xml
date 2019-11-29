@@ -31,6 +31,12 @@
       <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.RunoffBoundaryData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
     </list>
 
+    <list name="NWRWData" batch-size="4" cascade="all-delete-orphan" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW.NWRWData, DeltaShell.Plugins.DelftModels.RainfallRunoff]], DeltaShell.Plugins.Data.NHibernate"  >
+      <key column="parent_nwrwdata_id"/>
+      <index column="index_in_parent" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW.NWRWData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+    </list>
+
     <list name="MeteoStations" cascade="all-delete-orphan" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[System.String]], DeltaShell.Plugins.Data.NHibernate">
       <key column="parent_meteostation_id"/>
       <index column="index_in_parent"/>

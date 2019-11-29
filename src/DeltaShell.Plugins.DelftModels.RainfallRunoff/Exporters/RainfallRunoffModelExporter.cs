@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
@@ -54,6 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             if (model == null) return false;
             var bcWriter = new RainfallRunoffBoundaryDataFileWriter();
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
+            var nwrwWriter = new NWRWFileWriter();
+            nwrwWriter.WriteNWRWFile(model.NWRWData, Path.Combine(Path.GetFullPath(path), "nwrw.3b"));
             model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path); 
             return model.ModelController.WriteFiles();
         }

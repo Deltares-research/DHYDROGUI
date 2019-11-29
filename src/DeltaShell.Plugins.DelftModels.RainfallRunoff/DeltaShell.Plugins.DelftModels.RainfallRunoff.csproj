@@ -55,7 +55,7 @@
     <Compile Include="Domain\Concepts\NWRW\NWRWFileWriter.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWFileReader.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWRegion.cs" />
-    <Compile Include="Domain\Concepts\NWRW\SpecialArea.cs" />
+    <Compile Include="Domain\Concepts\NWRW\NWRWSpecialArea.cs" />
     <Compile Include="Domain\Concepts\OpenWaterDataProperties.cs" />
     <Compile Include="Domain\Concepts\Polder\PolderConceptProperties.cs" />
     <Compile Include="Domain\Concepts\SacramentoData.cs" />
@@ -369,7 +369,7 @@
     <EmbeddedResource Include="Domain\Concepts\NWRW\NWRWData.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Domain\Concepts\NWRW\SpecialArea.hbm.xml" />
+    <EmbeddedResource Include="Domain\Concepts\NWRW\NWRWSpecialArea.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

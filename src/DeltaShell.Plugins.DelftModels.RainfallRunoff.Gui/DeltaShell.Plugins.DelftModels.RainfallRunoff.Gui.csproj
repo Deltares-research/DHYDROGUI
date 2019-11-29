@@ -160,6 +160,7 @@
     <Compile Include="Concepts\HbvMeteoStationSelection.Designer.cs">
       <DependentUpon>HbvMeteoStationSelection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Concepts\NWRWDataRow.cs" />
     <Compile Include="Concepts\OpenWaterDataRow.cs" />
     <Compile Include="Concepts\OpenWaterDataView.cs">
       <SubType>UserControl</SubType>
