@@ -88,7 +88,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void ApplicationProjectOpened(Project project)
         {
             // relink all dataitems (between rtc and flowFM) for all hydromodels
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm => hm.RelinkDataItems());
+            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            {
+                hm.RelinkDataItems();
+                hm.RelinkHydroRegionLinks();
+            });
         }
 
         private void ApplicationProjectSaving(Project project)
@@ -100,6 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
                 hydroModel.UnlinkAndRememberDataItems();
+                hydroModel.UnlinkAndRememberRegionLinks();
             }
         }
 
@@ -110,6 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
                 hydroModel.RelinkDataItems();
+                hydroModel.RelinkHydroRegionLinks();
             }
         }
 
