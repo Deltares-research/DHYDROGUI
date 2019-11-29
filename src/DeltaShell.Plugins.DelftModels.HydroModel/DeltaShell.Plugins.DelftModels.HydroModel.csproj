@@ -52,8 +52,12 @@
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
     <Compile Include="Export\Iterative1D2DCouplerExporter.cs" />
     <Compile Include="Export\Iterative1D2DCouplerFileWriter.cs" />
+    <Compile Include="ModelExchanges\IHydroModelExchangeInfo.cs" />
     <Compile Include="Iterative1D2DCouplerDataAccessListener.cs" />
+    <Compile Include="ModelExchanges\ModelExchange.cs" />
+    <Compile Include="ModelExchanges\RegionExchange.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="ModelExchanges\RegionExchangeInfo.cs" />
     <Compile Include="Validation\HydroModelValidator.cs" />
     <Compile Include="Validation\IWorkFlowTypeValidator.cs" />
     <Compile Include="Validation\IWorkFlowTypeValidatorProvider.cs" />
@@ -66,8 +70,8 @@
     <Compile Include="Iterative1D2DCoupler.cs" />
     <Compile Include="Iterative1D2DCouplerData.cs" />
     <Compile Include="Iterative1D2DCouplerLink.cs" />
-    <Compile Include="ModelCouplingFile.cs" />
-    <Compile Include="ModelExchangeInfo.cs" />
+    <Compile Include="ModelExchanges\HydroModelExchangeJsonFileExtensions.cs" />
+    <Compile Include="ModelExchanges\ModelExchangeInfo.cs" />
     <Compile Include="HydroModel.cs" />
     <Compile Include="HydroModelBuilder.cs" />
     <Compile Include="HydroModelApplicationPlugin.cs" />

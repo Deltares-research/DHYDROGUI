@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
@@ -64,18 +65,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        /// <summary>
-        /// Load links when building model from file
-        /// </summary>
-        public virtual void LoadLinks()
-        {
-            modelExchangeInfos.Clear();
-            modelExchangeInfos.AddRange(couplingFile.Read(couplingFile.FilePath));
-        }
-
         public virtual string CouplingFilePath
         {
-            get { return couplingFile?.FilePath; }
+            get { return couplingFilePath; }
         }
 
         private bool TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel)
@@ -143,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         #region Logic for Model saving, loading, and copying
 
-        private ModelCouplingFile couplingFile { get; set; }
+        private string couplingFilePath;
 
         private void OnSave()
         {
@@ -152,52 +144,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void OnAddedToProject(string filePath)
         {
-            if (couplingFile == null)
+            if (couplingFilePath == null)
             {
-                couplingFile = new ModelCouplingFile { FilePath = filePath };
+                couplingFilePath = filePath;
             }
 
-            ModelSaveTo(filePath, false);
+            ModelSaveTo(filePath);
         }
 
         private void OnCopyTo(string filePath)
         {
-            ModelSaveTo(filePath, false);
+            ModelSaveTo(filePath);
         }
 
         private void OnSwitchTo(string filePath)
         {
-            if (couplingFile == null)
+            if (couplingFilePath == null)
             {
-                BuildModelFromFile(filePath);
+                modelExchangeInfos.ReadFromJson(filePath);
             }
-            else
-            {
-                couplingFile.FilePath = filePath;
-            }
-        }
 
-        private void BuildModelFromFile(string filePath)
-        {
-            couplingFile = new ModelCouplingFile { FilePath = filePath };
-            LoadLinks();
+            couplingFilePath = filePath;
         }
 
         private void ModelSave()
         {
-            ModelSaveTo(couplingFile.FilePath, true);
+            ModelSaveTo(couplingFilePath);
         }
 
-        private void ModelSaveTo(string filePath, bool switchTo)
+        private void ModelSaveTo(string filePath)
         {
-            var targetDir = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(targetDir))
-                Directory.CreateDirectory(targetDir);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(filePath));
 
             // write exchanges
-            couplingFile.Write(filePath, modelExchangeInfos);
-            if (switchTo)
-                couplingFile.FilePath = filePath;
+            modelExchangeInfos.WriteToJson(filePath);
         }
 
         #endregion
@@ -278,7 +258,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private string GetJsonPathFromDeltaShellPath(string dsPath, string fileName)
         {
-            // dsproj_data/<model name>/<model name>.mdw
+            // dsproj_data/<model name>/<model name>.json
             return Path.Combine(Path.GetDirectoryName(dsPath), Name, fileName + ".json");
         }
 
