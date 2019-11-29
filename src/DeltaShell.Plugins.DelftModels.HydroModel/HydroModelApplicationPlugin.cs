@@ -99,7 +99,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             // because flow is not saved in the database.
             foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
-                hydroModel.SaveLinks();
                 hydroModel.UnlinkAndRememberDataItems();
             }
         }

@@ -20,43 +20,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #region Logic for (un)linking/saving RTC-FlowFM filebased coupling
 
         /// <summary>
-        /// Save the links between models to a different file.
-        /// Only used for rtc and flow now.
-        /// TODO: Use abstraction.
-        /// </summary>
-        public virtual void SaveLinks()
-        {
-            if (TryGetFmAndRtcModel(out var flowModel1, out var rtcModel))
-            {
-                modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel1, rtcModel, false));
-            }
-
-            if (TryGetFmAndRRModel(out var flowModel2, out var rrModel))
-            {
-                modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel2, rrModel, false));
-            }
-        }
-
-        /// <summary>
         /// Unlink data items and remember them in linkInfos.
         /// Can be restored after saving to the database with <see cref="RelinkDataItems"/>.
         /// </summary>
-        public virtual void UnlinkAndRememberDataItems()
+        public virtual void UnlinkAndRememberDataItems(bool unlink = true)
         {
-            IModel flowModel, rtcModel;
-            if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
-            {
-                modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, true));
-            }
+            if (!TryGetFmAndRtcModel(out var flowModel, out var rtcModel)) 
+                return;
 
-            if (TryGetFmAndRRModel(out var flowModel2, out var rrModel))
-            {
-                modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel2, rrModel, true));
-            }
+            modelExchangeInfos.Clear();
+            modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, unlink));
         }
 
         /// <summary>
@@ -100,7 +73,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             modelExchangeInfos.AddRange(couplingFile.Read(couplingFile.FilePath));
         }
 
-        public virtual string CouplingFilePath { get { return couplingFile != null ? couplingFile.FilePath : null; } }
+        public virtual string CouplingFilePath
+        {
+            get { return couplingFile?.FilePath; }
+        }
 
         private bool TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel)
         {
@@ -123,90 +99,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return flowModel != null && rtcModel != null;
         }
 
-        private bool TryGetFmAndRRModel(out IModel flowModel, out IModel rrModel)
-        {
-            flowModel = null;
-            rrModel = null;
-
-            foreach (var model in Models)
-            {
-                if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))
-                {
-                    flowModel = model;
-                }
-                else if (model.GetEntityType().Name.Equals("RainfallRunoffModel"))
-                {
-                    rrModel = model;
-                }
-            }
-
-            return flowModel != null && rrModel != null;
-        }
-
         public static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)
         {
-            if (model is IFileBased)
-            {
-                return model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems);
-            }
-            else
-            {
-                return model.AllDataItems.Where(di => (di.Role & role) == role);
-            }
+            return model is IFileBased
+                ? model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems)
+                : model.AllDataItems.Where(di => (di.Role & role) == role);
         }
 
         /// <summary>
         /// finds the currently linked dataitems of the models, stores them in exhangeInfo, and when unlink is
         /// true, the linkage is broken. Currently only used for flowfm + rtc
         /// </summary>
-        /// <param name="flowModel"></param>
-        /// <param name="rtcModel"></param>
-        /// <param name="unlink"></param>
-        /// <returns></returns>
-        public static IEnumerable<ModelExchangeInfo> GetExchangeInfo(IModel flowModel, IModel rtcModel, bool unlink)
+        private static IEnumerable<ModelExchangeInfo> GetExchangeInfo(IModel flowModel, IModel rtcModel, bool unlink)
         {
-            var flowInputItems = GetDataItems(flowModel, DataItemRole.Input).ToList();
-            var flowOutputItems = GetDataItems(flowModel, DataItemRole.Output).ToList();
+            yield return GetModelExchangeInfo(rtcModel, flowModel, unlink);
+            yield return GetModelExchangeInfo(flowModel, rtcModel, unlink);
+        }
 
-            var rtcInputItems = GetDataItems(rtcModel, DataItemRole.Input).ToList();
-            var rtcOutputItems = GetDataItems(rtcModel, DataItemRole.Output).ToList();
+        private static ModelExchangeInfo GetModelExchangeInfo(IModel targetModel, IModel sourceModel, bool unlink)
+        {
+            var targetInputItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
+            var sourceOutputItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
+            
+            var exchangeInfo = new ModelExchangeInfo(sourceModel, targetModel);
 
-            var exchangeInfoList = new List<ModelExchangeInfo>();
-            var exchangeInfo = new ModelExchangeInfo(flowModel, rtcModel);
-            foreach (var flowOutputItem in flowOutputItems)
+            foreach (var sourceOutputItem in sourceOutputItems)
             {
-                foreach (var rtcInputItem in rtcInputItems)
+                foreach (var targetInputItem in targetInputItems.Where(i => i.LinkedTo != null && i.LinkedTo.Equals(sourceOutputItem)))
                 {
-                    if (rtcInputItem.LinkedTo != null && rtcInputItem.LinkedTo.Equals(flowOutputItem))
+                    exchangeInfo.Exchanges.Add(new ModelExchange(sourceOutputItem, targetInputItem));
+
+                    if (unlink)
                     {
-                        exchangeInfo.Exchanges.Add(new ModelExchange(flowOutputItem, rtcInputItem));
-                        if (unlink)
-                        {
-                            rtcInputItem.Unlink();
-                        }
+                        targetInputItem.Unlink();
                     }
                 }
             }
-            exchangeInfoList.Add(exchangeInfo);
 
-            exchangeInfo = new ModelExchangeInfo(rtcModel, flowModel);
-            foreach (var rtcOutputItem in rtcOutputItems)
-            {
-                foreach (var flowInputItem in flowInputItems)
-                {
-                    if (flowInputItem.LinkedTo != null && flowInputItem.LinkedTo.Equals(rtcOutputItem))
-                    {
-                        exchangeInfo.Exchanges.Add(new ModelExchange(rtcOutputItem, flowInputItem));
-                        if (unlink)
-                        {
-                            flowInputItem.Unlink();
-                        }
-                    }
-                }
-            }
-            exchangeInfoList.Add(exchangeInfo);
-
-            return exchangeInfoList;
+            return exchangeInfo;
         }
 
         #endregion RTC-FlowFM coupling
@@ -226,6 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 couplingFile = new ModelCouplingFile { FilePath = filePath };
             }
+
             ModelSaveTo(filePath, false);
         }
 
@@ -313,7 +244,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         void IFileBased.CreateNew(string path)
         {
-            OnAddedToProject(GetJSONPathFromDeltaShellPath(path));
+            OnAddedToProject(GetJsonPathFromDeltaShellPath(path, Name));
+
             this.path = path;
             IsOpen = true;
         }
@@ -330,13 +262,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         void IFileBased.CopyTo(string destinationPath)
         {
-            OnCopyTo(GetJSONPathFromDeltaShellPath(destinationPath));
+            OnCopyTo(GetJsonPathFromDeltaShellPath(destinationPath, Name));
         }
 
         void IFileBased.SwitchTo(string newPath)
         {
             path = newPath;
-            OnSwitchTo(GetJSONPathFromDeltaShellPath(newPath));
+            OnSwitchTo(GetJsonPathFromDeltaShellPath(newPath, Name));
             IsOpen = true;
         }
 
@@ -344,10 +276,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
         }
 
-        private string GetJSONPathFromDeltaShellPath(string dsPath)
+        private string GetJsonPathFromDeltaShellPath(string dsPath, string fileName)
         {
             // dsproj_data/<model name>/<model name>.mdw
-            return Path.Combine(Path.GetDirectoryName(dsPath), Path.Combine(Name, Name + ".json"));
+            return Path.Combine(Path.GetDirectoryName(dsPath), Name, fileName + ".json");
         }
 
         #endregion
