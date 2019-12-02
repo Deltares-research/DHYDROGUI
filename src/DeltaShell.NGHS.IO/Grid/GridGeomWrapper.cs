@@ -17,9 +17,19 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <summary>
         /// Makes embedded 1-1 the 1d2d links 
         /// </summary>
+        /// <param name="c_npl">The number of polygon nodes.</param>
+        /// <param name="c_xpl">The x coordinates of the polygon nodes.</param>
+        /// <param name="c_ypl">The y coordinates of the polygon nodes.</param>
+        /// <param name="c_zpl">The z coordinates of the polygon nodes.</param>
+        /// <param name="c_nOneDMask">The size of the 1d mask, should be equal to the number of 1d computational nodes</param>
+        /// <param name="c_oneDmask">The size of the 1d mask.</param>
+        /// <param name="c_inNet">Generate 1d2d connections only inside 2d net(1) or not(0)</param>
+        /// <param name="c_jsferic">Cartisian (0) or spheric (1)</param>
+        /// <param name="c_jasfer3D"></param>
+        /// <param name="c_jglobe"></param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask, ref int c_inNet, ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
         /// <summary>
         /// Makes embedded 1-n 1d2d links. 1d-2d internal connections.With this function multiple 2d cells can be connected to 1d mesh points. all the cell crossing the 1d links will be connected to the closest 1d point.
@@ -132,7 +142,8 @@ namespace DeltaShell.NGHS.IO.Grid
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int c_inNet = 1;
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints, ref c_inNet, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
