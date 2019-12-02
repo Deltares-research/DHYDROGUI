@@ -1234,10 +1234,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var roughnessSection = RoughnessSections.FirstOrDefault(rs =>string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network));
             if (roughnessSection != null)
             {
-                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
-                roughnessSection.SetDefaultRoughnessValue(0.003);
+                if (roughnessSection.GetDefaultRoughnessType() != RoughnessType.WhiteColebrook)
+                {
+                    roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+                    roughnessSection.SetDefaultRoughnessValue(0.003);
+                }
                 return;
             }
+
             if (settingSewerRoughness && !Network.Manholes.Any() && !Network.Pipes.Any()) return;
             settingSewerRoughness = true;
 

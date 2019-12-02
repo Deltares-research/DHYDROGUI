@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Tests.Structures
             var retrievedPipe = AddPipeToNetworkAndReturn(network);
 
             Assert.IsNotNull(retrievedPipe.CrossSectionDefinition);
-            var profile = retrievedPipe.CrossSectionDefinition;
+            var profile = retrievedPipe.Profile;
 
             Assert.AreEqual(CrossSectionType.Standard ,profile.CrossSectionType);
 

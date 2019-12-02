@@ -1,9 +1,12 @@
+using System.ComponentModel;
+
 namespace DelftTools.Hydro
 {
+
     public enum SewerConnectionSpecialConnectionType
     {
-        None,
-        Pump,
-        Weir
+        [Description("None")] None,
+        [Description("Pressurized pipe")] Pump,
+        [Description("Weir")] Weir
     }
 }

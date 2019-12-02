@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             // Read branches file (GUI properties only)
             var branchFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, UGridToNetworkAdapter.BranchGuiFileName);
-            if (File.Exists(branchFilePath)) fmReaderData.PropertiesPerBranch = BranchFile.Read(branchFilePath);
+            if (File.Exists(branchFilePath)) fmReaderData.PropertiesPerBranch = BranchFile.Read(branchFilePath, netFilePath);
             
             // Read network discretization
             fmReaderData.NetworkDiscretisationDataModel = UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel(netFilePath);

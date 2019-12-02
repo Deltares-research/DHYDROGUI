@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
@@ -8,8 +9,10 @@ using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -23,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
+            WriteBranchFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network.Branches);
             WriteCrossSectionFiles(targetMduFilePath, fmModel);
             WriteStructuresFiles(targetMduFilePath, fmModel);
             WriteRoughnessFiles(targetMduFilePath, fmModel);
@@ -44,7 +48,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(KnownProperties.StorageNodeFile, string.Empty);
             }
         }
+        private static void WriteBranchFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<IBranch> branches)
+        {
 
+            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, UGridToNetworkAdapter.BranchGuiFileName);
+            FileUtils.DeleteIfExists(branchesFilePath);
+            if (!branches.Any())
+            {
+                modelDefinition.SetModelProperty(KnownProperties.BranchFile, string.Empty);
+            }
+            BranchFile.Write(branchesFilePath, branches);
+            modelDefinition.SetModelProperty(KnownProperties.BranchFile, branchesFilePath);
+        }
         private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             WriteCrossSectionDefinitions(targetMduFilePath, fmModel);
@@ -79,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (fmModel.Network.ContainsAnyCrossSectionDefinitions())
             {
                 fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
-                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network, fmModel.RoughnessSections);
+                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network);
             }
             else
             {

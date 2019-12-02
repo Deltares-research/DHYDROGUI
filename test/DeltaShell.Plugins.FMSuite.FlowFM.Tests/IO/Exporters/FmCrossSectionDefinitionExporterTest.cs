@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var filePath = Path.Combine(FileUtils.CreateTempDirectory(), FeatureFile1D2DWriter.CROSS_SECTION_DEFINITION_FILE_NAME);
             var fmModel = new WaterFlowFMModel();
             //fmModel.Network.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle()));
-            CrossSectionDefinitionFileWriter.WriteFile(filePath, fmModel.Network, fmModel.RoughnessSections);
+            CrossSectionDefinitionFileWriter.WriteFile(filePath, fmModel.Network);
 
             Assert.That(File.Exists(filePath));
         }

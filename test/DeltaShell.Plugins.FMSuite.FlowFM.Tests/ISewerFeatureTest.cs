@@ -374,7 +374,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var pipeCrossSectionDefinition = pipeInNetwork.CrossSectionDefinition;
             var expectedCrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
             Assert.That(pipeCrossSectionDefinition.CrossSectionType, Is.EqualTo(expectedCrossSectionDefinition.CrossSectionType));
-            Assert.That(pipeCrossSectionDefinition.ShapeType, Is.EqualTo(expectedCrossSectionDefinition.ShapeType));
+            Assert.That(pipeCrossSectionDefinition, Is.TypeOf<CrossSectionDefinitionStandard>());
+            Assert.That(((CrossSectionDefinitionStandard)pipeCrossSectionDefinition).ShapeType, Is.EqualTo(expectedCrossSectionDefinition.ShapeType));
         }
 
         #endregion
@@ -1252,11 +1253,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             AddSewerFeatureToNetwork(roundShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
 
-            Assert.That(pipe1.CrossSectionDefinition.Shape, Is.EqualTo(roundShape));
-            Assert.That(pipe1.CrossSectionDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That(pipe1.Profile.Shape, Is.EqualTo(roundShape));
+            Assert.That(pipe1.Profile.Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(pipe1.Material, Is.EqualTo(materialType));
 
-            Assert.That(pipe2.CrossSectionDefinition.Shape, Is.EqualTo(roundShape));
+            Assert.That(pipe2.Profile.Shape, Is.EqualTo(roundShape));
             Assert.That(pipe2.CrossSectionDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(pipe2.Material, Is.EqualTo(materialType));
 
@@ -1283,7 +1284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             AddSewerFeatureToNetwork(circleShape, network);
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
 
-            var csDefinition = pipe1.CrossSectionDefinition;
+            var csDefinition = pipe1.Profile;
             Assert.That(csDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(pipe1.Material, Is.EqualTo(materialType));
 

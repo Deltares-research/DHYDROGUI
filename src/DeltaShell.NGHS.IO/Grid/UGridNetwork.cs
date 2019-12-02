@@ -46,6 +46,14 @@ namespace DeltaShell.NGHS.IO.Grid
             ThrowIfError(ierr, errorMessage);
         }
 
+        public void DefineBranchTypeValuesNetworkId(int networkId)
+        {
+            string errorMessage = "Could not define branchtype variable";
+            var uGridNetworkApi = GetValidGridApi(errorMessage);
+            var ierr = uGridNetworkApi.DefineBranchesTypeValues(networkId);
+            ThrowIfError(ierr, errorMessage);
+            
+        }
         public void WriteNetworkNodes(double[] nodesX, double[] nodesY, string[] nodesids, string[] nodeslongNames)
         {
             DoWithValidGridApi(uGridNetworkApi => uGridNetworkApi.WriteNetworkNodes(nodesX, nodesY, nodesids, nodeslongNames), 

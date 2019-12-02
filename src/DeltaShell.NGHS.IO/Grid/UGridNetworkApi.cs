@@ -516,5 +516,27 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             get { return networkIdForWriting > 0; }
         }
+        public int DefineBranchesTypeValues(int networkId)
+        {
+            if (!Initialized) return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+
+            try
+            {
+                int varId = 0;
+
+                return wrapper.DefineNetworkVariable(ioncId, networkId, varId, 
+                    GridApiDataSet.GridConstants.NF90_INT, 
+                    GridApiDataSet.LocationType.UG_LOC_EDGE, 
+                    GridApiDataSet.UGridApiConstants.BranchType,
+                    "", 
+                    "Water type in branch (network edge)", 
+                    "", 
+                    GridApiDataSet.GridConstants.DEFAULT_FILL_VALUE_INT);
+            }
+            catch
+            {
+                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+            }
+        }
     }
 }

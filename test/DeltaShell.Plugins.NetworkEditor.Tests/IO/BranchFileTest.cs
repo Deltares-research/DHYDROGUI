@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)
         {
             BranchFile.Write(filePath, branches);
-            var propertiesPerBranch = BranchFile.Read(filePath);
+            var propertiesPerBranch = BranchFile.Read(filePath, null);
             for (var n = 0; n < propertiesPerBranch.Count; n++)
             {
                 Assert.That(propertiesPerBranch[n].Name, Is.EqualTo(branches[n].Name));

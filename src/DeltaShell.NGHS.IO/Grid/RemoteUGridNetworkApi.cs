@@ -130,5 +130,10 @@ namespace DeltaShell.NGHS.IO.Grid
             var ugridNetworkApi = api as IUGridNetworkApi;
             return ugridNetworkApi != null ? function(ugridNetworkApi) : defaultValue;
         }
+
+        public int DefineBranchesTypeValues(int networkId)
+        {
+            return GetFromValidUGridNetworkApi(ugridNetworkApi => ugridNetworkApi.DefineBranchesTypeValues(networkId), GridApiDataSet.GridConstants.GENERAL_FATAL_ERR);
+        }
     }
 }

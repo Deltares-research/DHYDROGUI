@@ -4,16 +4,13 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.NGHS.IO.FileReaders 
 {
@@ -40,14 +37,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
                 throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
-
-            AddSubStructuresToCompositeStructuresOrAddNew(structures);
-
+            
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
-
-            // update geometry based on branch chainage
-            structures.ForEach(s => s.Geometry = GetStructureGeometry(s));
 
             if (fileReadingExceptions.Count > 0)
             {
@@ -55,64 +47,23 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("While reading structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
         }
-
-        public static IGeometry GetStructureGeometry(IStructure1D structure1D)
-        {
-            var lengthIndexedLine = new LengthIndexedLine(structure1D.Branch.Geometry);
-            var mapOffset = NetworkHelper.MapChainage(structure1D.Branch, structure1D.Chainage);
-            return new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
-        }
-
-        private static void AddSubStructuresToCompositeStructuresOrAddNew(IList<IStructure1D> structures)
-        {
-            var compositeBranchStructures = structures.OfType<ICompositeBranchStructure>().ToList();
-            compositeBranchStructures.ForEach(comp =>
-            {
-                var structureIds = comp.Tag as string;
-                if (string.IsNullOrWhiteSpace(structureIds))
-                {
-                    return;
-                }
-
-                // todo : think about caching structures and name as a lookup
-                structureIds.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(sId => structures.FirstOrDefault(st => st.Name == sId))
-                    .Where(s => s != null)
-                    .ForEach(s =>
-                    {
-                        s.Geometry = comp.Geometry;
-                        s.ParentStructure = comp;
-                        comp.Structures.Add(s);
-                    });
-            });
-
-            // generate composite structures for single structures
-            var singleStructures = structures.Where(s => s.ParentStructure == null && !(s is ICompositeBranchStructure)).ToList();
-
-            singleStructures.ForEach((s, i) =>
-            {
-                var compositeStructure = new CompositeBranchStructure
-                {
-                    Name = $"Composite structure generated {i}",
-                    Branch = s.Branch,
-                    Chainage = s.Chainage,
-                    Geometry = s.Geometry
-                };
-
-                structures.Add(compositeStructure);
-
-                compositeStructure.Structures.Add(s);
-                s.ParentStructure = compositeStructure;
-            });
-        }
-
+        
         private static void AddStructuresToNetwork(IList<IStructure1D> structures)
         {
             var grouping = structures.GroupBy(s => s.Branch);
 
             foreach (var group in grouping)
             {
-                group.Key.BranchFeatures.AddRange(group);
+                if (group.Key is ISewerConnection)
+                {
+                    group.ForEach(s =>
+                    {
+
+                        HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, @group.Key);
+                    });
+                }
+                else
+                    group.Key.BranchFeatures.AddRange(group);
             }
         }
 

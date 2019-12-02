@@ -87,7 +87,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private string GetSelectedDirectory()
         {
-            var dialog = new FolderBrowserDialog();
+            var dialog = new FolderBrowserDialog()
+            {
+                SelectedPath = Properties.Settings.Default.Last_GwswImport_FolderPath
+            };
             var result = dialog.ShowDialog();
             return result != System.Windows.Forms.DialogResult.OK ? null : dialog.SelectedPath;
         }

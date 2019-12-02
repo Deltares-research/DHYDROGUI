@@ -7,6 +7,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
 using SharpMap.Api;
 using SharpMap.Rendering.Thematics;
@@ -316,9 +317,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     DefaultStyle = branchStyle,
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        new CategorialThemeItem("Pressurized pipe", pumpStyle, null, SewerConnectionSpecialConnectionType.Pump),
-                        new CategorialThemeItem("Weir", weirStyle, null, SewerConnectionSpecialConnectionType.Weir),
-                        new CategorialThemeItem("None", branchStyle, null, SewerConnectionSpecialConnectionType.None),
+                        new CategorialThemeItem(SewerConnectionSpecialConnectionType.Pump.GetDescription(), pumpStyle, null, SewerConnectionSpecialConnectionType.Pump),
+                        new CategorialThemeItem(SewerConnectionSpecialConnectionType.Weir.GetDescription(), weirStyle, null, SewerConnectionSpecialConnectionType.Weir),
+                        new CategorialThemeItem(SewerConnectionSpecialConnectionType.None.GetDescription(), branchStyle, null, SewerConnectionSpecialConnectionType.None),
                     }
                 };
             }

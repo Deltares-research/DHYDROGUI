@@ -16,5 +16,6 @@ namespace DeltaShell.NGHS.IO.Grid
         int ReadNetworkNodes(int networkId, out double[] nodesX, out double[] nodesY, out string[] nodesIs, out string[] nodesLongnames);
         int ReadNetworkBranches(int networkId, out int[] sourceNodes, out int[] targetNodes, out double[] branchLengths, out int[] branchGeoPoints, out string[] branchIds, out string[] branchLongnames, out int[] branchOrderNumbers);
         int ReadNetworkGeometry(int networkId, out double[] geopointsX, out double[] geopointsY);
+        int DefineBranchesTypeValues(int networkId);
     }
 }

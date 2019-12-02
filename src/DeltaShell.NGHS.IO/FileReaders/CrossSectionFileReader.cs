@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
@@ -77,15 +78,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     crossSectionDefinition.ShiftLevel(shiftLevel);
 
                     var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
-                    var crossSection = AddCrossSectionToNetwork(network, crossSectionLocationInfo, crossSectionDefinition);
+                    var crossSection = network.AddCrossSection(crossSectionLocationInfo, crossSectionDefinition, isSharedCrossSection);
                     
                     if (isSharedCrossSection)
                     {
-                        crossSection.ShareDefinitionAndChangeToProxy();
-                        
-                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Where(cslInfo => !cslInfo.ReadProperty<string>(LocationRegion.Definition.Key).Equals(crossSectionDefinition.Name)))
+                        crossSection?.ShareDefinitionAndChangeToProxy();
+
+                        foreach (var sectionLocationInfo in crossSectionLocationInfos.Except(new[] {crossSectionLocationInfo}))
                         {
-                            AddCrossSectionToNetwork(network, sectionLocationInfo, (ICrossSectionDefinition)crossSection.Definition.Clone());
+                            network.AddCrossSection(sectionLocationInfo, new CrossSectionDefinitionProxy(crossSectionDefinition), false);
                         }
                     }
                 }
@@ -107,8 +108,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static CrossSection AddCrossSectionToNetwork(IHydroNetwork network, DelftIniCategory crossSectionLocationInfo,
-            ICrossSectionDefinition crossSectionDefinition)
+        private static CrossSection AddCrossSection(this IHydroNetwork network, DelftIniCategory crossSectionLocationInfo, ICrossSectionDefinition crossSectionDefinition, bool isFirstOfSharedCrossSectionDefinitions)
         {
             var branchId = crossSectionLocationInfo.ReadProperty<string>(LocationRegion.BranchId.Key);
             var chainage = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Chainage.Key);
@@ -120,17 +120,39 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
             if (branch == null)
                 throw new FileReadingException(string.Format(
-                    "The read cross section '{0}' has a branch id ({1}) which is not available in the model.", crossSectionName,
+                    "The read cross section '{0}' has a branch id ({1}) which is not available in the model.",
+                    crossSectionName,
                     branchId));
-
-            var crossSection = new CrossSection(crossSectionDefinition)
+            if (branch is IPipe pipe)
             {
-                Name = crossSectionName,
-                LongName = crossSectionLongName,
-                Chainage = chainage
-            };
-            branch.BranchFeatures.Add(crossSection);
-            return crossSection;
+                if (isFirstOfSharedCrossSectionDefinitions)
+                {
+                    pipe.CrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionProxy ?? new CrossSectionDefinitionProxy(crossSectionDefinition);
+                    if (!network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                    {
+                        network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+                    }
+                }
+                else
+                {
+                    pipe.CrossSectionDefinition = crossSectionDefinition;
+                }
+
+                return null;
+            }
+            else
+            {
+                var crossSection = new CrossSection(crossSectionDefinition)
+                {
+                    Name = crossSectionName,
+                    LongName = crossSectionLongName,
+                    Chainage = chainage
+                };
+                branch.BranchFeatures.Add(crossSection);
+                return crossSection;
+            }
+
+            
         }
 
         public static ICrossSectionDefinition TransformDefinitionCategoryIntoCrossSectionDefinition(IDelftIniCategory crossSectionDefinitionCategory, IHydroNetwork network)

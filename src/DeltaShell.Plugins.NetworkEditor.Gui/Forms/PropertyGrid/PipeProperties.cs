@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Name")]
         public string CrossSectionName
         {
-            get { return data?.CrossSectionDefinition?.ToString() ?? string.Empty; }
+            get { return data?.Profile?.ToString() ?? string.Empty; }
         }
 
         [Category("Cross section properties")]
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Shape")]
         public string CrossSectionShape
         {
-            get { return data?.CrossSectionDefinition?.Shape?.Type.ToString() ?? string.Empty; }
+            get { return data?.Profile?.Shape?.Type.ToString() ?? string.Empty; }
         }
 
         [Category("Cross section properties")]
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionDiameter
         {
-            get { return data?.CrossSectionDefinition?.GetProfileDiameter() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileDiameter() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionWidth
         {
-            get { return data?.CrossSectionDefinition?.GetProfileWidth() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileWidth() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double CrossSectionHeight
         {
-            get { return data?.CrossSectionDefinition?.GetProfileHeight() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileHeight() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double ArcHeight
         {
-            get { return data?.CrossSectionDefinition?.GetProfileArchHeight() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileArchHeight() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double Slope
         {
-            get { return data?.CrossSectionDefinition?.GetProfileSlope() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileSlope() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double BottomWidthB
         {
-            get { return data?.CrossSectionDefinition?.GetProfileBottomWidthB() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileBottomWidthB() ?? double.NaN; }
         }
 
         [Category("Cross section properties")]
@@ -175,13 +175,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         public double MaximumFlowWidth
         {
-            get { return data?.CrossSectionDefinition?.GetProfileMaximumFlowWidth() ?? double.NaN; }
+            get { return data?.Profile?.GetProfileMaximumFlowWidth() ?? double.NaN; }
         }
 
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
-            var shape = data?.CrossSectionDefinition?.Shape;
+            var shape = data?.Profile?.Shape;
             switch (propertyName)
             {
                 case "CrossSectionDiameter":

@@ -49,6 +49,7 @@ geometry,CrossDefFile,,,,FileName,,,,TRUE,,,,,,Channel profile definition file *
 geometry,CrossLocFile,,,,FileName,,,,TRUE,,,,,,"Channel profile location file *_proflocation.xyz with rows x, y, z, profile number ref",
 geometry,FrictFile,,,,FileName,,,,TRUE,,,,,,Roughness files in .ini format,
 geometry,StorageNodeFile,,,,FileName,,,,TRUE,,,,,,Node file that describes data for compartments in a sewer network *.ini,
+geometry,BranchFile,,,,FileName,,,,TRUE,,,,,,Branch gui file that describes data (like material) for pipes in a sewer network *.ini,
 geometry,RoofsFile,,,,FileName,,,,TRUE,,,,,,"Roof area file *.pliz, containing x- and y-coordinates that describe the shapes of these roofs",
 geometry,ProfdefxyzFile,,,,FileName,,,,TRUE,,,,,,Channel profile definition file _profdefinition.def with definition for all profile numbers,
 geometry,IniFieldFile,,,,FileName,,,,TRUE,,,,,,Initial values and parameter fields file,

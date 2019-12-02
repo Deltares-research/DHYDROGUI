@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -108,6 +113,8 @@ namespace DeltaShell.NGHS.IO.Grid
 
     public class NetworkUGridDataModel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NetworkUGridDataModel));
+
         public string Name;
         public int NetworkId;
 
@@ -160,6 +167,28 @@ namespace DeltaShell.NGHS.IO.Grid
             NumberOfBranches = branchNames.Length;
             NumberOfGeometryPoints = branchGeometryPoints.Sum();
         }
+        public enum BranchType
+        {
+            [Description("Dry Weather Flow")]
+            DryWeatherFlow = 1,
+
+            [Description("Storm Water Flow")]
+            StormWaterFlow = 2,
+
+            [Description("Mixed Flow")]
+            MixedFlow = 3,
+
+            [Description("Surface Water")]
+            SurfaceWater = 4,
+
+            [Description("Transport Water")]
+            TransportWater = 5,
+
+            [Description("Sewer Connection")]
+            SewerConnection = 6,
+        }
+
+        public BranchType[] BranchTypes { get; set; }
 
         private void SetNetworkData(IHydroNetwork network)
         {
@@ -259,7 +288,39 @@ namespace DeltaShell.NGHS.IO.Grid
                 var networkBranches = network.Branches.ToArray();
                 GeopointsX = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.X)).ToArray();
                 GeopointsY = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.Y)).ToArray();
+                BranchTypes = networkBranches.Select(GetBranchType).ToArray();
             }
+        }
+
+        private BranchType GetBranchType(IBranch branch)
+        {
+            switch (branch)
+            {
+                case IChannel c:
+                    return BranchType.SurfaceWater;
+                case IPipe p:
+                    switch (p.WaterType)
+                    {
+                        case SewerConnectionWaterType.None:
+                            return BranchType.TransportWater;
+                        case SewerConnectionWaterType.StormWater:
+                            return BranchType.StormWaterFlow;
+                        case SewerConnectionWaterType.DryWater:
+                            return BranchType.DryWeatherFlow;
+                        case SewerConnectionWaterType.Combined:
+                            return BranchType.MixedFlow;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                case ISewerConnection s:
+                    return BranchType.SewerConnection;
+                default:
+                    Log.Error($"<unknown branch type for branch {branch.Name}, returning {BranchType.SurfaceWater.GetDescription()}>");
+                    return BranchType.SurfaceWater;
+                case null:
+                    throw new ArgumentNullException(nameof(branch));
+            }
+            
         }
     }
 }

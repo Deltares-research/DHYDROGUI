@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -140,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var filePath = writerData.FilePaths.CrossSectionDefinitionFilePath;
             if (string.IsNullOrEmpty(filePath)) return;
 
-            CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network, model.RoughnessSections);
+            CrossSectionDefinitionFileWriter.WriteFile(filePath, model.Network);
         }
 
         private static void WriteCrossSectionLocations(WaterFlowFMModelWriterData writerData, IWaterFlowFMModel model)

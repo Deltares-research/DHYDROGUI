@@ -96,12 +96,33 @@ namespace DeltaShell.NGHS.IO.Grid
                         networkDataModel.BranchOrderNumbers);
 
                     uGridNetwork.WriteNetworkGeometry(networkDataModel.GeopointsX, networkDataModel.GeopointsY);
+
+                    uGridNetwork.DefineBranchTypeValuesNetworkId(networkId);
                 }
+
+                WriteBranchTypeValues(netFilePath, networkDataModel.BranchTypes);
+
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
             }
+        }
+        private static void WriteBranchTypeValues(string netFilePath, NetworkUGridDataModel.BranchType[] branchTypes)
+        {
+            var ncFile = NetCdfFile.OpenExisting(netFilePath, true);
+            var var = ncFile.GetVariableByName($"{GridApiDataSet.DataSetNames.Network}_{GridApiDataSet.UGridApiConstants.BranchType}");
+            if (var != null)
+            {
+                ncFile.ReDefine();
+                //ncFile.AddAttribute(var, new NetCdfAttribute("valid_range", (object) new int[] {1, 4}) );
+                //ncFile.AddAttribute(var, new NetCdfAttribute("flag_value", (object)new int[] { 1, 2, 3, 4 }));
+                ncFile.AddAttribute(var, new NetCdfAttribute("flag_meaning", "dry_weather_flow storm_water_flow mixed_flow surface_water transport_water"));
+                ncFile.EndDefine();
+                ncFile.Write(var, branchTypes.Cast<int>().ToArray());
+                ncFile.Flush();
+            }
+            ncFile.Close();
         }
 
         public static void SaveNetworkDiscretisation(string netFilePath, NetworkDiscretisationUGridDataModel discretisationDataModel)
@@ -196,7 +217,7 @@ namespace DeltaShell.NGHS.IO.Grid
         private static IList<BranchFile.BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
             var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
-            var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath) : null;
+            var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath, netFilePath) : null;
             return propertiesPerBranch;
         }
 

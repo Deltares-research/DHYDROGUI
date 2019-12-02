@@ -973,7 +973,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             // the SharedCrossSectionDefinitions of the network
             pipes.ForEach(p =>
             {
-                var pipeCsDefinition = p.CrossSectionDefinition;
+                var pipeCsDefinition = p.Profile;
                 var sharedCsDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(csd => csd.Name == pipeCsDefinition.Name);
                 Assert.NotNull(sharedCsDefinition);
                 Assert.That(pipeCsDefinition.Width, Is.EqualTo(sharedCsDefinition.Width));
@@ -1021,7 +1021,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             // Check the sewer profiles in the network
-            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.CrossSectionDefinition).FirstOrDefault(d => d.Name == csdName)?.Shape;
+            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.Profile).FirstOrDefault(d => d.Name == csdName)?.Shape;
             Assert.IsNotNull(sewerProfileShapeAfter);
         }
 

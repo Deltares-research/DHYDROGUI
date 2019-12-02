@@ -18,7 +18,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -940,9 +939,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void LoadNetworkAndDiscretisation(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             string netFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            string storageNodeFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
             if (!File.Exists(netFilePath)) return;
-
+            string storageNodeFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+            
             var nodeData = File.Exists(storageNodeFilePath)
                 ? NodeFile.Read(storageNodeFilePath)
                 : null;

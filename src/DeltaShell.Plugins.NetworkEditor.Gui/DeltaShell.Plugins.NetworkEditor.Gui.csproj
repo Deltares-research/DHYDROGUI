@@ -214,6 +214,7 @@
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ReverseRoughnessSectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesBase.cs" />
+    <Compile Include="Forms\PropertyGrid\SewerConnectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\VectorVisibilityLayerProperties.cs" />
     <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.cs">
       <SubType>Form</SubType>

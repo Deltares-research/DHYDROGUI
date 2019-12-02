@@ -9,7 +9,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         string CrossSectionDefinitionName { get; set; }
 
-        CrossSectionDefinitionStandard CrossSectionDefinition { get; set; }
+        ICrossSectionDefinition CrossSectionDefinition { get; set; }
+        CrossSectionDefinitionStandard Profile { get; }
 
         SewerProfileMapping.SewerProfileMaterial Material { get; set; }
     }

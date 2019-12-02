@@ -174,14 +174,14 @@ namespace DelftTools.Hydro.Structures
             }
             else
             {
-                sewerConnection = GetNewSewerConnectionWithPump();
+                sewerConnection = GetNewSewerConnectionWithPump(hydroNetwork);
             }
 
             sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.UpdateBranchFeatureGeometries();
         }
 
-        protected virtual ISewerConnection GetNewSewerConnectionWithPump()
+        protected virtual ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
         {
             return null;
         }

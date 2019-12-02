@@ -28,6 +28,8 @@ namespace DeltaShell.NGHS.IO.Grid
             public const string FaceZ = "face_z";
             public const string M = "m";
             public const string DiscretisationPointIds = "node_ids";
+            public const string BranchIds = "branch_id";
+            public const string BranchType = "branch_type";
         }
         
         public static class GridConstants
@@ -48,8 +50,10 @@ namespace DeltaShell.NGHS.IO.Grid
 
             public const int TESTING_ERROR = -9999;
 
+            public const int NF90_INT = 4;
             public const int NF90_DOUBLE = 6;
             public const double DEFAULT_FILL_VALUE = -999.0;
+            public const int DEFAULT_FILL_VALUE_INT = -999;
 
         }
 

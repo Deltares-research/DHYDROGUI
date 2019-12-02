@@ -197,7 +197,7 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         [EditAction]
-        private void UpdateGeometryBasedOnSourceAndTargetCompartments()
+        protected virtual void UpdateGeometryBasedOnSourceAndTargetCompartments()
         {
             if (Source == null || Target == null) return;
 

@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.SewerFeatures
     public class Pipe : SewerConnection, IPipe
     {
         private static ILog Log = LogManager.GetLogger(typeof(Pipe));
-        private CrossSectionDefinitionStandard crossSectionDefinition;
+        private ICrossSectionDefinition crossSectionDefinition;
 
         public string PipeId { get; set; }
 
@@ -48,7 +48,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        public CrossSectionDefinitionStandard CrossSectionDefinition
+        public ICrossSectionDefinition CrossSectionDefinition
         {
             get { return crossSectionDefinition; }
             set
@@ -57,6 +57,19 @@ namespace DelftTools.Hydro.SewerFeatures
 
                 if(crossSectionDefinition != null)
                     CrossSectionDefinitionName = crossSectionDefinition.Name;
+            }
+        }
+
+        public CrossSectionDefinitionStandard Profile
+        {
+            get
+            {
+                if (CrossSectionDefinition is CrossSectionDefinitionProxy crossSectionDefinitionProxy)
+                {
+                    return crossSectionDefinitionProxy.InnerDefinition as CrossSectionDefinitionStandard;
+                }
+
+                return CrossSectionDefinition as CrossSectionDefinitionStandard;
             }
         }
 
@@ -100,7 +113,7 @@ namespace DelftTools.Hydro.SewerFeatures
             {
                 CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
                 if (CrossSectionDefinition != null)
-                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(CrossSectionDefinition.Shape.MaterialName);
+                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)CrossSectionDefinition).Shape.MaterialName);
             }
         }
         [EditAction]
@@ -112,6 +125,14 @@ namespace DelftTools.Hydro.SewerFeatures
                 NotifyCollectionChangedEventArgs.Cancel = true;
                 Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
             }
+        }
+
+        protected override void UpdateGeometryBasedOnSourceAndTargetCompartments()
+        {
+            base.UpdateGeometryBasedOnSourceAndTargetCompartments();
+            if (TargetCompartment?.Geometry?.Coordinate != null && SourceCompartment?.Geometry?.Coordinate?.Distance(TargetCompartment?.Geometry?.Coordinate) == 0)
+                Log.Error($"This pipe {Name} has a geometry with distance of 0 but a 'custom length' (read from GWSW) of {Length}, the source {SourceCompartment?.Name} has a coordinate on {SourceCompartment?.Geometry?.Coordinate}; the target {TargetCompartment?.Name} has a coordinate on {TargetCompartment?.Geometry?.Coordinate} ");
+
         }
     }
 }

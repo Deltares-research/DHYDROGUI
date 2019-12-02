@@ -158,7 +158,7 @@ namespace DelftTools.Hydro
         [EditAction]
         void SectionTypesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Name")
+            if (e.PropertyName == nameof(CrossSectionSectionType.Name))
             {
                 var sectionName = ((CrossSectionSectionType) sender).Name;
                 if (crossSectionSectionTypes.Count(sec => sec.Name == sectionName) > 1)

@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string MapInterval = "mapinterval";
         public const string NetFile = "netfile";
         public const string StorageNodeFile = "StorageNodeFile";
+        public const string BranchFile = "BranchFile";
         public const string NodeFile = "nodefile";
         public const string ObsFile = "obsfile";
         public const string OutDir = "outputdir";

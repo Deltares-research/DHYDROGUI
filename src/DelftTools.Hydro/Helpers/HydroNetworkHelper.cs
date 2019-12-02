@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
@@ -549,6 +548,8 @@ namespace DelftTools.Hydro.Helpers
 
             if(compositeBranchStructure == null)
             {
+                if (structure.Geometry == null)
+                    structure.Geometry = GetStructureGeometry(branch, structure.Chainage);
                 compositeBranchStructure = new CompositeBranchStructure
                 {
                     Branch = branch,
@@ -565,6 +566,14 @@ namespace DelftTools.Hydro.Helpers
 
             AddStructureToComposite(compositeBranchStructure, structure);
             return compositeBranchStructure;
+        }
+
+        private static IGeometry GetStructureGeometry(IBranch branch, double chainage)
+        {
+            if (branch == null) return null;
+            var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
+            var mapOffset = NetworkHelper.MapChainage(branch, chainage);
+            return new Point(lengthIndexedLine.ExtractPoint(mapOffset).Copy());
         }
 
         private static ICompositeBranchStructure GetCompositeBranchStructure(IStructure1D structure, IBranch branch)

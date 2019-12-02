@@ -8,9 +8,10 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        protected override ISewerConnection GetNewSewerConnectionWithPump()
+        protected override ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = new SewerConnection(Name);
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.AddStructureToBranch(this);
             return sewerConnection;
         }
