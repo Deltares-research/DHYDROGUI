@@ -269,6 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
             else
             {
+                Coordinate exactStartCoordinate = fmModel.NetworkDiscretization.Locations.Values[networkLocationId].Geometry.Coordinate;
                 var cellId = Links1D2DHelper.FindCellIndex(endPoint, fmModel.Grid);
                 if (cellId == Links1D2DHelper.MISSING_INDEX)
                 {
@@ -279,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     var link = new Link1D2D(networkLocationId, cellId)
                     {
                         TypeOfLink = linkType,
-                        Geometry = new LineString(new[] { startPoint.Coordinate, endPoint.Coordinate }),
+                        Geometry = new LineString(new[] { exactStartCoordinate, endPoint.Coordinate }),
                         SnapToleranceUsed = snapTolerance
                     };
                     return link;
