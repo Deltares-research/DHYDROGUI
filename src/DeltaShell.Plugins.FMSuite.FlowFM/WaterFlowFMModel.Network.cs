@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
-        public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D
+        public IEnumerable<Model1DBoundaryNodeData> BoundaryConditions1D
         {
             get { return ModelDefinition.BoundaryConditions1D; }
         }

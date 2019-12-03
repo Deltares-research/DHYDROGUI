@@ -9,12 +9,14 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -89,9 +91,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
 
-            var fmModel = target as WaterFlowFMModel;
-            var network = fmModel?.ModelDefinition?.Network;
+            var hydroModel = target as HydroModel;
+            var fmModel = hydroModel?.GetAllActivitiesRecursive<IWaterFlowFMModel>()?.FirstOrDefault() ?? target as IWaterFlowFMModel;
+            var network = fmModel?.ModelDefinition?.Network ?? target as IHydroNetwork;
 
+            if (network == null) return null;
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database"));
 
             try
@@ -163,7 +167,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 Log.ErrorFormat($"While adding GWSW features to network we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
 
-        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(WaterFlowFMModel fmModel)
+        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IWaterFlowFMModel fmModel)
         {
             foreach (var outletCompartment in fmModel.Network.OutletCompartments)
             {
@@ -480,7 +484,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             get
             {
                 yield return typeof(IWaterFlowFMModel);
-                yield return typeof(INetwork);
+                yield return typeof(IHydroNetwork);
+                yield return typeof(HydroModel);
             }
         }
 
@@ -511,7 +516,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void LoadDefinitionFile()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = @"DeltaShell.Plugins.FMSuite.FlowFM.Resources.GWSWDefinition.csv";
+            var resourceName = @"DeltaShell.Plugins.ImportExport.GWSW.Resources.GWSWDefinition.csv";
             var csvPreviousDelimeter = CsvDelimeter;
             CsvDelimeter = ',';
             DataTable importedTable;

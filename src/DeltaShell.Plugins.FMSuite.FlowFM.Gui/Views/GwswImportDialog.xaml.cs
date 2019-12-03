@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Views;
 using Image = System.Drawing.Image;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using MessageBox = System.Windows.Forms.MessageBox;
 
