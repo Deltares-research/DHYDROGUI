@@ -52,8 +52,8 @@
     <Compile Include="Domain\Concepts\GreenhouseDataProperties.cs" />
     <Compile Include="Domain\Concepts\HbvDataProperties.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWData.cs" />
-    <Compile Include="Domain\Concepts\NWRW\NWRWFileWriter.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWFileReader.cs" />
+    <Compile Include="Domain\Concepts\NWRW\NWRWFileWriter.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWRegion.cs" />
     <Compile Include="Domain\Concepts\NWRW\NWRWSpecialArea.cs" />
     <Compile Include="Domain\Concepts\OpenWaterDataProperties.cs" />

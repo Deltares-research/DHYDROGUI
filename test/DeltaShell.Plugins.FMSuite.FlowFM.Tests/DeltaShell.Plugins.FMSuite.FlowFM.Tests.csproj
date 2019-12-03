@@ -464,6 +464,11 @@
       <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
+      <Project>{f456b556-d969-4768-9e3f-f151a387071b}</Project>
+      <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>

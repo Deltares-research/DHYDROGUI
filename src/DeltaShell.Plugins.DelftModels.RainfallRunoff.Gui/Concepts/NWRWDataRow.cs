@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
-    class NWRWDataRow : RainfallRunoffDataRow<NWRWData>
+    public class NWRWDataRow : RainfallRunoffDataRow<NWRWData>
     {
         [Description("Area Id")]
         public string NWRWDataId

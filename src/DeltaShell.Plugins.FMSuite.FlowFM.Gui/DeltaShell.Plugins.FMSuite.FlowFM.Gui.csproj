@@ -422,6 +422,10 @@
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
+      <Project>{F456B556-D969-4768-9E3F-F151A387071B}</Project>
+      <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>

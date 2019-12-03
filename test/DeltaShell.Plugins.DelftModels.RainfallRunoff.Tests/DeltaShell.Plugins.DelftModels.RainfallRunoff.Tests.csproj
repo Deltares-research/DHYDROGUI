@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="CatchmentCoverageMaintainerImplTest.cs" />
     <Compile Include="Domain\Concepts\Hbv\HbvDataTest.cs" />
+    <Compile Include="Domain\Concepts\NWRW\NWRWTest.cs" />
     <Compile Include="Domain\Concepts\Sacramento\SacramentoDataTest.cs" />
     <Compile Include="Exporters\MeteoDataExporterTest.cs" />
     <Compile Include="Exporters\RainfallRunoffBoundaryDataFileWriterTest.cs" />

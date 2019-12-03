@@ -15,6 +15,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 

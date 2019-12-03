@@ -1,12 +1,29 @@
-﻿using DelftTools.Hydro;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
 {
+    public class GwswNwRWData : NWRWData
+    {
+        public GwswNwRWData() : base()
+        {
+        }
+
+        public double SurfaceStorage { get; set; }
+        public double InfiltrationCapacityMax { get; set; }
+        public double InfiltrationCapacityMin { get; set; }
+        public double InfiltrationCapacityReduction { get; set; }
+        public double InfiltrationCapacityRecovery { get; set; }
+        public double RunoffDelay { get; set; }
+        //public double RunoffLength { get; set; }
+        //public double RunoffSlope { get; set; }
+        //public double TerrainRoughness { get; set; }
+
+    }
     [Entity(FireOnCollectionChange = false)]
-    public class NWRWData : CatchmentModelData
+    public class NWRWData : CatchmentModelData, ISewerFeature
     {
         //nhib
         protected NWRWData()
@@ -29,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
         public int RoofFlatStretched { get; set; }
         public int UnpavedWithSlope { get; set; }
         public int UnpavedFlat { get; set; }
-        public virtual int UnpavedFlatStretched { get; set; }
+        public int UnpavedFlatStretched { get; set; }
         public string MeteoStationId { get; set; }
         public string DryWeatherFlowId { get; set; }
         public int NumberOfPeople { get; set; }
@@ -38,6 +55,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
         public double AreaAdjustmentFactor { get; set; }
 
 
+        public void AddToHydroNetwork(IHydroNetwork network)
+        {
+            //
+        }
     }
 
 }
