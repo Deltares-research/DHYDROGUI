@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             base.AddCommonProperties(crossSectionDefinition);
             var crossSectionSection = crossSectionDefinition.Sections.FirstOrDefault();
-            if (crossSectionSection != null) IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType.Name);
+            if (crossSectionSection != null) IniCategory.AddProperty(DefinitionPropertySettings.FrictionId, crossSectionSection.SectionType?.Name);
         }
 
         protected abstract bool HasCorrectCrossSectionShape(CrossSectionDefinitionStandard standardDefinition);

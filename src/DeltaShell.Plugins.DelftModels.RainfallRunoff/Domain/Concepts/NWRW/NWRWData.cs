@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
 
     }
     [Entity(FireOnCollectionChange = false)]
-    public class NWRWData : CatchmentModelData, ISewerFeature
+    public class NWRWData : CatchmentModelData, INwrwFeature
     {
         //nhib
         protected NWRWData()
@@ -54,10 +54,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
         public IList<NWRWSpecialArea> SpecialAreas { get; set; }
         public double AreaAdjustmentFactor { get; set; }
 
-
-        public void AddToHydroNetwork(IHydroNetwork network)
+        public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
-            //
+            var rrModel = model as RainfallRunoffModel;
+            if(rrModel == null) return;
+            rrModel.NWRWData.Add(this);
+            rrModel.ModelData.Add(this);
         }
     }
 

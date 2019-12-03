@@ -231,6 +231,7 @@
     <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="IPointFeature.cs" />
+    <Compile Include="SewerFeatures\INwrwFeature.cs" />
     <Compile Include="SewerFeatures\ISewerConnection.cs" />
     <Compile Include="SewerFeatures\Compartment.cs" />
     <Compile Include="SewerFeatures\ISewerFeature.cs" />

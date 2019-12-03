@@ -121,36 +121,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 createdSewerFeatures.AddRange(structureFeatures);
             }
 
-            // Runoff types 
-            var runoffTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Runoff).Select(k => k.Value).ToList();
-            if (runoffTypes.Any())
-            {
-                var nrOfRunoffs = runoffTypes.Count;
-                var runoffFeatures = runoffTypes.Select(element =>
-                {
-                    var indexOf = runoffTypes.IndexOf(element);
-                    var stepSize = nrOfRunoffs / 20;
-                    if (stepSize != 0 && indexOf % stepSize == 0)
-                    {
-                        setProgress?.Invoke($"Generating sewer features", runoffTypes.IndexOf(element), nrOfRunoffs);
-                    }
-
-                    return CreateSewerFeature(element);
-                }).ToList();
-                var pointFeatures = runoffFeatures.OfType<IStructure1D>();
-
-                foreach (var pointFeature in pointFeatures)
-                {
-
-                    if (pointFeature.Branch != null && pointFeature.Branch.Source == pointFeature.Branch.Target)
-                    {
-                        // is internal connection
-                        pointFeature.ParentPointFeature = (Manhole)pointFeature.Branch.Source;
-                    }
-                }
-
-                createdSewerFeatures.AddRange(runoffFeatures);
-            }
+            
             return createdSewerFeatures;
         }
 
@@ -186,9 +157,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     break;
                 case SewerFeatureType.Structure:
                     generator = gwswElement.GetSewerStructureGenerator();
-                    break;
-                case SewerFeatureType.Runoff:
-                    generator = new SewerNWRWGenerator();
                     break;
                 default:
                     generator = null;

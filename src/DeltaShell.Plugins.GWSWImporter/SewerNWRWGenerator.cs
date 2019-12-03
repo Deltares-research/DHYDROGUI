@@ -4,14 +4,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class SewerNWRWGenerator : ISewerFeatureGenerator
+    public static class GWSWNWRWGenerator 
     {
-        public ISewerFeature Generate(GwswElement gwswElement)
-        {
-            return CreateNewNWRWData(gwswElement);
-        }
-
-        private static NWRWData CreateNewNWRWData(GwswElement gwswElement)
+       public static INwrwFeature CreateNewNWRWData(GwswElement gwswElement)
         {
             var uniqueIdKey = gwswElement.IsValidGwswSewerConnection()
                 ? SewerConnectionMapping.PropertyKeys.UniqueId

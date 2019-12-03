@@ -47,6 +47,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.Scripting">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
@@ -133,6 +137,11 @@
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
+      <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
