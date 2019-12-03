@@ -300,8 +300,8 @@ namespace DelftTools.Hydro.Structures
             var sewerConnection = new SewerConnection(Name);
             SetSewerConnectionProperties(sewerConnection);
             
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.AddStructureToBranch(this);
+            sewerConnection.AddToHydroNetwork(hydroNetwork);
         }
 
         protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)

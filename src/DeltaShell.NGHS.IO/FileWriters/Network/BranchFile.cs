@@ -24,17 +24,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public enum BranchType
         {
-            Unkown = 0, Channel = 1, SewerConnection = 2, Pipe = 3
+            Channel = 0, SewerConnection = 1, Pipe = 2
         }
 
         private static string GetBranchType(IBranch branch)
         {
-            var value = BranchType.Unkown;
-            if (branch is IChannel)
-            {
-                value = BranchType.Channel;
-            }
-            else if (branch is IPipe)
+            var value = BranchType.Channel;
+            if (branch is IPipe)
             {
                 value = BranchType.Pipe;
             }
@@ -53,20 +49,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             {
                 var iniCategory = new DelftIniCategory("Branch");
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, branch.Name, string.Empty));
-                /*
-
-                AAAAHHHHH NEEEE DIT MOET TERUG!! WAAAROM IN NETCDF?
+                
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BranchType, GetBranchType(branch), 
-                    "0 = Unknown, 1 = Channel, 2 = Pipe, 3 = SewerConnection"));
-
-                var sewerConnection = branch as ISewerConnection;
+                    "2 = Pipe, 3 = SewerConnection"));
+                /*
+                 var sewerConnection = branch as ISewerConnection;
                 var waterType = (int) (sewerConnection?.WaterType ?? SewerConnectionWaterType.None);
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.WaterType, waterType.ToString(),
                     "0 = None, 1 = StormWater, 2 = DryWater, 3 = Combined"));
                 */
-
+                var sewerConnection = branch as ISewerConnection;
+                if (sewerConnection == null) continue;
                 var pipe = branch as Pipe;
-                if(pipe == null) continue;
+                if (pipe == null)
+                {
+                    categories.Add(iniCategory);
+                    continue;
+                }
+
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Material, ((int) pipe.Material).ToString(),
                     "0 = Unknown, 1 = Concrete, 2 = CastIron, 3 = StoneWare, 4 = Hdpe, 5 = Masonry, 6 = SheetMetal, 7 = Polyester, 8 = Polyvinylchlorid, 9 = Steel"));
 
@@ -86,13 +86,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 var branchProperties = new BranchProperties
                 {
                     Name = category.GetPropertyValue(KnownPropertyNames.Name),
-                    /*BranchType = category.GetEnumValueByKey<BranchType>(KnownPropertyNames.BranchType),
-                    WaterType = category.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
+                    BranchType = category.GetEnumValueByKey<BranchType>(KnownPropertyNames.BranchType),
+                    /* WaterType = category.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
                     Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(KnownPropertyNames.Material)
                 };
                 propertiesPerBranch.Add(branchProperties);
             }
-            // now let's do something completely stupid...
+            
             if (!File.Exists(netFilePath)) return propertiesPerBranch;
             var file = NetCdfFile.OpenExisting(netFilePath);
             try
@@ -112,17 +112,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 for (int i = 0; i < branchIdValues.Length; i++)
                 {
                     var branchProperty = propertiesPerBranch.FirstOrDefault(bp => bp.Name == branchIdValues[i]);
-                    if (branchProperty == null)
-                    {
-                        var branchProperties = new BranchProperties
-                        {
-                            Name = branchIdValues[i],
-                            BranchType = BranchType.SewerConnection
-                        };
-                        propertiesPerBranch.Add(branchProperties);
-                        continue;
-                    };
-                    branchProperty.BranchType = BranchType.Pipe;
+                    if (branchProperty == null) continue;
                     branchProperty.WaterType = ConvertBranchTypeToWaterType(branchTypeValues[i]);
                 }
 
@@ -155,7 +145,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         private static T GetEnumValueByKey<T>(this IDelftIniCategory category, string propertyKey)
         {
-            return (T) Enum.Parse(typeof(T), category.GetPropertyValue(propertyKey));
+            return (T) Enum.Parse(typeof(T), category.ReadProperty<int>(propertyKey, true).ToString());
         }
 
         public class BranchProperties

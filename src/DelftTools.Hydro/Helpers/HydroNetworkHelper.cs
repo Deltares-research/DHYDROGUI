@@ -570,7 +570,7 @@ namespace DelftTools.Hydro.Helpers
 
         private static IGeometry GetStructureGeometry(IBranch branch, double chainage)
         {
-            if (branch == null) return null;
+            if (branch?.Geometry == null) return null;
             var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
             var mapOffset = NetworkHelper.MapChainage(branch, chainage);
             return new Point(lengthIndexedLine.ExtractPoint(mapOffset).Copy());

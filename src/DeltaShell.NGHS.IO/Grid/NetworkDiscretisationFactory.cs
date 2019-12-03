@@ -237,9 +237,9 @@ namespace DeltaShell.NGHS.IO.Grid
             switch (branchProperties.BranchType)
             {
                 case BranchFile.BranchType.SewerConnection:
-                    return new SewerConnection();
+                    return new SewerConnection() { WaterType = branchProperties.WaterType };
                 case BranchFile.BranchType.Pipe:
-                    return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material}; ;
+                    return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material};
                 default:
                     return new Channel();
             }

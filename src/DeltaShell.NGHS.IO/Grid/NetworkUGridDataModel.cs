@@ -169,7 +169,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
         public enum BranchType
         {
-            [Description("Dry Weather Flow")]
+            [Description("Foul Water Flow")]
             DryWeatherFlow = 1,
 
             [Description("Storm Water Flow")]
@@ -182,10 +182,7 @@ namespace DeltaShell.NGHS.IO.Grid
             SurfaceWater = 4,
 
             [Description("Transport Water")]
-            TransportWater = 5,
-
-            [Description("Sewer Connection")]
-            SewerConnection = 6,
+            TransportWater = 5
         }
 
         public BranchType[] BranchTypes { get; set; }
@@ -298,8 +295,8 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 case IChannel c:
                     return BranchType.SurfaceWater;
-                case IPipe p:
-                    switch (p.WaterType)
+                case ISewerConnection s:
+                    switch (s.WaterType)
                     {
                         case SewerConnectionWaterType.None:
                             return BranchType.TransportWater;
@@ -312,8 +309,6 @@ namespace DeltaShell.NGHS.IO.Grid
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                case ISewerConnection s:
-                    return BranchType.SewerConnection;
                 default:
                     Log.Error($"<unknown branch type for branch {branch.Name}, returning {BranchType.SurfaceWater.GetDescription()}>");
                     return BranchType.SurfaceWater;

@@ -11,12 +11,11 @@ namespace DelftTools.Hydro.SewerFeatures
         public string SourceCompartmentName { get; set; }
 
         public string TargetCompartmentName { get; set; }
-        
-        protected override ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
+
+        protected override ISewerConnection GetNewSewerConnectionWithPump()
         {
             var sewerConnection = new SewerConnection(Name);
             SetSewerConnectionProperties(sewerConnection);
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
             sewerConnection.AddStructureToBranch(this);
 
             return sewerConnection;

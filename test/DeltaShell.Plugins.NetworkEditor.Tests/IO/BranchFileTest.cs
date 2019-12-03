@@ -130,21 +130,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
 
         private static BranchFile.BranchType GetBranchType(IBranch branch)
         {
-            var value = BranchFile.BranchType.Unkown;
-            if (branch is IChannel)
+            switch (branch)
             {
-                value = BranchFile.BranchType.Channel;
-            }
-            else if (branch is IPipe)
-            {
-                value = BranchFile.BranchType.Pipe;
-            }
-            else if (branch is ISewerConnection)
-            {
-                value = BranchFile.BranchType.SewerConnection;
+                case IPipe p:
+                    return BranchFile.BranchType.Pipe;
+                case ISewerConnection s:
+                    return BranchFile.BranchType.SewerConnection;
+                default:
+                    return BranchFile.BranchType.Channel;
+
             }
 
-            return value;
         }
     }
 }

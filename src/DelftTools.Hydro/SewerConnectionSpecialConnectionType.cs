@@ -7,6 +7,6 @@ namespace DelftTools.Hydro
     {
         [Description("None")] None,
         [Description("Pressurized pipe")] Pump,
-        [Description("Weir")] Weir
+        [Description("Weir / Orifice ")] Weir
     }
 }
