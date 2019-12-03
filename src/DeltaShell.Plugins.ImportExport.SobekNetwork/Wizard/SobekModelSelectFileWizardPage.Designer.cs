@@ -35,11 +35,14 @@
             // 
             // caseBox
             // 
+            this.caseBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.caseBox.Controls.Add(this.caseListBox);
-            this.caseBox.Location = new System.Drawing.Point(6, 42);
+            this.caseBox.Location = new System.Drawing.Point(9, 65);
+            this.caseBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.caseBox.Name = "caseBox";
-            this.caseBox.Padding = new System.Windows.Forms.Padding(10);
-            this.caseBox.Size = new System.Drawing.Size(381, 298);
+            this.caseBox.Padding = new System.Windows.Forms.Padding(15, 15, 15, 15);
+            this.caseBox.Size = new System.Drawing.Size(683, 458);
             this.caseBox.TabIndex = 6;
             this.caseBox.TabStop = false;
             this.caseBox.Text = "Select a case:";
@@ -49,18 +52,21 @@
             // 
             this.caseListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.caseListBox.FormattingEnabled = true;
-            this.caseListBox.Location = new System.Drawing.Point(10, 23);
+            this.caseListBox.ItemHeight = 20;
+            this.caseListBox.Location = new System.Drawing.Point(15, 34);
+            this.caseListBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.caseListBox.Name = "caseListBox";
-            this.caseListBox.Size = new System.Drawing.Size(361, 265);
+            this.caseListBox.Size = new System.Drawing.Size(653, 409);
             this.caseListBox.TabIndex = 0;
             // 
-            // WaterFlowModelSelectFileWizardPage
+            // SobekModelSelectFileWizardPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.caseBox);
+            this.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.Name = "SobekModelSelectFileWizardPage";
-            this.Size = new System.Drawing.Size(464, 400);
+            this.Size = new System.Drawing.Size(696, 615);
             this.Controls.SetChildIndex(this.caseBox, 0);
             this.caseBox.ResumeLayout(false);
             this.ResumeLayout(false);
