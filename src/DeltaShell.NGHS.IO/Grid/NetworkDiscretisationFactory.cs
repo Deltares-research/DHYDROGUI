@@ -234,12 +234,13 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static IBranch CreateBranch(BranchFile.BranchProperties branchProperties)
         {
-            switch (branchProperties.BranchType)
+            switch (branchProperties?.BranchType)
             {
                 case BranchFile.BranchType.SewerConnection:
                     return new SewerConnection() { WaterType = branchProperties.WaterType };
                 case BranchFile.BranchType.Pipe:
                     return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material};
+                case null:
                 default:
                     return new Channel();
             }

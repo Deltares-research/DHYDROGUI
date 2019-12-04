@@ -66,16 +66,26 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         continue;
                     //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
 
+
+                    var crossSectionLocationInfo = crossSectionLocationInfos.Length > 1
+                        ? crossSectionLocationInfos
+                              .FirstOrDefault(cslInfo =>
+                                  cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
+                                      .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase) 
+                                  && cslInfo.ReadProperty<string>(LocationRegion.Id.Key)
+                                      .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase)) 
+                          ?? crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
+                              .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
+                        : crossSectionLocationInfos.FirstOrDefault(cslInfo =>
+                            cslInfo.ReadProperty<string>(LocationRegion.Definition.Key)
+                                .Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase));
+
                     
-                    var crossSectionLocationInfo = crossSectionLocationInfos.FirstOrDefault(cslInfo => cslInfo.ReadProperty<string>(LocationRegion.Definition.Key).Equals(crossSectionDefinition.Name));
                     if (crossSectionLocationInfo == null)
                     {
                         fileReadingExceptions.Add(new FileReadingException("Could not find the location for cross section definition : " + crossSectionDefinition.Name));
                         continue;
                     }
-
-                    var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
-                    crossSectionDefinition.ShiftLevel(shiftLevel);
 
                     var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
                     var crossSection = network.AddCrossSection(crossSectionLocationInfo, crossSectionDefinition, isSharedCrossSection);
@@ -83,10 +93,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     if (isSharedCrossSection)
                     {
                         crossSection?.ShareDefinitionAndChangeToProxy();
+                        var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+                        crossSection.Definition.ShiftLevel(shiftLevel);
 
                         foreach (var sectionLocationInfo in crossSectionLocationInfos.Except(new[] {crossSectionLocationInfo}))
                         {
-                            network.AddCrossSection(sectionLocationInfo, new CrossSectionDefinitionProxy(crossSectionDefinition), false);
+                            var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(crossSectionDefinition);
+                            crossSectionDefinitionProxy.ShiftLevel(sectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key));
+                            network.AddCrossSection(sectionLocationInfo, crossSectionDefinitionProxy, false);
                         }
                     }
                 }
