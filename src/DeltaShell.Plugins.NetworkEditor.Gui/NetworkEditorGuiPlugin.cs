@@ -208,15 +208,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o =>
                 {
-                    return Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o) ?? new DataItem(o);
-                    /* var dataItem = Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, o);
-                     if (dataItem != null) return dataItem;
-                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject()
-                         .OfType<IModelWithRoughnessSections>()
-                         .FirstOrDefault(m => m.RoughnessSections.Contains(o));
-                     if ((RoughnessSection) roughnessSectionModel.RoughnessSectionDataItem.Value != o)
-                         roughnessSectionModel.RoughnessSectionDataItem = new DataItem(o);
-                     return roughnessSectionModel.RoughnessSectionDataItem;*/
+                    return Gui.Application.GetAllModelsInProject()
+                        .OfType<IModelWithRoughnessSections>()
+                        .FirstOrDefault(m => m.RoughnessSections.Contains(o));
                 },
             };
             yield return new ViewInfo<RoughnessNetworkCoverage, RoughnessSection, RoughnessSectionCoverageTableView>
