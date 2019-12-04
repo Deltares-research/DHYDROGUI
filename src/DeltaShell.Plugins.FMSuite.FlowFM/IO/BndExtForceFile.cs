@@ -231,8 +231,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void WriteMeteoExtForceFile(IEnumerable<DelftIniCategory> meteoExtForceFileItems)
         {
             var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
-                GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                GeneralRegion.FileTypeName.BoundaryConditions);
+                GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
+                GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
 
             if (!File.Exists(FilePath) || new DelftIniReader().ReadDelftIniFile(FilePath).All(c => !c.Name.Equals(GeneralRegion.IniHeader, StringComparison.InvariantCultureIgnoreCase)))
             {
