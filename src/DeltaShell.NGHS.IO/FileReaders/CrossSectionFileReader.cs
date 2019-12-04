@@ -94,7 +94,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     {
                         crossSection?.ShareDefinitionAndChangeToProxy();
                         var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
-                        crossSection.Definition.ShiftLevel(shiftLevel);
+                        crossSection?.Definition?.ShiftLevel(shiftLevel);
 
                         foreach (var sectionLocationInfo in crossSectionLocationInfos.Except(new[] {crossSectionLocationInfo}))
                         {
