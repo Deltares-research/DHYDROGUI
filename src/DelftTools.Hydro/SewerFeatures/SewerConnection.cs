@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -45,6 +46,9 @@ namespace DelftTools.Hydro.SewerFeatures
         public SewerConnectionWaterType WaterType { get; set; }
 
         // This property is used in the NetworkLayerStyleFactory, do not remove :)
+        [DisplayName("Sewer Special Connection type")]
+        [FeatureAttribute(ExportName = "Sewer Special Connection type", Order = 21)]
+        [InvokeRequired]
         public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
 
         #region Source and Target
@@ -286,8 +290,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
             if (!BranchFeatures.Any()) return SewerConnectionSpecialConnectionType.None;
 
-            if(BranchFeatures.Any(bf => bf.GetType() == typeof(Pump))) return SewerConnectionSpecialConnectionType.Pump;
-            if(BranchFeatures.Any(bf => bf.GetType() == typeof(Weir))) return SewerConnectionSpecialConnectionType.Weir;
+            if(BranchFeatures.Any(bf => bf.GetType().Implements(typeof(IPump)))) return SewerConnectionSpecialConnectionType.Pump;
+            if(BranchFeatures.Any(bf => bf.GetType().Implements(typeof(IWeir)))) return SewerConnectionSpecialConnectionType.Weir;
 
             return SewerConnectionSpecialConnectionType.None;
         }
