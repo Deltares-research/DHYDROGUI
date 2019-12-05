@@ -393,6 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
                 yield return model.NetworkDiscretization;
                 yield return model.Grid;
+                yield return model.RoughnessSections;
                 yield return model.Links;
                 yield return model.Bathymetry;
                 yield return model.Roughness;
