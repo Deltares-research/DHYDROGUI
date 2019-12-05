@@ -1631,27 +1631,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (location is IHydroNode)
             {
-                Model1DBoundaryNodeData boundary =
-                    BoundaryConditions1D.First(boundaryNodeData => boundaryNodeData.Node.Equals(location));
-                if (boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant ||
-                    boundary.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                var boundary = BoundaryConditions1D.FirstOrDefault(boundaryNodeData => boundaryNodeData.Node.Equals(location));
+                if (boundary == null) yield break;
+
+                switch (boundary.DataType)
                 {
-                    yield return new EngineParameter(QuantityType.WaterLevel, ElementSet.HBoundaries,
-                                                     DataItemRole.Input, FunctionAttributes.StandardNames.WaterLevel,
-                                                     new Unit("Meter above reference level", "m AD"));
-                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.HBoundaries,
-                                                     DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
-                                                     new Unit("Cubic meter", "m³"));
-                }
-                else if (boundary.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
-                    boundary.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries)
-                {
-                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
-                                                     DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
-                                                     new Unit("Cubic meter", "m³"));
-                    yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
-                                                     DataItemRole.Output, FunctionAttributes.StandardNames.WaterLevel,
-                                                     new Unit("Meter above reference level", "m AD"));
+                    case Model1DBoundaryNodeDataType.WaterLevelConstant:
+                    case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
+                        yield return new EngineParameter(QuantityType.WaterLevel, ElementSet.HBoundaries,
+                            DataItemRole.Input, FunctionAttributes.StandardNames.WaterLevel,
+                            new Unit("Meter above reference level", "m AD"));
+                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.HBoundaries,
+                            DataItemRole.Output, FunctionAttributes.StandardNames.WaterDischarge,
+                            new Unit("Cubic meter", "m³"));
+                        break;
+                    case Model1DBoundaryNodeDataType.FlowConstant:
+                    case Model1DBoundaryNodeDataType.FlowTimeSeries:
+                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
+                            DataItemRole.Input, FunctionAttributes.StandardNames.WaterDischarge,
+                            new Unit("Cubic meter", "m³"));
+                        yield return new EngineParameter(QuantityType.Discharge, ElementSet.QBoundaries,
+                            DataItemRole.Output, FunctionAttributes.StandardNames.WaterLevel,
+                            new Unit("Meter above reference level", "m AD"));
+                        break;
                 }
             }
             else

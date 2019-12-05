@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
     public class NetworkEditorMapLayerProvider : IMapLayerProvider
     {
-        private const double MaxVisibilityLayerValue = 1000.0;
+        private const double MaxVisibilityLayerValue = Double.MaxValue;
 
         public bool CanCreateLayerFor(object data, object parentObject)
         {
