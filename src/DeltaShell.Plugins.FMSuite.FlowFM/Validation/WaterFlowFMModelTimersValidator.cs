@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Feature.Generic;
+using NetTopologySuite.Extensions.Features.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -57,6 +63,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             foreach (var issue in issues.Where(i => i != null))
                 yield return issue;
+            // check if boundary 1d && lateral timeseries fit into timeframe
+            foreach (var featureData in waterFlowFmModel.ModelDefinition.BoundaryConditions1D.Where(bc1d => bc1d.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries || bc1d.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries).Cast<IFeatureData>().Concat(waterFlowFmModel.ModelDefinition.LateralSourcesData.Where(lsd => lsd.DataType == Model1DLateralDataType.FlowTimeSeries)))
+            {
+                var data = featureData?.Data as IFunction;
+                if (data?.Arguments ==null || !data.Arguments.Any() || data.Arguments[0]?.ValueType != typeof(DateTime)) continue;
+                var startTimeDefinedInFunction = (DateTime)data.Arguments[0].MinValue ;
+                if(startTimeDefinedInFunction > model.StartTime)
+                    yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, $"Time Series function {featureData.Name} has times with values defined which starts ({startTimeDefinedInFunction:s}) later than expected starttime of the timeframe of the model ({model.StartTime:s}). Please adjust timeseries so it will fit in model time frame, or adjust model Start and Stop time so it will fit the timeseries.", featureData);
+                var stopTimeDefinedInFunction = (DateTime)data.Arguments[0].MaxValue;
+                if (stopTimeDefinedInFunction < model.StopTime)
+                    yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, $"Time Series function {featureData.Name} has time with values defined which ends earlier ({stopTimeDefinedInFunction}) than expected stoptime of the timeframe of model ({model.StopTime:s}). Please adjust timeseries so it will fit in model time frame, or adjust model Start and Stop time so it will fit the timeseries.",featureData);
+            }
         }
 
         private static ValidationIssue CreateMultipleOfModelTimeStepIssue(WaterFlowFMModel waterFlowFmModel, string guiTimeSpanParameter, string outputName)
