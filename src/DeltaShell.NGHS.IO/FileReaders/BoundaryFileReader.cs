@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
@@ -218,6 +219,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", lateralSourceCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
                     throw new LateralDischargeReadingException(errorMessage);
             }
+            
         }
        
         private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, IDelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
@@ -229,7 +231,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     category.Table[0].Quantity, Environment.NewLine);
                 throw new BoundaryConditionReadingException(errorMessage);
             }
-
             var functionValues = parseFunctionValues(category.Table[1]);
             if (functionValues == null)
             {
@@ -242,6 +243,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
             function.Clear();
             function.Arguments[0].SetValues(argumentValues);
             function.SetValues(functionValues);
+            function.Arguments[0].ExtrapolationType = ExtrapolationType.Linear;
+            var periodic = category.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
+            if (!string.IsNullOrEmpty(periodic) && periodic == "true")
+                function.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
+
+
         }
 
         private static double ReadConstantValue(IDelftBcQuantityData quantityData, string categoryName)
