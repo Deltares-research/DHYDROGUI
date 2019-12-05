@@ -54,16 +54,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             foreach (var group in grouping)
             {
-                if (group.Key is ISewerConnection)
-                {
-                    group.ForEach(s =>
-                    {
-
-                        HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, @group.Key);
-                    });
-                }
-                else
-                    group.Key.BranchFeatures.AddRange(group);
+                group.ForEach(s => HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, group.Key));
             }
         }
 
