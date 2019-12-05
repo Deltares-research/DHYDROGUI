@@ -8,21 +8,8 @@
 
     <key column="Id"/>
 
-    <property name="NWRWDataId" />
-    <property name="SurfaceLevel" />
-    <property name="ClosedPavedWithSlope" />
-    <property name="ClosedPavedFlat" />
-    <property name="ClosedPavedFlatStretched" />
-    <property name="OpenPavedWithSlope" />
-    <property name="OpenPavedFlat" />
-    <property name="OpenPavedFlatStretched" />
-    <property name="RoofWithSlope" />
-    <property name="RoofFlat" />
-    <property name="RoofFlatStretched" />
-    <property name="UnpavedWithSlope" />
-    <property name="UnpavedFlat" />
-    <property name="UnpavedFlatStretched" />
-    <property name="MeteoStationId" />
+    <property name="Name" />
+    <property name="MeteoStationName" />
     <property name="DryWeatherFlowId" />
     <property name="NumberOfSpecialAreas" />
     <property name="NumberOfPeople" />

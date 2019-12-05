@@ -60,25 +60,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
                     case NWRWRegion.NWRWKey:
                         break;
                     case NWRWRegion.IdKey:
-                        data.NWRWDataId = ParseString(values[++i], LineNumber);
+                        data.Name = ParseString(values[++i], LineNumber);
                         break;
                     case NWRWRegion.SurfaceLevelKey:
-                        data.SurfaceLevel = ParseDouble(values[++i], LineNumber, parseErrors);
+                    //    data.SurfaceLevel = ParseDouble(values[++i], LineNumber, parseErrors);
                         break;
                     case NWRWRegion.AreaKey:
-                        data.ClosedPavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.ClosedPavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.ClosedPavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.OpenPavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.OpenPavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.OpenPavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.RoofWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.RoofFlat = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.RoofFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.UnpavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.UnpavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
-                        data.UnpavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
-                        break;
+                    //    data.ClosedPavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.ClosedPavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.ClosedPavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.OpenPavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.OpenPavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.OpenPavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.RoofWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.RoofFlat = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.RoofFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.UnpavedWithSlope = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.UnpavedFlat = ParseInt(values[++i], LineNumber, parseErrors);
+                    //    data.UnpavedFlatStretched = ParseInt(values[++i], LineNumber, parseErrors);
+                       break;
                     case NWRWRegion.NumberOfPeopleKey:
                         data.NumberOfPeople = ParseInt(values[++i], LineNumber, parseErrors);
                         break;
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
                         data.DryWeatherFlowId = ParseString(values[++i], LineNumber);
                         break;
                     case NWRWRegion.MeteostationIdKey:
-                        data.MeteoStationId = ParseString(values[++i], LineNumber);
+                        data.MeteoStationName = ParseString(values[++i], LineNumber);
                         break;
                     case NWRWRegion.NumberOfSpecialAreasKey:
                         data.NumberOfSpecialAreas = ParseInt(values[++i], LineNumber, parseErrors);

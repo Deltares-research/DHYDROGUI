@@ -28,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
             StringBuilder sb = new StringBuilder();
             sb.Append(AddOpeningTag());
             sb.Append(AddIdProperty(nwrwData));
-            sb.Append(AddSurfaceLevelProperty(nwrwData));
+            //sb.Append(AddSurfaceLevelProperty(nwrwData));
             sb.Append(AddSpecialAreas(nwrwData));
-            sb.Append(AddAreaProperty(nwrwData));
+            //sb.Append(AddAreaProperty(nwrwData));
             sb.Append(AddNumberOfPeopleProperty(nwrwData));
             sb.Append(AddDryWeatherFlowIdProperty(nwrwData));
             sb.Append(AddMeteostationIdProperty(nwrwData));
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
 
         private string AddMeteostationIdProperty(NWRWData nwrwData)
         {
-            return $"{NWRWRegion.MeteostationIdKey} '{nwrwData.MeteoStationId}' ";
+            return $"{NWRWRegion.MeteostationIdKey} '{nwrwData.MeteoStationName}' ";
         }
 
         private string AddDryWeatherFlowIdProperty(NWRWData nwrwData)
@@ -80,22 +80,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW
             return $"{NWRWRegion.NumberOfPeopleKey} {nwrwData.NumberOfPeople} ";
         }
 
-        private string AddAreaProperty(NWRWData nwrwData)
-        {
-            return 
-                $"{NWRWRegion.AreaKey} {nwrwData.ClosedPavedWithSlope} {nwrwData.ClosedPavedFlat} {nwrwData.ClosedPavedFlatStretched} " +
-                $"{nwrwData.OpenPavedWithSlope} {nwrwData.OpenPavedFlat} {nwrwData.OpenPavedFlatStretched} {nwrwData.RoofWithSlope} {nwrwData.RoofFlat} " +
-                $"{nwrwData.RoofFlatStretched} {nwrwData.UnpavedWithSlope} {nwrwData.UnpavedFlat} {nwrwData.UnpavedFlatStretched} ";
-        }
+        //private string AddAreaProperty(NWRWData nwrwData)
+        //{
+        //    return 
+        //        $"{NWRWRegion.AreaKey} {nwrwData.ClosedPavedWithSlope} {nwrwData.ClosedPavedFlat} {nwrwData.ClosedPavedFlatStretched} " +
+        //        $"{nwrwData.OpenPavedWithSlope} {nwrwData.OpenPavedFlat} {nwrwData.OpenPavedFlatStretched} {nwrwData.RoofWithSlope} {nwrwData.RoofFlat} " +
+        //        $"{nwrwData.RoofFlatStretched} {nwrwData.UnpavedWithSlope} {nwrwData.UnpavedFlat} {nwrwData.UnpavedFlatStretched} ";
+        //}
 
-        private string AddSurfaceLevelProperty(NWRWData nwrwData)
-        {
-            return $"{NWRWRegion.SurfaceLevelKey} {nwrwData.SurfaceLevel} ";
-        }
+        //private string AddSurfaceLevelProperty(NWRWData nwrwData)
+        //{
+        //    return $"{NWRWRegion.SurfaceLevelKey} {nwrwData.SurfaceLevel} ";
+        //}
 
         private string AddIdProperty(NWRWData nwrwData)
         {
-            return $"{NWRWRegion.IdKey} '{nwrwData.NWRWDataId}' ";
+            return $"{NWRWRegion.IdKey} '{nwrwData.Name}' ";
         }
 
         private string AddOpeningTag()
