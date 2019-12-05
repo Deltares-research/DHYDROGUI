@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Grid
         ///c_oneDmask::mask for 1d mesh points(1 = potential connection, 0 = do not connect)
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2DRiverLinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2DRiverLinks_dll(ref int c_jsferic, ref int c_jasfer3D, ref int c_searchRadius, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask);
+        public static extern int ggeo_make1D2DRiverLinks_dll(ref int c_jsferic, ref int c_jasfer3D, [In] ref double c_searchRadius, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask);
 
         /// <summary>
         /// 1d2d links gullies - 1d.
@@ -160,7 +160,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
-            int c_searchRadius = 100;
+            double c_searchRadius = 100.0;
             int ierr = ggeo_make1D2DRiverLinks_dll(ref c_jsferic, ref c_jasfer3D, ref c_searchRadius, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
             return ierr;
         }

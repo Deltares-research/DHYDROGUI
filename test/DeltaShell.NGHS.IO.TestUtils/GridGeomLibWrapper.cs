@@ -61,18 +61,19 @@ namespace General.tests
         /// <summary>
         /// Makes the 1d/2d links (results are stored in memory)
         /// </summary>
-        /// <param name="c_nin"></param>
-        /// <param name="c_xpl"></param>
-        /// <param name="c_ypl"></param>
-        /// <param name="c_zpl"></param>
-        /// <param name="c_nOneDMask"></param>
-        /// <param name="c_oneDmask"></param>
-        /// <param name="c_jsferic"></param>
+        /// <param name="c_npl">The number of polygon nodes.</param>
+        /// <param name="c_xpl">The x coordinates of the polygon nodes.</param>
+        /// <param name="c_ypl">The y coordinates of the polygon nodes.</param>
+        /// <param name="c_zpl">The z coordinates of the polygon nodes.</param>
+        /// <param name="c_nOneDMask">The size of the 1d mask, should be equal to the number of 1d computational nodes</param>
+        /// <param name="c_oneDmask">The size of the 1d mask.</param>
+        /// <param name="c_inNet">Generate 1d2d connections only inside 2d net(1) or not(0)</param>
+        /// <param name="c_jsferic">Cartisian (0) or spheric (1)</param>
         /// <param name="c_jasfer3D"></param>
         /// <param name="c_jglobe"></param>
         /// <returns></returns>
         [DllImport(LibDetails.LIB_DLL_NAME, EntryPoint = "ggeo_make1D2Dinternalnetlinks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref IntPtr c_oneDmask,  ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
+        public static extern int ggeo_make1D2Dinternalnetlinks_dll(ref int c_npl, [In] ref IntPtr c_xpl, [In] ref IntPtr c_ypl, [In] ref IntPtr c_zpl, [In] ref int c_nOneDMask, [In] ref int c_inNet, [In] ref IntPtr c_oneDmask,  ref int c_jsferic, ref int c_jasfer3D, ref int c_jglobe);
 
 
         /// <summary>
@@ -258,7 +259,8 @@ namespace General.tests
             int c_jsferic = 0;
             int c_jasfer3D = 0;
             int c_jglobe = 0;
-            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_nOneDMask, ref c_oneDmask, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
+            int c_inNet = 1;
+            int ierr = ggeo_make1D2Dinternalnetlinks_dll(ref c_nin, ref c_xpl, ref c_ypl, ref c_zpl, ref c_nOneDMask, ref c_inNet, ref c_oneDmask, ref c_jsferic, ref c_jasfer3D, ref c_jglobe);
             return ierr;
         }
 
