@@ -241,9 +241,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     
                     Assert.IsTrue(Directory.Exists(model.ModelSettings.WorkDirectory),
                         "Waq model work directory should exist. " + model.ModelSettings.WorkDirectory);
-                    Assert.AreEqual(0, Directory.GetFiles(model.ModelSettings.WorkDirectory).Length,
-                        "Waq model work directory ({0}) should be empty as work directory is moved on save.", model.ModelSettings.WorkDirectory);
-
                     Assert.IsTrue(Directory.Exists(model.ModelSettings.OutputDirectory),
                         "The project data directory should exist. " + model.ModelSettings.OutputDirectory);
                     Assert.IsTrue(Directory.GetFiles(model.ModelSettings.OutputDirectory).Length > 0,

@@ -192,6 +192,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void Check_When_RunningTwice_WaqModel_OutputFiles_AreConnectedToLastRun()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
+            {
+                //First run
+                ActivityRunner.RunActivity(model);
+
+                List<string> contentFirstRun = RetrieveRunContent(model);
+
+                //Second run
+                ActivityRunner.RunActivity(model);
+
+                List<string> contentSecondRun = RetrieveRunContent(model);
+
+                Assert.AreNotEqual(contentFirstRun, contentSecondRun);
+            }
+        }
+
+        private static List<string> RetrieveRunContent(WaterQualityModel model)
+        {
+            var content = new List<string>
+            {
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ListFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ProcessFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.MonitoringFileDataItemMetaData.Tag)
+                                .Value).Content
+            };
+            return content;
+        }
+
+        [Test]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.Integration)]
         public void GivenAWaqModelInAProject_WhenSavingTheProjectInANewLocation_ThenAllPathsShouldSwitchToNewLocation()
@@ -385,6 +425,79 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                             model.ModelSettings.WorkDirectory);
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Application_ProjectSaveFinished_WhenOutputFolderIsNull_ShouldDeleteAllDisconnectedOutputInPersistentFolder()
+        {
+            // Arrange
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var model = new WaterQualityModel())
+            {
+                application.Run();
+                application.Project.RootFolder.Add(model);
+
+                string savePath = Path.Combine(tempDirectory.Path, "test");
+                
+                application.SaveProjectAs(savePath);
+
+                string persistentOutputFolder = model.ModelSettings.OutputDirectory;
+
+                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
+
+                AddFiles(persistentOutputFolder);
+                
+                // Act
+                application.SaveProjectAs(savePath);
+
+                // Assert
+                Assert.IsNull(model.OutputFolder);
+                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Application_ProjectSaveFinished_WhenOutputFolderPathIsNull_ShouldDeleteAllDisconnectedOutputInPersistentFolder()
+        {
+            //Arrange
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var model = new WaterQualityModel())
+            {
+                application.Run();
+                application.Project.RootFolder.Add(model);
+
+                string savePath = Path.Combine(tempDirectory.Path, "test");
+
+                application.SaveProjectAs(savePath);
+
+                string persistentOutputFolder = model.ModelSettings.OutputDirectory;
+
+                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
+
+                AddFiles(persistentOutputFolder);
+                model.OutputFolder = new FileBasedFolder();
+
+                // Act
+                application.SaveProjectAs(savePath);
+
+                //Assert
+                Assert.IsNotNull(model.OutputFolder);
+                Assert.IsNull(model.OutputFolder.Path);
+                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
+            }
+        }
+
+        private static void AddFiles(string persistentOutputFolder)
+        {
+            FileUtils.CreateDirectoryIfNotExists(persistentOutputFolder);
+            File.WriteAllText(Path.Combine(persistentOutputFolder, "testfile"), "");
+            Directory.CreateDirectory(Path.Combine(persistentOutputFolder, "testdirectory"));
+
+            Assert.IsTrue(Directory.Exists(persistentOutputFolder));
+        }
+
         private static WaterQualityModelApplicationPlugin SetupWaterQualityApplicationPlugin(
             string workingDirectoryPath)
         {
@@ -392,6 +505,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Application = new DeltaShellApplication
                 {
+                    IsProjectCreatedInTemporaryDirectory = true,
                     UserSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath)
                 }
             };
