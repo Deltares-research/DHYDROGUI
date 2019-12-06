@@ -85,7 +85,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             return definitionGeneratorCrossSectionDefinition;
         }
 
-        public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature)
+        public static IDefinitionGeneratorLocation GetDefinitionGeneratorLocation(IBranchFeature branchFeature, bool obsCrs = false)
         {
             if (branchFeature is ICrossSection)
             {
@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             }
             if (branchFeature is IObservationPoint)
             {
-                return new DefinitionGeneratorLocation(ObservationPointRegion.IniHeader);
+                return new DefinitionGeneratorLocation(obsCrs? ObservationPointRegion.IniHeaderCrs : ObservationPointRegion.IniHeader);
             }
             if (branchFeature is ILateralSource)
             {

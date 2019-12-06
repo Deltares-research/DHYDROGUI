@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
@@ -19,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private static readonly Dictionary<Type, Action<string, DateTime, object>> WriteTimeSeriesActions = new Dictionary<Type, Action<string, DateTime, object>>();
 
-        private static readonly Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, WaterFlowFMModel, IStructure2D>>
+        private static readonly Dictionary<string, Action<string, string, DateTime, IStructure2D>> StructureWriteActions = new Dictionary<string, Action<string, string, DateTime, IStructure2D>>
         {
             //{StructureRegion.PolylineFile.Key, WritePolylineFile},
             {StructureRegion.Capacity.Key, WriteTimeSeriesFile},
@@ -43,15 +44,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteTimeSeriesActions.Add(typeof(T), (s, time, structure2D) => action(s,time, (T)structure2D));
         }
 
-        public static IEnumerable<DelftIniCategory> Generate2DStructureCategoriesFromFmModel(IModel model)
+        public static IEnumerable<DelftIniCategory> Generate2DStructureCategoriesFromFmModel(IEnumerable<IHydroRegion> regions, DateTime referenceTime, string mduPath)
         {
-            var fmModel = model as WaterFlowFMModel;
-            if (fmModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
+            var hydroRegions = regions as IHydroRegion[] ?? regions.ToArray();
+            var network = hydroRegions.OfType<IHydroNetwork>().FirstOrDefault();
+            if (network == null) return Enumerable.Empty<DelftIniCategory>();
 
-            var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(fmModel.Network);
-            var categories2D = ExtractFunctionStructuresOfAreaGenerator(fmModel.Area, fmModel.ReferenceTime).ToList();
+            var categories1D = NetworkEditor.IO.StructureFile.ExtractFunctionStructuresOfNetworkGenerator(network);
+            var area = hydroRegions.OfType<HydroArea>().FirstOrDefault();
+            if (area == null) return categories1D; 
+            var categories2D = ExtractFunctionStructuresOfAreaGenerator(area, referenceTime).ToList();
 
-            Action<string, WaterFlowFMModel, IStructure2D> myAction;
+            Action<string, string, DateTime, IStructure2D> myAction;
             foreach (var category2D in categories2D)
             {
                 var structureName = category2D.GetPropertyValue(StructureRegion.Id.Key);
@@ -62,8 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     if (StructureWriteActions.TryGetValue(propertyName, out myAction))
                     {
                         var fileNameProperty = category2D.Properties.FirstOrDefault(p => p.Name == propertyName);
-                        var structure2D = fmModel.Area.AllHydroObjects.Cast<IStructure2D>().FirstOrDefault(o => o.Name == structureName);
-                        if (fileNameProperty != null) myAction(fileNameProperty.Value, fmModel, structure2D);
+                        var structure2D = area.AllHydroObjects.Cast<IStructure2D>().FirstOrDefault(o => o.Name == structureName);
+                        if (fileNameProperty != null) myAction(fileNameProperty.Value, mduPath, referenceTime, structure2D);
                     }
                 }
             }
@@ -81,9 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WritePolylineFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
+        private static void WritePolylineFile(string fileName, string mduFilePath, DateTime referenceTime, IStructure2D structure2D)
         {
-            var pliFilePath = GetTargetFilePath(fileName, fmModel);
+            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName); 
 
             var geometryObjectsToBeWritten = new[]
             {
@@ -96,13 +100,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             new PliFile<Feature2D>().Write(pliFilePath, geometryObjectsToBeWritten);
         }
 
-        private static void WriteTimeSeriesFile(string fileName, WaterFlowFMModel fmModel, IStructure2D structure2D)
+        private static void WriteTimeSeriesFile(string fileName, string mduFilePath, DateTime referenceTime, IStructure2D structure2D)
         {
-            var timFilePath = GetTargetFilePath(fileName, fmModel);
-            WriteTimeSeriesActions.Keys.Where(k => k.IsInstanceOfType(structure2D)).ForEach(key => WriteTimeSeriesActions[key](timFilePath, fmModel.ReferenceTime, structure2D));
+            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName);
+            WriteTimeSeriesActions.Keys.Where(k => k.IsInstanceOfType(structure2D)).ForEach(key => WriteTimeSeriesActions[key](timFilePath, referenceTime, structure2D));
         }
 
-        private static string GetTargetFilePath(string fileName, WaterFlowFMModel fmModel)
+        /*private static string GetTargetFilePath(string fileName, string mduFilePath)
         {
             var subFilePathProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath);
             var subFilePath = subFilePathProperty?.GetValueAsString();
@@ -111,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName);
 
             return filePath;
-        }
+        }*/
 
         private static void WritePumpTimeSeriesFile(string timFilePath, DateTime referenceDateTime, IPump pump)
         {

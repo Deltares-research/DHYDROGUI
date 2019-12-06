@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -8,7 +9,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro
 {
     [Entity(FireOnCollectionChange=false)]
-    public class ObservationPoint : BranchFeatureHydroObject, IObservationPoint
+    public class ObservationPoint : BranchFeatureHydroObject, IObservationPoint 
     {
         public ObservationPoint()
         {
@@ -42,5 +43,13 @@ namespace DelftTools.Hydro
         [DisplayName("Long name")]
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
+
+        public virtual ICompositeNetworkPointFeature ParentPointFeature { get; set; }
+        public virtual ICompositeBranchStructure ParentStructure { get; set; }
+        public virtual double OffsetY { get; set; }
+        public virtual StructureType GetStructureType()
+        {
+            return StructureType.ObservationPoint;
+        }
     }
 }

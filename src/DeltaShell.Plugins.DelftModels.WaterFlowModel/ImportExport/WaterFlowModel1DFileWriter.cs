@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters;
@@ -15,6 +16,7 @@ using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.NetworkEditor.IO;
+using GeoAPI.Extensions.Feature;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             FileWritingUtils.ThrowIfFileNotExists(fileName.ObservationPoints, fileName.TargetPath, p => LocationFileWriter.WriteFileObservationPointLocations(p, waterFlowModel1D.Network.ObservationPoints));
             FileWritingUtils.ThrowIfFileNotExists(fileName.LateralDischarge, fileName.TargetPath, p => LocationFileWriter.WriteFileLateralDischargeLocations(p, waterFlowModel1D.Network.LateralSources));
             FileWritingUtils.ThrowIfFileNotExists(fileName.BoundaryLocations, fileName.TargetPath, p => BoundaryLocationFileWriter.WriteFile(p, waterFlowModel1D));
-            FileWritingUtils.ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, waterFlowModel1D, GenerateFlow1DStructureCategoriesFrom1DModel));
+            FileWritingUtils.ThrowIfFileNotExists(fileName.Structures, fileName.TargetPath, p => StructureFileWriter.WriteFile(p, new []{waterFlowModel1D.Network}, DateTime.MinValue, null, GenerateFlow1DStructureCategoriesFrom1DModel));
             FileWritingUtils.ThrowIfFileNotExists(fileName.Network, fileName.TargetPath, p => NetworkAndGridWriter.WriteFile(p, waterFlowModel1D.Network, waterFlowModel1D.NetworkDiscretization));
 
             #region Write network and computational grid in ugrid
@@ -88,11 +90,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             FileUtils.CreateDirectoryIfNotExists(Path.Combine(fileName.TargetPath, "output"), true);
         }
 
-        public static IEnumerable<DelftIniCategory> GenerateFlow1DStructureCategoriesFrom1DModel(IModel model)
+        public static IEnumerable<DelftIniCategory> GenerateFlow1DStructureCategoriesFrom1DModel(IEnumerable<IRegion> regions, DateTime referenceTime, string mduFile)
         {
-            var flowModel = model as WaterFlowModel1D;
-            if(flowModel?.Network == null) return Enumerable.Empty<DelftIniCategory>();
-            return StructureFile.ExtractFunctionStructuresOfNetworkGenerator(flowModel.Network);
+            var network = regions.OfType<IHydroNetwork>().FirstOrDefault();
+            if(network == null) return Enumerable.Empty<DelftIniCategory>();
+            return StructureFile.ExtractFunctionStructuresOfNetworkGenerator(network);
         }
 
         private static void CopyMorphologyFilesToRunDir(WaterFlowModel1D waterFlowModel1D, string targetPath)

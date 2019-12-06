@@ -86,8 +86,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var chainageProperty = content.Properties.First(p => p.Name == LocationRegion.Chainage.Key);
             Assert.AreEqual(expectedChainage.ToString(LocationRegion.Chainage.Format, CultureInfo.InvariantCulture), chainageProperty.Value);
 
-            var nameProperty = content.Properties.First(p => p.Name == LocationRegion.Name.Key);
-            Assert.AreEqual(expectedName, nameProperty.Value);
+            //var nameProperty = content.Properties.First(p => p.Name == LocationRegion.Name.Key);
+            //Assert.AreEqual(expectedName, nameProperty.Value);
 
         }
         
@@ -131,9 +131,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             var chainageProperty = content.Properties.First(p => p.Name == LocationRegion.Chainage.Key);
             Assert.AreEqual(expectedChainage.ToString(LocationRegion.Chainage.Format, CultureInfo.InvariantCulture), chainageProperty.Value);
-
-            var nameProperty = content.Properties.First(p => p.Name == LocationRegion.Name.Key);
-            Assert.AreEqual(expectedName, nameProperty.Value);
 
             var lengthProperty = content.Properties.First(p => p.Name == LateralSourceLocationRegion.Length.Key);
             Assert.AreEqual(expectedDiffuseLength.ToString(LateralSourceLocationRegion.Length.Format,CultureInfo.InvariantCulture), lengthProperty.Value);

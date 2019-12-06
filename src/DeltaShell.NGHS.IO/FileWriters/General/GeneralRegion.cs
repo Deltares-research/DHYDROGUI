@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int SpatialDataMajorVersion = 1;
         public const int SpatialDataMinorVersion = 0;
 
-        public const int ObservationPointLocationsMajorVersion = 1;
+        public const int ObservationPointLocationsMajorVersion = 2;
         public const int ObservationPointLocationsMinorVersion = 0;
 
         public const int BoundaryLocationsMajorVersion = 1;
@@ -63,6 +63,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string ModelDefinition = "modelDef";
             public const string NetworkDefinition = "network";
             public const string ObservationPoint = "obsPoints";
+            public const string ObservationCross = "obsCross";
             public const string SpatialData = "spatialData";
             public const string BoundaryLocation = "boundLocs";
             public const string LateralDischargeLocation = "latLocs";

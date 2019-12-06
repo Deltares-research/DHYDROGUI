@@ -23,6 +23,7 @@ namespace DelftTools.Hydro
         AdvancedWeir,
         Orifice,
         GeneralStructure
-        /* End Weirs */
+        /* End Weirs */,
+        ObservationPoint
     }
 }

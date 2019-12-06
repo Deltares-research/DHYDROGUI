@@ -46,16 +46,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 
-        public static void WriteFileObservationPointLocations(string targetFile, IEnumerable<IObservationPoint> observationPointLocations)
+        public static void WriteFileObservationPointLocations(string targetFile, IEnumerable<IObservationPoint> observationPointLocations, bool useObsCrs = false)
         {
             var categories = new List<DelftIniCategory>
             {
-                GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.ObservationPointLocationsMajorVersion, 
-                                      GeneralRegion.ObservationPointLocationsMinorVersion, 
-                                      GeneralRegion.FileTypeName.ObservationPoint),
+                GeneralRegionGenerator.GenerateGeneralRegion(GeneralRegion.ObservationPointLocationsMajorVersion,
+                    GeneralRegion.ObservationPointLocationsMinorVersion,
+                    useObsCrs
+                        ? GeneralRegion.FileTypeName.ObservationCross
+                        : GeneralRegion.FileTypeName.ObservationPoint)
             };
             
-            var observationPointLocationsDefinitions = GenerateFeatureDefinition(observationPointLocations);
+            var observationPointLocationsDefinitions = GenerateFeatureDefinition(observationPointLocations, useObsCrs);
             if (observationPointLocationsDefinitions != null)
                 categories.AddRange(observationPointLocationsDefinitions);
 
@@ -63,14 +65,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 
-        private static IEnumerable<DelftIniCategory> GenerateFeatureDefinition(IEnumerable<IBranchFeature> branchFeatures)
+        private static IEnumerable<DelftIniCategory> GenerateFeatureDefinition(
+            IEnumerable<IBranchFeature> branchFeatures, bool useObsCrs = false)
         {
             var definitions = new List<DelftIniCategory>(); 
             if (branchFeatures == null) return null;
             
             branchFeatures.ForEach(branchFeature =>
             {
-                var definitionGeneratorLocation = DefinitionGeneratorFactory.GetDefinitionGeneratorLocation(branchFeature);
+                var definitionGeneratorLocation = DefinitionGeneratorFactory.GetDefinitionGeneratorLocation(branchFeature, useObsCrs);
                 if (definitionGeneratorLocation != null)
                 {
                     definitions.AddRange(definitionGeneratorLocation.CreateIniRegion(branchFeature));

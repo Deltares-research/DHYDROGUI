@@ -169,8 +169,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
-            
-          
+
+            FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, modelDefinition.Network, hydroArea);
+
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:false, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
 

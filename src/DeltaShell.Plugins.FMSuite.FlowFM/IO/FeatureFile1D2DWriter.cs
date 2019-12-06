@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -19,17 +20,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public static class FeatureFile1D2DWriter
     {
         public const string NODE_FILE_NAME = "nodeFile.ini";
+        public const string OBS_FILE_NAME = "obsFile1D_obs.ini";
+        public const string OBS_CRS_FILE_NAME = "obsCrsFile1D_crs.ini";
         public const string CROSS_SECTION_DEFINITION_FILE_NAME = "crsdef.ini";
         public const string CROSS_SECTION_LOCATION_FILE_NAME = "crsloc.ini";
         public const string STRUCTURES_FILE_NAME = "structures.ini";
 
-        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
+        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area)
         {
-            WriteNodeFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network);
-            WriteBranchFile(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network.Branches);
-            WriteCrossSectionFiles(targetMduFilePath, fmModel);
-            WriteStructuresFiles(targetMduFilePath, fmModel);
-            WriteRoughnessFiles(targetMduFilePath, fmModel);
+            WriteNodeFile(targetMduFilePath, modelDefinition, network);
+            WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
+            WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network);
+            WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
+            WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
+            WriteRoughnessFiles(targetMduFilePath, modelDefinition);
+        }
+
+        private static void WriteObservationPointsFiles(string targetMduFilePath,
+            WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        {
+            var obsFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, OBS_FILE_NAME);
+            FileUtils.DeleteIfExists(obsFilePath);
+
+            var obsCrsFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, OBS_CRS_FILE_NAME);
+            FileUtils.DeleteIfExists(obsCrsFilePath);
+
+            var obsPoints = network.ObservationPoints.ToList();
+            if (obsPoints.Any() || network.Retentions.Any())
+            {
+                var currentObs = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
+                modelDefinition.SetModelProperty(KnownProperties.ObsFile, string.IsNullOrEmpty(currentObs) ? OBS_FILE_NAME : currentObs + " " + OBS_FILE_NAME);
+                LocationFileWriter.WriteFileObservationPointLocations(obsFilePath, obsPoints);
+                var currentObsCrs = modelDefinition.GetModelProperty(KnownProperties.ObsCrsFile).GetValueAsString();
+                modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.IsNullOrEmpty(currentObsCrs) ? OBS_CRS_FILE_NAME : currentObsCrs + " " + OBS_CRS_FILE_NAME);
+                LocationFileWriter.WriteFileObservationPointLocations(obsCrsFilePath, obsPoints, true);
+            }
+            else
+            {
+                ///empty?
+                modelDefinition.SetModelProperty(KnownProperties.ObsFile, string.Empty);
+                modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.Empty);
+            }
         }
 
         private static void WriteNodeFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
@@ -60,21 +91,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             BranchFile.Write(branchesFilePath, branches);
             modelDefinition.SetModelProperty(KnownProperties.BranchFile, branchesFilePath);
         }
-        private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
-            WriteCrossSectionDefinitions(targetMduFilePath, fmModel);
-            WriteCrossSectionLocations(targetMduFilePath, fmModel);
+            WriteCrossSectionDefinitions(targetMduFilePath, modelDefinition, network);
+            WriteCrossSectionLocations(targetMduFilePath, modelDefinition, network);
         }
 
-        private static void WriteCrossSectionLocations(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteCrossSectionLocations(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             var crossSectionLocationFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_LOCATION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionLocationFilePath);
 
-            var network = fmModel.Network;
+            
             if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
+                modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
 
                 var pipeCrossSections = HydroNetworkHelper.GeneratePipeCrossSections(network);
                 var crossSections = network.CrossSections.Concat(pipeCrossSections);
@@ -82,32 +113,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossLocFile, string.Empty);
+                modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, string.Empty);
             }
         }
 
-        private static void WriteCrossSectionDefinitions(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteCrossSectionDefinitions(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             var crossSectionDefinitionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, CROSS_SECTION_DEFINITION_FILE_NAME);
             FileUtils.DeleteIfExists(crossSectionDefinitionFilePath);
 
-            if (fmModel.Network.ContainsAnyCrossSectionDefinitions())
+            if (network.ContainsAnyCrossSectionDefinitions())
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
-                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, fmModel.Network);
+                modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
+                CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, network);
             }
             else
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
+                modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, string.Empty);
             }
         }
 
-        private static void WriteStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area)
         {
             var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, STRUCTURES_FILE_NAME);
-            if (fmModel.Network.BranchFeatures.Any() || fmModel.Area.AllHydroObjects.Any())
+            if (network.BranchFeatures.Any() || area.AllHydroObjects.Any())
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, STRUCTURES_FILE_NAME);
+                modelDefinition.SetModelProperty(KnownProperties.StructuresFile, STRUCTURES_FILE_NAME);
 
                 var targetMduFilePathPropertyDefinition = new WaterFlowFMPropertyDefinition
                 {
@@ -118,25 +149,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 };
                 var targetMduFilePathProperty = new WaterFlowFMProperty(targetMduFilePathPropertyDefinition, targetMduFilePath);
 
-                fmModel.ModelDefinition.AddProperty(targetMduFilePathProperty);
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
-                fmModel.ModelDefinition.Properties.Remove(targetMduFilePathProperty);
+                modelDefinition.AddProperty(targetMduFilePathProperty);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion> {network, area}, (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value, targetMduFilePath, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                modelDefinition.Properties.Remove(targetMduFilePathProperty);
             }
             else
             {
-                fmModel.ModelDefinition.SetModelProperty(KnownProperties.StructuresFile, string.Empty);
+                modelDefinition.SetModelProperty(KnownProperties.StructuresFile, string.Empty);
             }
         }
 
-        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
-            var roughnessFileNames = fmModel.RoughnessSections.Select(GetRoughnessFilename);
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
+            var sections = modelDefinition.RoughnessSections.ToArray();
+            var roughnessFileNames = sections.Select(GetRoughnessFilename);
+            modelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
 
-            foreach (var roughnessSection in fmModel.RoughnessSections)
+            foreach (var roughnessSection in sections)
             {
                 var roughnessFileName = GetRoughnessFilename(roughnessSection);
                 var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);

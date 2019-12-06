@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
@@ -15,6 +17,7 @@ using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -51,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             composite2.Structures.Add(weir);
             weir.ParentStructure = composite2;
 
-            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, flow1Dmodel, WaterFlowModel1DFileWriter.GenerateFlow1DStructureCategoriesFrom1DModel);
+            StructureFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Structures, new List<IHydroRegion>() {flow1Dmodel.Network},DateTime.MinValue, null,  WaterFlowModel1DFileWriter.GenerateFlow1DStructureCategoriesFrom1DModel);
 
             var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures).ToList();
             Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
@@ -117,7 +120,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){ fmModel.Network, fmModel.Area},fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
 
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
@@ -162,7 +165,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){fmModel.Network, fmModel.Area},fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -213,7 +216,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){fmModel.Network, fmModel.Area}, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -262,7 +265,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){fmModel.Network, fmModel.Area}, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -315,7 +318,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() {fmModel.Network, fmModel.Area}, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -369,7 +372,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){fmModel.Network, fmModel.Area}, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -414,7 +417,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -450,7 +453,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -486,7 +489,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
 
                 var structureCategory = categories.FirstOrDefault(c => c.Name == expectedCategoryName);
@@ -534,7 +537,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -600,7 +603,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>(){fmModel.Network, fmModel.Area}, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 
@@ -657,7 +660,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             try
             {
-                StructureFileWriter.WriteFile(structuresFilePath, fmModel, StructureFile.Generate2DStructureCategoriesFromFmModel);
+                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 var categories = new DelftIniReader().ReadDelftIniFile(structuresFilePath);
                 Assert.That(categories.Count, Is.EqualTo(2));
 

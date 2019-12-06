@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -49,13 +50,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             //add to model
             foreach (var locationPropertyValue in locationPropertyValuesList)
             {
-                locationPropertyValue.branch.BranchFeatures.Add(new ObservationPoint()
+                var observationPoint = new ObservationPoint()
                 {
-                    Branch = locationPropertyValue.branch,
                     Name = locationPropertyValue.name,
                     LongName = locationPropertyValue.longName,
                     Chainage = locationPropertyValue.chainage,
-                });
+                };
+                HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(observationPoint, locationPropertyValue.branch);
+                //locationPropertyValue.branch.BranchFeatures.Add(observationPoint);
             }
         }
 
@@ -106,9 +108,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
         private static LocationPropertyValues GetCommonLocationPropertyValues(IDelftIniCategory category, IHydroNetwork network)
         {
             var locationPropertyValues = new LocationPropertyValues();
+            if (category.GetPropertyValue(LocationRegion.Chainage.Key) == null ||
+                category.GetPropertyValue(LocationRegion.BranchId.Key) == null) return null; //2d obs point do not add as a 1d obs point
             
             // Essential Properties (an error will be generated if these fail)
-            locationPropertyValues.name = category.ReadProperty<string>(LocationRegion.Id.Key);
+            locationPropertyValues.name =
+                string.IsNullOrEmpty(category.ReadProperty<string>(LocationRegion.Id.Key, true))
+                    ? category.ReadProperty<string>(LocationRegion.ObsId.Key)
+                    : category.ReadProperty<string>(LocationRegion.Id.Key);
+
             locationPropertyValues.chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
@@ -120,7 +128,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             }
 
              // Optional Properties (an error will not be generated if these fail)
-            locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
+            //locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
             locationPropertyValues.diffuseLength = category.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true); 
 
             return locationPropertyValues;

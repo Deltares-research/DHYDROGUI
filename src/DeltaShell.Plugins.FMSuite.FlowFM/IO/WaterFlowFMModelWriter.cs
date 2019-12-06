@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
@@ -167,14 +169,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (branchesFilePath != null) BranchFile.Write(branchesFilePath, model.Network.Branches);
         }
 
-        private static void WriteStructuresFile(WaterFlowFMModelWriterData writerData, IModel model)
+        private static void WriteStructuresFile(WaterFlowFMModelWriterData writerData, WaterFlowFMModel model)
         {
             var filePath = writerData.FilePaths.StructuresFilePath;
 
             if (!string.IsNullOrEmpty(filePath))
                 StructureFileWriter.WriteFile(
                     filePath, 
-                    model,
+                    new List<IHydroRegion>() { model.Network, model.Area},
+                    model.ReferenceTime,
+                    string.IsNullOrEmpty(model.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? model.MduFilePath : model.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(),
                     StructureFile.Generate2DStructureCategoriesFromFmModel);
         }
 

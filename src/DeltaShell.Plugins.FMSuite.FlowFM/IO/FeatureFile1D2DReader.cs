@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using DeltaShell.NGHS.IO.FileReaders;
+using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -14,6 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             ReadCrossSectionFiles(targetMduFilePath, fmModel);
+            ReadObservationPointsFiles(targetMduFilePath, fmModel);
             ReadStructuresFiles(targetMduFilePath, fmModel);
             ReadRoughnessFiles(targetMduFilePath, fmModel);
         }
@@ -29,6 +31,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!File.Exists(crDefFile)) return;
 
             CrossSectionFileReader.ReadFile(crLocFile,crDefFile, fmModel.Network);
+        }
+        private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            var obsFiles = fmModel.ModelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
+            foreach (var obsFile in obsFiles.Split(' '))
+            {
+                var obsFileFullPath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, obsFile);
+                if (!File.Exists(obsFileFullPath)) return;
+                LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, fmModel.Network);
+            }
+            
         }
 
         private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)

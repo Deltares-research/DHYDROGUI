@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 
                 while (line != null)
                 {
+                    if (line == "[General]") break;
                     var lineFields = SplitLine(line).Take(3).ToList();
                     if (lineFields.Count != expectedLineCount)
                     {

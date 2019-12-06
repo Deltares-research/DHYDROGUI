@@ -135,6 +135,7 @@ namespace DeltaShell.NGHS.IO
 
                 while (line != null)
                 {
+                    if (line == "[General]") break;
                     if (lineCount % 100 == 0)
                     {
                         progress?.Invoke("Reading line", lineCount, numberOfLines);
