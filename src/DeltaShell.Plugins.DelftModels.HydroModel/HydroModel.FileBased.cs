@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -79,7 +80,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual void RelinkHydroRegionLinks()
         {
-            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r, r => r.AllHydroObjects.ToDictionary(o => o.Name.ToLower()));
+            if (!regionExchangeInfos.Any()) return;
+
+            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>()
+                .ToDictionary(r => r, r => r.AllHydroObjects.GroupBy(o => o.Name).ToDictionary(g => g.Key.ToLower(), g => g.FirstOrDefault()));
             var regionByNameLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r.Name.ToLower());
 
             foreach (var regionExchangeInfo in regionExchangeInfos)
