@@ -94,16 +94,22 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             {
                 parentStructure = newParentCompositeBranchStructure;
             }
-                // attach structure if it is relocated wihtin a structureFeature.
+            // attach structure if it is relocated within a structureFeature.
             else if (oldIndex != newIndex)
             {
                 parentStructure = oldParentCompositeStructure;
             }
             t.ParentStructure = parentStructure;
-            if (-1 != newIndex)
-                parentStructure.Structures.Insert(newIndex, t);
-            else
+
+            if (parentStructure == null)
+            {
+                return;
+            }
+
+            if (newIndex == -1)
                 parentStructure.Structures.Add(t);
+            else
+                parentStructure.Structures.Insert(newIndex, t);
         }
 
         private void AddStructureToNewCompositeStructure(IStructure1D structure)
