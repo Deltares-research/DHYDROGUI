@@ -269,6 +269,53 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             }
         }
 
+        [TestCase(false)]
+        [TestCase(true)]
+        [Category(TestCategory.Integration)]
+        public void GivenAProjectWithAModelAndOutput_WhenOpeningThisProjectAndClosingWithOrWithoutClearModelOutput_TheOutputFilesShouldNotBeRemoved(bool performClearModelOutput)
+        {
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = CreateValidWaqModel())
+            {
+                model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
+                app.Project.RootFolder.Add(model);
+
+                // Run
+                IEnumerable<string> outputFilesAfterRun = RunModelAndGetOutputFiles(model);
+
+                const string savedProjectFileName = "SavedProject.dsproj";
+                string savedProjectPath = Path.Combine(tempDirectory.Path, savedProjectFileName);
+
+                // Save 
+                app.SaveProjectAs(savedProjectPath);
+                string outputFolderAfterSavePath = model.OutputFolder.FullPath;
+
+                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath));
+                
+                // Close
+                app.CloseProject();
+
+                // Open
+                app.OpenProject(savedProjectPath);
+                
+                // 
+                if (performClearModelOutput)
+                {
+                    model.ClearOutput();
+                }
+
+                // Close
+                app.CloseProject();
+
+                string errormessage = performClearModelOutput
+                                       ? "After opening, clear model output and closing a project, all output files that were saved in the project should still be there"
+                                       : "After opening and closing a project, all output files that were saved in the project should still be there";
+                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath), errormessage);
+            }
+        }
+
         [Test]
         public void GivenAProjectWithAModel_WhenDoingVariousSubsequentActions_ThenOutputIsAlwaysPlacedCorrectly()
         {
