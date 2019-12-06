@@ -785,28 +785,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void AddStructuresToChart(ICompositeBranchStructure compositeStructure, bool active)
         {
             IShapeFeature shape = null;
-            foreach (var structure in compositeStructure.Structures)
+            foreach (IStructure1D structure in compositeStructure.Structures)
             {
-                if (structure is IWeir)
-                {
-                    shape = GetWeirShape((IWeir)structure);
+                switch (structure) {
+                    case IWeir weir:
+                        shape = GetWeirShape(weir);
+                        break;
+                    case IPump pump:
+                        shape = GetPumpShape(pump);
+                        break;
+                    case IBridge bridge:
+                        shape = GetBrigdeShape(bridge);
+                        break;
+                    case ICulvert culvert:
+                        shape = GetCulvertShape(culvert);
+                        break;
+                    case IExtraResistance resistance:
+                        shape = GetExtraResistanceShape(resistance);
+                        break;
                 }
-                else if (structure is IPump)
+
+                if (shape == null)
                 {
-                    shape = GetPumpShape((IPump)structure);
+                    continue;
                 }
-                else if (structure is IBridge)
-                {
-                    shape = GetBrigdeShape((IBridge) structure);
-                }
-                else if (structure is ICulvert)
-                {
-                    shape = GetCulvertShape((ICulvert) structure);
-                }
-                else if (structure is IExtraResistance)
-                {
-                    shape = GetExtraResistanceShape((IExtraResistance)structure);
-                }
+
                 shape.Active = active;
                 AddStructureAndShape(structure, shape);
             }
