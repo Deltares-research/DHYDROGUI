@@ -186,11 +186,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             get
             {
-                if(weir?.WeirFormula == null) {return 0;}
+                if (weir == null || !(weir.WeirFormula is IGatedWeirFormula weirFormula))
+                {
+                    return 0;
+                }
 
-                var gatedWeirFormula = Weir?.WeirFormula as IGatedWeirFormula;
-
-                return gatedWeirFormula.DoorHeight;
+                return weirFormula.DoorHeight;
             }
             set
             {
@@ -973,7 +974,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                    UnSubscribe();
                 }
                 var gatedWeir = weir?.WeirFormula as IGatedWeirFormula;
-                if (gatedWeir?.UseLowerEdgeLevelTimeSeries == value) return;
+                if (gatedWeir == null || gatedWeir.UseLowerEdgeLevelTimeSeries == value)
+                {
+                    return;
+                }
                 
                 //Avoid useless propagation of events.
                 try
