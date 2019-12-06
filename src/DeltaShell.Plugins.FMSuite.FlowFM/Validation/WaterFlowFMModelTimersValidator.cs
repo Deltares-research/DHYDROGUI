@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
@@ -74,6 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 var stopTimeDefinedInFunction = (DateTime)data.Arguments[0].MaxValue;
                 if (stopTimeDefinedInFunction < model.StopTime)
                     yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, $"Time Series function {featureData.Name} has time with values defined which ends earlier ({stopTimeDefinedInFunction}) than expected stoptime of the timeframe of model ({model.StopTime:s}). Please adjust timeseries so it will fit in model time frame, or adjust model Start and Stop time so it will fit the timeseries.",featureData);
+                if ((startTimeDefinedInFunction > model.StartTime || stopTimeDefinedInFunction < model.StopTime ) && data.Arguments[0].ExtrapolationType != ExtrapolationType.None)
+                    yield return new ValidationIssue(timerCategory, ValidationSeverity.Error, $"The timespan of the Time Series function {featureData.Name} does not cover the full period between model start and end time and extrapolation is set to {data.Arguments[0].ExtrapolationType}. The kernel cannot handle this.", featureData);
             }
         }
 
