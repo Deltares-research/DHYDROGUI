@@ -58,6 +58,12 @@ namespace DeltaShell.Dimr
         ValidationReport Validate();
 
         Array GetVar(string category, string itemName = null, string parameter = null);
+
         void SetVar(Array values, string category, string itemName = null, string parameter = null);
+
+        /// <summary>
+        /// Prepares the model for running it as part of an integrated model.
+        /// </summary>
+        void PrepareForIntegratedModelRun();
     }
 }

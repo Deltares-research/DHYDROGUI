@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -267,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         DataItems.Add(logDataItem);
                     }
 
-                    string log = DiaFileReader.Read(diaFilePath);
+                    string log = File.ReadAllText(diaFilePath);
                     ((TextDocument) logDataItem.Value).Content = log;
                 }
                 catch (Exception ex)

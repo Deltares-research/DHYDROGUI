@@ -981,5 +981,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public bool DisableFlowNodeRenumbering { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
     }
 }

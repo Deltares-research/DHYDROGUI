@@ -62,8 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             // General
             model1D.Name = "test model";
-            settings.WorkDirectory = @"D:\Temp";
-
+            
             // Simulation timers
             model1D.StartTime = new DateTime(2011, 1, 1);
             model1D.StopTime = new DateTime(2011, 2, 1);

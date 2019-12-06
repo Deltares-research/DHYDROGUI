@@ -9,6 +9,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -17,14 +19,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
 
-        private readonly MduFile mduFile = new MduFile();
-
-        public MduFile MduFile => mduFile;
+        /// <summary>
+        /// Gets the mdu file.
+        /// </summary>
+        /// <value>
+        /// The mdu file.
+        /// </value>
+        public MduFile MduFile { get; } = new MduFile();
 
         public Func<string> WorkingDirectoryPathFunc =
-            () => Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+
+        /// <summary>
+        /// Gets the cache file.
+        /// </summary>
+        /// <value>
+        /// The cache file.
+        /// </value>
+        public CacheFile CacheFile => 
+            cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
+
+        private CacheFile cacheFile = null;
 
         protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
         {

@@ -56,8 +56,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewCatchmentGreenHouseCommand = new AddNewCatchmentCommand.AddNewGreenHouseCommand();
         private ICommand addNewCatchmentSacramentoCommand = new AddNewCatchmentCommand.AddNewSacramentoCommand();
         private ICommand addNewCatchmentHbvCommand = new AddNewCatchmentCommand.AddNewHbvCommand();
-        private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewWasteWaterTreatmentPlantCommand();
-        private ICommand addNewRunoffBoundaryCommand = new AddNewRunoffBoundaryCommand();
+        private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddWasteWaterTreatmentPlantToolName);
+        private ICommand addNewRunoffBoundaryCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddRunoffBoundaryToolName);
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
         private ICommand showSideViewCommand = new ShowSideViewCommand();

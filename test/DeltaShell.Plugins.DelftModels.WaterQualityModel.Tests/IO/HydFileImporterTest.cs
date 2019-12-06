@@ -61,7 +61,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             var squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
-            var importer = new HydFileImporter();
+            Func<string> getWorkingDirectoryPathFunc = () => Path.Combine(Path.GetTempPath(), "test");
+            var importer = new HydFileImporter(getWorkingDirectoryPathFunc);
+
             var importedItem = importer.ImportItem(squareHydPath);
 
             Assert.IsNotNull(importedItem);
@@ -70,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var waqModel = (WaterQualityModel) importedItem;
             Assert.IsInstanceOf<HydFileData>(waqModel.HydroData);
             Assert.IsNotNull(waqModel.Grid);
+            Assert.AreEqual(Path.Combine(getWorkingDirectoryPathFunc(), "Water_Quality"), waqModel.ModelSettings.WorkDirectory);
 
             waqModel.Dispose();
         }
@@ -528,7 +531,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(waqModel.TimeStep, secondModel.TimeStep);
             }
         }
-
+      
         // TODO TOOLS-21848: Create test to verify some boundaries with data are retained, but have their ID's updated
 
         private static void AssertFirstInitialConditionHasSetValueSpatialOperation(WaterQualityModel model, double defaultValueForCoverage)

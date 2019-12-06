@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     return;
                 }
 
-                mduFile.Path = mduPath;
+                MduFile.Path = mduPath;
                 SwitchFileBasedItems();
             }
         }

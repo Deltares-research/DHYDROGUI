@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
             if (gridCopies.Length == 0)
             {
-                DeleteTempDir(tempDir);
+                FileUtils.DeleteIfExists(tempDir);
                 MessageBox.Show(
                     "Unable to reload grid file, no grid was referenced in the d3d file! Did you save the rgfgrid project?",
                     "No grid file found",
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                 for (var i = 0; i < grids.Length; i++)
                     File.Copy(gridCopies[i], grids[i], true); // copy the grids back to the expected location
 
-                DeleteTempDir(tempDir);
+                FileUtils.DeleteIfExists(tempDir);
             }
             else
             {
@@ -184,18 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
 
             return gridCopies;
         }
-
-        private static void DeleteTempDir(string tempDir)
-        {
-            try
-            {
-                FileUtils.DeleteIfExists(tempDir); // delete temp data
-            }
-            catch (Exception)
-            {
-            }
-        }
-
+        
         private static string[] PrepareGridCopies(string[] grids, bool[] gridIsEmpty, string tempDir, CoordinateSystemType systemType, ICoordinateSystem coordinateSystem)
         {
             var firstGrid = grids[0];

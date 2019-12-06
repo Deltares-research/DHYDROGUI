@@ -76,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public virtual void Configure(object model)
+        public virtual void Configure(object item)
         {
-            var bcFileExporter = model as BcFileExporter;
+            var bcFileExporter = item as BcFileExporter;
             if (bcFileExporter != null)
             {
                 bcFileExporter.ExcludedQuantities =

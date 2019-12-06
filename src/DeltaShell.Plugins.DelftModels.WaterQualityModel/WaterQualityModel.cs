@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -14,11 +15,11 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.Restart;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -33,27 +34,19 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api.SpatialOperations;
 
+[assembly: InternalsVisibleTo(" DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests")]
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     [Entity]
     public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
-
-        private readonly string[] filesToDeleteFromExplicitWorkingDirectoryAtClearOutput =
-        {
-            "bloominp.d09",
-            "bloominp.frm",
-            "deltashell-timers.out",
-            "memory_map.out"
-        };
 
         #region Tags
 
@@ -139,7 +132,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private bool hasHydroDataImported;
         private LayerType layerType;
 
-        private readonly string tempWorkDirectory;
         private string modelDataDirectory;
         private LazyMapFileFunctionStore mapFileFunctionStore;
         private ICoordinateSystem overriddenCoordinateSystem;
@@ -154,10 +146,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private string velocitiesFilePath;
 
         #endregion
-
+        
         public WaterQualityModel() : base("Water Quality")
         {
-            tempWorkDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             modelSettings = new WaterQualityModelSettings
             {
                 MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas
@@ -775,31 +766,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public virtual DateTime SaveStateStopTime { get; set; }
 
         public virtual TimeSpan SaveStateTimeStep { get; set; }
-
+        
         /// <summary>
-        /// The explicit output directory is used to send
-        /// delwaq1 a directory where it can directly put its output files.
-        /// This property is set when saving the model or opening
-        /// the model.
-        /// There is no need to save this in NHibernate.
-        /// It is set with ProjectSaved and ProjectOpened.
+        /// Persistent model data folder within Project folder
         /// </summary>
-        public virtual string ExplicitOutputDirectory
-        {
-            get => ModelSettings.OutputDirectory;
-            set => SetOutputDirectory(value);
-        }
-
-        public override string ExplicitWorkingDirectory
-        {
-            get => base.ExplicitWorkingDirectory;
-            set
-            {
-                base.ExplicitWorkingDirectory = value;
-                SettingExpliticWorkingDirectory(value);
-            }
-        }
-
         public virtual string ModelDataDirectory
         {
             get => modelDataDirectory;
@@ -811,6 +781,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public virtual DataTableManager LoadsDataManager =>
             (DataTableManager) GetDataItemByTag(LoadsDataDataItemMetaData.Tag).Value;
+
+        private IFileBasedFolder outputFolder;
+
+        /// <summary>
+        /// Gets or sets the output folder.
+        /// </summary>
+        /// <value>
+        /// The output folder.
+        /// </value>
+        public virtual IFileBasedFolder OutputFolder
+        {
+            get => outputFolder;
+            set
+            {
+                if (outputFolder == value)
+                {
+                    return;
+                }
+
+                if (value != null && outputFolder != null && value.Path == outputFolder.Path)
+                {
+                    OnOutputFolderChanged();
+                    return;
+                }
+
+                if (outputFolder != null)
+                {
+                    outputFolder.PropertyChanged -= OnOutputFolderPropertyChanged;
+                }
+
+                outputFolder = value;
+
+                if (outputFolder != null)
+                {
+                    outputFolder.PropertyChanged += OnOutputFolderPropertyChanged;
+                }
+
+                OnOutputFolderChanged();
+            }
+        }
+
+        private void OnOutputFolderChanged()
+        {
+            WaterQualityOutputDisconnector.Disconnect(this);
+            WaterQualityOutputConnector.Connect(this);
+        }
+
+        private void OnOutputFolderPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(OutputFolder.Path)))
+            {
+                WaterQualityOutputConnector.Connect(this);
+            }
+        }
 
         /// <summary>
         /// The coordinate system can be found in the grid,
@@ -972,6 +996,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 EndEdit();
                 enableMarkOutputOutOfSync = true;
             }
+        }
+        
+        /// <summary>
+        /// Method to connect the DeltaShell framework working directory to the ModelSettings.WorkingDirectory.
+        /// The model also adds a folder with the model name to the path.
+        /// <param name="WorkingDirectoryWithoutModelName"></param>
+        protected internal virtual void SetWorkingDirectoryInModelSettings(Func<string> WorkingDirectoryWithoutModelName)
+        {
+            modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
         }
 
         private void OverWriteSegmentFunctions(IHydroData data)
@@ -1212,6 +1245,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             yield return Loads;
             yield return BoundaryDataManager;
             yield return LoadsDataManager;
+            yield return OutputFolder;
         }
 
         public virtual double GetDefaultZ()
@@ -1309,8 +1343,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         private void OnInitializeCore()
         {
-            ClearOutput();
-
             ValidationReport validationReport = new WaterQualityModelValidator().Validate(this);
             if (validationReport.ErrorCount > 0)
             {
@@ -1318,11 +1350,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     "Water quality model could not initialize. Please check the validation report.");
             }
 
-            // a workaround to set the work directory on the model settings first
-            SetValidWorkDirectory();
-
             FileUtils.CreateDirectoryIfNotExists(ModelSettings.WorkDirectory);
-            FileUtils.CreateDirectoryIfNotExists(ModelSettings.OutputDirectory);
 
             waqInitializationSettings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(this);
 
@@ -1341,25 +1369,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // use the output directory to find the files to zip if writerestart is true.
             modelStateHandler.ModelWorkingDirectory = ModelSettings.OutputDirectory;
+
+            WaterQualityOutputDisconnector.Disconnect(this);
+
             waqPreProcessor = new WaqFileBasedPreProcessor();
-            bool success = waqPreProcessor.InitializeWaq(waqInitializationSettings,
-                                                         (displayName, filePath) =>
-                                                             this.AddTextDocument(displayName, filePath));
+            bool success = waqPreProcessor.InitializeWaq(waqInitializationSettings);
 
             if (!success)
             {
+                ConnectOutput(ModelSettings.WorkingOutputDirectory);
                 throw new Exception(string.Format(
                                         Resources
                                             .WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
                                         Environment.NewLine,
-                                        Path.GetDirectoryName(Path.Combine(ExplicitOutputDirectory, FileConstants.OutputDirectoryName))));
+                                        Path.GetDirectoryName(Path.Combine(ModelSettings.OutputDirectory, FileConstants.OutputDirectoryName))));
             }
 
-            //initialize and fill initial values in output coverages (needs to be available after initialize for rtc to pick up, for example)
             waqProcessor = new WaqFileBasedProcessor();
-            waqProcessor.Initialize(waqInitializationSettings);
         }
-
+        
         protected override void OnExecute()
         {
             InvokeAndRestoreDirectory(OnExecuteCore);
@@ -1390,51 +1418,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         protected override void OnFinish()
         {
-            if (ModelSettings.OutputDirectory == null)
+            string outputDirectory = ModelSettings.WorkingOutputDirectory;
+            if (outputDirectory == null)
             {
                 Log.Error("Could not add output because work directory is empty.");
                 return;
             }
 
-            ConnectMapOutput();
-
-            waqProcessor.AddOutput(ModelSettings.OutputDirectory, ObservationVariableOutputs,
-                                   (displayName, filePath) => this.AddTextDocument(displayName, filePath),
-                                   ModelSettings.MonitoringOutputLevel);
+            ConnectOutput(outputDirectory);
         }
 
-        /// <summary>
-        /// Connects the output map files to the model.
-        /// </summary>
-        /// <remarks>
-        /// If both the binary and NetCDF file exist in the output directory,
-        /// then the NetCDF file is connected to the model, except when the
-        /// convention is not supported.
-        /// </remarks>
-        private void ConnectMapOutput()
+        private void ConnectOutput(string outputDirectory)
         {
-            string outputDirectory = ModelSettings.OutputDirectory;
-
-            string mapFilePath = Path.Combine(outputDirectory, FileConstants.BinaryMapFileName);
-            if (File.Exists(mapFilePath))
+            if (OutputFolder == null)
             {
-                MapFileFunctionStore.Path = mapFilePath;
-            }
-
-            string mapNetCdfFilePath = Path.Combine(outputDirectory, FileConstants.NetCdfMapFileName);
-            if (!File.Exists(mapNetCdfFilePath))
-            {
+                OutputFolder = new FileBasedFolder(outputDirectory);
                 return;
             }
 
-            if (!NetCdfFileConventionChecker.HasSupportedConvention(mapNetCdfFilePath))
+            var outputDirectoryInfo = new DirectoryInfo(outputDirectory);
+            if (OutputFolder.FullPath == outputDirectoryInfo.FullName)
             {
-                Log.WarnFormat(Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard, Path.GetFileName(mapNetCdfFilePath));
+                WaterQualityOutputConnector.Connect(this);
+                return;
             }
-            else
-            {
-                MapFileFunctionStore.Path = mapNetCdfFilePath;
-            }
+
+            OutputFolder.Path = outputDirectory;
         }
 
         protected override void OnCleanup()
@@ -1446,74 +1455,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         protected override void OnClearOutput()
         {
-            MapFileFunctionStore.Path = null;
-
-            List<IDataItem> outputDataItems = AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output))
-                                                          .ToList();
-
-            ClearCoverageOutput(outputDataItems);
-            ClearTimeSeriesOutput(outputDataItems);
-            RemoveTextDocumentFromFileOutput(outputDataItems);
-            RemoveTextDocumentOutput(outputDataItems);
-
-            DeleteOutputFiles();
-        }
-
-        private static void ClearCoverageOutput(List<IDataItem> outputDataItems)
-        {
-            outputDataItems.Select(di => di.Value)
-                           .OfType<UnstructuredGridCellCoverage>()
-                           .ForEach(c => c.ClearCoverage());
-
-            outputDataItems.Select(di => di.Value)
-                           .OfType<IFeatureCoverage>()
-                           .ForEach(c =>
-                           {
-                               c.Filters.Clear();
-                               c.Clear();
-                           });
-        }
-
-        private static void ClearTimeSeriesOutput(List<IDataItem> outputDataItems)
-        {
-            outputDataItems.Select(di => di.Value)
-                           .OfType<WaterQualityObservationVariableOutput>()
-                           .ForEach(v => v.ClearAllTimeSeries());
-        }
-
-        private void RemoveTextDocumentOutput(IEnumerable<IDataItem> outputDataItems)
-        {
-            IEnumerable<IDataItem> textDocumentDataItems = outputDataItems.Where(di => di.Value.GetType() == typeof(TextDocument))
-                                                                          .ToList();
-
-            foreach (IDataItem dataItem in textDocumentDataItems)
+            if (OutputFolder == null || OutputIsEmpty)
             {
-                dataItems.Remove(dataItem);
+                return;
             }
-        }
 
-        private void RemoveTextDocumentFromFileOutput(IEnumerable<IDataItem> outputDataItems)
-        {
-            IEnumerable<IDataItem> textDocumentFromFileDataItems = outputDataItems
-                                                                   .Where(di => di.Value.GetType() == typeof(TextDocumentFromFile))
-                                                                   .ToList();
-
-            foreach (IDataItem dataItem in textDocumentFromFileDataItems)
-            {
-                dataItems.Remove(dataItem);
-            }
-        }
-
-        private void DeleteOutputFiles()
-        {
-            string outputDirectory = ModelSettings.OutputDirectory;
-            FileUtils.DeleteIfExists(outputDirectory);
-            FileUtils.CreateDirectoryIfNotExists(outputDirectory);
-            if (ExplicitWorkingDirectory != null)
-            {
-                filesToDeleteFromExplicitWorkingDirectoryAtClearOutput.ForEach(
-                    file => FileUtils.DeleteIfExists(Path.Combine(ExplicitWorkingDirectory, file)));
-            }
+            WaterQualityOutputDisconnector.Disconnect(this);
+            OutputFolder.Path = null;
         }
 
         # endregion
@@ -1627,19 +1575,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
             ReplaceGridOnUnstructuredGridCoverages(this.GetOutputCoverages(), schematizationRemainsUnchanged);
         }
-
-        [EditAction]
-        private void SetOutputDirectory(string value)
-        {
-            ModelSettings.OutputDirectory = value;
-        }
-
-        [EditAction]
-        private void SettingExpliticWorkingDirectory(string directory)
-        {
-            ModelSettings.WorkDirectory = directory;
-        }
-
+        
         private void SubscribeToInternalEvents()
         {
             // subscribe to evented lists that are not in the DataItems collection
@@ -1663,12 +1599,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                return Path.GetFileName(tempWorkDirectory);
+                return "Water_Quality";
             }
 
             return Name.Replace(" ", "_");
         }
-
         [EditAction]
         private void SetWaqPointHeights()
         {
@@ -1814,31 +1749,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         {
             return new WaterQualityObservationAreaCoverage(grid);
         }
-
-        private void SetValidWorkDirectory()
-        {
-            if (ModelSettings == null)
-            {
-                return;
-            }
-
-            // check if it is explicit, or if there is a project data directory
-            if (ExplicitWorkingDirectory != null)
-            {
-                ModelSettings.WorkDirectory = ExplicitWorkingDirectory;
-            }
-            else if (ModelDataDirectory != null)
-            {
-                ModelSettings.WorkDirectory =
-                    Path.Combine(Path.GetDirectoryName(ModelDataDirectory), GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
-            }
-            else
-            {
-                // use a folder that was created
-                ModelSettings.WorkDirectory = Path.Combine(tempWorkDirectory, GetWaqDataFolderName() + FileConstants.WorkDirectoryPostfix);
-            }
-        }
-
+        
         /// <summary>
         /// Replace the grid on a list of coverages.
         /// This method does not look at spatial operations.

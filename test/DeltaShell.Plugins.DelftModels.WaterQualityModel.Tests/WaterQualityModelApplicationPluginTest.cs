@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -9,6 +12,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
@@ -119,17 +123,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void ImportCorrectSubFileAndThenCorruptItAndExpectExceptionMessage()
         {
-            var app = new DeltaShellApplication();
-            var waqModel = new WaterQualityModel();
-            PerformActionOnWesternscheldWithRunningApplication(app, waqModel, () =>
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
             {
-                var boundaryDataTableFilePath = Path.Combine(waqModel.BoundaryDataManager.FolderPath, "bacteria.tbl");
+                var boundaryDataTableFilePath = Path.Combine(model.BoundaryDataManager.FolderPath, "bacteria.tbl");
                 Assert.True(File.Exists(boundaryDataTableFilePath));
 
                 // Simulate corruption of boundary table data
@@ -141,56 +144,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 var expectedExceptionMsg =
                     string.Format(Resources.WaterQualityModel_OnInitializeCore_Failed_to_initialize_pre_processor__0_Please_look_at_the_List_file_for_more_information__0_List_file_found_in__Project_view____Output____List_file__0___1_,
-                        Environment.NewLine, waqModel.ExplicitOutputDirectory);
+                        Environment.NewLine, model.ModelSettings.OutputDirectory);
 
                 //Expect the exception message thrown as log message
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => ActivityRunner.RunActivity(waqModel), expectedExceptionMsg);
-            });
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => ActivityRunner.RunActivity(model), expectedExceptionMsg);
+            }
         }
-        
+
         [Test]
-        [TestCase("deltashell.lst")]
-        [TestCase("deltashell.lsp")]
-        [TestCase("deltashell.mon")]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void Check_When_RunningTwice_WaqModel_OutputFiles_AreNot_Duplicated(string outputFile)
+        public void Check_When_RunningTwice_WaqModel_OutputFiles_AreNot_Duplicated()
         {
-            var app = new DeltaShellApplication();
-            var waqModel = new WaterQualityModel();
-            PerformActionOnWesternscheldWithRunningApplication(app, waqModel, () =>
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
             {
                 //First run
-                ActivityRunner.RunActivity(waqModel);
-                CheckDataItems(outputFile, waqModel);
+                ActivityRunner.RunActivity(model);
+                CheckDataItems(model);
 
                 //Second run
-                ActivityRunner.RunActivity(waqModel);
-                CheckDataItems(outputFile, waqModel);
-            });
+                ActivityRunner.RunActivity(model);
+                CheckDataItems(model);
+            }
         }
 
         [Test]
-        [TestCase("deltashell.lst")]
-        [TestCase("deltashell.lsp")]
-        [TestCase("deltashell.mon")]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted(string outputFileName)
+        public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted()
         {
-            var app = new DeltaShellApplication();
-            var waqModel = new WaterQualityModel();
-            PerformActionOnWesternscheldWithRunningApplication(app, waqModel, () =>
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
             {
                 //First run
-                ActivityRunner.RunActivity(waqModel);
+                ActivityRunner.RunActivity(model);
 
                 //save the project
                 app.SaveProject();
+
                 //Second run
-                ActivityRunner.RunActivity(waqModel);
-                CheckDataItems(outputFileName, waqModel);
-            });
+                ActivityRunner.RunActivity(model);
+                CheckDataItems(model);
+            }
         }
 
         [Test]
@@ -201,7 +199,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var modelPathsDictionary = new Dictionary<string, IList<string>>
             {
                 {"model directory", new List<string>()},
-                {"working directory", new List<string>()},
                 {"output directory", new List<string>()},
                 {"boundary data manager folder path", new List<string>()},
                 {"loads data manager folder path", new List<string>()}
@@ -259,7 +256,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             void AddCurrentModelPaths(WaterQualityModel waqModel)
             {
                 modelPathsDictionary["model directory"].Add(waqModel.ModelDataDirectory);
-                modelPathsDictionary["working directory"].Add(waqModel.ModelSettings.WorkDirectory);
                 modelPathsDictionary["output directory"].Add(waqModel.ModelSettings.OutputDirectory);
                 modelPathsDictionary["boundary data manager folder path"].Add(waqModel.BoundaryDataManager.FolderPath);
                 modelPathsDictionary["loads data manager folder path"].Add(waqModel.LoadsDataManager.FolderPath);
@@ -283,6 +279,124 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             ApplicationPluginTestHelper.TestForGetParentProjectItemDelegateSetByApplicationPlugins_WhenApplicationPluginHelperReturnsNull(waterQualityModelApplicationPlugin);
         }
 
+        [Test]
+        public void CreateModelFunctionShouldSetWorkingDirectoryInModelSettingsBasedOnTheApplicationWorkingDirectory()
+        {
+            // Arrange
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "test");
+            WaterQualityModelApplicationPlugin applicationPlugin = SetupWaterQualityApplicationPlugin(workingDirectoryPath);
+
+            // Act
+            IEnumerable<ModelInfo> modelInfos = applicationPlugin.GetModelInfos();
+            IModel model = modelInfos.First().CreateModel(null);
+
+            // Assert
+            Assert.AreEqual(Path.Combine(workingDirectoryPath,model.Name.Replace(" ","_")), ((WaterQualityModel)model).ModelSettings.WorkDirectory);
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GetFileImportersShouldReturnHydFileImporterWithWorkingDirectoryOfTheApplicationAsArgument()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+                string hydFileName = Path.GetFileName(squareHydPath);
+                string squareHydTempDirectory =
+                    tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(squareHydPath));
+                string squareHydTempPath = Path.Combine(squareHydTempDirectory, hydFileName);
+
+
+                string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "test");
+                WaterQualityModelApplicationPlugin applicationPlugin = SetupWaterQualityApplicationPlugin(workingDirectoryPath);
+
+                // Act
+                IEnumerable<IFileImporter> importers = applicationPlugin.GetFileImporters();
+                IFileImporter hydFileImporter = importers.FirstOrDefault(i => i is HydFileImporter);
+
+                // Assert
+                Assert.NotNull(hydFileImporter);
+
+                // Import model to check StoreWorkingDirectoryPathFunc, since it is private
+                using (var model = (WaterQualityModel) hydFileImporter.ImportItem(squareHydTempPath))
+                {
+                    Assert.AreEqual(Path.Combine(workingDirectoryPath, model.Name.Replace(" ", "_")),
+                                    model.ModelSettings.WorkDirectory);
+                }
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AfterOpeningAProjectTheWorkingDirectoryInModelSettingsShouldBeBasedOnTheCurrentApplicationWorkingDirectory()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication application = GetConfiguredApplication())
+            using (var model = new WaterQualityModel())
+            {
+                // Arrange
+                string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "workingDirectory");
+                application.UserSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+                model.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
+                application.Run();
+                application.Project.RootFolder.Add(model);
+
+                string savePath = Path.Combine(tempDirectory.Path, "test");
+
+                // Create project files
+                application.SaveProjectAs(savePath);
+                application.CloseProject();
+
+                string changedWorkingDirectoryPath = Path.Combine(Path.GetTempPath(), "changedWorkingDirectory");
+                application.UserSettings =
+                    ApplicationTestHelper.GetMockedApplicationSettingsBase(changedWorkingDirectoryPath);
+
+                // Act
+                application.OpenProject(savePath);
+
+                // Assert
+                Assert.AreEqual(Path.Combine(changedWorkingDirectoryPath, model.Name.Replace(" ", "_")),
+                                ((WaterQualityModel) application.Project.RootFolder.Models.First())
+                                .ModelSettings.WorkDirectory);
+
+                application.CloseProject();
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ChangeWorkingDirectoryInApplication_ShouldUpdateTheWorkingDirectoryInModelSettings()
+        {
+            // Arrange
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "workingDirectory");
+            WaterQualityModelApplicationPlugin applicationPlugin = SetupWaterQualityApplicationPlugin(workingDirectoryPath);
+            var model = new WaterQualityModel();
+            model.SetWorkingDirectoryInModelSettings(() => applicationPlugin.Application.WorkDirectory);
+            
+            // Act
+            string changedWorkingDirectoryPath = Path.Combine(Path.GetTempPath(), "changedWorkingDirectory");
+            applicationPlugin.Application.UserSettings =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(changedWorkingDirectoryPath);
+
+            // Assert
+            Assert.AreEqual(Path.Combine(changedWorkingDirectoryPath, model.Name.Replace(" ", "_")),
+                            model.ModelSettings.WorkDirectory);
+        }
+
+        private static WaterQualityModelApplicationPlugin SetupWaterQualityApplicationPlugin(
+            string workingDirectoryPath)
+        {
+            return new WaterQualityModelApplicationPlugin
+            {
+                Application = new DeltaShellApplication
+                {
+                    UserSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath)
+                }
+            };
+        }
+
         private static DeltaShellApplication GetConfiguredApplication()
         {
             var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
@@ -294,79 +408,97 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return app;
         }
 
-        private static void PerformActionOnWesternscheldWithRunningApplication(DeltaShellApplication app, WaterQualityModel waqModel, Action actionToPerform)
+        private static WaterQualityModel GetWesternscheldtModelInApplication(string tempDirectory, DeltaShellApplication application)
         {
-            var testDir = FileUtils.CreateTempDirectory();
-            var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
-            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(testDir), string.Empty);
+            var waqModel = new WaterQualityModel();
 
-            var hydFilePath = Path.Combine(testDir, "flow-model", "westernscheldt01.hyd");
+            application.Project.RootFolder.Add(waqModel);
+            waqModel.SetWorkingDirectoryInModelSettings(() => application.WorkDirectory);
+
+            var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
+            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(tempDirectory), string.Empty);
+
+            var hydFilePath = Path.Combine(tempDirectory, "flow-model", "westernscheldt01.hyd");
             Assert.True(File.Exists(hydFilePath));
 
-            var subFilePath = Path.Combine(testDir, "waq", "sub-files", "bacteria.sub");
+            var subFilePath = Path.Combine(tempDirectory, "waq", "sub-files", "bacteria.sub");
             Assert.True(File.Exists(subFilePath));
 
-            var boundaryConditionsFilePath = Path.Combine(testDir, "waq", "boundary-conditions", "bacteria.csv");
+            var boundaryConditionsFilePath = Path.Combine(tempDirectory, "waq", "boundary-conditions", "bacteria.csv");
             Assert.True(File.Exists(boundaryConditionsFilePath));
 
-            try
-            {
-                using (app)
-                {
-                    //Declaring plugins.
-                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                    app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    app.Plugins.Add(new CommonToolsApplicationPlugin());
-                    app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                    app.Plugins.Add(new NetCdfApplicationPlugin());
-                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                    app.Plugins.Add(new ScriptingApplicationPlugin());
-                    app.Plugins.Add(new ToolboxApplicationPlugin());
+            new HydFileImporter().ImportItem(hydFilePath, waqModel);
+            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
+            new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
 
-                    app.Run();
-
-                    app.SaveProjectAs(Path.Combine(testDir, "WAQ_proj"));
-
-                    app.Project.RootFolder.Items.Add(waqModel);
-
-                    new HydFileImporter().ImportItem(hydFilePath, waqModel);
-                    new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
-                    new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
-
-                    actionToPerform.Invoke();
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testDir);
-            }
+            return waqModel;
         }
 
-        private static void CheckDataItems(string outputFileName, WaterQualityModel waqModel)
+        private static DeltaShellApplication GetRunningApplication(string tempDirectory)
+        {
+            string workingDirectoryPath = Path.Combine(tempDirectory, "DeltaShell_Working_Directory");
+            ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+            var app = new DeltaShellApplication
+            {
+                UserSettings = userSettings,
+                IsProjectCreatedInTemporaryDirectory = true
+            };
+
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new NetCdfApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new ScriptingApplicationPlugin());
+            app.Plugins.Add(new ToolboxApplicationPlugin());
+
+            app.Run();
+
+            app.SaveProjectAs(Path.Combine(tempDirectory, "WAQ_proj"));
+
+            return app;
+        }
+
+        private static void CheckDataItems(WaterQualityModel waqModel)
         {
             //Check data items
-            var filePaths = GetFilePaths(waqModel);
+            IList<string> dataItemTags = GetDataItemTags(waqModel);
 
-            Assert.IsTrue(filePaths.Any( fp => Path.GetFileName(fp) == outputFileName),
-                string.Format("OutputFile: {0} not found in dataItems {1}", outputFileName, string.Join(", ", filePaths)));
-
-            //Check the file paths exist.
-            foreach (var filePath in filePaths)
+            string[] expectedDataItemTags =
             {
-                Assert.IsTrue(File.Exists(filePath));
+                WaterQualityModel.ListFileDataItemMetaData.Tag,
+                WaterQualityModel.ProcessFileDataItemMetaData.Tag,
+                WaterQualityModel.MonitoringFileDataItemMetaData.Tag
+            };
+
+            foreach (string expectedTag in expectedDataItemTags)
+            {
+                Assert.IsTrue(dataItemTags.Any(t => t == expectedTag),
+                              $"DataItem with tag {expectedTag} not found in dataItems {string.Join(", ", dataItemTags)}");
             }
         }
 
-        private static IList<string> GetFilePaths(WaterQualityModel waqModel)
+        private static IList<string> GetDataItemTags(WaterQualityModel waqModel)
         {
-            var dataItems = waqModel.DataItems.Where(di =>
-                di.Role == DataItemRole.Output &&
-                di.ValueType == typeof(TextDocumentFromFile)).ToList();
+            List<IDataItem> dataItems = waqModel.DataItems.Where(di => di.Role == DataItemRole.Output
+                                                                       && di.ValueType == typeof(TextDocument)).ToList();
             Assert.IsTrue(dataItems.Any());
-
             Assert.AreEqual(3, dataItems.Count);
-            var filePaths = dataItems.Select(di => ((TextDocumentFromFile) di.Value).Path).ToList();
-            return filePaths;
+            return dataItems.Select(di => di.Tag).ToList();
+        }
+
+        [Test]
+        public void GetPersistentAssemblies_ThenCorrectAssembliesAreReturned()
+        {
+            // Call
+            Assembly[] assemblies = new WaterQualityModelApplicationPlugin().GetPersistentAssemblies().ToArray();
+
+            // Assert
+            Assert.That(assemblies.Length, Is.EqualTo(2));
+            Assert.That(assemblies.Contains(typeof(FileBasedFolder).Assembly));
+            Assert.That(assemblies.Contains(typeof(WaterQualityModelApplicationPlugin).Assembly));
         }
     }
 }

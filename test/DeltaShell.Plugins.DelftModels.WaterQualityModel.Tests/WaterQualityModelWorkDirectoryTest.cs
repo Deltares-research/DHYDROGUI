@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -7,6 +8,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -22,73 +25,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     public class WaterQualityModelWorkDirectoryTest
     {
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void RunModelInTempTest()
-        {
-            // setup
-            var model = CreateWaqModelWithData();
-
-            var waqModelTempFolder = Path.GetDirectoryName(model.ModelSettings.WorkDirectory);
-
-            try
-            {
-                // call
-                ActivityRunner.RunActivity(model);
-
-                // assert
-
-                // Expected folder layout:
-                // %temp%
-                // `-- <temp folder location determined by Waq Model>
-                //    |-- <waq_model_name>_output
-                //    |   `-- ... model work directory, with includes and *inp file etc.
-                //    |-- <waq_model_name>
-                //    |  |-- boundary_data_tables
-                //    |  |   `-- ... all boundary *.tbl and *.usefors files.
-                //    |  |-- load_data_tables
-                //    |  |   `-- ...  all load *.tbl and *.usefors files.
-                //    |  |-- model_run_output
-                //    |  |   `-- ... all output generated from waq run like *.lst, *.his, *.map files.
-
-                var tempPath = Path.GetTempPath();
-                StringAssert.StartsWith(tempPath, model.ModelSettings.WorkDirectory,
-                    "Work directory should be located somewhere in temp folder.");
-                StringAssert.StartsWith(tempPath, model.ModelSettings.OutputDirectory,
-                    "Output directory should be located somewhere in temp folder.");
-                StringAssert.StartsWith(tempPath, model.BoundaryDataManager.FolderPath,
-                    "Boundary data directory should be located somewhere in temp folder.");
-                StringAssert.StartsWith(tempPath, model.LoadsDataManager.FolderPath,
-                    "Loads data directory should be located somewhere in temp folder.");
-
-                var parentFolderOfWaqModelTempFolder = Path.GetDirectoryName(waqModelTempFolder) + Path.DirectorySeparatorChar;
-                Assert.AreEqual(tempPath, parentFolderOfWaqModelTempFolder,
-                    "Waq model temp folder should be located directly in temp folder.");
-                var waqModelFolderName = model.Name.Replace(" ", "_");
-                Assert.AreEqual(waqModelFolderName + "_output", Path.GetFileName(model.ModelSettings.WorkDirectory),
-                    "Expected work directory name should be based on name of waq model and post-fixed with '_output'.");
-
-                var waqModelDataFolder = Path.GetDirectoryName(model.ModelSettings.OutputDirectory);
-                Assert.AreEqual(waqModelTempFolder, Path.GetDirectoryName(waqModelDataFolder),
-                    "Expected waq model data folder to be direct child-folder of the work directory parent folder.");
-                Assert.AreEqual(waqModelFolderName, Path.GetFileName(waqModelDataFolder),
-                    "Expected waq data directory name should be based on name of waq model without post-fix.");
-                Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.BoundaryDataManager.FolderPath),
-                    "Parent folder of boundary data manager should be the waq data directory.");
-                Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.LoadsDataManager.FolderPath),
-                    "Parent folder of load data manager should be the waq data directory.");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(waqModelTempFolder);
-            }
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void AddWaqModelToProject_SetsProjectDataDir()
         {
             // setup
-            using (var deltaShell = GetRunningDSApplication(true))
+            using (var deltaShell = GetRunningDSApplication("path", true))
             {
                 var model = CreateWaqModelWithData();
 
@@ -149,6 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
             finally
             {
+                
                 FileUtils.DeleteIfExists(testModelDirectory);
                 FileUtils.DeleteIfExists(Directory.GetParent(testHydFilePath).FullName);
                 Thread.Sleep(100); // Give system enough time to delete these files, before the next test case is being tested.
@@ -164,25 +106,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.WorkInProgress)]
-        public void RunModelInSavedFolderTest_WIP()
-        {
-            RunModelInSavedFolderTestCore(false);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void RunModelAndThenSave_CopiesOutput()
+        public void RunModelAndThenSave_MovesOutput()
         {
             RunModelAndThenSave(true);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.WorkInProgress)]
-        public void RunModelAndThenSave_CopiesOutput_NoTempProject()
-        {
-            RunModelAndThenSave(false);
         }
 
         /// <summary>
@@ -196,16 +122,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void RunModel_DeleteMonFile_Save()
         {
-            string savePath = Path.Combine(Environment.CurrentDirectory, "RunModel_DeleteMonFile_Save",
-                        "project1.dsproj");
-            try
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                using (var deltaShell = GetRunningDSApplication(true))
+                string tempDirPath = tempDirectory.Path;
+                string savePath = Path.Combine(tempDirPath, "RunModel_DeleteMonFile_Save", "project1.dsproj");
+                using (var deltaShell = GetRunningDSApplication(tempDirPath, true))
                 {
                     var dataDir = TestHelper.GetTestDataDirectory();
                     var realHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
 
-                    var model = CreateWaqModelWithData(realHydFile, false);
+                    var deltaShellWorkingDirectory = deltaShell.WorkDirectory;
+                    var model = CreateWaqModelWithData(realHydFile, createFalseBoundaryData: false);
+                    model.SetWorkingDirectoryInModelSettings(() => deltaShellWorkingDirectory);
+
                     deltaShell.Project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -214,16 +143,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                         "Couldn't find " + deltaShell.ProjectDataDirectory);
 
                     // delete the mon file, so it's incomplete
-                    string monFilePath = Path.Combine(model.ModelSettings.OutputDirectory, "deltashell.mon");
+                    string monFilePath = Path.Combine(model.ModelSettings.WorkingOutputDirectory, "deltashell.mon");
                     Assert.IsTrue(File.Exists(monFilePath), "Couldn't find " + monFilePath);
                     File.Delete(monFilePath);
 
                     deltaShell.SaveProjectAs(savePath);
                 }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(savePath);
             }
         }
 
@@ -268,72 +193,62 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static void RunModelInSavedFolderTestCore(bool createAndSaveTempProjectOnStartup)
         {
-            string savePath = Path.Combine(Environment.CurrentDirectory, "RunModelInSavedFolderTest",
-                "project1.dsproj");
-            var expectedProjectDataFolderPath = savePath + "_data";
-            try
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                using (var deltaShell = GetRunningDSApplication(createAndSaveTempProjectOnStartup))
+                string tempDirPath = tempDirectory.Path;
+                string savePath = Path.Combine(tempDirPath, "RunModelInSavedFolderTest", "project1.dsproj");
+
+                using (DeltaShellApplication deltaShell = GetRunningDSApplication(tempDirPath, createAndSaveTempProjectOnStartup))
                 {
-                    var model = CreateWaqModelWithData();
+                    var model = CreateWaqModelWithData(createFalseBoundaryData:false);
                     deltaShell.Project.RootFolder.Add(model);
 
                     deltaShell.SaveProjectAs(savePath);
 
-                    StringAssert.StartsWith(expectedProjectDataFolderPath, model.ExplicitWorkingDirectory);
-
                     ActivityRunner.RunActivity(model);
+                    Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
 
-                    Assert.AreEqual(model.ExplicitWorkingDirectory, model.ModelSettings.WorkDirectory);
-                    Assert.AreEqual(model.ExplicitOutputDirectory, model.ModelSettings.OutputDirectory);
-                    Assert.IsTrue(Directory.Exists(model.ModelSettings.OutputDirectory),
-                        "The project data directory doesn't exist.");
-                    Assert.IsTrue(Directory.GetFiles(model.ModelSettings.OutputDirectory).Length > 0,
+                    Assert.IsTrue(Directory.Exists(model.ModelSettings.WorkingOutputDirectory),
+                        "The working output directory doesn't exist.");
+                    Assert.IsTrue(Directory.GetFiles(model.ModelSettings.WorkingOutputDirectory).Any(),
                         "There are no output files in the data directory.");
                 }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(savePath));
             }
         }
 
         private static void RunModelAndThenSave(bool saveTempProjectOnStartup)
         {
-            string savePath = Path.Combine(Environment.CurrentDirectory, "RunModelAndThenSave_CopiesOutput",
-                "project1.dsproj");
-            string projectDataDir = savePath + "_data";
-            try
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                using (var deltaShell = GetRunningDSApplication(saveTempProjectOnStartup))
+                string tempDirPath = tempDirectory.Path;
+                string savePath = Path.Combine(tempDirPath, "RunModelAndThenSave_CopiesOutput", "project1.dsproj");
+                string projectDataDir = savePath + "_data";
+
+                using (DeltaShellApplication deltaShell = GetRunningDSApplication(tempDirPath, saveTempProjectOnStartup))
                 {
-                    var model = CreateWaqModelWithData();
+                    var deltaShellWorkingDirectory = deltaShell.WorkDirectory;
+                    var model = CreateWaqModelWithData(createFalseBoundaryData:false);
+                    model.SetWorkingDirectoryInModelSettings(() => deltaShellWorkingDirectory);
                     deltaShell.Project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
+                    Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
 
                     deltaShell.SaveProjectAs(savePath);
 
-                    StringAssert.StartsWith(projectDataDir, model.ModelSettings.WorkDirectory);
+                    StringAssert.StartsWith(deltaShellWorkingDirectory, model.ModelSettings.WorkDirectory);
                     StringAssert.StartsWith(projectDataDir, model.ModelSettings.OutputDirectory);
-
-                    Assert.AreEqual(model.ExplicitWorkingDirectory, model.ModelSettings.WorkDirectory);
-                    Assert.AreEqual(model.ExplicitOutputDirectory, model.ModelSettings.OutputDirectory);
-
+                    
                     Assert.IsTrue(Directory.Exists(model.ModelSettings.WorkDirectory),
                         "Waq model work directory should exist. " + model.ModelSettings.WorkDirectory);
                     Assert.AreEqual(0, Directory.GetFiles(model.ModelSettings.WorkDirectory).Length,
-                        "Waq model work directory ({0}) should be empty as work directory is not moved on save.", model.ModelSettings.WorkDirectory);
+                        "Waq model work directory ({0}) should be empty as work directory is moved on save.", model.ModelSettings.WorkDirectory);
 
                     Assert.IsTrue(Directory.Exists(model.ModelSettings.OutputDirectory),
                         "The project data directory should exist. " + model.ModelSettings.OutputDirectory);
                     Assert.IsTrue(Directory.GetFiles(model.ModelSettings.OutputDirectory).Length > 0,
                         "There should be output files in the data directory.");
                 }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(savePath));
             }
         }
 
@@ -342,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             if (hydFile == null)
             {
                 var dataDir = TestHelper.GetTestDataDirectory();
-                var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
+                var squareHydFile = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
 
                 hydFile = squareHydFile;
             }
@@ -352,7 +267,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             model.ImportHydroData(data);
 
-            var subFilePath = TestHelper.GetTestFilePath(@"IO\03d_Tewor2003.sub");
+            var subFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\coli_04.sub");
             new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
             if (createFalseBoundaryData)
@@ -364,17 +279,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return model;
         }
 
-        private static DeltaShellApplication GetRunningDSApplication(bool createAndSaveProjectOnStartup)
+        private static DeltaShellApplication GetRunningDSApplication(string tempDirectoryPath, bool createAndSaveProjectOnStartup)
         {
-            var app = new DeltaShellApplication();
+            string workingDirectoryPath = Path.Combine(tempDirectoryPath, "DeltaShell_Working_Directory");
+            ApplicationSettingsBase userSettings = ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+
+            var app = new DeltaShellApplication
+            {
+                UserSettings = userSettings,
+                IsProjectCreatedInTemporaryDirectory = createAndSaveProjectOnStartup
+            };
+
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
-            app.IsProjectCreatedInTemporaryDirectory = createAndSaveProjectOnStartup;
-
             app.Run();
 
             return app;

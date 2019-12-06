@@ -185,11 +185,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
-        {
-            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
-        }
-
         private void WritePropertyValueIfNotNull(string propertyName, DelftIniCategory bndExtForceFileItem)
         {
             string propertyValue = bndExtForceFileItem.GetPropertyValue(propertyName);
@@ -197,6 +192,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 WritePropertyValue(propertyName, propertyValue);
             }
+        }
+
+        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
         }
 
         private void WritePropertyValue(string propertyName, string propertyValue)

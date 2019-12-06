@@ -9,6 +9,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class HydFileImporter : IFileImporter
     {
+        /// <summary>
+        /// Constructor needed for connecting the Application.WorkingDirectory to the
+        /// WaterQualityModelSettings Working Directory when a new Water Quality model
+        /// needs to be created.
+        /// </summary>
+        /// <param name="getWorkingDirectoryPathFunc"> </param>
+        public HydFileImporter(Func<string> getWorkingDirectoryPathFunc)
+        {
+            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+        }
+
+        /// <summary>
+        /// Constructor for when the Water Quality model already exists, but empty hyd file.
+        /// </summary>
+        public HydFileImporter() {}
+
         public string Name => "Hydrodynamics (*.hyd)";
 
         public string Category => "Water Quality";
@@ -49,12 +65,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool SkipImportTimers { get; set; }
 
+        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+
         /// <summary>
         /// Import data on a water quality model,
         /// or create a new one if the target doesn't exist.
         /// </summary>
         public object ImportItem(string path, object target = null)
-        {
+        { 
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException("Couldn't find file: " + path);
@@ -63,7 +81,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             SetProgress("Reading hydrodynamics file", 0, 0);
             HydFileData data = HydFileReader.ReadAll(new FileInfo(path));
 
-            WaterQualityModel model = target as WaterQualityModel ?? new WaterQualityModel();
+            WaterQualityModel model = target as WaterQualityModel;
+
+            if (model == null)
+            {
+                model = new WaterQualityModel();
+                if (StoreWorkingDirectoryPathFunc != null)
+                {
+                    model.SetWorkingDirectoryInModelSettings(StoreWorkingDirectoryPathFunc);
+                }
+            }
 
             EventHandler progressChangedHandler = (s, e) => SetProgress(model.ProgressText, 0, 0);
 

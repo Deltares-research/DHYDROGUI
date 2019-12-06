@@ -31,6 +31,7 @@
         public const string ExternalForcingFileExtension = ".ext";
         public const string GriddedHeatFluxModelFileExtension = ".htc";
         public const string WindFileExtension = ".wnd";
+        public const string CachingFileExtension = ".cache";
 
         public const string NetFileExtension = "_net" + NetCdfFileExtension;
         public const string MapFileExtension = "_map" + NetCdfFileExtension;

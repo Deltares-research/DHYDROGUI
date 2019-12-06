@@ -79,6 +79,21 @@ namespace DeltaShell.NGHS.IO.TestUtils
         }
 
         /// <summary>
+        /// Copies a directory to the temporary directory.
+        /// </summary>
+        /// <param name="directoryPath">The directory path.</param>
+        /// <returns>The path of the copied directory in the temporary directory.</returns>
+        public string CopyDirectoryToTempDirectory(string directoryPath)
+        {
+            string directoryName = System.IO.Path.GetFileName(directoryPath);
+            string targetDirPath = System.IO.Path.Combine(Path, directoryName);
+
+            FileUtils.CopyDirectory(directoryPath, targetDirPath);
+
+            return targetDirPath;
+        }
+
+        /// <summary>
         /// Copies the test data directory of a file to a temporary directory.
         /// </summary>
         /// <param name="relativeTestDataFilePath">The relative test data file path.</param>

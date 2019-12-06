@@ -25,13 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
         /// <param name="model"> The water quality model to add the text document to </param>
         /// <param name="dataItemMetaData"> The metadata object that provides information about the data item to be created </param>
         /// <param name="filePath"> The path to the file to read </param>
-        /// <param name="insertIndex"> The data item index at which the text document must be inserted </param>
-        /// <remarks>
-        /// The <paramref name="insertIndex" /> is ignored when a text document with <paramref name="dataItemMetaData" />
-        /// already exists
-        /// </remarks>
-        public static void AddTextDocument(this WaterQualityModel model, ADataItemMetaData dataItemMetaData,
-                                           string filePath, int insertIndex = -1)
+        public static void AddTextDocument(this WaterQualityModel model, ADataItemMetaData dataItemMetaData, string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -39,72 +33,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
                 return;
             }
 
-            IDataItem dataItem = ((IModel) model).DataItems.FirstOrDefault(di => di.Tag == dataItemMetaData.Tag);
+            string fileContent = File.ReadAllText(filePath);
+
+            IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Tag == dataItemMetaData.Tag);
             if (dataItem == null)
             {
-                TextDocumentBase textDocumentFromFile =
-                    ((Func<string, TextDocumentBase>) CreateTextDocumentFromFile)(filePath);
-                dataItem = new DataItem(textDocumentFromFile, dataItemMetaData.Name, textDocumentFromFile.GetType(),
+                var textDocument = new TextDocument(true) {Content = fileContent};
+                dataItem = new DataItem(textDocument, dataItemMetaData.Name, textDocument.GetType(),
                                         DataItemRole.Output,
                                         dataItemMetaData.Tag);
 
-                if (insertIndex > ((IModel) model).DataItems.Count || insertIndex < 0)
-                {
-                    ((IModel) model).DataItems.Add(dataItem);
-                }
-                else
-                {
-                    ((IModel) model).DataItems.Insert(insertIndex, dataItem);
-                }
-
-                CleanupInvalidFiles(filePath, dataItem);
+                model.DataItems.Add(dataItem);
             }
             else
             {
-                UpdateTextFromFileDocument(dataItem);
+                if (dataItem.Value is TextDocument textDocument)
+                {
+                    textDocument.Content = fileContent;
+                }
             }
-        }
-
-        private static void CleanupInvalidFiles(string filePath, IDataItem dataItem)
-        {
-            //D3DFMIQ-76
-            /* When adding a TextDocumentFromFile - DataItem to the DataItems collection,
-             * it gets updated with a temporary file that should not be created.
-             * To avoid this behaviour we do hereby a cleanup of such files.
-             */
-            if (dataItem == null
-                || (TextDocumentFromFile) dataItem.Value == null
-                || ((TextDocumentFromFile) dataItem.Value).Path == filePath)
-            {
-                return;
-            }
-
-            string fileToRemove = ((TextDocumentFromFile) dataItem.Value).Path;
-            ((TextDocumentFromFile) dataItem.Value).Path = filePath;
-            File.Delete(fileToRemove);
-        }
-
-        private static void UpdateTextFromFileDocument(IDataItem dataItem)
-        {
-            var value = dataItem.Value as TextDocumentFromFile;
-            if (value != null)
-            {
-                // Reopen the file but keep same name for DataItem:
-                string originalDataItemName = dataItem.Name;
-
-                string path = value.Path;
-                value.Close();
-                value.Open(path);
-
-                dataItem.Name = originalDataItemName;
-            }
-        }
-
-        private static TextDocumentFromFile CreateTextDocumentFromFile(string filePath)
-        {
-            var textDocumentFromFile = new TextDocumentFromFile(true);
-            textDocumentFromFile.Open(filePath);
-            return textDocumentFromFile;
         }
 
         /// <summary>
@@ -134,10 +81,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
 
             string name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetTempFileName() : model.Name;
             model.ModelDataDirectory = Path.Combine(projectDataDir, name.Replace(" ", "_"));
-            string modelWorkFolder = model.ModelDataDirectory + FileConstants.WorkDirectoryPostfix;
             if (model.ModelSettings != null)
             {
-                model.ModelSettings.WorkDirectory = modelWorkFolder;
                 model.ModelSettings.OutputDirectory =
                     Path.Combine(model.ModelDataDirectory, FileConstants.OutputDirectoryName);
             }

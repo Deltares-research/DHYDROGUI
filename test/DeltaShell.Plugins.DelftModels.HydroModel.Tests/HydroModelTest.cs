@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation;
+using DeltaShell.Dimr;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -354,6 +358,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow2.Data, hydroModelWorkFlowData2);
             Assert.AreEqual(hydroModelWorkFlow3.Data, hydroModelWorkFlowData3);
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
+        }
+
+        [Test]
+        public void GivenAHydroModel_WhenOnInitializeIsCalled_ThenThePrepareForIntegratedModelRunIsCalled()
+        {
+            // Given
+            var activity = Substitute.For<IActivity, IDimrModel>();
+            ((IDimrModel) activity).Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
+
+            var workflow = new SequentialActivity {Activities = { activity }};
+
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.Activities.Add(activity);
+                hydroModel.CurrentWorkflow = workflow;
+
+                // When 
+                hydroModel.Initialize();
+
+                // Then
+                ((IDimrModel) activity).Received(1).PrepareForIntegratedModelRun();
+            }
         }
 
         public class SimpleHydroModel : ModelBase, IHydroModel

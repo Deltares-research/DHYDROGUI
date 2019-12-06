@@ -7,7 +7,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -16,15 +15,12 @@ using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Extensions.Feature;
 using Mono.Addins;
-using NetTopologySuite.IO;
 
 namespace DeltaShell.Plugins.NetworkEditor
 {
     [Extension(typeof(IPlugin))]
     public class NetworkEditorApplicationPlugin : ApplicationPlugin
     {
-        static readonly WKTReader WktReader = new WKTReader();
-
         public readonly IList<IFileExporter> exporters = new List<IFileExporter>
             {
                 new CrossSectionYZToCsvFileExporter(),
@@ -70,115 +66,6 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             Application.ProjectClosing += ApplicationOnProjectClosing;
             Application.ProjectOpened += ApplicationOnProjectOpened;
-        }
-
-        public override IEnumerable<DataItemInfo> GetDataItemInfos()
-        {
-            yield return new DataItemInfo<HydroRegion>
-                {
-                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region,
-                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
-                    Image = Properties.Resources.HydroRegion,
-                    CreateData = owner => new HydroRegion
-                        {
-                            Name = string.Format("{0}1", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region),
-                            SubRegions =
-                                {
-                                    new HydroNetwork { Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network },
-                                    new DrainageBasin { Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin }
-                                },
-                        },
-                    AddExampleData = data => AddExampleHydroRegionData(data)
-                };
-
-            yield return new DataItemInfo<HydroNetwork>
-                {
-                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network,
-                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
-                    Image = Properties.Resources.Network,
-                    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
-                                                    || !((HydroRegion) owner).SubRegions.OfType<HydroNetwork>().Any(), // Support only a single network per region for now
-                    CreateData = owner =>
-                        {
-                            var network = new HydroNetwork();
-
-                            var hydroRegion = owner as HydroRegion;
-                            if (hydroRegion != null)
-                            {
-                                network.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network), hydroRegion.SubRegions);
-
-                                hydroRegion.SubRegions.Add(network);
-                            }
-
-                            var folder = owner as Folder;
-                            if (folder != null)
-                            {
-                                network.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network), folder.Items);
-                            }
-
-                            return network;
-                        },
-                    AddExampleData = data => AddExampleHydroNetworkData(data)
-                };
-
-            yield return new DataItemInfo<DrainageBasin>
-                {
-                    Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin,
-                    Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
-                    Image = Properties.Resources.DrainageBasin,
-                    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
-                                                    || !((HydroRegion) owner).SubRegions.OfType<DrainageBasin>().Any(), // Support only a single basin per region for now
-                    CreateData = owner =>
-                        {
-                            var drainageBasin = new DrainageBasin();
-
-                            var hydroRegion = owner as HydroRegion;
-                            if (hydroRegion != null)
-                            {
-                                drainageBasin.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin), hydroRegion.SubRegions);
-
-                                hydroRegion.SubRegions.Add(drainageBasin);
-                            }
-
-                            var folder = owner as Folder;
-                            if (folder != null)
-                            {
-                                drainageBasin.Name = NamingHelper.GetUniqueName(string.Format("{0}{{0}}", Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin), folder.Items);
-                            }
-
-                            return drainageBasin;
-                        },
-                    AddExampleData = data => AddExampleDrainageBasinData(data)
-                };
-
-            //yield return new DataItemInfo<Area>
-            //{
-            //    Name = "Area",
-            //    Category = "Hydro",
-            //    Image = Properties.Resources.CrossSectionSmallWithExclamation,
-            //    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
-            //                                    || !((HydroRegion)owner).SubRegions.OfType<Area>().Any(), // Support only a single area per region for now
-            //    CreateData = owner =>
-            //    {
-            //        var area = new Area();
-
-            //        var hydroRegion = owner as HydroRegion;
-            //        if (hydroRegion != null)
-            //        {
-            //            area.Name = NamingHelper.GetUniqueName("area{0}", hydroRegion.SubRegions);
-
-            //            hydroRegion.SubRegions.Add(area);
-            //        }
-
-            //        var folder = owner as Folder;
-            //        if (folder != null)
-            //        {
-            //            area.Name = NamingHelper.GetUniqueName("area{0}", folder.Items);
-            //        }
-
-            //        return area;
-            //    }
-            //};
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
@@ -357,41 +244,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                 ValueConverter = new AggregationValueConverter(subRegion),
                 Owner = parent.Owner
             };
-        }
-
-        private static void AddExampleHydroRegionData(IRegion hydroRegion)
-        {
-            var hydroNetwork = hydroRegion.SubRegions.OfType<IHydroNetwork>().First();
-            var drainageBasin = hydroRegion.SubRegions.OfType<IDrainageBasin>().First();
-
-            AddExampleHydroNetworkData(hydroNetwork);
-            AddExampleDrainageBasinData(drainageBasin);
-
-            var link = drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.FirstOrDefault());
-            link.Geometry = WktReader.Read("LINESTRING(5 5, 5 0)");
-        }
-
-        private static void AddExampleHydroNetworkData(IHydroNetwork network)
-        {
-            var node1 = new HydroNode { Name = "Node1", Geometry = WktReader.Read("POINT(0 0)") };
-            var node2 = new HydroNode { Name = "Node2", Geometry = WktReader.Read("POINT(10 0)") };
-            var lateral = new LateralSource { Chainage = 5, Geometry = WktReader.Read("POINT(5 0)") };
-            var channel1 = new Channel { Name = "Channel1", BranchFeatures = { lateral }, Source = node1, Target = node2, Geometry = WktReader.Read("LINESTRING(0 0, 10 0)") };
-
-            network.Branches.Add(channel1);
-            network.Nodes.AddRange(new[] { node1, node2 });
-        }
-
-        private static void AddExampleDrainageBasinData(IDrainageBasin drainageBasin)
-        {
-            var catchment = new Catchment { Name = "Catchment1", CatchmentType = CatchmentType.Unpaved, Geometry = WktReader.Read("POLYGON((0 6, 0 12, 10 12, 10 6, 0 6))"), Basin = drainageBasin};
-            var plant = new WasteWaterTreatmentPlant { Name = "Plant1", Geometry = WktReader.Read("POINT(5 5)") };
-
-            drainageBasin.Catchments.Add(catchment);
-            drainageBasin.WasteWaterTreatmentPlants.Add(plant);
-
-            var link = catchment.LinkTo(plant);
-            link.Geometry = WktReader.Read("LINESTRING(5 9, 5 5)");
         }
     }
 }

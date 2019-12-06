@@ -218,11 +218,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Then
                 string[] lines = File.ReadAllLines(morFilePath);
                 Assert.AreEqual($"[{MorphologyFile.Header}]", lines[4]);
-                Assert.AreEqual($"    {customPropertyName}       = {value1}                    ", lines[34]);
-                Assert.AreEqual($"[{customCategoryName}]", lines[35]);
-                Assert.AreEqual($"    {customPropertyName}       = {value2}                    ", lines[36]);
+                Assert.AreEqual($"    {customPropertyName}       = {value1}                    ", lines[32]);
+                Assert.AreEqual($"[{customCategoryName}]", lines[33]);
+                Assert.AreEqual($"    {customPropertyName}       = {value2}                    ", lines[34]);
             }
         }
+
+        [Test]
+        public void GivenAMorFileWithObsoleteParameters_WhenThisFileIsRead_ThenTheObsoleteParametersAreFilteredOutAndAnErrorReportIsGenerated()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // Create the actual .mor file.
+                var modelDefinitionWrite = new WaterFlowFMModelDefinition();
+
+                string fileContent = "[Morphology]"  + Environment.NewLine + 
+                                     "NeuBcSand = 1" + Environment.NewLine + 
+                                     "NeuBcMud  = 1" + Environment.NewLine + 
+                                     "EqmBc = 1"     + Environment.NewLine;
+
+                string morFilePath = Path.Combine(tempDir.Path, "morfile.mor");
+                File.WriteAllText(morFilePath, fileContent);
+
+                // Create the Read data structures.
+                string mduFilePath =
+                    TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
+                var modelDefinitionRead = new WaterFlowFMModelDefinition();
+                modelDefinitionRead.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
+                modelDefinitionRead.GetModelProperty(KnownProperties.MorFile).Value = morFilePath;
+
+                // When
+                List<string> logMessages = 
+                    TestHelper.GetAllRenderedMessages(() => MorphologyFile.Read(mduFilePath, modelDefinitionRead),
+                                                      Level.Warn)
+                              .ToList();
+
+                // Then
+                Assert.That(logMessages, Has.Count.EqualTo(1), "One grouped warning message was expected to be generated.");
+                string message = logMessages.First();
+
+                var obsoleteProperties = new List<string>
+                {
+                    "NeuBcSand",
+                    "NeuBcMud",
+                    "EqmBc"
+                };
+
+                foreach (string obsoleteProperty in obsoleteProperties)
+                {
+                    Assert.That(modelDefinitionRead.GetModelProperty(obsoleteProperty), Is.Null,
+                                "Expected the obsolete property to be null.");
+                    AssertMessageContainsWarningForObsoleteProperty(message, obsoleteProperty);
+                }
+            }
+        }
+
+        private static WaterFlowFMProperty CreateProperty(string name, string value)
+        {
+            WaterFlowFMPropertyDefinition propertyDefinition = 
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
+                    KnownProperties.morphology,
+                    name,
+                    "",
+                    PropertySource.MorphologyFile);
+
+            return new WaterFlowFMProperty(propertyDefinition, value);
+        } 
 
         private static WaterFlowFMModelDefinition CreateModelDefinitionWithCustomCategoryAndProperties(string customPropertyName, string customCategoryName, string value1, string value2)
         {
@@ -307,8 +369,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(morWritten, Is.StringContaining(boundary.Name));
                 Assert.That(morWritten, Is.StringContaining(MorphologyFile.BoundaryBedCondition));
                 Assert.That(morWritten, Is.StringContaining("= " + (int)BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)));
-
-
             }
             finally
             {
@@ -422,6 +482,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 propertyName, 
                 lineNumber);
             Assert.IsTrue(message.Contains(expectedMessage), $"The following warning is missing: <{expectedMessage}>");
+        }
+
+        private static void AssertMessageContainsWarningForObsoleteProperty(string message, string propertyName)
+        {
+            string expectedMessage = string.Format(
+                Resources
+                    .MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_,
+                propertyName);
+            Assert.That(message.Contains(expectedMessage), $"Expected the warning, <{expectedMessage}>, to be contained in the log report, {message}");
         }
     }
 }

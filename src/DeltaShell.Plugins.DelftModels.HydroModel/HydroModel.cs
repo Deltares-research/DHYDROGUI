@@ -57,6 +57,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
 
         public virtual bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public virtual bool CopyFromWorkingDirectory { get; }
         #endregion
 
         #region Constructor and dispose
@@ -676,6 +681,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
                     m.RunsInIntegratedModel = true;
                     m.DisconnectOutput();
+
+                    m.PrepareForIntegratedModelRun();
                 });
 
                 var kernelDirectories = GetKernelDirectories(dimrModels);

@@ -12,7 +12,6 @@
       <generator class="increment"/>
     </id>
 
-    <property name="WorkDirectory" column="work_directory"/>
     <property name="HisStartTime" column="his_start_time"/>
     <property name="HisStopTime" column="his_stop_time"/>
     <property name="HisTimeStep" column="his_time_step"/>

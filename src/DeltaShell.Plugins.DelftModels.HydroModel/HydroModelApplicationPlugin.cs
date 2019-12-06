@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -69,8 +70,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened -= ApplicationProjectOpened;
+                    Application.ProjectClosing -= ApplicationProjectClosing;
                 }
-                
+
                 base.Application = value;
 
                 if (Application != null)
@@ -80,15 +82,85 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
                     Application.ProjectOpened += ApplicationProjectOpened;
-                    //Application.ProjectDataDirectory
+                    Application.ProjectClosing += ApplicationProjectClosing;
                 }
             }
         }
-        
+
+        private void ApplicationProjectClosing(Project project)
+        {
+            Application.Project.CollectionChanging -= OnProjectCollectionChanging;
+            Application.Project.PropertyChanged -= OnProjectPropertyChanged;
+        }
+
         private void ApplicationProjectOpened(Project project)
         {
             // relink all dataitems (between rtc and flowFM) for all hydromodels
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm => hm.RelinkDataItems());
+
+            Application.Project.CollectionChanging += OnProjectCollectionChanging;
+            Application.Project.PropertyChanged += OnProjectPropertyChanged;
+        }
+
+        private void OnProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(INameable.Name) && sender is IModel renamedModel)
+            {
+                TrimModelName(renamedModel);
+                MakeModelNameUnique(renamedModel);
+            }
+        }
+
+        private void OnProjectCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangeAction.Add && e.Item is IModel addedModel)
+            {
+                TrimAllModelNames(addedModel);
+                MakeAllModelNamesUnique(addedModel);
+            }
+        }
+
+        private static void TrimAllModelNames(IModel model)
+        {
+            TrimModelName(model);
+
+            foreach (IModel subModel in model.GetDirectChildren().OfType<IModel>())
+            {
+                TrimAllModelNames(subModel);
+            }
+        }
+
+        private static void TrimModelName(IModel renamedModel)
+        {
+            string modelName = renamedModel.Name;
+            string trimmedName = modelName.Trim();
+            if (modelName != trimmedName)
+            {
+                renamedModel.Name = trimmedName;
+            }
+        }
+
+        private void MakeAllModelNamesUnique(IModel model)
+        {
+            MakeModelNameUnique(model);
+
+            foreach (IModel subModel in model.GetDirectChildren().OfType<IModel>())
+            {
+                MakeAllModelNamesUnique(subModel);
+            }
+        }
+
+        private void MakeModelNameUnique(IModel model)
+        {
+            IModel[] allModels = Application.Project.GetAllItemsRecursive()
+                                            .OfType<IModel>()
+                                            .Where(m => m != model)
+                                            .ToArray();
+
+            if (allModels.Any(m => m.Name == model.Name))
+            {
+                model.Name = NamingHelper.GetUniqueName(model.Name + " ({0})", allModels);
+            }
         }
 
         private void ApplicationProjectSaving(Project project)

@@ -30,9 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return result;
         }
 
-        public override void Configure(object importer)
+        public override void Configure(object item)
         {
-            var bcmFileImporter = importer as BcmFileImporter;
+            var bcmFileImporter = item as BcmFileImporter;
             if (bcmFileImporter != null)
             {
                 bcmFileImporter.FilePaths = FilePaths;

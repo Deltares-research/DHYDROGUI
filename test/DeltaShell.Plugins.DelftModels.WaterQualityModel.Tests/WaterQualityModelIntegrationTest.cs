@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
 
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFilePath = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
+            var hydFilePath = Path.Combine(dataDir, "ValidWaqModels", "UGrid", "f34.hyd");
             var substanceFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
 
             string[] outputTextDocumentsTags = { "ListFileTag", "ProcessFileTag", "MonitoringFileTag", "lastRunLogFileDataItem" };
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     // are not connected to data
                     var outputDataItemValues = waqModel.AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output));
                     foreach (var tag in outputTextDocumentsTags) Assert.IsFalse(outputDataItemValues.Any(di => di.Tag == tag));
-                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
+                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 
                     app.RunActivity(waqModel);
 
@@ -204,28 +204,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
 
                     // Check folder structure after model run
-                    var outputFolderFiles = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
-                    Assert.That(outputFolderFiles.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelRun.Length));
-                    foreach (var filePath in outputFolderFiles)
-                    {
-                        Assert.That(relativePathsThatShouldExistAfterWaqModelRun.Contains(filePath),
-                            $"File at location '{filePath}' should not exist after Water Quality Model run.");
-                    }
-                    
+                    IEnumerable<string> filesAfterModelRun = GetAllFilesPaths(projectFolder);
+
                     waqModel.ClearOutput(); // Clearing output
+
+                    IEnumerable<string> filesAfterClearOutput = GetAllFilesPaths(projectFolder);
 
                     // Check that feature coverage data items are not connected to data
                     foreach (var tag in outputFeatureCoveragesTags)
                         CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 
                     // Check folder structure after model cleanup
-                    var outputFolderFilesAfterCleanup = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
-                    Assert.That(outputFolderFilesAfterCleanup.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelCleanup.Length));
-                    foreach (var filePath in outputFolderFilesAfterCleanup)
-                    {
-                        Assert.That(relativePathsThatShouldExistAfterWaqModelCleanup.Contains(filePath), 
-                            $"File at location '{filePath}' should not exist after Water Quality Model cleanup.");
-                    }
+                    IEnumerable<string> missingFilesAfterClearOutput = filesAfterModelRun.Except(filesAfterClearOutput);
+                    Assert.That(missingFilesAfterClearOutput.Any(), Is.False,
+                                "No files should be deleted at a clear output.");
                 }
             }
             finally
@@ -234,96 +226,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        private readonly string[] relativePathsThatShouldExistAfterWaqModelRun =
+        private IEnumerable<string> GetAllFilesPaths(string directory)
         {
-            @"Water_Quality",
-            @"Water_Quality_output",
-            @"Water_Quality\output",
-            @"Water_Quality\output\deltashell.lsp",
-            @"Water_Quality\output\deltashell.lst",
-            @"Water_Quality\output\deltashell_map.nc",
-            @"Water_Quality\output\deltashell.mon",
-            @"Water_Quality\output\deltashell_res.map",
-            @"Water_Quality_output\deltashell-timers.out",
-            @"Water_Quality_output\deltashell.inp",
-            @"Water_Quality_output\includes_deltashell",
-            @"Water_Quality_output\memory_map.out",
-            @"Water_Quality_output\includes_deltashell\B1_sublist.inc",
-            @"Water_Quality_output\includes_deltashell\B1_t0.inc",
-            @"Water_Quality_output\includes_deltashell\B2_numsettings.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
-            @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
-            @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
-            @"Water_Quality_output\includes_deltashell\B3_volumes.inc",
-            @"Water_Quality_output\includes_deltashell\B4_area.inc",
-            @"Water_Quality_output\includes_deltashell\B4_cdispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B4_flows.inc",
-            @"Water_Quality_output\includes_deltashell\B4_length.inc",
-            @"Water_Quality_output\includes_deltashell\B4_nrofexch.inc",
-            @"Water_Quality_output\includes_deltashell\B4_pointers.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundaliases.inc",
-            @"Water_Quality_output\includes_deltashell\B5_bounddata.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundlist.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_aliases.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_data.inc",
-            @"Water_Quality_output\includes_deltashell\B7_constants.inc",
-            @"Water_Quality_output\includes_deltashell\B7_dispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B7_functions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_numerical_options.inc",
-            @"Water_Quality_output\includes_deltashell\B7_parameters.inc",
-            @"Water_Quality_output\includes_deltashell\B7_processes.inc",
-            @"Water_Quality_output\includes_deltashell\B7_segfunctions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_vdiffusion.inc",
-            @"Water_Quality_output\includes_deltashell\B8_initials.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Hisvar.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Mapvar.inc"
-        };
-
-        private readonly string[] relativePathsThatShouldExistAfterWaqModelCleanup =
-        {
-            @"Water_Quality",
-            @"Water_Quality_output",
-            @"Water_Quality\output",
-            @"Water_Quality_output\deltashell.inp",
-            @"Water_Quality_output\includes_deltashell",
-            @"Water_Quality_output\includes_deltashell\B1_sublist.inc",
-            @"Water_Quality_output\includes_deltashell\B1_t0.inc",
-            @"Water_Quality_output\includes_deltashell\B2_numsettings.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
-            @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
-            @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
-            @"Water_Quality_output\includes_deltashell\B3_volumes.inc",
-            @"Water_Quality_output\includes_deltashell\B4_area.inc",
-            @"Water_Quality_output\includes_deltashell\B4_cdispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B4_flows.inc",
-            @"Water_Quality_output\includes_deltashell\B4_length.inc",
-            @"Water_Quality_output\includes_deltashell\B4_nrofexch.inc",
-            @"Water_Quality_output\includes_deltashell\B4_pointers.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundaliases.inc",
-            @"Water_Quality_output\includes_deltashell\B5_bounddata.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundlist.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_aliases.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_data.inc",
-            @"Water_Quality_output\includes_deltashell\B7_constants.inc",
-            @"Water_Quality_output\includes_deltashell\B7_dispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B7_functions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_numerical_options.inc",
-            @"Water_Quality_output\includes_deltashell\B7_parameters.inc",
-            @"Water_Quality_output\includes_deltashell\B7_processes.inc",
-            @"Water_Quality_output\includes_deltashell\B7_segfunctions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_vdiffusion.inc",
-            @"Water_Quality_output\includes_deltashell\B8_initials.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Hisvar.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Mapvar.inc"
-        };
+            return new DirectoryInfo(directory).GetFiles().Select(f => f.FullName);
+        }
 
         private static void CheckFeatureCoverageFunctionStore(IEnumerable<IDataItem> outputDataItemValues, string tag,
             bool connectedToData = true)

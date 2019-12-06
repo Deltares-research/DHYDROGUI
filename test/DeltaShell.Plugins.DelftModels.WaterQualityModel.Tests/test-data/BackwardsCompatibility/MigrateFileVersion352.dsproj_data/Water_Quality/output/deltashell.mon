@@ -1,0 +1,1650 @@
+ Deltares, DELWAQ Version 5.08.00.64757M, Aug 28 2019, 20:32:30
+ Execution start: 2019/11/07 17:39:16 
+
+ Parallel processing with   2 processor(s)
+
+ total real      array space:    2530512
+ total integer   array space:     295917
+ total character array space:        995
+ grand total in 4-byte words:    2827424 =   0-GB  11-MB 309-KB 696-Byte.
+                     Water quality calculation               
+                                                             
+
+                                                             
+                     T0: 2001.01.01 00:00:00  (scu=       1s)
+
+                     Initialisation from system file completed.
+
+ No process decomposition active
+ partit: noseg,nolay=        8355           1 , nseghr=        8355
+ partit: npart=  1, assigning all segments to part "npart", none to other parts
+ 
+ CONSTANT ON UNIT:        26, READING: D:/test/WAQ_model/westernscheldt/westernscheldt.len                                                                                                                                                                                                            
+ SIMULATION TIME : 4748D  0H  0M  0S ! 
+ TIME IN FILE    :    0D  4H 27M 52S ! 
+  Closure error correction enabled
+ 
+ Initialising numerical options for method 15...18
+ 
+ Preconditioner switch not found, using default
+ switch = 3, corrections based on lower and upper 
+ 
+ Maximum number of iterations found in input
+ Maximum number of iterations set to :   100
+ Maximum number of vectors is:    50
+ 
+ Relative tolerance found in input
+ Relative tolerance set to : 0.100E-06
+ 
+ Scaling switch not found, using default
+ switch = 1, scaling is switched on
+ 
+ Iteration report switch found in input
+ switch = 0, iteration report is switched off
+ 
+ Extra functionality DLWQTR
+ End extra functionality DLWQTR
+  using default dll : d3dwaq_openpb.dll
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   0.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 0.0000E+00 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     0.0000E+00 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+
+ NetCDF version: 4.6.1 of Mar 16 2018 14:16:08 $
+
+ Mesh used for Delwaq output: mesh2d
+   1.04% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  0H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 7.0729E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     7.0729E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   2.08% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  0H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.9684E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.8954E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   3.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  0H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3066E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.0975E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   4.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  1H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5936E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.8704E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   5.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  1H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7579E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.6442E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    1.1785E+06 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   6.25% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  1H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8653E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.0778E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    3.8186E+06 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   7.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  1H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8618E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.9870E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    2.3409E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+   8.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  2H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7844E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    7.7415E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+   9.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  2H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6537E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.3077E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  10.42% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  2H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4785E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.7514E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  11.46% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  2H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2663E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.1221E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  12.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  3H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0634E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.0300E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  13.54% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  3H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.5718E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.0620E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  14.58% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  3H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.8241E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.7479E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  15.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  3H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.3395E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4849E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  16.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  4H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.1217E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.2179E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  17.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  4H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.1264E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    9.9560E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  18.75% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  4H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3457E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    7.8093E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  19.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  4H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7680E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    5.7786E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  20.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  5H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3345E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    4.3373E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  21.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  5H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0189E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.1589E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  22.92% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  5H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.0340E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.1568E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  23.96% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  5H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.5863E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4499E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  25.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  6H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6554E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    9.3306E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  26.04% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  6H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.1057E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    5.5197E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  27.08% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  6H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.0924E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.6922E+07 0.0000E+00
+ BOUNDARY OUTFLOWS    2.8260E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  28.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  6H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.3141E+08 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.3369E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    1.1519E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  29.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  7H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0024E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.7567E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    4.6408E+06 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  30.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  7H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6787E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     6.7684E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    5.9926E+05 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  31.25% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  7H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7797E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.1010E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  32.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  7H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.3256E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.5459E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  33.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  8H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 6.2901E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.9645E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  34.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  8H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.6401E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.3500E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  35.42% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  8H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1328E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.6875E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  36.46% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  8H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4301E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.9730E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  37.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  9H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7520E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2193E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  38.54% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  9H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0939E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4194E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  39.58% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  9H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4490E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5505E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  40.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D  9H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.8127E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6369E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  41.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 10H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.1799E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6719E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  42.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 10H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.5454E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6558E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  43.75% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 10H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.9053E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5989E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  44.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 10H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.2551E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4977E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  45.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 11H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.5877E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.3258E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  46.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 11H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.8984E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.1076E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  47.92% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 11H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.1784E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.7999E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  48.96% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 11H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.4215E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.4306E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  50.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 12H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6209E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.9936E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  51.04% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 12H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.7684E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.4756E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  52.08% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 12H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.8579E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     8.9991E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    4.7410E+06 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  53.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 12H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.8903E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     4.2065E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    9.6757E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  54.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 13H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.8670E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.4034E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    3.7367E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  55.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 13H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.7827E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2523E+06 0.0000E+00
+ BOUNDARY OUTFLOWS    8.4591E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  56.25% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 13H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.6365E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.4623E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  57.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 13H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.4331E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.0345E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  58.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 14H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.1781E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.5499E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  59.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 14H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.8796E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.9851E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  60.42% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 14H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.5465E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.3318E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  61.46% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 14H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.1865E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.5997E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  62.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 15H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.8129E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.7367E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  63.54% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 15H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.4383E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.7465E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  64.58% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 15H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0739E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.6439E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  65.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 15H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7289E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.4502E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  66.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 16H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.4099E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    3.1903E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  67.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 16H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.1210E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.8894E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  68.75% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 16H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.8641E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.5685E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  69.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 16H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.6399E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    2.2428E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  70.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 17H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.4472E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.9266E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  71.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 17H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.2845E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.6273E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  72.92% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 17H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1496E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.3497E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  73.96% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 17H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.0402E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    1.0946E+09 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  75.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 18H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.5384E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    8.6339E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  76.04% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 18H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.8867E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    6.5187E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  77.08% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 18H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.4329E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.2500E+05 0.0000E+00
+ BOUNDARY OUTFLOWS    4.5408E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  78.12% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 18H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.1760E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.0764E+07 0.0000E+00
+ BOUNDARY OUTFLOWS    2.7765E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  79.17% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 19H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.1399E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.0201E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    1.3810E+08 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  80.21% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 19H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.3890E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.1205E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    6.2890E+07 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  81.25% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 19H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 8.9631E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     5.8394E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    9.8889E+06 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  82.29% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 19H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 9.9498E+09 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     9.8674E+08 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  83.33% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 20H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.1359E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.4093E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  84.38% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 20H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.3171E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     1.8120E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  85.42% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 20H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.5358E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.1865E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  86.46% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 20H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 1.7880E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.5219E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  87.50% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 21H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.0686E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.8063E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  88.54% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 21H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.3740E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.0546E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  89.58% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 21H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 2.7013E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2730E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  90.62% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 21H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.0448E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4343E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  91.67% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 22H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.3993E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5453E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  92.71% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 22H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 3.7611E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6179E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  93.75% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 22H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.1249E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6381E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  94.79% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 22H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.4852E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.6031E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+  95.83% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 23H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 4.8384E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.5320E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  96.88% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 23H 15M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.1788E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.4037E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  97.92% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 23H 30M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.5000E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     3.2122E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+  98.96% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   3D 23H 45M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.7959E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.9589E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+
+ REWIND ON           UNIT:  20, READING: D:/test/WAQ_model/westernscheldt/westernscheldt.vol
+ AT SIMULATION TIME: 4749D  0H  0M  0S !
+ TIME IN FILE:       4749D  0H  0M  0S !
+Performing closure error correction
+Total volume before rewind:     0.5961842971099E+10
+Total volume after rewind :     0.5115898969413E+10
+Total correction factor   :     0.8581069636039E+00
+
+ REWIND ON           UNIT:  23, READING: D:/test/WAQ_model/westernscheldt/westernscheldt.are
+ AT SIMULATION TIME: 4749D  0H  0M  0S !
+ TIME IN FILE:       4749D  0H  0M  0S !
+
+ REWIND ON           UNIT:  24, READING: D:/test/WAQ_model/westernscheldt/westernscheldt.flo
+ AT SIMULATION TIME: 4749D  0H  0M  0S !
+ TIME IN FILE:       4749D  0H  0M  0S !
+ 
+                                             Water quality calculation               
+                                                                                     
+                                                                                     
+                                             T0: 2001.01.01 00:00:00  (scu=       1s)
+ 100.00% Completed
+
+
+ DUMP OF INTERMEDIATE RESULTS IN SELECTED SEGMENTS
+  TIME = 13Y   4D  0H  0M  0S .
+ 
+ TOTAL MASS IN SYSTEM 5.3212E+10 0.0000E+00
+ CHANGES BY PROCESSES 0.0000E+00 0.0000E+00
+ CHANGES BY LOADS     0.0000E+00 0.0000E+00
+ BOUNDARY INFLOWS     2.6168E+09 0.0000E+00
+ BOUNDARY OUTFLOWS    0.0000E+00 0.0000E+00
+                      Salinity   EColi      
+                                            
+ CONCENTRATION                           
+ 
+ 
+ Simulation ended normal
+ Execution stop : 2019/11/07 17:39:17 

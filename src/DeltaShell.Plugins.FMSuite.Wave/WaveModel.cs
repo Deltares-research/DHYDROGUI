@@ -1581,6 +1581,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         public virtual string MdwFilePath => mdwFile != null ? mdwFile.MdwFilePath : null;
 
         void IFileBased.CreateNew(string mdwPath)
@@ -1729,6 +1734,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
             //wave doesnt run standalone via dimr but via kernels
+        }
+
+        public virtual void PrepareForIntegratedModelRun()
+        {
+            // Initialization logic which should be executed as part of an
+            // integrated model HydroModel initialization.
         }
 
         #endregion

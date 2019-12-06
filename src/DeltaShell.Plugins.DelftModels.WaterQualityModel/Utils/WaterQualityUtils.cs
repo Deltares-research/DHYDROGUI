@@ -99,7 +99,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                 {
                     closeMainWindow = waqModelProcess.CloseMainWindow();
                 }
-                catch (Exception) {}
+                catch (Exception e) when (e is PlatformNotSupportedException || e is InvalidOperationException)
+                {
+                    Log.WarnFormat(e.Message);
+                }
                 finally
                 {
                     if (!closeMainWindow && !waqModelProcess.HasExited)

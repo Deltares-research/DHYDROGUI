@@ -136,6 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             TryInitializeApi();
         }
 
+        public string MduFilePath => mduFilePath;
+
         public bool SnapsToGrid(IGeometry geometry)
         {
             if (geometry == null)

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
 
@@ -135,6 +137,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"parameter name {parameterName} in {KnownFeatureCategories.Gates}/{gate.Name}/{parameterName} cannot be found in the FM model.",
                 ex.Message, "The exception message is different than expected");
+        }
+
+        [Test]
+        public void PrepareForIntegratedModelRun_SetsCacheFileToTheCorrectExplicitWorkingDirectory()
+        {
+            const string explicitWorkingDirectory = @"Explicit\Working\Directory\dflowfm";
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                model.ExplicitWorkingDirectory = explicitWorkingDirectory;
+
+                // Call
+                model.PrepareForIntegratedModelRun();
+
+                string expectedPath = Path.Combine(explicitWorkingDirectory,
+                                                   Path.ChangeExtension(model.Name, 
+                                                                        FileConstants.CachingFileExtension));
+
+                // Assert
+                Assert.That(model.CacheFile.Path, Is.EqualTo(expectedPath), "Expected a different path:");
+            }
         }
     }
 }

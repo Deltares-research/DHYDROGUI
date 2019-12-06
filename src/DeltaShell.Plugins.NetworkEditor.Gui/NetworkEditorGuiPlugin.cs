@@ -69,7 +69,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private bool settingGuiSelection;
         private ClonableToolStripMenuItem generateCalculationGridLocationsToolStripMenuItem;
         private ClonableToolStripMenuItem removeCalculationGridLocationsToolStripMenuItem;
-        private ClonableToolStripMenuItem addNewHydroRegionToolStripMenuItem;
         private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;
         private ContextMenuStrip calculationGridMenu;
         private ContextMenuStrip hydroRegionContextMenu;
@@ -194,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
-            }; ;
+            };
             yield return new ViewInfo<ICulvert, CulvertViewWpf>
             {
                 CompositeViewType = typeof(CompositeStructureView),
@@ -274,7 +273,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         {
                             v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
                             v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
-                            v.GetConveyanceCalculators = null;
                         }
                 };
             yield return new ViewInfo<ICrossSectionDefinition, CrossSectionDefinitionView>
@@ -498,28 +496,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 item.Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any();
             }
         }
-        
-        /*        private static void RemoveUngroupedItems<TFeature>(IEventedList<TFeature> eventedList)
-        {
-            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
-                .Where(g => string.IsNullOrWhiteSpace(g.GroupName))
-                .OfType<TFeature>()
-                .ToList();
-
-            itemsToRemove.ForEach(f => eventedList.Remove(f));
-        }
-
-        private static void RemoveGroup<TFeature>(IEventedList<TFeature> eventedList, string group)
-        {
-            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
-                .Where(g => g.GroupName == group)
-                .OfType<TFeature>()
-                .ToList();
-
-            itemsToRemove.ForEach(f => eventedList.Remove(f));
-        }
-        
-             */
 
         private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure1D
         {
@@ -562,12 +538,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Name = "removeCalculationGridLocationsToolStripMenuItem",
                 Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes
             };
-            addNewHydroRegionToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.HydroRegion,
-                Name = "addNewHydroRegionToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Add_Sub_Region
-            };
             convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
             {
                 Image = Properties.Resources.HydroRegion,
@@ -577,14 +547,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
             removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
-            addNewHydroRegionToolStripMenuItem.Click += AddNewHydroRegionToolStripMenuItemClick;
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
             
             calculationGridMenu = new ContextMenuStrip { Name = "calculationGridMenu", Size = new System.Drawing.Size(210, 48) };
             calculationGridMenu.Items.AddRange(new ToolStripItem[] {generateCalculationGridLocationsToolStripMenuItem, removeCalculationGridLocationsToolStripMenuItem});
 
             hydroRegionContextMenu = new ContextMenuStrip {Name = "addNewHydroRegion", Size = new System.Drawing.Size(210, 48)};
-            hydroRegionContextMenu.Items.AddRange(new ToolStripItem[] {addNewHydroRegionToolStripMenuItem});
 
             convertCoordinateSystemContextMenu = new ContextMenuStrip { Name = "convertCoordinateSystemMenu" };
             convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[] {convertCoordinateSystemToolStripMenuItem});
@@ -662,7 +630,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 if (data is HydroRegion)
                 {
-                    addNewHydroRegionToolStripMenuItem.Tag = data;
                     return new MenuItemContextMenuStripAdapter(hydroRegionContextMenu);
                 }
                 return hydroRegionTreeView.GetContextMenu(sender, data);
@@ -670,7 +637,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (data is HydroRegion)
             {
-                addNewHydroRegionToolStripMenuItem.Tag = data;
                 return new MenuItemContextMenuStripAdapter(hydroRegionContextMenu);
             }
 
@@ -680,13 +646,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            if(data is IDiscretization)
+            if (data is IDiscretization discretization)
             {
-                generateCalculationGridLocationsToolStripMenuItem.Tag = data as IDiscretization;
+                generateCalculationGridLocationsToolStripMenuItem.Tag = discretization;
                 generateCalculationGridLocationsToolStripMenuItem.Enabled = true;
 
-                removeCalculationGridLocationsToolStripMenuItem.Tag = data as IDiscretization;
-                removeCalculationGridLocationsToolStripMenuItem.Enabled = (((IDiscretization)data).Locations.Values.Count > 0);
+                removeCalculationGridLocationsToolStripMenuItem.Tag = discretization;
+                removeCalculationGridLocationsToolStripMenuItem.Enabled = discretization.Locations.Values.Count > 0;
 
                 return new MenuItemContextMenuStripAdapter(calculationGridMenu);
             }
@@ -837,22 +803,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return;
             }
             object value;
-            if ((removedOrAddedItem is IDataItem)) // NB IModel and IDataItem derive from IProjectItem
+            if (removedOrAddedItem is IDataItem item) // NB IModel and IDataItem derive from IProjectItem
             {
-                value = ((IDataItem)removedOrAddedItem).Value;
+                value = item.Value;
             }
             else
             {
                 value = removedOrAddedItem;
             }
-            //IEnumerable<object> 
+
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Remove:
                     // if network is removed - remove views for all items within the network (not obvious on a higher level since it has no knowledge about child items of the network)
-                    if (value is INetwork)
+                    if (value is INetwork network)
                     {
-                        RemoveNetworkViews((INetwork)value);
+                        RemoveNetworkViews(network);
                         return;
                     }
                     if (value is IModel)
@@ -867,13 +833,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         {
                             RemoveNetworkViews((INetwork)networkDataItem.Value);
                         }
-                        return;
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    //throw new NotImplementedException();
-                    break;
-
                 case NotifyCollectionChangedAction.Add:
                     break;
             }
@@ -940,23 +902,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override void OnViewRemoved(IView view)
         {
-            if (view is MapView)
+            if (view is MapView mapView)
             {
-                var mapView = (MapView)view;
                 HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mapView.MapControl);
             }
             //if the view contains a mapview remove the tool from the mapcontrol..
-            if (view is ICompositeView)
+            if (view is ICompositeView compositeView)
             {
-                var mapView = ((ICompositeView)view).ChildViews.OfType<MapView>().FirstOrDefault();
-                if (mapView != null)
-                {
-                    HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mapView.MapControl);
-                }
+                compositeView.ChildViews
+                             .OfType<MapView>()
+                             .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
             }
-            if (view is NetworkSideView)
+            if (view is NetworkSideView networkSideView)
             {
-                var networkSideView = (NetworkSideView)view;
                 networkSideView.SelectionChanged -= NetworkSideViewSelectionChanged;
             }
         }
@@ -1121,16 +1079,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return;
 
             //show network if selected
-            if (Gui.Selection is IDataItem)
+            if (Gui.Selection is IDataItem dataItem && typeof(IHydroRegion).IsAssignableFrom(dataItem.ValueType))
             {
-                var dataItem = (IDataItem)Gui.Selection;
-                if (typeof(IHydroRegion).IsAssignableFrom(dataItem.ValueType))
-                {
-                    hydroRegionTreeView.Region = (IHydroRegion)dataItem.Value;
-                    return;
-                }
+                hydroRegionTreeView.Region = (IHydroRegion)dataItem.Value;
+                return;
             }
-
+            
             //no network selected, so get it from the active view
             SetActiveRegion(GetRegionFromActiveView());
         }
@@ -1158,7 +1112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (crossSection == null) return;
             
-            // todo add condition to test for network?
             var crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
 
             foreach (var view in crossSectionViews.Where(v=>!v.Locked))
@@ -1182,17 +1135,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // for selected channel only.
             MapControl mapControl = null;
 
-            if (Gui.DocumentViews.ActiveView is CoverageView)
+            if (Gui.DocumentViews.ActiveView is CoverageView coverageView && coverageView.Coverage == discretization)
             {
-                var coverageView = (CoverageView) Gui.DocumentViews.ActiveView;
-                if (coverageView.Coverage == discretization)
-                {
-                    var mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
-
-                    mapControl = mapView != null ? mapView.MapControl : null;
-                }
+                MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
+                mapControl = mapView?.MapControl;
             }
-
+            
             IList<IChannel> selectedChannels = null;
             if (mapControl != null)
             {
@@ -1222,13 +1170,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             mapView?.MapControl.SelectTool.RefreshSelection();
         }
 
-        private void AddNewHydroRegionToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var region = (HydroRegion)((ToolStripMenuItem)sender).Tag;
-            Gui.CommandHandler.AddNewProjectItem(region);
-   
-        }
-
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
         {
             var network = ((ToolStripMenuItem) sender).Tag as INetwork;
@@ -1248,7 +1189,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
                                                                       coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
 
-            if (models.Count() > 1) //several matches, do more filtering
+            if (models.Count > 1) //several matches, do more filtering
             {
                 models = models.Where(m => !(m is CompositeModel)).ToList();
             }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Filters;
-using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -12,6 +10,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -34,16 +33,12 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
@@ -74,33 +69,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             //    |  |   `-- ... all output generated from waq run like *.lst, *.his, *.map files.
 
             var tempPath = Path.GetTempPath();
-            StringAssert.StartsWith(tempPath, model.ModelSettings.WorkDirectory,
-                "Work directory should be located somewhere in temp folder.");
-            StringAssert.StartsWith(tempPath, model.ModelSettings.OutputDirectory,
+           StringAssert.StartsWith(tempPath, model.ModelSettings.OutputDirectory,
                 "Output directory should be located somewhere in temp folder.");
             StringAssert.StartsWith(tempPath, model.BoundaryDataManager.FolderPath,
                 "Boundary data directory should be located somewhere in temp folder.");
             StringAssert.StartsWith(tempPath, model.LoadsDataManager.FolderPath,
                 "Loads data directory should be located somewhere in temp folder.");
-
-            var waqModelTempFolder = Path.GetDirectoryName(model.ModelSettings.WorkDirectory);
-            if (Directory.Exists(waqModelTempFolder))
-            {
-                FileUtils.DeleteIfExists(waqModelTempFolder);
-                Assert.Fail("Waq model temp folder should only be created when required.");
-            }
-
-            var parentFolderOfWaqModelTempFolder =
-                Path.GetDirectoryName(waqModelTempFolder) + Path.DirectorySeparatorChar;
-            Assert.AreEqual(tempPath, parentFolderOfWaqModelTempFolder,
-                "Waq model temp folder should be located directly in temp folder.");
+            
+            Assert.AreEqual(Path.Combine(tempPath, "DeltaShell_Working_Directory", "Water_Quality"), model.ModelSettings.WorkDirectory,
+                "Expected default working directory of DeltaShell");
             var waqModelFolderName = model.Name.Replace(" ", "_");
-            Assert.AreEqual(waqModelFolderName + "_output", Path.GetFileName(model.ModelSettings.WorkDirectory),
-                "Expected work directory name should be based on name of waq model and post-fixed with '_output'.");
+            Assert.AreEqual(waqModelFolderName, Path.GetFileName(model.ModelSettings.WorkDirectory),
+                "Expected model working directory name should be based on name of waq model");
 
             var waqModelDataFolder = Path.GetDirectoryName(model.ModelSettings.OutputDirectory);
-            Assert.AreEqual(waqModelTempFolder, Path.GetDirectoryName(waqModelDataFolder),
-                "Expected waq model data folder to be direct child-folder of the work directory parent folder.");
             Assert.AreEqual(waqModelFolderName, Path.GetFileName(waqModelDataFolder),
                 "Expected waq data directory name should be based on name of waq model without post-fix.");
             Assert.AreEqual(waqModelDataFolder, Path.GetDirectoryName(model.BoundaryDataManager.FolderPath),
@@ -377,133 +359,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void ClearOutput_WithFeatureCoverageDataItem_ThenFeatureCoverageIsCleared()
+        public void ClearOutput_ThenOutputFolderIsSetToNull()
         {
-            const string outputFeatureCoverageTag = "OutputFeatureCoverage";
-            var waqModel = new WaterQualityModel();
-
-            var featureCoverage = new FeatureCoverage("Test coverage");
-            featureCoverage.Arguments.Add(new Variable<IFeature>("Feature argument"));
-            featureCoverage.Components.Add(new Variable<int>("Test component"));
-            featureCoverage[new Feature()] = 2;
-            featureCoverage.Filters = new List<IVariableFilter>
-            {
-                new ComponentFilter(featureCoverage.Components[0])
-            };
-
-            waqModel.DataItems.Add(new DataItem(featureCoverage, DataItemRole.Output, outputFeatureCoverageTag));
-
-            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            // As we do not focus on model run, we use reflection to set this field and omit the model run.
-            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
-
-            // Pre-condition
-            Assert.That(featureCoverage.GetValues().Count, Is.EqualTo(1));
-            Assert.That(featureCoverage.Filters.Count, Is.EqualTo(1));
-
-            // Call
-            waqModel.ClearOutput();
-
-            // Assert
-            IDataItem featureCoverageDataItem = waqModel.GetDataItemByTag(outputFeatureCoverageTag);
-            Assert.That(featureCoverageDataItem, Is.Not.Null);
-
-            var coverage = (FeatureCoverage) featureCoverageDataItem.Value;
-            Assert.That(coverage.GetValues().Count, Is.EqualTo(0));
-            Assert.That(coverage.Filters.Count, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ClearOutput_WithTextDocumentOutputDataItem_ThenDataItemIsRemoved()
-        {
-            const string outputTextDocumentTag = "OutputTextDocument";
-            
             // Setup
-            var textDocument = new TextDocument();
-
-            var waqModel = new WaterQualityModel();
-            waqModel.DataItems.Add(new DataItem(textDocument, DataItemRole.Output, outputTextDocumentTag));
-
-            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            // As we do not focus on model run, we use reflection to set this field and omit the model run.
-            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
-
-            // Call
-            waqModel.ClearOutput();
-
-            // Assert
-            Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
-        }
-
-        [Test]
-        public void ClearOutput_WithTextDocumentFromFileOutputDataItem_ThenDataItemIsRemovedFromModel()
-        {
-            const string outputTextDocumentTag = "OutputTextDocument";
-            using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterQualityModel())
             {
-                // Setup
-                string filePath = Path.Combine(tempDirectory.Path, "myTextFile.txt");
-                File.WriteAllText(filePath, @"This is a test file.");
-
-                var textDocumentFromFile = new TextDocumentFromFile
-                {
-                    Path = filePath
-                };
-
-                var waqModel = new WaterQualityModel();
-                waqModel.DataItems.Add(new DataItem(textDocumentFromFile, DataItemRole.Output, outputTextDocumentTag));
-
-                // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-                // As we do not focus on model run, we use reflection to set this field and omit the model run.
-                TypeUtils.SetField(waqModel, "outputIsEmpty", false);
+                model.OutputFolder = new FileBasedFolder("path");
+                // This field should be false when clearing model output.
+                TypeUtils.SetField(model, "outputIsEmpty", false);
 
                 // Call
-                waqModel.ClearOutput();
+                model.ClearOutput();
 
                 // Assert
-                Assert.That(File.Exists(filePath), Is.True);
-                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null);
+                Assert.That(model.OutputFolder.Path, Is.Null);
             }
-        }
-        
-        [Test]
-        public void ClearOutput_WithUnstructuredGridCellCoverageOutputDataItem_ThenCoverageIsCleared()
-        {
-            const int numberOfHorizontalCells = 2;
-            const int numberOfVerticalCells = 2;
-            const int numberOfCells = numberOfHorizontalCells * numberOfVerticalCells;
-            const double noDataValue = -999.0;
-            const string outputGridCellCoverageTag = "OutputGridCellCoverage";
-
-            // Setup
-            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(numberOfHorizontalCells, numberOfVerticalCells, 10, 10);
-
-            var random = new Random();
-            var unstructuredGridCellCoverage = new UnstructuredGridCellCoverage(grid, false);
-            unstructuredGridCellCoverage.Components[0].NoDataValue = noDataValue;
-            unstructuredGridCellCoverage.SetValues(Enumerable.Range(0, numberOfCells).Select(i => random.NextDouble()));
-
-            var waqModel = new WaterQualityModel();
-            waqModel.DataItems.Add(new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputGridCellCoverageTag));
-
-            // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
-            // As we do not focus on model run, we use reflection to set this field and omit the model run.
-            TypeUtils.SetField(waqModel, "outputIsEmpty", false);
-
-            // Pre-condition
-            Assert.That(unstructuredGridCellCoverage.GetValues().Count, Is.EqualTo(numberOfCells));
-            Assert.That(unstructuredGridCellCoverage.GetValues<double>().All(v => Math.Abs(v - noDataValue) > 10e-6), Is.True);
-
-            // Call
-            waqModel.ClearOutput();
-
-            // Assert
-            IDataItem coverageDataItem = waqModel.GetDataItemByTag(outputGridCellCoverageTag);
-            Assert.That(coverageDataItem, Is.Not.Null);
-
-            var coverage = (UnstructuredGridCellCoverage) coverageDataItem.Value;
-            Assert.That(coverage.GetValues().Count, Is.EqualTo(numberOfCells));
-            Assert.That(coverage.GetValues<double>().All(v => Math.Abs(v - noDataValue) < 10e-6), Is.True);
         }
 
         [Test]
@@ -1902,82 +1772,135 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsTrue(waqModel.WaqProcessesRules.Any());
         }
 
-        [TestCase("deltashell.map")]
-        [TestCase("deltashell_map.nc")]
-        public void OnFinish_WithExistingMapFile_ThenModelIsConnectedToThisFile(string fileName)
+        [Test]
+        public void SetOutputFolder_WithValueWithSamePath_ThenOutputFolderIsStillSameObject()
         {
-            // Set-up
-            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", fileName);
-
-            using (var tempDir = new TemporaryDirectory())
+            // Setup
+            using (var model = new WaterQualityModel())
             {
-                string filePath = tempDir.CopyTestDataFileToTempDirectory(testFilePath);
-                var outputDirectory = Path.GetDirectoryName(filePath);
+                const string path = null;
+                var outputFolder = new FileBasedFolder(path);
+                model.OutputFolder = outputFolder;
 
-                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = outputDirectory } })
+                // Call
+                model.OutputFolder = new FileBasedFolder(path);
+
+                // Assert
+                Assert.That(model.OutputFolder, Is.SameAs(outputFolder));
+            }
+        }
+
+        [Test]
+        public void SetOutputFolder_ToNull_ThenModelIsDisconnected()
+        {
+            const string outputTextDocumentTag = "OutputTextDocument";
+
+            // Setup
+            using (var waqModel = new WaterQualityModel())
+            {
+                waqModel.OutputFolder = new FileBasedFolder();
+                waqModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, outputTextDocumentTag));
+
+                // Precondition
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Not.Null, "Precondition violated.");
+
+                // Call
+                waqModel.OutputFolder = null;
+
+                // Assert
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null,
+                            $"Model should be disconnected when setting {nameof(waqModel.OutputFolder)} to Null.");
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("does_not_exist")]
+        public void SetOutputFolder_ToOutputFolderWithNonExistingPath_ThenModelIsDisconnected(string folderPath)
+        {
+            const string outputTextDocumentTag = "OutputTextDocument";
+
+            // Setup
+            using (var waqModel = new WaterQualityModel())
+            {
+                waqModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, outputTextDocumentTag));
+
+                // Precondition
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Not.Null, "Precondition violated.");
+
+                // Call
+                waqModel.OutputFolder = new FileBasedFolder {Path = folderPath};
+
+                // Assert
+                Assert.That(waqModel.GetDataItemByTag(outputTextDocumentTag), Is.Null, 
+                            $"Model should be disconnected when setting {nameof(waqModel.OutputFolder)} to an instance with a path that does not exist.");
+            }
+        }
+
+        [Test]
+        public void SetOutputFolder_ToOutputFolderWithExistingPath_ThenModelIsConnected()
+        {
+            string dataItemTag = WaterQualityModel.ListFileDataItemMetaData.Tag;
+
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string outputDirectoryPath = tempDirectory.Path;
+                File.WriteAllText(Path.Combine(outputDirectoryPath, FileConstants.ListFileName), "");
+
+                using (var model = new WaterQualityModel())
                 {
+                    // Precondition
+                    Assert.That(model.GetDataItemByTag(dataItemTag), Is.Null, "Precondition violated.");
+
                     // Act
-                    model.Finish();
+                    model.OutputFolder = new FileBasedFolder(outputDirectoryPath);
 
                     // Assert
-                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath));
+                    Assert.That(model.GetDataItemByTag(dataItemTag), Is.Not.Null,
+                                $"When setting the {nameof(model.OutputFolder)} then the model is connected.");
                 }
             }
         }
 
         [Test]
-        public void OnFinish_WhenBothMapFilesExist_ThenModelIsConnectedToTheNetCdfFile()
+        public void CallingSetWorkingDirectoryInModelSettings_ShouldAddTheModelNameAndSetWorkingDirectoryInModelSettings()
         {
-            // Set-up
-            string testDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
-            string mapFilePath = Path.Combine(testDirectory, "deltashell.map");
-            string mapNetCdfFilePath = Path.Combine(testDirectory, "deltashell_map.nc");
-
-            using (var tempDir = new TemporaryDirectory())
+            // Arrange
+            var model = new WaterQualityModel
             {
-                mapNetCdfFilePath = tempDir.CopyAllTestDataToTempDirectory(mapNetCdfFilePath, mapFilePath)[0];
+                Name = "Name"
+            };
 
-                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = tempDir.Path } })
-                {
-                    // Act
-                    model.Finish();
+            var workingDirectoryPathFuncWithoutModelName = new Func<string>(() => Path.Combine(Path.GetTempPath(), "test"));
+            string expectedWorkingDirectoryPathWithModelName = Path.Combine(workingDirectoryPathFuncWithoutModelName(), "Name");
+            
+            // Act
+            model.SetWorkingDirectoryInModelSettings(workingDirectoryPathFuncWithoutModelName);
 
-                    // Assert
-                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(mapNetCdfFilePath));
-                }
-            }
+            // Assert
+            Assert.AreEqual(expectedWorkingDirectoryPathWithModelName, model.ModelSettings.WorkDirectory);
         }
 
         [Test]
-        public void OnFinish_WithNetCdfFileWithUnsupportedConvention_ThenFileIsNotConnectedAndWarningIsGiven()
+        public void RenameModel_ShouldUpdateTheWorkingDirectoryInModelSettings()
         {
-            // Set-up
-            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "NetCDFConventions",
-                                               "CF1.5_UGRID0.9.nc");
-
-            using (var tempDir = new TemporaryDirectory())
+            // Arrange
+            var model = new WaterQualityModel
             {
-                string filePath = Path.Combine(tempDir.Path, "deltashell_map.nc");
-                File.Copy(testFilePath, filePath);
-                string outputDirectory = Path.GetDirectoryName(filePath);
+                Name = "FirstName"
+            };
 
-                using (var model = new WaterQualityModel { ModelSettings = { OutputDirectory = outputDirectory } })
-                {
-                    // Action
-                    void TestAction()
-                    {
-                        model.Finish();
-                    }
+            var workingDirectoryPathFuncWithoutModelName = new Func<string>(() => Path.Combine(Path.GetTempPath(), "test"));
+           
+            model.SetWorkingDirectoryInModelSettings(workingDirectoryPathFuncWithoutModelName);
 
-                    // Assert
-                    IEnumerable<string> warningMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Warn);
-                    string expectedWarning = string.Format(
-                        Resources.WaterQualityModel_File_does_not_meet_supported_UGRID_1_0_or_newer_standard,
-                        Path.GetFileName(filePath));
-                    Assert.That(warningMessages, Contains.Item(expectedWarning));
-                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(null));
-                }
-            }
+            // Act
+            model.Name = "SecondName";
+
+            string expectedWorkingDirectoryPathWithModelName = Path.Combine(workingDirectoryPathFuncWithoutModelName(), "SecondName");
+
+            // Assert
+            Assert.AreEqual(expectedWorkingDirectoryPathWithModelName, model.ModelSettings.WorkDirectory);
         }
     }
 }
