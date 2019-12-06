@@ -94,16 +94,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (!string.IsNullOrEmpty(path)) FilesToImport = new EventedList<string> { path };
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
-            
+            var elementTypesList = ImportGwswElementsFromGwswFiles().ToList();
 
             var hydroModel = target is Project || target == null ? new HydroModelBuilder().BuildModel(ModelGroup.RHUModels) : target as HydroModel;
             
             
             var fmModel = hydroModel?.GetAllActivitiesRecursive<IWaterFlowFMModel>()?.FirstOrDefault() ?? target as IWaterFlowFMModel;
-            
             if (fmModel != null)
             {
-                ImportGWSWNetworkInFMModel(fmModel);
+                ImportGwswNetworkInFmModel(elementTypesList, fmModel);
                 if (hydroModel != null)
                 {
                     //hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 1 && w.Activities.OfType<IWaterFlowFMModel>().Any());
@@ -113,7 +112,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var rrModel = hydroModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault() ?? target as RainfallRunoffModel;
             if (rrModel != null)
             {
-                ImportGWSWNetworkInRRModel(rrModel);
+                ImportGwswNetworkInRrModel(elementTypesList, rrModel);
                 if (hydroModel != null)
                 {
                     //if (fmModel != null) hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 2 && w.Activities.OfType<IWaterFlowFMModel>().Any() && w.Activities.OfType<RainfallRunoffModel>().Any());
@@ -124,27 +123,29 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return target is Project || target == null ? hydroModel : null;
 
         }
-        private void ImportGWSWNetworkInRRModel(RainfallRunoffModel rrModel)
+        private void ImportGwswNetworkInRrModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel)
         {
-            InitializeImportManager();
-            var importedFeatureElements = ImportGwswDatabaseForRR();
+            //import GWSW Data into RR Model
+            var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList).ToList();
             if (rrModel!= null)
             {
                 ReportProgress("Adding features to Rainfall Runoff Model.");
                 AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel);
+
             }
         }
 
-        private void AddNwrwFeaturesToRainfallRunoffModel(IList<INwrwFeature> importedFeatureElements, RainfallRunoffModel rrModel)
+        private void AddNwrwFeaturesToRainfallRunoffModel(IEnumerable<INwrwFeature> importedFeatureElements, RainfallRunoffModel rrModel)
         {
-            var nrOfImportedFeatureElements = importedFeatureElements.Count;
+            var featureElements = importedFeatureElements.ToList();
+            var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
             var listOfErrors = new List<string>();
-            importedFeatureElements.ForEach(e =>
+            featureElements.ForEach(e =>
             {
                 try
                 {
-                    var indexOf = importedFeatureElements.IndexOf(e);
+                    var indexOf = featureElements.IndexOf(e);
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
                         SetProgress($"Adding feature to Rainfall Runoff Model ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
@@ -160,15 +161,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 Log.ErrorFormat($"While adding GWSW features to Rainfall Runoff Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
 
-        private void ImportGWSWNetworkInFMModel(IWaterFlowFMModel fmModel)
+        [EditAction]
+        private void ImportGwswNetworkInFmModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, IWaterFlowFMModel fmModel)
         {
             var network = fmModel?.Network;
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database."));
 
             try
             {
-                InitializeImportManager();
-                var importedFeatureElements = ImportGwswDatabaseForNetwork();
+                var importedFeatureElements = SewerFeatureFactory.CreateSewerEntities(elementTypesList, SetProgress).ToList();
                 if (network != null)
                 {
                     ReportProgress("Adding features to network.");
@@ -183,9 +184,79 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         }
 
         private GwswImportManager ImportManager { get; }
-        private IList<INwrwFeature> ImportGwswDatabaseForRR()
+
+        private IEnumerable<INwrwFeature> ImportGwswDatabaseForRr(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList)
         {
-            var importedFeatureElements = new List<INwrwFeature>();
+            // Surface types
+            // todo: refactor
+            var surfaceTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Surface).Select(k => k.Value).ToList();
+            if (surfaceTypes.Any())
+            {
+                var surfaceFeatures = new List<NWRWData>();
+                var nrOfSurfaces = surfaceTypes.Count;
+                foreach (var element in surfaceTypes)
+                {
+                    var indexOf = surfaceTypes.IndexOf(element);
+                    var stepSize = nrOfSurfaces / 20;
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        SetProgress($"Generating Rainfall Runoff features", surfaceTypes.IndexOf(element), nrOfSurfaces);
+                    }
+
+                    var uniqueId = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
+
+                    if (surfaceFeatures.Any(nwrwData => nwrwData.UniqueId == uniqueId))
+                    {
+                        var surfaceFeature = surfaceFeatures.FirstOrDefault(nwrwData => nwrwData.UniqueId == uniqueId);
+                        if (surfaceFeature != null)
+                        {
+                            var surfaceType = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId).ValueAsString;
+
+                            double auxDouble;
+                            var surface = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
+                            if (surface.TryGetValueAsDouble(out auxDouble))
+                            {
+                                var nwrwSurfaceType = (NWRWSurfaceType)typeof(NWRWSurfaceType).GetEnumValueFromDescription(surfaceType);
+                                surfaceFeature.SurfaceLevelDict[nwrwSurfaceType] = auxDouble;
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        surfaceFeatures.Add(GWSWNWRWGenerator.CreateNewNWRWSurfaceData(element));
+                    }
+                }
+
+                foreach (var surfaceFeature in surfaceFeatures)
+                {
+                    yield return surfaceFeature;
+                }
+                
+            }
+
+            // Runoff types 
+            var runoffTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Runoff).Select(k => k.Value)
+                .ToList();
+            if (!runoffTypes.Any()) yield break;
+
+            var nrOfRunoffs = runoffTypes.Count;
+            foreach (var element in runoffTypes)
+            {
+                var indexOf = runoffTypes.IndexOf(element);
+                var stepSize = nrOfRunoffs / 20;
+                if (stepSize != 0 && indexOf % stepSize == 0)
+                {
+                    SetProgress($"Generating Rainfall Runoff features", runoffTypes.IndexOf(element), nrOfRunoffs);
+                }
+                yield return GWSWNWRWGenerator.CreateNewNWRWRunoffData(element);
+            }
+
+        }
+
+        private IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> ImportGwswElementsFromGwswFiles()
+        {
+            InitializeImportManager();
             foreach (var filePath in FilesToImport)
             {
                 if (!File.Exists(filePath))
@@ -196,126 +267,35 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }
 
                 var gwswElements = ImportGwswElementList(filePath);
-                var elementTypesList = new List<KeyValuePair<SewerFeatureType, GwswElement>>();
-
+                
                 foreach (var gwswElement in gwswElements)
                 {
                     SewerFeatureType elementType;
                     if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
 
-                    elementTypesList.Add(new KeyValuePair<SewerFeatureType, GwswElement>(elementType, gwswElement));
-                }
-
-                // Surface types
-                // todo: refactor
-                var surfaceTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Surface).Select(k => k.Value).ToList();
-                if (surfaceTypes.Any())
-                {
-                    var surfaceFeatures = new List<NWRWData>();
-                    var nrOfSurfaces = surfaceTypes.Count;
-                    foreach (var element in surfaceTypes)
-                    {
-                        var indexOf = surfaceTypes.IndexOf(element);
-                        var stepSize = nrOfSurfaces / 20;
-                        if (stepSize != 0 && indexOf % stepSize == 0)
-                        {
-                            SetProgress($"Generating Rainfall Runoff features", surfaceTypes.IndexOf(element), nrOfSurfaces);
-                        }
-
-                        var uniqueId = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
-
-                        if (surfaceFeatures.Any(nwrwData => nwrwData.UniqueId == uniqueId))
-                        {
-                            var surfaceFeature = surfaceFeatures.FirstOrDefault(nwrwData => nwrwData.UniqueId == uniqueId);
-                            if (surfaceFeature != null)
-                            {
-                                var surfaceType = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId).ValueAsString;
-
-                                double auxDouble;
-                                var surface = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
-                                if (surface.TryGetValueAsDouble(out auxDouble))
-                                {
-                                    var nwrwSurfaceType = (NWRWSurfaceType) typeof(NWRWSurfaceType).GetEnumValueFromDescription(surfaceType);
-                                    surfaceFeature.SurfaceLevelDict[nwrwSurfaceType] = auxDouble;
-                                }
-                                    
-                            }
-                        }
-                        else
-                        {
-                            surfaceFeatures.Add(GWSWNWRWGenerator.CreateNewNWRWSurfaceData(element));
-                        }
-                    }
-                    importedFeatureElements.AddRange(surfaceFeatures);
-                    Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, surfaceFeatures.Count);
-                }
-
-
-                // Runoff types
-                var runoffTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Runoff).Select(k => k.Value).ToList();
-                if (runoffTypes.Any())
-                {
-                    var nrOfRunoffs = runoffTypes.Count;
-                    var runoffFeatures = runoffTypes.Select(element =>
-                    {
-                        var indexOf = runoffTypes.IndexOf(element);
-                        var stepSize = nrOfRunoffs / 20;
-                        if (stepSize != 0 && indexOf % stepSize == 0)
-                        {
-                            SetProgress($"Generating Rainfall Runoff features", runoffTypes.IndexOf(element), nrOfRunoffs);
-                        }
-
-                        return GWSWNWRWGenerator.CreateNewNWRWRunoffData(element);
-                    }).ToList();
-
-                    importedFeatureElements.AddRange(runoffFeatures);
-                    Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, runoffFeatures.Count);
+                    yield return new KeyValuePair<SewerFeatureType, GwswElement>(elementType, gwswElement);
                 }
             }
-
-            return importedFeatureElements;
         }
 
-        private IList<ISewerFeature> ImportGwswDatabaseForNetwork()
+        private void AddSewerFeaturesToNetwork(IEnumerable<ISewerFeature> importedFeatureElements, IHydroNetwork network)
         {
-            var importedFeatureElements = new List<ISewerFeature>();
-            foreach (var filePath in FilesToImport)
-            {
-                if (!File.Exists(filePath))
-                {
-                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
-                    ImportManager.JumpImportStepsForNextFile();
-                    continue;
-                }
-
-
-                var gwswElements = ImportGwswElementList(filePath);
-                var createdSewerEntities = SewerFeatureFactory.CreateSewerEntities(gwswElements, SetProgress);
-
-                importedFeatureElements.AddRange(createdSewerEntities);
-                Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_File__0__imported__1__features_, filePath, createdSewerEntities.Count);
-            }
-
-            return importedFeatureElements;
-        }
-
-        [EditAction]
-        private void AddSewerFeaturesToNetwork(IList<ISewerFeature> importedFeatureElements, IHydroNetwork network)
-        {
-            var nrOfImportedFeatureElements = importedFeatureElements.Count;
+            var featureElements = importedFeatureElements.ToList();
+            var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
             var listOfErrors = new List<string>();
-            importedFeatureElements.ForEach(e =>
+            var helper = new SewerImporterHelper();
+            featureElements.ForEach(e =>
             {
                 try
                 {
-                    var indexOf = importedFeatureElements.IndexOf(e);
+                    var indexOf = featureElements.IndexOf(e);
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
                         SetProgress($"Adding feature to network ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
 
 
-                    e.AddToHydroNetwork(network);
+                    e.AddToHydroNetwork(network, helper);
                 }
                 catch (Exception exception)
                 {

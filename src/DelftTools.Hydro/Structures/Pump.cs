@@ -158,7 +158,7 @@ namespace DelftTools.Hydro.Structures
             return StructureType.Pump;
         }
         [EditAction]
-        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
                 sc => sc.BranchFeatures.Count >= 2
@@ -177,7 +177,7 @@ namespace DelftTools.Hydro.Structures
                 sewerConnection = GetNewSewerConnectionWithPump();
             }
 
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
+            sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
             sewerConnection.UpdateBranchFeatureGeometries();
         }
 

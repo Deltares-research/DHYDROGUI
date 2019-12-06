@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Geometry = outletGeometry
             };
 
-            outlet.AddToHydroNetwork(network);
+            outlet.AddToHydroNetwork(network, null);
             Assert.That(network.Manholes.Count(), Is.EqualTo(1));
 
             var manhole = network.Manholes.FirstOrDefault(m => m.Name == parentManholeName);
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Length = 0
             };
 
-            sewerConnection.AddToHydroNetwork(network);
+            sewerConnection.AddToHydroNetwork(network, null);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
@@ -566,13 +566,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            connectionOrifice.AddToHydroNetwork(fmModel.Network);
+            connectionOrifice.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
 
-            structureOrifice.AddToHydroNetwork(fmModel.Network);
+            structureOrifice.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
@@ -591,13 +591,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            structureOrifice.AddToHydroNetwork(fmModel.Network);
+            structureOrifice.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(0));
 
-            connectionOrifice.AddToHydroNetwork(fmModel.Network);
+            connectionOrifice.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
@@ -952,13 +952,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            connectionPump.AddToHydroNetwork(fmModel.Network);
+            connectionPump.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
 
-            structurePump.AddToHydroNetwork(fmModel.Network);
+            structurePump.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
@@ -977,13 +977,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            structurePump.AddToHydroNetwork(fmModel.Network);
+            structurePump.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(0));
 
-            connectionPump.AddToHydroNetwork(fmModel.Network);
+            connectionPump.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
@@ -1156,13 +1156,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            connectionWeir.AddToHydroNetwork(fmModel.Network);
+            connectionWeir.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
 
-            structureWeir.AddToHydroNetwork(fmModel.Network);
+            structureWeir.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }
@@ -1181,13 +1181,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TargetCompartmentName = TestSewerNetworkProvider.TargetCompartmentName
             };
 
-            structureWeir.AddToHydroNetwork(fmModel.Network);
+            structureWeir.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That(discretizationLocations.Count, Is.EqualTo(0));
 
-            connectionWeir.AddToHydroNetwork(fmModel.Network);
+            connectionWeir.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(discretizationLocations.Count, Is.EqualTo(2));
         }

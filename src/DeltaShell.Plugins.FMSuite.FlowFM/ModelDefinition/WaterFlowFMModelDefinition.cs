@@ -1186,8 +1186,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         [EditAction]
         private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
         {
-            var locations = new HashSet<Coordinate>(NetworkDiscretization.Locations.Values.Select(l => l.Geometry.Coordinate));
-            if (!locations.Contains(toLocation.Geometry.Coordinate))
+            var locations = new HashSet<Coordinate>(NetworkDiscretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
+            var locationGeometry = toLocation.Geometry;
+            if(locationGeometry == null) Log.Warn($"No geometry set for {toLocation.Name}");
+            if (!locations.Contains(locationGeometry?.Coordinate))
             {
                 NetworkDiscretization.Locations.AddValues(new[] { toLocation });
             }

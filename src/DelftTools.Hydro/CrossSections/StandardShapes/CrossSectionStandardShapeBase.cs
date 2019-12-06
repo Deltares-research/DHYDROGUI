@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -36,7 +37,7 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             return TypeUtils.MemberwiseClone(this);
         }
         [EditAction]
-        public virtual void AddToHydroNetwork(IHydroNetwork network)
+        public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             var crossSectionDefinitionToAdd = new CrossSectionDefinitionStandard(this)

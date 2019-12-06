@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(createdSewerEntity);
 
             var network = new HydroNetwork();
-            createdSewerEntity.AddToHydroNetwork(network);
+            createdSewerEntity.AddToHydroNetwork(network, null);
             if (isNode)
             {
                 Assert.IsTrue(network.Nodes.Any());
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var network = new HydroNetwork();
             var gwswElements = new List<GwswElement> { nodeOne, nodeTwo, nodeThree };
             var generatedSewerFeatures = SewerFeatureFactory.CreateSewerEntities(gwswElements);
-            generatedSewerFeatures.ForEach(sf => sf.AddToHydroNetwork(network));
+            generatedSewerFeatures.ForEach(sf => sf.AddToHydroNetwork(network, null));
 
             //check manholes and their geometries
             var manholeWithTwoCompartments = network.Manholes.FirstOrDefault(m => m.Name == manholeOneName) as Manhole;
@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             #endregion
 
             var outletCompartment = CreateSewerFeature<GwswStructureOutletCompartment>(structureGwswElement);
-            outletCompartment.AddToHydroNetwork(network);
+            outletCompartment.AddToHydroNetwork(network, null);
 
             // Check new outlet compartment properties
             Assert.IsNotNull(outletCompartment);

@@ -344,13 +344,22 @@ namespace DelftTools.Hydro.SewerFeatures
 
         #region Network is visiting us
         [EditAction]
-        public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
 
-            var hydroNetworkManholes = hydroNetwork.Manholes.ToArray();
-            var sourceManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
-            var targetManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
+            //var hydroNetworkManholes = hydroNetwork.Manholes.ToDictionary(m=>m.Compartments.SelectMany(c =>c.Name));
+
+            IManhole sourceManhole;
+            if (!helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
+                sourceManhole = null;
+
+            IManhole targetManhole;
+            if (!helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
+                targetManhole = null;
+
+            //var sourceManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
+            //var targetManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
 
             ConnectSourceCompartment(sourceManhole);
             ConnectTargetCompartment(targetManhole);
@@ -401,7 +410,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public void UpdateBranchFeatureGeometries()
         {
-            if (SourceCompartment != null || TargetCompartment != null)
+            if (SourceCompartment != null && TargetCompartment != null)
                 BranchFeatures.ForEach(bf => bf.Geometry = GetBranchFeatureGeometry());
         }
 

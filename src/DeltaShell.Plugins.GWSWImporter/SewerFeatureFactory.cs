@@ -17,95 +17,53 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         #region Creators
 
-        /// <summary>
-        /// Generate multiple sewer features from a list of GwswElements.
-        /// </summary>
-        /// <param name="gwswElements">List of GwswElements.</param>
-        /// <returns>IList of ISewerFeature objects that have been created from objects in gwswElements.<param name="gwswElements"/></returns>
-        public static IList<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements, Action<string, int, int> setProgress = null)
+        public static IEnumerable<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements, Action<string, int, int> setProgress = null)
         {
-            var createdSewerFeatures = new List<ISewerFeature>();
-            var elementTypesList = new List<KeyValuePair<SewerFeatureType, GwswElement>>();
-
+            var elementTypesList= new List<KeyValuePair<SewerFeatureType, GwswElement>>();
             foreach (var gwswElement in gwswElements)
             {
                 SewerFeatureType elementType;
-                if(!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
+                if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
 
                 elementTypesList.Add(new KeyValuePair<SewerFeatureType, GwswElement>(elementType, gwswElement));
             }
 
+            return CreateSewerEntities(elementTypesList, setProgress);
+        }
+        /// <summary>
+        /// Generate multiple sewer features from a list of GwswElements.
+        /// </summary>
+        /// <param name="elementTypesList">List of GwswElements by key.</param>
+        /// <param name="setProgress"></param>
+        /// <returns>IList of ISewerFeature objects that have been created from objects in gwswElements.<param name="gwswElements"/></returns>
+        public static IEnumerable<ISewerFeature> CreateSewerEntities(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList,  Action<string, int, int> setProgress = null)
+        {
             // node types
             var nodeTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
             if (nodeTypes.Any())
             {
-                var nrOfNodes = nodeTypes.Count;
-                createdSewerFeatures.AddRange(nodeTypes.Select(element =>
-                {
-                    var indexOf = nodeTypes.IndexOf(element);
-                    var stepSize = nrOfNodes / 20;
-                    if (stepSize != 0 && indexOf % stepSize == 0)
-                    {
-                        setProgress?.Invoke($"Generating node features", indexOf, nrOfNodes);
-                    }
-
-                    return CreateSewerFeature(element);
-                }));
+                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(nodeTypes, "node", setProgress).ToList()) yield return sewerFeature;
             }
             
             // Cross section types
             var crossSectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Crosssection).Select(k => k.Value).ToList();
             if (crossSectionTypes.Any())
             {
-                var nrOfCrossSections = crossSectionTypes.Count;
-                createdSewerFeatures.AddRange(crossSectionTypes.Select(element =>
-                {
-                    var indexOf = nodeTypes.IndexOf(element);
-                    var stepSize = nrOfCrossSections / 20;
-                    if (stepSize != 0 && indexOf % stepSize == 0)
-                    {
-                        setProgress?.Invoke($"Generating cross section features", nodeTypes.IndexOf(element),
-                            nrOfCrossSections);
-                    }
-                    return CreateSewerFeature(element);
-                }));
+                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(crossSectionTypes, "cross section", setProgress).ToList()) yield return sewerFeature;
             }
 
             // Connection types
             var connectionTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Connection).Select(k => k.Value).ToList();
             if (connectionTypes.Any())
             {
-                var nrOfConnections = connectionTypes.Count;
-                var connectionSewerFeatures = connectionTypes.Select(element =>
-                {
-                    var indexOf = nodeTypes.IndexOf(element);
-                    var stepSize = nrOfConnections / 20;
-                    if (stepSize != 0 && indexOf % stepSize == 0)
-                    {
-                        setProgress?.Invoke($"Generating connection type features", connectionTypes.IndexOf(element), nrOfConnections);
-                    }
-
-                    return CreateSewerFeature(element);
-                });
-                createdSewerFeatures.AddRange(connectionSewerFeatures);
+                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(connectionTypes, "connection type", setProgress).ToList()) yield return sewerFeature;
             }
             
             // Structure types 
             var structureTypes = elementTypesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
             if (structureTypes.Any())
             {
-                var nrOfStructures = structureTypes.Count;
-                var structureFeatures = structureTypes.Select(element =>
-                {
-                    var indexOf = structureTypes.IndexOf(element);
-                    var stepSize = nrOfStructures / 20;
-                    if (stepSize != 0 && indexOf % stepSize == 0)
-                    {
-                        setProgress?.Invoke($"Generating sewer features", structureTypes.IndexOf(element), nrOfStructures);
-                    }
-
-                    return CreateSewerFeature(element);
-                }).ToList();
+                var structureFeatures = CreateSewerFeaturesWithProgress(structureTypes, "sewer", setProgress).ToList();
                 var pointFeatures = structureFeatures.OfType<IStructure1D>();
 
                 foreach (var pointFeature in pointFeatures)
@@ -117,12 +75,29 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         pointFeature.ParentPointFeature = (Manhole) pointFeature.Branch.Source;
                     }
                 }
-                
-                createdSewerFeatures.AddRange(structureFeatures);
-            }
 
+                foreach (var structureFeature in structureFeatures)
+                {
+                    yield return structureFeature;
+                }
+            }
             
-            return createdSewerFeatures;
+        }
+
+        private static IEnumerable<ISewerFeature> CreateSewerFeaturesWithProgress(IList<GwswElement> gwswElements, string feature, Action<string, int, int> setProgress)
+        {
+            var nrOfGwswFeatures = gwswElements.Count;
+            foreach (var element in gwswElements)
+            {
+                var indexOf = gwswElements.IndexOf(element);
+                var stepSize = nrOfGwswFeatures / 20;
+                if (stepSize != 0 && indexOf % stepSize == 0)
+                {
+                    setProgress?.Invoke($"Generating {feature} features", indexOf, nrOfGwswFeatures);
+                }
+
+                yield return CreateSewerFeature(element);
+            }
         }
 
         /// <summary>

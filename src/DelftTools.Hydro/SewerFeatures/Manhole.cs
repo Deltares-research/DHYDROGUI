@@ -208,7 +208,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         #region Network is visiting us
         [EditAction]
-        public void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             throw new System.NotImplementedException();
         }

@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         protected static void AddSewerFeatureToNetwork(ISewerFeature sewerFeature, IHydroNetwork network)
         {
-            sewerFeature.AddToHydroNetwork(network);
+            sewerFeature.AddToHydroNetwork(network, null);
         }
     }
 }

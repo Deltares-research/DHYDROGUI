@@ -262,7 +262,7 @@ namespace DelftTools.Hydro.Structures
             return StructureType.Unknown;
         }
         [EditAction]
-        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork)
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
                 sc => sc.BranchFeatures.Count >= 2
@@ -276,14 +276,14 @@ namespace DelftTools.Hydro.Structures
                 CopyPropertyValuesToExistingWeir(weir);
                 SetSewerConnectionProperties(sewerConnection);
                 sewerConnection?.UpdateBranchFeatureGeometries();
-                sewerConnection?.AddToHydroNetwork(hydroNetwork);
+                sewerConnection?.AddToHydroNetwork(hydroNetwork, helper);
                 return;
             }
 
             sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc => sc.Name == Name);
             if (sewerConnection == null)
             {
-                AddNewSewerConnectionWithWeirToNetwork(hydroNetwork);
+                AddNewSewerConnectionWithWeirToNetwork(hydroNetwork, helper);
             }
             else
             {
@@ -295,13 +295,13 @@ namespace DelftTools.Hydro.Structures
         {
         }
 
-        private void AddNewSewerConnectionWithWeirToNetwork(IHydroNetwork hydroNetwork)
+        private void AddNewSewerConnectionWithWeirToNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             var sewerConnection = new SewerConnection(Name);
             SetSewerConnectionProperties(sewerConnection);
             
             sewerConnection.AddStructureToBranch(this);
-            sewerConnection.AddToHydroNetwork(hydroNetwork);
+            sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
         }
 
         protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)

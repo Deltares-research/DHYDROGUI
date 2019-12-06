@@ -36,13 +36,13 @@ namespace DelftTools.Hydro.SewerFeatures
                 AddCrossSectionSectionToDefinition((IHydroNetwork) Network);
             }
         }
-
+        [EditAction]
         private void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
         {
             if (hydroNetwork == null) return;
 
             var sewerCrossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            if (sewerCrossSectionSectionType != null && CrossSectionDefinition != null)
+            if (sewerCrossSectionSectionType == null && CrossSectionDefinition != null)
             {
                 CrossSectionDefinition.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
             }

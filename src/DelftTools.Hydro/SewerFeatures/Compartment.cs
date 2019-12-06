@@ -123,37 +123,47 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public string ParentManholeName { get; set; }
         [EditAction]
-        public virtual void AddToHydroNetwork(IHydroNetwork network)
+        public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             AssignParentManholeNameIfMissing(network);
-            var manhole = GetManholeInNetworkToAddCompartmentTo(network);
+            IManhole manhole;
+            if (!helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole))
+            {
+                if (!helper.ManholesByCompartmentName.TryGetValue(Name, out manhole))
+                {
+                    manhole = null;
+                }
+            }
+
             if (manhole != null)
             {
                 var duplicateCompartment = manhole.Compartments.FirstOrDefault(c => c.Name == Name);
                 CopyExistingCompartmentPropertyValuesToNewCompartment(duplicateCompartment);
-                ReplaceCompartmentInManhole(duplicateCompartment, manhole);
+                ReplaceCompartmentInManhole(duplicateCompartment, manhole, helper);
                 ReconnectSewerConnections(duplicateCompartment, network);
             }
             else
             {
-                var newManhole = CreateManholeWithCompartment(network);
+                var newManhole = CreateManholeWithCompartment(network, helper);
                 network.Nodes.Add(newManhole);
+                helper.ManholesByManholeName[ParentManholeName] = newManhole;
             }
         }
 
-        private Manhole CreateManholeWithCompartment(IHydroNetwork network)
+        private Manhole CreateManholeWithCompartment(IHydroNetwork network, SewerImporterHelper helper)
         {
             var newManhole = new Manhole(ParentManholeName);
             if (Name == null)
             {
                 Name = HydroNetworkHelper.CreateUniqueCompartmentNameInNetwork(network);
             }
-
+            
             newManhole.Compartments.Add(this);
+            helper.ManholesByCompartmentName[Name] = newManhole;
             return newManhole;
         }
 
-        private Manhole GetManholeInNetworkToAddCompartmentTo(IHydroNetwork network)
+        /*private Manhole GetManholeInNetworkToAddCompartmentTo(IHydroNetwork network)
         {
             var networkManholes = new HashSet<IManhole>(network.Manholes);
             var manhole = networkManholes.FirstOrDefault(m => m.Name.Equals(ParentManholeName,StringComparison.InvariantCultureIgnoreCase)) as Manhole;
@@ -163,7 +173,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
 
             return manhole;
-        }
+        }*/
 
         private void AssignParentManholeNameIfMissing(IHydroNetwork network)
         {
@@ -171,10 +181,11 @@ namespace DelftTools.Hydro.SewerFeatures
                 ParentManholeName = HydroNetworkHelper.GetUniqueManholeIdInNetwork(network);
         }
 
-        protected void ReplaceCompartmentInManhole(ICompartment oldCompartment, IManhole manhole)
+        protected void ReplaceCompartmentInManhole(ICompartment oldCompartment, IManhole manhole, SewerImporterHelper helper)
         {
             manhole.Compartments.Remove(oldCompartment);
             manhole.Compartments.Add(this);
+            helper.ManholesByCompartmentName[name] = manhole;
         }
 
         protected void ReconnectSewerConnections(ICompartment oldCompartment, IHydroNetwork network)
