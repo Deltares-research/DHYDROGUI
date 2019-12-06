@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public string Description { get { return Name; } }
         public string Category
         {
-            get { return "Data Import"; }
+            get { return "Data"; }
         }
 
         public Bitmap Image

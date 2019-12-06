@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
         public string Description { get { return Name; } }
         public string Category
         {
-            get { return "RHU"; }
+            get { return "1D / 2D"; }
         }
 
         public Bitmap Image
