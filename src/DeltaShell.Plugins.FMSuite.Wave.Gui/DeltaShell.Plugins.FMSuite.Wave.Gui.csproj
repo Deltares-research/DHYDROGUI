@@ -147,6 +147,7 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Buttons\SelectComFileButton.cs" />
     <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -355,6 +356,7 @@
     <Resource Include="Resources\wave.png" />
     <None Include="packages.config" />
     <None Include="Resources\hurricane2.png" />
+    <None Include="Resources\folder.png" />
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>

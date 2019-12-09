@@ -7,6 +7,8 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
@@ -20,15 +22,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 wpfGuiCategories = GetWaveSettings(data)?.FieldDescriptions
                                                         .GroupBy(fd => fd.Category)
-                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
+                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
+                                                        .ToList();
                 wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
-            }
 
-            SetWaveExtraSettings(data, gui, wpfGuiCategories);
+                ModifyWaveSettings(wpfGuiCategories);
+            }
+            
+            AddCustomWaveSettings(data, gui, wpfGuiCategories);
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
-        private static void SetWaveExtraSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
+        private static void ModifyWaveSettings(IReadOnlyCollection<WpfGuiCategory> wpfGuiCategories)
+        {
+            if (wpfGuiCategories == null)
+            {
+                return;
+            }
+
+            WpfGuiProperty comFileGuiProperty = wpfGuiCategories.SelectMany(c => c.Properties)
+                                                                .Single(p => p.Name == KnownWaveProperties.COMFile);
+            comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
+            comFileGuiProperty.CustomCommand.ButtonImage = SelectComFileButton.ButtonImage;
+        }
+
+        private static void AddCustomWaveSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
         {
             WpfGuiCategory generalCategory =
                 wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
@@ -46,8 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         HasMinValue = false,
                     });
 
-                coordSys.CustomCommand.ButtonFunction =
-                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
+                coordSys.CustomCommand.TextBoxIsEnabled = false;
+                coordSys.CustomCommand.ButtonFunction = o => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }

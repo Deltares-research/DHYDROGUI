@@ -199,10 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        public bool IsEditable
-        {
-            get { return IsEnabled && !CustomCommand.ButtonIsVisible; }
-        }
+        public bool IsEditable => IsEnabled && CustomCommand.TextBoxIsEnabled;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.

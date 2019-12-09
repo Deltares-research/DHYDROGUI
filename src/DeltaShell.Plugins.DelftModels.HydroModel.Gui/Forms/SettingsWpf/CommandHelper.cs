@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         public CommandHelper(Action updateAction)
         {
             UpdateAction = updateAction;
+            TextBoxIsEnabled = true;
         }
 
         public ICommand CustomCommand
@@ -18,6 +19,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         public bool ButtonIsVisible { get { return ButtonFunction != null; } }
+
+        /// <summary>
+        /// Determines whether the user may also enter a value in
+        /// the accompanied text box.
+        /// </summary>
+        public bool TextBoxIsEnabled { get; set; }
 
         public Bitmap ButtonImage { get; set; }
 
