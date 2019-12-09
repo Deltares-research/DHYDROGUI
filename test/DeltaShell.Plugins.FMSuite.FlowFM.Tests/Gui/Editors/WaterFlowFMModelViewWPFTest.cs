@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
     [TestFixture]
     public class WaterFlowFMModelViewWPFTest
     {
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void Test_WaterFlowFMModelViewWPF()
@@ -62,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var cat = new WpfGuiCategory("Sediment", fieldUiDescriptions);
             var sedProperty = cat.Properties.FirstOrDefault();
             Assert.IsNotNull(sedProperty);
-            sedProperty.CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties);
             sedProperty.GetModel = () => fmModel;
 
             wpfSettingsViewModel.SettingsCategories.Add(cat);

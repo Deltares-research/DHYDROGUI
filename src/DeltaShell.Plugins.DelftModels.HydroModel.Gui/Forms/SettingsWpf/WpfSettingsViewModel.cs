@@ -93,7 +93,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             //Notify to all properties with custom controls to update.
             //For tab visibility.
             UpdateVisibleCategories();
-            SettingsCategories.SelectMany( sc => sc.Properties.Where( p => p.HasCustomControl)).ForEach( p => p.RaisePropertyChangedEvents());
             
             UpdatingProperties = false;
         }

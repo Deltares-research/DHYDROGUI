@@ -31,19 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             CustomCommand = new CommandHelper(() => OnPropertyChanged("Value"));
             this.description = description;
-            if (description?.CustomControlHelper != null)
-            {
-                var control = description.CustomControlHelper.CreateControl();
-                var hostHelper = new WindowsFormsHost
-                {
-                    Child = control,
-                    Width = 300,
-                    Height = 300,
-                    Background = new SolidColorBrush(SystemColors.ControlColor)
-                };
-                CustomControl = hostHelper;
-            }
-
+            
             UpdateValueCollection();
         }
 
@@ -82,27 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return Error;
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance has custom control.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasCustomControl
-        {
-            get { return CustomControl != null; }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom control.
-        /// ToDo: This should be removed once all custom controls are migrated into WPF.
-        /// </summary>
-        /// <value>
-        /// The custom control.
-        /// </value>
-        public FrameworkElement CustomControl { get; set; }
-
+        
         public CommandHelper CustomCommand { get; set; }
 
         public Type ValueType { get { return description?.ValueType; } }
@@ -178,10 +146,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 getModel = value;
                 CustomCommand.GetModel = getModel;
-                if (getModel != null && HasCustomControl)
-                {
-                    UpdateCustomControlData();
-                }
             }
         }
 
@@ -309,16 +273,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             return null;
-        }
-
-        private void UpdateCustomControlData()
-        {
-            if (description?.CustomControlHelper != null)
-            {
-                var control = CustomControl as WindowsFormsHost;
-                var hostedControl = control?.Child;
-                description.CustomControlHelper.SetData(hostedControl, getModel?.Invoke(), null);
-            }
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
