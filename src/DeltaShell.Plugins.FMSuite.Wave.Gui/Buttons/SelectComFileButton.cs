@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         /// <summary>
         /// The image for the button.
         /// </summary>
-        public static Bitmap ButtonImage = Resources.folder;
+        public static readonly Bitmap ButtonImage = Resources.folder;
 
         /// <summary>
         /// Opens a file selection dialog and sets the selected file location, if any,
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
 
             using (var fileDialog = new OpenFileDialog
             {
-                Filter = "Communication files|*.com"
+                Filter = Resources.SelectComFileButton_ButtonAction_FileDialogFilter
             })
             {
                 if (fileDialog.ShowDialog() == DialogResult.OK)

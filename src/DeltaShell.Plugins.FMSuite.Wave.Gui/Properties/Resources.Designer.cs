@@ -121,6 +121,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Communication files|*.com.
+        /// </summary>
+        internal static string SelectComFileButton_ButtonAction_FileDialogFilter {
+            get {
+                return ResourceManager.GetString("SelectComFileButton_ButtonAction_FileDialogFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap wall_brick {
