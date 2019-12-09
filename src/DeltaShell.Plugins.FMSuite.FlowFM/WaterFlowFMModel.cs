@@ -2762,7 +2762,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
 
-                if (!Network.IsEdgesEmpty && !Network.IsVerticesEmpty)
+                if (Network != null && !Network.IsEdgesEmpty && !Network.IsVerticesEmpty)
                 {
 
                     if (switchTo && Output1DFileStore != null)
