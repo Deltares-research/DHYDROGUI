@@ -3,6 +3,8 @@
   <ComponentRef Id="FMSuiteCommon"/>
   <ComponentRef Id="FMSuiteCommonGui"/>
   <ComponentRef Id="NetworkEditorPlugin"/>
+  <ComponentRef Id="GridEditorPlugin"/>
+  <ComponentRef Id="GWSWImporterPlugin"/>
   <ComponentRef Id="network_editor_scripts_examples_files"/>
   <ComponentRef Id="network_editor_scripts_libraries_files"/>
 

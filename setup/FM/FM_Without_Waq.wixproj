@@ -44,6 +44,12 @@
     <Content Include="..\NetworkEditor\NetworkEditorPlugin.wxi">
       <Link>NetworkEditorPlugin.wxi</Link>
     </Content>
+    <Content Include="..\GWSWImporter\GWSWImporterPlugin.wxi">
+      <Link>GWSWImporterPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\GridEditor\GridEditorPlugin.wxi">
+      <Link>GridEditorPlugin.wxi</Link>
+    </Content>
     <Content Include="..\NGHS.IO\NGHS.IO.wxi">
       <Link>NGHS.IO.wxi</Link>
     </Content>
