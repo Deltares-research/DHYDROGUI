@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     {
         private readonly FieldUIDescription description;
         private Func<object> getModel;
-        private ObservableCollection<DoubleWrapper> valueCollection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiProperty"/> class.
@@ -215,7 +214,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsEnabled(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -232,7 +230,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsVisible(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -241,14 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The value collection.
         /// </value>
-        public ObservableCollection<DoubleWrapper> ValueCollection
-        {
-            get { return valueCollection; }
-            set
-            {
-                valueCollection = value;
-            }
-        }
+        public ObservableCollection<DoubleWrapper> ValueCollection { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -310,14 +300,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private string CheckValueWithinBoundaries(double valueAsDouble)
         {
-            if ((description.HasMinValue && valueAsDouble < description.MinValue) 
+            if ((description.HasMinValue && valueAsDouble < description.MinValue)
                 || (description.HasMaxValue && valueAsDouble > description.MaxValue))
             {
-                {
-                    return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
-                        description.HasMinValue ? description.MinValue : double.NegativeInfinity,
-                        description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
-                }
+                return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
+                                     description.HasMinValue ? description.MinValue : double.NegativeInfinity,
+                                     description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
             }
 
             return null;
