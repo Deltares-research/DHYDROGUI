@@ -1165,7 +1165,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                   : (MapView) activeView;
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
-                region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
+                region = mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region).OfType<IHydroNetwork>().FirstOrDefault();
             }
             else if ((activeView is CrossSectionView))
             {
