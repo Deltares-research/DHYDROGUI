@@ -108,6 +108,47 @@ namespace DelftTools.Hydro.Validators
             IBranch branch,
             IList<INetworkLocation> branchLocations)
         {
+            if (networkDiscretization.SegmentGenerationMethod == SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered)
+            {
+                var hasCalculationPointAtStartOfBranchOnOtherBranch = false;
+                //Check if we have a location of this branch at begin of branch
+                if (branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon))
+                {
+                    hasCalculationPointAtStartOfBranchOnOtherBranch = true;
+                }
+                else
+                {
+                    //Ah no location at begin of this branch
+                    //check if we have a network location in our complete discretization
+                    //at the same location as the source node coordinate (start of our branch)
+                    if (networkDiscretization.Locations.Values.Any(l =>
+                        l?.Geometry?.Coordinate != null &&
+                        branch?.Source?.Geometry?.Coordinate != null &&
+                        l.Geometry.Coordinate.Equals2D(branch.Source.Geometry.Coordinate, 0.01)))
+                        hasCalculationPointAtStartOfBranchOnOtherBranch = true;
+                }
+                //Check if we have a location of this branch at end of branch
+                var hasCalculationPointAtEndOfBranchOnOtherBranch = false;
+                if (branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
+                {
+                    hasCalculationPointAtEndOfBranchOnOtherBranch = true;
+                }
+                else
+                {
+                    //Ah no location at end of this branch
+                    //check if we have a network location in our complete discretization
+                    //at the same location as the target node coordinate (end of our branch)
+                    if (networkDiscretization.Locations.Values.Any(l =>
+                        l?.Geometry?.Coordinate != null &&
+                        branch?.Target?.Geometry?.Coordinate != null &&
+                        l.Geometry.Coordinate.Equals2D(branch.Target.Geometry.Coordinate, 0.01)))
+                        hasCalculationPointAtEndOfBranchOnOtherBranch = true;
+                }
+                //ok, i need to make this nicer... but i don't have time..
+                if (hasCalculationPointAtStartOfBranchOnOtherBranch && hasCalculationPointAtEndOfBranchOnOtherBranch)
+                    yield break;
+
+            }
             // Each branch should have calculation point at start and end
             if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
                 !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
