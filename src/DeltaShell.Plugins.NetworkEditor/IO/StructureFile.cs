@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -17,7 +18,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             
             foreach (var structure in compositeStructures.SelectMany(composite => composite.Structures).Concat(network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure)).Distinct())
             {
-                yield return ExtractStructureCategory(structure);
+                var category = ExtractStructureCategory(structure);
+                if(category != null)
+                    yield return category;
             }
 
             foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1))
@@ -30,6 +33,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
         {
             var structureType = structure.GetStructureType();
             var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structureType);
+            if (definitionGeneratorStructure == null)
+                return null;
 
             var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure);
             var structurefrictionData = structure as IFrictionData;

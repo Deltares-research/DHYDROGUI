@@ -251,7 +251,7 @@ namespace DeltaShell.NGHS.IO
         protected double GetDouble(string lineField, string errorMessageKey = null)
         {
             double x;
-            if (!Double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out x))
+            if (!Double.TryParse(lineField, NumberStyles.Any | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture.NumberFormat, out x))
             {
                 throw new FormatException(String.Format("Invalid {0} line {1} in file {2}", 
                     errorMessageKey != null ? errorMessageKey + " on " : "", LineNumber, InputFilePath));
@@ -274,7 +274,7 @@ namespace DeltaShell.NGHS.IO
                 return xAsInt;
             }
             double xAsDouble;
-            if (Double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture, out xAsDouble))
+            if (Double.TryParse(lineField, NumberStyles.Any | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out xAsDouble))
             {
                 var xAsDoubleFloored = Math.Floor(xAsDouble);
                 if ((xAsDouble - xAsDoubleFloored) < 1e-12)

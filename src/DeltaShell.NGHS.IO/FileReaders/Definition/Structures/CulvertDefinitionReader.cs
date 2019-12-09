@@ -42,11 +42,15 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             };
 
             SetCulvertDimensionsBasedOnProfile(culvert, definition);
+            var numLossCoeff = category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key, true);
+            if (numLossCoeff > 0)
+            {
+                var relOpening = category.ReadProperty<string>(StructureRegion.RelativeOpening.Key).ToDoubleArray();
+                var lossCoeff = category.ReadProperty<string>(StructureRegion.LossCoefficient.Key).ToDoubleArray();
 
-            var relOpening = category.ReadProperty<string>(StructureRegion.RelativeOpening.Key).ToDoubleArray();
-            var lossCoeff = category.ReadProperty<string>(StructureRegion.LossCoefficient.Key).ToDoubleArray();
-
-            culvert.GateOpeningLossCoefficientFunction = culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
+                culvert.GateOpeningLossCoefficientFunction =
+                    culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
+            }
 
             culvert.CulvertType = category.Properties.All(p => p.Name != StructureRegion.BendLossCoef.Key)
                 ? CulvertType.Culvert

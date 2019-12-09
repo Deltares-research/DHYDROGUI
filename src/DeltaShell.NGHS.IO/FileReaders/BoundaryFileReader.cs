@@ -254,7 +254,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         private static double ReadConstantValue(IDelftBcQuantityData quantityData, string categoryName)
         {
             double constantValue;
-            if (!double.TryParse(quantityData.Values[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out constantValue))
+            if (!double.TryParse(quantityData.Values[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out constantValue))
             {
                 var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", categoryName, quantityData.Quantity, Environment.NewLine);
                 throw new LateralDischargeReadingException(errorMessage);

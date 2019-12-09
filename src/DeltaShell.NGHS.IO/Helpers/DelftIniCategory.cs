@@ -291,7 +291,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             foreach (var propertyString in propertyStringValues)
             {
                 double propertyDouble;
-                if (double.TryParse(propertyString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out propertyDouble))
+                if (double.TryParse(propertyString, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out propertyDouble))
                 {
                     propertyDoubleValues.Add(propertyDouble);
                 }

@@ -224,7 +224,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         private static List<double> MakeValuesUniqueInwards(IList<double> uniqueY)
         {
-            const double yDelta = 1e-8;
+            const double yDelta = 1e-5;
             var valueCount = uniqueY.Count;
             var index = (int)Math.Ceiling(0.5 * valueCount);
 
