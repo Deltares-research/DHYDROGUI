@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -54,11 +56,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return null;
             }
 
-            SetGrid(path, flowModel);
+            IRegularGridCoverage gridCoverage;
+            SetGrid(path, flowModel, out gridCoverage);
             makeLayerVisibleAction?.Invoke(flowModel.Grid);
-            SetBedLevel(path, flowModel);
+            SetBedLevel(path, flowModel, gridCoverage);
             makeLayerVisibleAction?.Invoke(flowModel.Bathymetry);
-            flowModel.ReloadGrid(false);
             return flowModel;
         }
 
@@ -76,7 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             bool verticesEqual;
             bool cellsEqual;
             bool linksEqual;
-            var grid = RasterFile.ReadUnstructuredGrid(netFilePath);
+            IRegularGridCoverage gridCoverage = null;
+            var grid = RasterFile.ReadUnstructuredGrid(netFilePath, out gridCoverage);
             UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out verticesEqual, out cellsEqual, out linksEqual);
             if (!verticesEqual || !cellsEqual)
             {
@@ -84,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return bathymetry;
             }
 
-            SetBedLevel(netFilePath, flowModel);
+            SetBedLevel(netFilePath, flowModel, gridCoverage);
             return flowModel.Bathymetry;
         }
 
@@ -98,26 +101,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     Log.Error("There is no model present for the selected grid. Import canceled.");
                     return grid;
                 }
-                SetGrid(path, flowModel);
+
+                IRegularGridCoverage gridCoverage;
+                SetGrid(path, flowModel, out gridCoverage);
                 makeLayerVisibleAction?.Invoke(flowModel.Grid);
                 return flowModel.Grid;
             }
             return grid;
         }
 
-        private static void SetGrid(string path, WaterFlowFMModel flowModel)
+        private static void SetGrid(string path, WaterFlowFMModel flowModel, out IRegularGridCoverage gridCoverage)
         {
-            var grid = RasterFile.ReadUnstructuredGrid(path);
+            var grid = RasterFile.ReadUnstructuredGrid(path, out gridCoverage);
             if (grid != null)
             {
                 flowModel.Grid = grid;
-                flowModel.ReloadGrid();
             }
         }
 
-        private static void SetBedLevel(string path, WaterFlowFMModel flowModel)
+        private static void SetBedLevel(string path, WaterFlowFMModel flowModel, IRegularGridCoverage gridCoverage)
         {
-            var bedlevels = RasterFile.ReadPointValues(path);
+            var bedlevels = RasterFile.ReadPointValues(path, gridCoverage);
             if (bedlevels != null)
             {
                 var bedLevelTypeProperty = flowModel.ModelDefinition.Properties.FirstOrDefault(p =>
@@ -131,12 +135,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 else
                 {
                     var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
-                    BathymetryFileWriter.Write(flowModel.NetFilePath, location, bedlevels.Select(bl => bl.Value).ToArray());
-                    flowModel.Bathymetry.Arguments[0].Clear();
-                    flowModel.Bathymetry.Components[0].Clear(); 
-                    flowModel.UpdateBathymetryCoverage(location);
-                    flowModel.ReloadGrid(false);
-                    
+                    var zValues = bedlevels.Select(bl => bl.Value).ToArray();
+                    if (flowModel.Grid.Vertices.Count == zValues.Length &&
+                        (location == UnstructuredGridFileHelper.BedLevelLocation.Faces ||
+                         location == UnstructuredGridFileHelper.BedLevelLocation.Faces))
+                    {
+                        Log.Warn($"seems location type is on vertices, setting model type to {UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev.GetDisplayName()}");
+                        flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev).ToString());
+                    }
+                    if (flowModel.Grid.Cells.Count == zValues.Length &&
+                        (location == UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev||
+                         location == UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev ||
+                         location == UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev ||
+                         location == UnstructuredGridFileHelper.BedLevelLocation.CellEdges  
+                         ))
+                    {
+                        Log.Warn($"seems location type is on faces, setting model type to {UnstructuredGridFileHelper.BedLevelLocation.Faces.GetDisplayName()}");
+                        flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString());
+                    }
+                    flowModel.Bathymetry.SetValues(zValues);
+                    flowModel.Bathymetry.Components[0].NoDataValue = gridCoverage.Components[0].NoDataValue;
                 }
             }
         }

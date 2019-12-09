@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
         /// <returns>List of points with a value, or null if file is too large</returns>
         /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
-        public static IEnumerable<IPointValue> ReadPointValues(string rasterFilePath, bool checkForUnsupportedSize = false)
+        public static IEnumerable<IPointValue> ReadPointValues(string rasterFilePath, IRegularGridCoverage gridCoverage = null, bool checkForUnsupportedSize = false)
         {
             if (checkForUnsupportedSize)
             {
@@ -46,20 +46,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
             }
 
-            var regularGridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
-            var pointValuesList = ConvertRegularGridToBedLevelValues(regularGridCoverage);
+            if(gridCoverage == null) gridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
+            var pointValuesList = ConvertRegularGridToBedLevelValues(gridCoverage);
 
             return pointValuesList;
         }
-        
+
         /// <summary>
         /// Read the raster from the provided <param name="rasterFilePath"/>
         /// </summary>
         /// <param name="rasterFilePath">Path to the Asc file</param>
+        /// <param name="regularGridCoverage"></param>
         /// <param name="checkForUnsupportedSize">Check if the file size is not to big (> 2.0 gb)</param>
         /// <returns>List of points with a value, or null if file is too large</returns>
         /// <exception cref="FormatException">When less then 3 values are found or the values are invalid</exception>
-        public static UnstructuredGrid ReadUnstructuredGrid(string rasterFilePath, bool checkForUnsupportedSize = false)
+        public static UnstructuredGrid ReadUnstructuredGrid(string rasterFilePath, out IRegularGridCoverage regularGridCoverage, bool checkForUnsupportedSize = false)
         {
             if (checkForUnsupportedSize)
             {
@@ -67,11 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
                 if (!IsFileSizeAccepted(rasterFilePath))
                 {
+                    regularGridCoverage = null;
                     return null;
                 }
             }
 
-            var regularGridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
+            regularGridCoverage = ReadAscFileToRegularGridCoverage(rasterFilePath);
 
             return ConvertRegularGridCoverageToUnstructuredGrid(regularGridCoverage);
         }
