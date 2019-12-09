@@ -21,13 +21,6 @@ namespace DeltaShell.Plugins.NetworkEditor
     [Extension(typeof(IPlugin))]
     public class NetworkEditorApplicationPlugin : ApplicationPlugin
     {
-        public readonly IList<IFileExporter> exporters = new List<IFileExporter>
-            {
-                new CrossSectionYZToCsvFileExporter(),
-                new CrossSectionXYZToCsvFileExporter(),
-                new CrossSectionZWToCsvFileExporter()
-            };
-
         public override string Name
         {
             get { return "Network"; }
@@ -92,7 +85,9 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
-            return exporters;
+            yield return new CrossSectionYZToCsvFileExporter();
+            yield return new CrossSectionXYZToCsvFileExporter();
+            yield return new CrossSectionZWToCsvFileExporter();
         }
 
         private void ApplicationOnProjectClosing(Project project)
