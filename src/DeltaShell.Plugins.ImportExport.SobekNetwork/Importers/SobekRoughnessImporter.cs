@@ -529,12 +529,12 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
                 HydroNetwork.CrossSectionSectionTypes.Add(crossSectionSectionType);
             }
 
-            /*roughnessSection = waterFlowFMModel.ModelDefinition.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            roughnessSection = waterFlowFMModel.ModelDefinition.RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, sectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             if (roughnessSection == null)
-            {*/
+            {
                 roughnessSection = new RoughnessSection(crossSectionSectionType, HydroNetwork);
                 waterFlowFMModel.ModelDefinition.RoughnessSections.Add(roughnessSection);
-            //}
+            }
 
             return roughnessSection;
         }
