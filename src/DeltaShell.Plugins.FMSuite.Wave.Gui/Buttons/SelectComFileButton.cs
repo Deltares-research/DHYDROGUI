@@ -25,7 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         /// on the COMFile-property of the input wave model.
         /// </summary>
         /// <param name="input"> The input for this action. </param>
-        /// /// <remarks>
+        /// <remarks>
+        /// The selected file location value will be put on the COMFile-property with
+        /// forward slashes as file separators.
+        /// 
         /// We will not cover the code in this class with tests, as we cannot
         /// automate the behavior in this method, due to the OpenFileDialog.
         /// </remarks>
@@ -42,12 +45,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 Filter = Resources.SelectComFileButton_ButtonAction_FileDialogFilter
             })
             {
-                if (fileDialog.ShowDialog() == DialogResult.OK)
+                if (fileDialog.ShowDialog() != DialogResult.OK)
                 {
-                    waveModel.ModelDefinition
-                             .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
-                             .SetValueAsString(fileDialog.FileName);
+                    return;
                 }
+
+                string fileLocation = fileDialog.FileName.Replace('\\', '/');
+                waveModel.ModelDefinition
+                         .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
+                         .SetValueAsString(fileLocation);
             }
         }
     }
