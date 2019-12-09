@@ -78,9 +78,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string EnclosureToolName = "Enclosure tool";
         public const string BridgePillarToolName = "Bridge pillar tool";
 
-
-        private static readonly ILog log = LogManager.GetLogger(typeof (HydroRegionEditorMapTool));
-
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
 
