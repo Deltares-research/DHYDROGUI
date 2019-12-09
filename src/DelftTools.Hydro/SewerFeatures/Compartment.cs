@@ -126,8 +126,8 @@ namespace DelftTools.Hydro.SewerFeatures
         public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             AssignParentManholeNameIfMissing(network);
-            IManhole manhole;
-            if (!helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole))
+            IManhole manhole = null;
+            if (helper != null && !helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole))
             {
                 if (!helper.ManholesByCompartmentName.TryGetValue(Name, out manhole))
                 {
@@ -146,7 +146,7 @@ namespace DelftTools.Hydro.SewerFeatures
             {
                 var newManhole = CreateManholeWithCompartment(network, helper);
                 network.Nodes.Add(newManhole);
-                helper.ManholesByManholeName[ParentManholeName] = newManhole;
+                if (helper != null) helper.ManholesByManholeName[ParentManholeName] = newManhole;
             }
         }
 
@@ -159,7 +159,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             
             newManhole.Compartments.Add(this);
-            helper.ManholesByCompartmentName[Name] = newManhole;
+            if (helper != null) helper.ManholesByCompartmentName[Name] = newManhole;
             return newManhole;
         }
 

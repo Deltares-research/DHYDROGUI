@@ -350,12 +350,12 @@ namespace DelftTools.Hydro.SewerFeatures
 
             //var hydroNetworkManholes = hydroNetwork.Manholes.ToDictionary(m=>m.Compartments.SelectMany(c =>c.Name));
 
-            IManhole sourceManhole;
-            if (!helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
+            IManhole sourceManhole = null;
+            if (helper != null && !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
                 sourceManhole = null;
 
-            IManhole targetManhole;
-            if (!helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
+            IManhole targetManhole= null;
+            if (helper != null && !helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
                 targetManhole = null;
 
             //var sourceManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
