@@ -2,6 +2,8 @@
 <Include>
   <?include ..\HydroModel\HydroModelPlugin.wxi?>
   <?include ..\NetworkEditor\NetworkEditorPlugin.wxi?>
+  <?include ..\GridEditor\GridEditorPlugin.wxi?>
+  <?include ..\GWSWImporter\GWSWImporterPlugin.wxi?>
   <?include ..\NGHS.IO\NGHS.IO.wxi?>
   <?include ..\Dimr\Dimr.wxi?>
   
