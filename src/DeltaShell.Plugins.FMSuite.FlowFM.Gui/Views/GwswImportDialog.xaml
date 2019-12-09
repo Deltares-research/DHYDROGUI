@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels"
         mc:Ignorable="d"
-        Title="Gwsw Feature Importer" Height="494" Width="550" WindowStartupLocation="CenterOwner" SizeToContent="Height" ResizeMode="CanResizeWithGrip" ScrollViewer.CanContentScroll="True">
+        Title="Gwsw Feature Importer" Height="494" Width="850" WindowStartupLocation="CenterScreen" SizeToContent="Height" ResizeMode="CanResizeWithGrip" ScrollViewer.CanContentScroll="True">
     <Window.DataContext>
         <vm:GwswImportDialogViewModel x:Name="ViewModel"/>
     </Window.DataContext>
