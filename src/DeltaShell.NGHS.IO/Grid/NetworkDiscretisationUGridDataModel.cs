@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.Grid
@@ -82,17 +85,19 @@ namespace DeltaShell.NGHS.IO.Grid
             EdgePointsX = networkSegments.Select(s => s.Geometry.Centroid.X).ToArray();
             EdgePointsY = networkSegments.Select(s => s.Geometry.Centroid.Y).ToArray();
 
+            var epsilonLocation = 0.01;
             EdgeNodes = networkSegments.SelectMany(s => new int[]
             {
                 Array.IndexOf(discretisationPoints,
                     discretisationPoints.FirstOrDefault(p =>
                         p.Branch == s.Branch && Math.Abs(p.Chainage - s.Chainage) < double.Epsilon ||
-                        p.Geometry.Coordinate.Equals(s.Geometry.Coordinates[0]))),
+                        p.Geometry.Coordinate.Equals2D(s.Geometry.Coordinates[0],epsilonLocation))),
                 Array.IndexOf(discretisationPoints,
                     discretisationPoints.FirstOrDefault(p =>
                         p.Branch == s.Branch && Math.Abs(p.Chainage - s.EndChainage) < double.Epsilon ||
-                        p.Geometry.Coordinate.Equals(s.Geometry.Coordinates.Last())))
+                        p.Geometry.Coordinate.Equals2D(s.Geometry.Coordinates.Last(),epsilonLocation)))
             }).ToArray();
+
             NumberOfMeshEdges = EdgeIdx.Length;
         }
 
