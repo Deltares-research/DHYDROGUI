@@ -516,6 +516,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
 
+            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            if (Equals(e.Target, networkDataItem) && !e.Relinking)
+            {
+                var hydroNetwork = (IHydroNetwork) networkDataItem.Value;
+                SubscribeToNetwork(hydroNetwork);
+                ModelDefinition.Network = hydroNetwork;
+            }
+
             base.OnDataItemLinked(sender, e);
         }
 
@@ -527,6 +535,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+
+            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            if (Equals(e.Target, networkDataItem))
+            {
+                var hydroNetwork = (IHydroNetwork)networkDataItem.Value;
+
+                UnSubscribeFromNetwork(hydroNetwork);
+                ModelDefinition.Network = hydroNetwork;
             }
 
             base.OnDataItemUnlinking(sender, e);
