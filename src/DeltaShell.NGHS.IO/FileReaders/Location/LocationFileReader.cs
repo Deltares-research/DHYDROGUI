@@ -128,8 +128,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 throw new FileReadingException(errorMessage);
             }
 
-             // Optional Properties (an error will not be generated if these fail)
-            //locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
+            // Optional Properties (an error will not be generated if these fail) 
+            locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
             locationPropertyValues.diffuseLength = category.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true); 
 
             return locationPropertyValues;
