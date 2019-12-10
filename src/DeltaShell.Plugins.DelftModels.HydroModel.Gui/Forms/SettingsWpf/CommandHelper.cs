@@ -26,6 +26,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </summary>
         public bool TextBoxIsEnabled { get; set; }
 
+        /// <summary>
+        /// Determines whether the button has no image to show.
+        /// </summary>
+        public bool HasNoImage => ButtonImage == null;
+
         public Bitmap ButtonImage { get; set; }
 
         private void ExecuteAction(object dummyObject)

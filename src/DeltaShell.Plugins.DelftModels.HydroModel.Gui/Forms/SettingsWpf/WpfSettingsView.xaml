@@ -174,7 +174,10 @@
                     Height="20"
                     Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
                     Command="{Binding CustomCommand.CustomCommand}">
-                    <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
+                    <StackPanel>
+                        <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
+                        <TextBlock Visibility="{Binding CustomCommand.HasNoImage, Converter={StaticResource BoolToVisibility}}">...</TextBlock>
+                    </StackPanel>
                 </Button>
             </Grid>
         </DataTemplate>

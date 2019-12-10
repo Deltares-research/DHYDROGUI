@@ -43,7 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             WpfGuiProperty comFileGuiProperty = wpfGuiCategories.SelectMany(c => c.Properties)
                                                                 .Single(p => p.Name == KnownWaveProperties.COMFile);
             comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
-            comFileGuiProperty.CustomCommand.ButtonImage = SelectComFileButton.ButtonImage;
         }
 
         private static void AddCustomWaveSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)

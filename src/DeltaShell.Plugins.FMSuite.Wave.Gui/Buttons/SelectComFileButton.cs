@@ -16,11 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
     public static class SelectComFileButton
     {
         /// <summary>
-        /// The image for the button.
-        /// </summary>
-        public static readonly Bitmap ButtonImage = Resources.folder;
-
-        /// <summary>
         /// Opens a file selection dialog and sets the selected file location, if any,
         /// on the COMFile-property of the input wave model.
         /// </summary>
