@@ -76,7 +76,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             var exportItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu__Export___,
-                Tag = data
+                Tag = data,
+                Enabled = gui.CommandHandler.CanExportFrom(data)
             };
             exportItem.Click += (s, a) =>
             {

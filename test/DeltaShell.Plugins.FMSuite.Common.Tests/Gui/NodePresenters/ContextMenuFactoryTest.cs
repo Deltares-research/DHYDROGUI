@@ -39,5 +39,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.NodePresenters
             Assert.IsNotNull(importToolStripItem);
             Assert.That(importToolStripItem.Enabled, Is.EqualTo(canImportOn));
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void CreateMenuFor_WithDataObject_ReturnExportToolStripMenu_CheckEnabled(bool canExportFrom)
+        {
+            // Arrange
+            var data = Substitute.For<object>();
+
+            var commandHandler = Substitute.For<IGuiCommandHandler>();
+            commandHandler.CanExportFrom(data).Returns(canExportFrom);
+
+            var gui = Substitute.For<IGui>();
+            gui.CommandHandler.Returns(commandHandler);
+
+            // Act
+            ContextMenuStrip menu = ContextMenuFactory.CreateMenuFor(data, gui, Substitute.For<ITreeNodePresenter>(), Substitute.For<ITreeNode>());
+
+            // Assert
+            ToolStripItem importToolStripItem = null;
+            foreach (ToolStripItem toolStripItem in menu.Items)
+            {
+                if (toolStripItem.Text == "&Export...")
+                {
+                    importToolStripItem = toolStripItem;
+                }
+            }
+
+            Assert.IsNotNull(importToolStripItem);
+            Assert.That(importToolStripItem.Enabled, Is.EqualTo(canExportFrom));
+        }
     }
 }
