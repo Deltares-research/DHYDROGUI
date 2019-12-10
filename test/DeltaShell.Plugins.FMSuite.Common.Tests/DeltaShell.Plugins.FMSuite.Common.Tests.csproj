@@ -154,6 +154,7 @@
     <Compile Include="FMSuiteCommonTestHelper.cs" />
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
     <Compile Include="Gui\ModelTreeShortcutNodePresenterBaseTest.cs" />
+    <Compile Include="Gui\NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
     <Compile Include="IO\ApwxwyFileReaderTest.cs" />
     <Compile Include="IO\DiaFileReaderTest.cs" />

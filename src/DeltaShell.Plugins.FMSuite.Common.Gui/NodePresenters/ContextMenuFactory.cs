@@ -66,7 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu__Import___,
                 Tag = data,
-                Image = Import
+                Image = Import,
+                Enabled = gui.CommandHandler.CanImportOn(data)
             };
             importItem.Click += (s, a) => gui.CommandHandler.ImportOn(data);
 
