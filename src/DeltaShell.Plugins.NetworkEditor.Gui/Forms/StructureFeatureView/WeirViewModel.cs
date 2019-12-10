@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     return;
                 }
 
-                if (!(Math.Abs(weirFormula.DoorHeight - value) > double.Epsilon))
+                if (Math.Abs(weirFormula.DoorHeight - value) <= double.Epsilon)
                 {
                     return;
                 }
