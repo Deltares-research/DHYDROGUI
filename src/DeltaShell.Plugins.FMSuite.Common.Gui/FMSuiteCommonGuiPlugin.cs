@@ -8,6 +8,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
@@ -274,8 +275,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         private void SubscribeToProjectEvents()
         {
             base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
+            base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
+            base.Gui.Application.ProjectSaved += OpenClosedViews;
         }
-     
+
         private void SubscribeToActivityEvents()
         {
         }
@@ -283,6 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         private void UnsubscribeToProjectEvents()
         {
             base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
+            base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
+            base.Gui.Application.ProjectSaved -= OpenClosedViews;
         }
 
         private void UnSubscribeToActivityEvents()
@@ -303,6 +308,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             foreach (var lateralSourceData in project.RootFolder.GetAllItemsRecursive().OfType<Model1DLateralSourceData>())
             {
                 Gui.CommandHandler.RemoveAllViewsForItem(lateralSourceData);
+            }
+        }
+
+        [InvokeRequired]
+        private void OpenClosedViews(Project project)
+        {
+            if (project == null || project.RootFolder == null || ClosedViewTypes == null) return;
+
+            try
+            {
+                if (ClosedViewTypes == null || !ClosedViewTypes.Any()) return;
+                foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<IModel>())
+                {
+                    foreach (var viewType in ClosedViewTypes)
+                    {
+                        Gui.CommandHandler.OpenView(flowFmModel, viewType);
+                    }
+                }
+                ClosedViewTypes = new List<Type>();
+            }
+            catch
+            {
+                //gulp
+                ClosedViewTypes = new List<Type>();
             }
         }
     }

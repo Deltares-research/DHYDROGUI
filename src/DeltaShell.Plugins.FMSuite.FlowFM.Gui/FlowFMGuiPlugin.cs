@@ -65,10 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     public class FlowFMGuiPlugin : GuiPlugin
     {
         private readonly IGraphicsProvider graphicsProvider;
-        private ClonableToolStripMenuItem generateDataInSeriesToolStripMenuItem;
-        private ClonableToolStripMenuItem zoomToToolStripMenuItem;
-        private ContextMenuStrip generateDataMenu;
-
         public override string Name
         {
             get { return "Delft3D FM (Gui)"; }
@@ -116,86 +112,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
         }
-        public override IMenuItem GetContextMenu(object sender, object dataobject)
-        {
-            //TODO: method is a mess clean up.
-
-            IFunction function;
-            bool activeViewIsMapView = Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count() == 1;
-
-            if (dataobject is Model1DBoundaryNodeData)
-            {
-                //add zoom to functionality to context menu
-                var waterFlowModel1DBoundaryNodeData = (Model1DBoundaryNodeData)dataobject;
-                if (waterFlowModel1DBoundaryNodeData.IsLinked ||
-                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
-                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
-                {
-                    if (activeViewIsMapView)
-                    {
-                        zoomToToolStripMenuItem.Available = true;
-                        generateDataInSeriesToolStripMenuItem.Available = false;
-                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
-                    }
-                    return null;
-                }
-                function = waterFlowModel1DBoundaryNodeData.Data;
-            }
-            else if (dataobject is Model1DLateralSourceData)
-            {
-                var waterFlowModel1DLateralSourceData = (Model1DLateralSourceData)dataobject;
-                if (waterFlowModel1DLateralSourceData.IsLinked ||
-                    waterFlowModel1DLateralSourceData.DataType == Model1DLateralDataType.FlowConstant)
-                {
-                    if (activeViewIsMapView)
-                    {
-                        zoomToToolStripMenuItem.Available = true;
-                        generateDataInSeriesToolStripMenuItem.Available = false;
-                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
-                    }
-                    return null;
-                }
-                function = waterFlowModel1DLateralSourceData.Data;
-            }
-            else
-            {
-                return null;
-            }
-
-            var node = sender as TreeNode;
-            if (node != null && node.Tag is IDataItem)
-            {
-                if (((IDataItem)node.Tag).Role != DataItemRole.Input)
-                {
-                    return null;
-                }
-                if (((IDataItem)node.Tag).IsLinked)
-                {
-                    return null;
-                }
-            }
-
-            if (function == null || function is IVariable)
-            {
-                return null;
-            }
-
-            if (function.Arguments.Count > 0)
-            {
-                if (function.Arguments[0].ValueType != typeof(DateTime))
-                {
-                    return null;
-                }
-            }
-            zoomToToolStripMenuItem.Available = activeViewIsMapView;
-            generateDataInSeriesToolStripMenuItem.Available = true;
-            generateDataInSeriesToolStripMenuItem.Tag = function;
-            // only support dataserieswizard for function with one argument for now.
-            generateDataInSeriesToolStripMenuItem.Enabled = (function.Arguments.Count == 1);
-            return new MenuItemContextMenuStripAdapter(generateDataMenu);
-
-        }
-
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
