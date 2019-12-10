@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
 
             using (var fileDialog = new OpenFileDialog
             {
-                Filter = Resources.SelectComFileButton_ButtonAction_FileDialogFilter
+                Filter = string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension)
             })
             {
                 if (fileDialog.ShowDialog() != DialogResult.OK)

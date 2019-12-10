@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
+﻿namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     /// <summary>
     /// Contains known file constants, such as names and extensions

@@ -163,7 +163,6 @@
     <Compile Include="IO\DataAccessObjects\BcmQuantityData.cs" />
     <Compile Include="IO\DataAccessObjects\BcQuantityData.cs" />
     <Compile Include="IO\DelftIniReaders\MduDelftIniReader.cs" />
-    <Compile Include="IO\FileConstants.cs" />
     <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
@@ -197,7 +196,6 @@
     <Compile Include="IO\Files\Helpers\MorphologySedimentIniFileHelper.cs" />
     <Compile Include="IO\ImportExport\Importers\FMRstFileImporter.cs" />
     <Compile Include="IO\ImportExport\ImportersExporters\PolFileImporterExporter.cs" />
-    <Compile Include="IO\LinkCoveragesDoneReadingEventArgs.cs" />
     <Compile Include="IO\DataAccessObjects\UnsupportedFileBasedExtForceFileItem.cs" />
     <Compile Include="IO\Operator.cs" />
     <Compile Include="IO\Files\BcFile.cs" />

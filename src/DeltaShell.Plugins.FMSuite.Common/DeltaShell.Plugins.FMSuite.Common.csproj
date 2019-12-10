@@ -147,6 +147,7 @@
     <Compile Include="FeatureData\VerticalProfileDefinition.cs" />
     <Compile Include="FeatureData\IWindField.cs" />
     <Compile Include="FeatureData\UniformWindField.cs" />
+    <Compile Include="IO\FileConstants.cs" />
     <Compile Include="IO\Files\HtcFile.cs" />
     <Compile Include="IO\Files\Structures\StructureRegion.cs" />
     <Compile Include="IO\Readers\DiaFileLogSeverity.cs" />

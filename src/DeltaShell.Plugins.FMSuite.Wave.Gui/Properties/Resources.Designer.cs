@@ -111,11 +111,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Communication files|*.com.
+        ///   Looks up a localized string similar to Communication files|*{0}.
         /// </summary>
-        internal static string SelectComFileButton_ButtonAction_FileDialogFilter {
+        internal static string SelectComFileButton_ButtonAction_Communication_files___0_ {
             get {
-                return ResourceManager.GetString("SelectComFileButton_ButtonAction_FileDialogFilter", resourceCulture);
+                return ResourceManager.GetString("SelectComFileButton_ButtonAction_Communication_files___0_", resourceCulture);
             }
         }
         
