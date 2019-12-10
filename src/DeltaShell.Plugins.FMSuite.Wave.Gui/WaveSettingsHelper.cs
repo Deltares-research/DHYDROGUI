@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -32,19 +33,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
-        private static void ModifyWaveSettings(IReadOnlyCollection<WpfGuiCategory> wpfGuiCategories)
+        private static void ModifyWaveSettings(IEnumerable<WpfGuiCategory> wpfGuiCategories)
         {
-            if (wpfGuiCategories == null)
-            {
-                return;
-            }
-
             WpfGuiProperty comFileGuiProperty = wpfGuiCategories.SelectMany(c => c.Properties)
                                                                 .Single(p => p.Name == KnownWaveProperties.COMFile);
             comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
         }
 
-        private static void AddCustomWaveSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
+        private static void AddCustomWaveSettings(IHasCoordinateSystem model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)
         {
             WpfGuiCategory generalCategory =
                 wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
