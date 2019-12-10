@@ -121,14 +121,17 @@
     <Compile Include="Builders\IBranchStructureBuilder.cs" />
     <Compile Include="Importers\PartialSobekImporterBase.cs" />
     <Compile Include="Importers\SobekBoundaryConditionsImporter.cs" />
+    <Compile Include="Importers\SobekCaseDataReader.cs" />
     <Compile Include="Importers\SobekComputationalGridImporter.cs" />
     <Compile Include="Importers\SobekControllersTriggersImporter.cs" />
     <Compile Include="Importers\SobekLateralSourcesDataImporter.cs" />
     <Compile Include="Importers\SobekLateralSourcesImporter.cs" />
     <Compile Include="Importers\SobekLinkageNodeImporter.cs" />
     <Compile Include="Importers\SobekMeasurementStationsImporter.cs" />
+    <Compile Include="Importers\SobekMeteoDataImporterHelper.cs" />
     <Compile Include="Importers\SobekRetentionImporter.cs" />
     <Compile Include="Importers\SobekRoughnessImporter.cs" />
+    <Compile Include="Importers\SobekSettingsImporter.cs" />
     <Compile Include="Importers\SobekStructuresImporter.cs" />
     <Compile Include="Importers\ToDictionaryExtensions.cs" />
     <Compile Include="IPartialSobekImporter.cs" />

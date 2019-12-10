@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 new SobekLateralSourcesDataImporter(),
                 new SobekComputationalGridImporter(),
                 new SobekLinkageNodeImporter(),
-                //new SobekSettingsImporter(),
+                new SobekSettingsImporter(),
                 //new SobekSaltImporter(),
                 new SobekRetentionImporter()
             };
