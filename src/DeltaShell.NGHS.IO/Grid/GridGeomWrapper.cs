@@ -160,7 +160,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
-            double c_searchRadius = 100.0;
+            double c_searchRadius = 5000.0;
             int ierr = ggeo_make1D2DRiverLinks_dll(ref c_jsferic, ref c_jasfer3D, ref c_searchRadius, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
             return ierr;
         }
