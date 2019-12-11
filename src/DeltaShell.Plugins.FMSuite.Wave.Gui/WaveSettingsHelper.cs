@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         HasMinValue = false,
                     });
 
-                coordSys.CustomCommand.TextBoxIsEnabled = false;
+                coordSys.CustomCommand.TextBoxEnabled = false;
                 coordSys.CustomCommand.ButtonFunction = o => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);

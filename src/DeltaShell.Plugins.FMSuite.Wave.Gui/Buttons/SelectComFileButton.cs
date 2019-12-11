@@ -9,10 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
     /// Class that holds button functionality for selecting communication
     /// files (*.com).
     /// </summary>
-    /// <remarks>
-    /// We will not cover the code in this class with tests, as we cannot
-    /// automate the behavior in this class.
-    /// </remarks>
+    // We will not cover the code in this class with tests, as we cannot
+    // automate the behavior in this class.
     public static class SelectComFileButton
     {
         /// <summary>
