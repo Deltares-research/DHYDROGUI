@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public static class SewerConnectionMapping
     {
@@ -58,6 +58,37 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             public const string MeteoStationId = "WEATHER_STATION";
             public const string SurfaceId = "SURFACE_ID";
             public const string Surface = "SURFACE";
+            public const string DistributionId = "DISTRIBUTION_ID";
+            public const string DistributionType = "DISTRIBUTION_TYPE";
+            public const string DayNumber = "DAY";
+            public const string DailyVolume = "VOLUME";
+            public const string HourlyPercentage00 = "H00_PERCENTAGE_DAY_VOLUME_AT_00_HOUR";
+            public const string HourlyPercentage01 = "H01_PERCENTAGE_DAY_VOLUME_AT_01_HOUR";
+            public const string HourlyPercentage02 = "H02_PERCENTAGE_DAY_VOLUME_AT_02_HOUR";
+            public const string HourlyPercentage03 = "H03_PERCENTAGE_DAY_VOLUME_AT_03_HOUR";
+            public const string HourlyPercentage04 = "H04_PERCENTAGE_DAY_VOLUME_AT_04_HOUR";
+            public const string HourlyPercentage05 = "H05_PERCENTAGE_DAY_VOLUME_AT_05_HOUR";
+            public const string HourlyPercentage06 = "H06_PERCENTAGE_DAY_VOLUME_AT_06_HOUR";
+            public const string HourlyPercentage07 = "H07_PERCENTAGE_DAY_VOLUME_AT_07_HOUR";
+            public const string HourlyPercentage08 = "H08_PERCENTAGE_DAY_VOLUME_AT_08_HOUR";
+            public const string HourlyPercentage09 = "H09_PERCENTAGE_DAY_VOLUME_AT_09_HOUR";
+            public const string HourlyPercentage10 = "H10_PERCENTAGE_DAY_VOLUME_AT_10_HOUR";
+            public const string HourlyPercentage11 = "H11_PERCENTAGE_DAY_VOLUME_AT_11_HOUR";
+            public const string HourlyPercentage12 = "H12_PERCENTAGE_DAY_VOLUME_AT_12_HOUR";
+            public const string HourlyPercentage13 = "H13_PERCENTAGE_DAY_VOLUME_AT_13_HOUR";
+            public const string HourlyPercentage14 = "H14_PERCENTAGE_DAY_VOLUME_AT_14_HOUR";
+            public const string HourlyPercentage15 = "H15_PERCENTAGE_DAY_VOLUME_AT_15_HOUR";
+            public const string HourlyPercentage16 = "H16_PERCENTAGE_DAY_VOLUME_AT_16_HOUR";
+            public const string HourlyPercentage17 = "H17_PERCENTAGE_DAY_VOLUME_AT_17_HOUR";
+            public const string HourlyPercentage18 = "H18_PERCENTAGE_DAY_VOLUME_AT_18_HOUR";
+            public const string HourlyPercentage19 = "H19_PERCENTAGE_DAY_VOLUME_AT_19_HOUR";
+            public const string HourlyPercentage20 = "H20_PERCENTAGE_DAY_VOLUME_AT_20_HOUR";
+            public const string HourlyPercentage21 = "H21_PERCENTAGE_DAY_VOLUME_AT_21_HOUR";
+            public const string HourlyPercentage22 = "H22_PERCENTAGE_DAY_VOLUME_AT_22_HOUR";
+            public const string HourlyPercentage23 = "H23_PERCENTAGE_DAY_VOLUME_AT_23_HOUR";
+            public const string DischargeId = "DISCHARGE_ID";
+            public const string DischargeType = "DISCHARGE_TYPE";
+            public const string PollutingUnits = "POLLUTING_UNITS";
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public static class SewerStructureMapping
     {

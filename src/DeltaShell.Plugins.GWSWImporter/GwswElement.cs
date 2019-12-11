@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     /// <summary>
     /// Element with placeholder for GWSWattributes

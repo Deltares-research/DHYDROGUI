@@ -120,7 +120,7 @@
     <Compile Include="SewerConnectionPipeGenerator.cs" />
     <Compile Include="SewerFeatureFactory.cs" />
     <Compile Include="SewerFeatureType.cs" />
-    <Compile Include="SewerNWRWGenerator.cs" />
+    <Compile Include="SewerNwrwGenerator.cs" />
     <Compile Include="SewerOrificeGenerator.cs" />
     <Compile Include="SewerOutletCompartmentGenerator.cs" />
     <Compile Include="SewerPumpGenerator.cs" />

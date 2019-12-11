@@ -5,7 +5,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     /// <summary>
     /// GwswElementExtensions can be for validating and checking types of a GwswAttribute
@@ -139,6 +139,34 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             catch (Exception)
             {
                 gwswAttribute.LogErrorParseType(typeof(double));
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Tries the get value as integer.
+        /// </summary>
+        /// <param name="gwswAttribute">The GWSW attribute.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static bool TryGetValueAsInt(this GwswAttribute gwswAttribute, out int value)
+        {
+            value = default(int);
+            if (!gwswAttribute.IsValidAttribute() || gwswAttribute.ValueAsString == string.Empty) return false;
+            if (!gwswAttribute.IsNumerical())
+            {
+                gwswAttribute.LogErrorParseType(typeof(int));
+                return false;
+            }
+
+            try
+            {
+                value = Convert.ToInt32(gwswAttribute.ValueAsString, CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch (Exception)
+            {
+                gwswAttribute.LogErrorParseType(typeof(int));
             }
             return false;
         }

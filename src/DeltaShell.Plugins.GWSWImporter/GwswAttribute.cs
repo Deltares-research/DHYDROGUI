@@ -1,4 +1,4 @@
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     /// <summary>
     /// GwswAttribute

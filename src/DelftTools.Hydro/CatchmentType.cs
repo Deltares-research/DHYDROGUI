@@ -16,7 +16,7 @@ namespace DelftTools.Hydro
         public const string UnpavedTypeName = "Unpaved";
         public const string SacramentoTypeName = "Sacramento";
         public const string HbvTypeName = "HBV";
-        public const string NWRWTypeName = "NWRW";
+        public const string NwrwTypeName = "NWRW";
         public const string NoneTypeName = "";
 
         protected CatchmentType() //you shouldn't create one yourself: use the static ones
@@ -56,8 +56,8 @@ namespace DelftTools.Hydro
             };
         public static readonly CatchmentType NWRW = new CatchmentType
         {
-            Name = NWRWTypeName,
-            Icon = Properties.Resources.sacramento // todo: change icon
+            Name = NwrwTypeName,
+            Icon = Properties.Resources.nwrw //todo: change icon
         };
         public static readonly CatchmentType Polder = new CatchmentType
             {
@@ -100,7 +100,7 @@ namespace DelftTools.Hydro
                     return Sacramento;
                 case HbvTypeName:
                     return Hbv;
-                case NWRWTypeName:
+                case NwrwTypeName:
                     return NWRW;
                 case NoneTypeName:
                     return None;

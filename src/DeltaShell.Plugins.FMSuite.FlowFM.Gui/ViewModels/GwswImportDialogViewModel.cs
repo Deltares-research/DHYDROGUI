@@ -10,7 +10,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels

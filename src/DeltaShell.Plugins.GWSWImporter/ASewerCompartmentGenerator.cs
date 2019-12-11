@@ -5,7 +5,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public abstract class ASewerCompartmentGenerator : ISewerFeatureGenerator
     {

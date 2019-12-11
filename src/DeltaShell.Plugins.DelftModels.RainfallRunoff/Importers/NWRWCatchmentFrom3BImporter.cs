@@ -6,7 +6,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 {
@@ -70,16 +70,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                 return null;
             }
 
-            var data = new NWRWFileReader().ReadNWRWFile(path).ToList();
+            var data = new NwrwFileReader().ReadNwrwFile(path).ToList();
             if (data.Count == 0)
             {
                 // throw new Exception()
                 return null;
             }
 
-            //model.Basin.Catchments.AddRange(data.Select(d=>d.Catchment));
-            //model.ModelData.AddRange(data);
-            model.NWRWData.AddRange(data);
+            model.ModelData.AddRange(data);
             return null;
         }
     }

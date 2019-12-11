@@ -22,7 +22,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;

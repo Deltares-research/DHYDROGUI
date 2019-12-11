@@ -1,6 +1,8 @@
-﻿namespace DelftTools.Hydro.SewerFeatures
+﻿using DelftTools.Utils;
+
+namespace DelftTools.Hydro.SewerFeatures
 {
-    public interface INwrwFeature
+    public interface INwrwFeature: INameable
     {
         void AddNwrwCatchmentModelDataToModel(IHydroModel model);
     }

@@ -3,7 +3,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public class EggCrossSectionShapeGenerator : ASewerCrossSectionShapeGenerator
     {

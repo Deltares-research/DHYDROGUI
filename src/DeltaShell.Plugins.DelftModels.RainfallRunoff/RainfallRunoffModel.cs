@@ -28,7 +28,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private RainfallRunoffOutputSettingData outputSettings;
         private IEventedList<CatchmentModelData> modelData;
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
-        private IEventedList<NWRWData> nwrwData;
 
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
@@ -152,8 +151,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 };
 
             ModelData = new EventedList<CatchmentModelData>();
-            NWRWData = new EventedList<NWRWData>();
-            NWRWGlobalDataDict = new Dictionary<NWRWSurfaceType, GwswNWRWGlobalData>();
+            NwrwGlobalDataDict = new Dictionary<NwrwSurfaceType, NwrwGlobalData>();
+            NwrwDryWeatherFlowDefinitions = new List<NwrwDryWeatherFlowDefinition>();
+            NwrwDischargeData = new List<NwrwDischargeData>();
             BoundaryData = new EventedList<RunoffBoundaryData>();
             MeteoStations = new EventedList<string>();
             TemperatureStations = new EventedList<string>();
@@ -635,36 +635,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangedEvent(sender ,e);
         }
 
-        public IEventedList<NWRWData> NWRWData
-        {
-            get { return nwrwData; }
-            set
-            {
-                if (nwrwData != null)
-                {
-                    nwrwData.CollectionChanging -= NWRWDataCollectionChanging;
-                    nwrwData.CollectionChanged -= NWRWDataCollectionChanged;
-                }
-                nwrwData = value;
-                if (nwrwData != null)
-                {
-                    nwrwData.CollectionChanging += NWRWDataCollectionChanging;
-                    nwrwData.CollectionChanged += NWRWDataCollectionChanged;
-                }
-            }
-        }
-
-        void NWRWDataCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            BubbleCollectionChangingEvent(sender, e);
-        }
-
-        void NWRWDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            BubbleCollectionChangedEvent(sender, e);
-        }
-
-        public Dictionary<NWRWSurfaceType, GwswNWRWGlobalData> NWRWGlobalDataDict;
+        public Dictionary<NwrwSurfaceType, NwrwGlobalData> NwrwGlobalDataDict;
+        public List<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions;
+        public List<NwrwDischargeData> NwrwDischargeData;
         
 
         public IEventedList<RunoffBoundaryData> BoundaryData
@@ -826,9 +799,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             // clone boundary data
             clone.BoundaryData = new EventedList<RunoffBoundaryData>(BoundaryData.Select(bd => (RunoffBoundaryData) bd.Clone()));
-
-            // clone NWRW data
-            clone.NWRWData = new EventedList<NWRWData>(NWRWData.Select(nd => (NWRWData) nd.Clone()));
 
             clone.MeteoStations = new EventedList<string>(meteoStations);
             clone.TemperatureStations = new EventedList<string>(temperatureStations);

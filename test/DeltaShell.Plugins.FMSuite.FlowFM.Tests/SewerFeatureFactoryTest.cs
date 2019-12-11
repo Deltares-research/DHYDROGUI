@@ -6,7 +6,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
 using NUnit.Framework;
 

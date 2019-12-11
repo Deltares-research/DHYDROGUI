@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public class SewerConnectionPipeGenerator: SewerConnectionGenerator
     {

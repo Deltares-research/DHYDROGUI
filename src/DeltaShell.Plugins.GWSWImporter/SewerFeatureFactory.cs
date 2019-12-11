@@ -9,7 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.GWSW
+namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
     public static class SewerFeatureFactory
     {

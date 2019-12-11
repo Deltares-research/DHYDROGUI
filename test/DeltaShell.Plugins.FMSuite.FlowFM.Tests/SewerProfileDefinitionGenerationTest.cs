@@ -6,7 +6,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 

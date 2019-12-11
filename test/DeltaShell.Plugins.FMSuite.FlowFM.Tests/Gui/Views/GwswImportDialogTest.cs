@@ -7,7 +7,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.ViewModels;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views

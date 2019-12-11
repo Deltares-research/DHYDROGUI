@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.NWRW;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
         {
             return new IDataRowProvider[]
                 {
-                    new ConceptDataRowProvider<NWRWData, NWRWDataRow>(model,"NWRW"){Filter=filter},
+                    new ConceptDataRowProvider<NwrwData, NwrwDataRow>(model,"NWRW"){Filter=filter},
                     new ConceptDataRowProvider<UnpavedData, UnpavedDataRow>(model, "Unpaved"){Filter=filter},
                     new ConceptDataRowProvider<PavedData, PavedDataRow>(model, "Paved"){Filter=filter},
                     new ConceptDataRowProvider<GreenhouseData, GreenhouseDataRow>(model, "Greenhouse"){Filter=filter},

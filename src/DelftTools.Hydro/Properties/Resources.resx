@@ -150,7 +150,8 @@
   </data>
   <data name="CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__" xml:space="preserve">
     <value>Could not add CrossSectionSection with duplicate name '{0}'</value>
-  </data>  <data name="SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_" xml:space="preserve">
+  </data>
+  <data name="SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_" xml:space="preserve">
     <value>Sewer connection {0} does not accept more than one branch feature.</value>
   </data>
   <data name="Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_" xml:space="preserve">
@@ -160,7 +161,8 @@
     <value>The Main section width of cross section {0} has been changed from {1} m to {2} m.</value>
   </data>
   <data name="CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m" xml:space="preserve">
-    <value>The {0} section width of cross section {1} has been changed from {2}m to {3}m</value>  </data>
+    <value>The {0} section width of cross section {1} has been changed from {2}m to {3}m</value>
+  </data>
   <data name="HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_" xml:space="preserve">
     <value>Branch feature names must be unique, the following Branch features have been renamed:</value>
   </data>
@@ -169,5 +171,8 @@
   </data>
   <data name="SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target" xml:space="preserve">
     <value>We cannot add compartment {0} as target of sewer connection {1}, because it has no parent manhole.</value>
+  </data>
+  <data name="nwrw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nwrw.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

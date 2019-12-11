@@ -4,7 +4,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.ImportExport.GWSW;
+using DeltaShell.Plugins.ImportExport.Gwsw;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
