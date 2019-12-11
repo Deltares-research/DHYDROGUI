@@ -114,6 +114,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 ToolTip = "Coupling time step"
             };
 
+            FieldUIDescription fieldDescription = objectDescription.FieldDescriptions.Single(fd => fd.Name == KnownWaveProperties.COMFile);
+            fieldDescription.SetIsEnabledFunc(d => !data.IsCoupledToFlow);
+
             objectDescription.FieldDescriptions =
                 new[]
                     {

@@ -220,6 +220,7 @@
     <Compile Include="Gui\WaveModelMapLayerProviderTest.cs" />
     <Compile Include="Gui\WaveModelNodePresenterTest.cs" />
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
+    <Compile Include="Gui\WaveSettingsHelperTest.cs" />
     <Compile Include="Gui\WaveTimePointEditorTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
