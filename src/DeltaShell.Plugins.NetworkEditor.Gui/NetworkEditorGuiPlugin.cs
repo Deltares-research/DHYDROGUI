@@ -676,18 +676,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new HydroNetworkProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new DrainageBasinProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
-
-            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroArea.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroArea.ThinDamsPluralName, Properties.Resources.thindam) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroArea.FixedWeirsPluralName, Properties.Resources.fixedweir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroArea.PumpsPluralName, Properties.Resources.pump) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

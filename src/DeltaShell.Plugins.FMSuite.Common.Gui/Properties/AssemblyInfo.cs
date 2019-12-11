@@ -19,5 +19,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("6d58d3bf-00a2-4731-9072-7e5dd6b72363")]
-
-[assembly: InternalsVisibleTo("DeltaShell.Plugins.FMSuite.Common.Tests")]

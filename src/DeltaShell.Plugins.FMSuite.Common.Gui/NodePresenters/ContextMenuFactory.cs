@@ -7,19 +7,19 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 {
-    internal static class ContextMenuFactory
+    public static class ContextMenuFactory
     {
         private static readonly Bitmap Import = Resources.import;
         private static readonly Bitmap Properties = Resources.properties;
 
         /// <summary>
-        /// Generates a context menu for the provided <param name="data"/>
+        /// Generates a context menu for the provided <param name="data"/>.
         /// </summary>
-        /// <param name="data">Data to generate a menu for</param>
-        /// <param name="gui">The gui (needed for calling commands)</param>
-        /// <param name="nodePresenter">The nodepresenter for the <param name="data"/> object</param>
-        /// <param name="node">Tree node for the <param name="data"/> object</param>
-        /// <returns>Contextmenu</returns>
+        /// <param name="data"> Data to generate a menu for. </param>
+        /// <param name="gui"> The gui (needed for calling commands) </param>
+        /// <param name="nodePresenter"> The node presenter for the <param name="data"/> object. </param>
+        /// <param name="node"> Tree node for the <param name="data"/> object. </param>
+        /// <returns> A <see cref="ContextMenuStrip"/> object with defined functionality. </returns>
         public static ContextMenuStrip CreateMenuFor(object data, IGui gui, ITreeNodePresenter nodePresenter, ITreeNode node)
         {
             var menu = new ContextMenuStrip();
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             menu.Items.Add(openWithItem);
             menu.Items.Add(new ToolStripSeparator());
 
-            bool addToolStripSeparator = false;
+            var addToolStripSeparator = false;
             if (node != null && nodePresenter.CanRemove(null, node.Tag))
             {
                 var deleteItem = new ClonableToolStripMenuItem { Text = "Delete", Tag = data, Enabled = true, Image = Resources.DeleteHS };

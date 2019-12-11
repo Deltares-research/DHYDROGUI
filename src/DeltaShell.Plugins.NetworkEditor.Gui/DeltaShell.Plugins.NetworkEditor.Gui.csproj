@@ -619,11 +619,9 @@
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
-    <Compile Include="ProjectExplorer\Feature2DPolygonTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroNetworkProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroRegionProjectTreeViewNodePresenter.cs" />
-    <Compile Include="ProjectExplorer\FeatureProjectTreeViewNodePresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

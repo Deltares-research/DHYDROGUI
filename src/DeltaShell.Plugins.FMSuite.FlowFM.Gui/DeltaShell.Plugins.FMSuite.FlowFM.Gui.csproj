@@ -327,6 +327,8 @@
     <Compile Include="MapTools\GridWizardMapToolHelper.cs" />
     <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
+    <Compile Include="NodePresenters\Feature2DPolygonTreeViewNodePresenter.cs" />
+    <Compile Include="NodePresenters\FeatureProjectTreeViewNodePresenter.cs" />
     <Compile Include="NodePresenters\FMClassMapFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FMHisFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\FMMapFileFunctionStoreNodePresenter.cs" />
@@ -501,6 +503,10 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\BridgeSmall.png" />
+    <None Include="Resources\Embankment.png" />
+    <None Include="Resources\observationcs2d.png" />
+    <None Include="Resources\Observation.png" />
     <Resource Include="Resources\deletehs.png" />
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />

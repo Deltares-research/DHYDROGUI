@@ -5,7 +5,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
     /// <summary>
     /// A custom TreeViewNodePresenter to distinguish between DryAreas and Enclosures (both are Feature2DPolygons)
