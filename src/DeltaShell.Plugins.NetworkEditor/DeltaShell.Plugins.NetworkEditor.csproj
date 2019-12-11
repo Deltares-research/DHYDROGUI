@@ -421,9 +421,9 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47136\build\net461\DeltaShell.Plugins.GridEditor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47136\build\net461\DeltaShell.Plugins.GridEditor.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47189\build\net461\DeltaShell.Plugins.GridEditor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47189\build\net461\DeltaShell.Plugins.GridEditor.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47136\build\net461\DeltaShell.Plugins.GridEditor.targets" Condition="Exists('..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47136\build\net461\DeltaShell.Plugins.GridEditor.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47189\build\net461\DeltaShell.Plugins.GridEditor.targets" Condition="Exists('..\..\packages\DeltaShell.Plugins.GridEditor.1.0.0.47189\build\net461\DeltaShell.Plugins.GridEditor.targets')" />
 </Project>
