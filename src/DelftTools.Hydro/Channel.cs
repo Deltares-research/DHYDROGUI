@@ -162,7 +162,7 @@ namespace DelftTools.Hydro
         public virtual IHydroRegion Region { get { return HydroNetwork; } }
 
         [Aggregation]
-        public virtual IEventedList<HydroLink> Links { get; set; }
+        public virtual IEventedList<HydroLink> Links { get; set; } = new EventedList<HydroLink>();
 
         public virtual bool CanBeLinkSource { get { return false; } }
 
