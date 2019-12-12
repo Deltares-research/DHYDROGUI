@@ -568,7 +568,7 @@ namespace DelftTools.Hydro.Helpers
             return compositeBranchStructure;
         }
 
-        private static IGeometry GetStructureGeometry(IBranch branch, double chainage)
+        public static IGeometry GetStructureGeometry(IBranch branch, double chainage)
         {
             if (branch?.Geometry == null) return null;
             var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
