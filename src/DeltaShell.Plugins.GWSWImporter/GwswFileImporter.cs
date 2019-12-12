@@ -95,6 +95,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (!string.IsNullOrEmpty(path)) FilesToImport = new EventedList<string> { path };
 
             Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
+            if (ShouldCancel)
+                return null;
             var elementTypesList = ImportGwswElementsFromGwswFiles().ToList();
 
             var hydroModel = target is Project || target == null ? new HydroModelBuilder().BuildModel(ModelGroup.RHUModels) : target as HydroModel;
@@ -123,13 +125,13 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 }
             }
 
-            return target is Project || target == null ? hydroModel : null;
+            return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
 
         }
         private void ImportGwswNetworkInRrModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IHydroNetwork network)
         {
             var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList).ToList();
-            if (rrModel == null || network == null) return;
+            if (rrModel == null || network == null || ShouldCancel) return;
             ReportProgress("Adding features to Rainfall Runoff Model.");
             AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network);
         }
@@ -144,6 +146,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 try
                 {
+                    if (ShouldCancel)
+                        return;
                     var indexOf = featureElements.IndexOf(e);
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
@@ -171,8 +175,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
             try
             {
-                var importedFeatureElements = SewerFeatureFactory.CreateSewerEntities(elementTypesList, SetProgress).ToList();
-                if (network != null)
+                var importedFeatureElements = SewerFeatureFactory.CreateSewerEntities(elementTypesList, SetProgress, this).ToList();
+                if (network != null && !ShouldCancel)
                 {
                     ReportProgress("Adding features to network.");
                     AddSewerFeaturesToNetwork(importedFeatureElements, network);
@@ -197,6 +201,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
                 foreach (var surfaceFeature in surfaceFeatures)
                 {
+                    if (ShouldCancel)
+                        yield break;
                     yield return surfaceFeature;
                 }
             }
@@ -208,6 +214,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 var nrOfRunoffs = runoffTypes.Count;
                 foreach (var element in runoffTypes)
                 {
+                    if (ShouldCancel)
+                        yield break;
                     var indexOf = runoffTypes.IndexOf(element);
                     var stepSize = nrOfRunoffs / 20;
                     if (stepSize != 0 && indexOf % stepSize == 0)
@@ -226,6 +234,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 var nrOfDistributions = distributionTypes.Count;
                 foreach (var element in distributionTypes)
                 {
+                    if (ShouldCancel)
+                        yield break;
                     var indexOf = distributionTypes.IndexOf(element);
                     var stepSize = nrOfDistributions / 20;
                     if (stepSize != 0 && indexOf % stepSize == 0)
@@ -244,6 +254,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 var nrOfDischargeTypes = dischargeTypes.Count;
                 foreach (var element in dischargeTypes)
                 {
+                    if (ShouldCancel)
+                        yield break;
                     var indexOf = dischargeTypes.IndexOf(element);
                     var stepSize = nrOfDischargeTypes / 20;
                     if (stepSize != 0 && indexOf % stepSize == 0)
@@ -256,12 +268,14 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
         }
 
-        private IEnumerable<NwrwData> CreateSurfaceFeatures(List<GwswElement> surfaceTypes)
+        private IEnumerable<NwrwData> CreateSurfaceFeatures(IList<GwswElement> surfaceTypes)
         {
             var surfaceFeatures = new List<NwrwData>();
             var nrOfSurfaces = surfaceTypes.Count;
             foreach (var element in surfaceTypes)
             {
+                if(ShouldCancel)
+                    yield break;
                 var indexOf = surfaceTypes.IndexOf(element);
                 var stepSize = nrOfSurfaces / 20;
                 if (stepSize != 0 && indexOf % stepSize == 0)
@@ -282,19 +296,18 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         var surface = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
                         if (surface.TryGetValueAsDouble(out double auxDouble))
                         {
-                            var nwrwSurfaceType =
-                                (NwrwSurfaceType) typeof(NwrwSurfaceType).GetEnumValueFromDescription(surfaceType);
+                            var nwrwSurfaceType = (NwrwSurfaceType) typeof(NwrwSurfaceType).GetEnumValueFromDescription(surfaceType);
                             surfaceFeature.SurfaceLevelDict[nwrwSurfaceType] = auxDouble;
                         }
                     }
                 }
                 else
                 {
-                    surfaceFeatures.Add(GwswNwrwGenerator.CreateNewNwrwSurfaceData(element));
+                    var newNwrwSurfaceData = GwswNwrwGenerator.CreateNewNwrwSurfaceData(element);
+                    surfaceFeatures.Add(newNwrwSurfaceData);
+                    yield return newNwrwSurfaceData;
                 }
             }
-
-            return surfaceFeatures;
         }
 
         private IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> ImportGwswElementsFromGwswFiles()
@@ -302,6 +315,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             InitializeImportManager();
             foreach (var filePath in FilesToImport)
             {
+                if (ShouldCancel)
+                    yield break;
                 if (!File.Exists(filePath))
                 {
                     Log.ErrorFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
@@ -313,6 +328,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 
                 foreach (var gwswElement in gwswElements)
                 {
+                    if(ShouldCancel)
+                        yield break;
                     SewerFeatureType elementType;
                     if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
 
@@ -332,6 +349,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 try
                 {
+                    if (ShouldCancel)
+                        return;
                     var indexOf = featureElements.IndexOf(e);
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
@@ -349,10 +368,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 Log.ErrorFormat($"While adding GWSW features to network we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
 
-        private static void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IWaterFlowFMModel fmModel)
+        private void AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(IWaterFlowFMModel fmModel)
         {
             foreach (var outletCompartment in fmModel.Network.OutletCompartments)
             {
+                if (ShouldCancel)
+                    return;
                 //var boundaryCondition = WaterFlowModel1DHelper.CreateDefaultBoundaryCondition(outletCompartment.ParentManhole, fmModel.UseSalinity, fmModel.UseTemperature);
                 var boundaryCondition = fmModel.BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outletCompartment.ParentManhole);
                 if (boundaryCondition == null) continue;
@@ -425,13 +446,13 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// </summary>
         /// <param name="path">The location of the CSV file we want to transform into Gwsw elements.</param>
         /// <returns>List of GwswElements or null</returns>
-        public IList<GwswElement> ImportGwswElementList(string path)
+        public IEnumerable<GwswElement> ImportGwswElementList(string path)
         {
             var importedDataTable = ImportFileAsDataTable(path); // TODO Sil -> invalid cast exception from this method
             if (importedDataTable == null)
-                return null;
+                yield break;
 
-            var elementList = new List<GwswElement>();
+            
             var elementTypeFound = GwswAttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(path)));
             var elementTypeName = string.Empty;
             if (elementTypeFound != null)
@@ -442,17 +463,19 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             else
             {
                 Log.InfoFormat(Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, path);
-                return elementList;
+                yield break;
             }
 
             if (!IsColumnMappingCorrect(path, importedDataTable))
             {
-                return elementList;
+                yield break;
             }
 
             var nrOfRows = importedDataTable.Rows.Count;
             foreach (DataRow dataRow in importedDataTable.Rows)
             {
+                if(ShouldCancel)
+                    yield break;
                 var lineNumber = importedDataTable.Rows.IndexOf(dataRow);
                 var stepSize = (int)nrOfRows / 10;
                 if (stepSize != 0 && lineNumber % stepSize == 0)
@@ -477,10 +500,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     element.GwswAttributeList.Add(attribute);
                 }
 
-                elementList.Add(element);
+                yield return element;
             }
-
-            return elementList;
         }
 
         private bool IsColumnMappingCorrect(string path, DataTable importedDataTable)

@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             var fileAsStringList = File.ReadAllLines(filePath);
             var numberOfLines = fileAsStringList.Length - 1; // we should not include the header
-            var rowsCount = importedElementList.Count;
+            var rowsCount = importedElementList.Count();
             if (rowsCount != numberOfLines && !continousTesting)
             {
                 //Check there are no repeated columns in the .CSV
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 }
             }
 
-            return importedElementList;
+            return importedElementList.ToList();
         }
 
         protected static void CheckThatGwswAttributeValidationLogMessageIsReturned(string fileName, int lineNumber,
