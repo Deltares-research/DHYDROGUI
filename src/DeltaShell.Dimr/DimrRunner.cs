@@ -47,11 +47,9 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
-                {
-                    dimrApi.ProcessMessages();
-                    dimrApi.Dispose();
-                }
+
+                dimrApi.Dispose();
+
                 dimrApi = null;
             }
         }
@@ -121,11 +119,7 @@ namespace DeltaShell.Dimr
                 Console.WriteLine(e.Message);
                 log.ErrorFormat(e.Message);
                 model.Status = ActivityStatus.Failed;
-                if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
-                {
-                    dimrApi.ProcessMessages();
-                    dimrApi.Dispose();
-                }
+                dimrApi?.Dispose();
                 dimrApi = null;
             }
         }
@@ -139,10 +133,7 @@ namespace DeltaShell.Dimr
         }
         public void OnCleanup()
         {
-            if (dimrApi is RemoteDimrApi && RemoteInstanceContainer.IsProcessAlive(dimrApi))
-            {
-                dimrApi.Dispose();
-            }
+            dimrApi.Dispose();
             dimrApi = null;
             var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
