@@ -63,7 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange) network).CollectionChanged += NetworkCollectionChanged;
                 ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
+                
+                var hydroNetworkParent = network.Parent;
                 fmRegion?.SubRegions?.Add(network);
+                network.Parent = hydroNetworkParent;
             }
         }
 
@@ -73,7 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange) network).CollectionChanged -= NetworkCollectionChanged;
                 ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
+
+                var hydroNetworkParent = network.Parent;
                 fmRegion?.SubRegions?.Remove(network);
+                network.Parent = hydroNetworkParent;
             }
         }
 

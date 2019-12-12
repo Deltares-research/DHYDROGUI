@@ -111,7 +111,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             AddNetworkToModel();
             AddAreaToModel();
-            fmRegion = new HydroRegion(){Name = Name, SubRegions = new EventedList<IRegion>(){Area, Network}};
+
+            var hydroAreaParent = Area.Parent;
+            var hydroNetworkParent = Network.Parent;
+            
+            fmRegion = new HydroRegion{Name = Name, SubRegions = new EventedList<IRegion>{ Area, Network}};
+
+            Area.Parent = hydroAreaParent;
+            Network.Parent = hydroNetworkParent;
+
             if (!string.IsNullOrEmpty(mduFilePath))
             {
                 LoadStateFromMdu(mduFilePath);
