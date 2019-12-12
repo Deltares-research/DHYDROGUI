@@ -196,11 +196,9 @@ class HydroModelBuilder(object):
     def links_from_wave_to_flowfm(self, wave, fm, remove=False):
         if remove:
             wave.IsCoupledToFlow = False
-            wave.GetFlowComFilePath = None
         else:
             fm.SetWaveForcing()
             wave.IsCoupledToFlow = True
-            wave.GetFlowComFilePath = lambda: fm.ComFilePath;
 
     def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):
         # query first region

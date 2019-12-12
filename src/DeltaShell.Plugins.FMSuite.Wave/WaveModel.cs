@@ -1136,10 +1136,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (IsCoupledToFlow)
             {
-                string flowComFilePath = GetFlowComFilePath();
-                WaveModelProperty comFileProperty =
-                    ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
-                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, flowComFilePath);
+                WaveModelProperty comFileProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
+                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, modelDefinition.CommunicationsFilePath);
             }
 
             ModelSaveTo(filePath, false);
@@ -1167,8 +1165,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             return new WaveModelValidator().Validate(this);
         }
-
-        public virtual Func<string> GetFlowComFilePath { get; set; }
 
         private bool lazyInitializationFlag;
 
