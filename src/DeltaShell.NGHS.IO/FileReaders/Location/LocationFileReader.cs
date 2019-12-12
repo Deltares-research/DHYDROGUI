@@ -58,9 +58,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                     Chainage = locationPropertyValue.chainage,
                 };
                 observationPoint.Geometry = HydroNetworkHelper.GetStructureGeometry(locationPropertyValue.branch, observationPoint.Chainage);
-                locationPropertyValue.branch.BranchFeatures.Add(observationPoint);
-                //HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(observationPoint, locationPropertyValue.branch);
-                //locationPropertyValue.branch.BranchFeatures.Add(observationPoint);
+                locationPropertyValue.branch.BranchFeatures.Add(observationPoint);                
             }
         }
 
