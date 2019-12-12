@@ -153,12 +153,12 @@ namespace DeltaShell.NGHS.IO.Store1D
             {
                 if (variable.ValueType == typeof(INetworkLocation))
                 {
-                    return GetResultsFromCache(variable, () => GetNetworkLocationsForLocations(variable, Enumerable.Range(0, MetaData.NumLocations).ToList()));
+                    return GetResultsFromCache(variable, () => GetNetworkLocationsForLocations(variable, Enumerable.Range(0, MetaData.NumLocationsForFunctionId(GetNetCdfVariableName(GetCoverage(variable)))).ToList()));
                 }
 
                 if (variable.ValueType == typeof(IBranchFeature))
                 {
-                    return GetResultsFromCache(variable, () => GetBranchFeaturesForLocations(variable, Enumerable.Range(0, MetaData.NumLocations).ToList()));
+                    return GetResultsFromCache(variable, () => GetBranchFeaturesForLocations(variable, Enumerable.Range(0, MetaData.NumLocationsForFunctionId(GetNetCdfVariableName(GetCoverage(variable)))).ToList()));
                 }
 
                 if (variable.ValueType == typeof(DateTime))
@@ -271,15 +271,16 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         public T GetMaxValue<T>(IVariable variable)
         {
+            var key = GetNetCdfVariableName(GetCoverage(variable));
             if (typeof(T) == typeof(INetworkLocation))
             {
-                var maxValue = Enumerable.Last<INetworkLocation>(GetNetworkLocationsForLocations(variable, new List<int> { MetaData.NumLocations - 1 }));
+                var maxValue = Enumerable.Last<INetworkLocation>(GetNetworkLocationsForLocations(variable, new List<int> { MetaData.NumLocationsForFunctionId(key) - 1 }));
                 return (T)maxValue;
             }
 
             if (typeof(T) == typeof(IBranchFeature))
             {
-                var maxValue = Enumerable.Last<IBranchFeature>(GetBranchFeaturesForLocations(variable, new List<int> { MetaData.NumLocations -1 }));
+                var maxValue = Enumerable.Last<IBranchFeature>(GetBranchFeaturesForLocations(variable, new List<int> { MetaData.NumLocationsForFunctionId(key) - 1 }));
                 return (T)maxValue;
             }
 
@@ -379,7 +380,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         private IList<double> GetValuesForTimeSeriesAtSingleLocation(string ncVariableName, IVariableValueFilter branchFeatureFilter, out int[] shape)
         {
-            var locationIndex = GetLocationIndex((IBranchFeature)branchFeatureFilter.Values[0]);
+            var locationIndex = GetLocationIndex(ncVariableName, (IBranchFeature)branchFeatureFilter.Values[0]);
 
             var origin = new[] { 0, locationIndex };
             shape = new[] { MetaData.NumTimes, 1 };
@@ -390,7 +391,7 @@ namespace DeltaShell.NGHS.IO.Store1D
         private IList<double> GetValuesForTimeStepAtAllLocations(string ncVariableName, int timeStepIndex, out int[] shape)
         {
             var origin = new[] { timeStepIndex, 0 };
-            shape = new[] { 1, MetaData.NumLocations };
+            shape = new[] { 1, MetaData.NumLocationsForFunctionId(ncVariableName) };
 
             return GetSelectionOfVariableData(ncVariableName, origin, ref shape);
         }
@@ -408,7 +409,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         private IList<double> GetValueForTimeStepAtSingleLocation(string ncVariableName, IVariableValueFilter branchFeatureFilter, int timeStepIndex, out int[] shape)
         {
-            var locationIndex = GetLocationIndex((IBranchFeature)branchFeatureFilter.Values[0]);
+            var locationIndex = GetLocationIndex(ncVariableName, (IBranchFeature)branchFeatureFilter.Values[0]);
 
             var origin = new[] { timeStepIndex, locationIndex };
             shape = new[] { 1, 1 };
@@ -434,11 +435,13 @@ namespace DeltaShell.NGHS.IO.Store1D
         {
             UpdateTypeConverters(function);
             var convertedList = (List<INetworkLocation>)TypeUtils.CreateGeneric(typeof(List<>), networkLocationTypeConverter.ConvertedType);
+            var key = GetNetCdfVariableName(GetCoverage(function));
+            var MetaLocationInfo = MetaData.Locations.FirstOrDefault(l => l.Key.Name == key);
 
             foreach (var location in locations)
             {
-                var branchId = MetaData.Locations[location].BranchId - sobekStartIndex; 
-                var chainage = MetaData.Locations[location].Chainage;
+                var branchId = MetaLocationInfo.Value[location].BranchId - sobekStartIndex; 
+                var chainage = MetaLocationInfo.Value[location].Chainage;
                 var networkLocation = networkLocationTypeConverter.ConvertFromStore(new object[] { branchId, chainage });
                 convertedList.Add(networkLocation);
             }
@@ -460,13 +463,14 @@ namespace DeltaShell.NGHS.IO.Store1D
             return new MultiDimensionalArray<IBranchFeature>(convertedList, shape);
         }
 
-        private int GetLocationIndex(IBranchFeature branchFeature)
+        private int GetLocationIndex(string ncVariableName, IBranchFeature branchFeature)
         {
             T location;
+            var metaDataLocations = MetaData.Locations.FirstOrDefault(l => l.Key.Name == ncVariableName);
             if (branchFeature is INetworkLocation)
             {
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
-                location = MetaData.Locations.FirstOrDefault(l => l.BranchId - sobekStartIndex == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
+                location = metaDataLocations.Value.FirstOrDefault(l => l.BranchId - sobekStartIndex == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
             }
             else if (branchFeature is IStructure1D)
             {
@@ -478,11 +482,11 @@ namespace DeltaShell.NGHS.IO.Store1D
 
                 var structureName = compositePrefix + branchFeature.Name;
 
-                location = MetaData.Locations.FirstOrDefault(l => l.Id == structureName);
+                location = metaDataLocations.Value.FirstOrDefault(l => l.Id == structureName);
             }
             else
             {
-                location = MetaData.Locations.FirstOrDefault(l => l.Id == branchFeature.Name);
+                location = metaDataLocations.Value.FirstOrDefault(l => l.Id == branchFeature.Name);
             }
 
             if (location == null)
@@ -490,7 +494,7 @@ namespace DeltaShell.NGHS.IO.Store1D
                 throw new ArgumentException(string.Format((string)"Values for {0} feature type {1} could not be found.", branchFeature.Name, branchFeature.GetType().Name));
             }
 
-            return MetaData.Locations.IndexOf(location);
+            return metaDataLocations.Value.IndexOf(location);
         }
 
         protected virtual string GetNetCdfVariableName(ICoverage coverage)

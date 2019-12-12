@@ -39,12 +39,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             Assert.AreEqual("2016-08-10 10:40:30", lastTime.ToString(WaterFlowModel1DOutputFileConstants.DateTimeFormat));
 
             // check locations (ids are required, others are optional)
-            Assert.AreEqual(numLocations, metaData.NumLocations);
+            Assert.AreEqual(numLocations, metaData.NumLocationsForFunctionId(expectedFirstLocationId));
 
-            var firstLocationId = metaData.Locations.First().Id;
+            var firstLocationId = metaData.Locations.First().Value.First().Id;
             Assert.AreEqual(expectedFirstLocationId, firstLocationId);
 
-            var lastLocationId = metaData.Locations.Last().Id;
+            var lastLocationId = metaData.Locations.First().Value.Last().Id;
             Assert.AreEqual(expectedLastLocationId, lastLocationId);
 
             // check time dependent variables
@@ -77,13 +77,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var allTimeData = new WaterFlowModel1DOutputFileReader().GetAllVariableData(filePath, variableName, metaData);
 
             Assert.AreEqual(metaData.NumTimes, allTimeData.GetLength(0));
-            Assert.AreEqual(metaData.NumLocations, allTimeData.GetLength(1));
+            Assert.AreEqual(metaData.Locations.FirstOrDefault().Value.Count, allTimeData.GetLength(1));
 
             Assert.AreEqual(firstTimeStepFirstLocationValue, allTimeData[0, 0], Delta);
-            Assert.AreEqual(firstTimeStepLastLocationValue, allTimeData[0, metaData.NumLocations - 1], Delta);
+            Assert.AreEqual(firstTimeStepLastLocationValue, allTimeData[0, metaData.Locations.FirstOrDefault().Value.Count - 1], Delta);
 
             Assert.AreEqual(lastTimeStepFirstLocationValue, allTimeData[1, 0], Delta);
-            Assert.AreEqual(lastTimeStepLastLocationValue, allTimeData[1, metaData.NumLocations - 1], Delta);
+            Assert.AreEqual(lastTimeStepLastLocationValue, allTimeData[1, metaData.Locations.FirstOrDefault().Value.Count - 1], Delta);
         }
 
         
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
             var timeDependentVariableName = metaData.TimeDependentVariables.First().Name;
 
             var numTimesToRead = metaData.NumTimes/2;
-            var numLocationsToRead = metaData.NumLocations/2;
+            var numLocationsToRead = metaData.Locations.FirstOrDefault().Value.Count/2;
 
             var origin = new[] { 0, 0 };
             var shape = new[] { numTimesToRead, numLocationsToRead };

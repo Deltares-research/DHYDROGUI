@@ -3601,14 +3601,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         protected override void OnCleanup()
         {
-            foreach (var bc in boundaryConditionDataList)
-            {
-                var data = bc.Data;
-                if (data != null)
+            if (boundaryConditionDataList != null)
+                foreach (var bc in boundaryConditionDataList)
                 {
-                    data.SkipArgumentValidationInEvaluate = false;
+                    var data = bc.Data;
+                    if (data != null)
+                    {
+                        data.SkipArgumentValidationInEvaluate = false;
+                    }
                 }
-            }
+
             boundaryConditionDataList = null;
 
             if (runTimeGridOperationApi != null)
