@@ -31,9 +31,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                                         ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
                                         : geometry;
 
-            // snape to source / target features
+            // snap to source / target features
             var source = GetHydroFeature(linkMapGeometry.Coordinates[0], layer);
-            var target = GetHydroFeature(linkMapGeometry.Coordinates.Last(), layer);
+            var target = GetHydroFeature(linkMapGeometry.Coordinates.Last(), layer, h => source.Item1.CanLinkTo(h));
 
             Region.BeginEdit(new DefaultEditAction(string.Format("Adding link from {0} to {1}", source.Item1.Name, target.Item1.Name)));
 
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             return link;
         }
 
-        private static Tuple<IHydroObject, ILayer> GetHydroFeature(Coordinate coordinate, ILayer layer)
+        private static Tuple<IHydroObject, ILayer> GetHydroFeature(Coordinate coordinate, ILayer layer, Func<IHydroObject, bool> featureCompatible = null)
         {
             var envelope = MapHelper.GetEnvelope(coordinate, (float)MapHelper.ImageToWorld(layer.Map, 1));
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             foreach (var compatibleLayer in compatibleLayers)
             {
                 var feature = compatibleLayer.GetFeatures(envelope).OfType<IHydroObject>().FirstOrDefault();
-                if(feature == null) continue;
+                if(feature == null || featureCompatible != null && !featureCompatible(feature)) continue;
 
                 return new Tuple<IHydroObject, ILayer>(feature, layer);
             }
