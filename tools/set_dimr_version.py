@@ -87,7 +87,7 @@ def get_relevant_log_msg(file_path: Path, rev_number: int, verbose: bool) -> str
     if verbose:
         print("    Running command: {}".format(svn_cmd))
 
-    p = subprocess.run(svn_cmd, shell=True, capture_output=True, text=True)
+    p = subprocess.run(svn_cmd, shell=True, stdout=subprocess.PIPE)
 
     if verbose:
         print("    Result:\n{}".format(p.stdout))
