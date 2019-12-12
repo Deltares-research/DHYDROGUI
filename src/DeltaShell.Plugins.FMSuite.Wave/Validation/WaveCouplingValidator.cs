@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
@@ -12,9 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            string comFilePath =
-                model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
-                                                       KnownWaveProperties.COMFile).GetValueAsString();
+            string comFilePath = model.ModelDefinition.CommunicationsFilePath;
 
             if (model.IsCoupledToFlow)
             {

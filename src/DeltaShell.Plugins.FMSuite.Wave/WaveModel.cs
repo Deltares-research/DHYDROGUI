@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
+        private bool isCoupledToFlow;
         
         /// <summary>
         /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
@@ -60,7 +61,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
         /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
         /// </value>
-        public bool IsCoupledToFlow { get; set; }
+        /// <remarks>
+        /// When set to <c>true</c>, we assume that this model is coupled to an FM model as part of an
+        /// integrated model. In that case, the communications file path is set to a standard relative path.
+        /// </remarks>
+        public bool IsCoupledToFlow
+        {
+            get => isCoupledToFlow;
+            set
+            {
+                isCoupledToFlow = value;
+                if (value)
+                {
+                    ModelDefinition.CommunicationsFilePath = Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath;
+                }
+            }
+        }
 
         public int SimulationMode
         {

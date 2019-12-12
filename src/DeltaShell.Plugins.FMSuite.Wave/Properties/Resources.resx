@@ -235,4 +235,7 @@
   <data name="WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____" xml:space="preserve">
     <value>No data points found for boundary '{0}', saved boundary will default to Uniform spatial definition type</value>
   </data>
+  <data name="WaveModel_IsCoupledToFlow___ComFileRelativePath" xml:space="preserve">
+    <value>../dflowfm/output/model_name_com.nc</value>
+  </data>
 </root>
