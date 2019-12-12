@@ -7,6 +7,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -742,5 +743,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             return app;
         }
 
+        [Test]
+        public void SaveTo_WithCommunicationFilePathWithBackSlashFileSeparators_ThenFilePathIsExportedWithForwardSlashFileSeparators()
+        {
+            // Arrange
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                const string comFilePath = @"myDir1\myDir2\myComFile_com.nc";
+                var modelDefinition = new WaveModelDefinition
+                {
+                    CommunicationsFilePath = comFilePath
+                };
+
+                // Act
+                var mdwFile = new MdwFile();
+                string mdwFilePath = Path.Combine(temporaryDirectory.Path, "myModel.mdw");
+                mdwFile.SaveTo(mdwFilePath, modelDefinition, false);
+
+                // Assert
+                IEnumerable<string> mdwFileLines = File.ReadLines(mdwFilePath);
+                string comFileLine = mdwFileLines.Single(line => line.Trim().StartsWith(KnownWaveProperties.COMFile));
+
+                string exportedComFilePath = comFileLine.Split('=')[1].Trim();
+                Assert.That(exportedComFilePath, Is.EqualTo(comFilePath.Replace('\\','/')));
+            }
+        }
     }
 }
