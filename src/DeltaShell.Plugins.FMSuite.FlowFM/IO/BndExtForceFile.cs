@@ -936,7 +936,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
                 var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
                 lateralSource.Geometry = new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
-                modelDefinition.LateralSourcesData.Add(new Model1DLateralSourceData() { Feature = lateralSource });
+                branch.BranchFeatures.Add(lateralSource);
                 var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
                 if (forcingFile == null) continue;
                 forcingFiles.Add(forcingFile);
