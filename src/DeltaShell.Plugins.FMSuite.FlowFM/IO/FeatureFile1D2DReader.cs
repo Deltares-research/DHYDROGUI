@@ -2,6 +2,7 @@
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
+using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
@@ -18,8 +19,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadObservationPointsFiles(targetMduFilePath, fmModel);
             ReadStructuresFiles(targetMduFilePath, fmModel);
             ReadRoughnessFiles(targetMduFilePath, fmModel);
+            ReadRetentionsFile(targetMduFilePath, fmModel);
         }
-        
+
+        private static void ReadRetentionsFile(string targetMduFilePath, WaterFlowFMModel fmModel)
+        {
+            string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+            if (!File.Exists(netFilePath)) return;
+            string storageNodeFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, fmModel.ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+
+            if (File.Exists(storageNodeFilePath))
+                RetentionFileReader.ReadFile(storageNodeFilePath, fmModel.Network);
+
+        }
+
         private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
         {
             var crLocFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();

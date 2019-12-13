@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
@@ -73,18 +74,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
             return categories
                 .Skip(1) // skip version info
-                .Select(category => new CompartmentProperties
+                .Where(category => //Don't read retentions here
+                    !(category.Properties.Any(p => p.Name.Equals(RetentionRegion.IsRetention.Key, StringComparison.InvariantCultureIgnoreCase)) 
+                      && category.ReadProperty<bool>(RetentionRegion.IsRetention.Key)))
+                .Select(category =>
                 {
-                    CompartmentId = category.GetPropertyValue(KnownPropertyNames.Id),
-                    Name = category.GetPropertyValue(KnownPropertyNames.Name),
-                    NodeId = category.GetPropertyValue(KnownPropertyNames.NodeId),
-                    ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
-                    UseTable = false, // use category.GetPropertyValue(KnownPropertyNames.UseTable)
-                    BedLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
-                    Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
-                    StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
-                    StorageType = category.GetPropertyValue(KnownPropertyNames.StorageType),
-                    StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
+                    return new CompartmentProperties
+                    {
+                        CompartmentId = category.GetPropertyValue(KnownPropertyNames.Id),
+                        Name = category.GetPropertyValue(KnownPropertyNames.Name),
+                        NodeId = category.GetPropertyValue(KnownPropertyNames.NodeId),
+                        ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
+                        UseTable = false, // use category.GetPropertyValue(KnownPropertyNames.UseTable)
+                        BedLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
+                        Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
+                        StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
+                        StorageType = category.GetPropertyValue(KnownPropertyNames.StorageType),
+                        StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
+                    };
                 })
                 .ToList();
         }

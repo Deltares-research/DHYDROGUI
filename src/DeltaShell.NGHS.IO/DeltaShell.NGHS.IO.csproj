@@ -165,6 +165,7 @@
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
+    <Compile Include="FileReaders\RetentionFileReader.cs" />
     <Compile Include="FileReaders\StructureFileReader.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriter.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryFileWriterHelper.cs" />
