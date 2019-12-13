@@ -31,21 +31,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             using (var disposableMeshGeometry = new DisposableMeshGeometryGridGeom(fmModel.Grid))
             {
+                var mesh1D = new Mesh1DGeometry(fmModel.NetworkDiscretization);
+
                 LinkInformation linkInformation;
+
                 switch (linkType)
                 {
                     case LinkType.EmbeddedOneToOne:
-                        linkInformation = Get1D2DOneToOneEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        linkInformation = Get1D2DOneToOneEmbeddedLinks(disposableMeshGeometry, mesh1D, fmModel.NetworkDiscretization, selectedArea);
                         break;
                     case LinkType.EmbeddedOneToMany:
-                        linkInformation = Get1D2DOneToManyEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        linkInformation = Get1D2DOneToManyEmbeddedLinks(disposableMeshGeometry, mesh1D, fmModel.NetworkDiscretization, selectedArea);
                         break;
                     case LinkType.Lateral:
-                        linkInformation = Get1D2DLateralLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        linkInformation = Get1D2DLateralLinks(disposableMeshGeometry, mesh1D, fmModel.NetworkDiscretization, selectedArea);
                         break;
                     case LinkType.GullySewer:
                         var geometryGullies = fmModel.Area.Gullies.Where(r => r.Geometry.Intersects(selectedArea)).Select(r => r.Geometry);
-                        linkInformation = Get1D2DGullyLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, geometryGullies);
+                        linkInformation = Get1D2DGullyLinks(disposableMeshGeometry, mesh1D, fmModel.NetworkDiscretization, selectedArea, geometryGullies);
                         break;
                     default:
                         log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Type of link {1} unknown", fmModel.Name, linkType);
@@ -99,12 +102,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return lstNewLinks;
         }
 
-        private static LinkInformation Get1D2DGullyLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, IEnumerable<IGeometry> geometryGullies)
+        private static LinkInformation Get1D2DGullyLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, Mesh1DGeometry mesh1D, IDiscretization discretization, IPolygon selectedArea, IEnumerable<IGeometry> geometryGullies)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.GullySewer, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var links = gGeomApi.Get1D2DLinksFromGullies(disposableMeshGeometry, discretization, filter1DMesh, geometryGullies);
+            var links = gGeomApi.Get1D2DLinksFromGullies(disposableMeshGeometry, mesh1D, discretization, filter1DMesh, geometryGullies);
             if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
@@ -113,12 +116,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return links;
         }
 
-        private static LinkInformation Get1D2DLateralLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
+        private static LinkInformation Get1D2DLateralLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, Mesh1DGeometry mesh1D, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.Lateral);
 
             var gGeomApi = new GridGeomApi();
-            var links = gGeomApi.GetLateral1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh);
+            var links = gGeomApi.GetLateral1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh);
             if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
@@ -127,12 +130,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return links;
         }
 
-        private static LinkInformation Get1D2DOneToOneEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
+        private static LinkInformation Get1D2DOneToOneEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, Mesh1DGeometry mesh1D, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.EmbeddedOneToOne, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh, false);
+            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh, false);
             if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
@@ -141,12 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return links;
         }
 
-        private static LinkInformation Get1D2DOneToManyEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
+        private static LinkInformation Get1D2DOneToManyEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, Mesh1DGeometry mesh1D, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.EmbeddedOneToMany, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh, true);
+            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh, true);
             if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(

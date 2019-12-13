@@ -251,6 +251,8 @@
     <Compile Include="Grid\GridApi.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomApi.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomWrapper.cs" />
+    <Compile Include="Grid\GridGeomApi\Mesh1DGeometry.cs" />
+    <Compile Include="Grid\GridGeomApi\Mesh1DGeometryNative.cs" />
     <Compile Include="Grid\IGridApi.cs" />
     <Compile Include="Grid\IUGrid1D2DLinksApi.cs" />
     <Compile Include="Grid\IUGridMesh2DApi.cs" />
