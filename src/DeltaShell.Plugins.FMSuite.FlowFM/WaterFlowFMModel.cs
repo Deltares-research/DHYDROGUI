@@ -232,13 +232,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (modelDefinition != null)
                 {
-                    ((INotifyPropertyChange) (modelDefinition.Properties)).PropertyChanged += OnModelDefinitionPropertyChanged;
+                    ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged += OnModelDefinitionPropertyChanged;
                     modelDefinition.BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
                     modelDefinition.LateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
-                    ((INotifyPropertyChanged)(modelDefinition.BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
+                    ((INotifyPropertyChanged) (modelDefinition.BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
                 }
             }
         }
+        
         private void BoundaryConditions1DOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
@@ -622,6 +623,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             LoadRestartFile(mduFilePath);
             ReconnectOutputFiles(Path.GetDirectoryName(mduFilePath));
+            RefreshBoundaryConditions1DDataItemSet();
         }
 
         private void SynchronizeModelDefinitions()

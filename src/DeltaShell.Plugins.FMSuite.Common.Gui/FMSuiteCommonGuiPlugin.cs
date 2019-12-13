@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -274,9 +275,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         private void SubscribeToProjectEvents()
         {
+            base.Gui.Application.ProjectClosing += CloseAllViews;
             base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
             base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
             base.Gui.Application.ProjectSaved += OpenClosedViews;
+        }
+
+        private void CloseAllViews(Project obj)
+        {
+            CloseAllViews(obj, false);
         }
 
         private void SubscribeToActivityEvents()
@@ -293,45 +300,59 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         private void UnSubscribeToActivityEvents()
         {
         }
-        private IList<Type> ClosedViewTypes { get; set; }
+        private IDictionary<Type, IList<INameable>> ClosedViews { get; set; }
 
-        [InvokeRequired]
         private void CloseAllViewsBeforeSaving(Project project)
         {
             if (project == null || project.RootFolder == null) return;
-            ClosedViewTypes = new List<Type>();
-
-            foreach (var boundaryData in project.RootFolder.GetAllItemsRecursive().OfType<Model1DBoundaryNodeData>())
-            {
-                Gui.CommandHandler.RemoveAllViewsForItem(boundaryData);
-            }
-            foreach (var lateralSourceData in project.RootFolder.GetAllItemsRecursive().OfType<Model1DLateralSourceData>())
-            {
-                Gui.CommandHandler.RemoveAllViewsForItem(lateralSourceData);
-            }
+            ClosedViews = new Dictionary<Type, IList<INameable>>();
+            
+            CloseAllViews(project, true);
         }
 
-        [InvokeRequired]
+        private void CloseAllViews(Project project, bool saveViewList)
+        {
+            RemoveViewsOfType<Model1DBoundaryNodeDataViewWpf>(saveViewList);
+            RemoveViewsOfType<Model1DLateralSourceDataViewWpf>(saveViewList);
+        }
+
+        private void RemoveViewsOfType<T>(bool saveViewList) where T:IView
+        {
+            var views = Gui.DocumentViews.AllViews.OfType<T>().Cast<IView>().ToList();
+            if (views != null && saveViewList)
+                views.ForEach(view => ClosedViews[view.GetType()] = views.Where(v=> v.Data is INameable).Select(v => v.Data).Cast<INameable>().ToList());
+            Gui.CommandHandler.RemoveAllViewsForItem(views.Select(c => c.Data));
+            views.ForEach(view => Gui.DocumentViews.Remove(view));
+        }
+
         private void OpenClosedViews(Project project)
         {
-            if (project == null || project.RootFolder == null || ClosedViewTypes == null) return;
+            if (project == null || project.RootFolder == null || ClosedViews == null) return;
 
             try
             {
-                if (ClosedViewTypes == null || !ClosedViewTypes.Any()) return;
-                foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<IModel>())
+                if (ClosedViews == null || !ClosedViews.Any()) return;
+                ClosedViews.ForEach(v =>
                 {
-                    foreach (var viewType in ClosedViewTypes)
+                    v.Value.ForEach(o =>
                     {
-                        Gui.CommandHandler.OpenView(flowFmModel, viewType);
-                    }
-                }
-                ClosedViewTypes = new List<Type>();
+                        //search same object in current model
+                        project.RootFolder.GetAllItemsRecursive().OfType<IModel>().ForEach(model =>
+                        {
+                            //var items = model.GetAllItemsRecursive();
+                            //var o1 = items.OfType<INameable>().FirstOrDefault(i => i.Name.Equals(o.Name));
+                            //if (o1 != null)
+                                Gui.CommandHandler.OpenView(o, v.Key);
+                        });
+                    });
+                });
+                
+                ClosedViews = new Dictionary<Type, IList<INameable>>();
             }
             catch
             {
                 //gulp
-                ClosedViewTypes = new List<Type>();
+                ClosedViews = new Dictionary<Type, IList<INameable>>();
             }
         }
     }

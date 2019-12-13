@@ -220,7 +220,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 .ForEach(c => c.Network = Network);
             ModelDefinition.UpdateRoughnessSections();
         }
-        
+
+        private void RefreshBoundaryConditions1DDataItemSet()
+        {
+            foreach (var model1DBoundaryNodeData in BoundaryConditions1D.Where(bc1d =>
+                bc1d.DataType != Model1DBoundaryNodeDataType.None))
+            {
+                var bcDataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di =>
+                {
+                    var boundaryNodeData = (di.Value as Model1DBoundaryNodeData);
+                    if (boundaryNodeData == null) return false;
+
+                    return model1DBoundaryNodeData.Feature.Equals(boundaryNodeData.Feature);
+                });
+                if (bcDataItem != null)
+                {
+                    bcDataItem.Value = model1DBoundaryNodeData;
+                    bcDataItem.Hidden = model1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.None;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
