@@ -4,7 +4,7 @@ process. Should be run as a first step of the nuget process.
 """
 __author__ = "Maarten Tegelaers"
 __copyright__ = "Copyright (C) Stichting Deltares, 2019"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __maintainer__ = "Maarten Tegelaers, Prisca van der Sluis"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
@@ -56,7 +56,13 @@ def extract_version_number_from_svn_log_msg(log_msg: str, verbose: bool) -> str:
         print("  Extract version number from svn log message:")
 
     regex_str = r"DIMRset \d+\.\d+\.\d+"
-    version_raw = re.findall(regex_str, log_msg)[0]
+
+    matches = re.findall(regex_str, log_msg)
+
+    if not matches:
+        return None
+
+    version_raw = matches[0]
     version = version_raw.replace("DIMRset ", "")
 
     if verbose:
@@ -65,41 +71,85 @@ def extract_version_number_from_svn_log_msg(log_msg: str, verbose: bool) -> str:
     return version
 
 
-def get_relevant_log_msg(file_path: Path, rev_number: int, verbose: bool) -> str:
+def is_last_revision(file_path: Path, rev_number: int) -> bool:
     """
-    Get the log message corresponding with the provided revision number.
+    Verify whether the provided revision number is the last revision.
 
     Parameters:
-        file_path (Path): The path of which to retrieve the svn log.
-        rev_number (int): Revision numer of the commit for which the log message
-                          should be retrieved.
-        verbose (bool): Whether to display additional information.
+        file_path (Path): The path to get the revisions of.
+        rev_number (int): The revision number to check.
 
     Returns:
-        (str) The log message corresponding with the provided revision number.
+        True if rev_number == last revision number
     """
-    if verbose:
-        print("  Get the relevant log message:")
+    svn_cmd = "svn log {} --limit 1 --xml -q".format(str(file_path))
+    p = subprocess.run(svn_cmd, shell=True, stdout=subprocess.PIPE)
+    xml_log_msg = ET.fromstring(p.stdout)
 
-    svn_cmd = "svn log {} -r {} --xml".format(str(file_path), 
-                                                  rev_number)
+    last_rev_number = int(xml_log_msg[0].attrib["revision"])
+
+    return last_rev_number == rev_number
+
+
+def find_previous_revision(file_path: Path, rev_number: int) -> int:
+    """
+    Find the revision before the specified rev_number. 
+
+    Parameters:
+        file_path (Path): The path to get the revisions of.
+        rev_number (int): The revision number to check.
     
-    if verbose:
-        print("    Running command: {}".format(svn_cmd))
+    Returns:
+        (int) The revision number before the specified rev_number.
 
+    Exceptions:
+        Thrown when no previous revision could be located.
+    """
+    svn_cmd = "svn log {} --xml -q".format(str(file_path))
     p = subprocess.run(svn_cmd, shell=True, stdout=subprocess.PIPE)
 
-    if verbose:
-        print("    Result:\n{}".format(p.stdout))
+    xml_content = ET.fromstring(p.stdout)
+
+    for i in range(len(xml_content) - 1):
+        if int(xml_content[i].attrib["revision"]) == rev_number:
+            return int(xml_content[i+1].attrib["revision"])
+    
+    raise Exception("Could not locate the revision before {}.".format(rev_number))
 
 
-    xml_log_msg = ET.fromstring(p.stdout)
-    msg_content = xml_log_msg[0].find("msg").text
+def get_relevant_log_msgs(file_path: Path, rev_number: int) -> tuple:
+    """
+    Get log messages of the specified revision, as well as the revision
+    before this revision.
 
-    if verbose:
-        print("    message content:\n{}".format(msg_content))
+    Parameters:
+        file_path (Path): The path to get the revisions of.
+        rev_number (int): The revision number to check.
+    
+    Returns:
+        (tuple) A tuple containing the specified revision number's message, and
+        the revision number before the specified revision number's message.
 
-    return msg_content
+    Exceptions:
+        Thrown when no previous revision could be located.
+    """
+    if is_last_revision(file_path, rev_number):
+        svn_cmd = "svn log {} --limit 2 --xml".format(str(file_path))
+    else:
+        prev_rev_number = find_previous_revision(file_path, rev_number)
+        svn_cmd = "svn log {} -r {}:{} --xml".format(str(file_path), 
+                                                     rev_number, 
+                                                     prev_rev_number)
+    
+    p = subprocess.run(svn_cmd, shell=True, stdout=subprocess.PIPE)
+
+    xml_content = ET.fromstring(p.stdout)
+
+    curr_msg = xml_content[0].find("msg").text
+    prev_msg = xml_content[1].find("msg").text
+
+    return (curr_msg, prev_msg)
+
 
 
 def run(rev_number: int,
@@ -118,10 +168,22 @@ def run(rev_number: int,
     if verbose:
         print("Setting the '{}' build parameter".format(build_param))
 
-    log_msg = get_relevant_log_msg(working_directory, rev_number, verbose)
-    version_number = extract_version_number_from_svn_log_msg(log_msg, verbose)
+    curr_log_msg, prev_log_msg = get_relevant_log_msgs(working_directory, rev_number)
+    
+    curr_version_number = extract_version_number_from_svn_log_msg(curr_log_msg, verbose)
 
-    set_build_parameter(build_param, version_number)
+    if not curr_version_number:
+        curr_version_number = "2.0.0.{}".format(rev_number)
+
+    prev_version_number = extract_version_number_from_svn_log_msg(prev_log_msg, verbose)
+
+    if not prev_version_number:
+        prev_version_number = "2.0.0.{}".format(rev_number)
+
+    if curr_version_number == prev_version_number:
+        raise Exception("The DIMR version is the same between revision {} and the revision before it, no new DIMR NuGet will be generated.".format(rev_number))
+
+    set_build_parameter(build_param, curr_version_number)
 
 
 def parse_arguments():
