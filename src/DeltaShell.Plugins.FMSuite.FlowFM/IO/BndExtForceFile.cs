@@ -776,7 +776,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     if (!containsAndParsedLateralExtForceFileDefinitions)
                         containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey)));
-                    Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
+                    if(!containsAndParsedLateralExtForceFileDefinitions)
+                        Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
                     continue;
                 }
 

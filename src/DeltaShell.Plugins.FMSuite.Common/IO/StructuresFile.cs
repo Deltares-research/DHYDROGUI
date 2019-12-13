@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -60,7 +61,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 // Filter out unexpected .ini categories:
                 if (category.Name.ToLower() != StructureCategoryName.ToLower())
                 {
-                    Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
+                    if(!string.Equals(category.Name, GeneralRegion.IniHeader, StringComparison.CurrentCultureIgnoreCase))
+                        Log.WarnFormat("Category [{0}] not supported for structures and is skipped.", category.Name);
                     continue;
                 }
 

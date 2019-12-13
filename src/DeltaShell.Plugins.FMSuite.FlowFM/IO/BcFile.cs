@@ -311,7 +311,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
                     else
                     {
-                        log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
+                        if (line.StartsWith(GeneralRegion.Header))
+                        {
+                            line = GetNextLine(); //fileVersion
+                            line = GetNextLine(); //fileType
+                        }
+                        else
+                        {
+                            log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
+                        }
                         line = GetNextLine();
                     }
                 }

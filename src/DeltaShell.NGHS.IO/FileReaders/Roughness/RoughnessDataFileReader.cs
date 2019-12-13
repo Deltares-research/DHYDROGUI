@@ -38,6 +38,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             {
                 try
                 {
+                    roughnessSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
+
                     var branch = roughnessBranchData.Branch;
 
                     switch (roughnessBranchData.RoughnessFunctionType)
@@ -80,6 +82,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                 catch (FileReadingException fileReadingException)
                 {
                     fileReadingExceptions.Add(new FileReadingException(Resources.RoughnessDataFileReader_ReadFile_Could_not_set_roughness_data_in_model, fileReadingException));
+                }
+                finally
+                {
+                    roughnessSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = false;
                 }
             }
             if (fileReadingExceptions.Count != 0)
