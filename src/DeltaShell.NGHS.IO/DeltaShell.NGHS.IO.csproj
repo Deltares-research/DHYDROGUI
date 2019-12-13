@@ -256,6 +256,7 @@
     <Compile Include="Grid\IUGridMesh2DApi.cs" />
     <Compile Include="Grid\IUGridNetworkApi.cs" />
     <Compile Include="Grid\IUGridNetworkDiscretisationApi.cs" />
+    <Compile Include="Grid\LinkInformation.cs" />
     <Compile Include="Grid\NetworkDiscretisationFactory.cs" />
     <Compile Include="Grid\NetworkDiscretisationUGridDataModel.cs" />
     <Compile Include="Grid\NetworkUGridDataModel.cs" />

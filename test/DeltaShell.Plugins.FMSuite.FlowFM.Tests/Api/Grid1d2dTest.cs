@@ -372,9 +372,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //7. fill kn (Herman datastructure) for creating the links
                 int start_index = 1; //the smallest integer in sourcenodeid/targetnodeid is 1
                 ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength,
-                    ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints, ref start_index);
+                    ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
-                ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
+                ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 IntPtr intPtrXValuesSelectedArea;
@@ -424,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType, ref start_index);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];
@@ -484,9 +484,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //7. fill kn (Herman datastructure) for creating the links
                 int start_index = 1; //the smallest integer in sourcenodeid/targetnodeid is 1
                 ierr = gridGeomWrapper.Convert1dArray(ref c_meshXCoords, ref c_meshYCoords, ref c_branchoffset, ref c_branchlength,
-                    ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints, ref start_index);
+                    ref c_branchids, ref c_sourcenodeid, ref c_targetnodeid, ref nbranches, ref nmeshpoints);
                 Assert.That(ierr, Is.EqualTo(0));
-                ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
+                ierr = gridGeomWrapper.Convert(ref meshtwod, ref meshtwoddim);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 IntPtr intPtrXValuesGeom;
@@ -528,7 +528,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 //4. get the links: arrayfrom = 2d cell index, arrayto = 1d node index 
                 IntPtr c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //2d cell number
                 IntPtr c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * n1d2dlinks); //1d node
-                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType, ref start_index);
+                ierr = gridGeomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref n1d2dlinks, ref linkType);
                 Assert.That(ierr, Is.EqualTo(0));
 
                 int[] rc_arrayfrom = new int[n1d2dlinks];

@@ -147,22 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (fmModel.Grid == null || !fmModel.Grid.Cells.Any()) return;
             if (fmModel.NetworkDiscretization == null || !fmModel.NetworkDiscretization.Locations.AllValues.Any()) return;
 
-            // Talk to the api!
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 0;
-            int linksCount = 0;
             ProgressBarDialog.PerformTask("Generating 1d2d links", () =>
             {
                 try
                 {
-                    if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom,
-                        ref linksTo, ref linksCount, LinkType)) return;
-
-                    var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid,
-                        fmModel.NetworkDiscretization, LinkType, startIndex);
-                    created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
-                    fmModel.Links.AddRange(created1D2DLinks);
+                    var generated1D2DLinks = MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, LinkType);
+                    fmModel.Links.AddRange(generated1D2DLinks.Except(fmModel.Links));
                 }
                 catch (Exception e)
                 {
@@ -172,40 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                         Name);
                 }
             }, null);
-        }
-
-        private IList<Link1D2D> GetNew1D2DLinks(IList<Link1D2D> created1D2DLinks, IEventedList<ILink1D2D> existingLinks)
-        {
-            var result = new List<Link1D2D>();
-            foreach (var newLink in created1D2DLinks)
-            {
-                if (!existingLinks.Contains(newLink))
-                {
-                    result.Add(newLink);
-                }
-            }
-            return result;
-        }
-        
-        private IList<Link1D2D> Creates1d2dLinks(int linksCount, List<int> linksFromIndex, List<int> linksToIndex, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType, int startIndex)
-        {
-            var lstNewLinks = new List<Link1D2D>();
-            for (int i = 0; i < linksCount; i++)
-            {
-                //seems lists are swapt  
-                var pointIndex = linksToIndex[i] - startIndex;
-                var cellIndex = linksFromIndex[i] - startIndex;
-
-                var cell = grid.Cells[cellIndex];
-                var node = networkDiscretization.Locations.Values[pointIndex];
-                var link = new Link1D2D(pointIndex, cellIndex)
-                {
-                    Geometry = new LineString(new[] { node.Geometry.Coordinate, cell.Center }),
-                    TypeOfLink = linkType
-                };
-                lstNewLinks.Add(link);
-            }
-            return lstNewLinks;
         }
 
         private void EnterBoundingBoxDrawingMode()

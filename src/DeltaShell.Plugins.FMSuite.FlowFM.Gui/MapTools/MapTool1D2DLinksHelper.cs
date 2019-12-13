@@ -26,25 +26,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static readonly ILog log = LogManager.GetLogger(typeof(MapTool1D2DLinksHelper));
         private const double SNAP_DISTANCE = 10.0; //
 
-        public static bool Generate1D2DLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount, LinkType linkType)
+        public static IEnumerable<ILink1D2D> Generate1D2DLinks(WaterFlowFMModel fmModel, IPolygon selectedArea, LinkType linkType)
         {
             using (var disposableMeshGeometry = new DisposableMeshGeometryGridGeom(fmModel.Grid))
             {
+                LinkInformation linkInformation;
                 switch (linkType)
                 {
                     case LinkType.EmbeddedOneToOne:
-                        return Get1D2DOneToOneEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount);
+                        linkInformation = Get1D2DOneToOneEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        break;
                     case LinkType.EmbeddedOneToMany:
-                        return Get1D2DOneToManyEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount);
+                        linkInformation = Get1D2DOneToManyEmbeddedLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        break;
                     case LinkType.Lateral:
-                        return Get1D2DLateralLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount);
+                        linkInformation = Get1D2DLateralLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea);
+                        break;
                     case LinkType.GullySewer:
                         var geometryGullies = fmModel.Area.Gullies.Where(r => r.Geometry.Intersects(selectedArea)).Select(r => r.Geometry);
-                        return Get1D2DGullyLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, geometryGullies);
+                        linkInformation = Get1D2DGullyLinks(disposableMeshGeometry, fmModel.NetworkDiscretization, selectedArea, geometryGullies);
+                        break;
                     default:
                         log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Type of link {1} unknown", fmModel.Name, linkType);
-                        return false;
+                        return Enumerable.Empty<ILink1D2D>();
                 }
+
+                return linkInformation != null
+                    ? Creates1d2dLinks(linkInformation, fmModel.Grid, fmModel.NetworkDiscretization, linkType)
+                    : Enumerable.Empty<ILink1D2D>();
             }
         }
 
@@ -68,64 +77,81 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         #region main methods
 
-        private static bool Get1D2DGullyLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount, IEnumerable<IGeometry> geometryGullies)
+        private static IList<Link1D2D> Creates1d2dLinks(LinkInformation linkInformation, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkType linkType)
+        {
+            var lstNewLinks = new List<Link1D2D>();
+            for (int i = 0; i < linkInformation.fromIndices.Length; i++)
+            {
+                //seems lists are swapt  
+                var pointIndex = linkInformation.toIndices[i];
+                var cellIndex = linkInformation.fromIndices[i];
+
+                var cell = grid.Cells[cellIndex];
+                var node = networkDiscretization.Locations.Values[pointIndex];
+                var link = new Link1D2D(pointIndex, cellIndex)
+                {
+                    Geometry = new LineString(new[] { node.Geometry.Coordinate, cell.Center }),
+                    TypeOfLink = linkType
+                };
+                lstNewLinks.Add(link);
+            }
+            return lstNewLinks;
+        }
+
+        private static LinkInformation Get1D2DGullyLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, IEnumerable<IGeometry> geometryGullies)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.GullySewer, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.Get1D2DLinksFromGullies(disposableMeshGeometry, discretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, filter1DMesh, geometryGullies);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            var links = gGeomApi.Get1D2DLinksFromGullies(disposableMeshGeometry, discretization, filter1DMesh, geometryGullies);
+            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
-                return false;
             }
-            return true;
+            return links;
         }
 
-        private static bool Get1D2DLateralLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
+        private static LinkInformation Get1D2DLateralLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.Lateral);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.GetLateral1D2DLinks(disposableMeshGeometry, discretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            var links = gGeomApi.GetLateral1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh);
+            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
-                return false;
             }
-            return true;
+            return links;
         }
 
-        private static bool Get1D2DOneToOneEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
+        private static LinkInformation Get1D2DOneToOneEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.EmbeddedOneToOne, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, false);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh, false);
+            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
-                return false;
             }
-            return true;
+            return links;
         }
 
-        private static bool Get1D2DOneToManyEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea, int startIndex, ref List<int> linksFrom, ref List<int> linksTo, ref int linksCount)
+        private static LinkInformation Get1D2DOneToManyEmbeddedLinks(DisposableMeshGeometryGridGeom disposableMeshGeometry, IDiscretization discretization, IPolygon selectedArea)
         {
             var filter1DMesh = GetMesh1DFilter(discretization, LinkType.EmbeddedOneToMany, selectedArea);
 
             var gGeomApi = new GridGeomApi();
-            var ierr = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, ref linksFrom, ref linksTo, ref startIndex, ref linksCount, selectedArea, filter1DMesh, true);
-            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, discretization, selectedArea, filter1DMesh, true);
+            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
-                return false;
             }
-            return true;
+            return links;
         }
 
         #endregion main methods

@@ -49,18 +49,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(-1, -10));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+            
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
 
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            Assert.AreEqual(1, links.Count);
 
-            Assert.AreEqual(1, linksTo.Count);
-            Assert.AreEqual(1, linksFrom.Count);
-
-            Assert.AreEqual(3, linksTo[0]); //3rd face number
-            Assert.AreEqual(3, linksFrom[0]); //2nd discretisation point hwa 
+            Assert.AreEqual(3, links[0].FaceIndex); //3rd face number
+            Assert.AreEqual(3, links[0].DiscretisationPointIndex); //2nd discretisation point hwa 
 
         }
 
@@ -88,18 +83,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(29, -1));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
 
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            Assert.AreEqual(1, links.Count);
 
-            Assert.AreEqual(1, linksTo.Count);
-            Assert.AreEqual(1, linksFrom.Count);
-
-            Assert.AreEqual(3, linksTo[0]); //3rd face number
-            Assert.AreEqual(3, linksFrom[0]); //2nd discretisation point hwa 
+            Assert.AreEqual(3, links[0].FaceIndex); //3rd face number
+            Assert.AreEqual(3, links[0].DiscretisationPointIndex); //2nd discretisation point hwa 
         }
 
         [Test]
@@ -122,25 +111,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(-1, -10));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
 
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            Assert.AreEqual(1, links.Count);
 
-            Assert.AreEqual(2, linksTo.Count);
-            Assert.AreEqual(2, linksFrom.Count);
 
-            if (linksFrom[0] == 4) //1st discretisation point branch
-            {
-                Assert.AreEqual(8, linksTo[0]); //cell 8
-            }
-            else //2nd discretisation point branch
-            {
-                Assert.AreEqual(5, linksFrom[1]);
-                Assert.AreEqual(11, linksTo[1]); //11 face number
-            }
+            Assert.AreEqual(4, links[0].DiscretisationPointIndex); //1st discretisation point branch
+            Assert.AreEqual(8, links[0].FaceIndex); //cell 8
+
+            Assert.AreEqual(5, links[1].DiscretisationPointIndex);
+            Assert.AreEqual(11, links[1].FaceIndex); //11 face number
         }
 
         [Test]
@@ -163,25 +143,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(-1, -10));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
 
-            var linksFrom = new List<int>();
-            var linksTo = new List<int>();
-            var startIndex = 1;
-            int linksCount = 0;
-            MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, startIndex, ref linksFrom, ref linksTo, ref linksCount, linkType);
+            Assert.AreEqual(2, links.Count);
 
-            Assert.AreEqual(2, linksTo.Count);
-            Assert.AreEqual(2, linksFrom.Count);
+            Assert.AreEqual(4, links[0].DiscretisationPointIndex); //1st discretisation point branch
+            Assert.AreEqual(8, links[0].FaceIndex); //cell 8
 
-            if (linksFrom[0] == 4) //1st discretisation point branch
-            {
-                Assert.AreEqual(8, linksTo[0]); //cell 8
-            }
-            else //2nd discretisation point branch
-            {
-                Assert.AreEqual(5, linksFrom[1]);
-                Assert.AreEqual(11, linksTo[1]); //11 face number
-            }
+            Assert.AreEqual(5, links[1].DiscretisationPointIndex);
+            Assert.AreEqual(11, links[1].FaceIndex); //11 face number
         }
 
         private static Discretization GetTestDiscretization()
