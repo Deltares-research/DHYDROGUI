@@ -141,28 +141,35 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var featureElements = importedFeatureElements.ToList();
             var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
+
+            var nodeNameLookup = new HashSet<string>(network.Nodes.Select(n => n.Name));
+            var branchNameLookup = new HashSet<string>(network.Branches.Select(n => n.Name));
+
             var listOfErrors = new List<string>();
-            featureElements.ForEach(e =>
+            for (int i = 0; i < featureElements.Count; i++)
             {
+                var e = featureElements[i];
                 try
                 {
                     if (ShouldCancel)
                         return;
-                    var indexOf = featureElements.IndexOf(e);
+
+                    var indexOf = i;
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
-                        SetProgress($"Adding feature to Rainfall Runoff Model ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
+                        SetProgress($"Adding feature to Rainfall Runoff Model ({indexOf / (double)nrOfImportedFeatureElements:P0})", indexOf, nrOfImportedFeatureElements);
 
                     //todo: refactor
                     // only add gwsw data if a node/connection with same unique name already exists in the network, or when we are dealing with NwrwGlobalData or NwrwDryWeatherFlowDefinition
-                    if (network.Nodes.Any(n => n.Name.Equals(e.Name) || network.Branches.Any(b => b.Name.Equals(e.Name)) || e is NwrwGlobalData || e is NwrwDryWeatherFlowDefinition))
+                    if (e is NwrwGlobalData || e is NwrwDryWeatherFlowDefinition || nodeNameLookup.Contains(e.Name) || branchNameLookup.Contains(e.Name))
                         e.AddNwrwCatchmentModelDataToModel(rrModel);
                 }
                 catch (Exception exception)
                 {
                     listOfErrors.Add(exception.Message + Environment.NewLine);
                 }
-            });
+            }
+
             if (listOfErrors.Any())
                 Log.ErrorFormat($"While adding GWSW features to Rainfall Runoff Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
