@@ -47,7 +47,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region 1d2dlinks logic
 
-        public int GetEmbedded1D2DLinks(string gridFilePath, IDiscretization networkDiscretization,
+        public int GetEmbedded1D2DLinks(DisposableMeshGeometryGridGeom disposableMeshGeometryGridGeom, IDiscretization networkDiscretization,
             ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea = null, IList<bool> filter1DMesh = null, bool oneToMany = true)
         {
             if (filter1DMesh == null)
@@ -66,19 +66,19 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 if (oneToMany)
                 {
-                    return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                    return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(disposableMeshGeometryGridGeom, networkDiscretization, ref linksFrom, ref linksTo,
                         ref startIndex, ref linksCount, MakeEmbeddedOneToMany1D2DLinks, selectedArea, LinkType.EmbeddedOneToOne, filter1DMesh);
                 }
                 else
                 {
-                    return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                    return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(disposableMeshGeometryGridGeom, networkDiscretization, ref linksFrom, ref linksTo,
                         ref startIndex, ref linksCount, MakeEmbeddedOneToOne1D2DLinks, selectedArea, LinkType.EmbeddedOneToOne, filter1DMesh);
                 }
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
-        public int GetLateral1D2DLinks(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea = null, IList<bool> filter1DMesh = null)
+        public int GetLateral1D2DLinks(DisposableMeshGeometryGridGeom disposableMeshGeometryGridGeom, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, IPolygon selectedArea = null, IList<bool> filter1DMesh = null)
         {
             if (filter1DMesh == null)
             {
@@ -94,13 +94,13 @@ namespace DeltaShell.NGHS.IO.Grid
                     selectedArea = GetSelectAllArea(points);
                 }
 
-                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(gridFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(disposableMeshGeometryGridGeom, networkDiscretization, ref linksFrom, ref linksTo,
                     ref startIndex, ref linksCount, MakeLateral1D2DLinks, selectedArea, LinkType.EmbeddedOneToOne, filter1DMesh);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
-        public int Get1D2DLinksFromGullies(string netFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, List<bool> filter1DMesh, IEnumerable<IGeometry> geometryGullies)
+        public int Get1D2DLinksFromGullies(DisposableMeshGeometryGridGeom disposableMeshGeometryGridGeom, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, List<bool> filter1DMesh, IEnumerable<IGeometry> geometryGullies)
         {
             if (filter1DMesh == null)
             {
@@ -109,7 +109,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (filter1DMesh.Any(m => m.Equals(true)))
             {
-                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(netFilePath, networkDiscretization, ref linksFrom, ref linksTo,
+                return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(disposableMeshGeometryGridGeom, networkDiscretization, ref linksFrom, ref linksTo,
                     ref startIndex, ref linksCount, Make1D2DGullyLinks, null, LinkType.GullySewer, filter1DMesh, geometryGullies);
             }
             return GridApiDataSet.GridConstants.NOERR; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
@@ -381,7 +381,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         // TODO: This method is huge.. Make smaller please :(
-        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(string gridFilePath, IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, LinkType linkType, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
+        private int SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(DisposableMeshGeometryGridGeom mesh2d ,IDiscretization networkDiscretization, ref List<int> linksFrom, ref List<int> linksTo, ref int startIndex, ref int linksCount, Func<IPolygon, IList<bool>, IEnumerable<IGeometry>,int> make1D2DLinks, IPolygon selectedArea, LinkType linkType, IList<bool> filter1DMesh, IEnumerable<IGeometry> filter2DMesh = null)
         {
             IntPtr c_meshXCoords = IntPtr.Zero;
             IntPtr c_meshYCoords = IntPtr.Zero;
@@ -392,8 +392,7 @@ namespace DeltaShell.NGHS.IO.Grid
             IntPtr c_branchlength = IntPtr.Zero;
             IntPtr c_arrayfrom = IntPtr.Zero;
             IntPtr c_arrayto = IntPtr.Zero;
-            GridWrapper.meshgeom meshtwod = new GridWrapper.meshgeom();
-            GridWrapper.meshgeomdim meshtwoddim = new GridWrapper.meshgeomdim();
+
             try
             {
                 var ierr = geomWrapper.DeallocateMemory();
@@ -401,78 +400,6 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     return ierr;
                 }
-                var gridWrapper = new GridWrapper();
-
-                //1. open the file with the 2d mesh
-                int ioncId = 0; //file variable 
-                int mode = (int)GridApiDataSet.NetcdfOpenMode.nf90_nowrite;
-                int iConvType = 2;
-                double convVersion = 0.0;
-
-                ierr = gridWrapper.Open(gridFilePath, mode, ref ioncId, ref iConvType, ref convVersion);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                //2. get the 2d mesh Id
-                int meshId = 1;
-                ierr = gridWrapper.Get2DMeshId(ref ioncId, ref meshId);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                //2.1. Fill in the data related to the 2dMesh
-                int num2dNodes = 0;
-                ierr = gridWrapper.GetNodeCount(ioncId, meshId, ref num2dNodes);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                int num2dEdges = 0;
-                ierr = gridWrapper.GetEdgeCount(ioncId, meshId, ref num2dEdges);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                //3. get the dimensions of the 2d mesh
-                ierr = gridWrapper.get_meshgeom_dim(ref ioncId, ref meshId, ref meshtwoddim);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                //4. allocate the arrays in meshgeom for storing the 2d mesh coordinates, edge_nodes
-                meshtwod.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * num2dNodes);
-                meshtwod.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * num2dNodes);
-                meshtwod.nodez = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * num2dNodes);
-                meshtwod.edge_nodes = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * num2dEdges * 2);
-
-                //5. get the meshgeom arrays
-                bool includeArrays = true;
-                startIndex = 0;
-                ierr = gridWrapper.get_meshgeom(ref ioncId, ref meshId, ref meshtwod, ref startIndex, includeArrays);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                //Close file
-                ierr = gridWrapper.Close(ioncId);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    return ierr;
-                }
-
-                double[] rc_twodnodex = new double[num2dNodes];
-                double[] rc_twodnodey = new double[num2dNodes];
-                double[] rc_twodnodez = new double[num2dNodes];
-                Marshal.Copy(meshtwod.nodex, rc_twodnodex, 0, num2dNodes);
-                Marshal.Copy(meshtwod.nodey, rc_twodnodey, 0, num2dNodes);
-                Marshal.Copy(meshtwod.nodez, rc_twodnodez, 0, num2dNodes);
 
                 //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
                 var discretisationPoints = networkDiscretization.Locations.AllValues.ToList();
@@ -535,11 +462,23 @@ namespace DeltaShell.NGHS.IO.Grid
                     return ierr;
                 }
 
-                ierr = geomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
+                var meshtwod = mesh2d.CreateMeshGeometry();
+                var meshtwoddim = mesh2d.CreateMeshDimensions();
+
+                try
+                {
+                    ierr = geomWrapper.Convert(ref meshtwod, ref meshtwoddim, ref start_index);
+                }
+                finally
+                {
+                    mesh2d.UnPinMemory();
+                }
+
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
                 }
+
                 //9. make the links
                 ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
@@ -580,49 +519,34 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             finally
             {
-                //Free 2d arrays
-                if (meshtwod.nodex != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(meshtwod.nodex);
-                meshtwod.nodex = IntPtr.Zero;
-                if (meshtwod.nodey != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(meshtwod.nodey);
-                meshtwod.nodey = IntPtr.Zero;
-                if (meshtwod.nodez != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(meshtwod.nodez);
-                meshtwod.nodez = IntPtr.Zero;
-                if (meshtwod.edge_nodes != IntPtr.Zero)
-                    Marshal.FreeCoTaskMem(meshtwod.edge_nodes);
-
                 //Free 1d arrays
                 if (c_meshXCoords != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_meshXCoords);
-                c_meshXCoords = IntPtr.Zero;
+                
                 if (c_meshYCoords != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_meshYCoords);
-                c_meshYCoords = IntPtr.Zero;
+                
                 if (c_branchids != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_branchids);
-                c_branchids = IntPtr.Zero;
+                
                 if (c_sourcenodeid != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_sourcenodeid);
-                c_sourcenodeid = IntPtr.Zero;
+                
                 if (c_targetnodeid != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_targetnodeid);
-                c_targetnodeid = IntPtr.Zero;
+                
                 if (c_branchlength != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_branchlength);
-                c_branchlength = IntPtr.Zero;
+                
                 if (c_branchoffset != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_branchoffset);
-                c_branchoffset = IntPtr.Zero;
-
+                
                 //Free from and to arrays describing the links 
                 if (c_arrayfrom != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_arrayfrom);
-                c_arrayfrom = IntPtr.Zero;
+                
                 if (c_arrayto != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_arrayto);
-                c_arrayto = IntPtr.Zero;
             }
 
             return GridApiDataSet.GridConstants.NOERR;

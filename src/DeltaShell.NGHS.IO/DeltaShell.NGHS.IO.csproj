@@ -93,6 +93,9 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="ProtoBufRemote">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
@@ -243,6 +246,7 @@
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
+    <Compile Include="Grid\DisposableMeshGeometryGridGeom.cs" />
     <Compile Include="Grid\GridApi.cs" />
     <Compile Include="Grid\GridGeomApi.cs" />
     <Compile Include="Grid\GridGeomWrapper.cs" />

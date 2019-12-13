@@ -13,6 +13,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 {
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.AreEqual(0, linkIndexes.Count);
         }
 
-        [Test]
+/*        [Test]
         public void OneBrachInGrid_OneBranchOutsideGrid_ShouldNotCrashConverting1D()
         {
             string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\3by3grid_net.nc");
@@ -177,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             Assert.AreNotEqual(0, linksCount);
             Assert.IsNotEmpty(linksFrom);
             Assert.IsNotEmpty(linksTo);
-        }
+        }*/
 
         [Test]
         public void CreateGullyLinks()
@@ -209,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             }
         }
 
-        [Test]
+/*        [Test]
         public void Get1d2dLinksShouldNotCrashWhenRunningTwice()
         {
             string netFilePath = TestHelper.GetTestFilePath(@"flow1d2dLinks\SimpleModel\2d_ugrid_net.nc");
@@ -244,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 Assert.Fail("Did not run twice: {0}", e.Message);
             }
-        }
+        }*/
 
         private class TestCaseMaking1D2DLinks : IDisposable
         {
