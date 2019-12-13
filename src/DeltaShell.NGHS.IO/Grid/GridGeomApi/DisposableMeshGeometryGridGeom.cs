@@ -6,7 +6,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using ProtoBuf;
 
-namespace DeltaShell.NGHS.IO.Grid
+namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
     /// <summary>
     /// Copy of official <see cref="SharpMap.Api.DisposableMeshGeometry"/> using custom

@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace DeltaShell.NGHS.IO.Grid
+namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
     [ProtoContract(AsReferenceDefault = true)]
     public class LinkInformation

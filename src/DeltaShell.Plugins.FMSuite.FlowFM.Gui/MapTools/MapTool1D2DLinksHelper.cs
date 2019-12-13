@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

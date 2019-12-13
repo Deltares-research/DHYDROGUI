@@ -11,7 +11,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
-namespace DeltaShell.NGHS.IO.Grid
+namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
     public class GridGeomApi
     {

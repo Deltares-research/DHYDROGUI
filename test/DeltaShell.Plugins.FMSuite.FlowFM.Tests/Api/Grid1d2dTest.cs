@@ -9,6 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;

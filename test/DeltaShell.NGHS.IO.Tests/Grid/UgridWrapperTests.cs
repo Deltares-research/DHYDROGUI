@@ -9,6 +9,7 @@ using System.Text;
 using DelftTools.Utils.Interop;
 using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {

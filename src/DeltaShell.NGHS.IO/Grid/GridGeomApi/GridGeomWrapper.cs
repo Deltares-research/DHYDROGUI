@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DeltaShell.NGHS.IO.Grid
+namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
     public class GridGeomWrapper
     {
