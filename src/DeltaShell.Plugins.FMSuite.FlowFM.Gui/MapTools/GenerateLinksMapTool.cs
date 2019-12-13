@@ -189,11 +189,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 var pointIndex = linksToIndex[i] - startIndex;
                 var cellIndex = linksFromIndex[i] - startIndex;
 
-                var fromCell = grid.Cells[cellIndex];
-                var toNode = networkDiscretization.Locations.Values[pointIndex];
+                var cell = grid.Cells[cellIndex];
+                var node = networkDiscretization.Locations.Values[pointIndex];
                 var link = new Link1D2D(pointIndex, cellIndex)
                 {
-                    Geometry = new LineString(new[] { fromCell.Center, toNode.Geometry.Coordinate }),
+                    Geometry = new LineString(new[] { node.Geometry.Coordinate, cell.Center }),
                     TypeOfLink = linkType
                 };
                 lstNewLinks.Add(link);

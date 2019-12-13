@@ -99,8 +99,7 @@ namespace DelftTools.Hydro.Validators
                 var message = String.Format("No grid points defined between structure {0} and {1}",
                     branchStructureFirst.Name, branchStructureSecond.Name);
                 yield return
-                    new ValidationIssue(branchStructureSecond, ValidationSeverity.Error, message, networkDiscretization)
-                    ;
+                    new ValidationIssue(branchStructureSecond, ValidationSeverity.Error, message, networkDiscretization);
             }
         }
 
