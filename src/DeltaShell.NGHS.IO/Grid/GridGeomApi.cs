@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -475,22 +476,38 @@ namespace DeltaShell.NGHS.IO.Grid
 
                 //6. allocate the 1d arrays for storing the 1d coordinates and edge_nodes
                 var discretisationPoints = networkDiscretization.Locations.AllValues.ToList();
+                var branches = networkDiscretization.Network.Branches;
+                var branchesIndexLookup = branches.ToIndexDictionary();
+                var nodesIndexLookup = networkDiscretization.Network.Nodes.ToIndexDictionary();
 
-                int nBranches = networkDiscretization.Network.Branches.Count;
-                int[] branchIds = networkDiscretization.Locations.AllValues
-                    .Select(dp => networkDiscretization.Network.Branches.IndexOf(dp.Branch)).ToArray();
+                int nBranches = branches.Count;
+                var branchLength = new double[nBranches];
+                var sourceNodeId = new int[nBranches];
+                var targetNodeId = new int[nBranches];
 
+                for (int i = 0; i < nBranches; i++)
+                {
+                    var branch = branches[i];
+                    branchLength[i] = branch.Length;
+                    sourceNodeId[i] = nodesIndexLookup[branch.Source];
+                    targetNodeId[i] = nodesIndexLookup[branch.Target];
+                }
+                
                 int nMeshPoints = discretisationPoints.Count;
+                
+                var branchIds = new int[nMeshPoints];
+                var meshXCoords = new double[nMeshPoints];
+                var meshYCoords = new double[nMeshPoints];
+                var branchOffset = new double[nMeshPoints];
 
-                double[] meshXCoords = discretisationPoints.Select(dPoint => dPoint.Geometry.Coordinate.X).ToArray();
-                double[] meshYCoords = discretisationPoints.Select(dPoint => dPoint.Geometry.Coordinate.Y).ToArray();
-                double[] branchOffset = discretisationPoints.Select(dPoint => dPoint.Chainage).ToArray();
-                double[] branchLength = networkDiscretization.Network.Branches.Select(b => b.Length).ToArray();
-
-                int[] sourceNodeId = networkDiscretization.Network.Branches
-                    .Select(b => b.Network.Nodes.IndexOf(b.Source)).ToArray();
-                int[] targetNodeId = networkDiscretization.Network.Branches
-                    .Select(b => b.Network.Nodes.IndexOf(b.Target)).ToArray();
+                for (int i = 0; i < nMeshPoints; i++)
+                {
+                    var point = discretisationPoints[i];
+                    branchIds[i] = branchesIndexLookup[point.Branch];
+                    meshXCoords[i] = point.Geometry.Coordinate.X;
+                    meshYCoords[i] = point.Geometry.Coordinate.Y;
+                    branchOffset[i] = point.Chainage;
+                }
 
                 c_meshXCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
                 c_meshYCoords = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nMeshPoints);
