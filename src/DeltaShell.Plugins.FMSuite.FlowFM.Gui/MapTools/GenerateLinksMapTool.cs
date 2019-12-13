@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Controls.Wpf.Dialogs;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections.Generic;
@@ -151,20 +152,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             var linksTo = new List<int>();
             var startIndex = 0;
             int linksCount = 0;
-
-            try
+            ProgressBarDialog.PerformTask("Generating 1d2d links", () =>
             {
-                if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom, ref linksTo, ref linksCount, LinkType)) return;
+                try
+                {
+                    if (!MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, startIndex, ref linksFrom,
+                        ref linksTo, ref linksCount, LinkType)) return;
 
-                var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid, fmModel.NetworkDiscretization, LinkType, startIndex);
-                created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
-                fmModel.Links.AddRange(created1D2DLinks);
-            }
-            catch (Exception e)
-            {
-                log.DebugFormat("Unexpected exception thrown while generating 1D2D links: {0}", e.Message);
-                log.ErrorFormat("1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.", Name);
-            }
+                    var created1D2DLinks = Creates1d2dLinks(linksCount, linksFrom, linksTo, fmModel.Grid,
+                        fmModel.NetworkDiscretization, LinkType, startIndex);
+                    created1D2DLinks = GetNew1D2DLinks(created1D2DLinks, fmModel.Links);
+                    fmModel.Links.AddRange(created1D2DLinks);
+                }
+                catch (Exception e)
+                {
+                    log.DebugFormat("Unexpected exception thrown while generating 1D2D links: {0}", e.Message);
+                    log.ErrorFormat(
+                        "1D2D Links were not generated between the grid and the network of WaterFlowFMModel {0}. Please make sure the grid has been saved and the network is correct.",
+                        Name);
+                }
+            }, null);
         }
 
         private IList<Link1D2D> GetNew1D2DLinks(IList<Link1D2D> created1D2DLinks, IEventedList<ILink1D2D> existingLinks)
