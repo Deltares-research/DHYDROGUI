@@ -46,14 +46,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [TestCaseSource(nameof(TestCaseDataSmallerThanTwoDistinctCoordinates))]
         public void GivenABoundarySnappingCalculatorAndASetContainingLessThanTwoDistinctCoordinates_WhenGetSnappedEndPointsIsCalled_ThenAnArgumentExceptionIsThrown(IEnumerable<Coordinate> coordinates)
         {
-            // Setup
+            // Given
             var factoryHelper = new WaveBoundaryFactoryHelper();
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
-            // Call
+            // When
             void Call() => factoryHelper.GetSnappedEndPoints(calculator, coordinates);
 
-            // Assert
+            // Then
             var exception = 
                 Assert.Throws<ArgumentException>(Call, $"Expected {nameof(WaveBoundaryFactoryHelper.GetSnappedEndPoints)} to throw an {nameof(ArgumentException)}");
             Assert.That(exception.Message, Is.EqualTo("There should be two or more distinct coordinates in coordinates."), 
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [TestCaseSource(nameof(TestCaseDataGetSnappedEndpoints))]
         public void GivenABoundarySnappingCalculatorAndASetOfCoordinates_WhenGetSnappedEndPointsIsCalled_ThenTheFirstAndLastEndPointAreSnappedAndTheConcatenatedResultIsReturned(IEnumerable<Coordinate> coordinates)
         {
-            // Setup
+            // Given
             var coordinateComparer = new Coordinate2DEqualityComparer();
 
             Coordinate[] coordinatesArray = coordinates.ToArray();
@@ -168,10 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last())
                       .Returns(lastGridCoordinates);
 
-            // Call
+            // When
             IEnumerable<GridBoundaryCoordinate> result = factoryHelper.GetSnappedEndPoints(calculator, coordinatesArray);
 
-            // Assert
+            // Then
             calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First());
             calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last());
             calculator.DidNotReceive().SnapCoordinateToGridBoundaryCoordinate(
@@ -240,14 +240,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void GivenAValidEnumerableOfGridBoundaryCoordinates_WhenGetGeometricDefinitionIsCalled_ThenTheExpectedCandidateIsReturned(IEnumerable<GridBoundaryCoordinate> coordinates, 
                                                                                                                                      IWaveBoundaryGeometricDefinition expectedDefinition)
         {
-            // Setup
+            // Given
             var factoryHelper = new WaveBoundaryFactoryHelper();
 
-            // Call
+            // When
             IWaveBoundaryGeometricDefinition result = 
                 factoryHelper.GetGeometricDefinition(coordinates);
 
-            // Assert
+            // Then
             Assert.That(result.StartingIndex, Is.EqualTo(expectedDefinition.StartingIndex),
                         "Expected a different starting index:");
             Assert.That(result.EndingIndex, Is.EqualTo(expectedDefinition.EndingIndex),
@@ -294,14 +294,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [TestCaseSource(nameof(TestCaseDataGetGeometricDefinitionNull))]
         public void GivenAnInvalidEnumerableOfGridBoundaryCoordinates_WhenGetGeometricDefinitionIsCalled_ThenNullIsReturned(IEnumerable<GridBoundaryCoordinate> coordinates)
         {
-            // Setup
+            // Given
             var factoryHelper = new WaveBoundaryFactoryHelper();
 
-            // Call
+            // When
             IWaveBoundaryGeometricDefinition result =
                 factoryHelper.GetGeometricDefinition(coordinates);
 
-            // Assert
+            // Then
             Assert.That(result, Is.Null);
         }
     }
