@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(KnownProperties.BranchFile, string.Empty);
             }
             BranchFile.Write(branchesFilePath, branches);
-            modelDefinition.SetModelProperty(KnownProperties.BranchFile, branchesFilePath);
+            modelDefinition.SetModelProperty(KnownProperties.BranchFile, UGridToNetworkAdapter.BranchGuiFileName);
         }
         private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
