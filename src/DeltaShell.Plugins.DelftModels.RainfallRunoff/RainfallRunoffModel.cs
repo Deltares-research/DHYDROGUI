@@ -635,9 +635,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             BubbleCollectionChangedEvent(sender ,e);
         }
 
-        public Dictionary<NwrwSurfaceType, NwrwGlobalData> NwrwGlobalDataDict;
-        public List<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions;
-        public List<NwrwDischargeData> NwrwDischargeData;
+        public IDictionary<NwrwSurfaceType, NwrwGlobalData> NwrwGlobalDataDict { get; private set; }
+        public IList<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions { get; private set; }
+        public IList<NwrwDischargeData> NwrwDischargeData { get; private set; }
         
 
         public IEventedList<RunoffBoundaryData> BoundaryData

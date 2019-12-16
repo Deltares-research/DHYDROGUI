@@ -271,6 +271,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
@@ -373,6 +377,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwSpecialArea.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwGlobalData.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDischargeData.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

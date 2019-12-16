@@ -9,7 +9,7 @@
     <key column="Id"/>
 
     <property name="Name" />
-    <property name="MeteoStationName" />
+    <property name="MeteoStationId" />
     <property name="DryWeatherFlowId" />
     <property name="NumberOfSpecialAreas" />
     <property name="NumberOfPeople" />
@@ -18,6 +18,10 @@
       <index column="nwrw_special_area_index" />
       <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSpecialArea, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
     </list>
-
+    <map name="SurfaceLevelDict" access="property" table="nwrw_surface_level_dictionary" cascade="save-update">
+      <key column="nwrw_data_dict_id"/>
+      <index column="NwrwSurfaceType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSurfaceType, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
+      <element column="Value" type="System.Double" />
+    </map>
   </joined-subclass>
 </hibernate-mapping>

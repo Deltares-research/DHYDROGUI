@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedWithSlope, out double result)
+                return data.SurfaceLevelDict!=null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedWithSlope, out double result)
                     ? result
                     : 0.0;
             }
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedFlat, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedFlat, out double result)
                     ? result
                     : 0.0;
             }
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedFlatStretch, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.ClosedPavedFlatStretch, out double result)
                     ? result
                     : 0.0;
             }
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedWithSlope, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedWithSlope, out double result)
                     ? result
                     : 0.0;
             }
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedFlat, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedFlat, out double result)
                     ? result
                     : 0.0;
             }
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedFlatStretched, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.OpenPavedFlatStretched, out double result)
                     ? result
                     : 0.0;
             }
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofWithSlope, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofWithSlope, out double result)
                     ? result
                     : 0.0;
             }
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofFlat, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofFlat, out double result)
                     ? result
                     : 0.0;
             }
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofFlatStretched, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.RoofFlatStretched, out double result)
                     ? result
                     : 0.0;
             }
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedWithSlope, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedWithSlope, out double result)
                     ? result
                     : 0.0;
             }
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedFlat, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedFlat, out double result)
                     ? result
                     : 0.0;
             }
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedFlatStretched, out double result)
+                return data.SurfaceLevelDict != null && data.SurfaceLevelDict.TryGetValue(NwrwSurfaceType.UnpavedFlatStretched, out double result)
                     ? result
                     : 0.0;
             }
@@ -172,10 +172,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
         [Description("Meteostation identification")]
-        public string MeteoStationName
+        public string MeteoStationId
         {
-            get { return data.MeteoStationName; }
-            set { data.MeteoStationName = value; }
+            get { return data.MeteoStationId; }
+            set { data.MeteoStationId = value; }
         }
 
 

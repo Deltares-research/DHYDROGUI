@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Data;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         Constant,
     }
 
-    public class NwrwDryWeatherFlowDefinition : INwrwFeature
+    public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
         public NwrwDryWeatherFlowDefinition()
         {

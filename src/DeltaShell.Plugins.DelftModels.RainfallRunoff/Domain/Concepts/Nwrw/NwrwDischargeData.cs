@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Data;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -18,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         Lateral
     }
 
-    public class NwrwDischargeData : INwrwFeature
+    public class NwrwDischargeData : Unique<long>, INwrwFeature
     {
         public string Name { get; set; }
         public DischargeType DischargeType { get; set; }

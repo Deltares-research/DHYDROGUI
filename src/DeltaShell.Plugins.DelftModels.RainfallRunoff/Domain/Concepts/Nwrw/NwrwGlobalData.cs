@@ -1,9 +1,10 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Data;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
-    public class NwrwGlobalData : INwrwFeature
+    public class NwrwGlobalData : Unique<long>, INwrwFeature
     {
         public string Name { get; set; }
         public NwrwSurfaceType SurfaceType { get; set; }
