@@ -327,7 +327,6 @@
     <Compile Include="Import\ChannelFromGisImporterTest.cs" />
     <Compile Include="Import\CrossSectionXYZFromGisImporterTest.cs" />
     <Compile Include="Import\CrossSectionYZFromGisImporterTest.cs" />
-    <Compile Include="Import\CrossSectionZWFromGisImporterTest.cs" />
     <Compile Include="Import\CulvertFromGisImporterTest.cs" />
     <Compile Include="Import\HydroRegionFromGisImporterTest.cs" />
     <Compile Include="Import\LateralSourceFromGisImporterTest.cs" />
@@ -338,7 +337,6 @@
     <Compile Include="Import\OleDbSchemaReaderTest.cs" />
     <Compile Include="Import\PumpFromGisImporterTest.cs" />
     <Compile Include="Import\SimpleWeirFromGisImporterTest.cs" />
-    <Compile Include="Import\Wizard\DefineMappingTableWizardPageTest.cs" />
     <Compile Include="Import\Wizard\ImportFromGisWizardPageTest.cs" />
     <Compile Include="Import\Wizard\ImportHydroNetworkFromGisWizardDialogTest.cs" />
     <Compile Include="Import\Wizard\SelectDataWizardPageRelatedTablesPopUpTest.cs" />

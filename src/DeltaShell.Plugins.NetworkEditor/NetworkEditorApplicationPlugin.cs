@@ -68,7 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor
             yield return new ChannelFromGisImporter();
             yield return new CrossSectionXYZFromGisImporter();
             yield return new CrossSectionYZFromGisImporter();
-            yield return new CrossSectionZWFromGisImporter();
             yield return new CulvertFromGisImporter();
             yield return new HydroRegionFromGisImporter();
             yield return new LateralSourceFromGisImporter();
