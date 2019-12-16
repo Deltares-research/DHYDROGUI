@@ -275,6 +275,7 @@
     <Compile Include="HydroModelGuiTest.cs" />
     <Compile Include="HydroModelHelperTest.cs" />
     <Compile Include="HydroModelTest.cs" />
+    <Compile Include="HydroModelWaveIntegrationTest.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookupTest.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />
@@ -397,9 +398,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ValueConverters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

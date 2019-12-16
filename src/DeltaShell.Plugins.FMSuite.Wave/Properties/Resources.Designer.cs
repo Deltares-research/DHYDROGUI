@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ../dflowfm/output/model_name_com.nc.
+        ///   Looks up a localized string similar to ../dflowfm/output/{0}_com.nc.
         /// </summary>
         public static string WaveModel_IsCoupledToFlow___ComFileRelativePath {
             get {

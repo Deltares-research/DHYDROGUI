@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -419,22 +420,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Assert
 
             Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
-        }
-
-        [Test]
-        public void IsCoupledToFlow_WhenSetToTrue_ThenCommunicationsFilePathIsSetToSpecificRelativePath()
-        {
-            // Arrange
-            using (var waveModel = new WaveModel())
-            {
-                waveModel.ModelDefinition.CommunicationsFilePath = RandomStringGenerator.Generate();
-
-                // Act
-                waveModel.IsCoupledToFlow = true;
-
-                // Assert
-                Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo("../dflowfm/output/model_name_com.nc"));
-            }
         }
     }
 }

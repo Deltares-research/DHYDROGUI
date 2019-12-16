@@ -78,7 +78,6 @@
     <Compile Include="NghsTestCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationTestHelper.cs" />
-    <Compile Include="RandomStringGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
