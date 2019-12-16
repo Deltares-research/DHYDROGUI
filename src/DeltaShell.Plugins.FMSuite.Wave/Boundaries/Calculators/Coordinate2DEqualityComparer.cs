@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
     // TODO: Add tests
     /// <summary>
     /// <see cref="Coordinate2DEqualityComparer"/> provides an <see cref="IEqualityComparer{Coordinate}"/>.
-    /// It leverages the internal Equals2D to obtain equality.
+    /// It leverages the internal <see cref="Coordinate.Equals2D(Coordinate)"/> to obtain equality.
     /// </summary>
     /// <seealso cref="IEqualityComparer{Coordinate}" />
     public class Coordinate2DEqualityComparer : IEqualityComparer<Coordinate>
