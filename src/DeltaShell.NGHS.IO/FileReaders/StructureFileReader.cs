@@ -6,11 +6,14 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using QuickGraph;
 
 namespace DeltaShell.NGHS.IO.FileReaders 
 {
@@ -50,12 +53,35 @@ namespace DeltaShell.NGHS.IO.FileReaders
         
         private static void AddStructuresToNetwork(IList<IStructure1D> structures)
         {
-            var grouping = structures.GroupBy(s => s.Branch);
+            var compoundStructures = structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure);
+            var nonCoumpoundStructures = structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure);
+
+            AddCompositeStructuresToNetwork(compoundStructures);
+
+            var grouping = nonCoumpoundStructures.GroupBy(s => s.Branch);
 
             foreach (var group in grouping)
             {
                 group.ForEach(s => HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, group.Key));
             }
+        }
+
+        private static void AddCompositeStructuresToNetwork(IEnumerable<IStructure1D> compoundStructures)
+        {
+            compoundStructures.ForEach(c =>
+            {
+                    var compositeBranchStructure = new CompositeBranchStructure
+                    {
+                        Branch = c.Branch,
+                        Network = c.Branch.Network,
+                        Chainage = c.Chainage,
+                    };
+                    compositeBranchStructure.Name = c.Name;
+                    compositeBranchStructure.LongName = c.LongName;
+                    compositeBranchStructure.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, c.Chainage);
+                    c.Branch.BranchFeatures.Add(compositeBranchStructure);
+            });
+
         }
 
         private static IList<DelftIniCategory> ReadStructureDelftIniCategories(string structureFilename)
