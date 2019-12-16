@@ -67,9 +67,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     else
                     {
                         retention.BedLevel = c.ReadProperty<double>(RetentionRegion.BedLevel.Key);
-                        retention.StorageArea = c.ReadProperty<double>(RetentionRegion.StorageArea.Key);
+                        retention.StorageArea = c.ReadProperty<double>(RetentionRegion.Area.Key);
                         retention.StreetLevel = c.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
-                        retention.StreetStorageArea = c.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
                         retention.StreetStorageArea = c.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
                     }
                     retention.Branch.BranchFeatures.Add(retention);
