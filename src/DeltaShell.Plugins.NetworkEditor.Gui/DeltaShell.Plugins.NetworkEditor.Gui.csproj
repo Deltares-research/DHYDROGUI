@@ -599,7 +599,6 @@
     </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewData.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
-    <Compile Include="Forms\WeirPropertiesRow.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\HydroNetworkCopyAndPasteHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />

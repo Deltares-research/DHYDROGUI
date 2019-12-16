@@ -215,32 +215,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     };
                 }
             };
-            yield return new ViewInfo<IEnumerable<IWeir>, ILayer, VectorLayerAttributeTableView>
-                {
-                    Description = "Attribute Table",
-                    AdditionalDataCheck = o => o.All(weir => weir.Branch != null),
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
-                                                    .OfType<IDataItem>()
-                                                    .FirstOrDefault(d => d.Value is IHydroNetwork && 
-                                                                         ((IHydroNetwork)d.Value).Weirs == o),
-                    GetViewData = o =>
-                        {
-                            var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                            return centralMap.MapView.GetLayerForData(o);
-                        },
-                    AfterCreate = (v, o) =>
-                        {
-                            // It seems that this Gui can be null while calling the function. Is that correct?
-                            var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
-                            if (centralMap == null) return;
-
-                            v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
-                            v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
-                            v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                            v.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
-                        }
-                };
             yield return new ViewInfo<IEnumerable<IGate>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = "Attribute Table",
