@@ -71,10 +71,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             set
             {
                 isCoupledToFlow = value;
-                if (value)
+                if (value && Owner is IHydroModel hydroModel)
                 {
-                    ModelDefinition.CommunicationsFilePath = Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath;
+                    ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
                 }
+            }
+        }
+
+        /// <inheritdoc/>>
+        public override object Owner
+        {
+            get => base.Owner;
+            set
+            {
+                if (base.Owner is IHydroModel hydroModelBefore)
+                {
+                    ((INotifyPropertyChanged)hydroModelBefore).PropertyChanged -= OnModelOwnerChanged;
+                }
+
+                base.Owner = value;
+
+                if (base.Owner is IHydroModel hydroModelAfter)
+                {
+                    ((INotifyPropertyChanged)hydroModelAfter).PropertyChanged += OnModelOwnerChanged;
+                }
+            }
+        }
+
+        private void OnModelOwnerChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (IsCoupledToFlow && e.PropertyName == "Name" && Owner is IHydroModel hydroModel)
+            {
+                ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
             }
         }
 
