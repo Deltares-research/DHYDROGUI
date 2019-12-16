@@ -112,7 +112,7 @@ namespace DelftTools.Hydro.SewerFeatures
             if (target == value) return;
             BeforeTargetSet();
             if (value is HydroNode)
-                source = value;
+                target = value;
 
             var manhole = value as IManhole;
             if (manhole?.Compartments != null && manhole.Compartments.Any())
