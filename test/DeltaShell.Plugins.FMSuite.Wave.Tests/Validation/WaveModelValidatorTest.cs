@@ -72,23 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
         
         [Test]
-        [Category(TestCategory.Integration)]
-        public void CheckWaveCouplingValidationWithoutFlowModel()
-        {
-            var model = new WaveModel {IsCoupledToFlow = true};
-            model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
-                        KnownWaveProperties.COMFile).SetValueAsString("../FlowFM_output/");
-            model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
-            var validationReport = new WaveModelValidator().Validate(model);
-            Assert.IsTrue(
-                validationReport.GetAllIssuesRecursive()
-                    .Any(
-                        i =>
-                            i.Severity == ValidationSeverity.Error && i.Message == Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file));
-        }
-
-        
-        [Test]
         public void WaveModel_With_OuterDomain_SphericalCoordinates_And_WaveSetupIsTrue_ValidationFails()
         {
             var filePath = TestHelper.GetTestFilePath(@"WaveWithSphericalCoordinates\nonValidModel\d3dfm1125.mdw");
