@@ -229,6 +229,10 @@
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\IWaveBoundaryFactoryHelper.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelper.cs" />
+    <Compile Include="FeatureProviders\Boundaries\IWaveBoundaryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\WaveBoundaryFactory.cs" />
     <Compile Include="FeatureProviders\MultiIEventedListAdapter.cs" />
     <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
     <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.cs">
