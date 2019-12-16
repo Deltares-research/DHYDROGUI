@@ -149,6 +149,7 @@ namespace DelftTools.Hydro.Helpers
 
         private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSection)
         {
+            if (crossSection.CrossSectionType == CrossSectionType.Standard) return true;
             var sectionsTotalWidth = crossSection.SectionsTotalWidth();
             return sectionsTotalWidth - crossSection.FlowWidth() >= -1e-10;
         }
