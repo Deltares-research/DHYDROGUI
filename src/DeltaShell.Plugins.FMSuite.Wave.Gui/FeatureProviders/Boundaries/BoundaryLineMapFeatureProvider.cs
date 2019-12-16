@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     {
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryContainer boundaryContainer;
+        private readonly IWaveBoundaryFactory waveBoundaryFactory;
 
         private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
         {
@@ -38,15 +39,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                 ObservedWaveBoundary = waveBoundary,
             };
         }
-        
 
-        public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer)
+        /// <summary>
+        /// Creates a new <see cref="BoundaryLineMapFeatureProvider"/>.
+        /// </summary>
+        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="factory">The factory.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when either <paramref name="factory"/> or <paramref name="boundaryContainer"/>
+        /// is <c>null</c>.
+        /// </exception>
+        public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer, 
+                                              IWaveBoundaryFactory factory)
         {
+            waveBoundaryFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+
             this.boundaryContainer = boundaryContainer ?? 
                                      throw new ArgumentNullException(nameof(boundaryContainer));
 
             lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
                                                                                             CreateBoundaryLineFeature);
+
         }
 
         /// <summary>

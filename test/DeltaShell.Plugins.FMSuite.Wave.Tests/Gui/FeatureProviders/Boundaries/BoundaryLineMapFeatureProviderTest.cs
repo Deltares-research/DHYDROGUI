@@ -17,9 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         {
             // Setup 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var factory = Substitute.For<IWaveBoundaryFactory>();
 
             // Call
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer);
+            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, factory);
 
             // Assert
             Assert.That(featureProvider, Is.InstanceOf<Feature2DCollection>());
@@ -28,8 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         [Test]
         public void Constructor_BoundaryContainerNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = Substitute.For<IWaveBoundaryFactory>();
+
             // Call
-            void Call() => new BoundaryLineMapFeatureProvider(null);
+            void Call() => new BoundaryLineMapFeatureProvider(null, factory);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -37,11 +41,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         }
 
         [Test]
+        public void Constructor_FactoryNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+
+            // Call
+            void Call() => new BoundaryLineMapFeatureProvider(boundaryContainer, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("factory"));
+        }
+
+
+        [Test]
         public void AddGeometry_GeometryNull_ReturnsNull()
         {
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer);
+            var factory = Substitute.For<IWaveBoundaryFactory>();
+
+            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, factory);
 
             IGeometry geometry = null;
 
@@ -52,6 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             Assert.That(result, Is.Null);
             boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
             boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+            factory.DidNotReceiveWithAnyArgs().ConstructWaveBoundary(null);
         }
     }
 }
