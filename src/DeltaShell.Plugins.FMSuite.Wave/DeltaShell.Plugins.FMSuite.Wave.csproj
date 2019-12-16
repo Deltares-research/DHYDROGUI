@@ -128,6 +128,7 @@
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculator.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelper.cs" />
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculator.cs" />
+    <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparer.cs" />
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculator.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />

@@ -1,0 +1,35 @@
+﻿using System.Collections.Generic;
+using GeoAPI.Geometries;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
+{
+    // TODO: Add tests
+    /// <summary>
+    /// <see cref="Coordinate2DEqualityComparer"/> provides an <see cref="IEqualityComparer{Coordinate}"/>.
+    /// It leverages the internal Equals2D to obtain equality.
+    /// </summary>
+    /// <seealso cref="IEqualityComparer{Coordinate}" />
+    public class Coordinate2DEqualityComparer : IEqualityComparer<Coordinate>
+    {
+        public bool Equals(Coordinate x, Coordinate y)
+        {
+            if (x == null && y == null)
+            {
+                return true;
+            }
+
+            if (x == null || y == null)
+            {
+                return false;
+            }
+
+            return x.Equals2D(y);
+        }
+
+        public int GetHashCode(Coordinate obj)
+        {
+            int hCode = obj.X.GetHashCode() ^ obj.Y.GetHashCode();
+            return hCode.GetHashCode();
+        }
+    }
+}
