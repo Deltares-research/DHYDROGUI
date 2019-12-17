@@ -95,11 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             const int expectedX = 3;
             const int expectedY = 3;
 
-            var grid = Substitute.For<IDiscreteGridPointCoverage>();
-            grid.Size1.Returns(expectedX);
-            grid.Size2.Returns(expectedY);
-
-            var gridBoundary = new GridBoundary(grid);
+            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(expectedX, expectedY);
 
             GridSide[] expectedSides =
             {
@@ -135,11 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             const int expectedX = 5;
             const int expectedY = 6;
 
-            var grid = Substitute.For<IDiscreteGridPointCoverage>();
-            grid.Size1.Returns(expectedX);
-            grid.Size2.Returns(expectedY);
-
-            var gridBoundary = new GridBoundary(grid);
+            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(expectedX, expectedY);
 
             // Call
             void Call() => gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(null);
@@ -161,14 +153,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             const int expectedX = 6;
             const int expectedY = 5;
 
-            var grid = Substitute.For<IDiscreteGridPointCoverage>();
-            grid.Size1.Returns(expectedX);
-            grid.Size2.Returns(expectedY);
+            GridBoundary gridBoundary = 
+                GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(expectedX, 
+                                                                     expectedY, 
+                                                                     out IDiscreteGridPointCoverage grid);
 
             grid.X.Values[gridCoordinate.X, gridCoordinate.Y].Returns(expectedXWorldCoordinate);
             grid.Y.Values[gridCoordinate.X, gridCoordinate.Y].Returns(expectedYWorldCoordinate);
-
-            var gridBoundary = new GridBoundary(grid);
 
             var gridBoundaryCoordinate = new GridBoundaryCoordinate(GridSide.North, 5);
 

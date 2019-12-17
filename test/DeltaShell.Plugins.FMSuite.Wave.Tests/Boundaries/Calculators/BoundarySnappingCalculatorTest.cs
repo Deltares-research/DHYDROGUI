@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NUnit.Framework;

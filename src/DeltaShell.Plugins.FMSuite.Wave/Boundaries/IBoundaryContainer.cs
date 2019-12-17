@@ -1,5 +1,6 @@
 ﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
@@ -7,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// <see cref="IBoundaryContainer"/> is responsible for managing a set of
     /// boundaries linked to the current outer grid.
     /// </summary>
-    public interface IBoundaryContainer : IBoundarySnappingCalculatorProvider
+    public interface IBoundaryContainer : IBoundarySnappingCalculatorProvider, IGridBoundaryProvider
     {
         /// <summary>
         /// Gets the boundaries defined on the current outer grid.
@@ -18,10 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         IEventedList<IWaveBoundary> Boundaries { get; }
 
         /// <summary>
-        /// Updates the current <see cref="IBoundarySnappingCalculator"/> to
-        /// <paramref name="newSnappingCalculator"/>.
+        /// Updates the current <see cref="GridBoundary"/> to
+        /// <paramref name="gridBoundary"/>.
         /// </summary>
-        /// <param name="newSnappingCalculator">The new snapping calculator.</param>
-        void UpdateSnappingCalculator(IBoundarySnappingCalculator newSnappingCalculator);
+        /// <param name="gridBoundary">The grid boundary.</param>
+        void UpdateGridBoundary(GridBoundary gridBoundary);
     }
 }

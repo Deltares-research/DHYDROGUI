@@ -10,6 +10,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
     public static class GridBoundaryTestHelper
     {
         /// <summary>
+        /// Gets a valid grid mock with the specified dimensions.
+        /// </summary>
+        /// <param name="sizeX">The size x.</param>
+        /// <param name="sizeY">The size y.</param>
+        /// <returns>A valid grid mock with the specified dimensions.</returns>
+        public static IDiscreteGridPointCoverage GetValidGridMock(int sizeX, int sizeY)
+        {
+            var result = Substitute.For<IDiscreteGridPointCoverage>();
+            result.Size1.Returns(sizeX);
+            result.Size2.Returns(sizeY);
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets a <see cref="GridBoundary"/> with a mocked grid backing it.
         /// </summary>
         /// <param name="x">The x dimension.</param>
@@ -20,11 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         /// </returns>
         public static GridBoundary GetGridBoundaryWithMockedGrid(int x, int y, out IDiscreteGridPointCoverage grid)
         {
-            grid = Substitute.For<IDiscreteGridPointCoverage>();
-            grid.Size1.Returns(x);
-            grid.Size2.Returns(y);
-
-           return new GridBoundary(grid);
+            grid = GetValidGridMock(x, y);
+            return new GridBoundary(grid);
         }
 
         /// <summary>

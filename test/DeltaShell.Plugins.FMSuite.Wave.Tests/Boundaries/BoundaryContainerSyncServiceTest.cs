@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
@@ -35,12 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 boundaryContainer.Boundaries.Add(Substitute.For<IWaveBoundary>());
 
                 IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
+                GridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
 
                 // When
                 model.OuterDomain.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
 
                 // Then
                 Assert.That(boundaryContainer.GetBoundarySnappingCalculator(), Is.Not.SameAs(initialCalculator));
+                Assert.That(boundaryContainer.GetGridBoundary(), Is.Not.SameAs(intialGridBoundary));
                 Assert.That(boundaryContainer.Boundaries, Is.Empty);
             }
         }
@@ -56,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 boundaryContainer.Boundaries.Add(Substitute.For<IWaveBoundary>());
 
                 IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
+                GridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
 
                 var domainData = new WaveDomainData("name");
                 domainData.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
@@ -65,6 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
                 // Then
                 Assert.That(boundaryContainer.GetBoundarySnappingCalculator(), Is.Not.SameAs(initialCalculator));
+                Assert.That(boundaryContainer.GetGridBoundary(), Is.Not.SameAs(intialGridBoundary));
                 Assert.That(boundaryContainer.Boundaries, Is.Empty);
             }
         }
@@ -86,6 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 var boundary = Substitute.For<IWaveBoundary>();
                 boundaryContainer.Boundaries.Add(boundary);
                 IBoundarySnappingCalculator calculator = boundaryContainer.GetBoundarySnappingCalculator();
+                GridBoundary gridBoundary = boundaryContainer.GetGridBoundary();
 
                 // Then
                 oldDomain.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
@@ -93,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 Assert.That(boundaryContainer.Boundaries, Has.Count.EqualTo(1));
                 Assert.That(boundaryContainer.Boundaries.First(), Is.SameAs(boundary));
                 Assert.That(boundaryContainer.GetBoundarySnappingCalculator(), Is.SameAs(calculator));
+                Assert.That(boundaryContainer.GetGridBoundary(), Is.SameAs(gridBoundary));
             }
         }
     }

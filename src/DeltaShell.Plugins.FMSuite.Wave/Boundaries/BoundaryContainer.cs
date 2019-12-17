@@ -1,5 +1,6 @@
 ﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
@@ -21,16 +22,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// </remarks>
         public IEventedList<IWaveBoundary> Boundaries { get; } = new EventedList<IWaveBoundary>();
 
-        public void UpdateSnappingCalculator(IBoundarySnappingCalculator newSnappingCalculator)
+        public void UpdateGridBoundary(GridBoundary gridBoundary)
         {
-            snappingCalculator = newSnappingCalculator;
+            this.gridBoundary = gridBoundary;
+            snappingCalculator = this.gridBoundary != null ? new BoundarySnappingCalculator(this.gridBoundary) : null;
         }
 
-        public IBoundarySnappingCalculator GetBoundarySnappingCalculator()
-        {
-            return snappingCalculator;
-        }
-
+        public IBoundarySnappingCalculator GetBoundarySnappingCalculator() => snappingCalculator;
         private IBoundarySnappingCalculator snappingCalculator = null;
+
+        public GridBoundary GetGridBoundary() => gridBoundary;
+        private GridBoundary gridBoundary = null;
     }
 }

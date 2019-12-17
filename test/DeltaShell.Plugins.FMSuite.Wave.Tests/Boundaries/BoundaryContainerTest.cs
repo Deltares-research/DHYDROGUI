@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
-using NSubstitute;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
@@ -24,43 +25,73 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         }
 
         [Test]
-        [TestCaseSource(nameof(UpdateSnappingCalculatorData))]
-        public void GivenABoundaryContainer_WhenUpdateSnappingCalculatorAndGetBoundarySnappingCalculatorIsCalled_ThenTheSetCalculatorIsReturned(IBoundarySnappingCalculator newCalculator)
+        public void GivenABoundaryContainer_WhenUpdateGridBoundaryIsCalledwithNullAndGetBoundarySnappingCalculatorIsCalled_ThenCorrectCalculatorIsReturned()
         {
             // Given
             var container = new BoundaryContainer();
 
             // When
-            container.UpdateSnappingCalculator(newCalculator);
+            container.UpdateGridBoundary(null);
             IBoundarySnappingCalculator result = container.GetBoundarySnappingCalculator();
 
             // Assert
-            Assert.That(result, Is.SameAs(newCalculator));
+            Assert.That(result, Is.Null);
+        }
+
+
+        [Test]
+        public void GivenABoundaryContainer_WhenUpdateGridBoundaryAndGetBoundarySnappingCalculatorIsCalled_ThenCorrectCalculatorIsReturned()
+        {
+            // Given
+            var container = new BoundaryContainer();
+            var gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(3, 3);
+
+            // When
+            container.UpdateGridBoundary(gridBoundary);
+            IBoundarySnappingCalculator result = container.GetBoundarySnappingCalculator();
+
+            // Assert
+            Assert.That(result.GridBoundary, Is.SameAs(gridBoundary));
         }
 
         [Test]
-        [TestCaseSource(nameof(UpdateSnappingCalculatorData))]
-        public void GivenABoundaryContainerWithANonNullSnappingCalculator_WhenUpdateSnappingCalculatorAndGetBoundarySnappingCalculatorIsCalled_ThenTheSetCalculatorIsReturned(IBoundarySnappingCalculator newCalculator)
+        [TestCaseSource(nameof(UpdateGridBoundaryData))]
+        public void GivenABoundaryContainer_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(GridBoundary gridBoundary)
         {
             // Given
             var container = new BoundaryContainer();
-            var calculator = Substitute.For<IBoundarySnappingCalculator>();
-            container.UpdateSnappingCalculator(calculator);
 
             // When
-            container.UpdateSnappingCalculator(newCalculator);
-            IBoundarySnappingCalculator result = container.GetBoundarySnappingCalculator();
+            container.UpdateGridBoundary(gridBoundary);
+            GridBoundary result = container.GetGridBoundary();
 
             // Assert
-            Assert.That(result, Is.SameAs(newCalculator));
+            Assert.That(result, Is.SameAs(gridBoundary));
         }
 
-        private IEnumerable<TestCaseData> UpdateSnappingCalculatorData
+        [Test]
+        [TestCaseSource(nameof(UpdateGridBoundaryData))]
+        public void GivenABoundaryContainerWithANonNullGridBoundary_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(GridBoundary gridBoundary)
+        {
+            // Given
+            var container = new BoundaryContainer();
+            GridBoundary gridBoundaryInitial = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(4, 4);
+            container.UpdateGridBoundary(gridBoundaryInitial);
+
+            // When
+            container.UpdateGridBoundary(gridBoundary);
+            GridBoundary result = container.GetGridBoundary();
+
+            // Assert
+            Assert.That(result, Is.SameAs(gridBoundary));
+        }
+
+        private IEnumerable<TestCaseData> UpdateGridBoundaryData
         {
             get
             {
                 yield return new TestCaseData(null);
-                yield return new TestCaseData(Substitute.For<IBoundarySnappingCalculator>());
+                yield return new TestCaseData(GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(3, 3));
             }
         }
     }

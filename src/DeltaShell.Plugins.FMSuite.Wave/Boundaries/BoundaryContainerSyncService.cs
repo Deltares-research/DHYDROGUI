@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using DelftTools.Utils;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 
@@ -76,10 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         private void HandleGridChanged(IDiscreteGridPointCoverage outerDomainGrid)
         {
             boundaryContainer.Boundaries.Clear();
-            boundaryContainer.UpdateSnappingCalculator(CreateSnappingCalculator(outerDomainGrid));
+            boundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
         }
 
-        private static IBoundarySnappingCalculator CreateSnappingCalculator(IDiscreteGridPointCoverage outerDomainGrid)
+        private static GridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)
         {
             if (outerDomainGrid == null   || 
                 outerDomainGrid.Size1 < 2 ||
@@ -88,8 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 return null;
             }
 
-            var boundary = new GridBoundary(outerDomainGrid);
-            return new BoundarySnappingCalculator(boundary);
+            return new GridBoundary(outerDomainGrid);
         }
     }
 }
