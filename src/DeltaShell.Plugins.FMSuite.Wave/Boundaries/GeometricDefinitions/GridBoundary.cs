@@ -11,20 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// It further provides several convenience functions to ease the difficulty
     /// working with the boundaries of a grid.
     /// </summary>
-    /// <remarks>
-    /// The grid is assumed to be structured as follows.
-    ///
-    ///                    -p
-    ///   ( 0, Grid.NMax ) -- ( Grid.MMax, Grid.NMAX)
-    /// ^   |                          |
-    /// |   |                          | |
-    ///     |                          | v 
-    ///   ( 0,         0 ) -- ( Grid.NMax, 0 )
-    ///                    d-
-    ///
-    /// The coordinates are structured in a clock-wise fashion.
-    /// </remarks>
-    public class GridBoundary
+    public class GridBoundary : IGridBoundary
     {
         private readonly IDiscreteGridPointCoverage observedGrid;
         private readonly IDictionary<GridSide, IReadOnlyList<GridCoordinate>> boundaries;
@@ -63,29 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             };
         }
 
-        /// <summary>
-        /// Get the set of <see cref="GridCoordinate"/> specifying the boundary
-        /// of the grid at the specified <paramref name="gridSide"/>.
-        /// </summary>
-        /// <value>
-        /// The <see cref="IReadOnlyList{GridCoordinate}"/> specifying the
-        /// boundary of the grid at the specified <paramref name="gridSide"/>.
-        /// </value>
-        /// <param name="gridSide">The grid side.</param>
-        /// <returns>
-        /// The set of <see cref="GridCoordinate"/> specifying the boundary of
-        /// the grid at the specified <paramref name="gridSide"/>.
-        /// </returns>
         public IEnumerable<GridBoundaryCoordinate> this[GridSide gridSide] =>
             Enumerable.Range(0, boundaries[gridSide].Count).Select(x => new GridBoundaryCoordinate(gridSide, x));
 
-        /// <summary>
-        /// Gets the grid envelope starting from the west side, in a clock-wise fashion.
-        /// </summary>
-        /// <returns>
-        /// The envelope of this <see cref="GridBoundary"/> starting from the west side
-        /// in a clock-wise fashion.
-        /// </returns>
         public IEnumerable<GridBoundaryCoordinate> GetGridEnvelope()
         {
             GridSide[] sides =
@@ -99,16 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             return sides.SelectMany(x => this[x]);
         }
 
-        /// <summary>
-        /// Gets the world coordinate from boundary coordinate.
-        /// </summary>
-        /// <param name="boundaryCoordinate">The boundary coordinate.</param>
-        /// <returns>
-        /// The world coordinate location corresponding with <paramref name="boundaryCoordinate"/>
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCoordinate"/> is <c>null</c>.
-        /// </exception>
         public Coordinate GetWorldCoordinateFromBoundaryCoordinate(GridBoundaryCoordinate boundaryCoordinate)
         {
             if (boundaryCoordinate == null)
