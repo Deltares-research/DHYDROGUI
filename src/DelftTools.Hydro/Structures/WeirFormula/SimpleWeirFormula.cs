@@ -18,7 +18,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             DischargeCoefficient = 1.0;
             LateralContraction = 1.0;
-            UseVelocityHeight = true;
         }
 
         #region IWeirFormula Members

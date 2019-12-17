@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.LowerEdgeLevel));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
                     OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
+                    OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.UseVelocityHeight));
                     OnPropertyChanged(nameof(SelectedGateOpeningHorizontalDirection));
 
                     ((INotifyPropertyChanged)weir).PropertyChanged += WeirPropertyChanged;
@@ -280,6 +281,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 enableAdvancedSettings = value;
                 OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableAdvancedSettings));
+            }
+        }
+
+        public bool UseVelocityHeight
+        {
+            get { return Weir?.UseVelocityHeight ?? true; }
+            set
+            {
+                if (Weir.UseVelocityHeight == value) return;
+                Weir.UseVelocityHeight = value;
+                OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.UseVelocityHeight));
             }
         }
 

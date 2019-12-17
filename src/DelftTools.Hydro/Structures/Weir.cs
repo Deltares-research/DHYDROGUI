@@ -20,6 +20,7 @@ namespace DelftTools.Hydro.Structures
         private bool canBeTimedependent;
         private bool useCrestLevelTimeSeries;
         private bool useCrestWidthTimeSeries;
+        private bool useVelocityHeight;
 
         public Weir() : this("Weir")
         {
@@ -42,6 +43,7 @@ namespace DelftTools.Hydro.Structures
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
             CanBeTimedependent = allowTimeVaryingData;
+            UseVelocityHeight = true;
         }
 
         public virtual bool CanBeTimedependent
@@ -250,6 +252,8 @@ namespace DelftTools.Hydro.Structures
         {
             get { return !(WeirFormula is GeneralStructureWeirFormula || WeirFormula is FreeFormWeirFormula); }
         }
+
+        public virtual bool UseVelocityHeight { get; set; }
 
         public override StructureType GetStructureType()
         {

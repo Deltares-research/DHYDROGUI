@@ -52,8 +52,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
         private void AddUseVelocityHeightProperty(IWeir weir)
         {
-            var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weirFormula.UseVelocityHeight.ToString().ToLower());
+            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
         }
     }
 }

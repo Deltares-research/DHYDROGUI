@@ -62,6 +62,7 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
@@ -86,10 +87,12 @@
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding SimpleWeirPropertiesVisibility}" IsEnabled="{Binding IsCrestLevelConstantTime}"/>
                         <Label Grid.Row="2" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
 
-                        <CheckBox Grid.Row="3" Grid.Column="0"  Margin="5" Content=" Time dependent" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
-                        <Button Grid.Row="3" Grid.Column="1"  Margin="5" Content=" Time series" VerticalAlignment="Center" IsEnabled="{Binding EnableCrestLevelTimeSeries}" Command="{Binding Path=OnEditCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+                        <CheckBox Grid.Row="3" Grid.Column="0"  Margin="5" Content="Use velocity height" VerticalAlignment="Center" IsChecked="{Binding UseVelocityHeight}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+
+                        <CheckBox Grid.Row="4" Grid.Column="0"  Margin="5" Content=" Time dependent" VerticalAlignment="Center" IsChecked="{Binding EnableCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+                        <Button Grid.Row="4" Grid.Column="1"  Margin="5" Content=" Time series" VerticalAlignment="Center" IsEnabled="{Binding EnableCrestLevelTimeSeries}" Command="{Binding Path=OnEditCrestLevelTimeSeries}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
                         
-                        <CheckBox Grid.Row="4" Grid.Column="0"  Margin="5" Content=" Edit advanced settings" VerticalAlignment="Center" IsChecked="{Binding EnableAdvancedSettings}"/>
+                        <CheckBox Grid.Row="5" Grid.Column="0"  Margin="5" Content=" Edit advanced settings" VerticalAlignment="Center" IsChecked="{Binding EnableAdvancedSettings}"/>
                     </Grid>
 
                 </GroupBox>

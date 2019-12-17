@@ -66,6 +66,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             GateOpeningWidth = 0.0;
             CrestLength = 0.0;
             GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
+            UseVelocityHeight = true;
         }
 
         public virtual object Clone()

@@ -82,5 +82,11 @@ namespace DelftTools.Hydro.Structures
         /// For a general structure this is disabled since it is part of the formula.
         /// </summary>
         bool SpecifyCrestLevelAndWidthOnWeir { get; }
+
+
+        /// <summary>
+        /// Flag indicates whether the velocity height is to be calculated or not.
+        /// </summary>
+        bool UseVelocityHeight { get; set; }
     }
 }
