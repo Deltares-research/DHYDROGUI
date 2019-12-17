@@ -5,6 +5,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Validators
@@ -29,11 +30,30 @@ namespace DelftTools.Hydro.Validators
                 {
                     if (branchesWithoutGridSegments.Contains(branch) || !branchLocationsLookup.ContainsKey(branch))
                     {
-                        var message =
-                            String.Format(
-                                "No computational grid cells defined for branch {0}; can not start calculation.",
-                                branch.Name);
-                        issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization));
+                        //ok, we have a branch without network calculation locations.
+                        //This does not mean this is wrong. The calculation location could be on another branch
+                        //check if start coordinate has a calculation location on another branch, check by coordinate!
+
+                        if (!networkDiscretization
+                            .Locations
+                            .Values
+                            .Any(l => l.Geometry.Coordinate.Equals2D(branch.Source?.Geometry?.Coordinate, 0.001)))
+                        {
+                            var message = $"No computational grid cells defined for branch : {branch.Name}, not at start of branch; can not start calculation.";
+                            issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message,
+                                networkDiscretization));
+                        }
+                        if (!networkDiscretization
+                            .Locations
+                            .Values
+                            .Any(l => l.Geometry.Coordinate.Equals2D(branch.Target?.Geometry?.Coordinate, 0.001)))
+                        {
+                            var message = $"No computational grid cells defined for branch : {branch.Name}, not at end of branch; can not start calculation.";
+                            issues.Add(new ValidationIssue(branch, ValidationSeverity.Error, message,
+                                networkDiscretization));
+                        }
+
+
 
                         continue; //no computational grid, so no sense reporting additional errors
                     }
