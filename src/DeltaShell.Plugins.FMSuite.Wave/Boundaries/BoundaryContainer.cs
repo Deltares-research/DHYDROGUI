@@ -1,4 +1,5 @@
 ﻿using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
@@ -19,5 +20,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// within the model it is part of.
         /// </remarks>
         public IEventedList<IWaveBoundary> Boundaries { get; } = new EventedList<IWaveBoundary>();
+
+        public void UpdateSnappingCalculator(IBoundarySnappingCalculator newSnappingCalculator)
+        {
+            snappingCalculator = newSnappingCalculator;
+        }
+
+        public IBoundarySnappingCalculator GetBoundarySnappingCalculator()
+        {
+            return snappingCalculator;
+        }
+
+        private IBoundarySnappingCalculator snappingCalculator = null;
     }
 }
