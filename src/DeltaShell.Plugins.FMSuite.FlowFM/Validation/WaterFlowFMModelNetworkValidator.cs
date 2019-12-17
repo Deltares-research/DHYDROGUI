@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
@@ -158,6 +160,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 yield return new ValidationIssue("CrossSection", ValidationSeverity.Warning, Resources.WaterFlowFMModelNetworkValidator_GetCrossSectionValidationIssues_No_CrossSection_defined__all_channels_will_be_using_the_default_values_, network);
             }
+
+            foreach (var crossSections in network.CrossSections.GroupBy(c => new {c.Branch, c.Chainage}).Where(g => g.Count() >1).Select(g => g))
+            {
+                yield return new ValidationIssue("CrossSection", ValidationSeverity.Error, $"Two or more cross sections ({string.Join(",", crossSections.Select(c => c.Name))}) defined at same location ({crossSections.First().Branch}, {crossSections.First().Chainage}). Please correct.", crossSections.Last());
+            }
+            
             
             foreach (var issue in channel.CrossSections.SelectMany(cs => GetCorrectCrossSectionIssue(cs, network)))
             {
