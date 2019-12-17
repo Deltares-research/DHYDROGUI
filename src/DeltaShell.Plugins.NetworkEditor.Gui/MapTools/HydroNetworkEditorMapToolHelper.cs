@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
+using DelftTools.Controls.Wpf.Dialogs;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
@@ -50,17 +52,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 editable.BeginEdit("Generate grid");
             }
-            HydroNetworkHelper.GenerateDiscretization(discretization,
-                                                      calculationGridDialog.OverwriteSegments,
-                                                      calculationGridDialog.Erase,
-                                                      calculationGridDialog.MinimumCellLength,
-                                                      calculationGridDialog.GridAtStructure,
-                                                      calculationGridDialog.StructureDistance,
-                                                      calculationGridDialog.GridAtCrossSection,
-                                                      calculationGridDialog.GridAtLateralSource,
-                                                      calculationGridDialog.UseFixedLength,
-                                                      calculationGridDialog.FixedLength,
-                                                      calculationGridDialog.AllBranches ? null : selectedChannels);
+            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
+            try
+            {
+                EventSettings.BubblingEnabled = false;
+                ProgressBarDialog.PerformTask("Generating Computational grid points", () => HydroNetworkHelper.GenerateDiscretization(discretization,
+                    calculationGridDialog.OverwriteSegments,
+                    calculationGridDialog.Erase,
+                    calculationGridDialog.MinimumCellLength,
+                    calculationGridDialog.GridAtStructure,
+                    calculationGridDialog.StructureDistance,
+                    calculationGridDialog.GridAtCrossSection,
+                    calculationGridDialog.GridAtLateralSource,
+                    calculationGridDialog.UseFixedLength,
+                    calculationGridDialog.FixedLength,
+                    calculationGridDialog.AllBranches ? null : selectedChannels), null);
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = bubblingEnabledSetting;
+            }
+            
             if (editable != null)
             {
                 editable.EndEdit();
