@@ -76,6 +76,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
                 {
                     sourceCompartment = manhole.Compartments.FirstOrDefault();
+                    if (sourceCompartment != null) LevelSource = sourceCompartment.BottomLevel;
                     UpdateSource(sourceCompartment);
                     UpdateSourceCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();
@@ -121,6 +122,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
                 {
                     targetCompartment = manhole.Compartments.FirstOrDefault();
+                    if (targetCompartment != null) LevelTarget = targetCompartment.BottomLevel;
                     UpdateTarget(targetCompartment);
                     UpdateTargetCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();

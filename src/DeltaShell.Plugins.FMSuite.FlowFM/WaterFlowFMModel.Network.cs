@@ -123,12 +123,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 
+        public bool UseReverseRoughness
+        {
+            get { return ModelDefinition.UseReverseRoughness; }
+            set
+            {
+                if (ModelDefinition != null && ModelDefinition.UseReverseRoughness != value) ModelDefinition.UseReverseRoughness = value;
+            }
+        }
+
+        public bool UseReverseRoughnessInCalculation
+        {
+            get { return ModelDefinition.UseReverseRoughnessInCalculation; }
+            set
+            {
+                if (ModelDefinition != null && ModelDefinition.UseReverseRoughnessInCalculation != value) ModelDefinition.UseReverseRoughnessInCalculation = value;
+            }
+        }
+
         public IEventedList<RoughnessSection> RoughnessSections
         {
             get { return ModelDefinition?.RoughnessSections; }
         }
-        public bool UseReverseRoughness { get; set; }
-        public bool UseReverseRoughnessInCalculation { get; set; }
+        
         
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property

@@ -96,6 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         }
+        public bool UseReverseRoughness { get; set; }
+        public bool UseReverseRoughnessInCalculation { get; set; }
         public string ModelDirectory { get; set; }
         public string ModelName { get; set; }
         public ICoordinateSystem CoordinateSystem { get; set; }
@@ -1132,6 +1134,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 UpdateLateralSource(e);
             }
+            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
+            {
+                UpdateCrossSectionSectionType(e);
+            }
             else if (e.GetRemovedOrAddedItem() is IChannel)
             {
                 if (Equals(sender, Network.Branches))
@@ -1182,6 +1188,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 AddSewerRoughnessIfNecessary();
             }
+        }
+
+        private void UpdateCrossSectionSectionType(NotifyCollectionChangedEventArgs e)
+        {
+            var sectionType = (CrossSectionSectionType)e.GetRemovedOrAddedItem();
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    throw new NotImplementedException();
+                case NotifyCollectionChangedAction.Add:
+                    AddRoughnessSections(sectionType);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    var roughnessSection = RoughnessSections.FirstOrDefault(rs => rs.CrossSectionSectionType.Name == sectionType.Name);
+                    if (roughnessSection != null)
+                    {
+                        RemoveRoughnessSections(roughnessSection.CrossSectionSectionType);
+                    }
+                    break;
+            }
+        }
+        private void RemoveRoughnessSections(CrossSectionSectionType crossSectionSectionType)
+        {
+            var roughnessSections = RoughnessSections.Where(rs => rs.CrossSectionSectionType == crossSectionSectionType).ToList();
+            foreach (var section in roughnessSections) //can be multiple: normal and reverse
+            {
+                RemoveRoughnessSection(section);
+            }
+        }
+        private void AddRoughnessSections(CrossSectionSectionType crossSectionSectionType)
+        {
+            var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+            AddRoughnessSection(roughnessSection);
+
+            if (UseReverseRoughness)
+            {
+                AddRoughnessSection(new ReverseRoughnessSection(roughnessSection)
+                {
+                    UseNormalRoughness = !UseReverseRoughnessInCalculation
+                });
+            }
+        }
+        protected virtual void AddRoughnessSection(RoughnessSection roughnessSection)
+        {
+            RoughnessSections.Add(roughnessSection);
+        }
+        protected virtual void RemoveRoughnessSection(RoughnessSection roughnessSection)
+        {
+            RoughnessSections.Remove(roughnessSection);
         }
         [EditAction]
         private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)

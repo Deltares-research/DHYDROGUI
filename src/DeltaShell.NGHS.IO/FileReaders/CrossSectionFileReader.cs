@@ -243,7 +243,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
             {
-                var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key, true,';');
+                var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionId.Key, true,';');
                 if (frictionIds == null ) return;
                 
                 if (frictionIds.Count != 1)

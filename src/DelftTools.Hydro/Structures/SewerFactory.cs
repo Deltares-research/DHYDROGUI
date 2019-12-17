@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -41,9 +42,17 @@ namespace DelftTools.Hydro.Structures
 
         private static void AddDefaultSewerProfileToNetwork(HydroNetwork hydroNetwork)
         {
+            if (!DefaultSewerProfile.Sections.Any())
+            {
+                var sewerCrossSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
+                if (sewerCrossSectionType == null) return;
+                DefaultSewerProfile.AddSection(sewerCrossSectionType, DefaultSewerProfile.FlowWidth());
+            }
+
             var crossSectionDefinitionAlreadyPresentInNetwork = hydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name == DefaultProfileDefinitionName);
             if (!crossSectionDefinitionAlreadyPresentInNetwork)
             {
+                
                 hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerProfile);
             }
         }
