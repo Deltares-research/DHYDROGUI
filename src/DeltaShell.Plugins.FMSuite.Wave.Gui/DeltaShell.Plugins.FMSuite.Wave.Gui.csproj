@@ -244,6 +244,7 @@
     <Compile Include="Layers\WaveLayerIcons.cs" />
     <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
+    <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
