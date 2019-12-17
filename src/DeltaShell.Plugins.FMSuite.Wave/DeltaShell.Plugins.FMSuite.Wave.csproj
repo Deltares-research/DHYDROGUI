@@ -138,6 +138,7 @@
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinate.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparer.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSide.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\IGridBoundary.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IGridBoundaryProvider.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinition.cs" />
