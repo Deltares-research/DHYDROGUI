@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var network = new HydroNetwork();
 
             var mduFile = new MduFile();
-            mduFile.Read(mduPath, flowFmModelDefinition, area, network, new List<ModelFeatureCoordinateData<FixedWeir>>());
+            mduFile.Read(mduPath, flowFmModelDefinition, area, new List<ModelFeatureCoordinateData<FixedWeir>>());
             fmReaderData.ModelDefinition = flowFmModelDefinition;
             fmReaderData.Area = area;
 

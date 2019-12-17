@@ -804,7 +804,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
             var totalSteps = 6;
@@ -903,7 +903,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             
-            LoadNetworkAndDiscretisation(filePath, modelDefinition, network);
+            LoadNetworkAndDiscretisation(filePath, modelDefinition);
 
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
@@ -937,7 +937,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
-        private void LoadNetworkAndDiscretisation(string mduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private void LoadNetworkAndDiscretisation(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             string netFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
             if (!File.Exists(netFilePath)) return;
@@ -947,7 +947,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? NodeFile.Read(storageNodeFilePath)
                 : null;
 
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, network, nodeData);
+            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, modelDefinition.Network, nodeData);
 
             modelDefinition.NetworkDiscretization = loadedNetworkDiscretisation;
             modelDefinition.Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;

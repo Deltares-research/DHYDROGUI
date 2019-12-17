@@ -2324,7 +2324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, Network, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
+                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
 
                 isLoading = false;
                 SyncModelTimesWithBase();
