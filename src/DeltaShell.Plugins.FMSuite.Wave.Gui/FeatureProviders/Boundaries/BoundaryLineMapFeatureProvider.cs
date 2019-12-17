@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryContainer boundaryContainer;
         private readonly IWaveBoundaryFactory waveBoundaryFactory;
+        private readonly IGeometryFactory geometryFactory;
 
         // TODO: (MWT) move these to a helper class, so they can be easily tested?
         private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
@@ -38,6 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
             return new BoundaryLineFeature()
             {
                 ObservedWaveBoundary = waveBoundary,
+                Geometry = geometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
             };
         }
 
@@ -45,15 +47,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// Creates a new <see cref="BoundaryLineMapFeatureProvider"/>.
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
-        /// <param name="factory">The factory.</param>
+        /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when either <paramref name="factory"/> or <paramref name="boundaryContainer"/>
-        /// is <c>null</c>.
+        /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
         public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer, 
-                                              IWaveBoundaryFactory factory)
+                                              IWaveBoundaryFactory waveBoundaryFactory,
+                                              IGeometryFactory geometryFactory)
         {
-            waveBoundaryFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+            this.waveBoundaryFactory = waveBoundaryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryFactory));
+            this.geometryFactory = geometryFactory ?? throw new ArgumentNullException(nameof(geometryFactory));
 
             this.boundaryContainer = boundaryContainer ?? 
                                      throw new ArgumentNullException(nameof(boundaryContainer));

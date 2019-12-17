@@ -252,7 +252,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 // TODO: Update once all mapcomponents are in place
                 yield return new BoundaryLineMapFeatureProvider(model.BoundaryContainer,
                                                                 new WaveBoundaryFactory(model.BoundaryContainer, 
-                                                                                        new WaveBoundaryFactoryHelper()));
+                                                                                        new WaveBoundaryFactoryHelper()),
+                                                                new GeometryFactory(model.BoundaryContainer));
 
                 yield return model.BoundaryConditions;
                 yield return model.Boundaries;
