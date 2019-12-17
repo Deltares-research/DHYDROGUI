@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         IEventedList<IWaveBoundary> Boundaries { get; }
 
         /// <summary>
-        /// Updates the current <see cref="GridBoundary"/> to
+        /// Updates the current <see cref="IGridBoundary"/> to
         /// <paramref name="gridBoundary"/>.
         /// </summary>
         /// <param name="gridBoundary">The grid boundary.</param>
-        void UpdateGridBoundary(GridBoundary gridBoundary);
+        void UpdateGridBoundary(IGridBoundary gridBoundary);
     }
 }

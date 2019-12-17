@@ -14,7 +14,7 @@
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACAgAAAAAAAAAAAAgAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <HashCode>AgAAAgAAAgAAAAAAAAgAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
       <FileName>Boundaries\BoundaryContainer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -25,11 +25,12 @@
       <HashCode>AAAAAAAAAEAAIAEACAAAAAAIAAAAgAAAAAABIAAAAAA=</HashCode>
       <FileName>Boundaries\GeometricDefinitions\GridBoundary.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators.BoundarySnappingCalculator" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="7.75" Y="3.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AgAAAAIAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAI=</HashCode>
       <FileName>Boundaries\Calculators\BoundarySnappingCalculator.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -75,7 +76,7 @@
   <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.BoundaryContainerSyncService" Collapsed="true">
     <Position X="10.75" Y="1" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAAAIAACAAAAAAAAAAAAAAAACAAAAAgACA=</HashCode>
+      <HashCode>AAAABAAAAAAAAIAACAAAAAAAAAAAAAAAICAAAAAAACA=</HashCode>
       <FileName>Boundaries\BoundaryContainerSyncService.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -112,7 +113,7 @@
   <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.IBoundaryContainer">
     <Position X="10.75" Y="1.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Boundaries\IBoundaryContainer.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -126,7 +127,6 @@
       <FileName>Boundaries\Calculators\IBoundarySnappingCalculator.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="GridBoundary" />
       <Property Name="DistanceCalculator" />
     </ShowAsAssociation>
   </Interface>

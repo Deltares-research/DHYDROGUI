@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 boundaryContainer.Boundaries.Add(Substitute.For<IWaveBoundary>());
 
                 IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
-                GridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
+                IGridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
 
                 // When
                 model.OuterDomain.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 boundaryContainer.Boundaries.Add(Substitute.For<IWaveBoundary>());
 
                 IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
-                GridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
+                IGridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
 
                 var domainData = new WaveDomainData("name");
                 domainData.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 var boundary = Substitute.For<IWaveBoundary>();
                 boundaryContainer.Boundaries.Add(boundary);
                 IBoundarySnappingCalculator calculator = boundaryContainer.GetBoundarySnappingCalculator();
-                GridBoundary gridBoundary = boundaryContainer.GetGridBoundary();
+                IGridBoundary gridBoundary = boundaryContainer.GetGridBoundary();
 
                 // Then
                 oldDomain.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);

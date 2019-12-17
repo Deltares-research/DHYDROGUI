@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             boundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
         }
 
-        private static GridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)
+        private static IGridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)
         {
             if (outerDomainGrid == null   || 
                 outerDomainGrid.Size1 < 2 ||

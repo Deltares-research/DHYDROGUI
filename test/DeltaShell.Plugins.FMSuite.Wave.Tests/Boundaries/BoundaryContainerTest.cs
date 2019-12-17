@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         }
 
         [Test]
-        public void GivenABoundaryContainer_WhenUpdateGridBoundaryIsCalledwithNullAndGetBoundarySnappingCalculatorIsCalled_ThenCorrectCalculatorIsReturned()
+        public void GivenABoundaryContainer_WhenUpdateGridBoundaryIsCalledWithNullAndGetBoundarySnappingCalculatorIsCalled_ThenCorrectCalculatorIsReturned()
         {
             // Given
             var container = new BoundaryContainer();
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // When
             container.UpdateGridBoundary(gridBoundary);
-            GridBoundary result = container.GetGridBoundary();
+            IGridBoundary result = container.GetGridBoundary();
 
             // Assert
             Assert.That(result, Is.SameAs(gridBoundary));
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // When
             container.UpdateGridBoundary(gridBoundary);
-            GridBoundary result = container.GetGridBoundary();
+            IGridBoundary result = container.GetGridBoundary();
 
             // Assert
             Assert.That(result, Is.SameAs(gridBoundary));

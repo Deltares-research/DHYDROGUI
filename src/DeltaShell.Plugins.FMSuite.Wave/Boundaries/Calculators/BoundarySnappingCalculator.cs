@@ -19,19 +19,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="gridBoundary"/> is <c>null</c>.
         /// </exception>
-        public BoundarySnappingCalculator(GridBoundary gridBoundary)
+        public BoundarySnappingCalculator(IGridBoundary gridBoundary)
         {
             GridBoundary = gridBoundary ?? throw new ArgumentNullException(nameof(gridBoundary));
             DistanceCalculator = new CartesianDistanceCalculator();
         }
 
-        public GridBoundary GridBoundary
-        {
-            get => gridBoundary;
-            set => gridBoundary = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
-        private GridBoundary gridBoundary;
+        public IGridBoundary GridBoundary { get; }
 
         public IDistanceCalculator DistanceCalculator { get; }
 

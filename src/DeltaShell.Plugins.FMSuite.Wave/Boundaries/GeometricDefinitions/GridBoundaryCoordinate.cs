@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
         /// <summary>
         /// Gets the index of this <see cref="GridBoundaryCoordinate"/> on the
-        /// <see cref="GridSide"/> of the <see cref="GridBoundary"/> it was
+        /// <see cref="GridSide"/> of the <see cref="IGridBoundary"/> it was
         /// defined on.
         /// </summary>
         /// <value>

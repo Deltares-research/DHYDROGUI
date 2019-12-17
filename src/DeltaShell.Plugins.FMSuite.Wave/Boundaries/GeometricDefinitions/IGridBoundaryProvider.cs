@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// <see cref="IGridBoundaryProvider"/> defines the method required to obtain a
-    /// <see cref="GridBoundary"/>. This <see cref="GridBoundary"/> should not be
+    /// <see cref="IGridBoundary"/>. This <see cref="IGridBoundary"/> should not be
     /// cached, instead this method should be used to retrieve the latest version of
-    /// the <see cref="GridBoundary"/>.
+    /// the <see cref="IGridBoundary"/>.
     /// </summary>
     public interface IGridBoundaryProvider
     {
@@ -12,9 +12,9 @@
         /// Gets the grid boundary.
         /// </summary>
         /// <returns>
-        /// The latest version of the <see cref="GridBoundary"/>, if it exists;
+        /// The latest version of the <see cref="IGridBoundary"/>, if it exists;
         /// Otherwise <c>null</c>.
         /// </returns>
-        GridBoundary GetGridBoundary();
+        IGridBoundary GetGridBoundary();
     }
 }

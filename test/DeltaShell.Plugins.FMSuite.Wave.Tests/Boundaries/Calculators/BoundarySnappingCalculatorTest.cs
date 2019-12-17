@@ -40,36 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         }
 
         [Test]
-        public void SetGridBoundary_ValidGridBoundary_SetCorrectBoundary()
-        {
-            // Setup
-            var calculator = new BoundarySnappingCalculator(new GridBoundary(GridBoundaryTestHelper.GetValidGridMock(2, 2)));
-            var newGridBoundary = new GridBoundary(GridBoundaryTestHelper.GetValidGridMock(2, 2));
-
-            // Call
-            calculator.GridBoundary = newGridBoundary;
-
-            // Assert
-            Assert.That(calculator.GridBoundary, Is.SameAs(newGridBoundary));
-        }
-
-        [Test]
-        public void SetGridBoundary_Null_ThrowsArgumentNullException()
-        {
-            // Setup
-            var grid = GridBoundaryTestHelper.GetValidGridMock(2, 2);
-            var gridBoundary = new GridBoundary(grid);
-            var calculator = new BoundarySnappingCalculator(gridBoundary);
-
-            // Call
-            void Call() => calculator.GridBoundary = null;
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("value"));
-        }
-
-        [Test]
         public void SnapCoordinateToGridBoundaryCoordinate_CoordinateToSnapNull_ThrowsArgumentNullException()
         {
             // Setup 

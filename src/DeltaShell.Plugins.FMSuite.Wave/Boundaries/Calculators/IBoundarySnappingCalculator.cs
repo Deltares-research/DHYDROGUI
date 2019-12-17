@@ -7,17 +7,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 {
     /// <summary>
     /// <see cref="IBoundarySnappingCalculator"/> defines a set of equations
-    /// to snap coordinates to a <see cref="GridBoundary"/>. 
+    /// to snap coordinates to a <see cref="IGridBoundary"/>. 
     /// </summary>
     public interface IBoundarySnappingCalculator
     {
         /// <summary>
-        /// Gets or sets the <see cref="GridBoundary"/> of this <see cref="GridBoundary"/>.
+        /// Gets the <see cref="GridBoundary"/> of this <see cref="GridBoundary"/>.
         /// </summary>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when a <c>null</c> value is set.
-        /// </exception>
-        GridBoundary GridBoundary { get; set; }
+        IGridBoundary GridBoundary { get; }
 
         /// <summary>
         /// Gets the <see cref="IDistanceCalculator"/> used to calculate the
@@ -28,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// </value>
         /// <remarks>
         /// The type of <see cref="IDistanceCalculator"/> should be dependent on
-        /// the type of coordinate system of the <see cref="GridBoundary"/>
+        /// the type of coordinate system of the <see cref="IGridBoundary"/>
         /// </remarks>
         IDistanceCalculator DistanceCalculator { get; }
 
