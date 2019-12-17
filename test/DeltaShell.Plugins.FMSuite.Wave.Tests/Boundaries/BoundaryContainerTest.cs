@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.That(result, Is.SameAs(gridBoundary));
         }
 
-        private IEnumerable<TestCaseData> UpdateGridBoundaryData
+        private static IEnumerable<TestCaseData> UpdateGridBoundaryData
         {
             get
             {
