@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
             
             IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, formula.ContractionCoefficient*formula.LateralContraction, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, formula.UseVelocityHeight.ToString().ToLower());
+            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
 
 
             return IniCategory;

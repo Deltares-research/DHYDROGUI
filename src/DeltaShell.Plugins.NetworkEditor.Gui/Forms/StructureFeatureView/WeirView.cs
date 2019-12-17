@@ -311,7 +311,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
            {
                SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula) data.WeirFormula, data.CrestShape);
            }
+
+           SetVelocityHeightCheckboxVisibility(data.WeirFormula);
        }
+
+        private void SetVelocityHeightCheckboxVisibility(IWeirFormula weirFormula)
+        {
+            if (weirFormula is SimpleWeirFormula || weirFormula is GeneralStructureWeirFormula || weirFormula is GatedWeirFormula)
+            {
+                useVelocityHeightCheckBox.Enabled = true;
+            }
+            else
+            {
+                useVelocityHeightCheckBox.Enabled = false;
+            }
+        }
 
         private void RenderFormulaControls()
         {

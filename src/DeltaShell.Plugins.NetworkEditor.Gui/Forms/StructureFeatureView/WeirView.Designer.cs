@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.useVelocityHeightCheckBox = new System.Windows.Forms.CheckBox();
+            this.bindingSourceWeir = new System.Windows.Forms.BindingSource(this.components);
             this.LowerEdgeLevelTimeDependentCheckBox = new System.Windows.Forms.CheckBox();
             this.OpenGateOpeningTimeSeriesButton = new System.Windows.Forms.Button();
             this.OpenLowerEdgeLevelTimeSeriesButton = new System.Windows.Forms.Button();
@@ -51,7 +53,6 @@
             this.labelUnitMaxNeg = new System.Windows.Forms.Label();
             this.textBoxMaxPos = new System.Windows.Forms.TextBox();
             this.checkBoxAllowPositiveFlow = new System.Windows.Forms.CheckBox();
-            this.bindingSourceWeir = new System.Windows.Forms.BindingSource(this.components);
             this.checkBoxMaxPos = new System.Windows.Forms.CheckBox();
             this.checkBoxAllowNegativeFlow = new System.Windows.Forms.CheckBox();
             this.labelFlowDirection = new System.Windows.Forms.Label();
@@ -74,15 +75,16 @@
             this.groupBoxFormula = new System.Windows.Forms.GroupBox();
             this.panelFormula = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).BeginInit();
             this.groupBoxGate.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxFormula.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.useVelocityHeightCheckBox);
             this.groupBox1.Controls.Add(this.LowerEdgeLevelTimeDependentCheckBox);
             this.groupBox1.Controls.Add(this.OpenGateOpeningTimeSeriesButton);
             this.groupBox1.Controls.Add(this.OpenLowerEdgeLevelTimeSeriesButton);
@@ -111,6 +113,17 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Weir Properties";
+            // 
+            // useVelocityHeightCheckBox
+            // 
+            this.useVelocityHeightCheckBox.AutoSize = true;
+            this.useVelocityHeightCheckBox.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceWeir, "UseVelocityHeight", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.useVelocityHeightCheckBox.Location = new System.Drawing.Point(392, 89);
+            this.useVelocityHeightCheckBox.Name = "useVelocityHeightCheckBox";
+            this.useVelocityHeightCheckBox.Size = new System.Drawing.Size(116, 17);
+            this.useVelocityHeightCheckBox.TabIndex = 41;
+            this.useVelocityHeightCheckBox.Text = "Use velocity height";
+            this.useVelocityHeightCheckBox.UseVisualStyleBackColor = true;
             // 
             // LowerEdgeLevelTimeDependentCheckBox
             // 
@@ -585,10 +598,10 @@
             this.Size = new System.Drawing.Size(568, 471);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).EndInit();
             this.groupBoxGate.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSourceWeir)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.groupBoxFormula.ResumeLayout(false);
@@ -644,6 +657,6 @@
         private System.Windows.Forms.CheckBox LowerEdgeLevelTimeDependentCheckBox;
         private System.Windows.Forms.Button OpenLowerEdgeLevelTimeSeriesButton;
         private System.Windows.Forms.Button OpenGateOpeningTimeSeriesButton;
-
+        private System.Windows.Forms.CheckBox useVelocityHeightCheckBox;
     }
 }
