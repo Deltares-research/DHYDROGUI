@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
@@ -16,8 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void Constructor_ExpectedValues()
         {
             // Setup
-            IDiscreteGridPointCoverage grid = GridBoundaryTestHelper.GetValidGridMock(2, 2);
-            var gridBoundary = new GridBoundary(grid);
+            var gridBoundary = Substitute.For<IGridBoundary>();
 
             // Call
             var calculator = new BoundarySnappingCalculator(gridBoundary);
@@ -43,8 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void SnapCoordinateToGridBoundaryCoordinate_CoordinateToSnapNull_ThrowsArgumentNullException()
         {
             // Setup 
-            IDiscreteGridPointCoverage grid = GridBoundaryTestHelper.GetValidGridMock(2, 2);
-            var gridBoundary = new GridBoundary(grid);
+            var gridBoundary = Substitute.For<IGridBoundary>();
             var calculator = new BoundarySnappingCalculator(gridBoundary);
 
             // Call
@@ -68,8 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void SnapCoordinateToGridBoundaryCoordinate_CoordinateUndefined_ReturnsEmptyEnumerable(double x, double y)
         {
             // Setup 
-            IDiscreteGridPointCoverage grid = GridBoundaryTestHelper.GetValidGridMock(2, 2);
-            var gridBoundary = new GridBoundary(grid);
+            var gridBoundary = Substitute.For<IGridBoundary>();
             var calculator = new BoundarySnappingCalculator(gridBoundary);
             var coordinate = new Coordinate(x, y);
 
