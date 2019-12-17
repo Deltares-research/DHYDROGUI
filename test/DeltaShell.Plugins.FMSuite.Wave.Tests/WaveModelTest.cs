@@ -2,14 +2,12 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -312,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void Given1When2Then3()
+        public void GivenWaveModelWithSphericalCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
             var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\spherical.mdw");
             var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
@@ -331,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void Given1When2Then4()
+        public void GivenWaveModelWithCartesianCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
             var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\cartesian.mdw");
             var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
