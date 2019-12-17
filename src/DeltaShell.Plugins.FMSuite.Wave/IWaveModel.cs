@@ -17,22 +17,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     public interface IWaveModel : ITimeDependentModel, IHasCoordinateSystem, IEditableObject
     {
         /// <summary>
-        /// Get or set the observation points.
+        /// Gets the observation points.
         /// </summary>
         IEventedList<Feature2DPoint> ObservationPoints { get; }
 
         /// <summary>
-        /// Get or set the observation cross sections.
+        /// Gets the observation cross sections.
         /// </summary>
         IEventedList<Feature2D> ObservationCrossSections { get; }
 
         /// <summary>
-        /// Get or set the obstacles.
+        /// Gets the obstacles.
         /// </summary>
         IEventedList<WaveObstacle> Obstacles { get; }
 
         /// <summary>
-        /// Get the boundary container of this <see cref="IWaveModel"/>.
+        /// Gets the boundary container of this <see cref="IWaveModel"/>.
         /// </summary>
         IBoundaryContainer BoundaryContainer { get; }
 
