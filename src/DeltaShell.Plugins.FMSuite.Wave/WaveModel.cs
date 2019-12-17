@@ -193,6 +193,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private IWaveModelApi waveApi;
 
         public IBoundaryContainer BoundaryContainer { get; }
+
+        private readonly BoundaryContainerSyncService boundaryContainerSyncService;
+
         public IEventedList<Feature2D> Boundaries { get; }
         public IEventedList<Feature2D> Sp2Boundaries { get; }
 
@@ -428,6 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             InitializeCouplingTime();
 
             BoundaryContainer = new BoundaryContainer();
+            boundaryContainerSyncService = new BoundaryContainerSyncService(this);
         }
 
         private void InitializeCouplingTime()

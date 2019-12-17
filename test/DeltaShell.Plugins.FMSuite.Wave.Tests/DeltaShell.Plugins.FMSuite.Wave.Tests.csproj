@@ -200,6 +200,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundaries\BoundaryContainerSyncServiceTest.cs" />
     <Compile Include="Boundaries\BoundaryContainerTest.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelperTest.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
