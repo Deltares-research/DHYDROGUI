@@ -2,7 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         {
             // Given
             var container = new BoundaryContainer();
-            var gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(3, 3);
+            var gridBoundary = Substitute.For<IGridBoundary>();
 
             // When
             container.UpdateGridBoundary(gridBoundary);
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         {
             // Given
             var container = new BoundaryContainer();
-            GridBoundary gridBoundaryInitial = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(4, 4);
+            var gridBoundaryInitial = Substitute.For<IGridBoundary>();
             container.UpdateGridBoundary(gridBoundaryInitial);
 
             // When
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             get
             {
                 yield return new TestCaseData(null);
-                yield return new TestCaseData(GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(3, 3));
+                yield return new TestCaseData(Substitute.For<IGridBoundary>());
             }
         }
     }
