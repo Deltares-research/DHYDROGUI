@@ -8,24 +8,29 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 {
+    /// <summary>
+    /// <see cref="WaveBoundaryFactory"/> implements the method to construct
+    /// <see cref="IWaveBoundary"/> from view data with the help of
+    /// <see cref="IWaveBoundaryFactoryHelper"/>.
+    /// </summary>
+    /// <seealso cref="IWaveBoundaryFactory" />
     public class WaveBoundaryFactory : IWaveBoundaryFactory
     {
-        // (MWT) TODO: this should be invalidated once the grid changes
-        private readonly IBoundarySnappingCalculator snappingCalculator;
+        private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
         private readonly IWaveBoundaryFactoryHelper factoryHelper;
 
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundaryFactory"/>.
         /// </summary>
-        /// <param name="snappingCalculator">The snapping calculator.</param>
+        /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
-         public WaveBoundaryFactory(IBoundarySnappingCalculator snappingCalculator,
+         public WaveBoundaryFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider,
                                     IWaveBoundaryFactoryHelper factoryHelper)
         {
-            this.snappingCalculator = snappingCalculator ??
-                throw new ArgumentNullException(nameof(snappingCalculator));
+            this.snappingCalculatorProvider = snappingCalculatorProvider ??
+                throw new ArgumentNullException(nameof(snappingCalculatorProvider));
             this.factoryHelper = factoryHelper ??
                 throw new ArgumentNullException(nameof(factoryHelper));
         }
@@ -37,8 +42,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                 throw new ArgumentNullException(nameof(geometry));
             }
 
+            IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
+            if (calculator == null)
+            {
+                return null;
+            }
+
             IEnumerable<GridBoundaryCoordinate> snappedCoordinates =
-                factoryHelper.GetSnappedEndPoints(snappingCalculator, 
+                factoryHelper.GetSnappedEndPoints(calculator, 
                                                   geometry.Coordinates);
 
             IWaveBoundaryGeometricDefinition geometricDefinition = 
