@@ -29,6 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
             buttonCommands.Add(ButtonAddObsPoint, new MapToolCommand(WaveMapViewDecorator.ObservationPointToolName));
             buttonCommands.Add(ButtonAddObsCrossSection,
                                new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
+
+            // TODO: this should be renamed to ButtonAddBoundary once everything is implemented.
+            buttonCommands.Add(ButtonAddCustomBoundary, new MapToolCommand(WaveMapViewDecorator.CustomBoundaryToolName));
         }
 
         public IEnumerable<ICommand> Commands => buttonCommands.Values;
