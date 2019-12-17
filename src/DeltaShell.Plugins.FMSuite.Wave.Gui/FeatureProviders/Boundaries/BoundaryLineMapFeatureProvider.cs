@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         private readonly IBoundaryContainer boundaryContainer;
         private readonly IWaveBoundaryFactory waveBoundaryFactory;
 
+        // TODO: (MWT) move these to a helper class, so they can be easily tested?
         private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
         {
             return new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 
             lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
                                                                                             CreateBoundaryLineFeature);
-
+            lineFeatures.RegisterList(this.boundaryContainer.Boundaries);
         }
 
         /// <summary>
@@ -76,12 +77,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// </remarks>
         public override IFeature Add(IGeometry geometry)
         {
-            if (geometry == null)
+            if (!(geometry is ILineString lineString))
             {
                 return null;
             }
 
-            return null;
+            IWaveBoundary boundary = waveBoundaryFactory.ConstructWaveBoundary(lineString);
+
+            if (boundary == null)
+            {
+                return null;
+            }
+
+            boundaryContainer.Boundaries.Add(boundary);
+            
+            // We do not want to return this here, however the interface requires this (but never uses it).
+            return null; 
         }
 
         public override bool Add(IFeature feature)

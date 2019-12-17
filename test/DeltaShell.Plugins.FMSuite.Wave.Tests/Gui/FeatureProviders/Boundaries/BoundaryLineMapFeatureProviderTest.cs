@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 
 
         [Test]
-        public void AddGeometry_GeometryNull_ReturnsNull()
+        public void AddGeometry_GeometryNull_ReturnsNullAndDoesNotChangeBoundaries()
         {
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
@@ -74,6 +74,54 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
             boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
             factory.DidNotReceiveWithAnyArgs().ConstructWaveBoundary(null);
+        }
+
+        [Test]
+        public void AddGeometry_ConstructedBoundaryNull_ReturnsNullAndDoesNotChangeBoundaries()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var factory = Substitute.For<IWaveBoundaryFactory>();
+
+            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, factory);
+
+            var geometry = Substitute.For<ILineString>();
+            IWaveBoundary boundary = null;
+
+            factory.ConstructWaveBoundary(geometry).Returns(boundary);
+
+            // Call
+            IFeature result = featureProvider.Add(geometry);
+
+            // Assert
+            Assert.That(result, Is.Null);
+            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
+            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+            factory.Received(1).ConstructWaveBoundary(geometry);
+        }
+
+        [Test]
+        public void AddGeometry_ConstructedBoundaryValid_AddsBoundaryToContainer()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var factory = Substitute.For<IWaveBoundaryFactory>();
+
+            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, factory);
+
+            var geometry = Substitute.For<ILineString>();
+            var boundary = Substitute.For<IWaveBoundary>();
+
+            factory.ConstructWaveBoundary(geometry).Returns(boundary);
+
+            // Call
+            IFeature result = featureProvider.Add(geometry);
+
+            // Assert
+            Assert.That(result, Is.Null);
+            boundaryContainer.Boundaries.Received(1).Add(boundary);
+            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+            factory.Received(1).ConstructWaveBoundary(geometry);
         }
     }
 }
