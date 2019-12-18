@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
@@ -158,6 +159,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork.Importers
             waterFlowFMModel.StopTime = sobekCaseSettings.StopTime;
             waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
             waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = sobekCaseSettings.TimeStep.TotalSeconds;
             
             /*
             SetCaseSettingsToParameterSettings("LateralLocation", sobekCaseSettings.LateralLocation);
