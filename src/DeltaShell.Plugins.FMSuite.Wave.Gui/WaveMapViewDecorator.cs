@@ -55,8 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             tools.Cast<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             // TODO: This needs to be refactored
-            var boundaryTool = new GroupedLayerFeature2DLineTool("Spatially Varying Wave Boundaries",
-                                                                 "Wave Boundary",
+            var boundaryTool = new GroupedLayerFeature2DLineTool(WaveLayerNames.SpatiallyVaryingBoundaryLayerName,
+                                                                 WaveLayerNames.BoundaryLineLayerName,
                                                                  CustomBoundaryToolName,
                                                                  BoundaryIcon);
 

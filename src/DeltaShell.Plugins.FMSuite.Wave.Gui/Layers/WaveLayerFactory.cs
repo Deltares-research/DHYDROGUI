@@ -348,16 +348,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             {
                 LayersReadOnly = false,
             };
-            
-            ILayer lineDataLayer = 
-                CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
-                                        model);
-            groupLayer.Layers.Add(lineDataLayer);
 
             ILayer endPointsDataLayer =
                 CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider,
                                             model);
             groupLayer.Layers.Add(endPointsDataLayer);
+            
+            ILayer lineDataLayer = 
+                CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
+                                        model);
+            groupLayer.Layers.Add(lineDataLayer);
 
             return groupLayer;
         }

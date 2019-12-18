@@ -153,29 +153,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
-            // TODO: Temporary, move to WaveLayerFactory once all layers have been added.
-            if (data is BoundaryLineMapFeatureProvider boundaryLineMapFeatureProvider)
+            if (data is BoundaryMapFeaturesContainer featuresContainer)
             {
-                var groupLayer = new GroupLayer("Spatially Varying Wave Boundaries")
-                {
-                    LayersReadOnly = false,
-                };
-
-                var lineDataLayer = new VectorLayer("Wave Boundary")
-                {
-                    DataSource = boundaryLineMapFeatureProvider,
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(model),
-                    Style = new VectorStyle
-                    {
-                        Line = new Pen(Color.Blue, 3f),
-                        GeometryType = typeof(ILineString)
-                    },
-                };
-
-                groupLayer.Layers.Add(lineDataLayer);
-
-                return groupLayer;
+                return WaveLayerFactory.CreateBoundaryLayer(featuresContainer, model);
             }
 
             return null;
@@ -240,8 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                    || data is WaveSnappedFeaturesGroupLayerData
                    || data is WavmFileFunctionStore
                    || data is CurvilinearCoverage
-                   // TODO: Update once all mapcomponents are in place
-                   || data is BoundaryLineMapFeatureProvider;
+                   || data is BoundaryMapFeaturesContainer;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -250,12 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (model != null)
             {
                 yield return new WaveSnappedFeaturesGroupLayerData(model);
-                // TODO: Update once all mapcomponents are in place
-                yield return new BoundaryLineMapFeatureProvider(model.BoundaryContainer,
-                                                                new WaveBoundaryFactory(model.BoundaryContainer, 
-                                                                                        new WaveBoundaryFactoryHelper()),
-                                                                new GeometryFactory(model.BoundaryContainer));
-
+                yield return new BoundaryMapFeaturesContainer(model.BoundaryContainer, model.CoordinateSystem);
                 yield return model.BoundaryConditions;
                 yield return model.Boundaries;
                 yield return model.Sp2Boundaries;
