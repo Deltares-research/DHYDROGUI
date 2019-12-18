@@ -82,7 +82,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         
         private static IEnumerable<ICrossSectionDefinition> PipeCrossSectionDefinitions(this IHydroNetwork network)
         {
-            return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition);
+            return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)p.CrossSectionDefinition).InnerDefinition:p.CrossSectionDefinition);
         }
     }
 }
