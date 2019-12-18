@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
                         Style = AreaLayerStyles.ObservationPointStyle,
-                        DataSource = new HydroAreaFeature2DCollection (area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint", modelName, area2DParent.CoordinateSystem)
+                        DataSource = new HydroAreaFeature2DCollection (area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint_2D_", modelName, area2DParent.CoordinateSystem)
                     };
                 }
 
@@ -598,7 +598,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.ObsCrossSectionStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationCrossSections, "ObservationCrossSection",
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationCrossSections, "ObservationCrossSection_2D_",
                                                        modelName, area2DParent.CoordinateSystem),
                     CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
                 };
@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var pumps2d = data as IEventedList<Pump2D>;
             if (pumps2d != null && area2DParent != null && Equals(pumps2d, area2DParent.Pumps))
             {
-                var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "pump", modelName,
+                var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "Pump_2D_", modelName,
                     area2DParent.CoordinateSystem);
                 areaFeature2DCollection.FeatureType = typeof(Pump2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.PumpsPluralName)
@@ -627,7 +627,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var weirs2d = data as IEventedList<Weir2D>;
             if (weirs2d != null && area2DParent != null && Equals(weirs2d, area2DParent.Weirs))
             {
-                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "weir", modelName,
+                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "Weir_2D_", modelName,
                                                                          area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
                 return new VisibilityVectorLayer(HydroArea.WeirsPluralName)
@@ -652,7 +652,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var gates2d = data as IEventedList<Gate2D>;
             if (gates2d != null && area2DParent != null && Equals(gates2d, area2DParent.Gates))
             {
-                var feature2DCollection = new HydroAreaFeature2DCollection (area2DParent).Init(gates2d, "gate", modelName,
+                var feature2DCollection = new HydroAreaFeature2DCollection (area2DParent).Init(gates2d, "Gate_2D_", modelName,
                     area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Gate2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.GatesPluralName)
@@ -678,7 +678,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.ThinDamStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams, "ThinDam", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams, "ThinDam_2D_", modelName,
                                                        area2DParent.CoordinateSystem)
                 };
             }
@@ -692,7 +692,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.LandBoundaryStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries, "LandBoundary", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries, "LandBoundary_2D_", modelName,
                             area2DParent.CoordinateSystem)
                 };
             }
@@ -706,7 +706,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         new HydroAreaFeatureEditor(area2DParent) {CreateNewFeature = l => new Embankment {Region = area2DParent}},
                     Style = AreaLayerStyles.EmbankmentStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment_2D_", modelName,
                             area2DParent.CoordinateSystem),
                     CustomRenderers = new List<IFeatureRenderer>(new [] {new EmbankmentRenderer()})
                 };
@@ -722,7 +722,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.FixedWeirStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir_2D_", modelName,
                             area2DParent.CoordinateSystem),
                     MaxVisible = MaxVisibilityLayerValue
                 };
@@ -737,7 +737,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Style = AreaLayerStyles.BridgePillarStyle,
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar_2D_", modelName,
                             area2DParent.CoordinateSystem)
                 };
             }
@@ -751,7 +751,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     CanBeRemovedByUser = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "LeveeBreach", modelName,
+                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "LeveeBreach_2D_", modelName,
                                                        area2DParent.CoordinateSystem),
                     CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle) })
                 };

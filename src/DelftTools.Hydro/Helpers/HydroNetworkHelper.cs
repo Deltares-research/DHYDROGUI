@@ -515,11 +515,11 @@ namespace DelftTools.Hydro.Helpers
                 }
             }
             int i = 1;
-            var uniqueName = featureName + i;
+            var uniqueName = featureName + "_1D_" + i;
             while (names.Contains(uniqueName))
             {
                 i++;
-                uniqueName = featureName + i;
+                uniqueName = featureName + "_1D_" + i;
             }
 
             return uniqueName;
