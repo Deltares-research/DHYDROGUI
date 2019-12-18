@@ -2,6 +2,7 @@
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -317,6 +318,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
                 ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
             };
+        }
+
+        /// <summary>
+        /// Creates the boundary group layer.
+        /// </summary>
+        /// <param name="featuresProviderContainer">The features container.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// A new boundary group layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        public static ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
+                                                 IWaveModel model)
+        {
+            if (featuresProviderContainer == null)
+            {
+                throw new ArgumentNullException(nameof(featuresProviderContainer));
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var groupLayer = new GroupLayer(WaveLayerNames.SpatiallyVaryingBoundaryLayerName)
+            {
+                LayersReadOnly = false,
+            };
+            
+            ILayer lineDataLayer = 
+                CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
+                                        model);
+
+            groupLayer.Layers.Add(lineDataLayer);
+            return groupLayer;
+        }
+
+        private static ILayer CreateBoundaryLineLayer(BoundaryLineMapFeatureProvider featureProvider,
+                                                      IWaveModel model)
+        {
+            var lineDataLayer = new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
+            {
+                DataSource = featureProvider,
+                NameIsReadOnly = true,
+                FeatureEditor = new Feature2DEditor(model),
+                Style = new VectorStyle
+                {
+                    Line = new Pen(Color.Blue, 3f),
+                    GeometryType = typeof(ILineString)
+                },
+            };
+
+            return lineDataLayer;
         }
     }
 }

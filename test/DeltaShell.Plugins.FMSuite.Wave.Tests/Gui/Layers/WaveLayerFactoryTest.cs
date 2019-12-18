@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
@@ -321,6 +322,69 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("discreteGrid"));
+        }
+
+        [Test]
+        public void CreateBoundaryLayer_ValidParameters_ReturnsCorrectResults()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var coordinateSystem = Substitute.For<ICoordinateSystem>();
+
+            var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
+                                                                            coordinateSystem);
+            var model = Substitute.For<IWaveModel>();
+
+            // Call
+            ILayer layer = WaveLayerFactory.CreateBoundaryLayer(featureProviderContainer, 
+                                                                model);
+
+            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
+                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
+            Assert.That(layer.Name, Is.EqualTo(WaveLayerNames.SpatiallyVaryingBoundaryLayerName),
+                        "Expected the layer to have a different name.");
+
+            var groupLayer = (GroupLayer) layer;
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(1),
+                        "Expected a different number of layers:");
+
+            ILayer lineLayer = groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryLineLayerName);
+            Assert.That(lineLayer, Is.Not.Null,
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to exist.");
+            Assert.That(lineLayer, Is.InstanceOf(typeof(VectorLayer)),
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to be of type {typeof(VectorLayer)}");
+        }
+
+        [Test]
+        public void CreateBoundaryLayer_FeaturesProviderContainerNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var model = Substitute.For<IWaveModel>();
+
+            // Call
+            void Call() => WaveLayerFactory.CreateBoundaryLayer(null, model);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("featuresProviderContainer"));
+        }
+
+        [Test]
+        public void CreateBoundaryLayer_ModelNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var coordinateSystem = Substitute.For<ICoordinateSystem>();
+
+            var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
+                                                                            coordinateSystem);
+
+            // Call
+            void Call() => WaveLayerFactory.CreateBoundaryLayer(featureProviderContainer, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("model"));
         }
 
     }
