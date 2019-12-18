@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
         [Test]
         [TestCaseSource(nameof(UpdateGridBoundaryData))]
-        public void GivenABoundaryContainer_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(GridBoundary gridBoundary)
+        public void GivenABoundaryContainer_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(IGridBoundary gridBoundary)
         {
             // Given
             var container = new BoundaryContainer();
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
         [Test]
         [TestCaseSource(nameof(UpdateGridBoundaryData))]
-        public void GivenABoundaryContainerWithANonNullGridBoundary_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(GridBoundary gridBoundary)
+        public void GivenABoundaryContainerWithANonNullGridBoundary_WhenUpdateGridBoundaryAndGetGridBoundaryIsCalled_ThenTheGridBoundaryIsReturned(IGridBoundary gridBoundary)
         {
             // Given
             var container = new BoundaryContainer();
