@@ -22,12 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var geometryFactory = Substitute.For<IGeometryFactory>();
 
             // Call
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, 
-                                                                     waveBoundaryFactory,
-                                                                     geometryFactory);
-
-            // Assert
-            Assert.That(featureProvider, Is.InstanceOf<Feature2DCollection>());
+            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer,
+                                                                            waveBoundaryFactory,
+                                                                            geometryFactory))
+            {
+                // Assert
+                Assert.That(featureProvider, Is.InstanceOf<Feature2DCollection>());
+            }
         }
 
         [Test]
@@ -84,18 +85,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var geometryFactory = Substitute.For<IGeometryFactory>();
 
 
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, waveBoundaryFactory, geometryFactory);
+            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, 
+                                                                            waveBoundaryFactory, 
+                                                                            geometryFactory))
+            {
+                IGeometry geometry = null;
 
-            IGeometry geometry = null;
+                // Call
+                IFeature result = featureProvider.Add(geometry);
 
-            // Call
-            IFeature result = featureProvider.Add(geometry);
-
-            // Assert
-            Assert.That(result, Is.Null);
-            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
-            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
-            waveBoundaryFactory.DidNotReceiveWithAnyArgs().ConstructWaveBoundary(null);
+                // Assert
+                Assert.That(result, Is.Null);
+                boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
+                boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+                waveBoundaryFactory.DidNotReceiveWithAnyArgs().ConstructWaveBoundary(null);
+            }
         }
 
         [Test]
@@ -106,21 +110,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
             var geometryFactory = Substitute.For<IGeometryFactory>();
 
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, waveBoundaryFactory, geometryFactory);
+            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, 
+                                                                            waveBoundaryFactory, 
+                                                                            geometryFactory))
+            {
 
-            var geometry = Substitute.For<ILineString>();
-            IWaveBoundary boundary = null;
+                var geometry = Substitute.For<ILineString>();
+                IWaveBoundary boundary = null;
 
-            waveBoundaryFactory.ConstructWaveBoundary(geometry).Returns(boundary);
+                waveBoundaryFactory.ConstructWaveBoundary(geometry).Returns(boundary);
 
-            // Call
-            IFeature result = featureProvider.Add(geometry);
+                // Call
+                IFeature result = featureProvider.Add(geometry);
 
-            // Assert
-            Assert.That(result, Is.Null);
-            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
-            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
-            waveBoundaryFactory.Received(1).ConstructWaveBoundary(geometry);
+                // Assert
+                Assert.That(result, Is.Null);
+                boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().Add(null);
+                boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+                waveBoundaryFactory.Received(1).ConstructWaveBoundary(geometry);
+            }
         }
 
         [Test]
@@ -131,21 +139,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
             var geometryFactory = Substitute.For<IGeometryFactory>();
 
-            var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, waveBoundaryFactory, geometryFactory);
-
             var geometry = Substitute.For<ILineString>();
             var boundary = Substitute.For<IWaveBoundary>();
 
             waveBoundaryFactory.ConstructWaveBoundary(geometry).Returns(boundary);
 
-            // Call
-            IFeature result = featureProvider.Add(geometry);
+            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer,
+                                                                            waveBoundaryFactory,
+                                                                            geometryFactory))
+            {
+                // Call
+                IFeature result = featureProvider.Add(geometry);
 
-            // Assert
-            Assert.That(result, Is.Null);
-            boundaryContainer.Boundaries.Received(1).Add(boundary);
-            boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
-            waveBoundaryFactory.Received(1).ConstructWaveBoundary(geometry);
+                // Assert
+                Assert.That(result, Is.Null);
+                boundaryContainer.Boundaries.Received(1).Add(boundary);
+                boundaryContainer.Boundaries.DidNotReceiveWithAnyArgs().AddRange(null);
+                waveBoundaryFactory.Received(1).ConstructWaveBoundary(geometry);
+            }
         }
     }
 }
