@@ -516,15 +516,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return mapStore.Grid;
             if(mapStore.Links1D2D != null)
                 yield return mapStore.Links1D2D;
-            if (mapStore.LinkCoverages != null)
-            {
-                foreach (var fc in mapStore.LinkCoverages.OfType<IFeatureCoverage>())
-                {
-                    yield return fc;
-                }
-                
-            }
-
+            
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)
             {

@@ -971,11 +971,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GetBoundaryLinkValues(netCdfVariableName);
                 yield break;
             }
-            if (secondDimensionName.Equals("nlinks1d2d_connections")) // UGrid 1d2d links
+            if (secondDimensionName.Equals("links1d2d_nContacts", StringComparison.InvariantCultureIgnoreCase)) // UGrid 1d2d links
             {
                 //GetNewBoundaryLinkValues(netCdfVariableName);
                 yield break;
             }
+
+            var locationAttributeValue = netCdfFile.GetAttributeValue(netcdfVariable, "mesh");
+            if(!locationAttributeValue.Equals("mesh2d",StringComparison.InvariantCultureIgnoreCase))
+                yield break;
+
 
             var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute) ??
                            netCdfFile.GetAttributeValue(netcdfVariable, StandardNameAttribute);
