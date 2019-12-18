@@ -69,6 +69,12 @@
             this.textBoxWidthUpstream2 = new System.Windows.Forms.TextBox();
             this.checkBoxExtraResistance = new System.Windows.Forms.CheckBox();
             this.textBoxExtraResistance = new System.Windows.Forms.TextBox();
+            this.textBoxCrestLength = new System.Windows.Forms.TextBox();
+            this.textBoxGateOpeningWidth = new System.Windows.Forms.TextBox();
+            this.labelCrestLength = new System.Windows.Forms.Label();
+            this.labelGateOpeningWidth = new System.Windows.Forms.Label();
+            this.comboBoxGateOpeningDirection = new System.Windows.Forms.ComboBox();
+            this.labelGateOpeningDirection = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGeneralStructure)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -522,16 +528,74 @@
             this.textBoxExtraResistance.Size = new System.Drawing.Size(78, 20);
             this.textBoxExtraResistance.TabIndex = 21;
             // 
+            // textBoxCrestLength
+            // 
+            this.textBoxCrestLength.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "CrestLength", true));
+            this.textBoxCrestLength.Location = new System.Drawing.Point(143, 159);
+            this.textBoxCrestLength.Name = "textBoxCrestLength";
+            this.textBoxCrestLength.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCrestLength.TabIndex = 22;
+            // 
+            // textBoxGateOpeningWidth
+            // 
+            this.textBoxGateOpeningWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "GateOpeningWidth", true));
+            this.textBoxGateOpeningWidth.Location = new System.Drawing.Point(143, 186);
+            this.textBoxGateOpeningWidth.Name = "textBoxGateOpeningWidth";
+            this.textBoxGateOpeningWidth.Size = new System.Drawing.Size(100, 20);
+            this.textBoxGateOpeningWidth.TabIndex = 23;
+            // 
+            // labelCrestLength
+            // 
+            this.labelCrestLength.AutoSize = true;
+            this.labelCrestLength.Location = new System.Drawing.Point(14, 162);
+            this.labelCrestLength.Name = "labelCrestLength";
+            this.labelCrestLength.Size = new System.Drawing.Size(63, 13);
+            this.labelCrestLength.TabIndex = 24;
+            this.labelCrestLength.Text = "Crest length";
+            // 
+            // labelGateOpeningWidth
+            // 
+            this.labelGateOpeningWidth.AutoSize = true;
+            this.labelGateOpeningWidth.Location = new System.Drawing.Point(14, 189);
+            this.labelGateOpeningWidth.Name = "labelGateOpeningWidth";
+            this.labelGateOpeningWidth.Size = new System.Drawing.Size(99, 13);
+            this.labelGateOpeningWidth.TabIndex = 25;
+            this.labelGateOpeningWidth.Text = "Gate opening width";
+            // 
+            // comboBoxGateOpeningDirection
+            // 
+            this.comboBoxGateOpeningDirection.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGeneralStructure, "GateOpeningHorizontalDirection", true));
+            this.comboBoxGateOpeningDirection.FormattingEnabled = true;
+            this.comboBoxGateOpeningDirection.Location = new System.Drawing.Point(185, 212);
+            this.comboBoxGateOpeningDirection.Name = "comboBoxGateOpeningDirection";
+            this.comboBoxGateOpeningDirection.Size = new System.Drawing.Size(103, 21);
+            this.comboBoxGateOpeningDirection.TabIndex = 26;
+            // 
+            // labelGateOpeningDirection
+            // 
+            this.labelGateOpeningDirection.AutoSize = true;
+            this.labelGateOpeningDirection.Location = new System.Drawing.Point(17, 220);
+            this.labelGateOpeningDirection.Name = "labelGateOpeningDirection";
+            this.labelGateOpeningDirection.Size = new System.Drawing.Size(162, 13);
+            this.labelGateOpeningDirection.TabIndex = 27;
+            this.labelGateOpeningDirection.Text = "Gate opening horizontal direction";
+            // 
             // GeneralStructureWeirFormulaView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.labelGateOpeningDirection);
+            this.Controls.Add(this.comboBoxGateOpeningDirection);
+            this.Controls.Add(this.labelGateOpeningWidth);
+            this.Controls.Add(this.labelCrestLength);
+            this.Controls.Add(this.textBoxGateOpeningWidth);
+            this.Controls.Add(this.textBoxCrestLength);
             this.Controls.Add(this.textBoxExtraResistance);
             this.Controls.Add(this.checkBoxExtraResistance);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "GeneralStructureWeirFormulaView";
-            this.Size = new System.Drawing.Size(766, 154);
+            this.Size = new System.Drawing.Size(766, 242);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceGeneralStructure)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -584,5 +648,11 @@
         private System.Windows.Forms.TextBox textBoxWidthUpstream2;
         private System.Windows.Forms.CheckBox checkBoxExtraResistance;
         private System.Windows.Forms.TextBox textBoxExtraResistance;
+        private System.Windows.Forms.TextBox textBoxCrestLength;
+        private System.Windows.Forms.TextBox textBoxGateOpeningWidth;
+        private System.Windows.Forms.Label labelCrestLength;
+        private System.Windows.Forms.Label labelGateOpeningWidth;
+        private System.Windows.Forms.ComboBox comboBoxGateOpeningDirection;
+        private System.Windows.Forms.Label labelGateOpeningDirection;
     }
 }

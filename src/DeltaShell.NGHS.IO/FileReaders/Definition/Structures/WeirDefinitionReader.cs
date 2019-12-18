@@ -146,7 +146,26 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                         UseExtraResistance = Math.Abs(extraResistance) > tolerance,
 
                         GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true),
+                        CrestLength = category.ReadProperty<double>(StructureRegion.CrestLength.Key),
+                        GateOpeningWidth = category.ReadProperty<double>(StructureRegion.GateOpeningWidth.Key),
+
                     };
+
+                    var gateOpeningDirection = category.ReadProperty<string>(StructureRegion.GateHorizontalOpeningDirection.Key);
+                    switch (gateOpeningDirection.ToLower())
+                    {
+                        case "symmetric":
+                            generalStructureWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
+                            break;
+                        case "fromleft":
+                            generalStructureWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.FromLeft;
+                            break;
+                        case "fromright":
+                            generalStructureWeirFormula.GateOpeningHorizontalDirection = GateOpeningDirection.FromRight;
+                            break;
+                        default:
+                            throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + gateOpeningDirection);
+                    }
 
                     if (Math.Abs(generalStructureWeirFormula.GateOpening) < tolerance)
                     {

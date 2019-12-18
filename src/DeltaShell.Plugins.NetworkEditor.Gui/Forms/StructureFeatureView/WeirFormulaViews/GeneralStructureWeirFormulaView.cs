@@ -1,6 +1,8 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews
@@ -10,7 +12,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         public GeneralStructureWeirFormulaView()
         {
             InitializeComponent();
+            comboBoxGateOpeningDirection.DataSource = Enum.GetValues(typeof(GateOpeningDirection));
         }
+
 
         /// <summary>
         /// Sets or gets image set on the title of the view.
