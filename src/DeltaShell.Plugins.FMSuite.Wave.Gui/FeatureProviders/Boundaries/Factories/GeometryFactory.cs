@@ -55,5 +55,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
             return new LineString(relevantCoordinates.ToArray());
         }
+
+        public IEnumerable<IPoint> ConstructBoundaryEndPoints(IWaveBoundary waveBoundary)
+        {
+            if (waveBoundary == null)
+            {
+                throw new ArgumentNullException(nameof(waveBoundary));
+            }
+
+            IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
+
+            if (gridBoundary == null)
+            {
+                return Enumerable.Empty<IPoint>();
+            }
+
+            Coordinate firstCoordinate = GetCoordinate(waveBoundary.GeometricDefinition.StartingIndex,
+                                                       waveBoundary.GeometricDefinition.GridSide,
+                                                       gridBoundary);
+
+            Coordinate lastCoordinate = GetCoordinate(waveBoundary.GeometricDefinition.EndingIndex,
+                                                      waveBoundary.GeometricDefinition.GridSide,
+                                                      gridBoundary);
+
+            return new[]
+            {
+                new Point(firstCoordinate),
+                new Point(lastCoordinate),
+            };
+        }
+
+        private Coordinate GetCoordinate(int index, GridSide side, IGridBoundary boundary)
+        {
+            // TODO: (MWT) Fix this ToArray
+            GridBoundaryCoordinate gridBoundaryCoordinate = boundary[side].ToArray()[index];
+            return boundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinate);
+        }
     }
 }

@@ -115,6 +115,92 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             }
         }
 
+        [Test]
+        public void ConstructBoundaryEndPoints_WaveBoundaryNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            IGridBoundary gridBoundary = null;
 
+            gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
+            var factory = new GeometryFactory(gridBoundaryProvider);
+
+            // Call
+            void Call() => factory.ConstructBoundaryEndPoints(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("waveBoundary"));
+        }
+
+        [Test]
+        public void ConstructBoundaryEndPoints_GridBoundaryNull_ReturnsEmptyEnumerable()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            IGridBoundary gridBoundary = null;
+
+            gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
+            var factory = new GeometryFactory(gridBoundaryProvider);
+
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+
+            // Call
+            IEnumerable<IPoint> result = factory.ConstructBoundaryEndPoints(waveBoundary);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void ConstructBoundaryEndPoints_ValidInput_ReturnsCorrectPoints()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var gridBoundary = Substitute.For<IGridBoundary>();
+
+            gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
+            var factory = new GeometryFactory(gridBoundaryProvider);
+
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+
+            const int firstIndex = 5;
+            const int lastIndex = 10;
+            var gridSide = random.NextEnumValue<GridSide>();
+            
+            var geometricDefinition = new WaveBoundaryGeometricDefinition(firstIndex, 
+                                                                          lastIndex, 
+                                                                          gridSide);
+            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
+
+            var gridBoundaryCoordinates = Enumerable.Range(0, lastIndex * 2)
+                                                    .Select(x => new GridBoundaryCoordinate(gridSide, x))
+                                                    .ToArray();
+            gridBoundary[gridSide].Returns(gridBoundaryCoordinates);
+
+            var expectedFirstCoordinate = new Coordinate(20.0, 40.0);
+            var expectedLastCoordinate = new Coordinate(50.0, 100.0);
+            gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[firstIndex])
+                        .Returns(expectedFirstCoordinate);
+            gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[lastIndex])
+                        .Returns(expectedLastCoordinate);
+
+            // Call
+            IEnumerable<IPoint> result = factory.ConstructBoundaryEndPoints(waveBoundary);
+
+            // Assert
+            List<IPoint> resultList = result.ToList();
+            Assert.That(resultList, Is.Not.Null);
+            Assert.That(resultList, Has.Count.EqualTo(2));
+
+            var equalityComparer = new Coordinate2DEqualityComparer();
+            Assert.That(equalityComparer.Equals(resultList[0]?.Coordinate, expectedFirstCoordinate), 
+                        "Expected the first points coordinate to be equal to the expected coordinate.");
+            Assert.That(equalityComparer.Equals(resultList[1]?.Coordinate, expectedLastCoordinate), 
+                        "Expected the last points coordinate to be equal to the expected coordinate.");
+            gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[firstIndex]);
+            gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[lastIndex]);
+        }
     }
 }
