@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
         /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
+        /// <param name="geometryFactory">The geometryFactory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
