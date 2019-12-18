@@ -379,4 +379,7 @@
   <data name="Boundary_1d" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Boundary_1d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="realtime" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\realtime.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

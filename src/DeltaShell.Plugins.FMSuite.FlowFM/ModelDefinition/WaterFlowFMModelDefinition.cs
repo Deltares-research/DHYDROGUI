@@ -507,7 +507,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public void SetModelProperty(string propertyName, string value)
         {
-            GetModelProperty(propertyName).SetValueAsString(value);
+            WaterFlowFMProperty waterFlowFMProperty = GetModelProperty(propertyName);
+            waterFlowFMProperty?.SetValueAsString(value);
         }
 
         public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()

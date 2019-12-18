@@ -124,13 +124,21 @@ namespace DeltaShell.NGHS.IO.DataObjects
             {
                 case Model1DLateralDataType.FlowTimeSeries:
                     Data = HydroTimeSeriesFactory.CreateFlowTimeSeries();
+                    Name = Feature + " - " + Data;
                     // set data if it the function is completely defined to avoid side effects
                     break;
                 case Model1DLateralDataType.FlowWaterLevelTable:
                     Data = new FlowWaterLevelTable();
+                    Name = Feature + " - " + Data;
+                    break;
+                case Model1DLateralDataType.FlowRealTime:
+                    Name = Feature.Name + " - Realtime from RR";
+                    break;
+                default:
+                    Name = Feature + " - " + Data;
                     break;
             }
-            Name = Feature + " - " + Data;
+            
         }
 
         /// <summary>

@@ -432,6 +432,7 @@
     <None Include="Resources\document-tree.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\realtime.png" />
     <None Include="Resources\linkOverlay.png" />
     <None Include="Resources\none.png" />
     <None Include="Resources\QHBoundary.png" />

@@ -59,6 +59,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                     return Resources.QConst;
                 case Model1DLateralDataType.FlowWaterLevelTable:
                     return Resources.QHBoundary;
+                case Model1DLateralDataType.FlowRealTime:
+                    return Resources.realtime;
             }
 
             return null;

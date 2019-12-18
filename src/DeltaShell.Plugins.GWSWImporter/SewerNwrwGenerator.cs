@@ -17,12 +17,14 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             nwrwData.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
             nwrwData.MeteoStationId = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.MeteoStationId).ValueAsString;
 
-            var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId).ValueAsString;
+            var surfaceType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId).ValueAsString.Trim();
             double auxDouble;
             var surface = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
             if (surface.TryGetValueAsDouble(out auxDouble))
             {
-                var nwrwSurfaceType = (NwrwSurfaceType)typeof(NwrwSurfaceType).GetEnumValueFromDescription(surfaceType);
+                Type type = typeof(NwrwSurfaceType);
+                object enumValueFromDescription = type.GetEnumValueFromDescription(surfaceType);
+                NwrwSurfaceType nwrwSurfaceType = (NwrwSurfaceType)enumValueFromDescription;
                 nwrwData.SurfaceLevelDict[nwrwSurfaceType] = auxDouble;
             }
             

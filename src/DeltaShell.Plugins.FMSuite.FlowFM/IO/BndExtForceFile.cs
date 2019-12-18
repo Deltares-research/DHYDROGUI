@@ -202,11 +202,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
 
                 var lateralName = model1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
-                var lateral = model1DLateralSourceDatas.Select(m1dlsd => m1dlsd.Feature).FirstOrDefault(ls => ls.Name == lateralName);
+                var lateralData = model1DLateralSourceDatas.FirstOrDefault(lsd => lsd.Feature.Name == lateralName);
+                if (lateralData == null) continue;
+                var lateral = lateralData.Feature;
+
                 if (lateral == null) continue;
-                var lateralDef = new LateralSourceForcingDefinition();
-                lateralDef.Name = lateral.Name;
-                lateralDef.LongName = lateral.LongName;
+
+                var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName};
                 if (Math.Abs(lateral.Chainage) < double.Epsilon)
                 {
                     lateralDef.NodeId = lateral.Branch.Source.Name;
@@ -221,6 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralDef.Chainage = lateral.Chainage;
                 }
 
+                lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
                 lateralDef.DischargeForcingFile = filename;
                 yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
             }

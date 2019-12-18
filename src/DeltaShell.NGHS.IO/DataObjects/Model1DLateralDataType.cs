@@ -23,6 +23,12 @@ namespace DeltaShell.NGHS.IO.DataObjects
         /// Q 
         /// </summary>
         [Description("Q : Constant flow")]
-        FlowConstant
+        FlowConstant,
+
+        /// <summary>
+        /// Real time (provided by RR Nwrw) 
+        /// </summary>
+        [Description("Real time")]
+        FlowRealTime
     }
 }

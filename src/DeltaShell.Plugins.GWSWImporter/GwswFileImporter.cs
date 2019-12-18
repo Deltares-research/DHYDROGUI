@@ -119,6 +119,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 ImportGwswNetworkInRrModel(elementTypesList, rrModel, fmModel?.Network);
                 if (hydroModel != null)
                 {
+                    AddRRtoFMNwrwLinks(elementTypesList, rrModel, fmModel);
                     //todo: Add workflow
                     //if (fmModel != null) hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 2 && w.Activities.OfType<IWaterFlowFMModel>().Any() && w.Activities.OfType<RainfallRunoffModel>().Any());
                     //else hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 1 && w.Activities.OfType<RainfallRunoffModel>().Any());
@@ -128,6 +129,38 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
 
         }
+
+        private void AddRRtoFMNwrwLinks(List<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IWaterFlowFMModel fmModel)
+        {
+            // TODO: create link
+            foreach (var nwrwDischargeData in rrModel.NwrwDischargeData)
+            {
+                if (nwrwDischargeData.DischargeType == DischargeType.DryWeatherFlow)
+                {
+                    IBranch branch = fmModel.Network.Branches.FirstOrDefault(b => b.Name == nwrwDischargeData.Name);
+                    if (branch == null)
+                    {
+                        INode node = fmModel.Network.Nodes.FirstOrDefault(b => b.Name == nwrwDischargeData.Name);
+                        if (node != null) branch = node.IncomingBranches.FirstOrDefault();
+                    }
+
+                    if (branch != null)
+                    {
+                        // add lateral to branch
+                        LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = nwrwDischargeData.Name };
+                        branch.BranchFeatures.Add(lateralSource);
+
+                        // at FM-side, create lateral data of type REALTIME
+                        Model1DLateralSourceData model1DLateralSourceData = fmModel.ModelDefinition.LateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
+                        model1DLateralSourceData.Name = lateralSource.Name;
+                        model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
+                        model1DLateralSourceData.Flow = 0d;
+                        //fmModel.ModelDefinition.LateralSourcesData.Add(model1DLateralSourceData);
+                    }
+                }
+            }
+        }
+
         private void ImportGwswNetworkInRrModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IHydroNetwork network)
         {
             var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList).ToList();
@@ -267,7 +300,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     var stepSize = nrOfDischargeTypes / 20;
                     if (stepSize != 0 && indexOf % stepSize == 0)
                     {
-                        SetProgress($"Generating Rainfall Runoff features", surfaceTypes.IndexOf(element), nrOfDischargeTypes);
+                        SetProgress($"Generating Rainfall Runoff features", dischargeTypes.IndexOf(element), nrOfDischargeTypes);
                     }
 
                     yield return GwswNwrwGenerator.CreateNewNwrwDischargeData(element);
@@ -290,7 +323,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     SetProgress($"Generating Rainfall Runoff features", surfaceTypes.IndexOf(element), nrOfSurfaces);
                 }
 
-                var uniqueId = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
+                var uniqueId = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString.Trim();
 
                 if (surfaceFeatures.Any(nwrwData => nwrwData.Name == uniqueId))
                 {
@@ -298,7 +331,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     if (surfaceFeature != null)
                     {
                         var surfaceType = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SurfaceId)
-                            .ValueAsString;
+                            .ValueAsString.Trim();
 
                         var surface = element.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Surface);
                         if (surface.TryGetValueAsDouble(out double auxDouble))

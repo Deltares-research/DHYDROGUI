@@ -124,7 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                     {
                         CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant, Properties.Resources.QConst),
                         CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries, Properties.Resources.QBoundary),
-                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary)
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowRealTime, Properties.Resources.realtime)
                     }
                 }
             };
