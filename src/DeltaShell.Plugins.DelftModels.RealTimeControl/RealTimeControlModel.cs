@@ -610,6 +610,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual bool CanRunParallel { get { return false; } }
         public virtual string MpiCommunicatorString { get { return null; } }
 
+        public virtual void PrepareForIntegratedModelRun()
+        {
+            // Initialization logic which should be executed as part of an
+            // integrated model HydroModel initialization.
+        }
         #endregion
         
         

@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -35,13 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
                 // call
                 model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
 
-                // assert
-                Assert.AreEqual(1, dataItems.Count);
-                Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
-                var document = (TextDocumentFromFile)model.DataItems[0].Value;
-                Assert.AreEqual(content, document.Content);
-                Assert.IsTrue(document.IsOpen);
-                Assert.IsTrue(document.ReadOnly);
+                // Assert
+                AssertCorrectDataItem(dataItems, model, content);
             }
             finally
             {
@@ -60,33 +58,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 
             mocks.ReplayAll();
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "a.txt");
-            const string content = "test";
-            FileUtils.DeleteIfExists(path);
-            File.WriteAllText(path, content);
-
-            try
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                const string newContent = "Some other text";
-                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
+                string firstFilePath = Path.Combine(tempDirectory.Path, "one.txt");
+                const string firstFileContent = "one";
+                File.WriteAllText(firstFilePath, firstFileContent);
+                string secondFilePath = Path.Combine(tempDirectory.Path, "two.txt");
+                const string secondFileContent = "two";
+                File.WriteAllText(secondFilePath, secondFileContent);
 
-                File.WriteAllText(path, newContent);
+                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, firstFilePath);
 
-                // call
-                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, path);
+                AssertCorrectDataItem(dataItems, model, firstFileContent);
 
-                // assert
-                Assert.AreEqual(1, dataItems.Count);
-                Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
-                var document = (TextDocumentFromFile)model.DataItems[0].Value;
-                Assert.AreEqual(newContent, document.Content);
-                Assert.IsTrue(document.IsOpen);
-                Assert.IsTrue(document.ReadOnly);
+                // Call
+                model.AddTextDocument(WaterQualityModel.GridDataItemMetaData, secondFilePath);
+
+                // Assert
+                AssertCorrectDataItem(dataItems, model, secondFileContent);
             }
-            finally
-            {
-                FileUtils.DeleteIfExists(path);
-            }
+        }
+
+        private static void AssertCorrectDataItem(ICollection dataItems, IModel model, string content)
+        {
+            Assert.AreEqual(1, dataItems.Count);
+            Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
+            var document = (TextDocument) model.DataItems[0].Value;
+            Assert.That(document.Content, Is.EqualTo(content));
         }
 
         [Test]
@@ -94,6 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
         {
             // setup
             var model = new WaterQualityModel { Name = "My Model" };
+            model.SetWorkingDirectoryInModelSettings(() => Path.Combine(Path.GetTempPath(),"DeltaShell_Working_Directory"));
             var projectDataDir = Path.Combine(Directory.GetCurrentDirectory(), "A");
             FileUtils.DeleteIfExists(projectDataDir);
 
@@ -103,7 +102,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             // assert
             Assert.AreEqual(Path.Combine(projectDataDir, "My_Model"), model.ModelDataDirectory);
             Assert.AreEqual(Path.Combine(projectDataDir, "My_Model", "output"), model.ModelSettings.OutputDirectory);
-            Assert.AreEqual(Path.Combine(projectDataDir, "My_Model_output"), model.ModelSettings.WorkDirectory);
             Assert.AreEqual(Path.Combine(projectDataDir, "My_Model", "boundary_data_tables"), model.BoundaryDataManager.FolderPath);
             Assert.AreEqual(Path.Combine(projectDataDir, "My_Model", "load_data_tables"), model.LoadsDataManager.FolderPath);
 

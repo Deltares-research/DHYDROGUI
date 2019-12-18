@@ -156,25 +156,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void GivenWaveModelCoupledToFlowAndGetFlowComFilePathFunctionIsNull_WhenValidatingCoupling_ThenValidationErrorIsReturned()
-        {
-            // Given
-            var waveModel = new WaveModel
-            {
-                IsCoupledToFlow = true,
-                WriteCOM = true
-            };
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = "somePath";
-            waveModel.GetFlowComFilePath = null;
-
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file);
-        }
-
-        [Test]
         public void GivenWaveModelNotCoupledToFlowModelAndWriteComFileIsTrue_WhenValidatingCoupling_ThenValidationErrorIsReturned()
         {
             // Given

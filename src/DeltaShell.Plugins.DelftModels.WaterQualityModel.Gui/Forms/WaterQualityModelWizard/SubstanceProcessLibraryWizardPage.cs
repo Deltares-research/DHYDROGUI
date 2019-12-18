@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualityModelWizard
 {
     public partial class SubstanceProcessLibraryWizardPage : UserControl, IWizardPage
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SubstanceProcessLibraryWizardPage));
+
         public SubstanceProcessLibraryWizardPage(string dataDirectory = null)
         {
             InitializeComponent();
@@ -158,7 +162,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             {
                 line = f.OpenText().ReadLine();
             }
-            catch {}
+            catch (Exception e) when (e is UnauthorizedAccessException || e is SecurityException || e is IOException)
+            {
+                Log.WarnFormat(e.Message);
+            }
 
             return line;
         }

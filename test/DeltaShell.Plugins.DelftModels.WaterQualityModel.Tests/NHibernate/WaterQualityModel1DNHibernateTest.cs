@@ -44,7 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         {
             var entity = new WaterQualityModelSettings
                 {
-                    WorkDirectory = @"D:\Temp",
                     HisStartTime = new DateTime(2010, 1, 1),
                     HisStopTime = new DateTime(2010, 1, 2),
                     HisTimeStep = new TimeSpan(1, 1, 1),
@@ -85,7 +84,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
-            Assert.AreEqual(@"D:\Temp", retrievedEntity.WorkDirectory);
             Assert.AreEqual(new DateTime(2010, 1, 1), retrievedEntity.HisStartTime);
             Assert.AreEqual(new DateTime(2010, 1, 2), retrievedEntity.HisStopTime);
             Assert.AreEqual(new TimeSpan(1, 1, 1), retrievedEntity.HisTimeStep);

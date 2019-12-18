@@ -1,5 +1,4 @@
-﻿using DelftTools.Functions.Generic;
-using DelftTools.Shell.Core.Workflow;
+﻿using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
@@ -35,19 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var controlGroup = new ControlGroup {Name = "control_group_containing_relative_time_rule"};
             var output = new Output { Name = "output" };
             controlGroup.Outputs.Add(output);
-            var relativeTimeRule = new RelativeTimeRule
-            {
-                Name = "relative_time_rule",
-                FromValue = false,
-                Id = 6L,
-                Interpolation = InterpolationType.Constant,
-                MinimumPeriod = 3,
-                LongName = "relative_time_rule_long_name"
-            };
-            relativeTimeRule.Outputs.Add(output);
-            relativeTimeRule.Function[0d] = 1d;
-            relativeTimeRule.Function[3d] = 5d;
-            relativeTimeRule.Function[7d] = 11d;
+            RelativeTimeRule relativeTimeRule = RealTimeControlTestHelper.CreateRelativeTimeRule("relative_time_rule", output);
             controlGroup.Rules.Add(relativeTimeRule);
 
             mocks.ReplayAll();
@@ -170,6 +158,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 // Then
                 expectedMessages, nExpectedWarnings);
         }
+
+        [Test]
+        public void GetToolsConfigXml_WhenTwoRulesAndTwoConditionsShareOutput_ThenBothConditionsXmlElementsAreAddedToTheXDocument()
+        {
+            // Set-up
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateControlGroupWithTwoRulesOnOneOutput();
+
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(DimrApiDataSet.RtcToolsDllPath,
+                                                                             new List<ControlGroup> {controlGroup});
+
+            // Assert
+            Assert.That(xDocument.Root, Is.Not.Null);
+            XElement conditionsXmlElement = xDocument.Root.Elements()
+                                                     .Single(e => e.Name.LocalName.Equals("triggers"));
+            Assert.That(conditionsXmlElement.Elements().Count(), Is.EqualTo(2), "Conditions XElement should contain two elements.");
+        }
+
 
         private RealTimeControlModel CreateRealTimeControlModelWithPidRule(PIDRule.PIDRuleSetpointType setPointType,
             bool hasEmptyTimeSeries)

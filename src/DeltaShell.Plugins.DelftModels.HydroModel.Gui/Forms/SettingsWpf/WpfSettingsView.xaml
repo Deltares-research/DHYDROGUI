@@ -174,7 +174,10 @@
                     Height="20"
                     Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}"
                     Command="{Binding CustomCommand.CustomCommand}">
-                    <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
+                    <StackPanel>
+                        <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}"/>
+                        <TextBlock Visibility="{Binding CustomCommand.HasNoImage, Converter={StaticResource BoolToVisibility}}">...</TextBlock>
+                    </StackPanel>
                 </Button>
             </Grid>
         </DataTemplate>
@@ -292,12 +295,6 @@
         </DataTemplate>
 
         <!--#endregion-->
-
-        <!-- GUI Custom Property -->
-        <DataTemplate x:Key="propertyCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
-            <!-- Bind to the whole data item (a collection) here -->
-            <ContentControl Content="{Binding CustomControl}"/>
-        </DataTemplate>
 
         <!-- GUI Subcategory -->
         <DataTemplate x:Key="subCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">

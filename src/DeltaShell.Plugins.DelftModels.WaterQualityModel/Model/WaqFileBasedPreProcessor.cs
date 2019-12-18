@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
+﻿using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
@@ -15,26 +14,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedPreProcessor));
 
-        private static readonly IDictionary<ADataItemMetaData, string> OutputFiles =
-            new Dictionary<ADataItemMetaData, string>
-            {
-                {WaterQualityModel.ListFileDataItemMetaData, FileConstants.ListFileName},
-                {WaterQualityModel.ProcessFileDataItemMetaData, FileConstants.ProcessFileName}
-            };
-
         private const string RestartString = "0\n" + FileConstants.RestartInFileName + "\n";
 
         // save the work directory, because you cannot know it anymore in Cleanup phase.
-        private string workDirectory;
+        private string outputWorkDirectory;
 
         public bool TryToCancel { get; set; }
 
-        public bool InitializeWaq(WaqInitializationSettings initSettings,
-                                  Action<ADataItemMetaData, string> addTextDocumentAction)
+        public bool InitializeWaq(WaqInitializationSettings initSettings)
         {
             CheckInput(initSettings);
 
-            string includeDirectory = Path.Combine(initSettings.Settings.WorkDirectory, FileConstants.IncludesDirectoryName);
+            outputWorkDirectory = Path.Combine(initSettings.Settings.WorkDirectory, FileConstants.OutputDirectoryName);
+            initSettings.Settings.WorkingOutputDirectory = outputWorkDirectory;
+            FileUtils.CreateDirectoryIfNotExists(outputWorkDirectory, true);
+
+            string includeDirectory = Path.Combine(outputWorkDirectory, FileConstants.IncludesDirectoryName);
 
             if (!Directory.Exists(includeDirectory))
             {
@@ -45,32 +40,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 
             WriteIncludeFilesAndBinaryFiles(initSettings, includeDirectory);
 
-            // save the work directory for later use in Cleanup()
-            workDirectory = initSettings.Settings.WorkDirectory;
-
-            File.WriteAllText(Path.Combine(workDirectory, FileConstants.InputFileName),
+            File.WriteAllText(Path.Combine(outputWorkDirectory, FileConstants.InputFileName),
                               GetInputFileContents(initSettings));
-
-            Directory.SetCurrentDirectory(workDirectory);
-
-            // create an output directory if it was not specified
-            // don't check empty string, because it could be set intentionally to the same folder as the work directory
-            if (initSettings.Settings.OutputDirectory == null)
-            {
-                initSettings.Settings.OutputDirectory = Path.Combine(initSettings.Settings.WorkDirectory, FileConstants.OutputDirectoryName);
-            }
-
-            // if the string is empty, it is the same as the working directory
-            if (initSettings.Settings.OutputDirectory != string.Empty)
-            {
-                // create the directory
-                FileUtils.CreateDirectoryIfNotExists(initSettings.Settings.OutputDirectory);
-            }
-
-            foreach (KeyValuePair<ADataItemMetaData, string> outputFile in OutputFiles)
-            {
-                FileUtils.DeleteIfExists(Path.Combine(initSettings.Settings.OutputDirectory, outputFile.Value));
-            }
 
             string parameters = string.Format("{0} {1} \"{2}\" -eco \"{3}\"", FileConstants.InputFileName,
                                               initSettings.Settings.ProcessesActive ? "-p" : "-np",
@@ -78,45 +49,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                               Path.Combine(DelwaqFileStructureHelper.GetDelwaqDataDefaultFolderPath(),
                                                            "bloom.spe"));
 
-            // additional output directory
-            if (!string.IsNullOrEmpty(initSettings.Settings.OutputDirectory))
-            {
-                parameters += string.Format(" -output \"{0}\"", initSettings.Settings.OutputDirectory);
-            }
-
             DateTime startTime = DateTime.Now;
             Log.Info("Started delwaq1.exe.");
             bool processSuccessful = WaterQualityUtils.RunProcess(DelwaqFileStructureHelper.GetDelwaq1ExePath(),
-                                                                  parameters, workDirectory, () => TryToCancel, false);
+                                                                  parameters, outputWorkDirectory, () => TryToCancel, false);
             Log.InfoFormat("Done running delwaq1.exe. (Took {0})", DateTime.Now - startTime);
-
-            // Read the output files
-            foreach (KeyValuePair<ADataItemMetaData, string> outputFile in OutputFiles)
-            {
-                addTextDocumentAction(outputFile.Key,
-                                      Path.Combine(initSettings.Settings.OutputDirectory, outputFile.Value));
-            }
 
             return processSuccessful;
         }
 
         public void Dispose()
         {
-            if (workDirectory == null)
+            if (outputWorkDirectory == null)
             {
                 return;
             }
 
             // delete all deltashell-*.wrk and delwaq.rtn, deltashell-initials.map
-            string[] workFiles = Directory.GetFileSystemEntries(workDirectory, FileConstants.WorkFilesName + "-*.wrk");
+            string[] workFiles = Directory.GetFileSystemEntries(outputWorkDirectory, FileConstants.WorkFilesName + "-*.wrk");
 
             foreach (string workFile in workFiles)
             {
                 FileUtils.DeleteIfExists(workFile);
             }
 
-            FileUtils.DeleteIfExists(Path.Combine(workDirectory, "delwaq.rtn"));
-            FileUtils.DeleteIfExists(Path.Combine(workDirectory, FileConstants.InitialConditionsFileName));
+            FileUtils.DeleteIfExists(Path.Combine(outputWorkDirectory, "delwaq.rtn"));
+            FileUtils.DeleteIfExists(Path.Combine(outputWorkDirectory, FileConstants.InitialConditionsFileName));
         }
 
         /// <summary>
@@ -184,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 {
                     "B5_bounddata.inc",
                     set => IncludeFileFactory.CreateBoundaryDataInclude(
-                        set.BoundaryDataManager, set.Settings.WorkDirectory)
+                        set.BoundaryDataManager, outputWorkDirectory)
                 },
                 {"B6_loads.inc", set => IncludeFileFactory.CreateDryWasteLoadInclude(set.LoadAndIds)},
                 {
@@ -194,7 +152,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                 {
                     "B6_loads_data.inc",
                     set => IncludeFileFactory.CreateDryWasteLoadDataInclude(
-                        set.LoadsDataManager, set.Settings.WorkDirectory)
+                        set.LoadsDataManager, outputWorkDirectory)
                 },
                 {"B7_processes.inc", set => IncludeFileFactory.CreateProcessesInclude(set.SubstanceProcessLibrary)},
                 {"B7_constants.inc", set => IncludeFileFactory.CreateConstantsInclude(set.ProcessCoefficients)},

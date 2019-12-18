@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
+        private bool isCoupledToFlow;
         
         /// <summary>
         /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
@@ -61,7 +62,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
         /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
         /// </value>
-        public bool IsCoupledToFlow { get; set; }
+        /// <remarks>
+        /// When set to <c>true</c>, we assume that this model is coupled to an FM model as part of an
+        /// integrated model. In that case, the communications file path is set to a standard relative path.
+        /// </remarks>
+        public bool IsCoupledToFlow
+        {
+            get => isCoupledToFlow;
+            set
+            {
+                isCoupledToFlow = value;
+                if (value && Owner is IHydroModel hydroModel)
+                {
+                    ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
+                }
+            }
+        }
+
+        /// <inheritdoc/>>
+        public override object Owner
+        {
+            get => base.Owner;
+            set
+            {
+                if (base.Owner is IHydroModel hydroModelBefore)
+                {
+                    ((INotifyPropertyChanged)hydroModelBefore).PropertyChanged -= OnModelOwnerChanged;
+                }
+
+                base.Owner = value;
+
+                if (base.Owner is IHydroModel hydroModelAfter)
+                {
+                    ((INotifyPropertyChanged)hydroModelAfter).PropertyChanged += OnModelOwnerChanged;
+                }
+            }
+        }
+
+        private void OnModelOwnerChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (IsCoupledToFlow && e.PropertyName == "Name" && Owner is IHydroModel hydroModel)
+            {
+                ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
+            }
+        }
 
         public int SimulationMode
         {
@@ -1128,10 +1172,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (IsCoupledToFlow)
             {
-                string flowComFilePath = GetFlowComFilePath();
-                WaveModelProperty comFileProperty =
-                    ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
-                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, flowComFilePath);
+                WaveModelProperty comFileProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
+                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, modelDefinition.CommunicationsFilePath);
             }
 
             ModelSaveTo(filePath, false);
@@ -1159,8 +1201,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             return new WaveModelValidator().Validate(this);
         }
-
-        public virtual Func<string> GetFlowComFilePath { get; set; }
 
         private bool lazyInitializationFlag;
 
@@ -1589,6 +1629,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         public virtual string MdwFilePath => mdwFile != null ? mdwFile.MdwFilePath : null;
 
         void IFileBased.CreateNew(string mdwPath)
@@ -1737,6 +1782,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
             //wave doesnt run standalone via dimr but via kernels
+        }
+
+        public virtual void PrepareForIntegratedModelRun()
+        {
+            // Initialization logic which should be executed as part of an
+            // integrated model HydroModel initialization.
         }
 
         #endregion

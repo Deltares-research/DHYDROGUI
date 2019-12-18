@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
             Values = new List<string>();
         }
 
-        public string Quantity { get; set; }
+        public string QuantityName { get; set; }
         public string Unit { get; set; }
         public string VerticalPosition { get; set; }
         public string TracerName { get; set; }

@@ -1,44 +1,51 @@
-﻿using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
-using DelftTools.Utils;
-using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.IO;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Properties;
-using NUnit.Framework;
-using Rhino.Mocks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DelftTools.Functions;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.TestUtils;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Properties;
+using NSubstitute;
+using NUnit.Framework;
+
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
     [TestFixture]
     public class WaqFileBasedPreProcessorTest
     {
-
         [Test]
         public void InitializeWaqWithoutInitializationSettings()
         {
-            var preprocessor = new WaqFileBasedPreProcessor();
-            var exception = Assert.Throws<NullReferenceException>(() => preprocessor.InitializeWaq(null, null));
-            Assert.AreEqual(exception.Message, "Initialization settings may not be null");
+            // Call
+            void Call() => new WaqFileBasedPreProcessor().InitializeWaq(null);
+
+            // Assert
+            Assert.That(Call, Throws.Exception.TypeOf<NullReferenceException>()
+                                    .With.Message.EqualTo("Initialization settings may not be null"));
         }
 
         [Test]
         public void InitializeWaqWithEmptyInputFile()
         {
-            var preprocessor = new WaqFileBasedPreProcessor();
-            var exception = Assert.Throws<NullReferenceException>(() => preprocessor.InitializeWaq(new WaqInitializationSettings(), null));
-            Assert.AreEqual(exception.Message, "Input file may not be null");
+            // Call
+            void Call() => new WaqFileBasedPreProcessor().InitializeWaq(new WaqInitializationSettings());
+
+            // Assert
+            Assert.That(Call, Throws.Exception.TypeOf<NullReferenceException>()
+                                    .With.Message.EqualTo("Input file may not be null"));
         }
 
         [Test]
@@ -46,12 +53,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         {
             var preprocessor = new WaqFileBasedPreProcessor();
             var waqInitializationSettings = new WaqInitializationSettings
-                {
-                    InputFile = new TextDocument { Content = "a" },
-                    SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary()
-                };
+            {
+                InputFile = new TextDocument { Content = "a" },
+                SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary(),
+                Settings = Substitute.For<IWaterQualityModelSettings>()
+            };
 
-            var exception = Assert.Throws<NullReferenceException>(() => preprocessor.InitializeWaq(waqInitializationSettings, null));
+            waqInitializationSettings.Settings.WorkDirectory.Returns(string.Empty);
+
+            var exception = Assert.Throws<NullReferenceException>(() => preprocessor.InitializeWaq(waqInitializationSettings));
             Assert.AreEqual(exception.Message, "Work directory must be set");
         }
 
@@ -66,7 +76,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var currentDirectory = Directory.GetCurrentDirectory();
             var waqModelDataDir = Path.Combine(currentDirectory, "A");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
-            var includeDirectory = workingDirectory + @"includes_deltashell\";
+            var workingOutputDirectory = Path.Combine(workingDirectory, FileConstants.OutputDirectoryName);
+            var includeDirectory = Path.Combine(workingOutputDirectory, FileConstants.IncludesDirectoryName);
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -74,79 +85,60 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             FileUtils.DeleteIfExists(waqModelDataDir);
             Directory.CreateDirectory(waqModelDataDir);
-
-            var boundaryDataFolderPath = Path.Combine(waqModelDataDir, "haha");
-            var manager = new DataTableManager { FolderPath = boundaryDataFolderPath };
-            manager.CreateNewDataTable("A", "B", "C.usefors", "E");
-            manager.CreateNewDataTable("F", "G", "H.usefors", "J");
-
-            var loadsDataFolderPath = Path.Combine(waqModelDataDir, "lol");
-            var loadsManager = new DataTableManager { FolderPath = loadsDataFolderPath };
-            loadsManager.CreateNewDataTable("O", "P", "Q.usefors", "R");
-            loadsManager.CreateNewDataTable("S", "T", "U.usefors", "V");
-
-            var loads = loadsManager.DataTables.ToArray();
-            loads[1].IsEnabled = false;
-
-            var mocks = new MockRepository();
-            var model = mocks.Stub<WaterQualityModel>();
-
-            model.DataItems = new EventedList<IDataItem>();
-
-            mocks.ReplayAll();
-
-            var waqInitializationSettings = new WaqInitializationSettings
+            try
             {
-                InputFile = new TextDocument { Content = Resources.TestInputFile },
-                SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary(),
-                SimulationStartTime = new DateTime(2010, 1, 1),
-                SimulationStopTime = new DateTime(2010, 1, 2),
-                SimulationTimeStep = new TimeSpan(1, 0, 0, 0),
-                InitialConditions = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("AAP", 10.0, "AAP", "mg/s", "AAP") }),
-                ProcessCoefficients = new Collection<IFunction>(),
-                Dispersion = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null) }),
-                Settings = new WaterQualityModelSettings { WorkDirectory = workingDirectory },
-                BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
-                LoadAndIds = new Dictionary<WaterQualityLoad, int>(),
-                OutputLocations = new Dictionary<string, IList<int>>(),
-                BoundaryDataManager = manager,
-                LoadsDataManager = loadsManager, // same data for loads as for boundary data
-                LoadsAliases = new Dictionary<string, IList<string>>(),
-                BoundaryAliases = new Dictionary<string, IList<string>>(),
-                VolumesFile = @"dir1\dir2\volumesfile.inc",
-                AttributesFile = @"dir1\dir2\attributesfile.inc",
-                AreasFile = @"dir1\dir2\areasfile.inc",
-                FlowsFile = @"dir1\dir2\flowsfile.inc",
-                LengthsFile = @"dir1\dir2\lengthsfile.inc",
-                PointersFile = @"dir1\dir2\pointersfile.inc",
-                SurfacesFile = @"dir1\dir2\parametersfile.inc",
-                VerticalDiffusionFile = @"dir1\dir2\verticaldiffusionfile.inc",
-                UseAdditionalVerticalDiffusion = true,
-            };
-          
-            //act
-            preprocessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => model.AddTextDocument(displayName, filePath));
-            string[] files = Directory.GetFiles(includeDirectory);
-            var volumeFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_volumes.inc")));
-            var attributesFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_attributes.inc")));
-            var areaFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_area.inc")));
-            var flowsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_flows.inc")));
-            var lengthFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_length.inc")));
-            var pointersFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_pointers.inc")));
-            var parametersFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_parameters.inc")));
-            var verticalDiffusionFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_vdiffusion.inc")));
-            var loadsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B6_loads_data.inc")));
+                var boundaryDataFolderPath = Path.Combine(waqModelDataDir, "haha");
+                var manager = new DataTableManager {FolderPath = boundaryDataFolderPath};
+                manager.CreateNewDataTable("A", "B", "C.usefors", "E");
+                manager.CreateNewDataTable("F", "G", "H.usefors", "J");
 
-            //assert
-            Assert.That(volumeFilePath, Is.StringContaining(@"dir1/dir2/volumesfile.inc"));
-            Assert.That(attributesFilePath, Is.StringContaining(@"dir1/dir2/attributesfile.inc"));
-            Assert.That(areaFilePath, Is.StringContaining(@"dir1/dir2/areasfile.inc"));
-            Assert.That(flowsFilePath, Is.StringContaining(@"dir1/dir2/flowsfile.inc"));
-            Assert.That(lengthFilePath, Is.StringContaining(@"dir1/dir2/lengthsfile.inc"));
-            Assert.That(pointersFilePath, Is.StringContaining(@"dir1/dir2/pointersfile.inc"));
-            Assert.That(parametersFilePath, Is.StringContaining(@"dir1/dir2/parametersfile.inc"));
-            Assert.That(loadsFilePath, Is.StringContaining(@"INCLUDE '../A/lol/O.tbl'"));
-            Assert.That(verticalDiffusionFilePath, Is.StringContaining(@"dir1/dir2/verticaldiffusionfile.inc"));
+                var loadsDataFolderPath = Path.Combine(waqModelDataDir, "lol");
+                var loadsManager = new DataTableManager {FolderPath = loadsDataFolderPath};
+                loadsManager.CreateNewDataTable("O", "P", "Q.usefors", "R");
+                loadsManager.CreateNewDataTable("S", "T", "U.usefors", "V");
+
+                var loads = loadsManager.DataTables.ToArray();
+                loads[1].IsEnabled = false;
+
+                var model = Substitute.For<WaterQualityModel>();
+
+                model.DataItems = new EventedList<IDataItem>();
+                
+                var waqInitializationSettings =
+                    CreateValidWaqInitializationSettings(workingDirectory, manager, loadsManager);
+
+                //act
+                preprocessor.InitializeWaq(waqInitializationSettings);
+                string[] files = Directory.GetFiles(includeDirectory);
+                var volumeFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_volumes.inc")));
+                var attributesFilePath =
+                    File.ReadAllText(files.FirstOrDefault(file => file.Contains("B3_attributes.inc")));
+                var areaFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_area.inc")));
+                var flowsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_flows.inc")));
+                var lengthFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_length.inc")));
+                var pointersFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B4_pointers.inc")));
+                var parametersFilePath =
+                    File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_parameters.inc")));
+                var verticalDiffusionFilePath =
+                    File.ReadAllText(files.FirstOrDefault(file => file.Contains("B7_vdiffusion.inc")));
+                var loadsFilePath = File.ReadAllText(files.FirstOrDefault(file => file.Contains("B6_loads_data.inc")));
+
+                //assert
+                Assert.That(volumeFilePath, Is.StringContaining(@"dir1/dir2/volumesfile.inc"));
+                Assert.That(attributesFilePath, Is.StringContaining(@"dir1/dir2/attributesfile.inc"));
+                Assert.That(areaFilePath, Is.StringContaining(@"dir1/dir2/areasfile.inc"));
+                Assert.That(flowsFilePath, Is.StringContaining(@"dir1/dir2/flowsfile.inc"));
+                Assert.That(lengthFilePath, Is.StringContaining(@"dir1/dir2/lengthsfile.inc"));
+                Assert.That(pointersFilePath, Is.StringContaining(@"dir1/dir2/pointersfile.inc"));
+                Assert.That(parametersFilePath, Is.StringContaining(@"dir1/dir2/parametersfile.inc"));
+                Assert.That(loadsFilePath, Is.StringContaining(@"INCLUDE '../../A/lol/O.tbl'"));
+                Assert.That(verticalDiffusionFilePath, Is.StringContaining(@"dir1/dir2/verticaldiffusionfile.inc"));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(workingDirectory);
+                FileUtils.DeleteIfExists(waqModelDataDir);
+            }
         }
 
         [Test]
@@ -160,7 +152,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var currentDirectory = Directory.GetCurrentDirectory();
             var waqModelDataDir = Path.Combine(currentDirectory, "A");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
-            var includeDirectory = workingDirectory + @"includes_deltashell\";
+            var workingOutputDirectory = Path.Combine(workingDirectory, FileConstants.OutputDirectoryName);
+            var includeDirectory = Path.Combine(workingOutputDirectory, FileConstants.IncludesDirectoryName);
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -185,38 +178,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 var loads = loadsManager.DataTables.ToArray();
                 loads[2].IsEnabled = false;
 
-                var mocks = new MockRepository();
-                var model = mocks.Stub<WaterQualityModel>();
+                var model = Substitute.For<WaterQualityModel>();
 
                 model.DataItems = new EventedList<IDataItem>();
-
-                mocks.ReplayAll();
-
-                var waqInitializationSettings = new WaqInitializationSettings
-                {
-                    InputFile = new TextDocument { Content = Resources.TestInputFile },
-                    SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary(),
-                    SimulationStartTime = new DateTime(2010, 1, 1),
-                    SimulationStopTime = new DateTime(2010, 1, 2),
-                    SimulationTimeStep = new TimeSpan(1, 0, 0, 0),
-                    InitialConditions = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("AAP", 10.0, "AAP", "mg/s", "AAP") }),
-                    ProcessCoefficients = new Collection<IFunction>(),
-                    Dispersion = new Collection<IFunction>(new [] {WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null)} ),
-                    Settings = new WaterQualityModelSettings { WorkDirectory = workingDirectory },
-                    BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
-                    LoadAndIds = new Dictionary<WaterQualityLoad, int>(),
-                    OutputLocations = new Dictionary<string, IList<int>>(),
-                    BoundaryDataManager = manager,
-                    LoadsDataManager = loadsManager, // same data for loads as for boundary data
-                    LoadsAliases = new Dictionary<string, IList<string>>(),
-                    BoundaryAliases = new Dictionary<string, IList<string>>(),
-                };
-
+                
+                WaqInitializationSettings waqInitializationSettings = CreateValidWaqInitializationSettings(workingDirectory, manager, loadsManager);
+                
                 // call
-                preprocessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => model.AddTextDocument(displayName, filePath));
+                preprocessor.InitializeWaq(waqInitializationSettings);
 
                 // setup
-                Assert.IsTrue(File.Exists(workingDirectory + "deltashell.inp"));
+                Assert.IsTrue(File.Exists(Path.Combine(workingOutputDirectory, FileConstants.InputFileName)));
                 Assert.IsTrue(Directory.Exists(includeDirectory));
 
                 var includeFilesToCheck = new List<string>
@@ -294,17 +266,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                             folderPathToCheck, string.Join(",", unexpectedFiles));
                     }
                 }
-                
-                var listFileTextDocument = model.DataItems
-                    .Select(d => d.Value)
-                    .OfType<TextDocumentFromFile>()
-                    .ToList()
-                    .FirstOrDefault(t => t.Name == WaterQualityModel.ListFileDataItemMetaData.Name);
-                Assert.IsNotNull(listFileTextDocument);
-                Assert.IsTrue(listFileTextDocument.Content.Length > 0);
-                Assert.IsFalse(listFileTextDocument.Content.Contains("Test file")); // Previous list file output should be removed
-
-                mocks.VerifyAll();
             }
             finally
             {
@@ -314,15 +275,59 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             }
         }
 
+        private static WaqInitializationSettings CreateValidWaqInitializationSettings(
+            string workingDirectory, DataTableManager manager, DataTableManager loadsManager)
+        {
+            var waqInitializationSettings = new WaqInitializationSettings
+            {
+                InputFile = new TextDocument {Content = Resources.TestInputFile},
+                SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary(),
+                SimulationStartTime = new DateTime(2010, 1, 1),
+                SimulationStopTime = new DateTime(2010, 1, 2),
+                SimulationTimeStep = new TimeSpan(1, 0, 0, 0),
+                InitialConditions = new Collection<IFunction>(new[]
+                {
+                    WaterQualityFunctionFactory.CreateConst("AAP", 10.0, "AAP", "mg/s", "AAP")
+                }),
+                ProcessCoefficients = new Collection<IFunction>(),
+                Dispersion = new Collection<IFunction>(new[]
+                {
+                    WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null)
+                }),
+                Settings = Substitute.For<IWaterQualityModelSettings>(),
+                BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
+                LoadAndIds = new Dictionary<WaterQualityLoad, int>(),
+                OutputLocations = new Dictionary<string, IList<int>>(),
+                BoundaryDataManager = manager,
+                LoadsDataManager = loadsManager, // same data for loads as for boundary data
+                LoadsAliases = new Dictionary<string, IList<string>>(),
+                BoundaryAliases = new Dictionary<string, IList<string>>(),
+
+                VolumesFile = @"dir1\dir2\volumesfile.inc",
+                AttributesFile = @"dir1\dir2\attributesfile.inc",
+                AreasFile = @"dir1\dir2\areasfile.inc",
+                FlowsFile = @"dir1\dir2\flowsfile.inc",
+                LengthsFile = @"dir1\dir2\lengthsfile.inc",
+                PointersFile = @"dir1\dir2\pointersfile.inc",
+                SurfacesFile = @"dir1\dir2\parametersfile.inc",
+                VerticalDiffusionFile = @"dir1\dir2\verticaldiffusionfile.inc",
+                UseAdditionalVerticalDiffusion = true,
+            };
+
+            IWaterQualityModelSettings settings = waqInitializationSettings.Settings;
+            settings.WorkDirectory.Returns(workingDirectory);
+            settings.ProcessesActive.Returns(true);
+
+            return waqInitializationSettings;
+        }
+
         [Test]
         public void GetDataTableUserforsRelativeFolderPathTest()
         {
             // setup
-            var mocks = new MockRepository();
-            var managerStub = mocks.Stub<DataTableManager>();
+            var managerStub = Substitute.For<DataTableManager>();
             managerStub.FolderPath = Path.Combine("bla", "foo", "bar");
-            mocks.ReplayAll();
-
+            
             // call
             var relativePath = WaqFileBasedPreProcessor.GetDataTableUseforsRelativeFolderPath(managerStub);
 
@@ -340,9 +345,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var currentDirectory = Directory.GetCurrentDirectory();
             var waqModelDataDir = Path.Combine(currentDirectory, "B");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
-            var includeDirectory = workingDirectory + @"includes_deltashell\";
-            var listFile = workingDirectory + "deltashell.lst";
-            var processFile = workingDirectory + "deltashell.lsp";
+            var workingOutputDirectory = Path.Combine(workingDirectory, FileConstants.OutputDirectoryName);
+            var includeDirectory = Path.Combine(workingOutputDirectory, FileConstants.IncludesDirectoryName);
+            var listFile = workingOutputDirectory + "deltashell.lst";
+            var processFile = workingOutputDirectory + "deltashell.lsp";
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -373,42 +379,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     dataTable.IsEnabled = false; // disable all data tables, so no folder is created
                 }
 
-                var mocks = new MockRepository();
-                var model = mocks.Stub<WaterQualityModel>();
+                var model = Substitute.For<WaterQualityModel>();
 
                 model.DataItems = new EventedList<IDataItem>();
 
-                mocks.ReplayAll();
-
-                var waqInitializationSettings = new WaqInitializationSettings
-                {
-                    InputFile = new TextDocument { Content = Resources.TestInputFile },
-                    SubstanceProcessLibrary = SubstanceProcessLibraryTestHelper.CreateDefaultSubstanceProcessLibrary(),
-                    SimulationStartTime = new DateTime(2010, 1, 1),
-                    SimulationStopTime = new DateTime(2010, 1, 2),
-                    SimulationTimeStep = new TimeSpan(1, 0, 0, 0),
-                    InitialConditions = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("AAP", 10.0, "AAP", "mg/s", "AAP") }),
-                    ProcessCoefficients = new Collection<IFunction>(),
-                    Dispersion = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null) }),
-                    Settings = new WaterQualityModelSettings { WorkDirectory = workingDirectory },
-                    BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
-                    LoadAndIds = new Dictionary<WaterQualityLoad, int>(),
-                    OutputLocations = new Dictionary<string, IList<int>>(),
-                    BoundaryDataManager = boundaryDataManager,
-                    LoadsDataManager = new DataTableManager(),
-                    LoadsAliases = new Dictionary<string, IList<string>>(),
-                    BoundaryAliases = new Dictionary<string, IList<string>>(),
-                };
-
+                WaqInitializationSettings waqInitializationSettings = CreateValidWaqInitializationSettings(workingDirectory,
+                                                                                                           boundaryDataManager,
+                                                                                                           new DataTableManager());
                 // call
-                preprocessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => model.AddTextDocument(displayName, filePath));
+                preprocessor.InitializeWaq(waqInitializationSettings);
 
                 // setup
                 Assert.IsTrue(Directory.Exists(includeDirectory));
 
                 Assert.IsFalse(Directory.Exists(Path.Combine(includeDirectory, Path.GetFileName(boundaryDataManager.FolderPath))));
-
-                mocks.VerifyAll();
             }
             finally
             {
@@ -428,9 +412,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             var currentDirectory = Directory.GetCurrentDirectory();
             var waqModelDataDir = Path.Combine(currentDirectory, "B");
             var workingDirectory = Path.GetFullPath(@".\TestInitializeWaqForFileBasedProcessing\");
-            var includeDirectory = workingDirectory + @"includes_deltashell\";
-            var listFile = workingDirectory + "deltashell.lst";
-            var processFile = workingDirectory + "deltashell.lsp";
+            var workingOutputDirectory = Path.Combine(workingDirectory, FileConstants.OutputDirectoryName);
+            var includeDirectory = Path.Combine(workingOutputDirectory, FileConstants.IncludesDirectoryName);
+            var listFile = workingOutputDirectory + "deltashell.lst";
+            var processFile = workingOutputDirectory + "deltashell.lsp";
 
             // Delete directory to avoid failing test on build server when there is already a previous version of the directory
             FileUtils.DeleteIfExists(workingDirectory);
@@ -459,12 +444,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 var loadsDataFolderPath = Path.Combine(waqModelDataDir, "lol");
                 var loadsManager = new DataTableManager { FolderPath = loadsDataFolderPath };
 
-                var mocks = new MockRepository();
-                var model = mocks.Stub<WaterQualityModel>();
+                var model = Substitute.For<WaterQualityModel>();
 
                 model.DataItems = new EventedList<IDataItem>();
-
-                mocks.ReplayAll();
 
                 var waqInitializationSettings = new WaqInitializationSettings
                 {
@@ -476,7 +458,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     InitialConditions = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("AAP", 10.0, "AAP", "mg/s", "AAP") }),
                     ProcessCoefficients = new Collection<IFunction>(),
                     Dispersion = new Collection<IFunction>(new[] { WaterQualityFunctionFactory.CreateConst("Dispersion", 0.2d, "Dispersion", "m2/s", null) }),
-                    Settings = new WaterQualityModelSettings { WorkDirectory = workingDirectory },
+                    Settings = Substitute.For<IWaterQualityModelSettings>(),
                     BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>(),
                     LoadAndIds = new Dictionary<WaterQualityLoad, int>(),
                     OutputLocations = new Dictionary<string, IList<int>>(),
@@ -486,16 +468,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     BoundaryAliases = new Dictionary<string, IList<string>>(),
                 };
 
+                waqInitializationSettings.Settings.WorkDirectory.Returns(workingDirectory);
+                
                 // call
-                preprocessor.InitializeWaq(waqInitializationSettings, (displayName, filePath) => model.AddTextDocument(displayName, filePath));
+                preprocessor.InitializeWaq(waqInitializationSettings);
 
                 // setup
                 Assert.IsTrue(Directory.Exists(includeDirectory));
 
                 Assert.IsTrue(Directory.Exists(Path.Combine(includeDirectory, Path.GetFileName(boundaryDataManager.FolderPath))));
                 Assert.IsFalse(Directory.Exists(Path.Combine(includeDirectory, Path.GetFileName(loadsManager.FolderPath))));
-
-                mocks.VerifyAll();
             }
             finally
             {
@@ -505,7 +487,64 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             }
         }
 
+        [Test]
+        public void InitializeWaq_ThenWorkingOutputDirectoryIsCreated()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string workDirectoryPath = tempDirectory.Path;
+                string expectedOutputDirectory = Path.Combine(workDirectoryPath, FileConstants.OutputDirectoryName);
 
+                WaqInitializationSettings initializationSettings =
+                    CreateValidWaqInitializationSettings(workDirectoryPath, new DataTableManager(),
+                                                         new DataTableManager());
 
+                // Precondition
+                Assert.That(!Directory.Exists(expectedOutputDirectory),
+                            "This test is unreliable when the working directory already exists.");
+
+                // Call
+                new WaqFileBasedPreProcessor().InitializeWaq(initializationSettings);
+
+                // Assert
+                Assert.That(Directory.Exists(expectedOutputDirectory),
+                            "Working output directory should be created when initializing.");
+            }
+        }
+
+        [Test]
+        public void InitializeWaq_WhenNonEmptyWorkingOutputDirectoryAlreadyExists_ThenNewEmptyFolderIsCreated()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string workDirectoryPath = tempDirectory.Path;
+                string expectedOutputDirectory = Path.Combine(workDirectoryPath, FileConstants.OutputDirectoryName);
+                string filePath = Path.Combine(expectedOutputDirectory, "file.txt");
+
+                WaqInitializationSettings initializationSettings =
+                    CreateValidWaqInitializationSettings(workDirectoryPath, new DataTableManager(),
+                                                         new DataTableManager());
+
+                Directory.CreateDirectory(expectedOutputDirectory);
+                File.WriteAllText(filePath, "output_file");
+
+                // Precondition
+                Assert.That(File.Exists(filePath),
+                            "This test is unreliable when this file does not exist.");
+
+                // Call
+                new WaqFileBasedPreProcessor().InitializeWaq(initializationSettings);
+
+                // Assert
+                Assert.That(Directory.Exists(expectedOutputDirectory),
+                            "Working output directory should be created when initializing.");
+                Assert.That(!File.Exists(filePath),
+                            "Working output directory should be emptied to delete old output files");
+
+            }
+        }
     }
 }
+    

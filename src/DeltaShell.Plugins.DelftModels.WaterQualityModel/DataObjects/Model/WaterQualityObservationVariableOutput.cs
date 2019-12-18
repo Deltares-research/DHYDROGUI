@@ -121,14 +121,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
             }
         }
 
-        /// <summary>
-        /// Clears all time series values from <see cref="TimeSeriesList" />
-        /// </summary>
-        public void ClearAllTimeSeries()
-        {
-            timeSeriesList.ForEach(timeSeries => timeSeries.Clear());
-        }
-
         public override string ToString()
         {
             return Name;

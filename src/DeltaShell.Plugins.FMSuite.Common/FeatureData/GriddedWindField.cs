@@ -115,6 +115,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public bool IsOpen => Path != null;
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         public void CreateNew(string path)
         {
             if (!File.Exists(path))

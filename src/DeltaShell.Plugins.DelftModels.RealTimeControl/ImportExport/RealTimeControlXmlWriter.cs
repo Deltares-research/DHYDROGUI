@@ -233,25 +233,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return xDocument;
         }
 
-
         private static XElement GetXmlConditionsFromControlGroups(IEnumerable<ControlGroup> controlGroups)
         {
             var triggersElement = new XElement(Fns + "triggers");
-            foreach (var group in controlGroups)
+            foreach (ControlGroup group in controlGroups)
             {
                 //find start condition for each output
-                foreach (var output in group.Outputs)
+                foreach (Output output in group.Outputs)
                 {
-                    var startObject = ControlGroupHelper.StartObjectsForOutput(group, output).FirstOrDefault();
-                    if (startObject is ConditionBase)
+                    IList<RtcBaseObject> startObjects = ControlGroupHelper.StartObjectsForOutput(group, output);
+                    foreach (RtcBaseObject startObject in startObjects)
                     {
-                        var condition = (ConditionBase) startObject;
-                        triggersElement.Add(condition.ToXml(Fns, GetGroupNameWithSeparator(group.Name)));
+                        if (startObject is ConditionBase condition)
+                        {
+                            triggersElement.Add(condition.ToXml(Fns, GetGroupNameWithSeparator(group.Name)));
+                        }
                     }
                 }
             }
 
-            return triggersElement.HasElements ? triggersElement: null;
+            return triggersElement.HasElements ? triggersElement : null;
         }
 
         private static string GetGroupNameWithSeparator(string groupName)

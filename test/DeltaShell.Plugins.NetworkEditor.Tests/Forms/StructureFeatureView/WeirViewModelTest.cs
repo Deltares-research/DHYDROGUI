@@ -30,23 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             mocks.VerifyAll();
         }
 
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsNull_ThenHasWeirMethodReturnsFalse()
-        {
-            var viewModel = new WeirViewModel();
-            Assert.IsFalse(viewModel.HasWeir);
-        }
-
-        [Test]
-        public void GivenWeirViewModel_WhenWeirIsNotNull_ThenHasWeirReturnsTrue()
-        {
-            var viewModel = new WeirViewModel
-            {
-                Weir = new Weir()
-            };
-            Assert.IsTrue(viewModel.HasWeir);
-        }
-
         #region TimeSeriesEditor
 
         [Test]
@@ -157,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
-            Assert.IsFalse(viewModel.GateGroupboxEnabled);
+            Assert.IsFalse(viewModel.GateGroupBoxEnabled);
             Assert.That(viewModel.SimpleWeirPropertiesVisibility, Is.EqualTo(System.Windows.Visibility.Visible));
             Assert.AreEqual(2, count,
                 $"Expected 2 INotifyPropertyChanged.PropertyChanged events instead of {count} when setting the selected weir");
@@ -177,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
-            Assert.IsTrue(viewModel.GateGroupboxEnabled);
+            Assert.IsTrue(viewModel.GateGroupBoxEnabled);
             var crestLevelEnabled = (bool) TypeUtils.GetPropertyValue(viewModel, "CrestLevelEnabled");
 
             if (crestLevelEnabled && !viewModel.LowerEdgeLevelEnabled && !viewModel.HorizontalDoorOpeningWidthEnabled)
@@ -203,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
-            Assert.IsTrue(viewModel.GateGroupboxEnabled);
+            Assert.IsTrue(viewModel.GateGroupBoxEnabled);
             var crestLevelEnabled = (bool) TypeUtils.GetPropertyValue(viewModel, "CrestLevelEnabled");
 
             if (crestLevelEnabled && !viewModel.LowerEdgeLevelEnabled && !viewModel.HorizontalDoorOpeningWidthEnabled)
@@ -229,7 +212,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.IsTrue(viewModel.EnableCrestLevelTimeSeries);
             Assert.IsTrue(viewModel.Weir.UseCrestLevelTimeSeries);
-            Assert.IsTrue(viewModel.GateGroupboxEnabled);
+            Assert.IsTrue(viewModel.GateGroupBoxEnabled);
         }
 
         [Test]
@@ -719,7 +702,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleWeir;
             Assert.That(viewModel.Weir.WeirFormula is SimpleWeirFormula);
             Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
-            Assert.AreEqual(viewModel.GateGroupboxEnabled, false);
+            Assert.AreEqual(viewModel.GateGroupBoxEnabled, false);
             Assert.AreNotEqual(viewModel.GeneralStructurePropertiesVisibility,  System.Windows.Visibility.Visible);
         }
 
@@ -734,7 +717,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.SimpleGate;
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
             Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Collapsed);
-            Assert.AreEqual(viewModel.GateGroupboxEnabled, true);
+            Assert.AreEqual(viewModel.GateGroupBoxEnabled, true);
         }
 
         [Test]
@@ -748,7 +731,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             viewModel.SelectedWeirType = SelectableWeirFormulaType.GeneralStructure;
             Assert.That(viewModel.Weir.WeirFormula is GeneralStructureWeirFormula);
             Assert.AreEqual(viewModel.GeneralStructurePropertiesVisibility, System.Windows.Visibility.Visible);
-            Assert.AreEqual(viewModel.GateGroupboxEnabled, true);
+            Assert.AreEqual(viewModel.GateGroupBoxEnabled, true);
         }
 
         #endregion
@@ -859,7 +842,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             yield return new TestCaseData(nameof(WeirViewModel.BedLevelStructureCentre), 1);
             yield return new TestCaseData(nameof(WeirViewModel.SimpleWeirPropertiesVisibility), 4);
             yield return new TestCaseData(nameof(WeirViewModel.GeneralStructurePropertiesVisibility), 1);
-            yield return new TestCaseData(nameof(WeirViewModel.GeneralStructureVisibility), 1);
         }
     }
 }

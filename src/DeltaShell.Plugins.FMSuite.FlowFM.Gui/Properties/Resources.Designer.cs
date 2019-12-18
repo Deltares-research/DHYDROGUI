@@ -152,6 +152,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap BridgeSmall {
+            get {
+                object obj = ResourceManager.GetObject("BridgeSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
@@ -235,6 +245,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap dumping {
             get {
                 object obj = ResourceManager.GetObject("dumping", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Embankment {
+            get {
+                object obj = ResourceManager.GetObject("Embankment", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -355,6 +375,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap meteo {
             get {
                 object obj = ResourceManager.GetObject("meteo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Observation {
+            get {
+                object obj = ResourceManager.GetObject("Observation", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap observationcs2d {
+            get {
+                object obj = ResourceManager.GetObject("observationcs2d", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

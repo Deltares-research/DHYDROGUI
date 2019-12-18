@@ -66,6 +66,11 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             get { return false; }
         }
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         #region Unsupported properties
 
         public bool SkipChildItemEventBubbling { get; set; }

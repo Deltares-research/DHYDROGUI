@@ -83,9 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
-            var feature2DImporterExporter = model as IFeature2DImporterExporter;
+            var feature2DImporterExporter = item as IFeature2DImporterExporter;
             if (feature2DImporterExporter != null)
             {
                 feature2DImporterExporter.Files = ImportMode ? openFileDialog.FileNames : new[] {saveFileDialog.FileName};

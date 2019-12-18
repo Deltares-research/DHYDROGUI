@@ -406,4 +406,7 @@
   <data name="RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input" xml:space="preserve">
     <value>Interval rule '{0}' requires 1 input.</value>
   </data>
+  <data name="ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1" xml:space="preserve">
+    <value>Output item {0} has multiple Active Condition Paths: {1}.</value>
+  </data>
 </root>

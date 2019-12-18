@@ -226,20 +226,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
                     .SetValueAsString(((int) value).ToString());
         }
 
-        public double WaveTimeStep
+        public string CommunicationsFilePath
         {
-            get
-            {
-                double dt = -1.0;
-                WaveModelProperty prop =
-                    GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
-                if (prop != null)
-                {
-                    dt = (double) prop.Value;
-                }
-
-                return dt;
-            }
+            get => GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).GetValueAsString();
+            set => GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).SetValueAsString(value);
         }
 
         public bool WaveSetup

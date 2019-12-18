@@ -1,24 +1,28 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
+    /// <summary>
+    /// Validator for model coupling settings of <see cref="WaveModel"/> objects.
+    /// </summary>
     public static class WaveCouplingValidator
     {
+        /// <summary>
+        /// Validates the coupling settings of a <see cref="WaveModel"/>.
+        /// </summary>
+        /// <param name="model"> The wave model to validate. </param>
+        /// <returns> A collection of validation issues encountered. </returns>
         public static ValidationReport Validate(WaveModel model)
         {
             var issues = new List<ValidationIssue>();
 
-            string comFilePath =
-                model.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
-                                                       KnownWaveProperties.COMFile).GetValueAsString();
-
             if (model.IsCoupledToFlow)
             {
-                if (!model.WriteCOM || string.IsNullOrEmpty(comFilePath) || model.GetFlowComFilePath == null)
+                string comFilePath = model.ModelDefinition.CommunicationsFilePath;
+                if (!model.WriteCOM || string.IsNullOrEmpty(comFilePath))
                 {
                     issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
                                                    Resources

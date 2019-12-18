@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (BcQuantityData quantity in bcmBlock.Quantities)
             {
-                WriteKyeValuePairParameterLine(quantity.Quantity, quantity.Unit);
+                WriteKyeValuePairParameterLine(quantity.QuantityName, quantity.Unit);
             }
 
             int rowCount = bcmBlock.Quantities.Select(q => q.Values.Count).Min();
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     parameterValue = split[1];
                     quantityData = new BcmQuantityData
                     {
-                        Quantity = parameterValue,
+                        QuantityName = parameterValue,
                         ReferenceTime = referenceTimeValue.ToString("yyyyMMdd")
                     };
                     if (split.Length == 4 && split[2] == "unit")

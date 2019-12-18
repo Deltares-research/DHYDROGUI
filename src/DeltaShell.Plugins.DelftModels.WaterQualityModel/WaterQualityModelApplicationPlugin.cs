@@ -12,7 +12,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public override string Version => GetType().Assembly.GetName().Version.ToString();
 
-        public override string FileFormatVersion => "3.5.2.0";
+        public override string FileFormatVersion => "3.5.3.0";
 
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
@@ -52,14 +54,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 AdditionalOwnerCheck =
                     owner =>
                         !(owner is ICompositeActivity), // Don't allow water quality models to be added to composite activity
-                CreateModel = owner => new WaterQualityModel()
+                CreateModel = owner =>
+                {
+                    var model = new WaterQualityModel();
+                    model.SetWorkingDirectoryInModelSettings(() => Application.WorkDirectory);
+                    return model;
+                }
             };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new SubFileImporter();
-            yield return new HydFileImporter();
+            yield return new HydFileImporter(() => Application.WorkDirectory);
             yield return new LoadsImporter();
             yield return new ObservationPointImporter();
             yield return new BoundaryDataTableImporter();
@@ -75,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return GetType().Assembly;
+            yield return typeof(FileBasedFolder).Assembly;
         }
 
         public override IApplication Application
@@ -121,9 +129,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 m.SetupModelDataFolderStructure(Application.ProjectDataDirectory);
                 m.SetEnableMarkOutputOutOfSync(true);
+                RemoveDisconnectedOutputFiles(m);
             });
         }
 
+        private void RemoveDisconnectedOutputFiles(WaterQualityModel model)
+        {
+            if (model.OutputFolder?.Path == null)
+            {
+                FileUtils.DeleteIfExists(model.ModelSettings.OutputDirectory);
+            }
+        }
         private void Application_ProjectSaving(Project obj)
         {
             if (Application.Project == null)
@@ -250,7 +266,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private void Application_OnProjectOpened(Project project)
         {
             IEnumerable<WaterQualityModel> allWaqModels =
-                Application.GetAllModelsInProject().OfType<WaterQualityModel>();
+                Application.GetAllModelsInProject().OfType<WaterQualityModel>().ToList();
+
+            allWaqModels.ForEach(m => m.SetWorkingDirectoryInModelSettings( () => Application.WorkDirectory));
             allWaqModels.ForEach(ReimportHydFileForWaterQualityModel);
             allWaqModels.ForEach(RelinkToProcessDefinitionFiles);
 

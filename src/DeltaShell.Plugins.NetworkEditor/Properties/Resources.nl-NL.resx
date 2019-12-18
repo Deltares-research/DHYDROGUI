@@ -126,12 +126,6 @@
   <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Basin" xml:space="preserve">
     <value>Stroomgebied</value>
   </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro" xml:space="preserve">
-    <value>Hydro</value>
-  </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Network" xml:space="preserve">
-    <value>Netwerk</value>
-  </data>
   <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Region" xml:space="preserve">
     <value>Gebied</value>
   </data>

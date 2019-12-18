@@ -256,12 +256,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, fixedWeirProperties,
+                MduFile.Read(mduFilePath, ModelDefinition, Area, fixedWeirProperties,
                              (name, current, total) =>
                                  FireImportProgressChanged(this, "Reading mdu - " + name, current, total),
                              BridgePillarsDataModel);
                 isLoading = false;
                 SyncModelTimesWithBase();
+
+                CacheFile.UpdatePathToMduLocation(mduFilePath);
             }
 
             WaterFlowFMProperty netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);

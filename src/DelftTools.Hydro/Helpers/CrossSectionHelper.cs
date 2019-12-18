@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
 using GeoAPI.Geometries;
 using log4net;
@@ -42,74 +41,12 @@ namespace DelftTools.Hydro.Helpers
                 }
             }
         }
-
-        /// <summary>
-        /// Calculator to update the conveyance table for the cross section.
-        /// </summary>
-        public static IConveyanceCalculator CurrentConveyanceCalculator { get; set; }
-
-        static CrossSectionHelper()
-        {
-            CurrentConveyanceCalculator = new DefaultConveyanceCalculator();
-        }
-
-        /// <summary>
-        /// Updates the conveyance table
-        /// </summary>
-        /// <param name="crossSection"> </param>
-        public static IFunction GetConveyanceTable(ICrossSection crossSection)
-        {
-            return CurrentConveyanceCalculator.GetConveyance(crossSection);
-        }
-
-        /// <summary>
-        /// Updates the processed data (depth: width) based on the available y-z values;
-        /// </summary>
-        /// <param name="crossSectionDefinition"></param>
-
-        /// <summary>
-        /// Sets a default geometry for the cross section. The default geometry is a linestring geometry 
-        /// perpendicular to the branch. 
-        /// </summary>
-        /// <param name="crossSectionDefinition"></param>
-        /// <param name="defaultLength"></param>
-        /// The default length of the generated linestring geometry. Since this can be different for each network 
-        /// it is not a setting of the CrossSectionService
-//        public static void SetDefaultGeometry(ICrossSectionDefinition crossSectionDefinition, double defaultLength)
-//        {
-//            UpdateDefaultGeometry(crossSectionDefinition, defaultLength);
-//        }
-
-        ///<summary>
-        /// Sets a default geometry for the cross section. The default geometry is a linestring geometry 
-        /// perpendicular to the branch. 
-        ///</summary>
-        ///<param name="crossSectionDefinition"></param>
-        ///<param name="defaultLength"></param>
-        ///<exception cref="ArgumentException"></exception>
-//        public static void UpdateDefaultGeometry(ICrossSectionDefinition crossSectionDefinition, double defaultLength)
-//        {
-//            /*if (null == crossSection.Branch)
-//            {
-//                throw new ArgumentException("The default geometry can only be set for cross section that are connected to a branch.");
-//            }
-//
-//            var mapChainage = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
-//            crossSection.Geometry = ComputeDefaultCrossSectionGeometry(crossSection.Branch.Geometry, mapChainage, defaultLength, crossSection.Thalweg, crossSection.Left);*/
-//        }
-
-        //public static void ComputeDefaultCrossSectionGeometry(IGeometry branchGeometry, IGeometry crossSectionGeometry, double chainage, double length,
-        //    double thalwegOffset)
-        //{
-        //    ComputeDefaultCrossSectionGeometry(branchGeometry, crossSectionGeometry, chainage, length, length/2, thalWayOffset);
-        //}
-
+        
         /// <summary>
         /// Sets a default geometry for the cross section. The default geometry is a linestring geometry
         /// perpendicular to the branch.
         /// </summary>
         /// <param name="branchGeometry"> </param>
-        /// <param name="crossSectionGeometry"> </param>
         /// <param name="mapChainage"> </param>
         /// <param name="length"> </param>
         /// <param name="thalWeg"> </param>

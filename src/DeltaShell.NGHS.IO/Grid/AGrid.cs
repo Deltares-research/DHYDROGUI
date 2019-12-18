@@ -2,13 +2,16 @@
 using System.IO;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
+using log4net;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class AGrid<T> : IDisposable where T : class, IGridApi
     {
-        protected readonly string filename;
+        private static readonly ILog log = LogManager.GetLogger(typeof(AGrid<T>));
+
+        private readonly string filename;
         private readonly GridApiDataSet.NetcdfOpenMode mode;
         private bool disposed;
         private T gridApi;
@@ -162,6 +165,14 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
+        private static void LogIfError(int ierr, string exceptionText)
+        {
+            if (ierr != GridApiDataSet.GridConstants.NOERR)
+            {
+                log.ErrorFormat(exceptionText + Resources.AGrid_ThrowIfError__because_of_error_number___0_, ierr);
+            }
+        }
+
         public virtual void Dispose()
         {
             if (disposed) return;
@@ -182,37 +193,26 @@ namespace DeltaShell.NGHS.IO.Grid
             CleanUp();
         }
         
-
         private void CleanUp()
         {
-            if (disposed) return;
-
-            try
+            if (disposed)
             {
-                if (GridApi != null)
+                return;
+            }
+
+            if (GridApi != null)
+            {
+                int ierr = GridApiDataSet.GridConstants.NOERR;
+
+                if (IsInitialized())
                 {
-                    var ierr = GridApiDataSet.GridConstants.NOERR;
-
-                    if (IsInitialized())
-                    {
-                        ierr = GridApi.Close();
-                    }
-
-                    ThrowIfError(ierr, Resources.AGrid_CleanUp_Couldn_t_close_grid_nc_file);
+                    ierr = GridApi.Close();
                 }
-            }
-            catch
-            {
-                // ignored
-            }
-            finally
-            {
-                // dispose GridApi if IDisposable
+
+                LogIfError(ierr, Resources.AGrid_CleanUp_Couldn_t_close_grid_nc_file);
+
                 var disposableGridApi = GridApi as IDisposable;
-                if (disposableGridApi != null)
-                {
-                    disposableGridApi.Dispose();
-                }
+                disposableGridApi?.Dispose();
                 GridApi = null;
             }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
@@ -7,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
 using NUnit.Framework;
@@ -458,6 +460,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             // If we reach this statement validation did not throw errors
             Assert.GreaterOrEqual(result.ErrorCount, 0);
+        }
+
+        [Test]
+        public void Validate_WhenControlGroupHasTwoRulesAndTwoConditionsThatShareOuptut_ThenReportContainsExpectedValidationIssue()
+        {
+            // Set-up
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateControlGroupWithTwoRulesOnOneOutput();
+
+            // Call
+            ValidationReport report = new ControlGroupValidator().Validate(null, controlGroup);
+
+            // Assert
+            const string expectedMessage = "Output item output has multiple Active Condition Paths: condition1, condition2.";
+            ValidationIssue validationIssue = report.GetAllIssuesRecursive().Single(i => i.Message == expectedMessage);
+            Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+            Assert.That(validationIssue.Subject, Is.SameAs(controlGroup));
         }
     }
 }

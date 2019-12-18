@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// <summary>
     /// Function store wrapper for waterquality map file. Only supports readonly timedependend UnstructuredGridCellCoverages
     /// </summary>
-    public class LazyMapFileFunctionStore : IFunctionStore, IFileBased
+    public class LazyMapFileFunctionStore : IFunctionStore
     {
         private IEventedList<IFunction> functions = new EventedList<IFunction>();
         private bool isNetCdfFile;

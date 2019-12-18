@@ -105,14 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
-            var mdwCategories = new List<DelftIniCategory>();
+            List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
 
-            // group properties by mdw category
-            GroupPropertiesByMdwCategory(modelDefinition, mdwCategories);
-
-            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-
-            // timepoints
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
             IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
@@ -127,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
+                DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
                 if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
                 {
                     List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
@@ -175,9 +170,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
+            DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
+            outputCategory.SetProperty(KnownWaveProperties.COMFile, modelDefinition.CommunicationsFilePath.Replace('\\', '/'));
+
             #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
-            DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
             string curvesFileName = outputCategory.GetPropertyValue(KnownWaveProperties.CurveFile);
             if (modelDefinition.ObservationCrossSections.Any())
             {
@@ -253,9 +250,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private static void GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition,
-                                                         List<DelftIniCategory> mdwCategories)
+        private static List<DelftIniCategory> GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition)
         {
+            var mdwCategories = new List<DelftIniCategory>();
             IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties =
                 modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
             foreach (IGrouping<string, WaveModelProperty> grouping in groupedProperties)
@@ -276,6 +273,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 mdwCategories.Add(mdwGroup);
             }
+
+            return mdwCategories;
         }
 
         private static List<string> GetMeteoFiles(WaveMeteoData meteoData)

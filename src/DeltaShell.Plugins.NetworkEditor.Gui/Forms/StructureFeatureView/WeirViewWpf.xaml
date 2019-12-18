@@ -121,7 +121,7 @@
                         <Setter Property="Header" Value="Weir">
                         </Setter>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding GateGroupboxEnabled}" Value="true">
+                            <DataTrigger Binding="{Binding GateGroupBoxEnabled}" Value="true">
                                 <Setter Property="Header" Value="Sill"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -255,7 +255,7 @@
             </GroupBox>
             
             <!--GATE PROPERTIES-->
-            <GroupBox  Grid.Row="2" Grid.Column="0" Header="Gate" Visibility="{Binding GateGroupboxEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <GroupBox  Grid.Row="2" Grid.Column="0" Header="Gate" Visibility="{Binding GateGroupBoxEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid  Margin="5" >
                     <Grid.RowDefinitions>
                         <RowDefinition/>

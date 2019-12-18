@@ -12,8 +12,8 @@ using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using NetTopologySuite.Extensions.Grids;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests
@@ -261,8 +261,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
         }
-        
-       
 
         [Test]
         public void
@@ -323,8 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void
-            Given1When2Then3()
+        public void GivenWaveModelWithSphericalCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
             var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\spherical.mdw");
             var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
@@ -343,8 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void
-            Given1When2Then4()
+        public void GivenWaveModelWithCartesianCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
             var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\cartesian.mdw");
             var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
@@ -407,7 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             // Setup
             var waveModel = new WaveModel();
-            var function = MockRepository.GenerateStub<IFunction>();
+            var function = Substitute.For<IFunction>();
             waveModel.WavmFunctionStores.Single().Functions.Add(function);
 
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.

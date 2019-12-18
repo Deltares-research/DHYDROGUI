@@ -94,6 +94,7 @@ namespace DelftTools.Hydro.Helpers
                 catch (Exception)
                 {
                     //don't do anything: exception on split or on parse: non standard name
+                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
                 }
             }
 

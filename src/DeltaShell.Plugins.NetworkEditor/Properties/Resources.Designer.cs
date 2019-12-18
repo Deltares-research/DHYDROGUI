@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -161,16 +161,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Network {
-            get {
-                object obj = ResourceManager.GetObject("Network", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Provides editing functionality for geometrical information in the hydro region..
         /// </summary>
         public static string NetworkEditorApplicationPlugin_Description {
@@ -185,42 +175,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         public static string NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin {
             get {
                 return ResourceManager.GetString("NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Basin.
-        /// </summary>
-        public static string NetworkEditorApplicationPlugin_GetDataItemInfos_Basin {
-            get {
-                return ResourceManager.GetString("NetworkEditorApplicationPlugin_GetDataItemInfos_Basin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hydro.
-        /// </summary>
-        public static string NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro {
-            get {
-                return ResourceManager.GetString("NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Network.
-        /// </summary>
-        public static string NetworkEditorApplicationPlugin_GetDataItemInfos_Network {
-            get {
-                return ResourceManager.GetString("NetworkEditorApplicationPlugin_GetDataItemInfos_Network", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Region.
-        /// </summary>
-        public static string NetworkEditorApplicationPlugin_GetDataItemInfos_Region {
-            get {
-                return ResourceManager.GetString("NetworkEditorApplicationPlugin_GetDataItemInfos_Region", resourceCulture);
             }
         }
         

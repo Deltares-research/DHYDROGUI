@@ -74,16 +74,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
-        public void Test_SelectTemplate_GivenWpfGuiProperty_WithCustomControl_ReturnsTemplate()
-        {
-            var item = new WpfGuiProperty(new FieldUIDescription(null, null))
-            {
-                CustomControl = new UserControl(),
-            };
-            GetAndCheckDataTemplate(item);
-        }
-
-        [Test]
         public void Test_SelectTemplate_GivenWpfGuiProperty_WithUnMappedType_DoesNotThrow()
         {
             var item = new WpfGuiProperty(new FieldUIDescription(null, null)

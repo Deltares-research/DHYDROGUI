@@ -194,7 +194,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                             feature.Geometry.GeometryType);
                     }
                 }
-                catch (Exception) {}
+                catch (Exception e)
+                {
+                    Log.ErrorFormat(Properties.Resources.SnappedFeatureCollection_Calculating_the_snapped_geometry_for_feature___0___failed___1_, feature, e.Message);
+                }
             }
 
             var feature2D = new Feature2D();

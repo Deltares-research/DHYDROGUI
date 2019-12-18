@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

@@ -81,6 +81,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not copy {0} to {1} due to: {2}.
+        /// </summary>
+        public static string CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_ {
+            get {
+                return ResourceManager.GetString("CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown key {0} from file {1}. It will not be imported..
         /// </summary>
         public static string CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_ {
@@ -675,6 +684,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} is not supported by our computational core and will be removed from your input file..
+        /// </summary>
+        public static string MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_ {
+            get {
+                return ResourceManager.GetString("MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_compu" +
+                        "tational_core_and_will_be_removed_from_your_input_file_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
         /// </summary>
         public static string MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__ {
@@ -731,6 +750,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_ {
             get {
                 return ResourceManager.GetString("Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No errors were reported in the diagnostics file {0}.
+        /// </summary>
+        public static string RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_ {
+            get {
+                return ResourceManager.GetString("RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The kernel reported the following error(s):{0}{1}{0}(Errors extracted from diagnostics file {2}).
+        /// </summary>
+        public static string RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__Errors_extracted_from_diagnostics_file__2__ {
+            get {
+                return ResourceManager.GetString("RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__E" +
+                        "rrors_extracted_from_diagnostics_file__2__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read diagnostics file {0}: {1}.
+        /// </summary>
+        public static string RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_ {
+            get {
+                return ResourceManager.GetString("RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_", resourceCulture);
             }
         }
         

@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class WasteWaterTreatmentPlant : Feature, IHydroObject, IComparable
+    public class WasteWaterTreatmentPlant : Feature, IHydroObject, IComparable, ILongNameable
     {
         public WasteWaterTreatmentPlant()
         {

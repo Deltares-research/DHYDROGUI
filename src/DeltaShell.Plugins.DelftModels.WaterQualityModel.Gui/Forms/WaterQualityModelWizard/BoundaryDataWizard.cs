@@ -27,9 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     Resources.BoundaryDataWizardPage_Description);
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
-            var importer = (BoundaryDataTableImporter) model;
+            var importer = (BoundaryDataTableImporter) item;
             importer.FilePath = boundaryDataWizardPage.CsvFilePath;
         }
     }
