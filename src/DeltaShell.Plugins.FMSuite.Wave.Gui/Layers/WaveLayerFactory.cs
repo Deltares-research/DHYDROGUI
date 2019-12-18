@@ -352,8 +352,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             ILayer lineDataLayer = 
                 CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
                                         model);
-
             groupLayer.Layers.Add(lineDataLayer);
+
+            ILayer endPointsDataLayer =
+                CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider,
+                                            model);
+            groupLayer.Layers.Add(endPointsDataLayer);
+
             return groupLayer;
         }
 
@@ -373,6 +378,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
 
             return lineDataLayer;
+        }
+
+        private static ILayer CreateBoundaryEndPointLayer(BoundaryEndPointMapFeatureProvider featureProvider,
+                                                          IWaveModel model)
+        {
+            var endPointsLayer = new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
+            {
+                DataSource = featureProvider,
+                Selectable = false,
+                ReadOnly = true,
+                Style = new VectorStyle
+                {
+                    Fill = Brushes.Gray,
+                    GeometryType = typeof(IPoint),
+                    SymbolScale = 0.5F,
+                },
+            };
+
+            return endPointsLayer;
         }
     }
 }

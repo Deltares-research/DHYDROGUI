@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         "Expected the layer to have a different name.");
 
             var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(1),
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(2),
                         "Expected a different number of layers:");
 
             ILayer lineLayer = groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryLineLayerName);
@@ -353,6 +353,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to exist.");
             Assert.That(lineLayer, Is.InstanceOf(typeof(VectorLayer)),
                         $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to be of type {typeof(VectorLayer)}");
+
+            ILayer endPointsLayer =
+                groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryEndPointsLayerName);
+            Assert.That(endPointsLayer, Is.Not.Null,
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to exist.");
+            Assert.That(endPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
+
         }
 
         [Test]
