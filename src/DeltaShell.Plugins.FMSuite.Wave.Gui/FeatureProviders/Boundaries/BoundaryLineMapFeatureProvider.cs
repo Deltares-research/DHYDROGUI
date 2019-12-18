@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Specialized;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using GeoAPI.Extensions.Feature;
@@ -64,6 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
             lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
                                                                                             CreateBoundaryLineFeature);
             lineFeatures.RegisterList(this.boundaryContainer.Boundaries);
+            SubscribeToEventing();
         }
 
         /// <summary>
@@ -100,7 +103,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 
         public override bool Add(IFeature feature)
         {
-            throw new NotImplementedException("This has not been implemented yet.");
+            throw new NotSupportedException("This is currently not supported, implement when needed.");
         }
+
+        private void SubscribeToEventing()
+        {
+            lineFeatures.CollectionChanged += OnFeaturesCollectionChanged;
+        }
+
+        private void UnsubscribeFromEventing()
+        {
+            lineFeatures.CollectionChanged -= OnFeaturesCollectionChanged;
+        }
+
+        private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            FireFeaturesChanged();
+        }
+
+        public override IList Features
+        {
+            get => lineFeatures;
+            set => throw new NotSupportedException("Setting the Features to another value is currently not supported.");
+        }
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            UnsubscribeFromEventing();
+        }
+        #endregion
     }
 }
