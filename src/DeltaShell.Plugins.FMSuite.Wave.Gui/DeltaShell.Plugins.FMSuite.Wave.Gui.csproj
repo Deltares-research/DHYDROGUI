@@ -231,6 +231,7 @@
     <Compile Include="FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\BoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\GeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IWaveBoundaryFactoryHelper.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelper.cs" />

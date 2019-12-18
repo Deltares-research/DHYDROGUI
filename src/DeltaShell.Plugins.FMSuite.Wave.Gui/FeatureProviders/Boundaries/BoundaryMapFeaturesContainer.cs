@@ -1,0 +1,68 @@
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
+using GeoAPI.Extensions.CoordinateSystems;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+{
+    /// <summary>
+    /// <see cref="BoundaryMapFeaturesContainer"/> acts as a convenience to
+    /// group the different BoundaryMapFeatureProviders that are part of
+    /// the <see cref="IWaveBoundary"/> visualisation.
+    ///
+    /// Upon construction the different factories, and FeatureProviders are
+    /// created.
+    /// </summary>
+    public class BoundaryMapFeaturesContainer
+    {
+        /// <summary>
+        /// Creates a new <see cref="BoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="boundaryContainer"/> is <c>null</c>.
+        /// </exception>
+        public BoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
+                                            ICoordinateSystem coordinateSystem)
+        {
+            if (boundaryContainer == null)
+            {
+                throw new ArgumentNullException(nameof(boundaryContainer));
+            }
+
+            var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
+                                                              new WaveBoundaryFactoryHelper());
+            var geometryFactory = new GeometryFactory(boundaryContainer);
+
+            BoundaryLineMapFeatureProvider = 
+                new BoundaryLineMapFeatureProvider(boundaryContainer,
+                                                   waveBoundaryFactory,
+                                                   geometryFactory);
+            BoundaryEndPointMapFeatureProvider = 
+                new BoundaryEndPointMapFeatureProvider(boundaryContainer, 
+                                                       coordinateSystem, 
+                                                       geometryFactory);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="BoundaryLineMapFeatureProvider"/> of this
+        /// <see cref="BoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <value>
+        /// The boundary line map feature provider.
+        /// </value>
+        public BoundaryLineMapFeatureProvider BoundaryLineMapFeatureProvider { get; }
+
+        /// <summary>
+        /// Gets the <see cref="BoundaryEndPointMapFeatureProvider"/> of this
+        /// <see cref="BoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <value>
+        /// The boundary end point map feature provider.
+        /// </value>
+        public BoundaryEndPointMapFeatureProvider BoundaryEndPointMapFeatureProvider { get; }
+        
+    }
+}
