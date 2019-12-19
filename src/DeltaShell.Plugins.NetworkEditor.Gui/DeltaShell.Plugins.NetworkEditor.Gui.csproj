@@ -637,41 +637,11 @@
     <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.Designer.cs">
       <DependentUpon>CrossSectionImportSettingsWizardPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\DefineMappingTableWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Wizard\DefineMappingTableWizardPage.Designer.cs">
-      <DependentUpon>DefineMappingTableWizardPage.cs</DependentUpon>
-    </Compile>
     <Compile Include="Wizard\CrossSectionCsvImportWizard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Wizard\CrossSectionCsvImportWizard.Designer.cs">
       <DependentUpon>CrossSectionCsvImportWizard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wizard\ImportFromGisWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Wizard\ImportFromGisWizardPage.Designer.cs">
-      <DependentUpon>ImportFromGisWizardPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wizard\ImportHydroNetworkFromGisWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\ImportNetworkCoverageFromGisWizardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\SelectDataWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Wizard\SelectDataWizardPage.Designer.cs">
-      <DependentUpon>SelectDataWizardPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.Designer.cs">
-      <DependentUpon>SelectDataWizardPageRelatedTablesPopUp.cs</DependentUpon>
     </Compile>
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
@@ -820,18 +790,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\CrossSectionImportSettingsWizardPage.resx">
       <DependentUpon>CrossSectionImportSettingsWizardPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizard\DefineMappingTableWizardPage.resx">
-      <DependentUpon>DefineMappingTableWizardPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizard\ImportFromGisWizardPage.resx">
-      <DependentUpon>ImportFromGisWizardPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizard\SelectDataWizardPage.resx">
-      <DependentUpon>SelectDataWizardPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizard\SelectDataWizardPageRelatedTablesPopUp.resx">
-      <DependentUpon>SelectDataWizardPageRelatedTablesPopUp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

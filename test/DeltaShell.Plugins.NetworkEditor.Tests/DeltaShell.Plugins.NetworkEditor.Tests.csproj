@@ -268,10 +268,6 @@
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
     <Compile Include="Import\CrossSectionXYZFromCsvFileImporterTest.cs" />
     <Compile Include="Import\CrossSectionYZFromCsvFileImporterTest.cs" />
-    <Compile Include="Import\MappingColumnTest.cs" />
-    <Compile Include="Import\NetworkCoverageFromGisImporterTest.cs" />
-    <Compile Include="Import\PointValuePairsFromGisImporterTest.cs" />
-    <Compile Include="Import\Wizard\ImportNetworkCoverageFromGisWizardDialogTest.cs" />
     <Compile Include="Import\CrossSectionZWFromCsvFileImporterTest.cs" />
     <Compile Include="Import\Wizard\CrossSectionCsvImportWizardDialogTest.cs" />
     <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRendererTest.cs" />
@@ -322,16 +318,6 @@
     <Compile Include="Forms\CompositeStructureView\MockCompositeStructureView.cs" />
     <Compile Include="Forms\CompositeStructureView\MockGui.cs" />
     <Compile Include="Forms\CompositeStructureView\SideViewDataBuilderTest.cs" />
-    <Compile Include="Import\CatchmentFromGisImporterTest.cs" />
-    <Compile Include="Import\HydroRegionFromGisImporterTest.cs" />
-    <Compile Include="Import\NetworkFeatureFromGisImporterBaseTest.cs" />
-    <Compile Include="Import\OgrSchemaReaderTest.cs" />
-    <Compile Include="Import\ShapeFileSchemaReaderTest.cs" />
-    <Compile Include="Import\OleDbSchemaReaderTest.cs" />
-    <Compile Include="Import\Wizard\ImportFromGisWizardPageTest.cs" />
-    <Compile Include="Import\Wizard\ImportHydroNetworkFromGisWizardDialogTest.cs" />
-    <Compile Include="Import\Wizard\SelectDataWizardPageRelatedTablesPopUpTest.cs" />
-    <Compile Include="Import\Wizard\SelectDataWizardPageTest.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
     <Compile Include="MapLayers\Tools\Feature2DPointToolTest.cs" />
     <Compile Include="NetworkEditorApplicationPluginTest.cs" />

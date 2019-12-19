@@ -170,8 +170,6 @@
     <Compile Include="Import\GroupablePointCloudImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
-    <Compile Include="Import\PointValuePairsFromGisImporter.cs" />
-    <Compile Include="Import\NetworkCoverageFromGisImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionFromCsvFileImporterBase.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWCsvImportExportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWFromCsvFileImporter.cs" />
@@ -188,8 +186,6 @@
     <Compile Include="MapLayers\Editors\Interactors\LateralSourceInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroNodeInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\ChannelInteractor.cs" />
-    <Compile Include="Import\BasinFeatureFromGisImporterBase.cs" />
-    <Compile Include="Import\FeatureFromGisImporterBase.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroLinkInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
@@ -203,19 +199,6 @@
     <Compile Include="MapLayers\CustomRenderers\BranchFeatureRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
-    <Compile Include="Import\CatchmentFromGisImporter.cs" />
-    <Compile Include="Import\HydroRegionFromGisImporter.cs" />
-    <Compile Include="Import\HydroNetworkFromGisImporterXmlSerializer.cs" />
-    <Compile Include="Import\ISchemaReader.cs" />
-    <Compile Include="Import\MappingColumn.cs" />
-    <Compile Include="Import\NetworkFeatureFromGisImporterBase.cs" />
-    <Compile Include="Import\FeatureFromGisImporterSettings.cs" />
-    <Compile Include="Import\NetworkFeatureFromGisImporterSettingsCollection.cs" />
-    <Compile Include="Import\OgrSchemaReader.cs" />
-    <Compile Include="Import\ShapeFileSchemaReader.cs" />
-    <Compile Include="Import\OleDbSchemaReader.cs" />
-    <Compile Include="Import\PropertyMapping.cs" />
-    <Compile Include="Import\RelatedTable.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CrossSectionInteractor.cs" />
@@ -373,9 +356,7 @@
   <ItemGroup>
     <None Include="Resources\guide.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>

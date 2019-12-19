@@ -63,12 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new CatchmentFromGisImporter();
-            yield return new HydroRegionFromGisImporter();
             yield return new CrossSectionYZFromCsvFileImporter();
             yield return new CrossSectionXYZFromCsvFileImporter();
             yield return new CrossSectionZWFromCsvFileImporter();
-            yield return new NetworkCoverageFromGisImporter();
             yield return new HydroAreaEmbankmentImporter();
             yield return new HydroAreaEmbankmentHeightImporter();
         }
