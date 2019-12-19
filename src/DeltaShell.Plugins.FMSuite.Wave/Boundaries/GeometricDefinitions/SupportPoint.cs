@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -11,6 +7,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// </summary>
     public class SupportPoint
     {
+        /// <summary>
+        /// Gets the distance.
+        /// </summary>
+        /// <value>
+        /// The distance from the start index of the <see cref="IWaveBoundaryGeometricDefinition"/>.
+        /// </value>
         public double Distance { get; }
 
         /// <summary>
