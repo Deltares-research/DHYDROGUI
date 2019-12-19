@@ -44,12 +44,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             }
 
             List<GridBoundaryCoordinate> gridEnvelope = GridBoundary.GetGridEnvelope().ToList();
-            List<Coordinate> gridEnvelopeWorldCoordinates = gridEnvelope.Select(GridBoundary.GetWorldCoordinateFromBoundaryCoordinate)
-                                                                        .ToList();
+            List<Coordinate> gridEnvelopeWorldCoordinates =
+                gridEnvelope.Select(GridBoundary.GetWorldCoordinateFromBoundaryCoordinate)
+                            .ToList();
             Tuple<IEnumerable<int>, double> closestIndices =
                 BoundarySnappingCalculatorHelper.FindClosestIndices(DistanceCalculator,
-                                                                  coordinateToSnap, 
-                                                                  gridEnvelopeWorldCoordinates);
+                                                                    coordinateToSnap,
+                                                                    gridEnvelopeWorldCoordinates);
 
             if (tolerance != null && closestIndices.Item2 > tolerance)
             {

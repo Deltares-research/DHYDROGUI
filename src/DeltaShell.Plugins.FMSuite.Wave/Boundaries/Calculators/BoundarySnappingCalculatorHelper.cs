@@ -12,16 +12,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
     internal static class BoundarySnappingCalculatorHelper
     {
         /// <summary>
-        /// Finds the distance and  set of indices of the coordinates within <paramref name="coordinateSrc"/>
-        /// closest to <paramref name="coordinates"/>, given the provided <paramref name="distanceCalculator"/>.
+        /// Finds the distance and sequence of indices of the coordinates within <paramref name="coordinates"/>
+        /// closest to <paramref name="coordinateSrc"/>, given <paramref name="distanceCalculator"/>.
         /// </summary>
         /// <param name="distanceCalculator">The distance calculator.</param>
         /// <param name="coordinateSrc">The coordinate source.</param>
-        /// <param name="coordinates">The coordinates.</param>
+        /// <param name="coordinates">The sequence of coordinates to evaluate the distance to.</param>
         /// <returns>
-        /// The set of indices and distance of the <see cref="Coordinate"/>s within <paramref name="coordinates"/>
-        /// which are closest to the provided <see cref="coordinateSrc"/> given the <see cref="distanceCalculator"/>.
-        /// </returns>
+        /// The minimal distance found between <paramref name="coordinates"/> and <paramref name="coordinateSrc"/>,
+        /// and the sequence of indices of coordinates in <paramref name="coordinates"/> that are at this distance
+        /// given the <see cref="distanceCalculator"/>.
         /// <remarks>
         /// It is a assumed that no parameter is <c>null</c>, the behaviour is undefined in case this happens.
         /// </remarks>

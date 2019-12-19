@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     public interface IGridBoundary
     {
         /// <summary>
-        /// Get the set of <see cref="GridCoordinate"/> specifying the boundary
-        /// of the grid at the specified <paramref name="gridSide"/>.
+        /// Get the set of <see cref="GridBoundaryCoordinate"/> specifying the
+        /// boundary of the grid at the specified <paramref name="gridSide"/>.
         /// </summary>
         /// <value>
         /// The <see cref="IReadOnlyList{T}"/> specifying the
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// </value>
         /// <param name="gridSide">The grid side.</param>
         /// <returns>
-        /// The set of <see cref="GridCoordinate"/> specifying the boundary of
+        /// The set of <see cref="GridBoundaryCoordinate"/> specifying the boundary of
         /// the grid at the specified <paramref name="gridSide"/>.
         /// </returns>
         IEnumerable<GridBoundaryCoordinate> this[GridSide gridSide] { get; }

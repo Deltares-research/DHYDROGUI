@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     public interface IWaveBoundaryGeometricDefinition
     {
         /// <summary>
-        /// Get or set the index of the first <see cref="GridCoordinate"/>
+        /// Gets the index of the first <see cref="GridCoordinate"/>
         /// of this <see cref="IWaveBoundary"/>.
         /// </summary>
         /// <value>
@@ -27,10 +27,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// Thrown when <paramref name="value"/> is smaller than zero.
         /// Thrown when <paramref name="value"/> is greater or equal to <see cref="EndingIndex"/>.
         /// </exception>
-        int StartingIndex { get; set; }
+        int StartingIndex { get; }
 
         /// <summary>
-        /// Get or set the index of the last <see cref="GridCoordinate"/>
+        /// Gets the index of the last <see cref="GridCoordinate"/>
         /// of this <see cref="IWaveBoundary"/>.
         /// </summary>
         /// <value>
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="value"/> is smaller or equal to <see cref="StartingIndex"/>.
         /// </exception>
-        int EndingIndex { get; set; }
+        int EndingIndex { get; }
 
         /// <summary>
         /// The side of the grid this <see cref="IWaveBoundary"/> is located on.
@@ -48,6 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when <see cref="GridSide"/> is set to an invalid enum value.
         /// </exception>
-        GridSide GridSide { get; set; }
+        GridSide GridSide { get; }
     }
 }

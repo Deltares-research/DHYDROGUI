@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             if (grid == null)
             {
                 throw new ArgumentNullException(nameof(grid));
-
             }
 
             if (grid.Size1 < 2 || grid.Size2 < 2)

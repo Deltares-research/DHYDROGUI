@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         public int StartingIndex
         {
             get => startingIndex;
-            set
+            internal set
             {
                 ValidateStartingIndex(value);
                 startingIndex = value;
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         public int EndingIndex
         {
             get => endingIndex;
-            set
+            internal set
             {
                 ValidateEndingIndex(value);
                 endingIndex = value;
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         public GridSide GridSide
         {
             get => gridSide;
-            set
+            internal set
             {
                 if (!Enum.IsDefined(typeof(GridSide), value))
                 {

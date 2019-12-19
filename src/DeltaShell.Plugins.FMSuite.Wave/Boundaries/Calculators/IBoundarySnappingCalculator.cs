@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
     public interface IBoundarySnappingCalculator
     {
         /// <summary>
-        /// Gets the <see cref="GridBoundary"/> of this <see cref="GridBoundary"/>.
+        /// Gets the <see cref="IGridBoundary"/> of this <see cref="IGridBoundary"/>.
         /// </summary>
         IGridBoundary GridBoundary { get; }
 
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// can be snapped, an empty list otherwise.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is null.
+        /// Thrown when <paramref name="coordinateToSnap"/> is <c>null</c>.
         /// </exception>
         /// <remarks>
         /// If tolerance is <c>null</c>, then it will not be taken into account.
