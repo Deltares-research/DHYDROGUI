@@ -141,6 +141,7 @@
     <Compile Include="Boundaries\GeometricDefinitions\IGridBoundary.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IGridBoundaryProvider.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\SupportPoint.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinition.cs" />
     <Compile Include="Boundaries\IBoundaryContainer.cs" />
     <Compile Include="Boundaries\IWaveBoundary.cs" />
