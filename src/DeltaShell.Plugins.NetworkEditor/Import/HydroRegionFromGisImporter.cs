@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections.Generic;
@@ -76,7 +75,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public Bitmap Image
         {
-            get { return Properties.Resources.HydroRegion; }
+            get
+            {
+                return null;
+            }
         }
 
         public IEnumerable<Type> SupportedItemTypes
@@ -138,7 +140,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             availableFeatureFromGisImporters.Clear();
             if (HydroRegion is HydroNetwork || HydroRegion is HydroRegion)
             {
-                availableFeatureFromGisImporters.Add("Channels", typeof (ChannelFromGisImporter));
                 availableFeatureFromGisImporters.Add("Cross Sections Y'Z", typeof (CrossSectionYZFromGisImporter));
                 availableFeatureFromGisImporters.Add("Cross Sections XYZ", typeof (CrossSectionXYZFromGisImporter));
                 availableFeatureFromGisImporters.Add("Bridge", typeof (BridgeFromGisImporter));
@@ -156,15 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         private void RunAllFeatureFromGisImporters()
         {
-            //run channels import first
-            var channelImporters = FeatureFromGisImporters.OfType<ChannelFromGisImporter>().ToList();
-            foreach (var importer in channelImporters)
-            {
-                RunFeatureFromGisImporter(importer);
-            }
-            //then the other importers
-            var featureImporters = FeatureFromGisImporters.Where(importer => !(importer is ChannelFromGisImporter)).ToList();
-            foreach (var importer in featureImporters)
+            foreach (FeatureFromGisImporterBase importer in FeatureFromGisImporters)
             {
                 RunFeatureFromGisImporter(importer);
             }

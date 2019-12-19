@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.NetworkEditor.Import;
@@ -39,20 +37,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             }
             set
             {
-                if (hydroRegionFromGisImporter != null)
-                {
-                    hydroRegionFromGisImporter.FeatureFromGisImporters.CollectionChanged -= NetworkFeatureFromGisImporters_CollectionChanged;
-                }
                 hydroRegionFromGisImporter = value;
                 textBoxSnappingPrecision.Text = hydroRegionFromGisImporter.SnappingPrecision.ToString();
-                hydroRegionFromGisImporter.FeatureFromGisImporters.CollectionChanged += NetworkFeatureFromGisImporters_CollectionChanged;
             }
-        }
-
-        private void NetworkFeatureFromGisImporters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var noChannelImporters = hydroRegionFromGisImporter.FeatureFromGisImporters.Where(importer => !(importer is ChannelFromGisImporter));
-            textBoxSnappingPrecision.Enabled = (noChannelImporters.Count() != 0);
         }
 
         private void textBoxSnappingPrecision_TextChanged(object sender, EventArgs e)

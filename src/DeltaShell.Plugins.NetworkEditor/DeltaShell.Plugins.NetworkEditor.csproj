@@ -205,7 +205,6 @@
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
     <Compile Include="Import\BridgeFromGisImporter.cs" />
     <Compile Include="Import\CatchmentFromGisImporter.cs" />
-    <Compile Include="Import\ChannelFromGisImporter.cs" />
     <Compile Include="Import\CulvertFromGisImporter.cs" />
     <Compile Include="Import\HydroRegionFromGisImporter.cs" />
     <Compile Include="Import\HydroNetworkFromGisImporterXmlSerializer.cs" />

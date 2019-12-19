@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -10,7 +9,6 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Api;
 using SharpMap.Data.Providers;
-using SharpMap.Extensions.Data.Providers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
@@ -64,57 +62,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             Assert.IsTrue(resultingCoverage != null);
             Assert.AreEqual(5, resultingCoverage.Locations.Values.Count, "number of location in network coverage with larger tolerance");
             Assert.AreEqual(new object[]{1.0,2.0,3.0,4.0,5.0}, resultingCoverage.GetValues(), "values on network locations");
-        }
-
-        [Test]
-        public void ImportBranchesFromGeodatabaseAndSnapWeirCrestLevelToCoverage()
-        {
-            var path = TestHelper.GetTestFilePath("HydroBaseCF_Basis.mdb");
-
-            var channelFromGisImporter = new ChannelFromGisImporter
-                {
-                    FileBasedFeatureProviders = new EventedList<IFileBasedFeatureProvider> {new OgrFeatureProvider()},
-                    HydroRegion = new HydroNetwork()
-                };
-            
-            var importerSettings = channelFromGisImporter.FeatureFromGisImporterSettings;
-            importerSettings.Path = path;
-            importerSettings.TableName = "Channel";
-            importerSettings.GeometryColumn = new MappingColumn("Channel", "Shape");
-
-            var propertyMapping = importerSettings.PropertiesMapping.First(p => p.PropertyName == "Name");
-            propertyMapping.MappingColumn.TableName = "Channel";
-            propertyMapping.MappingColumn.ColumnName = "OBJECTID";
-            propertyMapping = importerSettings.PropertiesMapping.First(p => p.PropertyName == "LongName");
-            propertyMapping.MappingColumn.TableName = "Channel";
-            propertyMapping.MappingColumn.ColumnName = "OVK_NAME";
-
-            var hydroNetwork = (IHydroNetwork)channelFromGisImporter.ImportItem(null);
-            Assert.AreEqual(181, hydroNetwork.Channels.Count(), "nr. of imported branches");
-
-            var networkCoverage = new NetworkCoverage { Name = "coverage", Network = hydroNetwork };
-
-            var pointValueImporter = new PointValuePairsFromGisImporter
-                {
-                    FileBasedFeatureProviders = new List<IFileBasedFeatureProvider> {new OgrFeatureProvider()},
-                    SnappingPrecision = 20
-                };
-            var networkCoverageImporter = new NetworkCoverageFromGisImporter
-                {
-                    PointValuePairsFromGisImporter = pointValueImporter,
-                };
-
-            importerSettings = pointValueImporter.FeatureFromGisImporterSettings;
-            importerSettings.Path = path;
-            importerSettings.TableName = "Weir";
-            importerSettings.GeometryColumn = new MappingColumn("Weir","Shape");
-            propertyMapping = importerSettings.PropertiesMapping.First(p => p.PropertyName == "Value");
-            propertyMapping.MappingColumn.TableName = "Weir";
-            propertyMapping.MappingColumn.ColumnName = "CREST_LVL";
-            
-            var coverage = (INetworkCoverage)networkCoverageImporter.ImportItem("", networkCoverage);
-            Assert.IsNotNull(coverage);
-            Assert.AreEqual(40, coverage.Locations.Values.Count, "nr. of locations snapped to coverage");
         }
     }
 }
