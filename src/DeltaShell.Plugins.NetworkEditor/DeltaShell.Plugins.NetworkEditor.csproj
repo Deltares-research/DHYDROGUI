@@ -207,7 +207,6 @@
     <Compile Include="Import\HydroRegionFromGisImporter.cs" />
     <Compile Include="Import\HydroNetworkFromGisImporterXmlSerializer.cs" />
     <Compile Include="Import\ISchemaReader.cs" />
-    <Compile Include="Import\LateralSourceFromGisImporter.cs" />
     <Compile Include="Import\MappingColumn.cs" />
     <Compile Include="Import\NetworkFeatureFromGisImporterBase.cs" />
     <Compile Include="Import\FeatureFromGisImporterSettings.cs" />

@@ -65,7 +65,6 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             yield return new CatchmentFromGisImporter();
             yield return new HydroRegionFromGisImporter();
-            yield return new LateralSourceFromGisImporter();
             yield return new ObservationPointFromGisImporter();
             yield return new PumpFromGisImporter();
             yield return new SimpleWeirFromGisImporter();
