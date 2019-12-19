@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -49,5 +50,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// Thrown when <see cref="GridSide"/> is set to an invalid enum value.
         /// </exception>
         GridSide GridSide { get; }
+
+        /// <summary>
+        /// Gets the support points defined on this <see cref="IWaveBoundaryGeometricDefinition"/>.
+        /// </summary>
+        /// <value>
+        /// The support points defined on this <see cref="IWaveBoundaryGeometricDefinition"/>.
+        /// </value>
+        IEventedList<SupportPoint> SupportPoints { get; }
     }
 }

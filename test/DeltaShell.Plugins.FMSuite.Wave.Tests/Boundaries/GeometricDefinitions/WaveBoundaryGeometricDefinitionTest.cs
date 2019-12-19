@@ -36,6 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                         "Expected a different EndingIndex.");
             Assert.That(geometricDefinition.GridSide, Is.EqualTo(gridSide),
                         "Expected a different GridSide.");
+            Assert.That(geometricDefinition.SupportPoints, Is.Not.Null,
+                        "Expected that SupportPoints was not null.");
         }
 
         [Test]

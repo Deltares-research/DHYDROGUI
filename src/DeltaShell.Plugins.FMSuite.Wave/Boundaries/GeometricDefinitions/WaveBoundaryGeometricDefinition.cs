@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -40,6 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             GridSide = gridSide;
             this.startingIndex = startingIndex;
             this.endingIndex = endingIndex;
+
+            SupportPoints = new EventedList<SupportPoint>();
         }
 
         public int StartingIndex
@@ -102,5 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         }
 
         private GridSide gridSide = GridSide.North;
+
+        public IEventedList<SupportPoint> SupportPoints { get; }
     }
 }
