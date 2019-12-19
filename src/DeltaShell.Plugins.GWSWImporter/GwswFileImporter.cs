@@ -132,7 +132,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         private void AddRRtoFMNwrwLinks(List<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IWaterFlowFMModel fmModel)
         {
-            // TODO: create link
             foreach (var nwrwDischargeData in rrModel.NwrwDischargeData)
             {
                 if (nwrwDischargeData.DischargeType == DischargeType.DryWeatherFlow)
@@ -150,12 +149,20 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = nwrwDischargeData.Name };
                         branch.BranchFeatures.Add(lateralSource);
 
+                        // add link from Nwrw Catchment to newly created lateral
+                        var catchment = rrModel.ModelData.OfType<NwrwData>().FirstOrDefault(cmd => cmd.Name.Equals(lateralSource.Name));
+                        if (catchment != null)
+                        {
+                            var hydroLink = new HydroLink(catchment.Catchment, lateralSource);
+                            catchment.Catchment.Links.Add(hydroLink);
+                        }
+
                         // at FM-side, create lateral data of type REALTIME
                         Model1DLateralSourceData model1DLateralSourceData = fmModel.ModelDefinition.LateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
                         model1DLateralSourceData.Name = lateralSource.Name;
                         model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                         model1DLateralSourceData.Flow = 0d;
-                        //fmModel.ModelDefinition.LateralSourcesData.Add(model1DLateralSourceData);
+
                     }
                 }
             }
