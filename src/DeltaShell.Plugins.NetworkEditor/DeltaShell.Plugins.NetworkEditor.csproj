@@ -222,7 +222,6 @@
     <Compile Include="Import\PumpFromGisImporter.cs" />
     <Compile Include="Import\RelatedTable.cs" />
     <Compile Include="Import\SimpleWeirFromGisImporter.cs" />
-    <Compile Include="Import\CrossSectionXYZFromGisImporter.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CrossSectionInteractor.cs" />
