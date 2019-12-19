@@ -164,16 +164,10 @@
     <Compile Include="..\..\AssemblyInfo.Version.Sobek.cs">
       <Link>Properties\AssemblyInfo.Version.Sobek.cs</Link>
     </Compile>
-    <Compile Include="ImportExportCsv\CrossSectionToCsvExporterBase.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionXYZFromCsvFileImporter.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionXYZToCsvFileExporter.cs" />
     <Compile Include="Import\GroupablePointCloudImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionFromCsvFileImporterBase.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWCsvImportExportSettings.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionZWFromCsvFileImporter.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionZWToCsvFileExporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
@@ -210,8 +204,6 @@
     <Compile Include="MapLayers\HydroNetworkRoutesLayerController.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvExportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionImportSettings.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionYZFromCsvFileImporter.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionYZToCsvFileExporter.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />

@@ -631,18 +631,6 @@
     <Compile Include="Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Wizard\CrossSectionImportSettingsWizardPage.Designer.cs">
-      <DependentUpon>CrossSectionImportSettingsWizardPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Wizard\CrossSectionCsvImportWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizard\CrossSectionCsvImportWizard.Designer.cs">
-      <DependentUpon>CrossSectionCsvImportWizard.cs</DependentUpon>
-    </Compile>
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\GeneralStructureWeirFormulaViewWpf.xaml.cs">
       <DependentUpon>GeneralStructureWeirFormulaViewWpf.xaml</DependentUpon>
@@ -787,9 +775,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizard\CrossSectionImportSettingsWizardPage.resx">
-      <DependentUpon>CrossSectionImportSettingsWizardPage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

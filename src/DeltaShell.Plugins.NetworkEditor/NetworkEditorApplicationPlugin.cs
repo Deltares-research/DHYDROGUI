@@ -12,7 +12,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.NetworkEditor.Import;
-using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Extensions.Feature;
 using Mono.Addins;
 
@@ -63,18 +62,8 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new CrossSectionYZFromCsvFileImporter();
-            yield return new CrossSectionXYZFromCsvFileImporter();
-            yield return new CrossSectionZWFromCsvFileImporter();
             yield return new HydroAreaEmbankmentImporter();
             yield return new HydroAreaEmbankmentHeightImporter();
-        }
-
-        public override IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new CrossSectionYZToCsvFileExporter();
-            yield return new CrossSectionXYZToCsvFileExporter();
-            yield return new CrossSectionZWToCsvFileExporter();
         }
 
         private void ApplicationOnProjectClosing(Project project)

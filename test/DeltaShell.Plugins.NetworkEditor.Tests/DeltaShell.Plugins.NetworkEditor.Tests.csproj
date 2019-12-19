@@ -226,9 +226,6 @@
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
     <Compile Include="CulvertPropertiesTest.cs" />
-    <Compile Include="Export\CrossSectionXYZToCsvFileExporterTest.cs" />
-    <Compile Include="Export\CrossSectionYZToCsvFileExporterTest.cs" />
-    <Compile Include="Export\CrossSectionZWToCsvExporterTest.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\YZProfileMutatorTest.cs" />
     <Compile Include="Forms\GridProperties\BridgePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
@@ -266,10 +263,6 @@
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
-    <Compile Include="Import\CrossSectionXYZFromCsvFileImporterTest.cs" />
-    <Compile Include="Import\CrossSectionYZFromCsvFileImporterTest.cs" />
-    <Compile Include="Import\CrossSectionZWFromCsvFileImporterTest.cs" />
-    <Compile Include="Import\Wizard\CrossSectionCsvImportWizardDialogTest.cs" />
     <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRendererTest.cs" />
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
