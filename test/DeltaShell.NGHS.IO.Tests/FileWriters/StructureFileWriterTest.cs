@@ -333,7 +333,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(8, content.Properties.Count);
+            Assert.AreEqual(9, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.WEIR_ID.ToString(), idProperty.Value);
@@ -609,7 +609,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(9, content.Properties.Count);
+            Assert.AreEqual(10, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.ORIFICE_ID.ToString(), idProperty.Value);
@@ -801,7 +801,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(27, content.Properties.Count);
+            Assert.AreEqual(32, content.Properties.Count);
             
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.ExtraResistance.Key);
             const double expectedExtraResistance = 0.0;
@@ -858,7 +858,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(StructureRegion.StructureTypeName.Culvert, idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.CULVERT_FLOW_DIRECTION).ToString(), idProperty.Value);
+            Assert.That((StructureFileWriterTestHelper.CULVERT_FLOW_DIRECTION).ToString(), Is.EqualTo(idProperty.Value).IgnoreCase);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.LeftLevel.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.CULVERT_INLET_LEVEL.ToString(StructureRegion.LeftLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
@@ -1070,7 +1070,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(StructureRegion.StructureTypeName.Bridge, idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION).ToString(), idProperty.Value);
+            Assert.That((StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION).ToString(), Is.EqualTo(idProperty.Value).IgnoreCase);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
@@ -1142,7 +1142,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(StructureRegion.StructureTypeName.BridgePillar, idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
-            Assert.AreEqual(((int)StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION).ToString(), idProperty.Value);
+            Assert.That((StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION).ToString(), Is.EqualTo(idProperty.Value).IgnoreCase);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);

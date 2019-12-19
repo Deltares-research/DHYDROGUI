@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            var expectedId = "CrossSection1";
+            var expectedId = "CrossSection_1D_1";
             var expectedChainage = 20.0;
 
             FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, expectedChainage, 1.5, true);

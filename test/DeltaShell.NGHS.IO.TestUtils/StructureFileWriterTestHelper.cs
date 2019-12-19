@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         #region Const TestValues
 
         public const int PUMP_ID = 1;
-        public const string PUMP_NAME = "Pump1";
+        public const string PUMP_NAME = "Pump_1D_1";
         public const double PUMP_CAPACITY = 3.0;
         public const double PUMP_CHAINAGE = 0.5;
         public const PumpControlDirection PUMP_CONTROL_DIRECTION = PumpControlDirection.DeliverySideControl;
@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public static readonly List<double> PUMP_REDUCTION_VALUES = new List<double> { 0.0, 0.1, 0.2 };
 
         public const int WEIR_ID = 2;
-        public const string WEIR_NAME = "Weir1";
+        public const string WEIR_NAME = "Weir_1D_1";
         public const double WEIR_CREST_LEVEL = 3.0;
         public const double WEIR_CREST_WIDTH = 5.0;
         public const double WEIR_CHAINAGE = 1.0;
@@ -60,7 +60,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double WEIR_LATERAL_DISCHARGE_COEFF = 2.0;
 
         public const int UNI_WEIR_ID = 3;
-        public const string UNI_WEIR_NAME = "Weir2";
+        public const string UNI_WEIR_NAME = "Weir_1D_2";
         public const double UNI_WEIR_CHAINAGE = 1.5;
         public const FlowDirection UNI_WEIR_FLOW_DIRECTION = FlowDirection.Both;
         public static readonly List<double> UNI_WEIR_Y_VALUES = new List<double> { 5.0, -2.0, -2.0, 5.0 };
@@ -69,7 +69,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
 
         public const int RIVER_WEIR_ID = 4;
-        public const string RIVER_WEIR_NAME = "Weir3";
+        public const string RIVER_WEIR_NAME = "Weir_1D_3";
         public const double RIVER_WEIR_CHAINAGE = 2.0;
         public const double RIVER_WEIR_CREST_LEVEL = 2.0;
         public const double RIVER_WEIR_CREST_WIDTH = 5.0;
@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public static readonly List<double> RIVER_WEIR_NEG_RED = new List<double> { 0.0, 0.25, 0.5, 0.75, 1.0 };
 
         public const int ADV_WEIR_ID = 5;
-        public const string ADV_WEIR_NAME = "Weir4";
+        public const string ADV_WEIR_NAME = "Weir_1D_4";
         public const double ADV_WEIR_CHAINAGE = 2.5;
         public const double ADV_WEIR_CREST_LEVEL = 3.0;
         public const double ADV_WEIR_CREST_WIDTH = 6.0;
@@ -98,7 +98,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double ADV_WEIR_ABUT_CONTRACTION_NEG = 0.2;
 
         public const int ORIFICE_ID = 6;
-        public const string ORIFICE_NAME = "Weir5";
+        public const string ORIFICE_NAME = "Weir_1D_5";
         public const double ORIFICE_CHAINAGE = 3.0;
         public const FlowDirection ORIFICE_FLOW_DIRECTION = FlowDirection.Both;
         public const double ORIFICE_CREST_LEVEL = 3.0;
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double ORIFICE_LIMIT_FLOW_NEG = 0.15;
 
         public const int GENERAL_STRUCTURE_ID = 7;
-        public const string GENERAL_STRUCTURE_NAME = "Weir6";
+        public const string GENERAL_STRUCTURE_NAME = "Weir_1D_6";
         public const double GENERAL_STRUCTURE_CHAINAGE = 3.5;
         public const double GENERAL_STRUCTURE_GATE_OPENING = 1.5;
         public const double GENERAL_STRUCTURE_EXTRA_RESISTANCE = 0.0;
@@ -138,7 +138,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG = 1.3;
 
         public const int CULVERT_ID = 8;
-        public const string CULVERT_NAME = "Culvert1";
+        public const string CULVERT_NAME = "Culvert_1D_1";
         public const double CULVERT_CHAINAGE = 0.4;
         public const FlowDirection CULVERT_FLOW_DIRECTION = FlowDirection.Both;
         public const double CULVERT_INLET_LEVEL = 0.5;
@@ -156,7 +156,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double CULVERT_GROUNDLAYER_ROUGHNESS = 0.0;
 
         public const int INV_SIPHON_ID = 9;
-        public const string INV_SIPHON_NAME = "Culvert2";
+        public const string INV_SIPHON_NAME = "Culvert_1D_2";
         public const double INV_SIPHON_CHAINAGE = 4.5;
         public const FlowDirection INV_SIPHON_FLOW_DIRECTION = FlowDirection.Both;
         public const double INV_SIPHON_INLET_LEVEL = 0.4;
@@ -175,7 +175,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double INV_SIPHON_BEND_LOSS_COEFF = 0.6;
 
         public const int SIPHON_ID = 10;
-        public const string SIPHON_NAME = "Culvert3";
+        public const string SIPHON_NAME = "Culvert_1D_3";
         public const double SIPHON_CHAINAGE = 5.0;
         public const FlowDirection SIPHON_FLOW_DIRECTION = FlowDirection.Both;
         public const double SIPHON_INLET_LEVEL = 0.5;
@@ -196,7 +196,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double SIPHON_TURNOFF_LEVEL = 0.8;
 
         public const int BRIDGE_ID = 11;
-        public const string BRIDGE_NAME = "Bridge1";
+        public const string BRIDGE_NAME = "Bridge_1D_1";
         public const double BRIDGE_CHAINAGE = 5.5;
         public const FlowDirection BRIDGE_FLOW_DIRECTION = FlowDirection.Both;
         public const double BRIDGE_BED_LEVEL = 0.3;
@@ -209,7 +209,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const bool BRIDGE_ENABLE_GROUNDLAYER = true;
 
         public const int BRIDGE_PILLAR_ID = 12;
-        public const string BRIDGE_PILLAR_NAME = "BridgePillar1";
+        public const string BRIDGE_PILLAR_NAME = "BridgePillar_1D_1";
         public const double BRIDGE_PILLAR_CHAINAGE = 6.0;
         public const FlowDirection BRIDGE_PILLAR_FLOW_DIRECTION = FlowDirection.Both;
         public const double BRIDGE_PILLAR_BED_LEVEL = 0.3;
@@ -258,7 +258,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             branch.AddStructure(pump);
         }
 
-        private static IWeir AddWeir(this IBranch branch, long id, string name, double chainage)
+        private static IWeir AddWeir1D(this IBranch branch, long id, string name, double chainage)
         {
             var weir = new Weir
             {
@@ -275,7 +275,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public static void AddSimpleWeir(this IBranch branch, long id, string name, double crestLevel, double crestWidth, double chainage,
                                           FlowDirection flowDirection, double dischargeCoefficient, double lateralDischargeCoefficient)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
             weir.CrestLevel = crestLevel;
             weir.CrestWidth = crestWidth;
             weir.FlowDirection = flowDirection;
@@ -290,7 +290,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public static void AddUniversalWeir(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection,
                                              double[] yValues, double[] zValues, double dischargeCoefficient)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
             weir.FlowDirection = flowDirection;
 
             Coordinate[] coordinates = new Coordinate[yValues.Length];
@@ -310,7 +310,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                          double posCwCoef, double posSlimLimit, double negCwCoef, double negSlimLimit,
                                          double[] posSf, double[] posRed, double[] negSf, double[] negRed)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
             weir.CrestLevel = crestLevel;
             weir.CrestWidth = crestWidth;
 
@@ -349,7 +349,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                             double upstreamFacePos, double designHeadPos, double pierContractionPos, double abutContractionPos,
                                             double upstreamFaceNeg, double designHeadNeg, double pierContractionNeg, double abutContractionNeg)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
             weir.CrestLevel = crestLevel;
             weir.CrestWidth = crestWidth;
 
@@ -371,7 +371,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                        double crestLevel, double crestWidth, double gateOpening, double contractionCoeff, double latContrCoeff,
                                        bool useLimitFlowPos, double limitFlowPos, bool useLimitFlowNeg, double limitFlowNeg)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
             weir.FlowDirection = flowDirection;
             weir.CrestLevel = crestLevel;
             weir.CrestWidth = crestWidth;
@@ -395,7 +395,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                                 double negFreeGateFlowCoeff, double negDrownGateFlowCoeff, double negFreeWeirFlowCoeff, double negDrownWeirFlowCoeff, double negContrCoefFreeGate,
                                                 bool useExtraResistance = true)
         {
-            var weir = AddWeir(branch, id, name, chainage);
+            var weir = AddWeir1D(branch, id, name, chainage);
 
             weir.WeirFormula = new GeneralStructureWeirFormula
             {
