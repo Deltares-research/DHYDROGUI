@@ -211,7 +211,6 @@
     <Compile Include="Import\NetworkFeatureFromGisImporterBase.cs" />
     <Compile Include="Import\FeatureFromGisImporterSettings.cs" />
     <Compile Include="Import\NetworkFeatureFromGisImporterSettingsCollection.cs" />
-    <Compile Include="Import\ObservationPointFromGisImporter.cs" />
     <Compile Include="Import\OgrSchemaReader.cs" />
     <Compile Include="Import\ShapeFileSchemaReader.cs" />
     <Compile Include="Import\OleDbSchemaReader.cs" />
