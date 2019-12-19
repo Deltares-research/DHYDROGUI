@@ -215,7 +215,6 @@
     <Compile Include="Import\ShapeFileSchemaReader.cs" />
     <Compile Include="Import\OleDbSchemaReader.cs" />
     <Compile Include="Import\PropertyMapping.cs" />
-    <Compile Include="Import\PumpFromGisImporter.cs" />
     <Compile Include="Import\RelatedTable.cs" />
     <Compile Include="Import\SimpleWeirFromGisImporter.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
