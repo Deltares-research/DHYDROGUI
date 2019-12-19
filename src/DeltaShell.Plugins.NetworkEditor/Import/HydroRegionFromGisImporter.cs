@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             availableFeatureFromGisImporters.Clear();
             if (HydroRegion is HydroNetwork || HydroRegion is HydroRegion)
             {
-                availableFeatureFromGisImporters.Add("Cross Sections Y'Z", typeof (CrossSectionYZFromGisImporter));
                 availableFeatureFromGisImporters.Add("Cross Sections XYZ", typeof (CrossSectionXYZFromGisImporter));
                 availableFeatureFromGisImporters.Add("Bridge", typeof (BridgeFromGisImporter));
                 availableFeatureFromGisImporters.Add("Culvert", typeof (CulvertFromGisImporter));
