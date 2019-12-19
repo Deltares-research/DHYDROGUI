@@ -204,7 +204,6 @@
     <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
     <Compile Include="Import\CatchmentFromGisImporter.cs" />
-    <Compile Include="Import\CulvertFromGisImporter.cs" />
     <Compile Include="Import\HydroRegionFromGisImporter.cs" />
     <Compile Include="Import\HydroNetworkFromGisImporterXmlSerializer.cs" />
     <Compile Include="Import\ISchemaReader.cs" />
