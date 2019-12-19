@@ -138,10 +138,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         private void InitAvailableFeatureImporters()
         {
             availableFeatureFromGisImporters.Clear();
-            if (HydroRegion is HydroNetwork || HydroRegion is HydroRegion)
-            {
-                availableFeatureFromGisImporters.Add("Weir (simple weir)", typeof (SimpleWeirFromGisImporter));
-            }
             if (HydroRegion is DrainageBasin || HydroRegion is HydroRegion)
             {
                 availableFeatureFromGisImporters.Add("Catchments", typeof (CatchmentFromGisImporter));
