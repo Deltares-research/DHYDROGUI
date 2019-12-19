@@ -72,11 +72,15 @@ namespace DelftTools.Hydro.Structures
 
         private static void SetTarget(IPipe pipe, HydroNetwork hydroNetwork)
         {
-            if (pipe.Target == null)
+            if (pipe.Target != null) return;
+            var manholeOrHydroNode = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
+            var manhole = manholeOrHydroNode;
+            if (!(manholeOrHydroNode is IManhole))
             {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
-                pipe.Target = manhole;
+                manhole = new Manhole(manholeOrHydroNode.Name) { Geometry = manholeOrHydroNode.Geometry};
+                ((IManhole)manhole).Compartments.Add(new Compartment(manhole.Name));
             }
+            pipe.Target = manhole;
         }
 
         private static void SetSource(IPipe pipe, HydroNetwork hydroNetwork)
