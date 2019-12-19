@@ -203,7 +203,6 @@
     <Compile Include="MapLayers\CustomRenderers\BranchFeatureRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
-    <Compile Include="Import\BridgeFromGisImporter.cs" />
     <Compile Include="Import\CatchmentFromGisImporter.cs" />
     <Compile Include="Import\CulvertFromGisImporter.cs" />
     <Compile Include="Import\HydroRegionFromGisImporter.cs" />
