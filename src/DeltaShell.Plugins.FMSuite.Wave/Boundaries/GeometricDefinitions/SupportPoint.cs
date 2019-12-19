@@ -3,7 +3,7 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
     /// <summary>
-    /// Represents a support point defined on a <see cref="IWaveBoundary"/>.
+    /// Represents a support point defined in a <see cref="IWaveBoundaryGeometricDefinition"/>.
     /// </summary>
     public class SupportPoint
     {
