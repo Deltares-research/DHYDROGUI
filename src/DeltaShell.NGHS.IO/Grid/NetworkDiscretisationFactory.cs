@@ -287,8 +287,20 @@ namespace DeltaShell.NGHS.IO.Grid
                 branch.Name = branchNames[i] == "" ? null : branchNames[i];
                 branch.Description = branchDescriptions[i] == "" ? null : branchDescriptions[i];
                 
-                branch.Source = nodesArray[sourceNodeIndex];
-                branch.Target = nodesArray[targetNodeIndex];
+                branch.Source = sourceNodeIndex >=0 && sourceNodeIndex < nodesArray.Length ? nodesArray[sourceNodeIndex] : null;
+                if (branch.Source == null)
+                {
+                    var startCoordinate = coordinates.FirstOrDefault();
+                    if (startCoordinate != null)
+                        branch.Source = nodesArray.Where(na => na.Geometry?.Coordinate != null).FirstOrDefault(n => n.Geometry.Coordinate.Equals2D(startCoordinate, 0.01));
+                }
+                branch.Target = targetNodeIndex >= 0 && targetNodeIndex < nodesArray.Length ? nodesArray[targetNodeIndex] : null;
+                if (branch.Target == null)
+                {
+                    var endCoordinate = coordinates.LastOrDefault();
+                    if (endCoordinate != null)
+                        branch.Target = nodesArray.Where(na => na.Geometry?.Coordinate != null).FirstOrDefault(n => n.Geometry.Coordinate.Equals2D(endCoordinate, 0.01));
+                }
                 branch.Geometry = new LineString(coordinates);
                 branch.OrderNumber = branchOrderNumbers[i];
 
