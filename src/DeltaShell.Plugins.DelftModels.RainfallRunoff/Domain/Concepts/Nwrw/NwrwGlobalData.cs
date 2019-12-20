@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Data;
 
@@ -18,9 +19,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null || rrModel.NwrwGlobalDataDict.ContainsKey(this.SurfaceType)) return;
+            if (rrModel == null || rrModel.NwrwGlobalData.Any(ngd => ngd.SurfaceType.Equals(this.SurfaceType))) return;
 
-            rrModel.NwrwGlobalDataDict.Add(this.SurfaceType, this);
+            rrModel.NwrwGlobalData.Add(this);
         }
     }
 }
