@@ -2,7 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
   <class name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwGlobalData, DeltaShell.Plugins.DelftModels.RainfallRunoff" table="rr_nwrw_global_data" lazy="false">
 
-    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
+    <id name="Id" column="NwrwGlobalDataID" type="Int64" unsaved-value="0" access="property">
       <generator class="increment" />
     </id>
 

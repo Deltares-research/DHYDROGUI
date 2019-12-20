@@ -34,10 +34,27 @@ namespace DeltaShell.NGHS.IO.Grid
                 dataModel.GeopointsX, dataModel.GeopointsY,
                 dataModel.BranchOrderNumbers, branchProperties);
 
-            network.Nodes.AddRange(nodes);
+            network.Nodes.AddRange(nodes.Distinct());
             network.Branches.AddRange(branches);
 
             return network;
+        }
+
+        public static void FillHydroNetwork(IHydroNetwork network, NetworkUGridDataModel dataModel, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
+        {
+            network.Name = dataModel.Name;
+            network.CoordinateSystem = dataModel.CoordinateSystem;
+
+            var nodes = CreateNodes(network, dataModel.NodesX, dataModel.NodesY, dataModel.NodesNames, dataModel.NodesDescriptions, compartmentProperties).ToList();
+
+            var branches = CreateNetworkBranches(network, nodes, dataModel.SourceNodeIds, dataModel.TargedNodesIds,
+                dataModel.BranchLengths,
+                dataModel.NumberOfGeometryPointsPerBranch, dataModel.BranchNames, dataModel.BranchDescriptions,
+                dataModel.GeopointsX, dataModel.GeopointsY,
+                dataModel.BranchOrderNumbers, branchProperties);
+
+            network.Nodes.AddRange(nodes.Distinct());
+            network.Branches.AddRange(branches);
         }
 
         public static IDiscretization CreateNetworkDiscretisation(IHydroNetwork network, NetworkDiscretisationUGridDataModel discretisationDataModel)
@@ -95,6 +112,58 @@ namespace DeltaShell.NGHS.IO.Grid
             return discretisation;
         }
 
+        public static void FillNetworkDiscretisation(IDiscretization discretisation, IHydroNetwork network, NetworkDiscretisationUGridDataModel discretisationDataModel)
+        {
+            if (network?.Branches == null)
+            {
+                discretisation.Clear();
+                return;
+            }
+
+            discretisation.Name = discretisationDataModel.Name;
+            discretisation.Network = network;
+            discretisation.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
+            
+
+            // check if size of branchindices and offsets are equal and > 0.
+            var branchIndices = discretisationDataModel.BranchIdx;
+            var offset = discretisationDataModel.Offsets;
+            var discretisationPointIds = discretisationDataModel.DiscretisationPointIds;
+            var discretisationPointDescriptions = discretisationDataModel.DiscretisationPointDescriptions;
+
+            if (branchIndices.Length != offset.Length
+                || branchIndices.Length != discretisationPointIds.Length)
+            {
+                return ;// throw new Exception(string.Format("Can't reconstruct the network discretisation because the "));
+            }
+
+            // make int[] of unique branch indices
+            var uniqueBranchIndices = branchIndices.Distinct();
+
+            // get the size and check if there are that many branches.
+            /*if (network.Branches.Count != uniqueBranchIndices.Count())
+            {
+                return null;
+            }*/
+
+            for (var i = 0; i < branchIndices.Length; i++)
+            {
+                var branchIndex = branchIndices[i];
+                var branch = network.Branches[branchIndex];
+                var discretisationPointId = discretisationPointIds[i];
+                var discretisationPointDescription = discretisationPointDescriptions[i];
+
+                var networkLocation =
+                    new NetworkLocation(branch, offset[i])
+                    {
+                        Name = discretisationPointId,
+                        LongName = discretisationPointDescription
+                    };
+
+                discretisation.Locations.Values.Add(networkLocation);
+            }
+        }
+
         private static IEnumerable<INode> CreateNodes(IHydroNetwork network, double[] nodesX, double[] nodesY, string[] nodesNames, string[] nodesDescriptions, ICollection<NodeFile.CompartmentProperties> propertiesPerCompartment)
         {
             var numberOfNodes = nodesX.Length;
@@ -133,6 +202,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     if (manHoleLookup.TryGetValue(compartmentProperties.ManholeId, out var existingManhole))
                     {
                         existingManhole.Compartments.Add(compartment);
+                        yield return existingManhole;
                         continue;
                     }
 

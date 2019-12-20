@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
         IEventedList<ISedimentFraction> SedimentFractions { get; }
         string MduFilePath { get; }
-        IEnumerable<Model1DBoundaryNodeData> BoundaryConditions1D { get; }
+        IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D { get; }
+        IEventedList<Model1DLateralSourceData> LateralSourcesData { get; }
     }
 }

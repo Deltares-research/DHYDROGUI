@@ -18,27 +18,36 @@ namespace DeltaShell.NGHS.IO.Grid
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridToNetworkAdapter));
 
         public const string BranchGuiFileName = "branches.gui";
+        public const string StorageNodeFileName = "nodeFile.ini";
 
         /// <summary>
         /// Always returns a new <see cref="IDiscretization"/> (containing Network) filled with the
         /// information from the <paramref name="netFilePath"/>
         /// </summary>
         /// <param name="netFilePath">Path to the net file</param>
-        /// <param name="nodeData">Data about the nodes (nodeFile.ini) not contained in the net file (manhole <-> compartment mapping etc.)</param>
+        /// <param name="discretization"></param>
         /// <param name="network"></param>
-        public static IDiscretization LoadNetworkAndDiscretisation(string netFilePath, IHydroNetwork network = null, List<NodeFile.CompartmentProperties> nodeData = null)
+        /// <param name="nodeData">Data about the nodes (nodeFile.ini) not contained in the net file (manhole <-> compartment mapping etc.)</param>
+        public static void LoadNetworkAndDiscretisation(string netFilePath, IDiscretization discretization, IHydroNetwork network, IList<NodeFile.CompartmentProperties> nodeData, IList<BranchFile.BranchProperties> branchData)
         {
             var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
             if (discretisationDataModel == null)
             {
                 // no discretisation is found. Return null and try to get the network in another call
-                return new Discretization();
+                discretization.Clear();
+                return;
             }
 
-            var loadedNetwork = LoadNetworkById(netFilePath, discretisationDataModel.NetworkId, nodeData, network);
-            return loadedNetwork != null
-                ? NetworkDiscretisationFactory.CreateNetworkDiscretisation(loadedNetwork, discretisationDataModel)
-                : new Discretization();
+            FillNetworkById(netFilePath, network, discretisationDataModel.NetworkId, nodeData, branchData);
+            if(network != null)
+            {
+                NetworkDiscretisationFactory.FillNetworkDiscretisation(discretization, network, discretisationDataModel);
+            }
+            else
+            {
+                discretization.Clear();
+            }
+            
         }
 
         // only used in tests => todo make private
@@ -185,7 +194,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties, IHydroNetwork network)
+        private static IHydroNetwork LoadNetworkById(string netFilePath, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties, ICollection<BranchFile.BranchProperties> branchData)
         {
             Func<int[], int> func = networkIds =>
             {
@@ -201,10 +210,10 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 using (var uGridNetwork = new UGridNetwork(netFilePath))
                 {
-                    var propertiesPerBranch = ReadPropertiesPerBranchFromFile(netFilePath);
+                    
 
                     var networkUGridDataModel = ImportNetworkFromUgridAndCreateNetworkDataModel(uGridNetwork, func);
-                    return NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, propertiesPerBranch, compartmentProperties, network);
+                    return NetworkDiscretisationFactory.CreateHydroNetwork(networkUGridDataModel, branchData, compartmentProperties);
                 }
             }
             catch (Exception ex)
@@ -213,12 +222,46 @@ namespace DeltaShell.NGHS.IO.Grid
                 return null;
             }
         }
+        private static void FillNetworkById(string netFilePath, IHydroNetwork network, int networkId, ICollection<NodeFile.CompartmentProperties> compartmentProperties, ICollection<BranchFile.BranchProperties> branchData)
+        {
+            Func<int[], int> func = networkIds =>
+            {
+                if (networkId > 0 && !networkIds.Contains(networkId))
+                {
+                    throw new Exception("The provided network ID is not present in the NetCDF file, can't load the network.");
+                }
+                return networkId == 0 && networkIds.Any() ? networkIds[0] : networkId;
 
-        private static IList<BranchFile.BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
+            };
+
+            try
+            {
+                using (var uGridNetwork = new UGridNetwork(netFilePath))
+                {
+                    
+
+                    var networkUGridDataModel = ImportNetworkFromUgridAndCreateNetworkDataModel(uGridNetwork, func);
+                    NetworkDiscretisationFactory.FillHydroNetwork(network, networkUGridDataModel, branchData, compartmentProperties);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
+
+        public static IList<BranchFile.BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
             var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
             var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath, netFilePath) : null;
             return propertiesPerBranch;
+        }
+
+        public static IList<NodeFile.CompartmentProperties> ReadPropertiesPerNodeFromFile(string netFilePath)
+        {
+            var nodeTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, StorageNodeFileName);
+            var propertiesPerNode = File.Exists(nodeTypeFilePath) ? NodeFile.Read(nodeTypeFilePath) : null;
+            return propertiesPerNode;
         }
 
         private static NetworkUGridDataModel ReadNetworkDataModelFromUGrid(string netFilePath, Func<int[], int> func)

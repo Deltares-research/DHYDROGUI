@@ -327,7 +327,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="RainfallRunoffModel.hbm.xml" />
+    <EmbeddedResource Include="RainfallRunoffModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Domain\Concepts\Polder\PolderConcept.hbm.xml">

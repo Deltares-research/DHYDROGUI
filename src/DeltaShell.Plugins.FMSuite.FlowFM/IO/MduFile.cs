@@ -4,13 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -18,6 +21,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.SharpMapGis.HibernateMappings;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -137,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
         bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true)
         {
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
@@ -160,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (writeExtForcings)
             {
-                WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea);
+                WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea, boundaryConditions1D, lateralSourcesData);
             }
 
             if (modelDefinition.UseMorphologySediment)
@@ -170,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
 
-            FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, modelDefinition.Network, hydroArea);
+            FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections);
 
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:false, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
@@ -325,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
         private void WriteExternalForcings(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
-            HydroArea hydroArea)
+            HydroArea hydroArea, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             var exportDirectory = System.IO.Path.GetDirectoryName(targetMduFilePath);
 
@@ -346,8 +351,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var newFormatBoundaryConditions = newBoundaryConditions.Any();
             var hasNewBoundaries = newBoundaries.Any();
 
-            var hasModel1dBoundaryConditions = modelDefinition.BoundaryConditions1D.Any();
-            var hasLateralSourcesData = modelDefinition.LateralSourcesData.Any();
+            var hasModel1dBoundaryConditions = boundaryConditions1D.Any();
+            var hasLateralSourcesData = lateralSourcesData.Any();
             // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
@@ -369,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     BoundaryExternalForcingsFile = new BndExtForceFile();
                 }
 
-                BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition);
+                BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition, boundaryConditions1D, lateralSourcesData);
             }
             else if (!modelDefinition.BoundaryConditions.Any())
             {
@@ -804,7 +809,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
+        public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IDiscretization discretization, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
             var totalSteps = 6;
@@ -902,8 +907,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     bridgePillar.Attributes.Clear(); //To Do during last step of cleaning. Turn this on. 
                 }
             }
+            string netFilePath = MduFileHelper.GetSubfilePath(filePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
             
-            LoadNetworkAndDiscretisation(filePath, modelDefinition);
+            UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(netFilePath), UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath));
 
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
@@ -928,7 +934,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     BoundaryExternalForcingsFile = new BndExtForceFile();
-                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition);
+                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition, network, boundaryConditions1D, lateralSourcesData);
                 }
             }
 
@@ -937,22 +943,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
-        private void LoadNetworkAndDiscretisation(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
-        {
-            string netFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            if (!File.Exists(netFilePath)) return;
-            string storageNodeFilePath = MduFileHelper.GetSubfilePath(mduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
-            
-            var nodeData = File.Exists(storageNodeFilePath)
-                ? NodeFile.Read(storageNodeFilePath)
-                : null;
-
-            var loadedNetworkDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, modelDefinition.Network, nodeData);
-
-            modelDefinition.NetworkDiscretization = loadedNetworkDiscretisation;
-            modelDefinition.Network = (IHydroNetwork)loadedNetworkDiscretisation.Network;
-        }
-
         
         private static void LoadAttributeIntoDataColumn(GeometryPointsSyncedList<double> loadedData, IDataColumn dataColumn)
         {

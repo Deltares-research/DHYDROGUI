@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteMduFile(string mduFilePath, WaterFlowFMModel model, bool switchTo, bool writeExtForcings, bool writeFeatures)
         {
             var mduFile = new MduFile();
-            mduFile.Write(mduFilePath, model.ModelDefinition, model.Area, model.FixedWeirsProperties, switchTo, writeExtForcings, writeFeatures, model.DisableFlowNodeRenumbering, null, false);
+            mduFile.Write(mduFilePath, model.ModelDefinition, model.Area, model.Network, model.RoughnessSections, model.BoundaryConditions1D, model.LateralSourcesData, model.FixedWeirsProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: model.DisableFlowNodeRenumbering, sedimentModelData: null, writeStructureFile: false);
         }
 
         private static void WriteCrossSectionDefinitions(WaterFlowFMModelWriterData writerData, WaterFlowFMModel model)

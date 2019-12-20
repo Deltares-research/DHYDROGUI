@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.ImportExport.SobekNetwork
                 log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
             }
 
-            waterFlowFMModel.ModelDefinition.Network?.MakeNamesUnique<ICompositeBranchStructure>();
+            waterFlowFMModel.Network?.MakeNamesUnique<ICompositeBranchStructure>();
         }
 
         public bool IsActive { get; set; }

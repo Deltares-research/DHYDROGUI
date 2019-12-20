@@ -2,12 +2,15 @@
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -37,9 +40,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var flowFmModelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var area = new HydroArea();
             var network = new HydroNetwork();
+            var discretization = new Discretization();
+            var boundaryConditions1D = new EventedList<Model1DBoundaryNodeData>();
+            var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+            
 
             var mduFile = new MduFile();
-            mduFile.Read(mduPath, flowFmModelDefinition, area, new List<ModelFeatureCoordinateData<FixedWeir>>());
+            mduFile.Read(mduPath, flowFmModelDefinition, area, network, discretization, boundaryConditions1D, lateralSourcesData, new List<ModelFeatureCoordinateData<FixedWeir>>());
             fmReaderData.ModelDefinition = flowFmModelDefinition;
             fmReaderData.Area = area;
 

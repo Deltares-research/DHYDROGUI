@@ -149,18 +149,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D = null, IEnumerable<Model1DLateralSourceData> lateralSourcesData = null)
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, modelDefinition.BoundaryConditions1D, modelDefinition.LateralSourcesData, modelDefinition.Embankments, modelDefinition.FmMeteoFields,
+            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, boundaryConditions1D, lateralSourcesData, modelDefinition.Embankments, modelDefinition.FmMeteoFields,
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile), refDate);
         }
 
         private void Write(string filePath, string modelDefinitionModelName,
             IList<BoundaryConditionSet> boundaryConditionSets,
-            IEventedList<Model1DBoundaryNodeData> modelDefinitionBoundaryConditions1D,
-            IEventedList<Model1DLateralSourceData> modelDefinitionLateralSourcesData, IList<Embankment> embankments,
+            IEnumerable<Model1DBoundaryNodeData> modelDefinitionBoundaryConditions1D,
+            IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, IList<Embankment> embankments,
             IEventedList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
         {
             FilePath = filePath;
@@ -433,7 +433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return resultingItems;
         }
-        public IEnumerable<DelftIniCategory> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IList<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
+        public IEnumerable<DelftIniCategory> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
         {
             var generateModel1DNodeBoundaryDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryDelftIniCategories(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
             var filename = AddExtension(modelDefinitionModelName+"_boundaryconditions1d", BcFile.Extension);
@@ -643,7 +643,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition)
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
         {
             FilePath = bndExtForceFilePath;
 
@@ -651,7 +651,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             ReadPolyLines(bndBlocks, modelDefinition);
 
-            ReadBoundaryConditions(bndBlocks, modelDefinition);
+            ReadBoundaryConditions(bndBlocks, modelDefinition, network, boundaryConditions1D, lateralSourcesData);
         }
 
         
@@ -736,7 +736,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             {FmMeteoQuantity.Precipitation, FmMeteoField.CreateMeteoPrecipitationSeries }
         };
-        private void ReadBoundaryConditions(IList<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadBoundaryConditions(IList<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData)
         {
             var correctionFunctionTypes = BcFileFlowBoundaryDataBuilder.CorrectionFunctionTypes.ToList();
 
@@ -778,7 +778,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (string.IsNullOrEmpty(quantityKey))
                 {
                     if (!containsAndParsedLateralExtForceFileDefinitions)
-                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey)));
+                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey)));
                     if(!containsAndParsedLateralExtForceFileDefinitions)
                         Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
                     continue;
@@ -792,7 +792,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!containsAndParsedModel1DBoundaryExtForceFileDefinitions)
                 {
-                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, bndBlocks.Where(b => b.Name.Equals(BoundaryHeaderKey)));
+                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.Equals(BoundaryHeaderKey)));
                 }
                 if (containsAndParsedModel1DBoundaryExtForceFileDefinitions)
                     continue;
@@ -881,14 +881,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IEnumerable<DelftIniCategory> modelBoundary1DBlocks)
+        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<DelftIniCategory> modelBoundary1DBlocks)
         {
+            network.Nodes.ForEach(node => boundaryConditions1D.Add(Helper1D.CreateDefaultBoundaryCondition(node, false, false)));
             var forcingFiles = new HashSet<string>();
             foreach (var delftIniCategory in modelBoundary1DBlocks)
             {
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
                 if (nodeId == null) continue;
-                var node = modelDefinition.Network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
                 if (node == null) continue;
                 var id = delftIniCategory.GetPropertyValue(IdKey);
                 if (id != null) continue; // make sure we are nog reading a lateral
@@ -900,12 +901,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var fullPath in forcingFiles.Distinct().Select(GetFullPath))
             {
                 if (!File.Exists(fullPath)) continue;
-                BoundaryFileReader.ReadFile(fullPath, modelDefinition.BoundaryConditions1D);
+                BoundaryFileReader.ReadFile(fullPath, boundaryConditions1D);
             }
             return true;
         }
 
-        private bool CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
+        private bool CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
         {
             var forcingFiles = new HashSet<string>();
             foreach (var delftIniCategory in lateralBlocksModel1D)
@@ -918,12 +919,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
                 if (nodeId != null)
                 {
-                    var node = modelDefinition.Network.Nodes.FirstOrDefault(n => n.Name == nodeId);
-                    branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Source == node);
+                    var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                    branch = network.Branches.FirstOrDefault(b => b.Source == node);
 
                     if (branch == null)
                     {
-                        branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Target == node);
+                        branch = network.Branches.FirstOrDefault(b => b.Target == node);
                         chainage = branch?.Length ?? 0;
                     }
                 }
@@ -931,7 +932,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var branchId = delftIniCategory.GetPropertyValue(BranchIdKey);
                 if (branchId != null)
                 {
-                    branch = modelDefinition.Network.Branches.FirstOrDefault(b => b.Name == branchId);
+                    branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                     chainage = delftIniCategory.ReadProperty<double>(ChainageKey);
                 }
                 if (branch == null) continue;
@@ -941,15 +942,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
                 lateralSource.Geometry = new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
                 branch.BranchFeatures.Add(lateralSource);
+                var model1DLateralSourceData =
+                    lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
+                if (model1DLateralSourceData == null) 
+                    model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = false, UseTemperature = false};
                 var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
-                if (forcingFile == null) continue;
+                if (forcingFile == "realtime")
+                    model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
+                if(lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
+                    lateralSourcesData.Add(model1DLateralSourceData);
+                if (forcingFile == null ) continue;
                 forcingFiles.Add(forcingFile);
             }
 
             foreach (var fullPath in forcingFiles.Distinct().Select(GetFullPath))
             {
                 if (!File.Exists(fullPath)) continue;
-                BoundaryFileReader.ReadFile(fullPath, modelDefinition.LateralSourcesData);
+                BoundaryFileReader.ReadFile(fullPath, lateralSourcesData);
             }
             
             return true;

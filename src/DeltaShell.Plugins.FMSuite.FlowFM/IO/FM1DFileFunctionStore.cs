@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected NetCdfFile netCdfFile;
         private const string TimeDimensionName = "time";
         protected string dateTimeFormat = "yyyy-MM-dd hh:mm:ss"; // default
-        private IHydroNetwork outputNetwork;
-        private IDiscretization outputDiscretization;
+        private IHydroNetwork outputNetwork = new HydroNetwork();
+        private IDiscretization outputDiscretization = new Discretization();
 
         private const string StandardNameAttribute = "standard_name";
         private const string LongNameAttribute = "long_name";
@@ -121,10 +121,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
 
-                var outputNetworkAndDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path);
+                var branchData = UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path);
+                outputNetwork.Nodes.Clear();
+                outputNetwork.Branches.Clear();
+                outputDiscretization.Clear();
+                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, outputDiscretization, outputNetwork, null, branchData);
 
-                outputNetwork = outputNetworkAndDiscretization.Network as IHydroNetwork;
-                outputDiscretization = outputNetworkAndDiscretization;
                 foreach (var hydroObject in outputNetwork.AllHydroObjects)
                 {
                     hydroObject.Name = hydroObject.Name + "_output";

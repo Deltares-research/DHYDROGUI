@@ -14,9 +14,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -123,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             modelDefinition.Embankments.Add(embankment);
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", modelDefinition,Enumerable.Empty<Model1DBoundaryNodeData>(), Enumerable.Empty<Model1DLateralSourceData>());
 
             int boundaryCounter = 0;
             int openBoundaryToleranceCounter = 0;
@@ -150,12 +152,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", modelDefinition, Enumerable.Empty<Model1DBoundaryNodeData>(), Enumerable.Empty<Model1DLateralSourceData>());
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -169,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read(testFilePath, modelDefinition);
+            reader.Read(testFilePath, modelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>() );
 
             Assert.AreEqual(1,modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
@@ -221,12 +223,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 10);
 
             var writer = new BndExtForceFile();
-            writer.Write("testbnd.ext", modelDefinition);
+            writer.Write("testbnd.ext", modelDefinition, Enumerable.Empty<Model1DBoundaryNodeData>(),Enumerable.Empty<Model1DLateralSourceData>());
 
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -277,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(thatcherHarlemanTimeLag,
                 ((FlowBoundaryCondition)newModelDefinition.BoundaryConditionSets[0].BoundaryConditions[0])
@@ -329,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);

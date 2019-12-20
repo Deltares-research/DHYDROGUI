@@ -26,14 +26,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string CROSS_SECTION_LOCATION_FILE_NAME = "crsloc.ini";
         public const string STRUCTURES_FILE_NAME = "structures.ini";
 
-        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area)
+        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area, IEnumerable<RoughnessSection> roughnessSections)
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
             WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network);
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
-            WriteRoughnessFiles(targetMduFilePath, modelDefinition);
+            WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections);
         }
 
         private static void WriteObservationPointsFiles(string targetMduFilePath,
@@ -159,12 +159,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition)
+        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<RoughnessSection> roughnessSections)
         {
             var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
-            var sections = modelDefinition.RoughnessSections.ToArray();
+            var sections = roughnessSections.ToArray();
             var roughnessFileNames = sections.Select(GetRoughnessFilename);
             modelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
 

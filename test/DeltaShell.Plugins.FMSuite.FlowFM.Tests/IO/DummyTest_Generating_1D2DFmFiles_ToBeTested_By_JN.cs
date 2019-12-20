@@ -124,7 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Action mainWindowShown = delegate
                 {
                     var path = TestHelper.GetTestFilePath(netFilePath);
-                    var fmModel = new WaterFlowFMModel {NetworkDiscretization = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(path)};
+                    var fmModel = new WaterFlowFMModel();
+                    UGridToNetworkAdapter.LoadNetworkAndDiscretisation(path,fmModel.NetworkDiscretization,fmModel.Network,null,null);
                     fmModel.Network = (IHydroNetwork) fmModel.NetworkDiscretization.Network;
 
                     var project = app.Project;

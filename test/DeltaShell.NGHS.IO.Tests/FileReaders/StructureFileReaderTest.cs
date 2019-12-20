@@ -4,6 +4,8 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Grid;
+using GeoAPI.Extensions.Coverages;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders
@@ -19,9 +21,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var crossSectionDefinitionFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsdef.ini");
             var structureFilePath = Path.Combine(TestHelper.GetTestDataDirectory(),@"FileReaders\StructureFileReaderTest\structures.ini");
 
-            var loadNetworkAndDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(networkFilePath, null);
-            var network = (IHydroNetwork) loadNetworkAndDiscretisation.Network;
-
+            IHydroNetwork network = new HydroNetwork();
+            IDiscretization discretization = new Discretization();
+            UGridToNetworkAdapter.LoadNetworkAndDiscretisation(networkFilePath, discretization, network, null, null);
+            
             // Act
             Assert.AreEqual(0, network.BranchFeatures.Count());
 

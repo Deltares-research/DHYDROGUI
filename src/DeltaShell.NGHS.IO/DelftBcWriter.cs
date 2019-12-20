@@ -12,12 +12,13 @@ namespace DeltaShell.NGHS.IO
             {
                 foreach (var category in categories)
                 {
+                    var bcCategory = category as DelftBcCategory;
+                    if(bcCategory != null && bcCategory.Table.Count == 0) return; 
                     WriteLine("[" + category.Name + "]");
                     foreach (var property in category.Properties)
                     {
                         WriteProperty(property);
                     }
-                    var bcCategory = category as DelftBcCategory;
                     if(bcCategory != null) WriteTable(bcCategory.Table);
                     WriteLine(string.Empty);
                 }

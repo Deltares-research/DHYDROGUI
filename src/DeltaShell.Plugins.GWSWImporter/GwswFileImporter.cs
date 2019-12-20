@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         }
 
                         // at FM-side, create lateral data of type REALTIME
-                        Model1DLateralSourceData model1DLateralSourceData = fmModel.ModelDefinition.LateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
+                        Model1DLateralSourceData model1DLateralSourceData = fmModel.LateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
                         model1DLateralSourceData.Name = lateralSource.Name;
                         model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                         model1DLateralSourceData.Flow = 0d;

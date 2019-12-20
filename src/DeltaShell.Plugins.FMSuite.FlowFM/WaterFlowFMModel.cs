@@ -9,6 +9,7 @@ using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -124,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 LoadStateFromMdu(mduFilePath);
                 
-                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, this);
+                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections);
 
                 LoadLinks();
 
@@ -145,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 RenameSubFilesIfApplicable();
             }
 
-            ModelDefinition.UpdateRoughnessSections();
+            UpdateRoughnessSections();
         }
 
         private void AddNetworkToModel()
@@ -154,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var network = new HydroNetwork { Name = WaterFlowFMModelDataSet.NetworkTag };
             AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
             networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            SubscribeToNetwork(network);
+            SubscribeToNetwork();
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             
             // q's supplied by externals
@@ -211,6 +212,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
             Links = new EventedList<ILink1D2D>();
+            BoundaryConditions1D = new EventedList<Model1DBoundaryNodeData>();
+            LateralSourcesData = new EventedList<Model1DLateralSourceData>();
+            RoughnessSections = new EventedList<RoughnessSection>();
         }
 
         public WaterFlowFMModelDefinition ModelDefinition
@@ -221,9 +225,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (modelDefinition != null)
                 {
                     ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged -= OnModelDefinitionPropertyChanged;
-                    modelDefinition.BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
-                    modelDefinition.LateralSourcesData.CollectionChanged -= LateralSourceDatasOnCollectionChanged;
-                    ((INotifyPropertyChanged) (modelDefinition.BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
                 }
 
                 modelDefinition = value;
@@ -233,9 +234,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (modelDefinition != null)
                 {
                     ((INotifyPropertyChanged) (modelDefinition.Properties)).PropertyChanged += OnModelDefinitionPropertyChanged;
-                    modelDefinition.BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
-                    modelDefinition.LateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
-                    ((INotifyPropertyChanged) (modelDefinition.BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
                 }
             }
         }
@@ -529,8 +527,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Equals(e.Target, networkDataItem) && !e.Relinking)
             {
                 var hydroNetwork = (IHydroNetwork) networkDataItem.Value;
-                SubscribeToNetwork(hydroNetwork);
-                ModelDefinition.Network = hydroNetwork;
+                SubscribeToNetwork();
+                Network = hydroNetwork;
             }
 
             base.OnDataItemLinked(sender, e);
@@ -551,8 +549,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var hydroNetwork = (IHydroNetwork)networkDataItem.Value;
 
-                UnSubscribeFromNetwork(hydroNetwork);
-                ModelDefinition.Network = hydroNetwork;
+                UnSubscribeFromNetwork();
+                Network = hydroNetwork;
             }
 
             base.OnDataItemUnlinking(sender, e);
@@ -628,8 +626,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SynchronizeModelDefinitions()
         {
-            Network = ModelDefinition.Network;
-            NetworkDiscretization = ModelDefinition.NetworkDiscretization;
+            //Network = ModelDefinition.Network;
+            //NetworkDiscretization = ModelDefinition.NetworkDiscretization;
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
             Boundaries = ModelDefinition.Boundaries;
             BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
@@ -2324,7 +2322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (File.Exists(mduFilePath))
             {
                 isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
+                mduFile.Read(mduFilePath, ModelDefinition, Area, Network, NetworkDiscretization, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
 
                 isLoading = false;
                 SyncModelTimesWithBase();
@@ -2394,7 +2392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ReloadGrid(); 
 
             
-            mduFile.Write(mduPath, ModelDefinition, Area, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+            mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
             
             if (!IsEditing)
                 RestoreAreaDataColumns();
@@ -2452,7 +2450,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             LoadStateFromMdu(mduPath);
             
-            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, this);
+            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections);
 
             LoadLinks();
 

@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
 
             var model1DBoundaryNodeData = new Model1DBoundaryNodeData();
-            model.ModelDefinition.BoundaryConditions1D.Add(model1DBoundaryNodeData);
+            model.BoundaryConditions1D.Add(model1DBoundaryNodeData);
             project.RootFolder.Add(model);
 /*
 

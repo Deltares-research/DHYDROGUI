@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
@@ -13,68 +16,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
         
-        public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModel fmModel)
+        public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections)
         {
-            ReadCrossSectionFiles(targetMduFilePath, fmModel);
-            ReadObservationPointsFiles(targetMduFilePath, fmModel);
-            ReadStructuresFiles(targetMduFilePath, fmModel);
-            ReadRoughnessFiles(targetMduFilePath, fmModel);
-            ReadRetentionsFile(targetMduFilePath, fmModel);
+            ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network);
+            ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
+            ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
+            ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections);
+            ReadRetentionsFile(targetMduFilePath, modelDefinition, network);
         }
 
-        private static void ReadRetentionsFile(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void ReadRetentionsFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
-            string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, fmModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+            string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
             if (!File.Exists(netFilePath)) return;
-            string storageNodeFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, fmModel.ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+            string storageNodeFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
 
             if (File.Exists(storageNodeFilePath))
-                RetentionFileReader.ReadFile(storageNodeFilePath, fmModel.Network);
+                RetentionFileReader.ReadFile(storageNodeFilePath, network);
 
         }
 
-        private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void ReadCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
-            var crLocFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
+            var crLocFile = modelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
             crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
             if (!File.Exists(crLocFile)) return;
 
-            var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
+            var crDefFile = modelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile =IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             if (!File.Exists(crDefFile)) return;
 
-            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, fmModel.Network);
+            CrossSectionFileReader.ReadFile(crLocFile,crDefFile, network);
         }
-        private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
-            var obsFiles = fmModel.ModelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
+            var obsFiles = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
             foreach (var obsFile in obsFiles.Split(' '))
             {
                 var obsFileFullPath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, obsFile);
                 if (!File.Exists(obsFileFullPath)) return;
-                LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, fmModel.Network);
+                LocationFileReader.ReadFileObservationPointLocations(obsFileFullPath, network);
             }
             
         }
 
-        private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
-            var crDefFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
+            var crDefFile = modelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
             
-            var structureFile = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
+            var structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
             structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
             if (!File.Exists(structureFile)) return;
 
-            StructureFileReader.ReadFile(structureFile, crDefFile , fmModel.Network);
+            StructureFileReader.ReadFile(structureFile, crDefFile, network);
         }
 
-        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModel fmModel)
+        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections)
         {
             var directoryName = Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
-            var frictionFileNames = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
+            var frictionFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
             if(frictionFileNames == null || frictionFileNames.Length == 0) return;
             
 
@@ -82,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
                 if (!File.Exists(fileName)) return;
-                RoughnessDataFileReader.ReadFile(fileName, fmModel.ModelDefinition.Network, fmModel.ModelDefinition.RoughnessSections);
+                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections);
             }
         }
     }

@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         {
             var categories = new List<IDelftIniCategory>();
             var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
-            categories.AddRange( model1DLateralSourceDatas.Where(lsd => lsd.DataType != Model1DLateralDataType.FlowRealTime).Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
+            categories.AddRange( model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
             if (useSalt)
             {
                 categories.AddRange(model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinitionForSalt(startTime, lsd, bcForcingHeader)));
@@ -188,6 +188,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
                     break;
                 case Model1DLateralDataType.FlowWaterLevelTable:
                     lateralDefinition.Table = GenerateTableForDischargeWaterLevelData(lateralSourceData.Data, BoundaryRegion.QuantityStrings.LateralDischarge);
+                    break;
+                case Model1DLateralDataType.FlowRealTime:
                     break;
             }
             return lateralDefinition;

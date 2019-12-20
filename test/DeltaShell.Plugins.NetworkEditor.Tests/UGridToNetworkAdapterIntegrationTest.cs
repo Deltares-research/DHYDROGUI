@@ -7,7 +7,9 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
@@ -89,10 +91,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             UGridToNetworkAdapter.SaveNetwork(netFilePath, networkDataModel, metaData);
             UGridToNetworkAdapter.SaveNetworkDiscretisation(netFilePath, discretisationDataModel);
 
-            var loadedDiscretisation = UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath);
+            IDiscretization loadedDiscretisation = new Discretization();
+            IHydroNetwork loadedNetwork = new HydroNetwork();
+            UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, loadedDiscretisation, loadedNetwork, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(netFilePath), UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath));
             Assert.NotNull(loadedDiscretisation);
 
-            var loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
+            
+            loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
 
             HydroNetworkTestHelper.CompareNetworks(storedNetwork, loadedNetwork);
             HydroNetworkTestHelper.CompareDiscretisations(networkDiscretisation, loadedDiscretisation);

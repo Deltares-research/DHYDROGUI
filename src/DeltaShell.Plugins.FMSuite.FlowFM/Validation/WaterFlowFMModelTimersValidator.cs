@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             foreach (var issue in issues.Where(i => i != null))
                 yield return issue;
             // check if boundary 1d && lateral timeseries fit into timeframe
-            foreach (var featureData in waterFlowFmModel.ModelDefinition.BoundaryConditions1D.Where(bc1d => bc1d.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries || bc1d.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries).Cast<IFeatureData>().Concat(waterFlowFmModel.ModelDefinition.LateralSourcesData.Where(lsd => lsd.DataType == Model1DLateralDataType.FlowTimeSeries)))
+            foreach (var featureData in waterFlowFmModel.BoundaryConditions1D.Where(bc1d => bc1d.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries || bc1d.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries).Cast<IFeatureData>().Concat(waterFlowFmModel.LateralSourcesData.Where(lsd => lsd.DataType == Model1DLateralDataType.FlowTimeSeries)))
             {
                 var data = featureData?.Data as IFunction;
                 if (data?.Arguments ==null || !data.Arguments.Any() || data.Arguments[0]?.ValueType != typeof(DateTime)) continue;
