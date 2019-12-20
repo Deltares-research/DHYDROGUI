@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -31,8 +32,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 return 0;
             }
 
-            int hCode = coordinate.X ^ coordinate.Y;
+            int hCode = (ShiftAndWrap(coordinate.X.GetHashCode(), 2) ^ 
+                         coordinate.Y.GetHashCode()) + 1;
             return hCode.GetHashCode();
+        }
+
+        private static int ShiftAndWrap(int value, int positions)
+        {
+            positions &= 0x1F;
+
+            uint number = BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
+            uint wrapped = number >> (32 - positions);
+            uint bitShiftedValue = (number << positions) | wrapped;
+
+            return BitConverter.ToInt32(BitConverter.GetBytes(bitShiftedValue), 0);
         }
     }
 }

@@ -46,13 +46,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             // Setup
             var equalityComparer = new GridCoordinateValueComparer();
             var coordinate = new GridCoordinate(5, 10);
-            const int expectedValue = 5 ^ 10;
+            const int expectedValue = 31;
 
             // Call
             int hashValue = equalityComparer.GetHashCode(coordinate);
 
             // Assert
             Assert.That(hashValue, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(EqualsValues))]
+        public void GetHashCode_MatchesEquals(GridCoordinate coordinate1, GridCoordinate coordinate2, bool expectedResult)
+        {
+            // Setup
+            var equalityComparer = new GridCoordinateValueComparer();
+
+            // Call
+            int hashValue1 = equalityComparer.GetHashCode(coordinate1);
+            int hashValue2 = equalityComparer.GetHashCode(coordinate2);
+
+            // Assert
+            Assert.That(hashValue1 == hashValue2, Is.EqualTo(expectedResult),
+                $"Expected hashValue1, {hashValue1} == hashValue2, {hashValue2} to be {expectedResult}.");
+            
         }
 
         [Test]
