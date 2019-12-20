@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NUnit.Framework;
 
@@ -38,6 +39,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 new TestCaseData(new GridCoordinate(1, 2), new GridCoordinate(2, 1), false), 
                 new TestCaseData(new GridCoordinate(1, 1), new GridCoordinate(2, 1), false), 
                 new TestCaseData(new GridCoordinate(1, 1), new GridCoordinate(1, 2), false), 
+                new TestCaseData(new GridCoordinate(int.MaxValue, 0), new GridCoordinate(int.MaxValue, 0), true), 
+                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(int.MaxValue, int.MaxValue), true), 
+                new TestCaseData(new GridCoordinate(0, int.MaxValue), new GridCoordinate(0, int.MaxValue), true), 
+                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(int.MaxValue, int.MaxValue), true), 
+                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(2, 2), false), 
+                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(1, 2), false), 
             };
 
         [Test]
