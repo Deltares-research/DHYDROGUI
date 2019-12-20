@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [NoNotifyPropertyChange]
         public virtual IHydroNetwork Network
         {
-            get { return (IHydroNetwork)GetDataItemValueByTag(WaterFlowFMModelDataSet.NetworkTag); }
+            get { return (IHydroNetwork) GetDataItemValueByTag(WaterFlowFMModelDataSet.NetworkTag); }
             set
             {
                 if (value == Network)
@@ -200,8 +200,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [EditAction]
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            // Manual call of OnInputCollectionChanged if the model is not owner of the network, i.e. the network is wrapped in a linked data item:
+            if (GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).LinkedTo != null)
+            {
+                OnInputCollectionChanged(sender, e);
+            }
+
             // when node is added or removed - check if boundary conditions are updated
             var removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (removedOrAddedItem is INode)
@@ -224,13 +231,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         case NotifyCollectionChangedAction.Remove:
                         {
+                            var channel = (IChannel) e.GetRemovedOrAddedItem();
+                            foreach (var lateralSource in channel.BranchSources)
+                            {
+                                RemoveLateralSourceData(lateralSource);
+                            }
+
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
                             var networkDataItem = GetDataItemByValue(Network);
 
                             if (networkDataItem != null)
                             {
-                                dataItemsToRemove.AddRange(networkDataItem.Children);
+                                foreach (var dataItem in networkDataItem.Children)
+                                {
+                                    // check if child data item uses WaterFlowModelBranchFeatureValueConverter
+                                    var valueConverter = dataItem.ValueConverter as Model1DBranchFeatureValueConverter;
+                                    if (valueConverter == null || !(valueConverter.Location is IBranchFeature))
+                                    {
+                                        continue;
+                                    }
+
+                                    // check if data item is related to the removed branch
+                                    var branchFeature = (IBranchFeature) valueConverter.Location;
+                                    if (!channel.BranchFeatures.Contains(branchFeature))
+                                    {
+                                        continue;
+                                    }
+
+                                    dataItemsToRemove.Add(dataItem);
+                                }
 
                                 foreach (var dataItem in dataItemsToRemove)
                                 {
@@ -238,12 +268,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                     dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
                                     networkDataItem.Children.Remove(dataItem);
                                 }
-                            }
-
-                            var channel = (IChannel) e.GetRemovedOrAddedItem();
-                            foreach (var lateralSource in channel.BranchSources)
-                            {
-                                RemoveLateralSourceData(lateralSource);
                             }
 
                             break;
@@ -259,38 +283,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             break;
                         }
                     }
+                    ClearOutput();
                 }
-
-                else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection)
+            }
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection)
+            {
+                var sewerConnection = removedOrAddedItem as SewerConnection;
+                if (sewerConnection?.Length > 0)
                 {
-                    var sewerConnection = removedOrAddedItem as SewerConnection;
-                    if (sewerConnection?.Length > 0)
+                    switch (e.Action)
                     {
-                        switch (e.Action)
-                        {
-                            case NotifyCollectionChangedAction.Add:
-                                AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
-                                    new NetworkLocation(sewerConnection, 0.0));
-                                AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
-                                    new NetworkLocation(sewerConnection, sewerConnection.Length));
-                                break;
-                        }
+                        case NotifyCollectionChangedAction.Add:
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                                new NetworkLocation(sewerConnection, 0.0));
+                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                                new NetworkLocation(sewerConnection, sewerConnection.Length));
+                            break;
                     }
                 }
-                else if (removedOrAddedItem is CrossSectionSectionType)
-                {
-                    UpdateRoughnessSectionsEvent(e);
-                }
-
-                if (removedOrAddedItem is IPipe || removedOrAddedItem is IManhole)
-                {
-                    AddSewerRoughnessIfNecessary();
-                }
-
-                ClearOutput();
             }
+            else if (removedOrAddedItem is CrossSectionSectionType)
+            {
+                UpdateRoughnessSectionsEvent(e);
+            }
+
+            if (removedOrAddedItem is IPipe || removedOrAddedItem is IManhole)
+            {
+                AddSewerRoughnessIfNecessary();
+            }
+
+            
             // check if removed item is used in the child data items
-            else if (removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
+            if (removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
                 var asNetworkFeature = removedOrAddedItem as INetworkFeature;
                 if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
