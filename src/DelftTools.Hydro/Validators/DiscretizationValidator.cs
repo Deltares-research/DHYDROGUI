@@ -169,7 +169,7 @@ namespace DelftTools.Hydro.Validators
 
             }
             // Each branch should have calculation point at start and end
-            if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
+            else if (!branchLocations.Any(l => Math.Abs(l.Chainage) < BranchFeature.Epsilon) ||
                 !branchLocations.Any(l => DoubleEquals(l.Chainage, branch.Length)))
             {
                 var message = String.Format("Not enough grid points defined for branch {0}. " +

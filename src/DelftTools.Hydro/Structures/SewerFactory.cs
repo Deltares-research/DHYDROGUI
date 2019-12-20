@@ -31,7 +31,7 @@ namespace DelftTools.Hydro.Structures
         {
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
-
+            pipe.Network = network;
             SetPipeProperties(pipe, hydroNetwork);
             AddDefaultSewerProfileToNetwork(hydroNetwork);
 

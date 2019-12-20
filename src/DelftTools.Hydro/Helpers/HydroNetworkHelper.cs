@@ -218,7 +218,8 @@ namespace DelftTools.Hydro.Helpers
                                            fixedLength);
                 }
             }
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
+
+            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
 
             discretization.Locations.SkipUniqueValuesCheck = false;
         }
