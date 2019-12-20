@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
@@ -99,6 +100,42 @@ namespace DelftTools.Hydro
                     }
                 }
             }
+        }
+        public static IEnumerable<ICrossSectionDefinition> GetNetworkCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return network.CrossSections.Select(GetCrossSectionDefinition)
+                .Concat(network.BridgeCrossSectionDefinitions())
+                .Concat(network.CulvertCrossSectionDefinitions())
+                .Concat(network.PipeCrossSectionDefinitions());
+        }
+
+        private static ICrossSectionDefinition GetCrossSectionDefinition(ICrossSection crossSection)
+        {
+            var crossSectionDefinition = crossSection.Definition;
+            var definition = crossSectionDefinition.IsProxy
+                ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition
+                : crossSectionDefinition;
+            return definition;
+        }
+
+        private static IEnumerable<ICrossSectionDefinition> BridgeCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return network.Bridges.Where(b => b.CrossSectionDefinition != null).Select(b => b.CrossSectionDefinition);
+        }
+
+        private static IEnumerable<ICrossSectionDefinition> CulvertCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return network.Culverts.Where(c => c.CrossSectionDefinition != null).Select(c => c.CrossSectionDefinition);
+        }
+
+
+        private static IEnumerable<ICrossSectionDefinition> PipeCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)p.CrossSectionDefinition).InnerDefinition : p.CrossSectionDefinition);
+        }
+        public static bool ContainsAnyCrossSectionDefinitions(this IHydroNetwork network)
+        {
+            return network.GetNetworkCrossSectionDefinitions().Any();
         }
     }
 }

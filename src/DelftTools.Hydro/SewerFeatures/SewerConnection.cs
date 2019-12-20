@@ -77,32 +77,15 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
                 {
                     sourceCompartment = manhole.Compartments.FirstOrDefault();
-                    if (sourceCompartment != null)
-                    {
-                        var crossSectionDefinition = HydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(scsd =>
-                            scsd.Name.Equals(CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
-                        LevelSource = crossSectionDefinition != null
-                            ? crossSectionDefinition.IsProxy
-                                ?
-                                ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition as
-                                CrossSectionDefinitionStandard != null
-                                    ?
-                                    ((CrossSectionDefinitionStandard)
-                                        ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition)
-                                    .LevelShift
-                                    : -2
-                                : crossSectionDefinition as
-                                      CrossSectionDefinitionStandard != null
-                                    ? ((CrossSectionDefinitionStandard)
-                                        crossSectionDefinition)
-                                    .LevelShift
-                                    : -2
-                            : -2;
-                    }
                     UpdateSource(sourceCompartment);
                     UpdateSourceCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();
                 }
+
+            }
+            else
+            {
+                source = null;
             }
 
             AfterSetSource();
@@ -144,31 +127,14 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
                 {
                     targetCompartment = manhole.Compartments.FirstOrDefault();
-                    if (targetCompartment != null)
-                    {
-                        var crossSectionDefinition = HydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(scsd =>
-                            scsd.Name.Equals(CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
-                        LevelTarget = crossSectionDefinition != null
-                            ? crossSectionDefinition.IsProxy
-                                ? ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition as
-                                  CrossSectionDefinitionStandard != null
-                                    ? ((CrossSectionDefinitionStandard)
-                                        ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition)
-                                    .LevelShift
-                                    : -2
-
-                                : crossSectionDefinition as
-                                      CrossSectionDefinitionStandard != null
-                                    ? ((CrossSectionDefinitionStandard)
-                                        crossSectionDefinition)
-                                    .LevelShift
-                                    : -2
-                            : -2;
-                    }
                     UpdateTarget(targetCompartment);
                     UpdateTargetCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();
                 }
+            }
+            else
+            {
+                target = null;
             }
 
             AfterTargetSet();
