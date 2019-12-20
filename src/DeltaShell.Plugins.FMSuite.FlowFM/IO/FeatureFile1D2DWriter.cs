@@ -51,9 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var currentObs = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
                 modelDefinition.SetModelProperty(KnownProperties.ObsFile, string.IsNullOrEmpty(currentObs) ? OBS_FILE_NAME : currentObs + " " + OBS_FILE_NAME);
                 LocationFileWriter.WriteFileObservationPointLocations(obsFilePath, obsPoints);
-                var currentObsCrs = modelDefinition.GetModelProperty(KnownProperties.ObsCrsFile).GetValueAsString();
-                modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.IsNullOrEmpty(currentObsCrs) ? OBS_CRS_FILE_NAME : currentObsCrs + " " + OBS_CRS_FILE_NAME);
-                LocationFileWriter.WriteFileObservationPointLocations(obsCrsFilePath, obsPoints, true);
+                //var currentObsCrs = modelDefinition.GetModelProperty(KnownProperties.ObsCrsFile).GetValueAsString();
+                //modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.IsNullOrEmpty(currentObsCrs) ? OBS_CRS_FILE_NAME : currentObsCrs + " " + OBS_CRS_FILE_NAME);
+                //LocationFileWriter.WriteFileObservationPointLocations(obsCrsFilePath, obsPoints, true);
             }
             else
             {
