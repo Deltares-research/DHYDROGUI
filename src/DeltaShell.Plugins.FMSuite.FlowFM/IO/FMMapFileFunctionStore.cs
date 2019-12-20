@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly IList<ITimeSeries> boundaryCellValues = new List<ITimeSeries>();
         private Dictionary<string, UnstructuredGridCoverage> velocityCoverages = new Dictionary<string, UnstructuredGridCoverage>();
         private IHydroNetwork network;
-        private IDiscretization discretisation;
+        private IDiscretization discretization;
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
         private List<FeatureCoverage> linkCoverages;
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public IDiscretization Discretisation
         {
-            get { return discretisation; }
+            get { return discretization; }
         }*/
 
 
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return grid != null
                     ? grid.CoordinateSystem
-                    : (network != null ? network.CoordinateSystem : discretisation?.CoordinateSystem);
+                    : (network != null ? network.CoordinateSystem : discretization?.CoordinateSystem);
             }
             set
             {
@@ -453,9 +453,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (typeof(T) == typeof(INetworkLocation))
                 {
 
-                    //var location = discretisation.Locations.AllValues.IndexOf(function);
+                    //var location = discretization.Locations.AllValues.IndexOf(function);
                     var convertedList = (List<INetworkLocation>)TypeUtils.CreateGeneric(typeof(List<>), networkLocationTypeConverter.ConvertedType);
-                    int[] shape = Enumerable.Range(0, discretisation.Locations.AllValues.Count).ToArray();
+                    int[] shape = Enumerable.Range(0, discretization.Locations.AllValues.Count).ToArray();
                     return (IMultiDimensionalArray<T>)new MultiDimensionalArray<INetworkLocation>(convertedList, shape);
                     var genericType = typeof(MultiDimensionalArray<>).MakeGenericType(function.ValueType);
                     return (IMultiDimensionalArray<T>)Activator.CreateInstance(genericType);
@@ -582,7 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             if (function.ValueType == typeof(INetworkLocation))
             {
-                return (MultiDimensionalArray <T>)GetResultsFromCache(function, () => GetNetworkLocationsForLocations(function, Enumerable.Range(0, discretisation.Locations.AllValues.Count).ToList()));
+                return (MultiDimensionalArray <T>)GetResultsFromCache(function, () => GetNetworkLocationsForLocations(function, Enumerable.Range(0, discretization.Locations.AllValues.Count).ToList()));
             }*/
 
             }
@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             if (typeof(T) == typeof(INetworkLocation))
             {
-                var maxValue = GetNetworkLocationsForLocations(variable, new List<int> {discretisation.Locations.AllValues.Count - 1}).Last();
+                var maxValue = GetNetworkLocationsForLocations(variable, new List<int> {discretization.Locations.AllValues.Count - 1}).Last();
                 return (T) maxValue;
             }
 
@@ -777,12 +777,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (flowLinks1D2D == null)
             {
                 var link1D2Ds = UGrid1D2DLinksAdapter.Load1D2DLinks(Path).ToList();
-                IDiscretization discretization = new Discretization();
+                IDiscretization disc = new Discretization();
                 IHydroNetwork network = new HydroNetwork();
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(Path),UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path));
-                Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, discretisation.Locations, grid.Cells);
+                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, disc, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(Path),UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path));
+                Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, this.discretization.Locations, grid.Cells);
                 links1D2D = new EventedList<ILink1D2D>(link1D2Ds);
-                //Links1D2DHelper.SetIndexes1D2DLinks(links1D2D, discretisation, grid);
+                //Links1D2DHelper.SetIndexes1D2DLinks(links1D2D, discretization, grid);
                 flowLinks1D2D = link1D2Ds.ConvertMultiThreaded(l1d2d =>
                 {
                     var startCoordinate = l1d2d.Geometry.Coordinates.First();
@@ -1077,7 +1077,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
             if (location != "contact") log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_UnexpectedLocationDimension, location);
-            //coverage = new Links1D2DCoverage(links1D2D, grid, discretisation, true) { Name = coverageLongName, CoordinateSystem = CoordinateSystem};
+            //coverage = new Links1D2DCoverage(links1D2D, grid, discretization, true) { Name = coverageLongName, CoordinateSystem = CoordinateSystem};
             coverage = new UnstructuredGridFlowLinkCoverage(grid, true) { Name = coverageLongName };
 
             if (coverage != null)
@@ -1114,7 +1114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // import the grid from the map file if there is no model grid available
             grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
             //network = waterFlowFmModel.Network;
-            //discretisation = waterFlowFmModel.NetworkDiscretization;
+            //discretization = waterFlowFmModel.NetworkDiscretization;
         }
         /*
         #region private GetValue helper methods
