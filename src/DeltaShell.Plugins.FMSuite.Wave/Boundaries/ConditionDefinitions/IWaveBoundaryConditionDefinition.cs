@@ -15,6 +15,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// The BoundaryConditionShape.
         /// </value>
         IBoundaryConditionShape BoundaryConditionShape { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the type of the period.
+        /// </summary>
+        /// <value>
+        /// The type of the period.
+        /// </value>
+        BoundaryConditionPeriodType PeriodType { get; set; }
     }
 }
