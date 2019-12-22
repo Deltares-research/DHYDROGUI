@@ -10,9 +10,6 @@
         /// <summary>
         /// Gets the peak enhancement factor of this <see cref="JonswapShape"/>.
         /// </summary>
-        /// <value>
-        /// The peak enhancement factor.
-        /// </value>
         public double PeakEnhancementFactor { get; set; }
     }
 }
