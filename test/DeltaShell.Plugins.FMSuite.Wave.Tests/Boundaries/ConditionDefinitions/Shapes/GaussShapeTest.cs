@@ -4,13 +4,13 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.Shapes
 {
     [TestFixture]
-    public class JonswapShapeTest
+    public class GaussShapeTest
     {
         [Test]
         public void Constructor_ExpectedValues()
         {
             // Call
-            var shape = new JonswapShape();
+            var shape = new GaussShape();
 
             // Assert
             Assert.That(shape, Is.InstanceOf(typeof(IBoundaryConditionShape)));
