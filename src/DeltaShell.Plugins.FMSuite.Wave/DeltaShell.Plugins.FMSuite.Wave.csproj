@@ -134,6 +134,7 @@
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculatorProvider.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShape.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShape.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinate.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinate.cs" />

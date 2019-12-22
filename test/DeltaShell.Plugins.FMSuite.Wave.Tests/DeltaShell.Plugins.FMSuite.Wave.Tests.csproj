@@ -206,6 +206,7 @@
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparerTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTestHelper.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\SupportPointTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionTest.cs" />
