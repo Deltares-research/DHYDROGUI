@@ -9,12 +9,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
     public interface IWaveBoundaryConditionDefinition
     {
         /// <summary>
-        /// Gets or sets the boundary condition shape.
+        /// Gets or sets the condition shape.
         /// </summary>
         /// <value>
-        /// The BoundaryConditionShape.
+        /// The shape
         /// </value>
-        IBoundaryConditionShape BoundaryConditionShape { get; set; }
+        IBoundaryConditionShape Shape { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the period.
@@ -23,5 +23,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// The type of the period.
         /// </value>
         BoundaryConditionPeriodType PeriodType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the directional spreading.
+        /// </summary>
+        /// <value>
+        /// The type of the directional spreading.
+        /// </value>
+        BoundaryConditionDirectionalSpreadingType DirectionalSpreadingType { get; set; }
     }
 }
