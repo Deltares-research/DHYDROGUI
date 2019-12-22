@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
-    /// <see cref="WavePeriodType"/> defines the possible options of
+    /// <see cref="BoundaryConditionPeriodType"/> defines the possible options of
     /// wave period types.
     /// </summary>
     public enum BoundaryConditionPeriodType
