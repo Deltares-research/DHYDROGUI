@@ -207,6 +207,7 @@
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparerTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionDirectionalSpreadingTypeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\DataComponents\UniformDataTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
