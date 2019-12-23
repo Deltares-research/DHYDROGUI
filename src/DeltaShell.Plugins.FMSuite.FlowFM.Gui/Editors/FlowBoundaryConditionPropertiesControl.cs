@@ -12,28 +12,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public sealed partial class FlowBoundaryConditionPropertiesControl : BoundaryConditionPropertiesControl
     {
-        private readonly string conditionTypePropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.FlowQuantity);
-
-        private readonly string reflectionAlphaPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ReflectionAlpha);
-
-        private readonly string forcingTypePropertyName =
-            TypeUtils.GetMemberName<BoundaryCondition>(b => b.DataType);
-
-        private readonly string verticalProfilePropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.VerticalInterpolationType);
-
-        private readonly string offsetPropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Offset);
-
-        private readonly string factorPropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Factor);
-
-        private readonly string tracerNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.TracerName);
-
-        private readonly string sedimentFractionNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.SedimentFractionName);
-
-        private readonly string thatcherHarlemanPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ThatcherHarlemanTimeLag);
+        private readonly string conditionTypePropertyName = nameof(FlowBoundaryCondition.FlowQuantity);
+        private readonly string reflectionAlphaPropertyName = nameof(FlowBoundaryCondition.ReflectionAlpha);
+        private readonly string forcingTypePropertyName = nameof(FlowBoundaryCondition.DataType);
+        private readonly string verticalProfilePropertyName = nameof(FlowBoundaryCondition.VerticalInterpolationType);
+        private readonly string offsetPropertyName = nameof(FlowBoundaryCondition.Offset);
+        private readonly string factorPropertyName = nameof(FlowBoundaryCondition.Factor);
+        private readonly string tracerNamePropertyName = nameof(FlowBoundaryCondition.TracerName);
+        private readonly string sedimentFractionNamePropertyName = nameof(FlowBoundaryCondition.SedimentFractionName);
+        private readonly string thatcherHarlemanPropertyName = nameof(FlowBoundaryCondition.ThatcherHarlemanTimeLag);
 
         private bool updatingView;
 
@@ -50,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             SubscribeEventHandlers();
         }
 
-        private FlowBoundaryCondition FlowBoundaryCondition
+        private FlowBoundaryCondition GetFlowBoundaryCondition
         {
             get { return BoundaryCondition as FlowBoundaryCondition; }
         }
@@ -106,13 +93,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 var flowModel = ((FlowBoundaryConditionEditorController) Controller).Model;
                 bool hasDepthLayers = flowModel != null && flowModel.UseDepthLayers;
                 verticalInterpolationComboBox.Items.Clear();
-                if (!FlowBoundaryCondition.IsVerticallyUniform && hasDepthLayers)
+                if (!GetFlowBoundaryCondition.IsVerticallyUniform && hasDepthLayers)
                 {
                     verticalInterpolationComboBox.Enabled = true;
                     label3.Enabled = true;
                     verticalInterpolationComboBox.Items.AddRange(
-                        FlowBoundaryCondition.SupportedVerticalInterpolationTypes.OfType<object>().ToArray());
-                    verticalInterpolationComboBox.SelectedItem = FlowBoundaryCondition.VerticalInterpolationType;
+                        GetFlowBoundaryCondition.SupportedVerticalInterpolationTypes.OfType<object>().ToArray());
+                    verticalInterpolationComboBox.SelectedItem = GetFlowBoundaryCondition.VerticalInterpolationType;
                 }
                 else
                 {
@@ -120,12 +107,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     label3.Enabled = false;
                 }
 
-                reflectionParameterTextBox.Enabled = FlowBoundaryCondition.SupportsReflection;
+                reflectionParameterTextBox.Enabled = GetFlowBoundaryCondition.SupportsReflection;
                 if (reflectionParameterTextBox.Enabled)
                 {
                     label4.Enabled = true;
-                    reflectionParameterTextBox.Text = string.Format("{0:0.00}", FlowBoundaryCondition.ReflectionAlpha);
-                    reflectionUnitLabel.Text = FlowBoundaryCondition.ReflectionUnit.Symbol;
+                    reflectionParameterTextBox.Text = string.Format("{0:0.00}", GetFlowBoundaryCondition.ReflectionAlpha);
+                    reflectionUnitLabel.Text = GetFlowBoundaryCondition.ReflectionUnit.Symbol;
                 }
                 else
                 {
@@ -134,11 +121,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     reflectionUnitLabel.Text = "";
                 }
 
-                thatcherTimeSpanEditor.Enabled = FlowBoundaryCondition.SupportsThatcherHarleman;
+                thatcherTimeSpanEditor.Enabled = GetFlowBoundaryCondition.SupportsThatcherHarleman;
                 label8.Enabled = thatcherTimeSpanEditor.Enabled;
                 if (thatcherTimeSpanEditor.Enabled)
                 {
-                    thatcherTimeSpanEditor.Value = FlowBoundaryCondition.ThatcherHarlemanTimeLag;    
+                    thatcherTimeSpanEditor.Value = GetFlowBoundaryCondition.ThatcherHarlemanTimeLag;    
                 }
                 else
                 {
@@ -146,9 +133,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 }
 
 
-                factorTextBox.Text = string.Format("{0:0.00}", FlowBoundaryCondition.Factor);
-                offsetTextBox.Text = string.Format("{0:0.00}", FlowBoundaryCondition.Offset);
-                offsetUnitLabel.Text = FlowBoundaryCondition.VariableUnit.Symbol;
+                factorTextBox.Text = string.Format("{0:0.00}", GetFlowBoundaryCondition.Factor);
+                offsetTextBox.Text = string.Format("{0:0.00}", GetFlowBoundaryCondition.Offset);
+                offsetUnitLabel.Text = GetFlowBoundaryCondition.VariableUnit.Symbol;
                 if (BoundaryCondition.DataType == BoundaryConditionDataType.Empty)
                 {
                     factorTextBox.Enabled = false;
@@ -181,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             double reflectionAlpha;
             if (double.TryParse(reflectionParameterTextBox.Text, out reflectionAlpha))
             {
-                FlowBoundaryCondition.ReflectionAlpha = reflectionAlpha;
+                GetFlowBoundaryCondition.ReflectionAlpha = reflectionAlpha;
             }
         }
 
@@ -193,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             double factor;
             if (double.TryParse(factorTextBox.Text, out factor))
             {
-                FlowBoundaryCondition.Factor = factor;
+                GetFlowBoundaryCondition.Factor = factor;
             }
         }
 
@@ -202,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (BoundaryCondition == null || updatingView)
                 return;
 
-            FlowBoundaryCondition.ThatcherHarlemanTimeLag = thatcherTimeSpanEditor.Value;
+            GetFlowBoundaryCondition.ThatcherHarlemanTimeLag = thatcherTimeSpanEditor.Value;
         }
 
         private void CommitOffsetText()
@@ -213,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             double offset;
             if (double.TryParse(offsetTextBox.Text, out offset))
             {
-                FlowBoundaryCondition.Offset = offset;
+                GetFlowBoundaryCondition.Offset = offset;
             }
         }
 
@@ -221,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             if (BoundaryCondition != null && sender == verticalInterpolationComboBox)
             {
-                FlowBoundaryCondition.VerticalInterpolationType =
+                GetFlowBoundaryCondition.VerticalInterpolationType =
                     (VerticalInterpolationType)verticalInterpolationComboBox.SelectedItem;
             }
         }
