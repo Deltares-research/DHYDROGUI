@@ -680,14 +680,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             CloseAllRelatedMultipleFunctionViews(FlowModels);
         }
 
-        private static readonly string CoordinateSystemMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
+        private static readonly string CoordinateSystemMemberName = nameof(WaterFlowFMModel.CoordinateSystem);
 
-        private static readonly string OutputHisFileStoreMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.OutputHisFileStore);
+        private static readonly string OutputHisFileStoreMemberName = nameof(WaterFlowFMModel.OutputHisFileStore);
 
-        private static readonly string HeatFluxModelTypeMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.HeatFluxModelType);
+        private static readonly string HeatFluxModelTypeMemberName = nameof(WaterFlowFMModel.HeatFluxModelType);
 
         private void ProjectOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

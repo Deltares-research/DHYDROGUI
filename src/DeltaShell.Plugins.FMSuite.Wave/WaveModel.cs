@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private static readonly string GridPropertyName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
+        private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
         private string previousGridName;
 
         private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)

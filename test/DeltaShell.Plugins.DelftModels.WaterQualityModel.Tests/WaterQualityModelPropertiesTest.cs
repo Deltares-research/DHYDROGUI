@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.PropertyBag.Dynamic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
@@ -21,9 +20,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     {
         static readonly string[] iterationRelatedProperties =
         {
-            TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.IterationMaximum),
-            TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.Tolerance),
-            TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.WriteIterationReport)
+            nameof(WaterQualityModelProperties.IterationMaximum),
+            nameof(WaterQualityModelProperties.Tolerance),
+            nameof(WaterQualityModelProperties.WriteIterationReport)
         };
 
         static readonly NumericalScheme[] iterationRelatedSchemes =
@@ -159,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 "Test precondition: Dispersion should be a coverage");
 
             // call
-            var propertyName = TypeUtils.GetMemberName<WaterQualityModel>(m => m.HorizontalDispersion);
+            var propertyName = nameof(WaterQualityModel.HorizontalDispersion);
             var isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
             // assert
@@ -179,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 "Test precondition: Dispersion should be a constant value.");
 
             // call
-            var propertyName = TypeUtils.GetMemberName<WaterQualityModel>(m => m.HorizontalDispersion);
+            var propertyName = nameof(WaterQualityModel.HorizontalDispersion);
             var isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
             // assert

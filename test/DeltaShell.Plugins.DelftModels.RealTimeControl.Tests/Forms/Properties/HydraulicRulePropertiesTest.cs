@@ -21,11 +21,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [SetCulture("en-US")]
         public void ResourcesCategoryAttributeOfInterpolationProperty_ShouldHaveCorrectText()
         {
-            string interpolationPropertyName = TypeUtils.GetMemberName<HydraulicRuleProperties>(p => p.Interpolation);
+            string interpolationPropertyName = nameof(HydraulicRuleProperties.Interpolation);
             PropertyInfo interpolationPropertyInfo = TypeUtils.GetPropertyInfo(typeof(HydraulicRuleProperties),
                                                                                interpolationPropertyName);
 
-            string categoryPropertyName = TypeUtils.GetMemberName<ResourcesCategoryAttribute>(a => a.Category);
+            string categoryPropertyName = nameof(ResourcesCategoryAttribute.Category);
             Assert.That(interpolationPropertyInfo,
                         Has.Attribute<ResourcesCategoryAttribute>()
                            .Property(categoryPropertyName)

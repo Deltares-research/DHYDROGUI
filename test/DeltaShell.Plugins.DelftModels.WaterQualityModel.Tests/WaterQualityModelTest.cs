@@ -1175,8 +1175,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         private void SetFakeOutputOnModel(WaterQualityModel model)
         {
             // Fake the output not being empty or out of sync
-            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputIsEmpty),
-                false);
+            TypeUtils.SetPrivatePropertyValue(model, nameof(WaterQualityModel.OutputIsEmpty), false);
         }
 
         #region Timers synchronization

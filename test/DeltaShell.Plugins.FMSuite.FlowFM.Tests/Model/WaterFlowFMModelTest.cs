@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var weirFormulaChangeCount = 0;
             ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != TypeUtils.GetMemberName<Weir>(w => w.WeirFormula)) return;
+                if (e.PropertyName != nameof(Weir.WeirFormula)) return;
                 weirFormulaChangeCount++;
             };
             // add weir to model

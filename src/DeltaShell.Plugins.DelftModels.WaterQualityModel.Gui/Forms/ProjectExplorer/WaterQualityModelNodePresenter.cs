@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
 
         protected override void OnPropertyChanged(WaterQualityModel model, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName<WaterQualityModel>(m => m.OutputOutOfSync))
+            if (e.PropertyName == nameof(WaterQualityModel.OutputOutOfSync))
             {
                 ((TreeNode) node).RefreshChildNodes();
             }

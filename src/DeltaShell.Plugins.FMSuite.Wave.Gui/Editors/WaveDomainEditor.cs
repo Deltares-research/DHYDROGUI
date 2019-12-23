@@ -126,8 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                                                      TypeUtils.GetMemberName(() => spectralDomain.FreqMax)));
 
             useDefaultMeteoCBox.DataBindings.Add(new Binding("Checked", data,
-                                                             TypeUtils.GetMemberName<WaveDomainData>(
-                                                                 d => d.UseGlobalMeteoData)));
+                                                             nameof(WaveDomainData.UseGlobalMeteoData)));
 
             HydroFromFlowSettings hydroData = data.HydroFromFlowData;
             useDefaultHydroCBox.DataBindings.Add(new Binding("Checked", hydroData,

@@ -254,8 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 outputSnappedFeaturesPath = value;
 
-                OnOutputSnappedFeaturesPathPropertyChanged(
-                    TypeUtils.GetMemberName<string>(() => OutputSnappedFeaturesPath));
+                OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
             }
         }
 

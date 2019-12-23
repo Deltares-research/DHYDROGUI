@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+﻿using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -12,23 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private const string FactorPropertyDescription = "Factor";
         private const string OffsetPropertyDescription = "Offset";
 
-        private static readonly string FeaturePropertyName =
-           TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.FeatureName);
-
-        private static readonly string QuantityPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.VariableName);
-
-        private static readonly string ForcingTypePropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.DataType);
-
-        private static readonly string FactorPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.Factor);
-
-        private static readonly string OffsetPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.Offset);
-
-        private static readonly string ThatcherHarlemanPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(bc => bc.ThatcherHarlemanTimeLag);
+        private static readonly string FeaturePropertyName = nameof(FlowBoundaryCondition.FeatureName);
+        private static readonly string QuantityPropertyName = nameof(FlowBoundaryCondition.VariableName);
+        private static readonly string ForcingTypePropertyName = nameof(FlowBoundaryCondition.DataType);
+        private static readonly string FactorPropertyName = nameof(FlowBoundaryCondition.Factor);
+        private static readonly string OffsetPropertyName = nameof(FlowBoundaryCondition.Offset);
+        private static readonly string ThatcherHarlemanPropertyName = nameof(FlowBoundaryCondition.ThatcherHarlemanTimeLag);
 
         /// <summary> 
         /// Required designer variable.
