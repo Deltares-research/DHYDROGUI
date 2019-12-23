@@ -13,17 +13,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundary"/>.
         /// </summary>
+        /// <param name="name">The name of this new <see cref="WaveBoundary"/>.</param>
         /// <param name="geometricDefinition">The geometric definition.</param>
         /// <param name="conditionDefinition">The condition definition.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when any argument is <c>null</c>.
+        /// Thrown when any argument is <c>null</c> or <paramref name="name"/> is empty.
         /// </exception>
-        public WaveBoundary(IWaveBoundaryGeometricDefinition geometricDefinition,
+        // TODO (MWT): Verify whether we accept white space characters.
+        public WaveBoundary(string name,
+                            IWaveBoundaryGeometricDefinition geometricDefinition,
                             IWaveBoundaryConditionDefinition conditionDefinition)
         {
+            Name = !string.IsNullOrEmpty(name) ? name : throw new ArgumentNullException(nameof(name));
             GeometricDefinition = geometricDefinition ?? throw new ArgumentNullException(nameof(geometricDefinition));
             ConditionDefinition = conditionDefinition ?? throw new ArgumentNullException(nameof(conditionDefinition));
         }
+
+        //
+        public string Name
+        {
+            get => name; 
+            set => name = !string.IsNullOrEmpty(value) ? value 
+                              : throw new ArgumentNullException(nameof(value)); 
+        }
+
+        private string name;
 
         public IWaveBoundaryGeometricDefinition GeometricDefinition { get; }
         public IWaveBoundaryConditionDefinition ConditionDefinition { get; }
