@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             double expectedSpreading = random.NextDouble() * 1000.0;
 
             // Call
-            var boundaryConditionParameters = new BoundaryConditionParameters(expectedHeight, 
+            var boundaryConditionParameters = new ConstantParameters(expectedHeight, 
                                                                               expectedPeriod, 
                                                                               expectedDirection, 
                                                                               expectedSpreading);

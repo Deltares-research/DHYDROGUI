@@ -1,24 +1,24 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
     /// <summary>
-    /// <see cref="BoundaryConditionParameters"/> provides the parameters
+    /// <see cref="ConstantParameters"/> provides the parameters
     /// associated with a <see cref="IWaveBoundaryConditionDefinition"/>
     /// in the case of uniform data, or the parameters associated with a
     /// <see cref="SupportPoint"/> in the case of a spatially variant
     /// <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
-    public class BoundaryConditionParameters
+    public class ConstantParameters
     {
         /// <summary>
-        /// Creates a new <see cref="BoundaryConditionParameters"/>.
+        /// Creates a new <see cref="ConstantParameters"/>.
         /// </summary>
         /// <param name="height">The height.</param>
         /// <param name="period">The period.</param>
         /// <param name="direction">The direction.</param>
         /// <param name="spreading">The spreading.</param>
-        public BoundaryConditionParameters(double height,
+        public ConstantParameters(double height,
                                            double period,
                                            double direction,
                                            double spreading)
