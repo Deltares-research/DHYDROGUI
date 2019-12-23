@@ -23,10 +23,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var factoryHelper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
             // Call
-            var factory = new WaveBoundaryFactory(calculatorProvider, helper);
+            var factory = new WaveBoundaryFactory(calculatorProvider, 
+                                                  factoryHelper, 
+                                                  nameProvider);
 
             // Assert
             Assert.That(factory, Is.InstanceOf(typeof(IWaveBoundaryFactory)),
@@ -38,9 +41,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
             // Call
-            void Call() => new WaveBoundaryFactory(null, helper);
+            void Call() => new WaveBoundaryFactory(null, helper, nameProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -48,13 +52,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
+        public void Constructor_NameProviderNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+
+            // Call
+            void Call() => new WaveBoundaryFactory(calculatorProvider, helper, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("nameProvider"));
+        }
+
+        [Test]
         public void Constructor_FactoryHelperNull_ThrowsArgumentNullException()
         {
             // Setup
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
             // Call
-            void Call() => new WaveBoundaryFactory(calculatorProvider, null);
+            void Call() => new WaveBoundaryFactory(calculatorProvider, null, nameProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -67,9 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
-            var factory = new WaveBoundaryFactory(calculatorProvider, helper);
-
+            var factory = new WaveBoundaryFactory(calculatorProvider, helper, nameProvider);
 
             // Call
             void Call() => factory.ConstructWaveBoundary(null);
@@ -88,8 +108,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             calculatorProvider.GetBoundarySnappingCalculator().Returns(calculator);
 
             var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
-            var factory = new WaveBoundaryFactory(calculatorProvider, helper);
+            var factory = new WaveBoundaryFactory(calculatorProvider, helper, nameProvider);
 
             var geometry = Substitute.For<ILineString>();
             var gridSide = random.NextEnumValue<GridSide>();
@@ -136,8 +157,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             calculatorProvider.GetBoundarySnappingCalculator().Returns(calculator);
 
             var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+            var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
-            var factory = new WaveBoundaryFactory(calculatorProvider, helper);
+            var factory = new WaveBoundaryFactory(calculatorProvider, helper, nameProvider);
 
             var geometry = Substitute.For<ILineString>();
             var gridSide = random.NextEnumValue<GridSide>();

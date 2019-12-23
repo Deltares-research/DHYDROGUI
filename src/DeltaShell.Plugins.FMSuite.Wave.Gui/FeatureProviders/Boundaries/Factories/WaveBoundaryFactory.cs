@@ -19,21 +19,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
     {
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
         private readonly IWaveBoundaryFactoryHelper factoryHelper;
+        private readonly IUniqueBoundaryNameProvider nameProvider;
 
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundaryFactory"/>.
         /// </summary>
         /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
+        /// <param name="factoryHelper">The factory helper.</param>
+        /// <param name="nameProvider">The unique boundary name provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
-         public WaveBoundaryFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider,
-                                    IWaveBoundaryFactoryHelper factoryHelper)
+        public WaveBoundaryFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider,
+                                    IWaveBoundaryFactoryHelper factoryHelper,
+                                    IUniqueBoundaryNameProvider nameProvider)
         {
             this.snappingCalculatorProvider = snappingCalculatorProvider ??
                 throw new ArgumentNullException(nameof(snappingCalculatorProvider));
             this.factoryHelper = factoryHelper ??
                 throw new ArgumentNullException(nameof(factoryHelper));
+            this.nameProvider = nameProvider ??
+                throw new ArgumentNullException(nameof(nameProvider));
         }
 
         public IWaveBoundary ConstructWaveBoundary(ILineString geometry)

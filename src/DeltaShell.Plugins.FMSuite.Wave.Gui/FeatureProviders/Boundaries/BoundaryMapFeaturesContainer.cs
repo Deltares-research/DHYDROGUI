@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
             }
 
             var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
-                                                              new WaveBoundaryFactoryHelper());
+                                                              new WaveBoundaryFactoryHelper(), 
+                                                              new UniqueBoundaryNameProvider(boundaryContainer));
             var geometryFactory = new GeometryFactory(boundaryContainer);
 
             BoundaryLineMapFeatureProvider = 
