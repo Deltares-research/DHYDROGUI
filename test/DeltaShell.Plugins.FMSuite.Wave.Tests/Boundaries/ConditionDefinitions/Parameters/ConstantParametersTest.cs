@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.Parameters
 {
     [TestFixture]
-    public class BoundaryConditionParametersTest
+    public class ConstantParametersTest
     {
         private readonly Random random = new Random(37);
 
