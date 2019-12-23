@@ -1,4 +1,6 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
@@ -14,6 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The shape
         /// </value>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
         IBoundaryConditionShape Shape { get; set; }
 
         /// <summary>
@@ -31,5 +36,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// The type of the directional spreading.
         /// </value>
         BoundaryConditionDirectionalSpreadingType DirectionalSpreadingType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data component.
+        /// </summary>
+        /// <value>
+        /// The <see cref="IBoundaryConditionDataComponent"/>.
+        /// </value>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        IBoundaryConditionDataComponent DataComponent { get; set; }
     }
 }
