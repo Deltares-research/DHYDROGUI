@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// <see cref="IBoundaryConditionShape"/> defines the different shapes used
-    /// within the <see cref="IBoundaryConditionDefinition"/>.
+    /// within the <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
     /// <remarks>
     /// This interface acts as a discriminated union for its implementing types.
