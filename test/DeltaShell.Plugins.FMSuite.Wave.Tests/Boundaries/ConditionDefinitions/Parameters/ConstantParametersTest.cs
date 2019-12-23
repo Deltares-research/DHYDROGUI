@@ -25,6 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                                                                               expectedSpreading);
 
             // Assert
+            Assert.That(boundaryConditionParameters, Is.InstanceOf<IBoundaryConditionParameters>());
+
             Assert.That(boundaryConditionParameters.Height, Is.EqualTo(expectedHeight),
                         "Expected a different Height:");
             Assert.That(boundaryConditionParameters.Period, Is.EqualTo(expectedPeriod),

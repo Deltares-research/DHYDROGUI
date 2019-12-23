@@ -9,7 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// <see cref="SupportPoint"/> in the case of a spatially variant
     /// <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
-    public class ConstantParameters
+    /// <seealso cref="IBoundaryConditionParameters"/>
+    public class ConstantParameters : IBoundaryConditionParameters
     {
         /// <summary>
         /// Creates a new <see cref="ConstantParameters"/>.
