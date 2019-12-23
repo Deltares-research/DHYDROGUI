@@ -213,6 +213,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShapeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinitionTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTestHelper.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\SupportPointTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionTest.cs" />

@@ -27,6 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The type of the period.
         /// </value>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="value"/> is not defined.
+        /// </exception>
         BoundaryConditionPeriodType PeriodType { get; set; }
 
         /// <summary>
@@ -35,6 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The type of the directional spreading.
         /// </value>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="value"/> is not defined.
+        /// </exception>
         BoundaryConditionDirectionalSpreadingType DirectionalSpreadingType { get; set; }
 
         /// <summary>
