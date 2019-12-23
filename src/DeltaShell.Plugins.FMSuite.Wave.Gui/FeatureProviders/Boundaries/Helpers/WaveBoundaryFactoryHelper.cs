@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -63,6 +67,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
             }
 
             return candidate;
+        }
+
+        public IWaveBoundaryConditionDefinition GetConditionDefinition()
+        {
+            // TODO (MWT): see if this warrants a separate class
+            var shape = new JonswapShape {PeakEnhancementFactor = 3.3};
+            const BoundaryConditionPeriodType periodType = 
+                BoundaryConditionPeriodType.Peak;
+            const BoundaryConditionDirectionalSpreadingType directionalSpreading =
+                BoundaryConditionDirectionalSpreadingType.Power;
+            var dataComponent = new UniformDataComponent(
+                new ConstantParameters(0.0, 
+                                       1.0, 
+                                       0.0, 
+                                       4.0));
+
+            return new WaveBoundaryConditionDefinition(shape, 
+                                                       periodType, 
+                                                       directionalSpreading,
+                                                       dataComponent);
         }
     }
 }

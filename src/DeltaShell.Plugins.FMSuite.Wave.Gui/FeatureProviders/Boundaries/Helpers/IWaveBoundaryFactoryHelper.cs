@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers
@@ -44,5 +46,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// then <c>null</c> is returned.
         /// </returns>
         IWaveBoundaryGeometricDefinition GetGeometricDefinition(IEnumerable<GridBoundaryCoordinate> snappedCoordinates);
+
+        /// <summary>
+        /// Gets the default condition definition.
+        /// </summary>
+        /// <returns>
+        /// The default <see cref="IWaveBoundaryConditionDefinition"/>.
+        /// </returns>
+        IWaveBoundaryConditionDefinition GetConditionDefinition();
     }
 }

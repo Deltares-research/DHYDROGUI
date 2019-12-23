@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Geometries;
@@ -303,6 +307,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Then
             Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetConditionDefinition_ExpectedReturnValue()
+        {
+            // Setup 
+            var factoryHelper = new WaveBoundaryFactoryHelper();
+
+            // Call
+            IWaveBoundaryConditionDefinition conditionDefinition = factoryHelper.GetConditionDefinition();
+
+            // Assert
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            var shape = conditionDefinition.Shape as JonswapShape;
+            Assert.That(shape, Is.Not.Null);
+            Assert.That(shape.PeakEnhancementFactor, Is.EqualTo(3.3));
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Peak));
+            Assert.That(conditionDefinition.DirectionalSpreadingType, Is.EqualTo(BoundaryConditionDirectionalSpreadingType.Power));
+
+            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            var data = dataComponent.Data as ConstantParameters;
+            Assert.That(data, Is.Not.Null);
+            Assert.That(data.Height, Is.EqualTo(0.0));
+            Assert.That(data.Period, Is.EqualTo(1.0));
+            Assert.That(data.Direction, Is.EqualTo(0.0));
+            Assert.That(data.Spreading, Is.EqualTo(4.0));
         }
     }
 }

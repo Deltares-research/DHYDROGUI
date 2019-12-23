@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
@@ -17,5 +18,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// GeometricDefinition is never null.
         /// </remarks>
         IWaveBoundaryGeometricDefinition GeometricDefinition { get; }
+
+        /// <summary>
+        /// Gets the condition definition.
+        /// </summary>
+        /// <value>
+        /// The condition definition.
+        /// </value>
+        IWaveBoundaryConditionDefinition ConditionDefinition { get; }
     }
 }

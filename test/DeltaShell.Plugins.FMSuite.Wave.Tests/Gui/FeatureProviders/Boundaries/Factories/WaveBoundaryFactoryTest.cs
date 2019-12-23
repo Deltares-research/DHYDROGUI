@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
@@ -106,18 +107,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             };
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             geometry.Coordinates.Returns(coordinates);
             helper.GetSnappedEndPoints(calculator, coordinates).Returns(snappedCoordinates);
             helper.GetGeometricDefinition(snappedCoordinates).Returns(geometricDefinition);
+            helper.GetConditionDefinition().Returns(conditionDefinition);
 
             // Call
             IWaveBoundary boundary = factory.ConstructWaveBoundary(geometry);
 
             // Assert
             Assert.That(boundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+            Assert.That(boundary.ConditionDefinition, Is.SameAs(conditionDefinition));
+
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
             helper.Received(1).GetGeometricDefinition(snappedCoordinates);
+            helper.Received(1).GetConditionDefinition();
         }
 
         [Test]
@@ -161,6 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(boundary, Is.Null);
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
             helper.Received(1).GetGeometricDefinition(snappedCoordinates);
+            helper.DidNotReceive().GetConditionDefinition();
         }
     }
 }

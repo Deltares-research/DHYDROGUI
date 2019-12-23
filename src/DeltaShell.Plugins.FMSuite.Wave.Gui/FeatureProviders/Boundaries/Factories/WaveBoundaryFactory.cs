@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Geometries;
@@ -55,7 +56,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             IWaveBoundaryGeometricDefinition geometricDefinition = 
                 factoryHelper.GetGeometricDefinition(snappedCoordinates);
 
-            return geometricDefinition != null ? new WaveBoundary(geometricDefinition) : null;
+            if (geometricDefinition == null)
+            {
+                return null;
+            }
+
+            IWaveBoundaryConditionDefinition conditionDefinition =
+                factoryHelper.GetConditionDefinition();
+
+            return new WaveBoundary(geometricDefinition, conditionDefinition);
         }
     }
 }
