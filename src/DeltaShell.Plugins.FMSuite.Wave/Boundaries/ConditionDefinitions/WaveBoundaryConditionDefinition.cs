@@ -66,6 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 
         private BoundaryConditionDirectionalSpreadingType spreadingType;
 
-        public IBoundaryConditionDataComponent DataComponent { get; set; }
+        public IBoundaryConditionDataComponent DataComponent
+        {
+            get => dataComponent; 
+            set => dataComponent = value ?? throw new ArgumentNullException(nameof(value)); 
+        }
+
+        private IBoundaryConditionDataComponent dataComponent;
     }
 }
