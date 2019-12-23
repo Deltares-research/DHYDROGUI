@@ -70,7 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             IWaveBoundaryConditionDefinition conditionDefinition =
                 factoryHelper.GetConditionDefinition();
 
-            return new WaveBoundary(geometricDefinition, conditionDefinition);
+            string newName = nameProvider.GetUniqueName();
+
+            return new WaveBoundary(newName, geometricDefinition, conditionDefinition);
         }
     }
 }

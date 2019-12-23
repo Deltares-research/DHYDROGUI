@@ -108,7 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             calculatorProvider.GetBoundarySnappingCalculator().Returns(calculator);
 
             var helper = Substitute.For<IWaveBoundaryFactoryHelper>();
+
+            const string name = "BoundaryName";
             var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
+            nameProvider.GetUniqueName().Returns(name);
 
             var factory = new WaveBoundaryFactory(calculatorProvider, helper, nameProvider);
 
@@ -141,10 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Assert
             Assert.That(boundary.GeometricDefinition, Is.SameAs(geometricDefinition));
             Assert.That(boundary.ConditionDefinition, Is.SameAs(conditionDefinition));
+            Assert.That(boundary.Name, Is.EqualTo(name));
 
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
             helper.Received(1).GetGeometricDefinition(snappedCoordinates);
             helper.Received(1).GetConditionDefinition();
+            nameProvider.Received(1).GetUniqueName();
         }
 
         [Test]
@@ -190,6 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
             helper.Received(1).GetGeometricDefinition(snappedCoordinates);
             helper.DidNotReceive().GetConditionDefinition();
+            nameProvider.DidNotReceive().GetUniqueName();
         }
     }
 }
