@@ -15,6 +15,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
@@ -376,6 +377,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this};
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
+
+            IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
+                WaveModels.Select(wm => wm.BoundaryContainer)
+                          .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
+
+            yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
         }
 
         public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();
