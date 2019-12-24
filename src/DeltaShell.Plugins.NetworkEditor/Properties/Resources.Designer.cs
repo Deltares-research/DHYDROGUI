@@ -143,16 +143,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap HydroRegion {
-            get {
-                object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap LateralSourceMap {
             get {
                 object obj = ResourceManager.GetObject("LateralSourceMap", resourceCulture);

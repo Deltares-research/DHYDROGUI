@@ -34,9 +34,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
-using DeltaShell.Plugins.NetworkEditor.Gui.Wizard;
-using DeltaShell.Plugins.NetworkEditor.Import;
-using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -176,7 +173,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<CrossSectionFromCsvFileImporterBase, CrossSectionCsvImportWizard>();
             yield return new ViewInfo<IPump, PumpView>
                 {
                     AdditionalDataCheck = o => o != null && o.Branch != null,
@@ -277,25 +273,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
                         }
                 };
-            yield return new ViewInfo<HydroRegionFromGisImporter, ImportHydroNetworkFromGisWizardDialog>
-                {
-                    GetViewName = (v, o) => v.Title,
-                    AfterCreate = (v, o) =>
-                        {
-                            // Reset the dialog with a HydroRegionFromGisImporter with HydroRegion set
-                            var selectedDataItem = gui.Selection as IDataItem;
-                            o.HydroRegion = selectedDataItem != null
-                                                ? selectedDataItem.Value as IHydroRegion
-                                                : gui.Selection as IHydroRegion;
-                            v.Importer = o;
-                        }
-                };
-            yield return new ViewInfo<NetworkCoverageFromGisImporter, ImportNetworkCoverageFromGisWizardDialog>
-                {
-                    GetViewName = (v, o) => v.Title,
-                    AfterCreate = (v, o) => v.Importer = o
-                };
-            
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,

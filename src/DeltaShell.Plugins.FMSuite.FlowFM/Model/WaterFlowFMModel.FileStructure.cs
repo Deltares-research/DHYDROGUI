@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -254,8 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 outputSnappedFeaturesPath = value;
 
-                OnOutputSnappedFeaturesPathPropertyChanged(
-                    TypeUtils.GetMemberName<string>(() => OutputSnappedFeaturesPath));
+                OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
             }
         }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
@@ -64,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNamesArray = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<WaterQualityModel>(m => m.ModelDataDirectory),
+                nameof(WaterQualityModel.ModelDataDirectory),
                 "haha",
                 "number"
             };
@@ -96,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNamesArray = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<DataTableManager>(m => m.FolderPath),
+                nameof(DataTableManager.FolderPath),
                 "haha"
             };
 
@@ -126,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             };
             var propertyNamesArray = new[]
             {
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(m => m.OutputDirectory),
+                nameof(WaterQualityModelSettings.OutputDirectory),
                 "hihi",
                 "haha"
             };
@@ -160,7 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 "hihi",
                 "number",
-                TypeUtils.GetMemberName<WaterQualityModel>(m => m.ModelDataDirectory),
+                nameof(WaterQualityModel.ModelDataDirectory),
                 "not a number"
             };
 
@@ -190,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNames = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<DataTableManager>(m => m.FolderPath),
+                nameof(DataTableManager.FolderPath),
                 "not a number"
             };
 
@@ -221,7 +220,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 "hihi",
                 "not a number",
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(m => m.OutputDirectory),
+                nameof(WaterQualityModelSettings.OutputDirectory),
             };
 
             // call

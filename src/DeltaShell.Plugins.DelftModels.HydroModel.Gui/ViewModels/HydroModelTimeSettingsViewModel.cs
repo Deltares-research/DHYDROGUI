@@ -10,7 +10,6 @@ using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private HydroModel hydroModel;
         private bool isUpdatingModel;
 
-        private readonly string parameterValueName = TypeUtils.GetMemberName<Parameter>(p => p.Value);
+        private readonly string parameterValueName = nameof(Parameter.Value);
 
         #region Properties
 

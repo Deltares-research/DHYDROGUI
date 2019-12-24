@@ -11,7 +11,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using GeoAPI.Extensions.Feature;
@@ -261,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == TypeUtils.GetMemberName<WaveModel>(m => m.IsEditing))
+            if (args.PropertyName == nameof(WaveModel.IsEditing))
             {
                 // to prevent cross thread access..
                 if (model.IsEditing)

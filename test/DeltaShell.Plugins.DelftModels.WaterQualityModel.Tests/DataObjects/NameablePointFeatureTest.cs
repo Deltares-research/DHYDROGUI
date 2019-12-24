@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
@@ -89,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
             var pointFeature = new SimpleNameablePointFeature();
             var changingCount = 0;
             var changedCount = 0;
-            var geometryPropertyName = TypeUtils.GetMemberName<NameablePointFeature>(npf => npf.Geometry);
+            var geometryPropertyName = nameof(NameablePointFeature.Geometry);
             ((INotifyPropertyChange)pointFeature).PropertyChanging += (sender, args) =>
             {
                 if (args.PropertyName == geometryPropertyName) changingCount++;
