@@ -1,10 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -62,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                         i =>
                             i.Severity == ValidationSeverity.Error && i.Message == "No time points defined"));
 
-            model.IsCoupledToFlow = true;
+            model.Owner = Substitute.For<ICompositeActivity>();
             validationReport = new WaveModelValidator().Validate(model);
             Assert.IsFalse(
                 validationReport.GetAllIssuesRecursive()

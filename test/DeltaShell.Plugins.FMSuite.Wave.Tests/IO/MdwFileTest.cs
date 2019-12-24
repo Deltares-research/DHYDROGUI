@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -265,6 +266,80 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.NDir, savedModelDef.OuterDomain.SpectralDomainData.NDir);
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.StartDir, savedModelDef.OuterDomain.SpectralDomainData.StartDir, 1e-07);
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.EndDir, savedModelDef.OuterDomain.SpectralDomainData.EndDir, 1e-07);
+        }
+
+        [TestCase(WaveDirectionalSpaceType.Sector)]
+        [TestCase(WaveDirectionalSpaceType.Circle)]
+        [Category(TestCategory.DataAccess)]
+        public void Load_ThenCorrectSpectralDomainDataIsSet(WaveDirectionalSpaceType directionalSpaceType)
+        {
+            var random = new Random();
+            var expectedDomainData = new SpectralDomainData()
+            {
+                DirectionalSpaceType = directionalSpaceType,
+                NDir = random.Next(),
+                StartDir = GetRandomRoundedValue(random),
+                EndDir = GetRandomRoundedValue(random),
+                NFreq = random.Next(),
+                FreqMin = GetRandomRoundedValue(random),
+                FreqMax = GetRandomRoundedValue(random),
+            };
+
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = CreateMdwFileWithSpectralDomainData(tempDirectory.Path, expectedDomainData);
+
+                // Call
+                WaveModelDefinition modelDefinition = new MdwFile().Load(filePath);
+
+                // Assert
+                SpectralDomainData spectralData = modelDefinition.OuterDomain.SpectralDomainData;
+                Assert.That(spectralData.DirectionalSpaceType, Is.EqualTo(directionalSpaceType), "Directional space type");
+                Assert.That(spectralData.NDir, Is.EqualTo(expectedDomainData.NDir), "NDir");
+                Assert.That(spectralData.StartDir, Is.EqualTo(expectedDomainData.StartDir), "StartDir");
+                Assert.That(spectralData.EndDir, Is.EqualTo(expectedDomainData.EndDir), "EndDir");
+                Assert.That(spectralData.FreqMin, Is.EqualTo(expectedDomainData.FreqMin), "FreqMin");
+                Assert.That(spectralData.FreqMax, Is.EqualTo(expectedDomainData.FreqMax), "FreqMax");
+                Assert.That(spectralData.NFreq, Is.EqualTo(expectedDomainData.NFreq), "NFreq");
+            }
+        }
+
+        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
+        {
+            string filePath = Path.Combine(tempDirPath, "file.mdw");
+            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
+                                                   ? "circle"
+                                                   : "sector";
+
+            string[] content =
+            {
+                "[Domain]",
+                $"DirSpace  = {directionalSpaceTypeValue}",
+                $"NDir      = {domainData.NDir}",
+                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
+                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
+                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
+                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
+                $"NFreq     = {domainData.NFreq}",
+                "[Output]",
+                "[General]"
+            };
+
+            File.WriteAllLines(filePath, content);
+
+            return filePath;
+        }
+
+        private static string ToDoubleString(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static double GetRandomRoundedValue(Random random)
+        {
+            const int factor = 10000000;
+            return Math.Floor(random.NextDouble() * factor) / factor;
         }
 
         /// <summary>

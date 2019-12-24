@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -418,6 +419,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Assert
 
             Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
+        }
+
+        [Test]
+        public void IsCoupledToFlow_ShouldAlwaysBeTrueForAWaveModelInsideAnIntegratedModel()
+        {
+            var waveModel = new WaveModel
+            {
+                Owner = Substitute.For<ICompositeActivity>()
+            };
+
+            Assert.IsTrue(waveModel.IsCoupledToFlow);
+        }
+
+        [Test]
+        public void IsCoupledToFlow_ShouldAlwaysBeFalseForAStandAloneModel()
+        {
+            var waveModel = new WaveModel();
+            Assert.IsFalse(waveModel.IsCoupledToFlow);
         }
     }
 }

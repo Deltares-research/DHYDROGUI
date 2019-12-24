@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
-using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
@@ -19,12 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                IsCoupledToFlow = true,
+                Owner = Substitute.For<ICompositeActivity>(),
                 StartTime = DateTime.Now
             };
             waveModel.TimeStep = new TimeSpan(0,0,timeStep);
             var expectedTabName = "General";
-            string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_;
+            const string expectedMessage = "The coupling time step must be positive.";
 
             // When
             ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
@@ -45,11 +49,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                IsCoupledToFlow = true,
+                Owner = Substitute.For<ICompositeActivity>(),
                 StartTime = DateTime.Now
             };
             waveModel.TimeStep = new TimeSpan(0, 0, 1);
-            string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_;
+            const string expectedMessage = "The coupling time step must be positive.";
 
             // When
             ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
@@ -67,12 +71,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var waveModel = new WaveModel())
             {
                 // Given
-                waveModel.IsCoupledToFlow = true;
+                waveModel.Owner = Substitute.For<ICompositeActivity>();
                 waveModel.StartTime = DateTime.Now;
                 waveModel.StopTime = waveModel.StartTime.AddDays(couplingPeriod);
 
-                string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_;
-                string expectedTabName = "General";
+                const string expectedMessage = "The coupling period must be positive.";
+                const string expectedTabName = "General";
 
                 // When
                 ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
@@ -94,11 +98,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var waveModel = new WaveModel())
             {
                 // Given
-                waveModel.IsCoupledToFlow = true;
+                waveModel.Owner = Substitute.For<ICompositeActivity>();
                 waveModel.StartTime = DateTime.Now;
                 waveModel.StopTime = DateTime.Now.AddDays(1);
 
-                string expectedMessage = Resources.WaveCouplingValidator_ValidateModelTimeSettings_start_time_must_be_smaller_than_stop_time_;
+                const string expectedMessage = "The coupling period must be positive.";
 
                 // When
                 ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
@@ -115,17 +119,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                IsCoupledToFlow = true,
+                Owner = Substitute.For<ICompositeActivity>(),
                 StartTime = DateTime.Now
             };
             waveModel.ModelDefinition.ModelReferenceDateTime = waveModel.StartTime.AddDays(1); // Model start time precedes model reference time
 
             // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            var expectedMessage = Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time;
-            var validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
+            const string expectedMessage = "Model start time precedes reference time";
+            ValidationIssue validationError = validationReport.AllErrors.FirstOrDefault(issue => issue.Message == expectedMessage);
             Assert.IsNotNull(validationError);
 
             var waveValidationShortcut = validationError.ViewData as WaveValidationShortcut;
@@ -143,115 +147,99 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                IsCoupledToFlow = true,
+                Owner = Substitute.For<ICompositeActivity>(),
                 WriteCOM = writeComFile
             };
             waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = comFilePath;
 
             // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            ContainsValidationErrorWithMessage(validationReport, Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file);
+            ContainsCouplingValidationErrorWithMessage(validationReport, "Coupled wave model must use COM-file");
         }
 
         [Test]
         public void GivenWaveModelNotCoupledToFlowModelAndWriteComFileIsTrue_WhenValidatingCoupling_ThenValidationErrorIsReturned()
         {
             // Given
-            var waveModel = new WaveModel
-            {
-                IsCoupledToFlow = false
-            };
+            var waveModel = new WaveModel();
+            
             waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
 
             // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
             // Then
-            ContainsValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
+            ContainsCouplingValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
         }
-        
-        [TestCase(UsageFromFlowType.UseAndExtend)]
-        [TestCase(UsageFromFlowType.UseDoNotExtend)]
-        public void GivenWaveModelNotCoupledToFlowModelWithBedLevelUsageNotEqualToDoNotUse_WhenValidatingCoupling_ThenValidationErrorIsReturned(UsageFromFlowType usageType)
+
+        [Test]
+        public void Validate_WaveModelWithNonExistingCommunicationFile_ThenValidationErrorIsReturned()
         {
-            // Given
-            var waveModel = new WaveModel
+            // Arrange
+            const string nonExistingFilePath = "C:/NonExistingDirectory/NonExistingFile_com.nc";
+
+            using (var waveModel = new WaveModel())
             {
-                IsCoupledToFlow = false
-            };
-            waveModel.OuterDomain.HydroFromFlowData.BedLevelUsage = usageType;
+                waveModel.ModelDefinition.CommunicationsFilePath = nonExistingFilePath;
+                
+                // Act
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            var expectedMessage = string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow bed level");
-            ContainsValidationErrorWithMessage(validationReport, expectedMessage);
+                // Assert
+                string expectedErrorMessage = $"Communications file '{nonExistingFilePath}' does not exist.";
+                ContainsCouplingValidationErrorWithMessage(validationReport, expectedErrorMessage);
+            }
         }
 
-        [TestCase(UsageFromFlowType.UseAndExtend)]
-        [TestCase(UsageFromFlowType.UseDoNotExtend)]
-        public void GivenWaveModelNotCoupledToFlowModelWithWaterLevelUsageNotEqualToDoNotUse_WhenValidatingCoupling_ThenValidationErrorIsReturned(UsageFromFlowType usageType)
+        [TestCase("")]
+        [TestCase(null)]
+        public void Validate_WaveModelWithNullOrEmptyCommunicationFilePath_ThenNoValidationErrorIsReturned(string communicationFilePath)
         {
-            // Given
-            var waveModel = new WaveModel
+            // Arrange
+            using (var waveModel = new WaveModel())
             {
-                IsCoupledToFlow = false
-            };
-            waveModel.OuterDomain.HydroFromFlowData.WaterLevelUsage = usageType;
+                waveModel.ModelDefinition.CommunicationsFilePath = communicationFilePath;
+               
+                // Act
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
 
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            var expectedMessage = string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow water level");
-            ContainsValidationErrorWithMessage(validationReport, expectedMessage);
+                // Assert
+                IEnumerable<ValidationIssue> validationErrors = validationReport.AllErrors.Where(issue => issue.Message.StartsWith("Communications file '"));
+                Assert.IsEmpty(validationErrors);
+            }
         }
 
-        [TestCase(UsageFromFlowType.UseAndExtend)]
-        [TestCase(UsageFromFlowType.UseDoNotExtend)]
-        public void GivenWaveModelNotCoupledToFlowModelWithVelocityUsageNotEqualToDoNotUse_WhenValidatingCoupling_ThenValidationErrorIsReturned(UsageFromFlowType usageType)
+        [Test]
+        public void Validate_WaveModelWithExistingRelativeCommunicationFilePath_ThenNoValidationErrorIsReturned()
         {
-            // Given
-            var waveModel = new WaveModel
+            // Arrange
+            using (var temporaryDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel())
             {
-                IsCoupledToFlow = false
-            };
-            waveModel.OuterDomain.HydroFromFlowData.VelocityUsage = usageType;
+                string mdwFilePath = Path.Combine(temporaryDirectory.Path, "WaveModelDirectory", "myModel.mdw");
+                waveModel.ModelSaveTo(mdwFilePath, true);
 
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
+                string communicationFilePath = Path.Combine(temporaryDirectory.Path, "myComFile_com.nc");
+                FileStream fileStream = File.Create(communicationFilePath);
+                fileStream.Close();
 
-            // Then
-            var expectedMessage = string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow velocities");
-            ContainsValidationErrorWithMessage(validationReport, expectedMessage);
+                waveModel.ModelDefinition.CommunicationsFilePath = "../myComFile_com.nc";
+
+                // Act
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+                // Assert
+                IEnumerable<ValidationIssue> validationErrors = validationReport.AllErrors.Where(issue => issue.Message.StartsWith("Communications file '"));
+                Assert.IsEmpty(validationErrors);
+            }
         }
 
-        [TestCase(UsageFromFlowType.UseAndExtend)]
-        [TestCase(UsageFromFlowType.UseDoNotExtend)]
-        public void GivenWaveModelNotCoupledToFlowModelWithWindUsageNotEqualToDoNotUse_WhenValidatingCoupling_ThenValidationErrorIsReturned(UsageFromFlowType usageType)
+        private static void ContainsCouplingValidationErrorWithMessage(ValidationReport validationReport, string expectedMessage)
         {
-            // Given
-            var waveModel = new WaveModel
-            {
-                IsCoupledToFlow = false
-            };
-            waveModel.OuterDomain.HydroFromFlowData.WindUsage = usageType;
-
-            // When
-            var validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            var expectedMessage = string.Format(Resources.WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_, "flow wind");
-            ContainsValidationErrorWithMessage(validationReport, expectedMessage);
-        }
-
-        private static void ContainsValidationErrorWithMessage(ValidationReport validationReport, string expectedMessage)
-        {
-            var errorMessages = validationReport.AllErrors.Select(issue => issue.Message).ToArray();
-            Assert.Contains(expectedMessage, errorMessages);
+            ValidationIssue validationError = validationReport.AllErrors.Single(issue => issue.Message == expectedMessage);
+            Assert.That(validationError.Subject, Is.EqualTo("Coupling"));
         }
     }
 }

@@ -51,60 +51,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
-        private bool isCoupledToFlow;
+
+        /// <summary>
+        /// Gets a value indicating whether this wave model is online coupled to a fm model.
+        /// Always true for wave model inside an integrated model, since waves models can
+        /// not run stand-alone in DIMR.
+        /// </summary>
+        public bool IsCoupledToFlow => Owner is ICompositeActivity;
         
         /// <summary>
-        /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
-        /// to a FM model.
+        /// Use domain specific data
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
-        /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// When set to <c>true</c>, we assume that this model is coupled to an FM model as part of an
-        /// integrated model. In that case, the communications file path is set to a standard relative path.
-        /// </remarks>
-        public bool IsCoupledToFlow
-        {
-            get => isCoupledToFlow;
-            set
-            {
-                isCoupledToFlow = value;
-                if (value && Owner is IHydroModel hydroModel)
-                {
-                    ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
-                }
-            }
-        }
-
-        /// <inheritdoc/>>
-        public override object Owner
-        {
-            get => base.Owner;
-            set
-            {
-                if (base.Owner is IHydroModel hydroModelBefore)
-                {
-                    ((INotifyPropertyChanged)hydroModelBefore).PropertyChanged -= OnModelOwnerChanged;
-                }
-
-                base.Owner = value;
-
-                if (base.Owner is IHydroModel hydroModelAfter)
-                {
-                    ((INotifyPropertyChanged)hydroModelAfter).PropertyChanged += OnModelOwnerChanged;
-                }
-            }
-        }
-
-        private void OnModelOwnerChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (IsCoupledToFlow && e.PropertyName == "Name" && Owner is IHydroModel hydroModel)
-            {
-                ModelDefinition.CommunicationsFilePath = string.Format(Resources.WaveModel_IsCoupledToFlow___ComFileRelativePath, hydroModel.Name);
-            }
-        }
+        public bool UseDomainSpecific { get; set; }
 
         public int SimulationMode
         {

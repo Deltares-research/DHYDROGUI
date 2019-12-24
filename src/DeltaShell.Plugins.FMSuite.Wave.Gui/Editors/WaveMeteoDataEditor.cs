@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         private void spwButton_Click(object sender, EventArgs e)
         {
-            meteoData.SpiderWebFileName = "";
+            meteoData.SpiderWebFilePath = "";
             meteoData.HasSpiderWeb = !meteoData.HasSpiderWeb;
             UpdatePanel();
         }

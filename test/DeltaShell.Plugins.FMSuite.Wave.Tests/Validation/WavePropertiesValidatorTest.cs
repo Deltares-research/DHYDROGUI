@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using DelftTools.TestUtils;
+using DelftTools.Functions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -11,59 +11,117 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
     [TestFixture]
     public class WavePropertiesValidatorTest
     {
+        private const string windWarningMessage = "Wind speed should be greater than zero when the option of quadruplets is activated.";
+
         [Test]
-        /* Units tests created after DELFT3DFM-510 */
-        [TestCase(0.0, new double[]{0.0}, false, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{0.0}, true, InputFieldDataType.Constant, true, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsTrue_ForConstantWindCase_WarningMustBeThere")]
-        [TestCase(0.0, new double[]{30.0}, true, InputFieldDataType.Constant, true, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForConstantWindCase_WarningMustBeThere")]
-        [TestCase(30.0, new double[]{0.0}, false, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
-        [TestCase(30.0, new double[]{0.0}, true, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsTrue_ForConstantWindCase_NoWarning")]
-        [TestCase(30.0, new double[] {30.0}, true, InputFieldDataType.Constant, false, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForConstantWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{30.0, 30.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{30.0, 0.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesNotAllGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{0.0, 0.0}, false, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{30.0, 30.0}, true, InputFieldDataType.TimeVarying, false, TestName = "ConstantWindSpeedZero_TimeseriesGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_NoWarning")]
-        [TestCase(0.0, new double[]{30.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedZero_TimeseriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
-        [TestCase(30.0, new double[]{30.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
-        [TestCase(0.0, new double[]{0.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedZero_TimeseriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
-        [TestCase(30.0, new double[]{0.0, 0.0}, true, InputFieldDataType.TimeVarying, true, TestName = "ConstantWindSpeedGreaterThanZero_TimeseriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
-        [Category(TestCategory.Integration)]
-        public void CheckWavePropertiesWithFlowModel(double windSpeedConstant, double [] windSpeedTimeseries, bool quadruplets, InputFieldDataType windType, bool warningAlert)
+        [TestCase(0.0, false, false, TestName = "ConstantWindSpeedZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
+        [TestCase(0.0, true, true, TestName = "ConstantWindSpeedZero_QuadrupletsTrue_ForConstantWindCase_WarningMustBeThere")]
+        [TestCase(30.0, false, false, TestName = "ConstantWindSpeedGreaterThanZero_QuadrupletsFalse_ForConstantWindCase_NoWarning")]
+        [TestCase(30.0, true, false, TestName = "ConstantWindSpeedGreaterThanZero_QuadrupletsTrue_ForConstantWindCase_NoWarning")]
+        public void CheckWavePropertiesWithFlowModel_ConstantWindSpeed(double windSpeedConstant, bool quadruplets, bool warningAlert)
         {
-            var model = new WaveModel();
-            var reportMessage = Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
-            var reportSeverity = ValidationSeverity.Error;
-
-            /* Assigning variables */
-           
-            model.TimePointData.WindSpeedConstant = windSpeedConstant;
-            
-            var timeSeriesWindSpeed = model.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
-            Assert.NotNull(timeSeriesWindSpeed);
-            
-            foreach (var wind in windSpeedTimeseries)
+            using (WaveModel model = WaveModelForPropertiesValidationBuilder.Start()
+                                                                            .WithQuadruplets(quadruplets)
+                                                                            .WithConstantWindSpeed(windSpeedConstant)
+                                                                            .Finish())
             {
-               timeSeriesWindSpeed.Values.Add(wind);
+                ValidationReport validationReport = WavePropertiesValidator.Validate(model);
+                if (warningAlert)
+                {
+                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                }
+                else
+                {
+                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                }
             }
-            
-            model.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets).
-                Value = quadruplets;
-            model.TimePointData.WindDataType = windType;
+        }
 
-            /*Test*/
-            var validationReport = WavePropertiesValidator.Validate(model);
-            if (warningAlert)
+        [TestCase(new[]{30.0, 30.0}, false, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(new[]{30.0, 0.0}, false, false, TestName = "TimeseriesNotAllGreaterThanZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(new[]{0.0, 0.0}, false, false, TestName = "TimeseriesZero_QuadrupletsFalse_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(new[]{30.0, 30.0}, true, false, TestName = "TimeseriesGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_NoWarning")]
+        [TestCase(new[]{30.0, 0.0}, true, true, TestName = "TimeSeriesNotAllGreaterThanZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        [TestCase(new[]{0.0, 0.0}, true, true, TestName = "TimeSeriesZero_QuadrupletsTrue_ForTimeSeriesWindCase_WarningMustBeThere")]
+        public void CheckWavePropertiesWithFlowModel_TimeVaryingWindSpeed(double[] windSpeedTimeSeries, bool quadruplets, bool warningAlert)
+        {
+            using (WaveModel model = WaveModelForPropertiesValidationBuilder.Start()
+                                                                            .WithQuadruplets(quadruplets)
+                                                                            .WithWindSpeedTimeSeries(windSpeedTimeSeries)
+                                                                            .Finish())
             {
-                Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == reportSeverity && i.Message == reportMessage));
-            }
-            else
-            {
-                Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == reportSeverity && i.Message == reportMessage));
+                ValidationReport validationReport = WavePropertiesValidator.Validate(model);
+                if (warningAlert)
+                {
+                    Assert.IsTrue(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning &&i.Message == windWarningMessage));
+                }
+                else
+                {
+                    Assert.IsFalse(validationReport.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Warning && i.Message == windWarningMessage));
+                }
             }
         }
 
         [Test]
-        public void GivenAWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoWarningsAndErrorsShouldBeGiven()
+        public void Validate_WaveModelWithDefaultWindUsageNotEqualToDoNotUse_Constant_ThenReturnValidationWarningsForWind()
+        {
+            // Arrange
+            using (WaveModel waveModel = WaveModelForPropertiesValidationBuilder.Start()
+                                                                                .WithDefaultWindUsage(UsageFromFlowType.DoNotUse)
+                                                                                .WithQuadruplets(true)
+                                                                                .WithConstantWindSpeed(0.0)
+                                                                                .Finish())
+            {
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(waveModel);
+
+                // Assert
+                ValidationReport processesReport = validationReport.SubReports.Single(r => r.Category == "Processes");
+                ValidationIssue validationIssue = processesReport.Issues.Single(i => i.Message == "Wind speed should be greater than zero when the option of quadruplets is activated.");
+                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+            }
+        }
+
+        [Test]
+        public void Validate_WaveModelWithDefaultWindUsageNotEqualToDoNotUse_TimeVarying_ThenReturnValidationWarningsForWind()
+        {
+            // Arrange
+            using (WaveModel waveModel = WaveModelForPropertiesValidationBuilder.Start()
+                                                                                .WithDefaultWindUsage(UsageFromFlowType.DoNotUse)
+                                                                                .WithQuadruplets(true)
+                                                                                .WithWindSpeedTimeSeries(0.0)
+                                                                                .Finish())
+            {
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(waveModel);
+
+                // Assert
+                ValidationReport processesReport = validationReport.SubReports.Single(r => r.Category == "Processes");
+                ValidationIssue validationIssue = processesReport.Issues.Single(i => i.Message == "Wind speed should be greater than zero when the option of quadruplets is activated.");
+                Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+            }
+        }
+
+        [TestCase(UsageFromFlowType.UseDoNotExtend)]
+        [TestCase(UsageFromFlowType.UseAndExtend)]
+        public void Validate_WaveModelWithDefaultWindUsageNotEqualToDoNotUse_TimeVarying_ThenReturnValidationWarningsForWind(UsageFromFlowType windDataType)
+        {
+            // Arrange
+            using (WaveModel waveModel = WaveModelForPropertiesValidationBuilder.Start()
+                                                                                .WithDefaultWindUsage(windDataType)
+                                                                                .Finish())
+            {
+                // Act
+                ValidationReport validationReport = WavePropertiesValidator.Validate(waveModel);
+
+                // Assert
+                ValidationReport processesReport = validationReport.SubReports.Single(r => r.Category == "Processes");
+                Assert.IsEmpty(processesReport.Issues);
+            }
+        }
+
+        [Test]
+        public void GivenAWaveModel_WhenTScaleAndTimeStepAreIntegersAndDivisors_ThenNoValidationIssuesShouldBeGiven()
         {
             var model = new WaveModel();
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
@@ -72,10 +130,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             model.TimePointData.WindDataType = InputFieldDataType.Constant;
             model.TimePointData.WindSpeedConstant = 10;
 
-            var validationReport = WavePropertiesValidator.Validate(model);
+            ValidationReport validationReport = WavePropertiesValidator.Validate(model);
 
             Assert.AreEqual(0, validationReport.GetAllIssuesRecursive().Count);
-
         }
 
         [Test]
@@ -86,10 +143,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,KnownWaveProperties.TimeScale).SetValueAsString("60.1");
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep).SetValueAsString("10");
 
-            var expectedMessage1 = Resources.WavePropertiesValidator_ValidateTScale;
-            var expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
+            string expectedMessage1 = Resources.WavePropertiesValidator_ValidateTScale;
+            string expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
 
-            var validationReport = WavePropertiesValidator.Validate(model);
+            ValidationReport validationReport = WavePropertiesValidator.Validate(model);
 
             Assert.IsTrue(
                 validationReport.GetAllIssuesRecursive()
@@ -112,10 +169,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale).SetValueAsString("60");
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep).SetValueAsString("9.9");
 
-            var expectedMessage1 = Resources.WavePropertiesValidator_ValidateTimeStep;
-            var expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
+            string expectedMessage1 = Resources.WavePropertiesValidator_ValidateTimeStep;
+            string expectedMessage2 = Resources.WavePropertiesValidator_ValidateDivisor;
 
-            var validationReport = WavePropertiesValidator.Validate(model);
+            ValidationReport validationReport = WavePropertiesValidator.Validate(model);
 
             Assert.IsTrue(
                 validationReport.GetAllIssuesRecursive()
@@ -138,15 +195,98 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale).SetValueAsString("60");
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep).SetValueAsString("65");
 
-            var expectedMessage1 = Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale;
+            string expectedMessage1 = Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale;
 
-            var validationReport = WavePropertiesValidator.Validate(model);
+            ValidationReport validationReport = WavePropertiesValidator.Validate(model);
 
             Assert.IsTrue(
                 validationReport.GetAllIssuesRecursive()
                     .Any(
                         i =>
                             i.Severity == ValidationSeverity.Error && i.Message == expectedMessage1));
+        }
+
+        /// <summary>
+        /// Fluent builder for <see cref="waveModel"/> instances.
+        /// </summary>
+        private class WaveModelForPropertiesValidationBuilder
+        {
+            private readonly WaveModel waveModel;
+
+            private WaveModelForPropertiesValidationBuilder()
+            {
+                waveModel = new WaveModel();
+            }
+
+            /// <summary>
+            /// Creates a new instance of <see cref="WaveModelForPropertiesValidationBuilder"/>.
+            /// </summary>
+            /// <returns> The new instance. </returns>
+            public static WaveModelForPropertiesValidationBuilder Start()
+            {
+                return new WaveModelForPropertiesValidationBuilder();
+            }
+
+            /// <summary>
+            /// Sets the usage type for wind in a D-Waves model.
+            /// </summary>
+            /// <param name="windUsageType"> The wind usage type. </param>
+            /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
+            public WaveModelForPropertiesValidationBuilder WithDefaultWindUsage(UsageFromFlowType windUsageType)
+            {
+                waveModel.ModelDefinition.DefaultWindUsage = windUsageType;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the quadruplets property value to a given value.
+            /// </summary>
+            /// <param name="value"> The value to set. </param>
+            /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
+            public WaveModelForPropertiesValidationBuilder WithQuadruplets(bool value)
+            {
+                WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets);
+                quadrupletsProperty.Value = value;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the wind speed constant value to a given value.
+            /// </summary>
+            /// <param name="value"> The value to set. </param>
+            /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
+            public WaveModelForPropertiesValidationBuilder WithConstantWindSpeed(double value)
+            {
+                waveModel.TimePointData.WindDataType = InputFieldDataType.Constant;
+                waveModel.TimePointData.WindSpeedConstant = value;
+
+                return this;
+            }
+
+            /// <summary>
+            /// Sets the wind speed time series values to a given set of values.
+            /// </summary>
+            /// <param name="values"> The values to set on the time series. </param>
+            /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
+            public WaveModelForPropertiesValidationBuilder WithWindSpeedTimeSeries(params double[] values)
+            {
+                waveModel.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
+                IVariable timeSeriesWindSpeed = waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
+                timeSeriesWindSpeed?.Values.AddRange(values);
+
+                return this;
+            }
+
+            /// <summary>
+            /// Returns a configured instance of <see cref="waveModel"/>.
+            /// </summary>
+            /// <returns> The configured D-waves model. </returns>
+            public WaveModel Finish()
+            {
+                return waveModel;
+            }
         }
     }
 }

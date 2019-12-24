@@ -1,5 +1,9 @@
 ﻿using System;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DeltaShell.Core;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
 
@@ -10,52 +14,118 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     public class HydroModelWaveIntegrationTest
     {
         [Test]
-        public void GivenWaveModelWithHydroModelAsOwner_WhenIsCoupledToFlowIsSetToTrue_ThenCommunicationsFilePathIsSetToSpecificRelativePath()
+        public void GivenHydroModel_WhenAddingWaveModelAsOnlyActivity_ThenWaveCommunicationsFilePathIsEmpty()
         {
             // Arrange
-            const string ownerModelName = "MyOwnerModel";
-
-            using (var waveModel = new WaveModel())
+            using (IApplication app = new DeltaShellApplication())
             {
-                waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
-                waveModel.Owner = new HydroModel
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new WaveApplicationPlugin());
+                app.Run();
+
+                using (var hydroModel = new HydroModel())
+                using (var waveModel = new WaveModel())
                 {
-                    Name = ownerModelName
-                };
+                    waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
 
-                // Act
-                waveModel.IsCoupledToFlow = true;
+                    // Act
+                    hydroModel.Activities.Add(waveModel);
 
-                // Assert
-                Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{ownerModelName}_com.nc"));
+                    // Assert
+                    Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo(string.Empty));
+                }
             }
         }
 
         [Test]
-        public void GivenWaveModelWithHydroModelAsOwner_WhenOwnerNameHasChanged_ThenCommunicationsFilePathIsUpdated()
+        public void GivenHydroModelWithWave_WhenAddingFmModel_ThenWaveCommunicationsFilePathIsSetToSpecificRelativePath()
         {
             // Arrange
-            const string initialOwnerName = "MyOwnerModel";
-            const string newOwnerName = "newName";
-
-            using (var waveModel = new WaveModel())
+            using (IApplication app = new DeltaShellApplication())
             {
-                waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
-                var owningModel = new HydroModel
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new WaveApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Run();
+
+                using (var hydroModel = new HydroModel())
+                using (var fmModel = new WaterFlowFMModel())
+                using (var waveModel = new WaveModel())
                 {
-                    Name = initialOwnerName
-                };
-                waveModel.Owner = owningModel;
-                waveModel.IsCoupledToFlow = true;
+                    fmModel.Name = Guid.NewGuid().ToString();
+                    waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
 
-                // Precondition
-                Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{initialOwnerName}_com.nc"));
+                    hydroModel.Activities.Add(waveModel);
 
-                // Act
-                owningModel.Name = newOwnerName;
+                    // Act
+                    hydroModel.Activities.Add(fmModel);
 
-                // Assert
-                Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{newOwnerName}_com.nc"));
+                    // Assert
+                    Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{fmModel.Name}_com.nc"));
+                }
+            }
+        }
+
+        [Test]
+        public void GivenHydroModelWithWaveAndFM_WhenRemovingFmModel_ThenWaveCommunicationsFilePathIsEmpty()
+        {
+            // Arrange
+            using (IApplication app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new WaveApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Run();
+
+                using (var hydroModel = new HydroModel())
+                using (var fmModel = new WaterFlowFMModel())
+                using (var waveModel = new WaveModel())
+                {
+                    fmModel.Name = Guid.NewGuid().ToString();
+                    waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
+
+                    hydroModel.Activities.Add(waveModel);
+                    hydroModel.Activities.Add(fmModel);
+
+                    // Act
+                    hydroModel.Activities.Remove(fmModel);
+
+                    // Assert
+                    Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo(string.Empty));
+                }
+            }
+        }
+
+        [Test]
+        public void GivenHydroModelWithWaveAndFM_WhenChangingFmModelName_ThenWaveCommunicationsFilePathIsAdjusted()
+        {
+            // Arrange
+            using (IApplication app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new WaveApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Run();
+
+                using (var hydroModel = new HydroModel())
+                using (var fmModel = new WaterFlowFMModel())
+                using (var waveModel = new WaveModel())
+                {
+                    string initialFmModelName = Guid.NewGuid().ToString();
+                    string finalFmModelName = Guid.NewGuid().ToString();
+
+                    fmModel.Name = initialFmModelName;
+                    waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();
+
+                    hydroModel.Activities.Add(waveModel);
+                    hydroModel.Activities.Add(fmModel);
+
+                    // Act
+                    fmModel.Name = finalFmModelName;
+
+                    // Assert
+                    Assert.That(waveModel.ModelDefinition.CommunicationsFilePath, Is.EqualTo($"../dflowfm/output/{finalFmModelName}_com.nc"));
+                }
             }
         }
     }

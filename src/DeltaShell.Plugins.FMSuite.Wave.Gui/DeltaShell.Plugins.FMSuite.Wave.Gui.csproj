@@ -147,7 +147,16 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverter.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverter.cs" />
     <Compile Include="Buttons\SelectComFileButton.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\EnumToDescriptionConverter.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverter.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToBooleanConverter.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\DirectionalSpaceSettingsViewModel.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\DirectionalSpaceType.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\DomainSpecificSettingsViewModel.cs" />
     <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -160,6 +169,12 @@
     <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.Designer.cs">
       <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterType.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\WindInputType.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataView.xaml.cs">
+      <DependentUpon>MainDomainSpecificDataView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\MainDomainSpecificDataViewModel.cs" />
     <Compile Include="Editors\MeteoFileSelectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -235,6 +250,11 @@
     <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.Designer.cs">
       <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\FrequencySpaceSettingsView.xaml.cs">
+      <DependentUpon>FrequencySpaceSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModel.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModel.cs" />
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
@@ -250,6 +270,18 @@
     <Compile Include="Ribbon\Ribbon.xaml.cs">
       <DependentUpon>Ribbon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\DirectionalSpaceSettingsView.xaml.cs">
+      <DependentUpon>DirectionalSpaceSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\DomainSpecificSettingsView.xaml.cs">
+      <DependentUpon>DomainSpecificSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\HydrodynamicsSettingsView.xaml.cs">
+      <DependentUpon>HydrodynamicsSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\DomainSpecificDataEditor\Views\WindSettingsView.xaml.cs">
+      <DependentUpon>WindSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WaveGridBasedDataSource.cs" />
     <Compile Include="WaveGuiPlugin.cs" />
     <Compile Include="WaveMapViewDecorator.cs" />
@@ -257,6 +289,7 @@
     <Compile Include="WaveModelUIDescription.cs" />
     <Compile Include="WaveSettingsHelper.cs" />
     <Compile Include="WaveModelTreeShortcut.cs" />
+    <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -267,6 +300,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
@@ -343,7 +381,31 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ribbon\Ribbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\FrequencySpaceSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\DirectionalSpaceSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\DomainSpecificSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\HydrodynamicsSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\DomainSpecificDataEditor\Views\WindSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

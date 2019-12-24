@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -184,100 +185,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        public void ValidateIntegratedModelFlowFMAndWaveBothModelsHaveTheSameTypeOfGrid()
+        [TestCase(true, true, 0)]
+        [TestCase(false, true, 1)]
+        [TestCase(true, false, 1)]
+        [TestCase(false, false, 0)]
+        public void ValidateIntegratedModelFlowFmAndWaveBothModelsHaveTheSameTypeOfGrid(bool fmIsSpherical, bool waveIsSpherical, int amountOfErrors)
         {
-            var fmModel = new WaterFlowFMModel();
-            var waveModel = new WaveModel();
-            var hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All);
-
-            PrepareValidFMWavesIntegratedModel(hydroModel, fmModel, waveModel);
-            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
-
-            //Both FM and Wave models have spherical grids -OK!
-            var fmIsSpherical = true;
-            var waveIsSpherical = true;
-            SetFmGridCoordinateType(fmModel, fmIsSpherical);
-            SetWaveGridCoordinateType(waveModel, waveIsSpherical);
-            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
-
-            //Both FM and Wave models have cartesian grids - OK!
-            SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
-            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
-            ValidateInconsistentGridTypeErrorInReport(hydroModel, 1);
-
-            //FM model has spherical grid and Wave model has cartesian grid -NOT OK!
-            SetFmGridCoordinateType(fmModel, fmIsSpherical = true);
-            SetWaveGridCoordinateType(waveModel, waveIsSpherical = false);
-            ValidateInconsistentGridTypeErrorInReport(hydroModel, 2);
-
-            //FM model has cartesian grid and Wave model has spherical grid -NOT OK!
-            SetFmGridCoordinateType(fmModel, fmIsSpherical = false);
-            SetWaveGridCoordinateType(waveModel, waveIsSpherical = true);
-            ValidateInconsistentGridTypeErrorInReport(hydroModel, 2);
-        }
-
-        private static void ValidateInconsistentGridTypeErrorInReport(HydroModel hydroModel, int expectedErrorCount)
-        {
-            var report = hydroModel.Validate();
-            Assert.AreEqual(expectedErrorCount, report.ErrorCount);
-
-            string expectedCategory1;
-            string expectedReportName1;
-            string expectedMsg1;
-
-            string expectedCategory2;
-            string expectedReportName2;
-            string expectedMsg2;
-
-
-            if (expectedErrorCount == 0)
+            // Arrange
+            using (var fmModel = new WaterFlowFMModel())
+            using (var waveModel = new WaveModel())
+            using (HydroModel hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All))
             {
-                Assert.That(expectedErrorCount > 0);
-            }
-            else if
-                (expectedErrorCount == 1)
-            {
-                expectedCategory1 = "Waves (Waves Model)";
-                expectedReportName1 = DeltaShell.Plugins.FMSuite.Wave.Properties.Resources.WavePropertiesValidator_Validate_Waves_Model_Properties;
-                expectedMsg1 = DeltaShell.Plugins.FMSuite.Wave.Properties.Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
+                PrepareValidFMWavesIntegratedModel(hydroModel, fmModel, waveModel);
+                SetFmGridCoordinateType(fmModel, fmIsSpherical);
+                SetWaveGridCoordinateType(waveModel, waveIsSpherical);
 
-                var generalReport1 = report.SubReports.FirstOrDefault(sr => sr.Category == expectedCategory1 && sr.ErrorCount == 1);
-                Assert.NotNull(generalReport1);
+                const string expectedMessage =
+                    "Wave model and FlowFM model, have grids with a different coordinate system . These coordinate systems have to be of the same type (Cartesian or spherical) to run the integrated model";
 
-                var subReport1 = generalReport1.SubReports.FirstOrDefault(sr => sr.Category == expectedReportName1 && sr.ErrorCount == 1);
-                Assert.NotNull(subReport1);
+                // Act
+                ValidationReport report = hydroModel.Validate();
 
-                var errorFound1 = subReport1.AllErrors.FirstOrDefault(err => err.Message == expectedMsg1);
-                Assert.NotNull(errorFound1);
-            }
-            else if
-                (expectedErrorCount == 2)
-            {
-                expectedCategory1 = "Waves (Waves Model)";
-                expectedReportName1 = DeltaShell.Plugins.FMSuite.Wave.Properties.Resources.WavePropertiesValidator_Validate_Waves_Model_Properties;
-                expectedMsg1 = DeltaShell.Plugins.FMSuite.Wave.Properties.Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_;
-
-                expectedCategory2 = Resources.HydroModelValidator_Validate_HydroModel_Specific;
-                expectedReportName2 = Resources.HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type;
-                expectedMsg2 = Resources.HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__;
-
-                var generalReport1 = report.SubReports.FirstOrDefault(sr => sr.Category == expectedCategory1 && sr.ErrorCount == 1);
-                Assert.NotNull(generalReport1);
-
-                var subReport1 = generalReport1.SubReports.FirstOrDefault(sr => sr.Category == expectedReportName1 && sr.ErrorCount == 1);
-                Assert.NotNull(subReport1);
-
-                var errorFound1 = subReport1.AllErrors.FirstOrDefault(err => err.Message == expectedMsg1);
-                Assert.NotNull(errorFound1);
-
-                var generalReport2 = report.SubReports.FirstOrDefault(sr => sr.Category == expectedCategory2 && sr.ErrorCount == 1);
-                Assert.NotNull(generalReport2);
-
-                var subReport2 = generalReport2.SubReports.FirstOrDefault(sr => sr.Category == expectedReportName2 && sr.ErrorCount == 1);
-                Assert.NotNull(subReport2);
-
-                var errorFound2 = subReport2.AllErrors.FirstOrDefault(err => err.Message == expectedMsg2);
-                Assert.NotNull(errorFound2);
+                // Assert
+                IEnumerable<ValidationIssue> errors = report.AllErrors.Where(error => error.Message == expectedMessage);
+                Assert.That(errors.Count(), Is.EqualTo(amountOfErrors));
             }
         }
 

@@ -8,109 +8,92 @@ using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
+    /// <summary>
+    /// Validator for the model definition properties of <see cref="WaveModel"/> instances.
+    /// </summary>
     public static class WavePropertiesValidator
     {
-        public static ValidationReport Validate(WaveModel model)
+        /// <summary>
+        /// Validates the properties of a <see cref="WaveModel"/>.
+        /// </summary>
+        /// <param name="waveModel"> The D-Waves model. </param>
+        /// <returns> A validation report with encountered issues. </returns>
+        public static ValidationReport Validate(WaveModel waveModel)
         {
             return new ValidationReport(Resources.WavePropertiesValidator_Validate_Waves_Model_Properties,
                                         new List<ValidationReport>
                                         {
-                                            ValidateTimeStepTimeInterval(model),
-                                            ValidateWindSpeedAndQuadruple(model)
+                                            new ValidationReport(KnownWaveCategories.GeneralCategory, GetTimeStepTimeIntervalValidationIssues(waveModel)),
+                                            new ValidationReport(KnownWaveCategories.ProcessesCategory, GetProcessesValidationIssues(waveModel))
                                         });
         }
 
-        private static ValidationReport ValidateTimeStepTimeInterval(WaveModel model)
+        private static IEnumerable<ValidationIssue> GetTimeStepTimeIntervalValidationIssues(WaveModel model)
         {
-            WaveModelProperty timeStepProperty = model.ModelDefinition.GetModelProperty(
-                KnownWaveCategories.GeneralCategory,
-                KnownWaveProperties.TimeStep);
-            var timeStep = (double) timeStepProperty.Value;
+            WaveModelProperty timeStepProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
+            var timeStep = (double)timeStepProperty.Value;
 
-            WaveModelProperty tScaleProperty = model.ModelDefinition.GetModelProperty(
-                KnownWaveCategories.GeneralCategory,
-                KnownWaveProperties.TimeScale);
-            var tScale = (double) tScaleProperty.Value;
+            WaveModelProperty tScaleProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale);
+            var tScale = (double)tScaleProperty.Value;
 
-            var issues = new List<ValidationIssue>();
 
             if (timeStep > tScale && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
-                                               Resources
-                                                   .WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale));
+                yield return new ValidationIssue(model, ValidationSeverity.Error,
+                                                 Resources.WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale);
             }
 
             if (tScale % timeStep >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
-                                               Resources.WavePropertiesValidator_ValidateDivisor));
+                yield return new ValidationIssue(model, ValidationSeverity.Error,
+                                                 Resources.WavePropertiesValidator_ValidateDivisor);
             }
 
             if (tScale % 1 >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                                               Resources.WavePropertiesValidator_ValidateTScale));
+                yield return new ValidationIssue(model, ValidationSeverity.Warning,
+                                                 Resources.WavePropertiesValidator_ValidateTScale);
             }
 
             if (timeStep % 1 >= 1e-10 && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
             {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                                               Resources.WavePropertiesValidator_ValidateTimeStep));
+                yield return new ValidationIssue(model, ValidationSeverity.Warning,
+                                                 Resources.WavePropertiesValidator_ValidateTimeStep);
             }
-
-            return new ValidationReport(KnownWaveCategories.GeneralCategory, issues);
         }
 
-        private static ValidationReport ValidateWindSpeedAndQuadruple(WaveModel waveModel)
+        private static IEnumerable<ValidationIssue> GetProcessesValidationIssues(WaveModel waveModel)
         {
-            bool windConstantSelected = waveModel.TimePointData.WindDataType == InputFieldDataType.Constant;
-            bool windTimeseriesSelected = waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying;
-
-            double windSpeedValueConstant = waveModel.TimePointData.WindSpeedConstant;
-            IVariable windSpeedValueTimeseries =
-                waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
-
-            var quadrupleSelected = false;
-            try
+            if (waveModel.ModelDefinition.DefaultWindUsage != UsageFromFlowType.DoNotUse)
             {
-                quadrupleSelected =
-                    Convert.ToBoolean(waveModel.ModelDefinition
-                                               .GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                                                                 KnownWaveProperties.Quadruplets).Value);
-            }
-            catch (Exception)
-            {
-                quadrupleSelected = false;
+                yield break;
             }
 
-            var issues = new List<ValidationIssue>();
+            IVariable windSpeedValueTimeSeries = waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
 
-            if (windConstantSelected && quadrupleSelected && Math.Abs(windSpeedValueConstant) <= double.Epsilon)
+            WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets);
+            bool quadrupletsSelected = Convert.ToBoolean(quadrupletsProperty.Value);
+
+            if (quadrupletsSelected)
             {
-                issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error,
-                                               Resources
-                                                   .WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
-            }
-            else if (windTimeseriesSelected && quadrupleSelected && windSpeedValueTimeseries != null)
-            {
-                foreach (object windSpeedValue in windSpeedValueTimeseries.Values)
+                if (waveModel.TimePointData.WindDataType == InputFieldDataType.Constant && Math.Abs(waveModel.TimePointData.WindSpeedConstant) <= double.Epsilon)
                 {
-                    if (Math.Abs((double) windSpeedValue) <= double.Epsilon)
+                    yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
+                                                     Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
+                }
+                else if (waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying && windSpeedValueTimeSeries != null)
+                {
+                    if (windSpeedValueTimeSeries.Values.Cast<double>().Any(windSpeedValue => Math.Abs(windSpeedValue) < double.Epsilon))
                     {
-                        issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error,
-                                                       Resources
-                                                           .WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_));
-                        break;
+                        yield return new ValidationIssue(waveModel, ValidationSeverity.Warning, 
+                                                         Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                     }
                 }
             }
-
-            return new ValidationReport(KnownWaveCategories.ProcessesCategory, issues);
         }
     }
 }
