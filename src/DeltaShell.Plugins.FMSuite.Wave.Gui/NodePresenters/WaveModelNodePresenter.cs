@@ -32,6 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string ObsCurveNodeName = "Observation Curves";
         private const string SpectralDomainName = "Spectral Domain";
 
+        private const string SpatiallyVariantBoundariesName = "Boundaries";
+
         private static readonly Bitmap AreaImage = Resources.area2d;
         private static readonly Bitmap TimePointImage = Resources.timers;
         private static readonly Bitmap BoundaryConditionsImage = Resources.boundary_folder;
@@ -45,6 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private static readonly Bitmap PhysicalParametersImage = Resources.folder_wrench;
 
         private static readonly Bitmap WaveImage = Wave.Properties.Resources.wave;
+
+        private static readonly Bitmap BoundariesImage = Resources.boundary_folder;
 
         private bool firstTimeCreate = true;
 
@@ -77,9 +81,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return model.OuterDomain;
             yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
                                                    ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(BoundaryFolderName, BoundaryConditionsImage, model,
-                                                   model.BoundaryConditions, ShortCutType.FeatureSet,
+
+            yield return new WaveModelTreeShortcut(BoundaryFolderName, 
+                                                   BoundaryConditionsImage, 
+                                                   model,
+                                                   model.BoundaryConditions, 
+                                                   ShortCutType.FeatureSet,
                                                    model.BoundaryConditions);
+
+            yield return new WaveModelTreeShortcut(SpatiallyVariantBoundariesName,
+                                                   BoundariesImage,
+                                                   model,
+                                                   model.BoundaryContainer.Boundaries,
+                                                   ShortCutType.FeatureSet,
+                                                   model.BoundaryContainer.Boundaries);
+
             yield return new WaveModelTreeShortcut(PhysicalProcessesName, ProcessesImage, model, PhysicalProcessesName);
             yield return new WaveModelTreeShortcut(NumericalParametersName, NumericsIcon, model,
                                                    NumericalParametersName);
