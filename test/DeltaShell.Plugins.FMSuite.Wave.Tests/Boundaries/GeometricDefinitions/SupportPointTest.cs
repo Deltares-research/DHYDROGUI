@@ -1,6 +1,7 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NUnit.Framework;
 using System;
+using NSubstitute;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 {
@@ -12,8 +13,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         [Test]
         public void Constructor_InvalidDistance_ThrowsArgumentOutOfRangeException()
         {
+            // Setup
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
             // Call
-            void Call() => new SupportPoint(random.NextDouble() * -1);
+            void Call() => new SupportPoint(random.NextDouble() * -1, geometricDefinition);
 
             // Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(Call);
@@ -21,16 +25,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         }
 
         [Test]
+        public void Constructor_GeometricDefinitionNull_ThrowsArgumentNullException()
+        {
+            // Setup
+
+            // Call
+            void Call() => new SupportPoint(random.NextDouble(), null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("geometricDefinition"));
+        }
+
+        [Test]
         public void Constructor_ExpectedValues()
         {
             // Setup
             double expectedDistance = random.NextDouble();
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
 
             // Call
-            var supportPoint = new SupportPoint(expectedDistance);
+            var supportPoint = new SupportPoint(expectedDistance, geometricDefinition);
 
             // Assert
             Assert.That(supportPoint.Distance, Is.EqualTo(expectedDistance));
+            Assert.That(supportPoint.GeometricDefinition, Is.SameAs(geometricDefinition));
         }
     }
 }

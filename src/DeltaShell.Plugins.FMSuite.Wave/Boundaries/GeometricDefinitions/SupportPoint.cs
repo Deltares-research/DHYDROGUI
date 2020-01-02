@@ -16,13 +16,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         public double Distance { get; }
 
         /// <summary>
+        /// Gets the geometric definition.
+        /// </summary>
+        /// <value>
+        /// The geometric definition.
+        /// </value>
+        public IWaveBoundaryGeometricDefinition GeometricDefinition { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SupportPoint"/> class.
         /// </summary>
         /// <param name="distance">The distance from the start index of the <see cref="IWaveBoundaryGeometricDefinition"/>.</param>
+        /// <param name="geometricDefinition">The geometric definition.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when <paramref name="distance"/> is smaller than 0.
         /// </exception>
-        public SupportPoint(double distance)
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="geometricDefinition"/> is <c>null</c>.
+        /// </exception>
+        public SupportPoint(double distance, IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             if (distance < 0)
             {
@@ -30,6 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             }
 
             Distance = distance;
+            GeometricDefinition = geometricDefinition ??
+                                  throw new ArgumentNullException(nameof(geometricDefinition));
         }
     }
 }
