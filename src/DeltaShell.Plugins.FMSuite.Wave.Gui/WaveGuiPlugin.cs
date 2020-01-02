@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
@@ -29,6 +25,11 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
@@ -183,8 +184,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
             yield return boundaryConditionViewInfo;
-            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, FindBoundaryConditionForFeature,
+            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, 
+                                                           FindBoundaryConditionForFeature,
                                                            IsModelBoundary);
+
+            // Spatially varying boundary editor
+            // This should be changed to the appropriate data context already.
+            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
+            {
+                Description = "Spatially Varying Boundary Editor",
+                GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
+                AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
+                CloseForData = (v, o) => v.Data.Equals(o)
+            };
+
+            yield return boundaryViewInfo;
 
             // obstacles
             var obstacleViewInfo = new ViewInfo<IEventedList<WaveObstacle>, WaveObstacleListView>()
@@ -374,7 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this};
+            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this}; // TODO: remove this
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
 
