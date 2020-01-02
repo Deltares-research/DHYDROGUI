@@ -148,6 +148,7 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Buttons\SelectComFileButton.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModel.cs" />
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml.cs">
       <DependentUpon>WaveBoundaryConditionEditorView.xaml</DependentUpon>
     </Compile>
@@ -386,6 +387,7 @@
     <Content Include="Resources\domain.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\" />
     <Folder Include="Editors\Buttons\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

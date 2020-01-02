@@ -233,6 +233,7 @@
     <Compile Include="Common\IO\Delft3DGridFileWriterTest.cs" />
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModelTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryLineFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryLineMapFeatureProviderTest.cs" />
