@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
@@ -190,15 +191,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // Spatially varying boundary editor
             // This should be changed to the appropriate data context already.
-            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
+            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorViewModel, WaveBoundaryConditionEditorView>()
             {
                 Description = "Spatially Varying Boundary Editor",
                 GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
+                GetViewData = data => new WaveBoundaryConditionEditorViewModel(data),
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
 
             yield return boundaryViewInfo;
+            // TODO: (MWT) add connection with  the map here as above.
 
             // obstacles
             var obstacleViewInfo = new ViewInfo<IEventedList<WaveObstacle>, WaveObstacleListView>()
