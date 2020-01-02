@@ -5,7 +5,7 @@ using System.Windows.Forms.Integration;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Geometries;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
@@ -16,18 +16,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
     /// </summary>
     public static class BoundaryGeometryPreviewWindowsFormsHostMap
     {
-        public static readonly DependencyProperty FeatureGeometryProperty = DependencyProperty.RegisterAttached("FeatureGeometry", typeof(Geometry), typeof(BoundaryGeometryPreviewWindowsFormsHostMap), new PropertyMetadata(PropertyChanged));
+        public static readonly DependencyProperty FeatureGeometryProperty = DependencyProperty.RegisterAttached("FeatureGeometry", typeof(IGeometry), typeof(BoundaryGeometryPreviewWindowsFormsHostMap), new PropertyMetadata(PropertyChanged));
         public static readonly DependencyProperty FeatureProperty = DependencyProperty.RegisterAttached("Feature", typeof(IFeature), typeof(BoundaryGeometryPreviewWindowsFormsHostMap), new PropertyMetadata(PropertyChanged));
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.RegisterAttached("SelectedIndex", typeof(int), typeof(BoundaryGeometryPreviewWindowsFormsHostMap), new PropertyMetadata(PropertyChanged));
 
-        public static void SetFeatureGeometry(DependencyObject element, Geometry value)
+        public static void SetFeatureGeometry(DependencyObject element, IGeometry value)
         {
             element.SetValue(FeatureGeometryProperty, value);
         }
 
-        public static Geometry GetFeatureGeometry(DependencyObject element)
+        public static IGeometry GetFeatureGeometry(DependencyObject element)
         {
-            return (Geometry)element.GetValue(FeatureGeometryProperty);
+            return (IGeometry)element.GetValue(FeatureGeometryProperty);
         }
 
         public static void SetSelectedIndex(DependencyObject element, int value)
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
             if (e.Property == FeatureGeometryProperty)
             {
-                var featureGeometry = (Geometry)e.NewValue;
+                var featureGeometry = (IGeometry)e.NewValue;
 
                 boundaryGeometryPreview.FeatureGeometry = featureGeometry;
 
