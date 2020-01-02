@@ -155,6 +155,9 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryDescriptionView.xaml.cs">
       <DependentUpon>BoundaryDescriptionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml.cs">
+      <DependentUpon>BoundaryGeometryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -373,6 +376,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryDescriptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
