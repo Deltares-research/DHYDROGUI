@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("getBoundaryContainerFunc"),
+            Assert.That(exception.ParamName, Is.EqualTo("getBoundaryContainerFunc"), 
                         "Expected a different ParamName:");
         }
 
@@ -100,6 +101,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters
 
             // Assert
             Assert.That(boundaries, Is.Empty);
+        }
+
+        [Test]
+        public void GetContextMenu_NodeDataNotIWaveBoundary_ReturnsNull()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            IBoundaryContainer GetBoundaryContainer(IWaveBoundary _) => boundaryContainer;
+
+            var nodePresenter = new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainer);
+
+            var sender = Substitute.For<ITreeNode>();
+            var someOtherData = new object();
+
+            // Call
+            IMenuItem result = nodePresenter.GetContextMenu(sender, someOtherData);
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetContextMenu_CorrectArgs_ReturnsValidContextMenu()
+        {
+            // Setup
+            var boundary = Substitute.For<IWaveBoundary>();
+
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            IBoundaryContainer GetBoundaryContainer(IWaveBoundary _) => boundaryContainer;
+            var nodePresenter = new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainer);
+
+            // Call
+            IMenuItem result = nodePresenter.GetContextMenu(null, boundary);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.EqualTo(1), 
+                        "Expected the number of elements in the Menu to be different:");
+
+
+            IMenuItem menuItem = result[0];
+
+            Assert.That(menuItem, Is.Not.Null, "Expected the MenuItem not to be null:");
+            Assert.That(menuItem.Text, Is.EqualTo("Delete"));
         }
     }
 }

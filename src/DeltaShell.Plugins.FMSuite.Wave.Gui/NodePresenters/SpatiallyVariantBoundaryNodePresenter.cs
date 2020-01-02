@@ -45,8 +45,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         [ExcludeFromCodeCoverage]
         protected override Image GetNodeImage(IWaveBoundary data) => boundaryImage;
-        protected override bool CanRemove(IWaveBoundary data) => true;
 
+        protected override bool CanRemove(IWaveBoundary data) => true;
+        
         protected override bool RemoveNodeData(object parentNodeData, IWaveBoundary data)
         {
             return OnDeleteBoundary(data);
@@ -58,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             {
                 return null;
             }
+
             IBoundaryContainer boundaryContainer = GetBoundaryContainer(waveBoundary);
 
             ContextMenuStrip contextMenu = GetDeleteContextMenu(waveBoundary, boundaryContainer);
