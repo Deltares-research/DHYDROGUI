@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.BoundaryDescriptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="400">
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Name:</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Text="Boundary" Margin="2" />
+
+        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Forcing Type:</TextBlock>
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="2" VerticalContentAlignment="Center">
+            <ComboBoxItem IsSelected="True">Parametrized (Constant)</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Spatial Definition:</TextBlock>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="2" VerticalContentAlignment="Center">
+            <ComboBoxItem IsSelected="True">Uniform</ComboBoxItem>
+        </ComboBox>
+    </Grid>
+</UserControl>
