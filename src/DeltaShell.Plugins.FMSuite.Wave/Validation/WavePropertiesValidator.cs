@@ -85,13 +85,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
                                                      Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                 }
-                else if (waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying && windSpeedValueTimeSeries != null)
+                else if (waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying && 
+                         windSpeedValueTimeSeries != null && 
+                         windSpeedValueTimeSeries.Values.Cast<double>()
+                                                        .Any(windSpeedValue => Math.Abs(windSpeedValue) < double.Epsilon))
                 {
-                    if (windSpeedValueTimeSeries.Values.Cast<double>().Any(windSpeedValue => Math.Abs(windSpeedValue) < double.Epsilon))
-                    {
-                        yield return new ValidationIssue(waveModel, ValidationSeverity.Warning, 
-                                                         Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
-                    }
+                    yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
+                                                     Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                 }
             }
         }

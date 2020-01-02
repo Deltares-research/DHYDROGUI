@@ -95,15 +95,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private void DomainsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             WaveDomainData waveDomainData = sender as WaveDomainData;
-            if (waveDomainData != null)
+            if (waveDomainData != null && e.PropertyName == nameof(WaveDomainData.SuperDomain) &&
+                DomainSpecificDataViewModelsList.All(vm => vm.DomainName != waveDomainData.SuperDomain.Name))
             {
-                if (e.PropertyName == nameof(WaveDomainData.SuperDomain))
-                {
-                    if (DomainSpecificDataViewModelsList.All(vm => vm.DomainName != waveDomainData.SuperDomain.Name))
-                    {
-                        RootDomain = waveDomainData.SuperDomain;
-                    }
-                }
+                RootDomain = waveDomainData.SuperDomain;
             }
         }
 

@@ -23,49 +23,67 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             string comFilePath = model.ModelDefinition.CommunicationsFilePath;
             if (model.IsCoupledToFlow)
             {
-                if (!model.WriteCOM || string.IsNullOrEmpty(comFilePath))
-                {
-                    issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
-                                                   Resources
-                                                       .WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file,
-                                                   model));
-                }
-
-                issues.AddRange(model.ValidateModelTimeSettings());
+                ValidateOnlineCoupledWavesModel(model, comFilePath, issues);
             }
             else
             {
-                if (!string.IsNullOrEmpty(comFilePath))
-                {
-                    string absoluteComFilePath;
-                    if (FileUtils.PathIsRelative(comFilePath))
-                    {
-                        string modelDirectoryPath = Directory.GetParent(model.MdwFilePath).FullName;
-                        absoluteComFilePath = Path.GetFullPath(Path.Combine(modelDirectoryPath, comFilePath));
-                    }
-                    else
-                    {
-                        absoluteComFilePath = comFilePath;
-                    }
-
-                    if (!File.Exists(absoluteComFilePath))
-                    {
-                        issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
-                                                       string.Format(Resources.WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_,
-                                                                     comFilePath)));
-                    }
-                }
-                
-                if (model.WriteCOM)
-                {
-                    issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
-                                                   Resources
-                                                       .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file,
-                                                   model));
-                }
+                ValidateStandAloneWavesModel(model, comFilePath, issues);
             }
 
             return new ValidationReport("Flow coupling", issues);
+        }
+
+        private static void ValidateOnlineCoupledWavesModel(WaveModel model, string comFilePath, List<ValidationIssue> issues)
+        {
+            if (!model.WriteCOM || string.IsNullOrEmpty(comFilePath))
+            {
+                issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
+                                               Resources
+                                                   .WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file,
+                                               model));
+            }
+
+            issues.AddRange(model.ValidateModelTimeSettings());
+        }
+
+        private static void ValidateStandAloneWavesModel(WaveModel model, string comFilePath, List<ValidationIssue> issues)
+        {
+            if (!string.IsNullOrEmpty(comFilePath))
+            {
+                ValidateStandAloneWavesModelWithComFile(model, comFilePath, issues);
+            }
+
+            if (model.WriteCOM)
+            {
+                issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
+                                               Resources
+                                                   .WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file,
+                                               model));
+            }
+        }
+
+        private static void ValidateStandAloneWavesModelWithComFile(WaveModel model, string comFilePath,
+                                                                    List<ValidationIssue> issues)
+        {
+            string absoluteComFilePath;
+            if (FileUtils.PathIsRelative(comFilePath))
+            {
+                string modelDirectoryPath = Directory.GetParent(model.MdwFilePath).FullName;
+                absoluteComFilePath = Path.GetFullPath(Path.Combine(modelDirectoryPath, comFilePath));
+            }
+            else
+            {
+                absoluteComFilePath = comFilePath;
+            }
+
+            if (!File.Exists(absoluteComFilePath))
+            {
+                issues.Add(new ValidationIssue("Coupling", ValidationSeverity.Error,
+                                               string.Format(Resources
+                                                                 .WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_,
+                                                             comFilePath)));
+
+            }
         }
 
         private static IEnumerable<ValidationIssue> ValidateModelTimeSettings(this WaveModel model)
