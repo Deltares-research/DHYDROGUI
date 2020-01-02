@@ -148,6 +148,9 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Buttons\SelectComFileButton.cs" />
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml.cs">
+      <DependentUpon>WaveBoundaryConditionEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -361,6 +364,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ribbon\Ribbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
