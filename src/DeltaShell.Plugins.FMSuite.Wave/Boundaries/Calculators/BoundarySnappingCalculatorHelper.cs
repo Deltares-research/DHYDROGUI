@@ -72,5 +72,51 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                      double.IsInfinity(coordinate.X) ||
                      double.IsInfinity(coordinate.Y));
         }
+
+        /// <summary>
+        /// Calculates the coordinate corresponding with the <paramref name="distance"/>
+        /// on the line segments defined by the <paramref name="coordinates"/> starting
+        /// from the first coordinate.
+        /// </summary>
+        /// <param name="distance">The distance.</param>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <param name="distanceCalculator">The distance calculator.</param>
+        /// <returns>
+        ///  The coordinate at the specified <paramref name="distance"/>.
+        /// </returns>
+        internal static Coordinate CalculateCoordinateFromDistance(double distance, Coordinate[] coordinates,
+                                                                   IDistanceCalculator distanceCalculator)
+        {
+            for (var i = 0; i < coordinates.Length - 1; i++)
+            {
+                Coordinate startCoordinate = coordinates[i];
+                Coordinate endCoordinate = coordinates[i + 1];
+
+                double distanceBetweenCoordinates = distanceCalculator.CalculateDistance(startCoordinate,
+                                                                                         endCoordinate);
+
+                if (distance > distanceBetweenCoordinates)
+                {
+                    distance -= distanceBetweenCoordinates;
+                }
+
+                else
+                {
+                    double CalculateCoordinate(double start, double end)
+                    {
+                        double difference = end - start;
+                        double normalized = difference / distanceBetweenCoordinates;
+                        return start + (normalized * distance);
+                    }
+
+                    double x = CalculateCoordinate(startCoordinate.X, endCoordinate.X);
+                    double y = CalculateCoordinate(startCoordinate.Y, endCoordinate.Y);
+
+                    return new Coordinate(x, y);
+                }
+            }
+
+            throw new InvalidOperationException("Distance exceeds total distance between coordinates.");
+        }
     }
 }

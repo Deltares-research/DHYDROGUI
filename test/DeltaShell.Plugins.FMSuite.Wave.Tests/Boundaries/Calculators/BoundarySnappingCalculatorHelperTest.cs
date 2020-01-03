@@ -12,6 +12,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     public class BoundarySnappingCalculatorHelperTest
     {
         private readonly Random random = new Random();
+        private IDistanceCalculator distanceCalculator;
+
+        [SetUp]
+        public void Setup()
+        {
+            distanceCalculator = Substitute.For<IDistanceCalculator>();
+        }
 
         [Test]
         [TestCaseSource(nameof(CoordinateTestData))]
@@ -49,7 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void GivenAnEmptySetOfCoordinates_WhenFindClosestIndicesIsCalled_ThenAnEmptySetAndPosInfIsReturned()
         {
             // Setup
-            var distanceCalculator = Substitute.For<IDistanceCalculator>();
             var coordinates = new List<Coordinate>();
             var coordinateRef = new Coordinate(0.0, 0.0);
 
@@ -73,7 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void GivenASetOfCoordinatesAndASourceCoordinate_WhenFindClosestIndicesIsCalled_ThenTheClosestIndexIsReturned()
         {
             // Setup
-            var distanceCalculator = Substitute.For<IDistanceCalculator>();
             var coordinateRef = new Coordinate(0.0, 0.0);
 
             IList<Coordinate> coordinates = GetRandomCoordinates(5);
@@ -88,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 1.0
             };
 
-            SetUpDistances(distanceCalculator, coordinateRef, coordinates, expectedDistances);
+            SetUpDistances(coordinateRef, coordinates, expectedDistances);
 
             // Call
             Tuple<IEnumerable<int>, double> result = 
@@ -112,7 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         public void GivenASetOfCoordinatesContainingEqualDistancesToASourceCoordinate_WhenFindClosestIndicesIsCalled_ThenTheClosestSetOfCoordinatesIsReturned()
         {
             // Setup
-            var distanceCalculator = Substitute.For<IDistanceCalculator>();
             var coordinateRef = new Coordinate(0.0, 0.0);
 
             IList<Coordinate> coordinates = GetRandomCoordinates(6);
@@ -128,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 1.0
             };
 
-            SetUpDistances(distanceCalculator, coordinateRef, coordinates, expectedDistances);
+            SetUpDistances(coordinateRef, coordinates, expectedDistances);
 
             // Call
             Tuple<IEnumerable<int>, double> result = 
@@ -150,6 +154,74 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                         "Expected the second returned index to be different:");
         }
 
+        [Test]
+        public void GivenASetOfCoordinatesAndADistanceEqualToTheDistancesBetweenTheCoordinates_WhenCalculateCoordinateFromDistanceIsCalled_ThenCorrectResultIsReturned()
+        {
+            // Setup
+            int index = random.Next(9);
+            double distanceBetweenCoordinates = random.NextDouble();
+            double distance = distanceBetweenCoordinates * index;
+
+            Coordinate[] coordinates = GetRandomCoordinates(10).ToArray();
+            SetUpDistancesBetweenCoordinates(coordinates, distanceBetweenCoordinates);
+
+            // Call
+            Coordinate result = BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance,
+                                                                                                 coordinates,
+                                                                                                 distanceCalculator);
+
+            // Assert
+            Assert.That(result.Equals2D(coordinates[index], 1E-15), $"Expected: {coordinates[index]} \n" +
+                                                                    $"But was:  {result}.");
+        }
+
+        [Test]
+        public void
+            GivenASetOfCoordinatesAndAValidDistance_WhenCalculateCoordinateFromDistanceIsCalled_ThenCorrectResultIsReturned()
+        {
+            // Setup
+            int index = random.Next(9);
+            double distanceBetweenCoordinates = random.NextDouble();
+            double distanceFromLastCoordinate = distanceBetweenCoordinates * random.NextDouble();
+            double distance = (distanceBetweenCoordinates * index) + distanceFromLastCoordinate;
+
+            Coordinate[] coordinates = GetRandomCoordinates(10).ToArray();
+            SetUpDistancesBetweenCoordinates(coordinates, distanceBetweenCoordinates);
+
+            // Call
+            Coordinate result = BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance,
+                                                                                                 coordinates,
+                                                                                                 distanceCalculator);
+
+            // Assert
+            Coordinate expectedCoordinate = GetExpectedCoordinate(distanceBetweenCoordinates,
+                                                                  distanceFromLastCoordinate,
+                                                                  coordinates,
+                                                                  index);
+
+            Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
+                                                                    $"But was:  {result}.");
+        }
+
+        [Test]
+        public void GivenASetOfCoordinatesAndADistanceThatExceedsTheTotalDistance_WhenCalculateCoordinateFromDistanceIsCalled_ThenInvalidOperationExceptionIsThrown()
+        {
+            // Setup
+            double distanceBetweenCoordinates = random.NextDouble();
+            double distance = distanceBetweenCoordinates * 10;
+
+            Coordinate[] coordinates = GetRandomCoordinates(10).ToArray();
+            SetUpDistancesBetweenCoordinates(coordinates, distanceBetweenCoordinates);
+
+            // Call
+            void Call() => BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance,
+                                                                                            coordinates,
+                                                                                            distanceCalculator);
+
+            // Assert
+            Assert.That(Call, Throws.TypeOf<InvalidOperationException>()
+                                    .With.Message.EqualTo("Distance exceeds total distance between coordinates."));
+        }
 
         private IList<Coordinate> GetRandomCoordinates(int numberOfCoordinates)
         {
@@ -163,8 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             return result;
         }
 
-        private void SetUpDistances(IDistanceCalculator distanceCalculator,
-                                    Coordinate coordinateRef,
+        private void SetUpDistances(Coordinate coordinateRef,
                                     IList<Coordinate> coordinates,
                                     IList<double> distances)
         {
@@ -173,6 +244,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 distanceCalculator.CalculateDistance(coordinateRef, coordinates[i]).Returns(distances[i]);
                 distanceCalculator.CalculateDistance(coordinates[i], coordinateRef).Returns(distances[i]);
             }
+        }
+
+        private void SetUpDistancesBetweenCoordinates(Coordinate[] coordinates,
+                                                      double distance)
+        {
+            for (var i = 0; i < coordinates.Length - 1; i++)
+            {
+                distanceCalculator.CalculateDistance(coordinates[i], coordinates[i + 1]).Returns(distance);
+            }
+        }
+
+        private static Coordinate GetExpectedCoordinate(double distanceBetweenCoordinates,
+                                                        double distanceFromLastCoordinate,
+                                                        Coordinate[] coordinates,
+                                                        int index)
+        {
+            double GetExpectedValue(double start, double end)
+            {
+                double difference = end - start;
+                double normalized = difference / distanceBetweenCoordinates;
+                return start + (normalized * distanceFromLastCoordinate);
+            }
+
+            double expectedX = GetExpectedValue(coordinates[index].X, coordinates[index + 1].X);
+            double expectedY = GetExpectedValue(coordinates[index].Y, coordinates[index + 1].Y);
+
+            return new Coordinate(expectedX, expectedY);
         }
     }
 }
