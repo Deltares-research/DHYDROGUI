@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ICoupledModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";

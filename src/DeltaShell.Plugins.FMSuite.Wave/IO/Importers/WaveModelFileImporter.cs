@@ -58,7 +58,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 var targetWaveModel = target as WaveModel;
                 if (targetWaveModel != null)
                 {
-                    importedWaveModel.IsCoupledToFlow = targetWaveModel.IsCoupledToFlow;
                     IProjectItem parent = targetWaveModel.Owner();
 
                     //add / replace the Wave Model in the project
@@ -73,11 +72,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     var compositeActivity = parent as ICompositeActivity;
                     if (compositeActivity != null)
                     {
-                        importedWaveModel.IsCoupledToFlow = true;
                         importedWaveModel.MoveModelIntoIntegratedModel(null, compositeActivity);
                         return compositeActivity;
                     }
-
                     return ShouldCancel ? null : importedWaveModel;
                 }
 
@@ -85,12 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 var hydroModel = target as ICompositeActivity;
                 if (hydroModel != null)
                 {
-                    importedWaveModel.IsCoupledToFlow = true;
                     importedWaveModel.MoveModelIntoIntegratedModel(null, hydroModel);
                     return hydroModel;
                 }
-
-                importedWaveModel.IsCoupledToFlow = false;
                 return ShouldCancel ? null : importedWaveModel;
             }
             catch (Exception e)

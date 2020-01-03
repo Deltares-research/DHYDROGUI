@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
@@ -21,7 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Substitute.For<IGui>());
 
             // Act
-            waveModel.IsCoupledToFlow = coupledToFlow;
+            if (coupledToFlow)
+            {
+                waveModel.Owner = Substitute.For<ICompositeActivity>();
+            }
 
             // Assert
             WpfGuiProperty comFileProperty = wpfGuiCategories.SelectMany(c => c.Properties)

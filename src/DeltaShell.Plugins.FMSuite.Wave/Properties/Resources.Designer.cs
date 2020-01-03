@@ -221,20 +221,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Communications file &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_ {
+            get {
+                return ResourceManager.GetString("WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coupled wave model must use COM-file.
         /// </summary>
         public static string WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file {
             get {
                 return ResourceManager.GetString("WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stand-alone wave model cannot use {0}.
-        /// </summary>
-        public static string WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_ {
-            get {
-                return ResourceManager.GetString("WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_", resourceCulture);
             }
         }
         
@@ -293,15 +293,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveDomainValidator_ValidateAllDomainsShareCoordinateSystem_WaveSetup_should_be_f" +
                         "alse_when_using_Spherical_Coordinate_Systems_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ../dflowfm/output/{0}_com.nc.
-        /// </summary>
-        public static string WaveModel_IsCoupledToFlow___ComFileRelativePath {
-            get {
-                return ResourceManager.GetString("WaveModel_IsCoupledToFlow___ComFileRelativePath", resourceCulture);
             }
         }
         
@@ -413,10 +404,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Wind speed should be greater than zero when the option of quadruplets is activated..
         /// </summary>
-        public static string WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_ {
+        public static string WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_ {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_q" +
-                        "uadruple_is_true_", resourceCulture);
+                        "uadruplets_is_activated_", resourceCulture);
             }
         }
         

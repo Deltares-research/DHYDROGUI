@@ -29,7 +29,6 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 {
     [TestFixture]
-    [Category(TestCategory.DataAccess)]
     [Category(TestCategory.Integration)]
     [Category(TestCategory.Slow)]
     public class WaterQualityModelNHibernateIntegrationTest
@@ -271,7 +270,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         [TestCase(false)]
         [TestCase(true)]
-        [Category(TestCategory.Integration)]
         public void GivenAProjectWithAModelAndOutput_WhenOpeningThisProjectAndClosingWithOrWithoutClearModelOutput_TheOutputFilesShouldNotBeRemoved(bool performClearModelOutput)
         {
             // Setup
@@ -299,8 +297,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 // Open
                 app.OpenProject(savedProjectPath);
-                
-                // 
+
+                // Optionally, clear model output
                 if (performClearModelOutput)
                 {
                     model.ClearOutput();
@@ -309,10 +307,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 // Close
                 app.CloseProject();
 
-                string errormessage = performClearModelOutput
+                string errorMessage = performClearModelOutput
                                        ? "After opening, clear model output and closing a project, all output files that were saved in the project should still be there"
                                        : "After opening and closing a project, all output files that were saved in the project should still be there";
-                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath), errormessage);
+                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath), errorMessage);
             }
         }
 

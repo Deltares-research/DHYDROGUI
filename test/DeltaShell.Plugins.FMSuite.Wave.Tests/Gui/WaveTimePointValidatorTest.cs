@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
@@ -24,8 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void GivenWaveModelWithNoTimePointsDefinedAndNotCoupledToFlow_WhenValidating_ThenValidationErrorIsGiven()
         {
-            waveModel.IsCoupledToFlow = false;
-
             var validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void GivenWaveModelWithNoTimePointsDefinedAndCoupledToFlow_WhenValidating_ThenValidationErrorIsNotGiven()
         {
-            waveModel.IsCoupledToFlow = true;
+            waveModel.Owner = Substitute.For<ICompositeActivity>();
 
             var validationReport = WaveTimePointValidator.Validate(waveModel);
 

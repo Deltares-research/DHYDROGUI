@@ -194,11 +194,11 @@ class HydroModelBuilder(object):
             self.auto_add_required_model_links(model, activity, False)
 
     def links_from_wave_to_flowfm(self, wave, fm, remove=False):
-        if remove:
-            wave.IsCoupledToFlow = False
+        if remove:           
+            wave.ModelDefinition.CommunicationsFilePath = ""
         else:
-            fm.SetWaveForcing()
-            wave.IsCoupledToFlow = True
+            fm.SetWaveForcing()            
+            wave.ModelDefinition.CommunicationsFilePath = '../dflowfm/output/%s_com.nc'%(fm.Name)
 
     def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):
         # query first region
@@ -208,24 +208,27 @@ class HydroModelBuilder(object):
         rtc = None
         if rtcPlugin.loaded:
             rtc = self.get_first_by_type(model.Activities, RealTimeControlModel)
-            
+        
         fm = None
         if fmPlugin.loaded:
             fm = self.get_first_by_type(model.Activities, WaterFlowFMModel)
-
+        
         wave = None
         if wavePlugin.loaded:
             wave = self.get_first_by_type(model.Activities, WaveModel)
-
+        
         if updateRegions:
             if fm and fm == child and not area:
                 area = HydroArea(Name="Area")
                 model.Region.SubRegions.Add(area)
-
+            
             # fm area
             if fm and fm == child:
                 fm.GetDataItemByValue(fm.Area).LinkTo(model.GetDataItemByValue(area), relinking)
-
+        
         # wave added and fm already or v.v.
         if wave and fm and (wave == child or fm == child):
             self.links_from_wave_to_flowfm(wave, fm)
+        
+        if(wave and wave == child and not fm):
+            wave.ModelDefinition.CommunicationsFilePath = ""

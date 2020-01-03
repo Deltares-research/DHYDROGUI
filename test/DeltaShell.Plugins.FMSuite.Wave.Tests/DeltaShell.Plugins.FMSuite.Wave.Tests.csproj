@@ -245,8 +245,21 @@
     <Compile Include="Gui\FeatureProviders\Boundaries\SupportPointFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\MultiIEventedListAdapterTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\EnumToDescriptionConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\WindInputTypeToBooleanConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\WindInputTypeToVisibilityConverterTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\DirectionalSpaceSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\DomainSpecificSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\MainDomainSpecificDataViewModelTest.cs" />
     <Compile Include="Gui\Editors\WaveBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\Editors\WaveModelViewWPFTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterTypeTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\VelocityTypeTest.cs" />
     <Compile Include="Gui\Layers\WaveLayerFactoryTest.cs" />
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
     <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
@@ -264,6 +277,8 @@
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
     <Compile Include="Gui\WaveSettingsHelperTest.cs" />
     <Compile Include="Gui\WaveTimePointEditorTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindInputTypeTest.cs" />
+    <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModelTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
@@ -304,6 +319,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
