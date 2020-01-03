@@ -359,26 +359,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         [Test]
-        public void ClearOutput_ThenOutputFolderIsSetToNull()
+        public void ClearOutput_ThenOutputFolderPathIsSetToNull()
         {
             // Setup
             using (var model = new WaterQualityModel())
             {
                 model.OutputFolder = new FileBasedFolder("path");
-                model.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output));
 
                 // This field should be false when clearing model output.
                 TypeUtils.SetField(model, "outputIsEmpty", false);
-
-                Assert.IsTrue(model.DataItems.Any(di => di.Value is TextDocument && di.Role == DataItemRole.Output),
-                              "Model output should be connected after model run");
 
                 // Call
                 model.ClearOutput();
 
                 // Assert
                 Assert.That(model.OutputFolder.Path, Is.Null);
-                Assert.IsFalse(model.DataItems.Any(di => di.Value is TextDocument && di.Role == DataItemRole.Output),
+            }
+        }
+
+        [Test]
+        public void ClearOutput_ThenOutputShouldBeDisconnected()
+        {
+            // Setup
+            using (var model = new WaterQualityModel())
+            {
+                model.OutputFolder = new FileBasedFolder("path");
+                var dataItem = new DataItem(new TextDocument(), DataItemRole.Output);
+                model.DataItems.Add(dataItem);
+
+                // This field should be false when clearing model output.
+                TypeUtils.SetField(model, "outputIsEmpty", false);
+
+                // Call
+                model.ClearOutput();
+
+                // Assert
+                Assert.IsFalse(model.DataItems.Contains(dataItem),
                                "Model output should be disconnected after model clear output");
             }
         }

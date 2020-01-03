@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -226,6 +228,117 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Check_RunningWaterQualityModelTwice_OutputFilesAreNotDuplicated()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
+            {
+                //First run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+                CheckDataItems(model);
+
+                //Second run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+                CheckDataItems(model);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Check_RunningWaterQualityModelTwice_ThenSeparateOutputFileContentsReferToTheirOwnRun()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
+            {
+                //First run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+
+                List<string> contentFirstRun = RetrieveRunContent(model);
+
+                //Second run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+
+                List<string> contentSecondRun = RetrieveRunContent(model);
+
+                for (var i = 0; i < contentFirstRun.Count; i++)
+                {
+                    int startIndex = contentFirstRun[i].IndexOf("Execution start", StringComparison.OrdinalIgnoreCase);
+                    string content1 = contentFirstRun[i].Substring(startIndex + 17, 19);
+                    string content2 = contentSecondRun[i].Substring(startIndex + 17, 19);
+
+                    Assert.AreNotEqual(content1, content2);
+                }
+            }
+        }
+
+        private static WaterQualityModel CreateWesternScheldtModel(string tempDirectory)
+        {
+            var waqModel = new WaterQualityModel();
+
+            string originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
+            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(tempDirectory), string.Empty);
+
+            string hydFilePath = Path.Combine(tempDirectory, "flow-model", "westernscheldt01.hyd");
+            string subFilePath = Path.Combine(tempDirectory, "waq", "sub-files", "bacteria.sub");
+            string boundaryConditionsFilePath = Path.Combine(tempDirectory, "waq", "boundary-conditions", "bacteria.csv");
+
+            new HydFileImporter().ImportItem(hydFilePath, waqModel);
+            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
+            new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
+
+            return waqModel;
+        }
+
+        private static void CheckDataItems(WaterQualityModel waqModel)
+        {
+            //Check data items
+            IList<string> dataItemTags = GetDataItemTags(waqModel);
+
+            string[] expectedDataItemTags =
+            {
+                WaterQualityModel.ListFileDataItemMetaData.Tag,
+                WaterQualityModel.ProcessFileDataItemMetaData.Tag,
+                WaterQualityModel.MonitoringFileDataItemMetaData.Tag
+            };
+
+            foreach (string expectedTag in expectedDataItemTags)
+            {
+                Assert.IsTrue(dataItemTags.Any(t => t == expectedTag),
+                              $"DataItem with tag {expectedTag} not found in dataItems {string.Join(", ", dataItemTags)}");
+            }
+        }
+
+        private static IList<string> GetDataItemTags(WaterQualityModel waqModel)
+        {
+            List<IDataItem> dataItems = waqModel.DataItems.Where(di => di.Role == DataItemRole.Output
+                                                                       && di.ValueType == typeof(TextDocument)).ToList();
+            Assert.IsTrue(dataItems.Any());
+            Assert.AreEqual(3, dataItems.Count);
+            return dataItems.Select(di => di.Tag).ToList();
+        }
+
+        private static List<string> RetrieveRunContent(WaterQualityModel model)
+        {
+            var content = new List<string>
+            {
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ListFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ProcessFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.MonitoringFileDataItemMetaData.Tag)
+                                .Value).Content
+            };
+            return content;
+        }
         private IEnumerable<string> GetAllFilesPaths(string directory)
         {
             return new DirectoryInfo(directory).GetFiles().Select(f => f.FullName);

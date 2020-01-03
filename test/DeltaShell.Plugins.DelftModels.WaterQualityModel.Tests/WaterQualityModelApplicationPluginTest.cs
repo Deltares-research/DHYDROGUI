@@ -154,25 +154,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void Check_When_RunningTwice_WaqModel_OutputFiles_AreNot_Duplicated()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
-            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
-            {
-                //First run
-                ActivityRunner.RunActivity(model);
-                CheckDataItems(model);
-
-                //Second run
-                ActivityRunner.RunActivity(model);
-                CheckDataItems(model);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
         public void Check_When_RunningTwice_WaqModel_OutputFiles_And_Saving_TheFilesArePersisted()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -181,6 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 //First run
                 ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
 
                 //save the project
                 app.SaveProject();
@@ -189,46 +171,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 ActivityRunner.RunActivity(model);
                 CheckDataItems(model);
             }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void Check_When_RunningTwice_WaqModel_OutputFiles_AreConnectedToLastRun()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = GetRunningApplication(tempDirectory.Path))
-            using (WaterQualityModel model = GetWesternscheldtModelInApplication(tempDirectory.Path, app))
-            {
-                //First run
-                ActivityRunner.RunActivity(model);
-
-                List<string> contentFirstRun = RetrieveRunContent(model);
-
-                //Second run
-                ActivityRunner.RunActivity(model);
-
-                List<string> contentSecondRun = RetrieveRunContent(model);
-
-                Assert.AreNotEqual(contentFirstRun, contentSecondRun);
-            }
-        }
-
-        private static List<string> RetrieveRunContent(WaterQualityModel model)
-        {
-            var content = new List<string>
-            {
-                ((TextDocument) model
-                                .DataItems.Single(di => di.Tag == WaterQualityModel.ListFileDataItemMetaData.Tag)
-                                .Value).Content,
-                ((TextDocument) model
-                                .DataItems.Single(di => di.Tag == WaterQualityModel.ProcessFileDataItemMetaData.Tag)
-                                .Value).Content,
-                ((TextDocument) model
-                                .DataItems.Single(di => di.Tag == WaterQualityModel.MonitoringFileDataItemMetaData.Tag)
-                                .Value).Content
-            };
-            return content;
         }
 
         [Test]
@@ -427,7 +369,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Application_ProjectSaveFinished_WhenOutputFolderIsNull_ShouldDeleteAllDisconnectedOutputInPersistentFolder()
+        public void AfterProjectSave_WhenOutputFolderIsNull_ApplicationShouldDeleteAllDisconnectedOutputInPersistentFolder()
         {
             // Arrange
             using (var tempDirectory = new TemporaryDirectory())
@@ -442,10 +384,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 application.SaveProjectAs(savePath);
 
                 string persistentOutputFolder = model.ModelSettings.OutputDirectory;
-
-                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
-
-                AddFiles(persistentOutputFolder);
+                
+                CreateDirectoryAndAddFiles(persistentOutputFolder);
                 
                 // Act
                 application.SaveProjectAs(savePath);
@@ -458,7 +398,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Application_ProjectSaveFinished_WhenOutputFolderPathIsNull_ShouldDeleteAllDisconnectedOutputInPersistentFolder()
+        public void AfterProjectSave_WhenOutputFolderPathIsNull_ApplicationShouldDeleteAllDisconnectedOutputInPersistentFolder()
         {
             //Arrange
             using (var tempDirectory = new TemporaryDirectory())
@@ -473,10 +413,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 application.SaveProjectAs(savePath);
 
                 string persistentOutputFolder = model.ModelSettings.OutputDirectory;
-
-                Assert.IsFalse(Directory.Exists(persistentOutputFolder));
-
-                AddFiles(persistentOutputFolder);
+                
+                CreateDirectoryAndAddFiles(persistentOutputFolder);
                 model.OutputFolder = new FileBasedFolder();
 
                 // Act
@@ -489,13 +427,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        private static void AddFiles(string persistentOutputFolder)
+        private static void CreateDirectoryAndAddFiles(string persistentOutputFolder)
         {
             FileUtils.CreateDirectoryIfNotExists(persistentOutputFolder);
             File.WriteAllText(Path.Combine(persistentOutputFolder, "testfile"), "");
             Directory.CreateDirectory(Path.Combine(persistentOutputFolder, "testdirectory"));
-
-            Assert.IsTrue(Directory.Exists(persistentOutputFolder));
         }
 
         private static WaterQualityModelApplicationPlugin SetupWaterQualityApplicationPlugin(
