@@ -47,5 +47,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// </remarks>
         IEnumerable<GridBoundaryCoordinate> SnapCoordinateToGridBoundaryCoordinate(Coordinate coordinateToSnap,
                                                                                    double? tolerance = null);
+
+        /// <summary>
+        /// Gets the coordinate at the given <see cref="distance"/> from
+        /// the start of the <see cref="IWaveBoundaryGeometricDefinition"/>.
+        /// </summary>
+        /// <param name="distance">The distance.</param>
+        /// <param name="gridSide">The grid side.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="distance"/> is smaller than 0.
+        /// </exception>
+        /// <returns>
+        /// The coordinate at the given <paramref name="distance"/>.
+        /// </returns>
+        Coordinate CalculateCoordinateFromDistance(double distance, GridSide gridSide);
     }
 }

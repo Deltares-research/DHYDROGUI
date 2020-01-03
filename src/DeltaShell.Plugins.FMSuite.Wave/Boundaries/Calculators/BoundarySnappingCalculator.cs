@@ -59,5 +59,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
             return closestIndices.Item1.Select(i => gridEnvelope[i]);
         }
+
+        public Coordinate CalculateCoordinateFromDistance(double distance, GridSide gridSide)
+        {
+            if (distance < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(distance),
+                                                      @"Distance cannot be smaller than 0");
+            }
+
+            Coordinate[] coordinates = GridBoundary[gridSide]
+                                       .Select(x => GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(x))
+                                       .ToArray();
+
+            return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance, coordinates, DistanceCalculator);
+        }
     }
 }
