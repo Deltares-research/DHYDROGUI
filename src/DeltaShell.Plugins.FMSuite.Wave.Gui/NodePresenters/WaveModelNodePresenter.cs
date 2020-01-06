@@ -126,28 +126,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         {
             IMenuItem menu = base.GetContextMenu(sender, nodeData);
 
-            var waveModel = nodeData as WaveModel;
-            if (waveModel == null)
+            var model = nodeData as WaveModel;
+            if (model == null)
             {
                 return menu;
             }
 
-            if (waveModel.IsCoupledToFlow && menu is MenuItemContextMenuStripAdapter menuAdapter)
-            {
-                DisableRunModelButton(menuAdapter);
-            }
-
             var contextMenu = new ContextMenuStrip();
 
-            if (waveModel.CoordinateSystem != null)
+            if (model.CoordinateSystem != null)
             {
-                contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(waveModel));
-                contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(waveModel, Gui));
+                contextMenu.Items.Add(FMMenuItemHelper.CreateResetCoordinateSystemItem(model));
+                contextMenu.Items.Add(FMMenuItemHelper.CreateCoordinateTransformItem(model, Gui));
                 contextMenu.Items.Add(new ToolStripSeparator());
             }
 
-            contextMenu.Items.Add(CreateWpfSettingsMenuItem(waveModel));
-            contextMenu.Items.Add(CreateValidationMenuItem(waveModel));
+            contextMenu.Items.Add(CreateWpfSettingsMenuItem(model));
+            contextMenu.Items.Add(CreateValidationMenuItem(model));
 
             var waveMenu = new MenuItemContextMenuStripAdapter(contextMenu);
             if (menu == null)
@@ -171,19 +166,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             }
 
             return menu;
-        }
-
-        private static void DisableRunModelButton(MenuItemContextMenuStripAdapter menuAdapter)
-        {
-            ToolStripItem runModelButton = menuAdapter.ContextMenuStrip
-                                                      .Items
-                                                      .OfType<ToolStripItem>()
-                                                      .FirstOrDefault(item => item.Name == "buttonModelStart");
-
-            if (runModelButton != null)
-            {
-                runModelButton.Enabled = false;
-            }
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)
