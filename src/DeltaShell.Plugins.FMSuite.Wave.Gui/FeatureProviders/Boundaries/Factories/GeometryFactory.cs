@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -16,18 +17,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
     public class GeometryFactory : IGeometryFactory
     {
         private readonly IGridBoundaryProvider gridBoundaryProvider;
+        private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
 
         /// <summary>
         /// Creates a new of the <see cref="GeometryFactory"/>.
         /// </summary>
         /// <param name="gridBoundaryProvider">The grid boundary provider.</param>
+        /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="gridBoundaryProvider"/> is <c>null</c>.
+        /// Throw when any parameter is <c>null</c>.
         /// </exception>
-        public GeometryFactory(IGridBoundaryProvider gridBoundaryProvider)
+        public GeometryFactory(IGridBoundaryProvider gridBoundaryProvider,
+                               IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
         {
             this.gridBoundaryProvider = gridBoundaryProvider ?? 
                                         throw new ArgumentNullException(nameof(gridBoundaryProvider));
+            this.snappingCalculatorProvider = snappingCalculatorProvider ??
+                                              throw new ArgumentNullException(nameof(snappingCalculatorProvider));
         }
 
         public ILineString ConstructBoundaryLineGeometry(IWaveBoundary waveBoundary)
@@ -83,6 +89,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                 new Point(firstCoordinate),
                 new Point(lastCoordinate),
             };
+        }
+
+        public IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint)
+        {
+            if (supportPoint == null)
+            {
+                throw new ArgumentNullException(nameof(supportPoint));
+            }
+
+            IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
+            Coordinate coordinate = calculator.CalculateCoordinateFromDistance(supportPoint.Distance,
+                                                                               supportPoint.GeometricDefinition.GridSide);
+
+            return new Point(coordinate);
         }
 
         private Coordinate GetCoordinate(int index, GridSide side, IGridBoundary boundary)

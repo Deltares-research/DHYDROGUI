@@ -20,8 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         public void Constructor_GridBoundaryProviderNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+
             // Call
-            void Call() => new GeometryFactory(null);
+            void Call() => new GeometryFactory(null, calculatorProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -29,14 +32,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
+        public void Constructor_BoundarySnappingCalculatorProviderNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+
+            // Call
+            void Call() => new GeometryFactory(gridBoundaryProvider, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("snappingCalculatorProvider"));
+        }
+
+        [Test]
         public void ConstructBoundaryLineGeometry_GridBoundaryNull_ReturnsNull()
         {
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -52,10 +70,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
             void Call() => factory.ConstructBoundaryLineGeometry(null);
@@ -71,11 +90,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // TODO: (MWT) make this neat
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             var gridBoundary = Substitute.For<IGridBoundary>();
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
 
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var gridSide = random.NextEnumValue<GridSide>();
             const int expectedStartingIndex = 3;
@@ -120,10 +140,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
             void Call() => factory.ConstructBoundaryEndPoints(null);
@@ -138,10 +159,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -158,10 +180,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             var gridBoundary = Substitute.For<IGridBoundary>();
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider);
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -201,6 +224,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                         "Expected the last points coordinate to be equal to the expected coordinate.");
             gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[firstIndex]);
             gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[lastIndex]);
+        }
+
+        [Test]
+        public void ConstructBoundarySupportPoint_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            // Call
+
+            void Call() => factory.ConstructBoundarySupportPoint(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void ConstructBoundarySupportPoint_ReturnsCorrectPoint()
+        {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+
+            double distance = random.NextDouble();
+            var gridSide = random.NextEnumValue<GridSide>();
+
+            SupportPoint supportPoint = CreateSupportPoint(gridSide, distance);
+
+            double x = random.NextDouble();
+            double y = random.NextDouble();
+
+            var snappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
+            calculatorProvider.GetBoundarySnappingCalculator().Returns(snappingCalculator);
+            snappingCalculator.CalculateCoordinateFromDistance(distance, gridSide).Returns(new Coordinate(x, y));
+
+            // Call
+            IPoint point = factory.ConstructBoundarySupportPoint(supportPoint);
+
+            // Assert
+            Assert.That(point.X, Is.EqualTo(x).Within(1E-15));
+            Assert.That(point.Y, Is.EqualTo(y).Within(1E-15));
+        }
+
+        private static SupportPoint CreateSupportPoint(GridSide gridSide, double distance)
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.GridSide.Returns(gridSide);
+
+            return new SupportPoint(distance, geometricDefinition);
         }
     }
 }

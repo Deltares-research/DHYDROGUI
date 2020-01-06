@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
@@ -42,5 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
         IEnumerable<IPoint> ConstructBoundaryEndPoints(IWaveBoundary waveBoundary);
+
+        /// <summary>
+        /// Constructs the boundary support point geometry from the given <paramref name="supportPoint"/>.
+        /// </summary>
+        /// <param name="supportPoint">The support point.</param>
+        /// <returns>The point geometry of the support point.</returns>
+        /// <exception
+        /// cref="ArgumentNullException">Thrown when <paramref name="supportPoint" /> is <c>null</c>.
+        /// </exception>
+        IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint);
     }
 }
