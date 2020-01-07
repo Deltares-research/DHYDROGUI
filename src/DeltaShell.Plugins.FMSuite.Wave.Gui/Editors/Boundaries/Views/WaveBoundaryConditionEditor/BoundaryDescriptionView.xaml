@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Name:</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Text="Boundary" Margin="2" />
+        <TextBox Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Text="{ Binding Path=Name }" Margin="2" />
 
         <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Forcing Type:</TextBlock>
         <ComboBox Grid.Row="1" Grid.Column="1" Margin="2" VerticalContentAlignment="Center">

@@ -147,6 +147,7 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverter.cs" />
     <Compile Include="Buttons\SelectComFileButton.cs" />
@@ -464,7 +465,6 @@
     <Content Include="Resources\domain.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\" />
     <Folder Include="Editors\Buttons\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
