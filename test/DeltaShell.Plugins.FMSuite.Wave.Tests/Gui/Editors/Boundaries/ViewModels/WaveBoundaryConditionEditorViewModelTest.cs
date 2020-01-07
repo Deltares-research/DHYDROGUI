@@ -20,7 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new WaveBoundaryConditionEditorViewModel(boundary);
 
             // Assert
-            Assert.That(viewModel.Name, Is.EqualTo(boundary.Name), "Expected a different Name:");
+            Assert.That(viewModel.Name, Is.EqualTo(boundary.Name), 
+                        "Expected a different Name:");
+            Assert.That(viewModel.DescriptionViewModel, Is.Not.Null,
+                        "Expected DescriptionViewModel to be set.");
         }
 
         [Test]
