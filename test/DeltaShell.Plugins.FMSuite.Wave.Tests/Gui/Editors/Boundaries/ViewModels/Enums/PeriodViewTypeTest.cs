@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Enums;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.Enums
