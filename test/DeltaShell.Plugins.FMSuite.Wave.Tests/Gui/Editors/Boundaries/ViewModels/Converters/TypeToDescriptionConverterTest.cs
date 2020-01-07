@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Converters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 using NUnit.Framework;
@@ -60,7 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Given
             var converter = new TypeToDescriptionConverter();
-            var otherInput = new object();
 
             // When
             object result = converter.Convert(typeof(GaussViewShape), typeof(IViewShape), null, CultureInfo.InvariantCulture);
@@ -73,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void ConvertBack_ThrowsNotSupportedException()
         {
             // Call | Assert
-            void Call() => (new TypeToDescriptionConverter()).ConvertBack(typeof(GaussShape), typeof(string), null, CultureInfo.InvariantCulture);
+            void Call() => (new TypeToDescriptionConverter()).ConvertBack(typeof(GaussViewShape), typeof(string), null, CultureInfo.InvariantCulture);
             Assert.Throws<NotSupportedException>(Call);
         }
     }
