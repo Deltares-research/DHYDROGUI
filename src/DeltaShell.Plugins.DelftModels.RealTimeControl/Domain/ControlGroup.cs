@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -9,9 +8,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Feature;
-using log4net;
 using NetTopologySuite.Extensions.Features.Generic;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -23,34 +20,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         public ControlGroup()
         {
-            Name = "Control Group";
+            Name = String.Empty;
             Conditions = new EventedList<ConditionBase>();
             Rules = new EventedList<RuleBase>();
             Inputs = new EventedList<Input>();
             Outputs = new EventedList<Output>();
             Signals = new EventedList<SignalBase>();
         }
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroup));
-        private string name;
-
-        public string Name
-        {
-            get { return name; }
-            set
-            {
-                string pattern = "^[A-Za-z0-9 _-]*$";
-                if (Regex.IsMatch(value, pattern) && !string.IsNullOrWhiteSpace(value))
-                {
-                    name = value;
-                }
-                else
-                {
-                    Log.ErrorFormat($"Error changing the {nameof(Name)} property. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.");
-                }
-                
-            }
-        }
+        
+        public string Name { get; set; }
         
         public IEventedList<RuleBase> Rules { get; set; }
         public IEventedList<ConditionBase> Conditions { get; set; }
