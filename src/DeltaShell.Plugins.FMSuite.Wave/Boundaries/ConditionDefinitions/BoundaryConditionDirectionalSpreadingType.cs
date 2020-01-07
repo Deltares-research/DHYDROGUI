@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
     /// <see cref="BoundaryConditionDirectionalSpreadingType"/> defines the
@@ -8,10 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
     /// </summary>
     public enum BoundaryConditionDirectionalSpreadingType
     {
-        [Description("Power")]
         Power = 1,
-
-        [Description("Degrees")]
         Degrees = 2,
     }
 }
