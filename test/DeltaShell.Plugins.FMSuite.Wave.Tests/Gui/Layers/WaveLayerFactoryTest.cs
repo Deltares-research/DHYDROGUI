@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
@@ -422,7 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             var solidBrush = vectorLayer.Style.Fill as SolidBrush;
             Assert.That(solidBrush, Is.Not.Null);
-            Assert.That(solidBrush.Color.ToArgb(), Is.EqualTo(Color.FromArgb(14, 187, 240).ToArgb()));
+            Assert.That(solidBrush.Color.Equals(DeltaresColor.LightBlue));
         }
     }
 }

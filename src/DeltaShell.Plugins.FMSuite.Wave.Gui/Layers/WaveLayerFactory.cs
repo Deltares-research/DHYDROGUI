@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -378,7 +379,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 FeatureEditor = new Feature2DEditor(model),
                 Style = new VectorStyle
                 {
-                    Fill = new SolidBrush(Color.FromArgb(14, 187, 240)),
+                    Fill = new SolidBrush(DeltaresColor.LightBlue),
                     GeometryType = typeof(IPoint)
                 }
             };
