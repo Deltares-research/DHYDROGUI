@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var compartmentName = compartmentIdAttribute.GetValidStringValue();
             if (compartmentName == null)
             {
-                Log.WarnFormat(Resources.SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name, "Compartment", gwswElement.GetElementLine());
+                Log.WarnFormat(GWSW.Properties.Resources.SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name, "Compartment", gwswElement.GetElementLine());
             }
 
             return new T { Name = compartmentName };

@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 return attribute;
 
             var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
-            Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
+            Log.WarnFormat(GWSW.Properties.Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
             return null;
         }
 
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
             catch (Exception)
             {
-                Log.WarnFormat(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, description);
+                Log.WarnFormat(GWSW.Properties.Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, description);
             }
 
             return default(T);
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (gwswAttribute.GwswAttributeType == null) return;
 
             var attributeType = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
+            Log.ErrorFormat(GWSW.Properties.Resources.GwswElementExtensions_LogInvalidAttribute_File__0___line__1___Column__2____3___contains_invalid_value___4___and_will_not_be_imported_
                 , attributeType.FileName, gwswAttribute.LineNumber, attributeType.LocalKey, attributeType.Key, gwswAttribute.ValueAsString);
         }
 
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         private static void LogErrorParseType(this GwswAttribute gwswAttribute, Type toType)
         {
             var attr = gwswAttribute.GwswAttributeType;
-            Log.ErrorFormat(Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__
+            Log.ErrorFormat(GWSW.Properties.Resources.GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__
                 , attr.FileName, gwswAttribute.LineNumber, attr.ElementName, attr.Name, gwswAttribute.ValueAsString, attr.AttributeType, toType);
         }
     }

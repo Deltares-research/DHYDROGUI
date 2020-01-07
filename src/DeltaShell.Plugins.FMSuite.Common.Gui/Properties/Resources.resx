@@ -274,15 +274,6 @@
   <data name="FMMenuItemHelper_CreateResetCoordinateSystemItem_Reset_Coordinate_System___" xml:space="preserve">
     <value>Reset Coordinate System...</value>
   </data>
-  <data name="GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imported__Path___1_" xml:space="preserve">
-    <value>Definition file {0} could not be imported, Path: {1}</value>
-  </data>
-  <data name="GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__was_imported_correctly__Path___1_" xml:space="preserve">
-    <value>Definition file {0} was imported correctly. Path: {1}</value>
-  </data>
-  <data name="GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_correctly__Path___1_" xml:space="preserve">
-    <value>Feature file {0} added to the list correctly. Path: {1}</value>
-  </data>
   <data name="HBoundary" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\HBoundary.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

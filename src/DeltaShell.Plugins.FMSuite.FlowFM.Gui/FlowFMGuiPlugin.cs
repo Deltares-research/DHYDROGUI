@@ -41,7 +41,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -355,13 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         v.EnableSolverSelection = false;
                     }
                 };
-            yield return new ViewInfo<GwswFileImporter, GwswImportDialog>
-            {
-                AfterCreate = (v, i) =>
-                {
-                    v.ViewModel.Model = Gui.SelectedModel as WaterFlowFMModel;
-                }
-            };
+            
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Embankment, Embankment>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, Embankment>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();

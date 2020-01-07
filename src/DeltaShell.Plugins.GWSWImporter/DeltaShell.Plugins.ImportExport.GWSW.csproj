@@ -34,6 +34,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BasicModelInterface">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
@@ -41,6 +53,10 @@
     <Reference Include="DelftTools.Shell.Core, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
@@ -83,8 +99,14 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -92,7 +114,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchCrossSectionDefinitionGenerator.cs" />
@@ -108,11 +133,29 @@
     <Compile Include="GwswElementExtensions.cs" />
     <Compile Include="GwswFileImporter.cs" />
     <Compile Include="GWSWImporterApplicationPlugin.cs" />
+    <Compile Include="GWSWImporterGuiPlugin.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswConnectionOrifice.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswConnectionPump.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswConnectionWeir.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswPointOutletCompartment.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswStructureOutletCompartment.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswStructurePump.cs" />
+    <Compile Include="Hydro\SewerFeatures\GwswStructureWeir.cs" />
     <Compile Include="InvertedEggCrossSectionShapeGenerator.cs" />
     <Compile Include="ISewerFeatureGenerator.cs" />
     <Compile Include="ManholeMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="RectangleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="SewerCompartmentGenerator.cs" />
     <Compile Include="SewerConnectionGenerator.cs" />
@@ -128,10 +171,28 @@
     <Compile Include="SewerWeirGenerator.cs" />
     <Compile Include="TrapezoidCrossSectionDefinitionGenerator.cs" />
     <Compile Include="UShapeCrossSectionShapeGenerator.cs" />
+    <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
+    <Compile Include="ViewModels\GwswFeatureViewItem.cs" />
+    <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
+    <Compile Include="Views\DelimeterSelector.xaml.cs">
+      <DependentUpon>DelimeterSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GwswImportDialog.xaml.cs">
+      <DependentUpon>GwswImportDialog.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\GWSWDefinition.csv" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -171,6 +232,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\DelimeterSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GwswImportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

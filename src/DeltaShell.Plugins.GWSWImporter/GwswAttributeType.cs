@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             catch (Exception)
             {
                 Log.ErrorFormat(
-                    Resources
+                    GWSW.Properties.Resources
                         .GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_,
                     name, lineNumber, fileName);
             }

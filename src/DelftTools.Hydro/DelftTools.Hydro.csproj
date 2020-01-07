@@ -224,9 +224,6 @@
     <Compile Include="Roughness\RoughnessSection.cs" />
     <Compile Include="Roughness\RoughnessSectionChangeBranchFunction.cs" />
     <Compile Include="Roughness\RoughnessSectionExtensions.cs" />
-    <Compile Include="SewerFeatures\GwswPointOutletCompartment.cs" />
-    <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
-    <Compile Include="SewerFeatures\GwswConnectionPump.cs" />
     <Compile Include="HydroNetwork351LegacyLoader.cs" />
     <Compile Include="HydroNetworkExtensions.cs" />
     <Compile Include="IGroupableFeature.cs" />
@@ -240,9 +237,6 @@
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionSpecialConnectionType.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
-    <Compile Include="SewerFeatures\GwswStructureOutletCompartment.cs" />
-    <Compile Include="SewerFeatures\GwswStructurePump.cs" />
-    <Compile Include="SewerFeatures\GwswStructureWeir.cs" />
     <Compile Include="Structure2DType.cs" />
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
@@ -347,7 +341,6 @@
     <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\LeveeBreachFormula\UserDefinedBreachSettings.cs" />
     <Compile Include="Structures\LeveeBreachFormula\VerheijVdKnaap2002BreachSettings.cs" />
-    <Compile Include="SewerFeatures\GwswConnectionWeir.cs" />
     <Compile Include="Structures\SewerFactory.cs" />
     <Compile Include="Structures\SewerProfileMapping.cs" />
     <Compile Include="Structures\Weir.cs" />

@@ -1,0 +1,292 @@
+﻿using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.ImportExport.Gwsw;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
+{
+    [TestFixture]
+    public class SewerCompartmentGeneratorTest: SewerFeatureFactoryTestHelper
+    {
+        #region Manhole
+
+        [Test]
+        public void GivenSimpleManholeData_WhenCreatingWithFactory_ThenManholeIsCorrectlyReturned()
+        {
+            #region expectedVariables
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var manholeLength = 7071;
+            var manholeWidth = 7071;
+            var compartmentShape = CompartmentShape.Square;
+            var compartmentShapeAsString = compartmentShape.GetDescription();
+            var nodeType = string.Empty;
+            var floodableArea = 45.67;
+            var bottomLevel = 0.01;
+            var surfaceLevel = 2.75;
+            var xCoordinate = 400.0;
+            var yCoordinate = 50.0;
+            var numberOfParentManholeCompartments = 1;
+            #endregion
+
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
+            var compartment = CreateSewerFeature<Compartment>(nodeGwswElement);
+            Assert.IsNotNull(compartment);
+
+            // Check Compartment properties
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel);
+        }
+
+        [Test]
+        public void GivenSimpleGwswCompartmentWithManholeIdAndNoNetwork_WhenCreatingWithGenerator_ThenManholeWithNewCoordinatesIsGiven()
+        {
+            #region expectedVariables
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var manholeLength = 7071;
+            var manholeWidth = 7071;
+            var compartmentShape = CompartmentShape.Square;
+            var compartmentShapeAsString = compartmentShape.GetDescription();
+            var nodeType = string.Empty;
+            var floodableArea = 45.67;
+            var bottomLevel = 0.01;
+            var surfaceLevel = 2.75;
+            var xCoordinate = 400.0;
+            var yCoordinate = 50.0;
+            var numberOfParentManholeCompartments = 1;
+            #endregion
+
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
+            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            Assert.IsNotNull(compartment);
+            
+            // Check Properties
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel);
+        }
+
+        [Test]
+        public void GivenSimpleGwswCompartmentWithManholeIdNetworkAndExistingManhole_WhenCreatingWithGenerator_NewCoordinatesOfAverageCompartmentsIsGiven()
+        {
+            #region expectedVariables
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var manholeLength = 7071;
+            var manholeWidth = 7071;
+            var compartmentShape = CompartmentShape.Square;
+            var compartmentShapeAsString = compartmentShape.GetDescription();
+            var nodeType = string.Empty;
+            var floodableArea = 45.67;
+            var bottomLevel = 0.01;
+            var surfaceLevel = 2.75;
+            var xCoordinate = 400.0;
+            var yCoordinate = 50.0;
+            var numberOfParentManholeCompartments = 1;
+            #endregion
+
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
+
+            var network = new HydroNetwork();
+            var existingXCoord = 5;
+            var existingYCoord = 3;
+            network.Nodes.Add(new Manhole(manholeId){Geometry = new Point(existingXCoord,existingYCoord)});
+            
+            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            Assert.IsNotNull(compartment);
+
+            // Check Compartment properties
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel);
+        }
+
+        [Test]
+        public void GivenSimpleGwswCompartmentWithManholeIdAndNetworkWithoutExistingManhole_WhenCreatingWithGenerator_ThenManholeWithNewCoordinatesIsGiven()
+        {
+            #region expectedVariables
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var manholeLength = 7071;
+            var manholeWidth = 7071;
+            var compartmentShape = CompartmentShape.Square;
+            var compartmentShapeAsString = compartmentShape.GetDescription();
+            var nodeType = string.Empty;
+            var floodableArea = 45.67;
+            var bottomLevel = 0.01;
+            var surfaceLevel = 2.75;
+            var xCoordinate = 400.0;
+            var yCoordinate = 50.0;
+            var numberOfParentManholeCompartments = 1;
+            #endregion
+
+            var nodeGwswElement = GetNodeGwswElement(uniqueId, manholeId, nodeType, xCoordinate, yCoordinate, manholeLength, manholeWidth, compartmentShapeAsString, floodableArea, bottomLevel, surfaceLevel);
+            
+            var compartment = new SewerCompartmentGenerator().Generate(nodeGwswElement) as Compartment;
+            Assert.IsNotNull(compartment);
+
+            // Check Compartment properties
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, manholeLength, manholeWidth, compartmentShape, floodableArea, bottomLevel, surfaceLevel);
+        }
+
+        [Test]
+        public void GivenCompartmentGwswElementWithOnlyUniqueIdAndManholeIdDefined_WhenCreatingCompartment_ThenDefaultValuesAreGivenToCompartmentProperties()
+        {
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var gwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty)
+                }
+            };
+
+            var compartment = CreateSewerFeature<Compartment>(gwswElement);
+        
+            Assert.IsNotNull(compartment);
+            Assert.IsNotNull(compartment.ParentManholeName);
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0, 0, CompartmentShape.Unknown, 0.0, 0.0, 0.0);
+        }
+
+        [Test]
+        public void GivenGwswElementWithBadlyFormattedStringForShape_WhenCreatingWithFactory_ThenLogMessageIsShownAndDefaultShapeIsAssigned()
+        {
+            var compartmentId = "put1";
+            var manholeId = "01001";
+            var unknownShapeValue = "UnkownValue";
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, compartmentId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.NodeShape, unknownShapeValue, string.Empty)
+                }
+            };
+
+            var expectedLogMsg = string.Format(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, unknownShapeValue);
+            var compartment = TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedLogMsg);
+            Assert.AreEqual(default(CompartmentShape), compartment.Shape);
+        }
+
+        [TestCase("01FA", ManholeMapping.PropertyKeys.NodeWidth)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.NodeLength)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.FloodableArea)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.BottomLevel)]
+        [TestCase("01FA", ManholeMapping.PropertyKeys.SurfaceLevel)]
+        public void GivenGwswElementWithBadlyFormattedStringForDoubleValue_WhenCreatingWithFactory_ThenLogMessageIsShownAndNullValueIsReturned(string badlyFormattedEntry, string keyValue)
+        {
+            var compartmentId = "put1";
+            var manholeId = "01001";
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, compartmentId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(keyValue, badlyFormattedEntry, string.Empty)
+                }
+            };
+            var expectedPartOfMessage = "It was not possible to parse attribute";
+            TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedPartOfMessage);
+        }
+
+        [Test]
+        public void GivenCompartmentGwswElementWithMissingUniqueId_WhenGeneratingCompartment_ThenLogMessageIsShownAndCompartmentWithParentManholeIdIsReturned()
+        {
+            var manholeId = "01001";
+            var lineNumber = 2;
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    new GwswAttribute
+                    {
+                        LineNumber = lineNumber,
+                        ValueAsString = manholeId,
+                        GwswAttributeType = GetGwswAttributeType("Knooppunt.csv", 0, "MyColumnName", "string",
+                            ManholeMapping.PropertyKeys.ManholeId, "MyDescription",  null, null, null)
+                    }
+                }
+            };
+
+            var compartment = GenerateCompartmentAndCheckForLogMessages(badGwswElement, "Compartment", lineNumber, string.Empty);
+            Assert.IsNotNull(compartment.ParentManholeName);
+        }
+
+        [Test]
+        public void GivenGwswElementWithMissingCompartmentIdAndManholeId_WhenGeneratingSewerCompartment_ThenLogMessageAreShown()
+        {
+            var badGwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString()
+            };
+
+            GenerateCompartmentAndCheckForLogMessages(badGwswElement, "Compartment", 0, string.Empty);
+        }
+
+        [TestCase(ManholeMapping.PropertyKeys.NodeLength)]
+        [TestCase(ManholeMapping.PropertyKeys.NodeWidth)]
+        [TestCase(ManholeMapping.PropertyKeys.FloodableArea)]
+        [TestCase(ManholeMapping.PropertyKeys.BottomLevel)]
+        [TestCase(ManholeMapping.PropertyKeys.SurfaceLevel)]
+        [TestCase(ManholeMapping.PropertyKeys.NodeShape)]
+        public void GivenGwswElementWithEmptyValue_WhenCreatingWithFactory_ThenDefaultValuesAreGivenToTheCorrespondingCompartmentProperty(string manholePropertyKey)
+        {
+            var uniqueId = "put1";
+            var manholeId = "01001";
+            var gwswElement = new GwswElement
+            {
+                ElementTypeName = SewerFeatureType.Node.ToString(),
+                GwswAttributeList =
+                {
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.UniqueId, uniqueId, string.Empty),
+                    GetDefaultGwswAttribute(ManholeMapping.PropertyKeys.ManholeId, manholeId, string.Empty),
+                    GetDefaultGwswAttribute(manholePropertyKey, string.Empty, string.Empty)
+                }
+            };
+
+            var compartment = CreateSewerFeature<Compartment>(gwswElement);
+            Assert.IsNotNull(compartment);
+            Assert.IsNotNull(compartment.ParentManholeName);
+
+            CheckCompartmentPropertyValues(compartment, uniqueId, manholeId, 0.0, 0.0, CompartmentShape.Unknown, 0.0, 0.0, 0.0);
+        }
+
+        private static Compartment GenerateCompartmentAndCheckForLogMessages(GwswElement badGwswElement, string componentType, int lineNumber, string newName)
+        {
+            Compartment compartment = null;
+            var message =
+                string.Format(
+                    Resources
+                        .SewerCompartmentGenerator_FindOrGetNewCompartment__0__in_line__1__does_not_have_a_name_and_will_be_added_to_the_network_with_a_unique_name,
+                    componentType, lineNumber, newName);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => compartment = new SewerCompartmentGenerator().Generate(badGwswElement) as Compartment, message);
+            Assert.IsNotNull(compartment);
+            
+            return compartment;
+        }
+
+        #endregion
+
+        private static Compartment TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(string manholeId, GwswElement badGwswElement, string compartmentId, string expectedMsg)
+        {
+            Compartment compartment = null;
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => compartment = CreateSewerFeature<Compartment>(badGwswElement),
+                expectedMsg);
+            
+            Assert.IsNotNull(compartment);
+            Assert.That(compartment.Name, Is.EqualTo(compartmentId));
+            Assert.That(compartment.ParentManholeName, Is.EqualTo(manholeId));
+
+            return compartment;
+        }
+    }
+}

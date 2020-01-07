@@ -338,21 +338,10 @@
     <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemNodePresenter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Ribbon\ImportBedlevelFromFileCommand.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />
     <Compile Include="Ribbon\RibbonViewModel1D2D.cs" />
     <Compile Include="Ribbon\RibbonViewModelRegion.cs" />
-    <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
-    <Compile Include="ViewModels\GwswFeatureViewItem.cs" />
-    <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
-    <Compile Include="Views\GwswImportDialog.xaml.cs">
-      <DependentUpon>GwswImportDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\RemoveBoundaryPointDialog.cs" />
     <Compile Include="Forms\DataImportPointsListBox.cs">
       <SubType>Component</SubType>
@@ -396,9 +385,6 @@
       <DependentUpon>WindFieldListView.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\TracerDefinitionsEditorWpfViewModel.cs" />
-    <Compile Include="Views\DelimeterSelector.xaml.cs">
-      <DependentUpon>DelimeterSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WaterFlowFM1D2DLinkFeatureCollection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -421,10 +407,6 @@
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
-      <Project>{F456B556-D969-4768-9E3F-F151A387071B}</Project>
-      <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
       <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
@@ -530,12 +512,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Resources\unstruc.png" />
   </ItemGroup>
   <ItemGroup>
@@ -645,17 +622,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GwswImportDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Ribbon\Ribbon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DelimeterSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup />

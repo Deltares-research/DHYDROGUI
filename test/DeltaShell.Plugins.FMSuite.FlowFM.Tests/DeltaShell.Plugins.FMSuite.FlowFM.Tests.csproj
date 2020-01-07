@@ -154,6 +154,7 @@
     </Reference>
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
@@ -169,6 +170,7 @@
     </Reference>
     <Reference Include="Nini">
       <HintPath>.\Nini.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=2.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.7.0\lib\nunit.framework.dll</HintPath>
@@ -225,7 +227,6 @@
     <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
     <Compile Include="IO\WaterFlowFMModelReadAndWriteTestBenchTests.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
-    <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="Api\Grid1d2dTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
@@ -272,8 +273,6 @@
     <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
     <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\MapTools\MapTool1D2DLinksHelperTests.cs" />
-    <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
-    <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
@@ -326,8 +325,6 @@
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\PlizFileImporterExporterTest.cs" />
@@ -360,17 +357,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Layers\UnstructuredGridVertexCoverageLayerTest.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="SewerCompartmentGeneratorTest.cs" />
-    <Compile Include="SewerCompartmentOutletTest.cs" />
-    <Compile Include="SewerConnectionGeneratorTest.cs" />
-    <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
-    <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
-    <Compile Include="SewerCrossSectionDefinitionGeneratorTest.cs" />
-    <Compile Include="SewerFeatureFactoryTest.cs" />
-    <Compile Include="SewerFeatureFactoryTestHelper.cs" />
-    <Compile Include="SewerProfileDefinitionGenerationTest.cs" />
-    <Compile Include="SewerPumpGeneratorTest.cs" />
-    <Compile Include="SewerWeirGeneratorTest.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />

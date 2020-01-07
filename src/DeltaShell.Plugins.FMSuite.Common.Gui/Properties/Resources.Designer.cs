@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -359,36 +359,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("gradient", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Feature file {0} added to the list correctly. Path: {1}.
-        /// </summary>
-        public static string GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_correctly__Path___1_ {
-            get {
-                return ResourceManager.GetString("GwswImportDialogViewModel_AddFeatureFile_Feature_file__0__added_to_the_list_corre" +
-                        "ctly__Path___1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Definition file {0} could not be imported, Path: {1}.
-        /// </summary>
-        public static string GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imported__Path___1_ {
-            get {
-                return ResourceManager.GetString("GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__could_not_be_imp" +
-                        "orted__Path___1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Definition file {0} was imported correctly. Path: {1}.
-        /// </summary>
-        public static string GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__was_imported_correctly__Path___1_ {
-            get {
-                return ResourceManager.GetString("GwswImportDialogViewModel_LoadDefinitionFile_Definition_file__0__was_imported_cor" +
-                        "rectly__Path___1_", resourceCulture);
             }
         }
         
