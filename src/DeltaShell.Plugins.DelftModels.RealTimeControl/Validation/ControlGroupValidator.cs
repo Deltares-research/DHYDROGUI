@@ -93,6 +93,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 issues.Add(new ValidationIssue(controlGroup, ValidationSeverity.Error, "Control Group requires at least 1 output"));
             }
 
+            foreach (Output output in controlGroup.Outputs)
+            {
+                IList<RtcBaseObject> startObjects = ControlGroupHelper.StartObjectsForOutput(controlGroup, output);
+                if (startObjects.Count > 1)
+                {
+                    string names = string.Join(", ", startObjects.Select(s => s.Name));
+                    issues.Add(new ValidationIssue(controlGroup, ValidationSeverity.Warning,
+                                                   string.Format(
+                                                       Resources.ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1,
+                                                       output.Name, names)));
+                }
+            }
+
             // PostSharp validation:
             var result = controlGroup.Validate();
             if (!result.IsValid)

@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -10,6 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
     [TestFixture]
     public class MorphologyFileBackwardsCompatibilityHelperTest
     {
+        private readonly Random random = new Random();
+
         /// <summary>
         /// GIVEN a property Name for which a mapping exists
         /// WHEN GetUpdatedPropertyName is called
@@ -94,5 +97,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 
         }
 
+        [Test]
+        [TestCase("EqmBc",     true)]
+        [TestCase("eqmbc",     true)]
+        [TestCase("EQMBC",     true)]
+        [TestCase("NeuBcSand", true)]
+        [TestCase("neubcsand", true)]
+        [TestCase("NEUBCSAND", true)]
+        [TestCase("NeuBcMud",  true)]
+        [TestCase("neubcmud",  true)]
+        [TestCase("NEUBCMUD",  true)]
+        [TestCase("RWave",     false)]
+        [TestCase("rwave",     false)]
+        [TestCase("RWAVE",     false)]
+        [TestCase("ASKLHE",    false)]
+        [TestCase("asklhe",    false)]
+        public void GivenAProperty_WhenIsObsoleteIsCalled_ThenTheExpectedValueIsReturned(string propertyName, bool expectedResult)
+        {
+            // When
+            bool result = MorphologyFileBackwardsCompatibilityHelper.IsObsoletePropertyName(propertyName);
+
+            // Then
+            Assert.That(result, Is.EqualTo(expectedResult), "Expected IsObsoletePropertyName to return a different value:");
+        }
     }
 }

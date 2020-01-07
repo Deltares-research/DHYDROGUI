@@ -41,7 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FileUtils.DeleteIfExists(previousExplicitWorkingDirectory);
         }
 
-        public virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true,
+        public virtual bool ExportTo(string mduPath, 
+                                     bool switchTo = true, 
+                                     bool writeExtForcings = true,
                                      bool writeFeatures = true)
         {
             string dirName = Path.GetDirectoryName(mduPath);
@@ -97,7 +99,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 WriteFeatures = writeFeatures,
                 DisableFlowNodeRenumbering = DisableFlowNodeRenumbering
             };
-            mduFile.Write(mduPath,
+
+            CacheFile.Export(mduPath);
+            MduFile.Write(mduPath,
                           ModelDefinition,
                           Area,
                           fixedWeirProperties.Values,
@@ -110,6 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (switchTo)
             {
                 MduFilePath = mduPath;
+                CacheFile.UpdatePathToMduLocation(mduPath);
+
                 SaveOutput();
             }
 

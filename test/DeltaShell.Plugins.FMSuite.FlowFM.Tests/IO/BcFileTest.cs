@@ -65,21 +65,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var quantity = firstBlock.Quantities[0];
             
-            Assert.AreEqual("astronomic component", quantity.Quantity);
+            Assert.AreEqual("astronomic component", quantity.QuantityName);
             Assert.AreEqual("-", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] {"M2", "S2"}, quantity.Values);
 
             quantity = firstBlock.Quantities[1];
 
-            Assert.AreEqual("waterlevelbnd amplitude", quantity.Quantity);
+            Assert.AreEqual("waterlevelbnd amplitude", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0.9", "0.95" }, quantity.Values);
 
             quantity = firstBlock.Quantities[2];
 
-            Assert.AreEqual("waterlevelbnd phase" , quantity.Quantity);
+            Assert.AreEqual("waterlevelbnd phase" , quantity.QuantityName);
             Assert.AreEqual("rad/deg/minutes", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "10", "-7.5" }, quantity.Values);
@@ -92,21 +92,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             quantity = secondBlock.Quantities[0];
 
-            Assert.AreEqual("astronomic component", quantity.Quantity);
+            Assert.AreEqual("astronomic component", quantity.QuantityName);
             Assert.AreEqual("-", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "M2", "S2" }, quantity.Values);
 
             quantity = secondBlock.Quantities[1];
 
-            Assert.AreEqual("waterlevelbnd amplitude", quantity.Quantity);
+            Assert.AreEqual("waterlevelbnd amplitude", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0.8", "1.1" }, quantity.Values);
 
             quantity = secondBlock.Quantities[2];
 
-            Assert.AreEqual("waterlevelbnd phase", quantity.Quantity);
+            Assert.AreEqual("waterlevelbnd phase", quantity.QuantityName);
             Assert.AreEqual("rad/deg/minutes", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "20", "-11.5" }, quantity.Values);
@@ -128,28 +128,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var quantity = firstBlock.Quantities[0];
 
-            Assert.AreEqual("time", quantity.Quantity);
+            Assert.AreEqual("time", quantity.QuantityName);
             Assert.AreEqual("minutes since 2013-01-01", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0", "1440" }, quantity.Values);
 
             quantity = firstBlock.Quantities[1];
 
-            Assert.AreEqual("waterlevelbnd", quantity.Quantity);
+            Assert.AreEqual("waterlevelbnd", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0.5", "0.65" }, quantity.Values);
 
             quantity = firstBlock.Quantities[2];
 
-            Assert.AreEqual("salinitybnd", quantity.Quantity);
+            Assert.AreEqual("salinitybnd", quantity.QuantityName);
             Assert.AreEqual("ppt", quantity.Unit);
             Assert.AreEqual("1", quantity.VerticalPosition);
             Assert.AreEqual(new[] { "22", "30" }, quantity.Values);
 
             quantity = firstBlock.Quantities[3];
 
-            Assert.AreEqual("salinitybnd", quantity.Quantity);
+            Assert.AreEqual("salinitybnd", quantity.QuantityName);
             Assert.AreEqual("ppt", quantity.Unit);
             Assert.AreEqual("2", quantity.VerticalPosition);
             Assert.AreEqual(new[] { "0", "0" }, quantity.Values);

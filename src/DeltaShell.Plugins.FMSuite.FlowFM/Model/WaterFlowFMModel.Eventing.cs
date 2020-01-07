@@ -756,7 +756,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             var weir = sender as IWeir;
             if (weir != null)
             {
-                if (e.PropertyName == TypeUtils.GetMemberName<Weir>(w => w.WeirFormula))
+                if (e.PropertyName == nameof(Weir.WeirFormula))
                 {
                     bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
                     UpdateAreaDataItems(weir, isInputSender);
@@ -765,7 +765,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             var groupableFeature = sender as IGroupableFeature;
             if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
-                e.PropertyName != TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName))
+                e.PropertyName != nameof(IGroupableFeature.GroupName))
             {
                 return;
             }

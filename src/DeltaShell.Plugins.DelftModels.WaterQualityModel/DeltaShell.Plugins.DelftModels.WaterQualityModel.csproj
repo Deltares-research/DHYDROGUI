@@ -69,6 +69,7 @@
     <Compile Include="DataObjects\BloomInfo.cs" />
     <Compile Include="DataObjects\BoundaryData\DataTable.cs" />
     <Compile Include="DataObjects\BoundaryData\DataTableManager.cs" />
+    <Compile Include="DataObjects\Model\IWaterQualityModelSettings.cs" />
     <Compile Include="DataObjects\SegmentFileFunction.cs" />
     <Compile Include="DataObjects\IHasLocationAliases.cs" />
     <Compile Include="DataObjects\WaterQualityBoundary.cs" />
@@ -94,7 +95,10 @@
     <Compile Include="IO\LazyMapFileFunctionStore.cs" />
     <Compile Include="IO\MultiDimentionalArrayAdapter.cs" />
     <Compile Include="Model\WaqInitializationDataVerifier.cs" />
+    <Compile Include="Model\WaterQualityOutputConnector.cs" />
+    <Compile Include="Model\WaterQualityOutputDisconnector.cs" />
     <Compile Include="NHibernate\WaterQualityModel350LegacyLoader.cs" />
+    <Compile Include="NHibernate\WaterQualityModel352LegacyLoader.cs" />
     <Compile Include="ObservationAreas\ObservationPointType.cs" />
     <Compile Include="ObservationAreas\OverwriteLabelOperation.cs" />
     <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverage.cs" />
@@ -354,40 +358,40 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.46597, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.47618, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -399,11 +403,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -411,15 +415,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.46597\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -488,6 +492,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WaterQualityModel.3.5.2.hbm.xml" />
     <EmbeddedResource Include="WaterQualityModel.3.5.0.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -547,8 +552,8 @@
     <Error Condition="!Exists('..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DIDO.6.1.0.63262\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.6.1.0.63262\build\net40\DIDO.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.46597\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.46597\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DIDO.6.3.0.64434\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.6.3.0.64434\build\net40\DIDO.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.47618\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.47618\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
@@ -557,6 +562,6 @@
   <Import Project="..\..\packages\PLCT.Libs.1.0.0.57497\build\net40\plct.Libs.targets" Condition="Exists('..\..\packages\PLCT.Libs.1.0.0.57497\build\net40\plct.Libs.targets')" />
   <Import Project="..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets" Condition="Exists('..\..\packages\Substances.Libs.1.0.0.57497\build\net40\Substances.Libs.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DIDO.6.1.0.63262\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.6.1.0.63262\build\net40\DIDO.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.46597\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.46597\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DIDO.6.3.0.64434\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.6.3.0.64434\build\net40\DIDO.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.47618\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.47618\build\net461\DeltaShell.Framework.targets')" />
 </Project>

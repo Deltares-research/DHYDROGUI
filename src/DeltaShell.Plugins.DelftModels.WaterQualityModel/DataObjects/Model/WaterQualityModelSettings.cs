@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
 {
@@ -9,13 +11,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     /// Water quality model settings
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class WaterQualityModelSettings : Unique<long>, ICloneable
+    public class WaterQualityModelSettings : Unique<long>, ICloneable, IWaterQualityModelSettings
     {
         /// <summary>
         /// Creates water quality model settings
         /// </summary>
         public WaterQualityModelSettings()
         {
+            WorkingDirectoryPathFuncWithModelName = 
+                () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory, "Water_Quality");
             HisStartTime = DateTime.Now.Date;
             HisStopTime = HisStartTime.AddHours(24);
             HisTimeStep = new TimeSpan(0, 1, 0, 0);
@@ -52,7 +56,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// <summary>
         /// The directory where all the temporary files are placed
         /// </summary>
-        public string WorkDirectory { get; set; }
+        public string WorkDirectory => WorkingDirectoryPathFuncWithModelName();
+
+        /// <summary>
+        /// Function for retrieving the latest status of the DeltaShell framework
+        /// working directory and model name from the model
+        /// </summary>
+        public Func<string> WorkingDirectoryPathFuncWithModelName { get; set; }
 
         /// <summary>
         /// The start time of the his output
@@ -242,12 +252,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public bool WriteIterationReport { get; set; }
 
         /// <summary>
-        /// The output directory is used in 2D/3D to explicitly set the folder to write the waq output files.
-        /// Map, His, lst, lsp and mon file go here.
-        /// The output directory can be intentionally set to an empty string if the
-        /// user wants the input and output in the same folder.
+        /// Gets or sets the output directory.
         /// </summary>
+        /// <value>
+        /// The persistent output directory.
+        /// </value>
         public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the working output directory.
+        /// Output files will be placed here during a model run.
+        /// </summary>
+        /// <value>
+        /// The working output directory.
+        /// </value>
+        public string WorkingOutputDirectory { get; set; }
 
         public object Clone()
         {

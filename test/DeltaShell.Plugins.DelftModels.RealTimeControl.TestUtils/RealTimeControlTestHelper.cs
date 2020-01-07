@@ -27,15 +27,51 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             return result;
         }
 
+        public static ControlGroup CreateControlGroupWithTwoRulesOnOneOutput()
+        {
+            var controlGroup = new ControlGroup { Name = "control_group" };
+            var output = new Output { Name = "output" };
+
+            RelativeTimeRule rule1 = CreateRelativeTimeRule("rule1", output);
+            var condition1 = new StandardCondition { Name = "condition1" };
+            condition1.TrueOutputs.Add(rule1);
+
+            RelativeTimeRule rule2 = CreateRelativeTimeRule("rule2", output);
+            var condition2 = new StandardCondition { Name = "condition2" };
+            condition2.TrueOutputs.Add(rule2);
+
+            controlGroup.Outputs.Add(output);
+            controlGroup.Rules.Add(rule1);
+            controlGroup.Rules.Add(rule2);
+            controlGroup.Conditions.Add(condition1);
+            controlGroup.Conditions.Add(condition2);
+
+            return controlGroup;
+        }
+
+        public static RelativeTimeRule CreateRelativeTimeRule(string name, Output output)
+        {
+            var rule1 = new RelativeTimeRule
+            {
+                Name = name,
+                FromValue = false,
+                Id = 6L,
+                Interpolation = InterpolationType.Constant,
+                MinimumPeriod = 3,
+                LongName = "relative_time_rule_long_name"
+            };
+
+            rule1.Outputs.Add(output);
+            rule1.Function[0d] = 1d;
+            rule1.Function[3d] = 5d;
+            rule1.Function[7d] = 11d;
+
+            return rule1;
+        }
+
         public static ControlGroup GenerateControlGroup()
         {
             return RealTimeControlModelHelper.CreateGroupPidRule(true);
-            var result = new ControlGroup { Name = "myFirstControlGroup" };
-            result.Inputs.Add(GenerateInput());
-            result.Outputs.Add(GenerateOutput());
-            result.Rules.Add(GeneratePidRule());
-            result.Conditions.Add(GenerateCondition(result));
-            return result;
         }
 
         public static Input GenerateInput()

@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading;
 using BasicModelInterface;
 using DelftTools.Utils.Remoting;
-using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
-using ProtoBufRemote;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
@@ -16,17 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         private bool disposed;
         private IFlexibleMeshModelApi remoteInstanceApi;
 
-        public RemoteFlexibleMeshModelApi(bool showDebugConsole = false)
+        public RemoteFlexibleMeshModelApi(IFlexibleMeshModelApi api)
         {
-            // DeltaShell is 32bit, however we still want to take advantage of the 64bit dflowfm.dll if the system can use it, 
-            // so we need to start the 64bit worker. This works as long as the data send over the IFlexibleMeshModelApi border 
-            // is not bit dependent, eg IntPtr and the like.
-            RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
-            remoteInstanceApi =
-                RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(
-                    true, showConsole: showDebugConsole);
-            // for non-remote use:
-            //remoteInstanceApi = new FlexibleMeshModelApi();
+            remoteInstanceApi = api;
         }
 
         private string WorkingDirectory { get; set; }
@@ -150,39 +141,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
         {
-            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia");
+            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia", SearchOption.AllDirectories);
 
             if (diaFiles.Length <= 0)
             {
                 throw new FileNotFoundException("Could not detect diagnostics file in " + runDirectory);
             }
 
-            List<string> errorMessages;
-            string diaFile = diaFiles[0];
+            IEnumerable<string> errorMessages;
+            string diaFilePath = diaFiles[0];
 
             try
             {
-                errorMessages = DiaFileReader.CollectAllErrorMessages(diaFile);
-
-                errorMessages.AddRange(File.ReadAllLines(diaFile).Where(line => line.Contains("FATAL")));
+                using(var reader = new StreamReader(diaFilePath))
+                {
+                    Dictionary<DiaFileLogSeverity, IList<string>> messagesDictionary = DiaFileReader.GetAllMessages(reader);
+                    errorMessages = messagesDictionary[DiaFileLogSeverity.Error].Concat(messagesDictionary[DiaFileLogSeverity.Fatal])
+                                    .ToArray();
+                }
             }
             catch (Exception e)
             {
-                throw new FileFormatException(string.Format("Unable to read diagnostics file {0}: {1}", diaFile,
+                throw new FileFormatException(string.Format(Resources.RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_, diaFilePath,
                                                             e.Message));
             }
 
             if (!errorMessages.Any())
             {
                 throw new InvalidOperationException(string.Format(
-                                                        "No errors were reported in the diagnostics file {0}",
-                                                        diaFile));
+                                                        Resources.RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_,
+                                                        diaFilePath));
             }
 
             throw new InvalidOperationException(string.Format(
-                                                    "The kernel reported the following error(s):{0}{1}{0}(Errors extracted from diagnostics file {2})",
+                                                    Resources.RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__Errors_extracted_from_diagnostics_file__2__,
                                                     Environment.NewLine,
-                                                    string.Join(Environment.NewLine, errorMessages), diaFile),
+                                                    string.Join(Environment.NewLine, errorMessages), diaFilePath),
                                                 innerException);
         }
 

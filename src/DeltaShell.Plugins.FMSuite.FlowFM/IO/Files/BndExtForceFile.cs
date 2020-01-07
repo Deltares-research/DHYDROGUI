@@ -8,9 +8,10 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -185,11 +186,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
-        {
-            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
-        }
-
         private void WritePropertyValueIfNotNull(string propertyName, DelftIniCategory bndExtForceFileItem)
         {
             string propertyValue = bndExtForceFileItem.GetPropertyValue(propertyName);
@@ -197,6 +193,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 WritePropertyValue(propertyName, propertyValue);
             }
+        }
+
+        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
         }
 
         private void WritePropertyValue(string propertyName, string propertyValue)

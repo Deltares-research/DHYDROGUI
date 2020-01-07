@@ -12,7 +12,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
@@ -34,22 +33,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
         #region Column property names
 
-        private readonly string namePropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Name);
-
-        private readonly string descriptionPropertyName =
-            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Description);
-
-        private readonly string functionTypePropertyName =
-            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.FunctionType);
-
-        private readonly string defaultValuePropertyName =
-            TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.DefaultValue);
-
-        private readonly string unitPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Unit);
-        private readonly string urlPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Url);
-        private readonly string argumentPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Arguments);
-        private readonly string componentsPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Components);
-        private readonly string editPropertyName = TypeUtils.GetMemberName<FunctionWrapper>(fw => fw.Edit);
+        private readonly string namePropertyName = nameof(FunctionWrapper.Name);
+        private readonly string descriptionPropertyName = nameof(FunctionWrapper.Description);
+        private readonly string functionTypePropertyName = nameof(FunctionWrapper.FunctionType);
+        private readonly string defaultValuePropertyName = nameof(FunctionWrapper.DefaultValue);
+        private readonly string unitPropertyName = nameof(FunctionWrapper.Unit);
+        private readonly string urlPropertyName = nameof(FunctionWrapper.Url);
+        private readonly string argumentPropertyName = nameof(FunctionWrapper.Arguments);
+        private readonly string componentsPropertyName = nameof(FunctionWrapper.Components);
+        private readonly string editPropertyName = nameof(FunctionWrapper.Edit);
         private bool useInitialValueColumn;
 
         #endregion

@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         public WaterQualityModel WaterQualityModel { get; set; }
 
-        public void Configure(object targetItemFileImporter)
+        public void Configure(object item)
         {
-            subFileItemFileImporter = (SubFileImporter) targetItemFileImporter;
+            subFileItemFileImporter = (SubFileImporter) item;
 
             subFileItemFileImporter.DefaultFilePath = substanceProcessLibraryWizardPage.SubFilePath;
 

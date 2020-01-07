@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// already has it applied. Projectexplorer does not function correctly when left out.
     /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ICoupledModel
+    public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IDimrStateAwareModel, IModelMerge, IDisposable, IDimrModel, ILinkedDataItemsModel
     {
         public const string InputPostFix = ".input";
         public const string OutputPostFix = ".output";
@@ -610,6 +610,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public virtual bool CanRunParallel { get { return false; } }
         public virtual string MpiCommunicatorString { get { return null; } }
 
+        public virtual void PrepareForIntegratedModelRun()
+        {
+            // Initialization logic which should be executed as part of an
+            // integrated model HydroModel initialization.
+        }
         #endregion
         
         

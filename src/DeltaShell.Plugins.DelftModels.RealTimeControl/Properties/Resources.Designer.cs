@@ -139,6 +139,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output item {0} has multiple Active Condition Paths: {1}..
+        /// </summary>
+        public static string ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1 {
+            get {
+                return ResourceManager.GetString("ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap CopyHS {

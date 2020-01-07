@@ -4,9 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Forms.Integration;
-using System.Windows.Media;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
@@ -22,7 +19,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     {
         private readonly FieldUIDescription description;
         private Func<object> getModel;
-        private ObservableCollection<DoubleWrapper> valueCollection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiProperty"/> class.
@@ -32,19 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             CustomCommand = new CommandHelper(() => OnPropertyChanged("Value"));
             this.description = description;
-            if (description?.CustomControlHelper != null)
-            {
-                var control = description.CustomControlHelper.CreateControl();
-                var hostHelper = new WindowsFormsHost
-                {
-                    Child = control,
-                    Width = 300,
-                    Height = 300,
-                    Background = new SolidColorBrush(SystemColors.ControlColor)
-                };
-                CustomControl = hostHelper;
-            }
-
+            
             UpdateValueCollection();
         }
 
@@ -83,27 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return Error;
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance has custom control.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasCustomControl
-        {
-            get { return CustomControl != null; }
-        }
-
-        /// <summary>
-        /// Gets or sets the custom control.
-        /// ToDo: This should be removed once all custom controls are migrated into WPF.
-        /// </summary>
-        /// <value>
-        /// The custom control.
-        /// </value>
-        public FrameworkElement CustomControl { get; set; }
-
+        
         public CommandHelper CustomCommand { get; set; }
 
         public Type ValueType { get { return description?.ValueType; } }
@@ -179,10 +143,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 getModel = value;
                 CustomCommand.GetModel = getModel;
-                if (getModel != null && HasCustomControl)
-                {
-                    UpdateCustomControlData();
-                }
             }
         }
 
@@ -199,10 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        public bool IsEditable
-        {
-            get { return IsEnabled && !CustomCommand.ButtonIsVisible; }
-        }
+        public bool IsEditable => IsEnabled && CustomCommand.TextBoxEnabled;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.
@@ -218,7 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsEnabled(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -235,7 +191,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsVisible(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -244,14 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The value collection.
         /// </value>
-        public ObservableCollection<DoubleWrapper> ValueCollection
-        {
-            get { return valueCollection; }
-            set
-            {
-                valueCollection = value;
-            }
-        }
+        public ObservableCollection<DoubleWrapper> ValueCollection { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -313,27 +261,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private string CheckValueWithinBoundaries(double valueAsDouble)
         {
-            if ((description.HasMinValue && valueAsDouble < description.MinValue) 
+            if ((description.HasMinValue && valueAsDouble < description.MinValue)
                 || (description.HasMaxValue && valueAsDouble > description.MaxValue))
             {
-                {
-                    return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
-                        description.HasMinValue ? description.MinValue : double.NegativeInfinity,
-                        description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
-                }
+                return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
+                                     description.HasMinValue ? description.MinValue : double.NegativeInfinity,
+                                     description.HasMaxValue ? description.MaxValue : double.PositiveInfinity);
             }
 
             return null;
-        }
-
-        private void UpdateCustomControlData()
-        {
-            if (description?.CustomControlHelper != null)
-            {
-                var control = CustomControl as WindowsFormsHost;
-                var hostedControl = control?.Child;
-                description.CustomControlHelper.SetData(hostedControl, getModel?.Invoke(), null);
-            }
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

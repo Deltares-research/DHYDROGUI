@@ -135,13 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                     }),
                 }
             };
-
-            // add user control for a property
-            wpfSettingsViewModel.SettingsCategories[0].SubCategories[2].Properties.ElementAt(0).CustomControl = new UserControl
-            {
-                Content = new TextBlock { Text = "Property user control", Background = new SolidColorBrush(Colors.Green) }
-            };
-
+            
             // add a command for a property
             wpfSettingsViewModel.SettingsCategories[0].SubCategories[2].Properties.ElementAt(1).CustomCommand = new CommandHelper(() => { }) { ButtonFunction = o => { } };
 

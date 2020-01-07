@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
@@ -20,15 +25,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 wpfGuiCategories = GetWaveSettings(data)?.FieldDescriptions
                                                         .GroupBy(fd => fd.Category)
-                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
+                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
+                                                        .ToList();
                 wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
+
+                ModifyWaveSettings(wpfGuiCategories);
             }
 
-            SetWaveExtraSettings(data, gui, wpfGuiCategories);
+            AddCustomWaveCategory(data, wpfGuiCategories);
+            AddCustomWaveSettings(data, gui, wpfGuiCategories);
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
-        private static void SetWaveExtraSettings(WaveModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
+        private static void ModifyWaveSettings(IEnumerable<WpfGuiCategory> wpfGuiCategories)
+        {
+            WpfGuiProperty comFileGuiProperty = wpfGuiCategories.SelectMany(c => c.Properties)
+                                                                .Single(p => p.Name == KnownWaveProperties.COMFile);
+            comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
+        }
+
+        private static void AddCustomWaveSettings(IHasCoordinateSystem model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)
         {
             WpfGuiCategory generalCategory =
                 wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
@@ -46,66 +62,98 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         HasMinValue = false,
                     });
 
-                coordSys.CustomCommand.ButtonFunction =
-                    (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
+                coordSys.CustomCommand.TextBoxEnabled = false;
+                coordSys.CustomCommand.ButtonFunction = o => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
+        }
+
+        private static void AddCustomWaveCategory(WaveModel model, IList<WpfGuiCategory> wpfCategories)
+        {
+            Func<object, bool> isEnabledFunc = o => true;
+            Func<object, bool> isVisibleFunc = o => (o is WaveModel) && (o as WaveModel).UseDomainSpecific;
+            var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
+            var fieldUiDescriptions = new List<FieldUIDescription>();
+            fieldUiDescriptions.Add(fieldUi);
+
+            var domainSpecificDataCategory = new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings, fieldUiDescriptions)
+            {
+                CategoryVisibility = () => model.UseDomainSpecific,
+                CustomControl = new DomainSpecificDataEditor(new MainDomainSpecificDataViewModel(model.OuterDomain))
+            };
+            
+            wpfCategories.Add(domainSpecificDataCategory);
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
         {
             ObjectUIDescription objectDescription = WaveModelUIDescription.Extract(data);
 
-            var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
-                                                              (d, v) => data.IsCoupledToFlow = (bool) v)
+            var useDomainSpecificCheckBox = new FieldUIDescription(o => data.UseDomainSpecific,
+                                                              (d, v) => data.UseDomainSpecific = (bool)v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = "Data from D-Flow FM",
-                Label = "Coupled to D-Flow FM",
+                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
+                Name = "UseDomainSpecific",
+                ValueType = typeof(bool),
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in
+            };
+
+            var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
+                                                              (d, v) => {}, 
+                                                              o => false)
+            {
+                Category = KnownWaveCategories.GeneralCategory,
+                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM,
                 Name = "IsCoupledToFlow",
                 ValueType = typeof(bool),
-                ToolTip = "When enabled, run coupled to D-Flow FM core"
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core
             };
 
             var startTime = new FieldUIDescription(o => data.StartTime, (d, v) => data.StartTime = (DateTime) v,
-                                                   (d) => data.IsCoupledToFlow)
+                                                   d => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = "Coupling time frame",
-                Label = "Start time",
+                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Start_time,
                 Name = "StartTime",
                 ValueType = typeof(DateTime),
-                ToolTip = "Start time within the coupled model run"
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run
             };
 
             var stopTime = new FieldUIDescription(o => data.StopTime, (d, v) => data.StopTime = (DateTime) v,
-                                                  (d) => data.IsCoupledToFlow)
+                                                  d => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = "Coupling time frame",
-                Label = "Stop time",
+                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time,
                 Name = "StopTime",
                 ValueType = typeof(DateTime),
-                ToolTip = "Stop time within the coupled model run",
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run,
                 ValidationMethod = ValidateCoupledTime
             };
 
             var timeStep = new FieldUIDescription(o => data.TimeStep, (d, v) => data.TimeStep = (TimeSpan) v,
-                                                  (d) => data.IsCoupledToFlow)
+                                                  d => data.IsCoupledToFlow)
             {
                 Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = "Coupling time frame",
-                Label = "Time step",
+                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Time_step,
                 Name = "TimeStep",
                 ValueType = typeof(TimeSpan),
-                ToolTip = "Coupling time step"
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step
             };
+
+            FieldUIDescription fieldDescription = objectDescription.FieldDescriptions.Single(fd => fd.Name == KnownWaveProperties.COMFile);
+            fieldDescription.SetIsEnabledFunc(d => !data.IsCoupledToFlow);
 
             objectDescription.FieldDescriptions =
                 new[]
-                    {
-                        /*setCoordinateSystemBtn,*/
+                    {                        
+                        useDomainSpecificCheckBox,
                         flowCouplingCheckBox,
                         startTime,
                         stopTime,

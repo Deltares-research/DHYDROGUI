@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Data.Providers;
 
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Equals(e.PropertyName, TypeUtils.GetMemberName<WaterQualityModel>(x => x.CoordinateSystem)))
+            if (Equals(e.PropertyName, nameof(WaterQualityModel.CoordinateSystem)))
             {
                 OnCoordinateSystemChanged();
             }

@@ -6,6 +6,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -187,38 +188,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [TestCase("bla_thd.pli", KnownProperties.ThinDamFile, TestName = "ThinDamFile")]
         [TestCase("bla_structures.ini", KnownProperties.StructuresFile, TestName = "StructuresFile")]
         [Category(TestCategory.Slow)]
-        public void GivenModelsWithPropertiesToClear_WhenGridSnappingIsCalled_ThenThesePropertiesShouldBeEmpty(string file, string knownProperties)
+        public void GivenModelsWithPropertiesToClear_WhenGridSnappingIsCalled_ThenThesePropertiesShouldBeEmpty(string fileName, string modelPropertyName)
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
-            netFile = TestHelper.CreateLocalCopy(netFile);
-            Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
-            try
-
+            //Given
+            using (var model = new WaterFlowFMModel())
+            using (var temporaryDirectory = new TemporaryDirectory())
             {
-                var model = new WaterFlowFMModel();
-                model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
-                File.Copy(netFile, model.NetFilePath, true);
-                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(model.NetFilePath));
+                string netFilePath = temporaryDirectory.CopyTestDataFileToTempDirectory(@"basicGrid\basicGrid_net.nc");
 
-                model.ModelDefinition.GetModelProperty(knownProperties).SetValueAsString(file);
+                model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(Path.GetFileName(netFilePath));
+                model.ModelDefinition.GetModelProperty(modelPropertyName).SetValueAsString(fileName);
+                model.ExportTo(Path.Combine(temporaryDirectory.Path, TestHelper.GetCurrentMethodName() + ".mdu"), true, false, false);
 
+                // When
                 var api = new UnstrucGridOperationApi(model, false);
-                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
-                var mduFileDir = Path.GetDirectoryName(tempMduPath);
-                var name = Path.GetFileNameWithoutExtension(tempMduPath);
-                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
-                var FileUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(knownProperties).GetValueAsString();
-                Assert.That(FileUsedInOriginalFMModel, Is.EqualTo(file));
-                var FileUsedInFMModelByApi = fmModelUsedByApi.ModelDefinition.GetModelProperty(knownProperties).GetValueAsString();
-                Assert.IsEmpty(FileUsedInFMModelByApi);
+                // Then
+                string originalFileName = model.ModelDefinition.GetModelProperty(modelPropertyName).GetValueAsString();
+                Assert.That(originalFileName, Is.EqualTo(fileName));
+
+                using (var fmModelUsedByApi = new WaterFlowFMModel(GetApiMduFilePath(api)))
+                {
+                    string apiFileName = fmModelUsedByApi.ModelDefinition.GetModelProperty(modelPropertyName).GetValueAsString();
+                    Assert.IsEmpty(apiFileName);
+                }
             }
-            finally
-            {
-                FileUtils.DeleteIfExists(netFile);
-                FileUtils.DeleteIfExists(tempFolder);
-            }
+        }
+
+        private static string GetApiMduFilePath(UnstrucGridOperationApi api)
+        {
+            string tempMduPath = api.MduFilePath;
+            string mduFileDir = Path.GetDirectoryName(tempMduPath);
+            return Path.Combine(mduFileDir, tempMduPath);
         }
 
         #region Point Sources

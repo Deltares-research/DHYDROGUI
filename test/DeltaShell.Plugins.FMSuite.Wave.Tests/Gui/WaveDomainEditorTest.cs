@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             domain.MeteoData = new WaveMeteoData
             {
                 FileType = WindDefinitionType.WindXY,
-                XYVectorFileName = "test.wnd",
+                XYVectorFilePath = "test.wnd",
                 HasSpiderWeb = true,
-                SpiderWebFileName = "spider.spw"
+                SpiderWebFilePath = "spider.spw"
             };
             
 

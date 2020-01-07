@@ -5,9 +5,10 @@ using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -278,6 +279,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
+                if (MorphologyFileBackwardsCompatibilityHelper.IsObsoletePropertyName(delftIniProperty.Name))
+                {
+                    logHandler?.ReportWarningFormat(Resources.MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_, delftIniProperty.Name);
+                    continue;
+                }
+
                 delftIniProperty.Name = 
                     MorphologyFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(delftIniProperty.Name,
                                                                                       logHandler) ??
@@ -291,8 +298,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         CreateModelPropertyForUnknownDelftIniProperty(categoryName, delftIniProperty);
                     modelDefinition.AddProperty(property);
 
-                    logHandler.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_, 
-                                                   delftIniProperty.Name,  delftIniProperty.LineNumber);
+                    logHandler?.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_, 
+                                                    delftIniProperty.Name,  delftIniProperty.LineNumber);
 
                     continue;
                 }

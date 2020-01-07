@@ -162,38 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             }
         }
-
-        [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void SaveLoadWaveModelPersistsIsCoupledToDFlowFM(bool isCoupled)
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                //Plugins needed to save the project
-                LoadRequiredPlugins(app);
-                app.Run();
-
-                var path = "mdw.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
-                var model = new WaveModel();
-                app.Project.RootFolder.Add(model);
-
-                //Set parameter to desired value.
-                model.IsCoupledToFlow = isCoupled;
-                app.SaveProjectAs(path);
-
-                app.CloseProject();
-                app.OpenProject(path);
-
-                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
-                //Check persistance
-                Assert.IsNotNull(retrievedModel);
-                Assert.AreEqual(isCoupled, retrievedModel.IsCoupledToFlow);
-            }
-        }
-
+        
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStartTime()
         {

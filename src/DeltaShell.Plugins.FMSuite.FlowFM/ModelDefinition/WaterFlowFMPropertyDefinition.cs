@@ -102,6 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string TrtL = "TrtL";
         public const string DtTrt = "DtTrt";
         public const string WaqOutputDir = "WAQOutputDir";
+        public const string UseCaching = "UseCaching";
     }
 
     public static class GuiProperties

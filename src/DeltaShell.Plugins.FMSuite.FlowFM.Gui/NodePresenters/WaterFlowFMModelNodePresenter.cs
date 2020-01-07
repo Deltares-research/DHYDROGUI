@@ -13,7 +13,6 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
@@ -82,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             base.OnPropertyChanged(model, node, e);
 
-            if (e.PropertyName == TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.InitialCoverageSetChanged))
+            if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged))
             {
                 TreeView.RefreshChildNodes(node);
             }

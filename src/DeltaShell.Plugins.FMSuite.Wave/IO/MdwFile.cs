@@ -104,14 +104,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
-            var mdwCategories = new List<DelftIniCategory>();
+            List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
 
-            // group properties by mdw category
-            GroupPropertiesByMdwCategory(modelDefinition, mdwCategories);
-
-            DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-
-            // timepoints
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
             IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
@@ -126,6 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
+                DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
                 if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.FromInputFiles)
                 {
                     List<string> meteoFiles = GetMeteoFiles(modelDefinition.TimePointData.MeteoData);
@@ -145,12 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // domain(s)
                 IList<WaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(modelDefinition.OuterDomain);
                 AddDomainCategories(allDomains, ref mdwCategories);
-                List<string> domainMeteoFiles = mdwCategories.Where(c => c.Name == KnownWaveCategories.DomainCategory)
-                                                             .SelectMany(
-                                                                 c => c.GetPropertyValues(
-                                                                     KnownWaveProperties.MeteoFile))
-                                                             .ToList();
-                domainMeteoFiles.ForEach(mf => CopyModelFile(mf, sourceDir, targetDir));
+                allDomains.ForEach(d => CopyMeteoFilesTo(d.MeteoData, targetDir, switchTo));
 
                 // grid is not edited within DS, so always in sync
                 // and a plain file copy suffices
@@ -174,9 +164,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
+            DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
+            outputCategory.SetProperty(KnownWaveProperties.COMFile, modelDefinition.CommunicationsFilePath.Replace('\\', '/'));
+
             #region Not synchronized with modeldefintionproperties, since property is missing in csv file
 
-            DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
             string curvesFileName = outputCategory.GetPropertyValue(KnownWaveProperties.CurveFile);
             if (modelDefinition.ObservationCrossSections.Any())
             {
@@ -252,9 +244,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private static void GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition,
-                                                         List<DelftIniCategory> mdwCategories)
+        private static List<DelftIniCategory> GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition)
         {
+            var mdwCategories = new List<DelftIniCategory>();
             IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties =
                 modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
             foreach (IGrouping<string, WaveModelProperty> grouping in groupedProperties)
@@ -275,6 +267,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 mdwCategories.Add(mdwGroup);
             }
+
+            return mdwCategories;
         }
 
         private static List<string> GetMeteoFiles(WaveMeteoData meteoData)
@@ -297,6 +291,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return meteoFiles;
+        }
+
+        private static void CopyMeteoFilesTo(WaveMeteoData meteoData, string targetDirPath, bool switchTo)
+        {
+            if (meteoData.FileType == WindDefinitionType.WindXY)
+            {
+                string targetFilePath = CopyFileTo(meteoData.XYVectorFilePath, targetDirPath);
+                if (switchTo)
+                {
+                    meteoData.XYVectorFilePath = targetFilePath;
+                }
+            }
+
+            if (meteoData.FileType == WindDefinitionType.WindXWindY)
+            {
+                string targetXComponentFilePath = CopyFileTo(meteoData.XComponentFilePath, targetDirPath);
+                string targetYComponentFilePath = CopyFileTo(meteoData.YComponentFilePath, targetDirPath);
+                if (switchTo)
+                {
+                    meteoData.XComponentFilePath = targetXComponentFilePath;
+                    meteoData.YComponentFilePath = targetYComponentFilePath;
+                }
+            }
+
+            if (meteoData.FileType == WindDefinitionType.SpiderWebGrid || meteoData.HasSpiderWeb)
+            {
+                string targetFilePath = CopyFileTo(meteoData.SpiderWebFilePath, targetDirPath);
+                if (switchTo)
+                {
+                    meteoData.SpiderWebFilePath = targetFilePath;
+                }
+            }
+        }
+
+        private static string CopyFileTo(string sourceFilePath, string targetDirPath)
+        {
+            if (string.IsNullOrEmpty(sourceFilePath))
+            {
+                return null;
+            }
+
+            string targetFilePath = Path.Combine(targetDirPath, Path.GetFileName(sourceFilePath));
+            if (File.Exists(sourceFilePath))
+            {
+                if (!File.Exists(targetFilePath))
+                {
+                    File.Copy(sourceFilePath, targetFilePath);
+                }
+
+                return targetFilePath;
+            }
+
+            return null;
         }
 
         private void CopyGridFiles(IEnumerable<string> gridFilePaths, string sourceDir, string targetDir)
@@ -707,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     domain.SpectralDomainData.StartDir = double.Parse(
                         domainCategory.GetPropertyValue("StartDir", "0.0"), NumberStyles.Any,
                         CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDIr", "0.0"),
+                    domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDir", "0.0"),
                                                                     NumberStyles.Any, CultureInfo.InvariantCulture);
                     domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
                 }
@@ -1133,7 +1180,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return timepointData;
         }
 
-        private WaveMeteoData CreateMeteoDataFromFiles(List<string> meteoFiles)
+        private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles)
         {
             List<string> spwFiles = meteoFiles.Where(mf => mf.EndsWith(".spw")).ToList();
             List<string> otherFiles = meteoFiles.Where(mf => !mf.EndsWith(".spw")).ToList();
@@ -1149,7 +1196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 return new WaveMeteoData
                 {
                     FileType = WindDefinitionType.SpiderWebGrid,
-                    SpiderWebFileName = spwFiles[0]
+                    SpiderWebFilePath = Path.Combine(MdwFilePath, spwFiles[0])
                 };
             }
 
@@ -1159,7 +1206,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 data = new WaveMeteoData
                 {
                     FileType = WindDefinitionType.WindXY,
-                    XYVectorFileName = otherFiles[0]
+                    XYVectorFilePath = Path.Combine(MdwFilePath, otherFiles[0])
                 };
             }
             else if (otherFiles.Count == 2)
@@ -1167,8 +1214,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 data = new WaveMeteoData
                 {
                     FileType = WindDefinitionType.WindXWindY,
-                    XComponentFileName = otherFiles[0],
-                    YComponentFileName = otherFiles[1]
+                    XComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1]),
+                    YComponentFilePath = Path.Combine(MdwFilePath, otherFiles[1])
                 };
             }
             else
@@ -1180,7 +1227,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             if (spwFiles.Count == 1)
             {
                 data.HasSpiderWeb = true;
-                data.SpiderWebFileName = spwFiles[0];
+                data.SpiderWebFilePath = Path.Combine(MdwFilePath, spwFiles[0]);
             }
 
             return data;

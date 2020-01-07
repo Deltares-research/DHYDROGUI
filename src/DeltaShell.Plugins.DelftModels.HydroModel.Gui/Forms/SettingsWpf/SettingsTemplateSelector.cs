@@ -38,8 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (!(item is WpfGuiProperty)) return base.SelectTemplate(item, container);
             
             var property = item as WpfGuiProperty;
-            if (property.HasCustomControl)
-                return fe.FindResource("propertyCustomTemplate") as DataTemplate;
 
             /* There were not any custom controls, so go ahead with the regular templates*/
             /*Todo: make a switch or create a dictionary for this. */

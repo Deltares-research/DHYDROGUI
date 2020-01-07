@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,8 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
@@ -120,19 +123,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveModel_WithDataTables_DataTablesShouldBeMovedFromTempToSavedLocation()
         {
             // setup
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             const string projectSaveName = "test.dsproj";
-            var saveFolderPath = Path.Combine(currentDirectory, "A");
+            string saveFolderPath = Path.Combine(currentDirectory, "A");
             FileUtils.DeleteIfExists(saveFolderPath);
             Directory.CreateDirectory(saveFolderPath);
 
-            var saveLocation = Path.Combine(saveFolderPath, projectSaveName);
+            string saveLocation = Path.Combine(saveFolderPath, projectSaveName);
 
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase userSettings =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication())
+                using (var app = new DeltaShellApplication
                 {
+                    UserSettings = userSettings,
+                    IsProjectCreatedInTemporaryDirectory = true
+                })
+                { 
                     app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -163,7 +173,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     // assert
                     var projectDataDirectory = saveLocation+"_data";
                     Assert.AreEqual(Path.Combine(projectDataDirectory, model.Name.Replace(" ", "_")), model.ModelDataDirectory);
-                    Assert.AreEqual(Path.Combine(projectDataDirectory, model.Name.Replace(" ", "_")+"_output"), model.ModelSettings.WorkDirectory);
                     Assert.AreEqual(Path.Combine(model.ModelDataDirectory, "output"), model.ModelSettings.OutputDirectory);
 
                     Assert.IsFalse(Directory.Exists(originalBoundaryDataFolder), 
@@ -192,17 +201,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveLoadModelTest()
         {
             // setup
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             const string projectSaveName = "test.dsproj";
-            var saveFolderPath = Path.Combine(currentDirectory, "A");
+            string saveFolderPath = Path.Combine(currentDirectory, "A");
             FileUtils.DeleteIfExists(saveFolderPath);
             Directory.CreateDirectory(saveFolderPath);
-            var saveLocation = Path.Combine(saveFolderPath, projectSaveName);
+            string saveLocation = Path.Combine(saveFolderPath, projectSaveName);
 
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase userSettings =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication
+                {
+                    UserSettings = userSettings,
+                    IsProjectCreatedInTemporaryDirectory = true
+                })
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -239,7 +255,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     var projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
 
                     StringAssert.StartsWith(saveLocation, projectDataDir);
-                    StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.WorkDirectory);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.BoundaryDataManager.FolderPath);
@@ -344,9 +359,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             FileUtils.DeleteIfExists(moveFolderPath);
             Directory.CreateDirectory(moveFolderPath);
             var moveLocation = Path.Combine(moveFolderPath, projectSaveName);
+
+            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            var application =
+                ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
-                using (var app = new DeltaShellApplication())
+                using (var app = new DeltaShellApplication
+                {
+                    UserSettings = application,
+                    IsProjectCreatedInTemporaryDirectory = true
+                })
                 {
                     app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
@@ -382,7 +405,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     var projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
 
                     StringAssert.StartsWith(moveLocation, projectDataDir);
-                    StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.WorkDirectory);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.BoundaryDataManager.FolderPath);
@@ -408,47 +430,57 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveModel_ChangeHydFileOtherData_LoadModel_OutputRemoved()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
-            var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
-            var localHydFileOtherTimestep = Path.Combine(Path.GetDirectoryName(localHydFile), "uni3d_otherTimestep.hyd");
-
-            try
+            string dataDir = TestHelper.GetTestDataDirectory();
+            string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                string workingDirectoryPath = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
+                ApplicationSettingsBase userSettings =
+                    ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
+                using (var app = new DeltaShellApplication
+                {
+                    UserSettings = userSettings,
+                    IsProjectCreatedInTemporaryDirectory = true
+                })
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new NetworkEditorApplicationPlugin());
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
                     app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-                    
+
                     app.Run();
+
+                    string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(squareHydFile));
+                    string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, "uni3d.hyd");
+                    string localHydFileOtherTimestep = Path.Combine(hydFileDirectoryInTemp, 
+                                                                    "uni3d_otherTimestep.hyd");
 
                     // create a model
                     var model = new WaterQualityModel();
+                    model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
 
-                    new HydFileImporter().ImportItem(localHydFile, model);
+                    new HydFileImporter().ImportItem(hydFileInTemp, model);
 
                     app.Project.RootFolder.Add(model);
 
                     new SubFileImporter().Import(model.SubstanceProcessLibrary,
-                        Path.Combine(dataDir, "IO", "03d_Tewor2003.sub"));
+                                                 Path.Combine(dataDir, "IO", "03d_Tewor2003.sub"));
 
                     app.RunActivity(model);
 
                     Assert.IsFalse(model.OutputIsEmpty);
 
                     // save it
-                    string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject",
-                        "project1.dsproj");
+                    string savePath = Path.Combine(hydFileDirectoryInTemp, "savedProject",
+                                                   "project1.dsproj");
                     app.SaveProjectAs(savePath);
                     app.CloseProject();
 
                     // remove the hyd file
-                    File.Delete(localHydFile);
-                    File.Move(localHydFileOtherTimestep, localHydFile);
+                    File.Delete(hydFileInTemp);
+                    File.Move(localHydFileOtherTimestep, hydFileInTemp);
 
                     // load the model, what should the hyd file do?
                     app.OpenProject(savePath);
@@ -466,12 +498,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.IsTrue(waqModel.OutputIsEmpty);
                     Assert.IsTrue(waqModel.GetOutputCoverages().All(c => c.Components[0].Values.Count == 0));
                 }
-            }
-            finally
-            {
-                // cleanup all files after test has ran.
-                string dir = Path.GetDirectoryName(localHydFile);
-                FileUtils.DeleteIfExists(dir);
             }
         }
 

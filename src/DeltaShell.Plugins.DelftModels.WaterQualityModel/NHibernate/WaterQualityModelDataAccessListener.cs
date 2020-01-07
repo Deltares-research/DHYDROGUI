@@ -24,13 +24,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
         public WaterQualityModelDataAccessListener()
         {
             projectDataPathPersisterHelper = new ProjectDataPathPersisterHelper();
-            modelDataDirPropertyName = TypeUtils.GetMemberName<WaterQualityModel>(m => m.ModelDataDirectory);
-            dataTableManagerFolderPropertyName = TypeUtils.GetMemberName<DataTableManager>(dtm => dtm.FolderPath);
-            settingsOutputDirectoryPropertyName =
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(s => s.OutputDirectory);
-            settingsWorkDirectoryPropertyName =
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(s => s.WorkDirectory);
-            hydFileDataPathPropertyName = TypeUtils.GetMemberName<HydFileData>(hydFileData => hydFileData.Path);
+            modelDataDirPropertyName = nameof(WaterQualityModel.ModelDataDirectory);
+            dataTableManagerFolderPropertyName = nameof(DataTableManager.FolderPath);
+            settingsOutputDirectoryPropertyName = nameof(WaterQualityModelSettings.OutputDirectory);
+            settingsWorkDirectoryPropertyName = nameof(WaterQualityModelSettings.WorkDirectory);
+            hydFileDataPathPropertyName = nameof(HydFileData.Path);
             waterQualityModelSettingsWorkDirectory = string.Empty;
         }
 

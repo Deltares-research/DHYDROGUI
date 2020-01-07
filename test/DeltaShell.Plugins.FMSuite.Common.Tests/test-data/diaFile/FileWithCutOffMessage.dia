@@ -1,4 +1,0 @@
-
-*** ERROR ERROR: RDMORLYR Error reading samples (not covering full grid) f_IniS
- edThick.xyz .
-** FATAL  : unstruc::flow_sedmorinit - Error in subroutine rdinimorlyr.

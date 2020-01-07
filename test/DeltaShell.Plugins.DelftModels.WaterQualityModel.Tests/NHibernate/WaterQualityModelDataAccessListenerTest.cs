@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DelftTools.Shell.Core.Dao;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate;
@@ -13,10 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     [TestFixture]
     public class WaterQualityModelDataAccessListenerTest
     {
-        private enum PrePersistMethod { OnPreUpdate, OnPreInsert, OnPreDelete }
-
-        private enum PostPersistMethod{ OnPostLoad, OnPostUpdate, OnPostInsert }
-
         [Test]
         public void TestClone()
         {
@@ -48,25 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             mocks.VerifyAll();
         }
 
-        [Test]
-        public void OnPreUpdate_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreUpdate);
-        }
-
-        [Test]
-        public void OnPreInsert_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreInsert);
-        }
-
-        [Test]
-        public void OnPreDelete_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreDelete);
-        }
-
-        private void DoPrePersistCallAndAssertProjectDataDirSubstitution(PrePersistMethod methodToCall)
+        [TestCaseSource(nameof(PrePersistMethods))]
+        public void DoPrePersistCallAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -84,13 +63,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNamesArray = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<WaterQualityModel>(m => m.ModelDataDirectory),
+                nameof(WaterQualityModel.ModelDataDirectory),
                 "haha",
                 "number"
             };
 
             // call
-            var returnResult = CallPrePersistMethod(methodToCall, listener, waqModel, stateArray, propertyNamesArray);
+            bool returnResult = prePersistMethod.Invoke(listener, waqModel, stateArray, propertyNamesArray);
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
@@ -98,25 +77,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(@"$data$test\foo\bar", stateArray[1]);
         }
 
-        [Test]
-        public void OnPreUpdate_DataTableManager_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreUpdate);
-        }
-
-        [Test]
-        public void OnPreInsert_DataTableManager_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreInsert);
-        }
-
-        [Test]
-        public void OnPreDelete_DataTableManager_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreDelete);
-        }
-
-        private void DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(PrePersistMethod methodToCall)
+        [TestCaseSource(nameof(PrePersistMethods))]
+        public void DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -133,12 +95,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNamesArray = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<DataTableManager>(m => m.FolderPath),
+                nameof(DataTableManager.FolderPath),
                 "haha"
             };
 
             // call
-            var returnResult = CallPrePersistMethod(methodToCall, listener, manager, stateArray, propertyNamesArray);
+            bool returnResult = prePersistMethod.Invoke(listener, manager, stateArray, propertyNamesArray);
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
@@ -146,41 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(@"$data$foo\bar", stateArray[1]);
         }
 
-        private static bool CallPrePersistMethod(PrePersistMethod methodToCall, WaterQualityModelDataAccessListener listener, 
-            object entity, object[] stateArray, string[] propertyNamesArray)
-        {
-            switch (methodToCall)
-            {
-                case PrePersistMethod.OnPreUpdate:
-                    return listener.OnPreUpdate(entity, stateArray, propertyNamesArray);
-                case PrePersistMethod.OnPreInsert:
-                    return listener.OnPreInsert(entity, stateArray, propertyNamesArray);
-                case PrePersistMethod.OnPreDelete:
-                    return listener.OnPreDelete(entity, stateArray, propertyNamesArray);
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        [Test]
-        public void OnPreUpdate_WaterQualityModel1DSettings_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreUpdate);
-        }
-
-        [Test]
-        public void OnPreInsert_WaterQualityModel1DSettings_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreInsert);
-        }
-
-        [Test]
-        public void OnPreDelete_WaterQualityModel1DSettings_SubstituteOutProjectDataDirectoryInPaths()
-        {
-            DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(PrePersistMethod.OnPreDelete);
-        }
-
-        private void DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(PrePersistMethod methodToCall)
+        [TestCaseSource(nameof(PrePersistMethods))]
+        public void DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -196,13 +125,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             };
             var propertyNamesArray = new[]
             {
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(m => m.OutputDirectory),
+                nameof(WaterQualityModelSettings.OutputDirectory),
                 "hihi",
                 "haha"
             };
 
             // call
-            var returnResult = CallPrePersistMethod(methodToCall, listener, settings, stateArray, propertyNamesArray);
+            bool returnResult = prePersistMethod.Invoke(listener, settings, stateArray, propertyNamesArray);
 
             // assert
             Assert.IsFalse(returnResult, "Should not veto.");
@@ -210,36 +139,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(@"$data$foo\bar", stateArray[0]);
         }
 
-        private static WaterQualityModelDataAccessListener CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(
-            string repoPath)
-        {
-            var mocks = new MockRepository();
-            var projectRepoMock = mocks.Stub<IProjectRepository>();
-            projectRepoMock.Stub(pr => pr.Path).Return(repoPath);
-            mocks.ReplayAll();
-            var listener = new WaterQualityModelDataAccessListener { ProjectRepository = projectRepoMock };
-            return listener;
-        }
-
-        [Test]
-        public void OnPostLoadTestWaqModel_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostLoad);
-        }
-
-        [Test]
-        public void OnPostUpdateTestWaqModel_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostUpdate);
-        }
-
-        [Test]
-        public void OnPostInsertTestWaqModel_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostInsert);
-        }
-
-        private static void DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(PostPersistMethod methodToCall)
+        [TestCaseSource(nameof(PostPersistMethods))]
+        public static void DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -258,37 +159,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 "hihi",
                 "number",
-                TypeUtils.GetMemberName<WaterQualityModel>(m => m.ModelDataDirectory),
+                nameof(WaterQualityModel.ModelDataDirectory),
                 "not a number"
             };
 
             // call
-            CallPostPersistMethod(methodToCall, listener, waqModel, stateArray, propertyNames);
+            postPersistMethod.Invoke(listener, waqModel, stateArray, propertyNames);
 
             // assert
             Assert.AreEqual(Path.Combine(repoPath + "_data", "test", "foo", "bar"), waqModel.ModelDataDirectory);
             Assert.AreEqual(Path.Combine(repoPath + "_data", "test", "foo", "bar"), stateArray[2]);
         }
 
-        [Test]
-        public void OnPostLoadTestDataTableManager_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostLoad);
-        }
-
-        [Test]
-        public void OnPostUpdateTestDataTableManager_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostUpdate);
-        }
-
-        [Test]
-        public void OnPostInsertTestDataTableManager_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostInsert);
-        }
-
-        private static void DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(PostPersistMethod methodToCall)
+        [TestCaseSource(nameof(PostPersistMethods))]
+        public static void DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -305,37 +189,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var propertyNames = new[]
             {
                 "hihi",
-                TypeUtils.GetMemberName<DataTableManager>(m => m.FolderPath),
+                nameof(DataTableManager.FolderPath),
                 "not a number"
             };
 
             // call
-            CallPostPersistMethod(methodToCall, listener, manager, stateArray, propertyNames);
+            postPersistMethod.Invoke(listener, manager, stateArray, propertyNames);
 
             // assert
             Assert.AreEqual(Path.Combine(repoPath + "_data", "foo", "bar"), manager.FolderPath);
             Assert.AreEqual(Path.Combine(repoPath + "_data", "foo", "bar"), stateArray[1]);
         }
 
-        [Test]
-        public void OnPostLoadTest_WaterQualityModel1DSettings_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostLoad);
-        }
-
-        [Test]
-        public void OnPostUpdateTest_WaterQualityModel1DSettings_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostUpdate);
-        }
-
-        [Test]
-        public void OnPostInsertTest_WaterQualityModel1DSettings_RestoreModelDataDirectoryToRootedPath()
-        {
-            DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(PostPersistMethod.OnPostInsert);
-        }
-
-        private static void DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(PostPersistMethod methodToCall)
+        [TestCaseSource(nameof(PostPersistMethods))]
+        public static void DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
             var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
@@ -353,33 +220,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 "hihi",
                 "not a number",
-                TypeUtils.GetMemberName<WaterQualityModelSettings>(m => m.OutputDirectory),
+                nameof(WaterQualityModelSettings.OutputDirectory),
             };
 
             // call
-            CallPostPersistMethod(methodToCall, listener, settings, stateArray, propertyNames);
+            postPersistMethod.Invoke(listener, settings, stateArray, propertyNames);
 
             // assert
             Assert.AreEqual(Path.Combine(repoPath + "_data", "foo", "bar"), settings.OutputDirectory);
             Assert.AreEqual(Path.Combine(repoPath + "_data", "foo", "bar"), stateArray[2]);
         }
 
-        private static void CallPostPersistMethod(PostPersistMethod methodToCall, WaterQualityModelDataAccessListener listener,
-            object entity, object[] stateArray, string[] propertyNames)
+        private static IEnumerable<Action<WaterQualityModelDataAccessListener, object, object[], string[]>> PostPersistMethods()
         {
-            switch (methodToCall)
-            {
-                case PostPersistMethod.OnPostLoad:
-                    listener.OnPostLoad(entity, stateArray, propertyNames);
-                    break;
-                case PostPersistMethod.OnPostUpdate:
-                    listener.OnPostUpdate(entity, stateArray, propertyNames);
-                    break;
+            yield return (listener, entity, state, propertyNames) => listener.OnPostLoad(entity, state, propertyNames);
+            yield return (listener, entity, state, propertyNames) => listener.OnPostInsert(entity, state, propertyNames);
+            yield return (listener, entity, state, propertyNames) => listener.OnPostUpdate(entity, state, propertyNames);
+        }
 
-                case PostPersistMethod.OnPostInsert:
-                    listener.OnPostInsert(entity, stateArray, propertyNames);
-                    break;
-            }
+        private static IEnumerable<Func<WaterQualityModelDataAccessListener, object, object[], string[], bool>> PrePersistMethods()
+        {
+            yield return (listener, entity, state, propertyNames) => listener.OnPreInsert(entity, state, propertyNames);
+            yield return (listener, entity, state, propertyNames) => listener.OnPreDelete(entity, state, propertyNames);
+            yield return (listener, entity, state, propertyNames) => listener.OnPreUpdate(entity, state, propertyNames);
+        }
+
+        private static WaterQualityModelDataAccessListener CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(
+            string repoPath)
+        {
+            var mocks = new MockRepository();
+            var projectRepoMock = mocks.Stub<IProjectRepository>();
+            projectRepoMock.Stub(pr => pr.Path).Return(repoPath);
+            mocks.ReplayAll();
+            var listener = new WaterQualityModelDataAccessListener { ProjectRepository = projectRepoMock };
+            return listener;
         }
     }
 }

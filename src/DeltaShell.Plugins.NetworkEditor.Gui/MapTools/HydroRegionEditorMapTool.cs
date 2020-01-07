@@ -21,7 +21,6 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -77,9 +76,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string EmbankmentToolName = "Embankment tool";
         public const string EnclosureToolName = "Enclosure tool";
         public const string BridgePillarToolName = "Bridge pillar tool";
-
-
-        private static readonly ILog log = LogManager.GetLogger(typeof (HydroRegionEditorMapTool));
 
         // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
@@ -779,19 +775,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     };
             }
 
-            var nodes = MapControl.SelectedFeatures.OfType<INode>().ToList();
-            if (nodes.Count > 0)
-            {
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Remove Node", null, (s,e) => RemoveNode(nodes))
-                            {
-                                Enabled = nodes.Any(n => n.IncomingBranches.Count == 1 && n.OutgoingBranches.Count == 1)
-                            }
-                    };
-            }
-
             var networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
             if (networkLocations.Count > 0)
             {
@@ -946,27 +929,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     crossSection.Definition.ShiftLevel(formLevelShift.Shift);
                 }
             }
-        }
-        
-        private void RemoveNode(IEnumerable<INode> nodes)
-        {
-            INode currentNode = null;
-            try
-            {
-                foreach (var node in nodes.Where(n => n.IncomingBranches.Count == 1 && n.OutgoingBranches.Count == 1))
-                {
-                    currentNode = node;
-                    NetworkHelper.MergeNodeBranches(node, node.Network);
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                //isn't a dialog more appropriate..
-                log.ErrorFormat("An error occured while removing node '{0}': {1}", currentNode.Name, ex.Message);
-            }
-
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
         }
     }
 }

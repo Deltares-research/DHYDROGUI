@@ -27,9 +27,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                     Resources.LoadsDataWizardPage_Description);
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
-            var importer = (LoadsDataTableImporter) model;
+            var importer = (LoadsDataTableImporter) item;
             importer.FilePath = loadsDataWizardPage.CsvFilePath;
         }
     }

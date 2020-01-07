@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Remoting;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -42,15 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallInitialize()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
             }
         }
 
@@ -333,16 +334,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestWriteNetGeomFileHarlingen()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
-
-                api.WriteNetGeometry("netgeom.nc");
+                remoteApi.Initialize(model.MduFilePath);
+                remoteApi.WriteNetGeometry("netgeom.nc");
 
                 Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(model.MduFilePath), "netgeom.nc")));
             }
@@ -351,43 +352,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedFeatures()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
-                var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
+                IGeometry snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
                     new LineString(new[] {center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0)}));
-                var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
+                IGeometry snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
+                IGeometry snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
+                IGeometry snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
+                IGeometry snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
+                IGeometry snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                var snappedWaterLevelBnd =
+                IGeometry snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                var snappedVelocityBnd =
+                IGeometry snappedVelocityBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                var snappedDischargeBnd =
+                IGeometry snappedDischargeBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
@@ -475,19 +477,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedThinDamFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
                 
                 Assert.IsTrue(snappedThinDam.SnapsToFlowFmGrid(model.GridExtent));
@@ -497,19 +500,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedFixedWeirFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedFixedWeir.SnapsToFlowFmGrid(model.GridExtent));
@@ -519,19 +523,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedCrossSectionFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedCrossSection.SnapsToFlowFmGrid(model.GridExtent));
@@ -541,19 +546,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedWeirFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedWeir.SnapsToFlowFmGrid(model.GridExtent));
@@ -563,19 +569,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedGateFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedGate.SnapsToFlowFmGrid(model.GridExtent));
@@ -585,19 +592,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedPumpFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedPump.SnapsToFlowFmGrid(model.GridExtent));
@@ -608,19 +616,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Category(TestCategory.Jira)] // UNST-1769 also see test TestGetSnappedFeatures (assert is commented out)
         public void TestGetSnappedEmbankmentFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
                     new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
                 Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent));
@@ -630,19 +639,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedObservationPointFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                Envelope gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
+                Coordinate center = gridExtent.Centre;
+                IGeometry snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
 
                 Assert.IsTrue(snappedPoint.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -651,16 +661,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedWaterLevelBndFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
                 
-                var snappedWaterLevelBnd =
+                IGeometry snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
@@ -672,16 +683,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedVelocityBndFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
-                var snappedVelocityBnd =
+                IGeometry snappedVelocityBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
@@ -693,16 +705,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedDischargeBndFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
                 
-                var snappedDischargeBnd =
+                IGeometry snappedDischargeBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
                         model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
@@ -714,14 +727,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedSourceSinkFeature()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = new RemoteFlexibleMeshModelApi())
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
+            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
-                api.Initialize(model.MduFilePath);
+                remoteApi.Initialize(model.MduFilePath);
 
                 Assert.True(model.Grid.Cells.Count > 1);
                 var geometry = new LineString(new[]
@@ -732,7 +746,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
 
-                var snappedSourceAndSink =
+                IGeometry snappedSourceAndSink =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
                         model.SourcesAndSinks.First().Feature.Geometry);
 

@@ -51,16 +51,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
+
+        /// <summary>
+        /// Gets a value indicating whether this wave model is online coupled to a fm model.
+        /// Always true for wave model inside an integrated model, since waves models can
+        /// not run stand-alone in DIMR.
+        /// </summary>
+        public bool IsCoupledToFlow => Owner is ICompositeActivity;
         
         /// <summary>
-        /// Gets or sets a value indicating whether this wave model is online (parallel) coupled
-        /// to a FM model.
+        /// Use domain specific data
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this wave model is online coupled to a FM model in an integrated model;
-        /// otherwise it is a stand alone model with or without COM file as input, <c>false</c>.
-        /// </value>
-        public bool IsCoupledToFlow { get; set; }
+        public bool UseDomainSpecific { get; set; }
 
         public int SimulationMode
         {
@@ -258,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private static readonly string GridPropertyName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
+        private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
         private string previousGridName;
 
         private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)
@@ -1120,10 +1122,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             if (IsCoupledToFlow)
             {
-                string flowComFilePath = GetFlowComFilePath();
-                WaveModelProperty comFileProperty =
-                    ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
-                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, flowComFilePath);
+                WaveModelProperty comFileProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
+                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, modelDefinition.CommunicationsFilePath);
             }
 
             ModelSaveTo(filePath, false);
@@ -1151,8 +1151,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             return new WaveModelValidator().Validate(this);
         }
-
-        public virtual Func<string> GetFlowComFilePath { get; set; }
 
         private bool lazyInitializationFlag;
 
@@ -1581,6 +1579,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         public virtual string MdwFilePath => mdwFile != null ? mdwFile.MdwFilePath : null;
 
         void IFileBased.CreateNew(string mdwPath)
@@ -1729,6 +1732,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
             //wave doesnt run standalone via dimr but via kernels
+        }
+
+        public virtual void PrepareForIntegratedModelRun()
+        {
+            // Initialization logic which should be executed as part of an
+            // integrated model HydroModel initialization.
         }
 
         #endregion
