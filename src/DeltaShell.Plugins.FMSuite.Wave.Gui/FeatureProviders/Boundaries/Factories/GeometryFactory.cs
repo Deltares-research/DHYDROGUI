@@ -99,8 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             }
 
             IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
-            Coordinate coordinate = calculator.CalculateCoordinateFromDistance(supportPoint.Distance,
-                                                                               supportPoint.GeometricDefinition.GridSide);
+            Coordinate coordinate = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
 
             return new Point(coordinate);
         }

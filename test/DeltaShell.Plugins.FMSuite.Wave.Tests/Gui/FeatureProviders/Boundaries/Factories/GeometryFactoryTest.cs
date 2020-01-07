@@ -252,16 +252,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             double distance = random.NextDouble();
-            var gridSide = random.NextEnumValue<GridSide>();
 
-            SupportPoint supportPoint = CreateSupportPoint(gridSide, distance);
+            SupportPoint supportPoint = CreateSupportPoint(distance);
 
             double x = random.NextDouble();
             double y = random.NextDouble();
 
             var snappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
             calculatorProvider.GetBoundarySnappingCalculator().Returns(snappingCalculator);
-            snappingCalculator.CalculateCoordinateFromDistance(distance, gridSide).Returns(new Coordinate(x, y));
+            snappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint)
+                              .Returns(new Coordinate(x, y));
 
             // Call
             IPoint point = factory.ConstructBoundarySupportPoint(supportPoint);
@@ -271,8 +271,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(point.Y, Is.EqualTo(y).Within(1E-15));
         }
 
-        private static SupportPoint CreateSupportPoint(GridSide gridSide, double distance)
+        private SupportPoint CreateSupportPoint(double distance)
         {
+            var gridSide = random.NextEnumValue<GridSide>();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             geometricDefinition.GridSide.Returns(gridSide);
 

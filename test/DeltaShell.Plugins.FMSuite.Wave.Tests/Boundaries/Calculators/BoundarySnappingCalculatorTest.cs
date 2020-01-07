@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
@@ -206,11 +205,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         }
 
         [TestCaseSource(nameof(CoordinateFromDistanceTestData))]
-        public void CalculateCoordinateFromDistance_WithValidDistance_ThenCorrectResultIsReturned(GridSide gridSide, double distance, Coordinate expectedCoordinate)
+        public void CalculateCoordinateFromSupportPoint_CorrectResultIsReturned(SupportPoint supportPoint,
+                                                                                Coordinate expectedCoordinate)
         {
             // Setup
-            const int x = 5;
-            const int y = 5;
+            const int x = 10;
+            const int y = 10;
 
             GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
             SetGridValues(grid, x, y);
@@ -218,33 +218,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             var calculator = new BoundarySnappingCalculator(gridBoundary);
 
             // Call
-            Coordinate result = calculator.CalculateCoordinateFromDistance(distance, gridSide);
+            Coordinate result = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
 
             // Assert
             Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
                                                                     $"But was:  {result}.");
-        }
-
-        [Test]
-        public void CalculateCoordinateFromDistance_WhenDistanceIsSmallerThanZero_ThenArgumentOutOfRangeExceptionIsThrown()
-        {
-            // Setup
-            const int x = 5;
-            const int y = 5;
-
-            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y);
-
-            var calculator = new BoundarySnappingCalculator(gridBoundary);
-
-            double distance = random.NextDouble() * -1;
-
-            // Call
-            void Call() => calculator.CalculateCoordinateFromDistance(distance, random.NextEnumValue<GridSide>());
-
-            // Assert
-            var exception = Assert.Throws<ArgumentOutOfRangeException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("distance"));
-            Assert.That(exception.Message, Is.StringStarting("Distance cannot be smaller than 0"));
         }
 
         private static void SetGridValues(IDiscreteGridPointCoverage grid, int x, int y)
@@ -259,14 +237,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             }
         }
 
+        /// <remarks>
+        /// Assumes grid of 10x10;
+        /// </remarks>>
         private IEnumerable<TestCaseData> CoordinateFromDistanceTestData()
         {
-            double distance = random.NextDouble() * 4;
+            const int maxIndex = 9;
 
-            yield return new TestCaseData(GridSide.North, distance, new Coordinate(distance, 4));
-            yield return new TestCaseData(GridSide.East, distance, new Coordinate(4, 4 - distance));
-            yield return new TestCaseData(GridSide.South, distance, new Coordinate(4 - distance, 0));
-            yield return new TestCaseData(GridSide.West, distance, new Coordinate(0, distance));
+            int startIndex = random.Next(maxIndex - 1);
+            int endIndex = random.Next(startIndex + 1, maxIndex);
+            double distance = random.NextDouble() * (endIndex - startIndex);
+
+            yield return new TestCaseData(CreateSupportPoint(distance, GridSide.North, startIndex, endIndex),
+                                          new Coordinate(distance + startIndex, 9));
+            yield return new TestCaseData(CreateSupportPoint(distance, GridSide.East, startIndex, endIndex),
+                                          new Coordinate(maxIndex, maxIndex - distance - startIndex));
+            yield return new TestCaseData(CreateSupportPoint(distance, GridSide.South, startIndex, endIndex),
+                                          new Coordinate(maxIndex - distance - startIndex, 0));
+            yield return new TestCaseData(CreateSupportPoint(distance, GridSide.West, startIndex, endIndex),
+                                          new Coordinate(0, distance + startIndex));
+        }
+
+        private static SupportPoint CreateSupportPoint(double distance, GridSide side, int start, int end)
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            geometricDefinition.GridSide.Returns(side);
+            geometricDefinition.StartingIndex.Returns(start);
+            geometricDefinition.EndingIndex.Returns(end);
+
+            return new SupportPoint(distance, geometricDefinition);
         }
     }
 }

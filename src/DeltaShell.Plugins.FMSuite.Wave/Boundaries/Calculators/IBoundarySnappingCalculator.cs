@@ -49,17 +49,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                                                                                    double? tolerance = null);
 
         /// <summary>
-        /// Gets the coordinate at the given <see cref="distance"/> from
-        /// the start of the <see cref="IWaveBoundaryGeometricDefinition"/>.
+        /// Gets the coordinate that corresponds with the given <paramref name="supportPoint"/>.
         /// </summary>
-        /// <param name="distance">The distance.</param>
-        /// <param name="gridSide">The grid side.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="distance"/> is smaller than 0.
+        /// <param name="supportPoint">The support point.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         /// <returns>
-        /// The coordinate at the given <paramref name="distance"/>.
+        /// The coordinate of the location of the <paramref name="supportPoint"/>.
         /// </returns>
-        Coordinate CalculateCoordinateFromDistance(double distance, GridSide gridSide);
+        Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint);
     }
 }

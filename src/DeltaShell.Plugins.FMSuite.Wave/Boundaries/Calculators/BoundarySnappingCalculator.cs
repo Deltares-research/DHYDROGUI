@@ -60,19 +60,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             return closestIndices.Item1.Select(i => gridEnvelope[i]);
         }
 
-        public Coordinate CalculateCoordinateFromDistance(double distance, GridSide gridSide)
+        public Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint)
         {
-            if (distance < 0)
+            if (supportPoint == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(distance),
-                                                      @"Distance cannot be smaller than 0");
+                throw new ArgumentNullException(nameof(supportPoint));
             }
 
-            Coordinate[] coordinates = GridBoundary[gridSide]
+            IWaveBoundaryGeometricDefinition geometricDefinition = supportPoint.GeometricDefinition;
+
+            int nElements = geometricDefinition.EndingIndex - geometricDefinition.StartingIndex + 1;
+
+            Coordinate[] coordinates = GridBoundary[geometricDefinition.GridSide]
+                                       .Skip(geometricDefinition.StartingIndex)
+                                       .Take(nElements)
                                        .Select(x => GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(x))
                                        .ToArray();
 
-            return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance, coordinates, DistanceCalculator);
+            return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(supportPoint.Distance, coordinates, DistanceCalculator);
         }
     }
 }
