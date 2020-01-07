@@ -7,7 +7,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor
+namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
 
     /// <summary>

@@ -245,7 +245,6 @@
     <Compile Include="Editors\WaterFlowFMFileStructureView.Designer.cs">
       <DependentUpon>WaterFlowFMFileStructureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="Editors\WaterFlowFmSettingsHelper.cs" />
     <Compile Include="FlowFMGuiPlugin.cs" />
     <Compile Include="FlowFMMapViewDecorator.cs" />

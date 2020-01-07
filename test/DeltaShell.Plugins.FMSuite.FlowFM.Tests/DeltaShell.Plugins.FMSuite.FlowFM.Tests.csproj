@@ -236,7 +236,6 @@
     <Compile Include="Api\RemoteFlexibleMeshModelApiTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiIntegrationTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiTest.cs" />
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />

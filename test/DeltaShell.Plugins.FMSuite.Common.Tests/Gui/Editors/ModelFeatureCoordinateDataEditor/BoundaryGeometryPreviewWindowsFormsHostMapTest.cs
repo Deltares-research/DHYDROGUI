@@ -4,7 +4,7 @@ using System.Windows.Forms.Integration;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -12,7 +12,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinateDataEditor
+namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
     [TestFixture]
     public class BoundaryGeometryPreviewWindowsFormsHostMapTest
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
             Assert.AreEqual(lineGeomery, usedFeatureGeometry);
 
             Assert.IsNotNull(boundaryGeometryPreview.DataPoints);
-            Assert.AreEqual(4, boundaryGeometryPreview.DataPoints.Count);
+            Assert.AreEqual((int) 4, (int) boundaryGeometryPreview.DataPoints.Count);
 
             // first point should be selected
             var selectedPoints = (IList<int>)TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
             BoundaryGeometryPreviewWindowsFormsHostMap.SetFeatureGeometry(windowsFormsHost, lineGeomery);
 
             Assert.IsNotNull(boundaryGeometryPreview.DataPoints);
-            Assert.AreEqual(4, boundaryGeometryPreview.DataPoints.Count);
+            Assert.AreEqual((int) 4, (int) boundaryGeometryPreview.DataPoints.Count);
 
             BoundaryGeometryPreviewWindowsFormsHostMap.SetSelectedIndex(windowsFormsHost, 1);
 
