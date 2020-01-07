@@ -102,8 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
-                                                              (d, v) => {}, 
-                                                              o => false)
+                                                              (d, v) => data.IsCoupledToFlow = (bool)v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
