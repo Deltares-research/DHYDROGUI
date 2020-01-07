@@ -233,6 +233,7 @@
     <Compile Include="Common\IO\Delft3DGridFileWriterTest.cs" />
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\Enums\DirectionalSpreadingViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\Enums\PeriodViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModelTest.cs" />
