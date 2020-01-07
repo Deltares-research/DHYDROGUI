@@ -45,6 +45,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                 new BoundaryEndPointMapFeatureProvider(boundaryContainer, 
                                                        coordinateSystem, 
                                                        geometryFactory);
+
+            SupportPointMapFeatureProvider =
+                new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+                                                           geometryFactory);
         }
 
         /// <summary>
@@ -64,6 +68,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// The boundary end point map feature provider.
         /// </value>
         public BoundaryEndPointMapFeatureProvider BoundaryEndPointMapFeatureProvider { get; }
-        
+
+        /// <summary>
+        /// Gets the <see cref="SupportPointMapFeatureProvider"/> of this
+        /// <see cref="BoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <value>
+        /// The boundary support point map feature provider.
+        /// </value>
+        public BoundarySupportPointMapFeatureProvider SupportPointMapFeatureProvider { get; }
     }
 }
