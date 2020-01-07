@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 return attribute;
 
             var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
-            Log.WarnFormat(GWSW.Properties.Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
+            Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
             return null;
         }
 

@@ -8,7 +8,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.ImportExport.GWSW.Hydro.SewerFeatures;
+using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 

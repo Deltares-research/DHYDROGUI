@@ -3,7 +3,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.ImportExport.GWSW.Hydro.SewerFeatures;
+using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw

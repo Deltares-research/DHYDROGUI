@@ -134,13 +134,13 @@
     <Compile Include="GwswFileImporter.cs" />
     <Compile Include="GWSWImporterApplicationPlugin.cs" />
     <Compile Include="GWSWImporterGuiPlugin.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswConnectionOrifice.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswConnectionPump.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswConnectionWeir.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswPointOutletCompartment.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswStructureOutletCompartment.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswStructurePump.cs" />
-    <Compile Include="Hydro\SewerFeatures\GwswStructureWeir.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionPump.cs" />
+    <Compile Include="SewerFeatures\GwswConnectionWeir.cs" />
+    <Compile Include="SewerFeatures\GwswPointOutletCompartment.cs" />
+    <Compile Include="SewerFeatures\GwswStructureOutletCompartment.cs" />
+    <Compile Include="SewerFeatures\GwswStructurePump.cs" />
+    <Compile Include="SewerFeatures\GwswStructureWeir.cs" />
     <Compile Include="InvertedEggCrossSectionShapeGenerator.cs" />
     <Compile Include="ISewerFeatureGenerator.cs" />
     <Compile Include="ManholeMapping.cs" />
@@ -231,7 +231,9 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\StructureFeatureSmall.png" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DelimeterSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -242,6 +244,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

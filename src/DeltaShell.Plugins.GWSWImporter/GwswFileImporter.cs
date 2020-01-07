@@ -10,7 +10,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -24,10 +23,9 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using PostSharp.Extensibility;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -88,13 +86,13 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         {
             if (GwswAttributesDefinition == null || !GwswAttributesDefinition.Any())
             {
-                Log.ErrorFormat(GWSW.Properties.Resources.GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_);
+                Log.ErrorFormat(Resources.GwswFileImporter_ImportItem_No_mapping_was_found_to_import_Gwsw_Files_);
                 return null;
             }
 
             if (!string.IsNullOrEmpty(path)) FilesToImport = new EventedList<string> { path };
 
-            Log.Info(GWSW.Properties.Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
+            Log.Info(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Importing_sub_files_);
             if (ShouldCancel)
                 return null;
             var elementTypesList = ImportGwswElementsFromGwswFiles().ToList();

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using DeltaShell.NGHS.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
@@ -122,8 +122,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
             catch (Exception)
             {
-                Log.ErrorFormat(
-                    GWSW.Properties.Resources
+                Log.ErrorFormat(Resources
                         .GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_,
                     name, lineNumber, fileName);
             }

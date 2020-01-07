@@ -370,5 +370,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
                         "a_network_defined_", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap StructureFeatureSmall {
+            get {
+                object obj = ResourceManager.GetObject("StructureFeatureSmall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

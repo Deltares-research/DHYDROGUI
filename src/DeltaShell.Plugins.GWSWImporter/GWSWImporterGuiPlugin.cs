@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
@@ -26,11 +27,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         }
         public override string Version
         {
-            get { return "1.0.0.0"; }
+            get { return GetType().Assembly.GetName().Version.ToString(); }
         }
         public override string FileFormatVersion
         {
-            get { return "1.0.0.0"; }
+            get { return FileVersionInfo.GetVersionInfo(GetType().Assembly.Location).FileVersion; }
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
