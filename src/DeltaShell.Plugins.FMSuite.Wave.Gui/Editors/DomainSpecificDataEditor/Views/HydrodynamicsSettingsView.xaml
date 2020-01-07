@@ -6,11 +6,12 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels"
              xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters"
+             xmlns:converters1="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              mc:Ignorable="d">
 
     <UserControl.Resources>
 
-        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converters:EnumToDescriptionConverter>
+        <converters1:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converters1:EnumToDescriptionConverter>
 
         <ObjectDataProvider x:Key="UseParameterTypes"
                             MethodName="GetValues" ObjectType="{x:Type system:Enum}">

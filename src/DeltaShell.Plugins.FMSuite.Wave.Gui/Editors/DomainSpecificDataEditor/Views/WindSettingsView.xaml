@@ -6,11 +6,12 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels"
              xmlns:converters1="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters"
+             xmlns:converters="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
              mc:Ignorable="d">
 
     <UserControl.Resources>
         <converters1:WindInputTypeToVisibilityConverter x:Key="WindInputTypeToVisibilityConverter"></converters1:WindInputTypeToVisibilityConverter>
-        <converters1:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converters1:EnumToDescriptionConverter>
+        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converters:EnumToDescriptionConverter>
         <converters1:FilePathToFileNameConverter x:Key="FileNameConverter"></converters1:FilePathToFileNameConverter>
         <converters1:WindInputTypeAndBooleanToBooleanConverter x:Key="EnabledGridWebFieldConverter"></converters1:WindInputTypeAndBooleanToBooleanConverter>
         <converters1:WindInputTypeToBooleanConverter x:Key="WindInputTypeToBooleanConverter"></converters1:WindInputTypeToBooleanConverter>

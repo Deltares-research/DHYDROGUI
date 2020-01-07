@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using DelftTools.Utils.Reflection;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Converters
 {
     /// <summary>
     /// Value converter for converting an <see cref="Enum"/> to its description.

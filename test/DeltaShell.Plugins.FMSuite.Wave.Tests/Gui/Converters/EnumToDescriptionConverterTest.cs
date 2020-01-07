@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Converters;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEditor.Converters
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Converters
 {
     [TestFixture]
     public class EnumToDescriptionConverterTest
