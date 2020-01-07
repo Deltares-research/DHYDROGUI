@@ -44,6 +44,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string BoundaryConditionLayerName = "Boundary Conditions";
 
         /// <summary>
+        /// The boundary support points layer name
+        /// </summary>
+        public const string BoundarySupportPointsLayerName = "Support points";
+
+        /// <summary>
         /// The observation point layer name
         /// </summary>
         public const string ObservationPointLayerName = "Observation Points";

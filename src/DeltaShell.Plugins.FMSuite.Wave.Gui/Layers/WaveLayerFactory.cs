@@ -359,7 +359,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                                         model);
             groupLayer.Layers.Add(lineDataLayer);
 
+            ILayer supportPointsLayer =
+                CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider, model);
+
+            groupLayer.Layers.Add(supportPointsLayer);
+
             return groupLayer;
+        }
+
+        private static ILayer CreateSupportPointsLayer(BoundarySupportPointMapFeatureProvider featureProvider, IWaveModel model)
+        {
+            return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
+            {
+                DataSource = featureProvider,
+                ReadOnly = true,
+                Selectable = false,
+                NameIsReadOnly = true,
+                FeatureEditor = new Feature2DEditor(model),
+                Style = new VectorStyle
+                {
+                    Fill = new SolidBrush(Color.FromArgb(14, 187, 240)),
+                    GeometryType = typeof(IPoint)
+                }
+            };
         }
 
         private static ILayer CreateBoundaryLineLayer(BoundaryLineMapFeatureProvider featureProvider,

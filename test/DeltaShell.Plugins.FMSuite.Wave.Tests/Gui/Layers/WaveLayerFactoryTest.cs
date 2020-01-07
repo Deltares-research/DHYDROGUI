@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -8,12 +9,14 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 {
@@ -345,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         "Expected the layer to have a different name.");
 
             var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(2),
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(3),
                         "Expected a different number of layers:");
 
             ILayer lineLayer = groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryLineLayerName);
@@ -361,6 +364,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(endPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
                         $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
 
+            ILayer supportPointsLayer =
+                groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundarySupportPointsLayerName);
+            Assert.That(supportPointsLayer, Is.Not.Null,
+                        $"Expected the layer with name '{WaveLayerNames.BoundarySupportPointsLayerName}' to exist.");
+            AssertCorrectSupportPointsLayer(supportPointsLayer, featureProviderContainer);
         }
 
         [Test]
@@ -395,5 +403,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception.ParamName, Is.EqualTo("model"));
         }
 
+        private static void AssertCorrectSupportPointsLayer(ILayer supportPointsLayer,
+                                                            BoundaryMapFeaturesContainer featureProviderContainer)
+        {
+            Assert.That(supportPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
+
+            Assert.That(supportPointsLayer.DataSource,
+                        Is.EqualTo(featureProviderContainer.SupportPointMapFeatureProvider));
+            Assert.That(supportPointsLayer.ReadOnly, Is.True);
+            Assert.That(supportPointsLayer.Selectable, Is.False);
+            Assert.That(supportPointsLayer.NameIsReadOnly, Is.True);
+            Assert.That(supportPointsLayer.FeatureEditor, Is.Not.Null);
+
+            var vectorLayer = supportPointsLayer as VectorLayer;
+            Assert.That(vectorLayer, Is.Not.Null);
+            Assert.That(vectorLayer.Style.GeometryType, Is.EqualTo(typeof(IPoint)));
+
+            var solidBrush = vectorLayer.Style.Fill as SolidBrush;
+            Assert.That(solidBrush, Is.Not.Null);
+            Assert.That(solidBrush.Color.ToArgb(), Is.EqualTo(Color.FromArgb(14, 187, 240).ToArgb()));
+        }
     }
 }

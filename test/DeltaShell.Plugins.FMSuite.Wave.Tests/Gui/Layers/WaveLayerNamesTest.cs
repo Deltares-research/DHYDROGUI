@@ -49,5 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
         }
 
+        [Test]
+        public void BoundarySupportPointLayerName_ReturnsCorrectValue()
+        {
+            Assert.That(WaveLayerNames.BoundarySupportPointsLayerName, Is.EqualTo("Support points"));
+        }
     }
 }
