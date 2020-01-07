@@ -124,7 +124,7 @@
   <data name="WavePropertiesValidator_Validate_Waves_Model_Properties" xml:space="preserve">
     <value>Waves Model Properties</value>
   </data>
-  <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruple_is_true_" xml:space="preserve">
+  <data name="WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_" xml:space="preserve">
     <value>Wind speed should be greater than zero when the option of quadruplets is activated.</value>
   </data>
   <data name="WavePropertiesValidator_ValidateThat_TimeStep_Is_Not_Bigger_Than_TimeScale" xml:space="preserve">
@@ -223,9 +223,6 @@
   <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_write_COM_file" xml:space="preserve">
     <value>Stand-alone wave model cannot write COM-file</value>
   </data>
-  <data name="WaveCouplingValidator_Validate_Stand_alone_wave_model_cannot_use__0_" xml:space="preserve">
-    <value>Stand-alone wave model cannot use {0}</value>
-  </data>
   <data name="WaveCouplingValidator_ValidateModelTimeSettings_Time_step_cannot_be_set_to_Zero_" xml:space="preserve">
     <value>The coupling time step must be positive.</value>
   </data>
@@ -234,5 +231,8 @@
   </data>
   <data name="WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____" xml:space="preserve">
     <value>No data points found for boundary '{0}', saved boundary will default to Uniform spatial definition type</value>
+  </data>
+  <data name="WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_" xml:space="preserve">
+    <value>Communications file '{0}' does not exist.</value>
   </data>
 </root>

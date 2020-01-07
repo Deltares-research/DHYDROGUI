@@ -10,7 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     /// </summary>
     public static class MorphologyFileBackwardsCompatibilityHelper
     {
-
         /// <summary>
         /// The category property mapping. This contains the currently
         /// available Backwards Compatibility mappings.
@@ -54,7 +53,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                                             mappedName);
 
             return mappedName;
+        }
 
+        /// <summary>
+        /// The set of obsolete properties that should be removed from .mor files.
+        /// </summary>
+        /// <remarks>
+        /// Each of these elements is supposed to be lowercase, as the .mor file is
+        /// case insensitive.
+        /// </remarks>
+        private static readonly HashSet<string> obsoleteProperties = new HashSet<string>()
+        {
+            "neubcmud",
+            "neubcsand",
+            "eqmbc",
+        };
+
+        /// <summary>
+        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
+        /// </summary>
+        /// <param name="propertyName">The property name to check.</param>
+        /// <returns>
+        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsObsoletePropertyName(string propertyName)
+        {
+            return obsoleteProperties.Contains(propertyName.ToLowerInvariant());
         }
     }
 }

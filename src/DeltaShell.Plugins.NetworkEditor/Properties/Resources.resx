@@ -127,12 +127,6 @@
   <data name="DrainageBasin" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\basin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="HydroRegion" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\region.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Network" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\network_crs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="runoff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\runoff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -180,18 +174,6 @@
   </data>
   <data name="NetworkEditorApplicationPlugin_Description" xml:space="preserve">
     <value>Provides editing functionality for geometrical information in the hydro region.</value>
-  </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Region" xml:space="preserve">
-    <value>Region</value>
-  </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro" xml:space="preserve">
-    <value>Hydro</value>
-  </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Network" xml:space="preserve">
-    <value>Network</value>
-  </data>
-  <data name="NetworkEditorApplicationPlugin_GetDataItemInfos_Basin" xml:space="preserve">
-    <value>Basin</value>
   </data>
   <data name="NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin" xml:space="preserve">
     <value>Hydro Region Plugin</value>

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 {
@@ -125,53 +123,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var channel = hydroNetwork.Channels.First();
             return HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionDefinitionXYZ, 10);
-        }
-
-        [Test]
-        public void TestShowConveyanceButton()
-        {
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var channel = hydroNetwork.Channels.First();
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView
-                {
-                    GetConveyanceCalculators = c =>
-                        {
-                            var mocks = new MockRepository();
-                            var calculatorMock = mocks.Stub<IConveyanceCalculator>();
-                            return new List<IConveyanceCalculator> {calculatorMock};
-                        }
-                };
-            var controls = crossSectionView.Controls.Find("panelForConveyanceBtn", true);
-
-            var showConveyancePanel = controls.FirstOrDefault();
-            Assert.IsNotNull(showConveyancePanel);
-
-            //YZ
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel,
-                                                                          CrossSectionDefinitionYZ.CreateDefault(), 10);
-            crossSectionView.Data = cs;
-
-            Assert.IsTrue(showConveyancePanel.Visible);
-
-            //XYZ
-            cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, CrossSectionDefinitionXYZ.CreateDefault(),
-                                                                      10);
-            crossSectionView.Data = cs;
-            Assert.IsTrue(showConveyancePanel.Visible);
-
-            //ZW
-            cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, CrossSectionDefinitionZW.CreateDefault(),
-                                                                      10);
-            crossSectionView.Data = cs;
-            Assert.IsFalse(showConveyancePanel.Visible);
-
-            //YZ + No Calculator
-            crossSectionView.GetConveyanceCalculators = c => new List<IConveyanceCalculator>();
-
-            cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, CrossSectionDefinitionYZ.CreateDefault(),
-                                                                      10);
-            crossSectionView.Data = cs;
-            Assert.IsFalse(showConveyancePanel.Visible);
         }
     }
 }

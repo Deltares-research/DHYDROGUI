@@ -130,11 +130,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
-            ConfigurePartition(model);
+            ConfigurePartition(item);
 
-            var exporter = model as FMPartitionExporterBase;
+            var exporter = item as FMPartitionExporterBase;
             if (exporter != null)
             {
                 exporter.FilePath = filePath;

@@ -16,9 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             {
                 FileType = WindDefinitionType.WindXWindY,
                 HasSpiderWeb = true,
-                SpiderWebFileName = "someSpider.spw",
-                XComponentFileName = "theX.wnd",
-                YComponentFileName = "theY.wnd"
+                SpiderWebFilePath = "someSpider.spw",
+                XComponentFilePath = "theX.wnd",
+                YComponentFilePath = "theY.wnd"
             } };
             WindowsFormsTestHelper.ShowModal(editor);
         }

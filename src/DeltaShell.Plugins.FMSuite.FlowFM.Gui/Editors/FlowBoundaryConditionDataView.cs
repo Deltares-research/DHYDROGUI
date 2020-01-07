@@ -436,9 +436,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.IsEditing) ||
                 e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.DataType) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Offset) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Factor) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ThatcherHarlemanTimeLag))
+                e.PropertyName == nameof(FlowBoundaryCondition.Offset) ||
+                e.PropertyName == nameof(FlowBoundaryCondition.Factor) ||
+                e.PropertyName == nameof(FlowBoundaryCondition.ThatcherHarlemanTimeLag))
             {
                 RefreshBoundaryData();
                 UpdateControl();

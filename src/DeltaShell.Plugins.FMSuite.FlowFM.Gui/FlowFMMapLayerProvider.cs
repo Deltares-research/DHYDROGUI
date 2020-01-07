@@ -11,7 +11,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -493,9 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             var theme = new CategorialTheme
             {
-                AttributeName =
-                    TypeUtils.GetMemberName<BoundaryConditionSet>(
-                        bc => bc.VariableDescription),
+                AttributeName = nameof(BoundaryConditionSet.VariableDescription),
                 DefaultStyle = null,
                 NoDataValues = new List<string> {""}
             };

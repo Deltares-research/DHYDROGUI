@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 
@@ -34,17 +33,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             };
             tableView.SelectionChanged += TableViewOnSelectionChanged;
 
-            tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Name), "Name");
-            obsTypeColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Type), "Type");
-            transCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.TransmissionCoefficient),
-                                                  "Transmission Coefficient");
-            heightColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Height), "Height");
-            alphaColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Alpha), "Alpha");
-            betaColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.Beta), "Beta");
-            reflTypeColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionType),
-                                                 "Reflection Type");
-            reflCoefColumn = tableView.AddColumn(TypeUtils.GetMemberName<WaveObstacle>(w => w.ReflectionCoefficient),
-                                                 "Reflection Coefficient");
+            tableView.AddColumn(nameof(WaveObstacle.Name), "Name");
+            obsTypeColumn = tableView.AddColumn(nameof(WaveObstacle.Type), "Type");
+            transCoefColumn = tableView.AddColumn(nameof(WaveObstacle.TransmissionCoefficient), "Transmission Coefficient");
+            heightColumn = tableView.AddColumn(nameof(WaveObstacle.Height), "Height");
+            alphaColumn = tableView.AddColumn(nameof(WaveObstacle.Alpha), "Alpha");
+            betaColumn = tableView.AddColumn(nameof(WaveObstacle.Beta), "Beta");
+            reflTypeColumn = tableView.AddColumn(nameof(WaveObstacle.ReflectionType), "Reflection Type");
+            reflCoefColumn = tableView.AddColumn(nameof(WaveObstacle.ReflectionCoefficient), "Reflection Coefficient");
 
             tableView.RowDeleteHandler += RowDeleteHandler;
             tableView.ReadOnlyCellFilter += ReadOnlyCellFilter;

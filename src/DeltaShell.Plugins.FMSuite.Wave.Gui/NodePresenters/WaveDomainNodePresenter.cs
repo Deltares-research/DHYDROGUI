@@ -9,7 +9,6 @@ using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -35,8 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             node.Image = DomainFolderImage;
         }
 
-        private readonly string gridMemberName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Grid);
-        private readonly string bathymetryMemberName = TypeUtils.GetMemberName<WaveDomainData>(d => d.Bathymetry);
+        private readonly string gridMemberName = nameof(WaveDomainData.Grid);
+        private readonly string bathymetryMemberName = nameof(WaveDomainData.Bathymetry);
 
         protected override void OnPropertyChanged(WaveDomainData item, ITreeNode node, PropertyChangedEventArgs e)
         {

@@ -8,7 +8,7 @@ using NetTopologySuite.Extensions.Features;
 namespace DelftTools.Hydro
 {
     [Entity]
-    public class RunoffBoundary : Feature, IHydroObject, IComparable
+    public class RunoffBoundary : Feature, IHydroObject, IComparable, ILongNameable
     {
         public RunoffBoundary()
         {

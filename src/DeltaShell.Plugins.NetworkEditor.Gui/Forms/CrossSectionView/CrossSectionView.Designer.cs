@@ -40,12 +40,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.comboBoxDefinitions = new System.Windows.Forms.ComboBox();
             this.rbShared = new System.Windows.Forms.RadioButton();
             this.rbLocal = new System.Windows.Forms.RadioButton();
-            this.btnShowConveyance = new System.Windows.Forms.Button();
             this.definitionView = new CrossSectionDefinitionView();
-            this.panelForConveyanceBtn = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceCrossSectionViewModel)).BeginInit();
-            this.panelForConveyanceBtn.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -150,18 +147,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.rbLocal.Text = "use local definition";
             this.rbLocal.UseVisualStyleBackColor = true;
             // 
-            // btnShowConveyance
-            // 
-            this.btnShowConveyance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnShowConveyance.Location = new System.Drawing.Point(1026, 11);
-            this.btnShowConveyance.Margin = new System.Windows.Forms.Padding(2);
-            this.btnShowConveyance.Name = "btnShowConveyance";
-            this.btnShowConveyance.Size = new System.Drawing.Size(115, 19);
-            this.btnShowConveyance.TabIndex = 7;
-            this.btnShowConveyance.Text = "Show conveyance";
-            this.btnShowConveyance.UseVisualStyleBackColor = true;
-            this.btnShowConveyance.Click += new System.EventHandler(this.btnShowConveyance_Click);
-            // 
             // definitionView
             // 
             this.definitionView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -174,28 +159,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.definitionView.Size = new System.Drawing.Size(1158, 675);
             this.definitionView.TabIndex = 0;
             // 
-            // panel2
-            // 
-            this.panelForConveyanceBtn.Controls.Add(this.btnShowConveyance);
-            this.panelForConveyanceBtn.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelForConveyanceBtn.Location = new System.Drawing.Point(0, 745);
-            this.panelForConveyanceBtn.Name = "panelForConveyanceBtn";
-            this.panelForConveyanceBtn.Size = new System.Drawing.Size(1158, 41);
-            this.panelForConveyanceBtn.TabIndex = 8;
-            // 
             // CrossSectionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.definitionView);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panelForConveyanceBtn);
             this.Name = "CrossSectionView";
             this.Size = new System.Drawing.Size(1158, 786);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceCrossSectionViewModel)).EndInit();
-            this.panelForConveyanceBtn.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -212,7 +186,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private Label label1;
         private ComboBox comboBoxDefinitions;
         private Button btnShare;
-        private Button btnShowConveyance;
-        private Panel panelForConveyanceBtn;
     }
 }

@@ -6,7 +6,7 @@ using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
     public class BcmFileFlowBoundaryDataBuilder : BcFileFlowBoundaryDataBuilder
     {
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccess
             refTime = referenceTime.Value.ToString("yyyyMMdd");
             return new BcmQuantityData
             {
-                Quantity = quantity,
+                QuantityName = quantity,
                 Unit = "minutes",
                 ReferenceTime = refTime,
                 Values = PrintValues(argument, null, converter).ToList()

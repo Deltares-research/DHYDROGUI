@@ -9,8 +9,6 @@
             discriminator-value="lazy_map_file_function_store" 
             lazy="false" >
 
-    <property name="Path"/>
-
   </subclass>
 
 </hibernate-mapping>

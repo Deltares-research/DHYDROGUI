@@ -34,9 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
         }
 
-        public override void Configure(object model)
+        public override void Configure(object item)
         {
-            var bcmFileExporter = model as BcmFileExporter;
+            var bcmFileExporter = item as BcmFileExporter;
             if (bcmFileExporter != null)
             {
                 bcmFileExporter.ExcludedQuantities =

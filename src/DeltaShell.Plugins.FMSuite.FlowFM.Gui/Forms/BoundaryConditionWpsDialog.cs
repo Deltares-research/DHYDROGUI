@@ -150,9 +150,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object obj)
+        public void Configure(object item)
         {
-            var importer = obj as BoundaryConditionWpsImporter;
+            var importer = item as BoundaryConditionWpsImporter;
 
             if (importer != null)
             {

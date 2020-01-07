@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 HorizontalDispersion = 5.5
             };
 
-            TypeUtils.SetPrivatePropertyValue(entity, TypeUtils.GetMemberName<WaterQualityModel>(m => m.LayerType),
+            TypeUtils.SetPrivatePropertyValue(entity, nameof(WaterQualityModel.LayerType),
                 LayerType.ZLayer);
 
             Assert.IsTrue(entity.Grid.IsEmpty);

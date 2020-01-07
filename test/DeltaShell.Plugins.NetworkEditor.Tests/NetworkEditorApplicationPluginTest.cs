@@ -1,16 +1,9 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using DelftTools.Hydro;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SharpTestsEx;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -18,133 +11,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     public class NetworkEditorApplicationPluginTest
     {
         [Test]
-        [Category(TestCategory.Integration)]
-        public void AddChildRegionsWithUniqueNames()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(HydroNetwork));
-
-            // Create two hydro networks based on the data item info
-            var region = new HydroRegion();
-            var hydroNetwork1 = (HydroNetwork) dataItemInfo.CreateData(region);
-            var hydroNetwork2 = (HydroNetwork) dataItemInfo.CreateData(region);
-
-            // The name of the second network should differ from the name of the first network
-            hydroNetwork1.Name.Should().Not.Be.EqualTo(hydroNetwork2.Name);
-        }
-
-        [Test]
-        public void GetDataItemsInfoHydroNetworkAdditionalOwnersCheckTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(HydroNetwork));
-
-            var region = new HydroRegion();
-            var hydroNetwork = (HydroNetwork) dataItemInfo.CreateData(region);
-            Assert.IsTrue(dataItemInfo.AdditionalOwnerCheck(hydroNetwork));
-            
-        }
-
-        [Test]
-        public void GetDataItemsInfoHydroNetworAddExampleDataTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(HydroNetwork));
-
-            var region = new HydroRegion();
-            var hydroNetwork = (HydroNetwork)dataItemInfo.CreateData(region);
-            dataItemInfo.AddExampleData(hydroNetwork);
-            Assert.That(hydroNetwork.LateralSources.Count(), Is.EqualTo(1));
-        }
-        [Test]
-        public void GetDataItemsInfoHydroNetworkCreateDataOnFolderTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(HydroNetwork));
-
-            var folder = new Folder();
-            var hydroNetwork = (HydroNetwork)dataItemInfo.CreateData(folder);
-            Assert.That(hydroNetwork.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));
-        }
-
-        [Test]
-        public void GetDataItemsInfoDrainageBasinCreateDataOnFolderTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
-
-            var folder = new Folder();
-            var basin = (DrainageBasin)dataItemInfo.CreateData(folder);
-            Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
-        }
-
-        [Test]
-        public void GetDataItemsInfoDrainageBasinCreateDataOnHydroRegionTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
-
-            var hydroRegion = new HydroRegion();
-            var basin = (DrainageBasin)dataItemInfo.CreateData(hydroRegion);
-            Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
-            Assert.That(hydroRegion.SubRegions[0], Is.EqualTo(basin));
-        }
-
-        [Test]
-        public void GetDataItemsInfoDrainageNetworkAdditionalOwnersCheckTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
-
-            var region = new HydroRegion();
-            var drainageBasin = (DrainageBasin)dataItemInfo.CreateData(region);
-            Assert.IsTrue(dataItemInfo.AdditionalOwnerCheck(drainageBasin));
-
-        }
-
-        [Test]
-        public void GetDataItemsInfoDrainageBasinAddExampleDataTest()
-        {
-            // Create an application plugin instance
-            var applicationPlugin = new NetworkEditorApplicationPlugin();
-
-            // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
-
-            var region = new HydroRegion();
-            var drainageBasin = (DrainageBasin)dataItemInfo.CreateData(region);
-            dataItemInfo.AddExampleData(drainageBasin);
-            Assert.That(drainageBasin.Catchments.Count(), Is.EqualTo(1));
-        }
-
-        [Test]
         public void CheckNetworkEditorApplicationPluginProperties()
         {
             // Create an application plugin instance
             var applicationPlugin = new NetworkEditorApplicationPlugin();
             Assert.That(applicationPlugin.Name,
-                Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));
+                Is.EqualTo("Network"));
             Assert.That(applicationPlugin.DisplayName,
                 Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin));
             Assert.That(applicationPlugin.Description,
@@ -158,122 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        public void AddExampleHydroNetworkDataTest()
-        {
-            var mocks = new MockRepository();
-            var network = mocks.DynamicMock<IHydroNetwork>();
-            var branches = new EventedList<IBranch>();
-            var nodes = new EventedList<INode>();
-            network.Expect(n => n.Branches).Return(branches).Repeat.Any();
-            network.Expect(n => n.Nodes).Return(nodes).Repeat.Any();
-            mocks.ReplayAll();
-
-            TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddExampleHydroNetworkData",
-                network);
-
-            mocks.VerifyAll();
-
-            Assert.That(branches.Count, Is.EqualTo(1));
-            var channel = branches.FirstOrDefault();
-            Assert.IsNotNull(channel);
-            Assert.That(channel.Name, Is.EqualTo("Channel1"));
-            Assert.That(channel.BranchFeatures.Count, Is.EqualTo(1));
-            Assert.That(channel.Geometry.ToString(), Is.EqualTo("LINESTRING (0 0, 10 0)"));
-            var lateral = channel.BranchFeatures.FirstOrDefault();
-            Assert.IsNotNull(lateral);
-            Assert.IsInstanceOf<LateralSource>(lateral);
-            Assert.That(lateral.Chainage, Is.EqualTo(5));
-            Assert.That(lateral.Geometry.ToString(), Is.EqualTo("POINT (5 0)"));
-            Assert.That(nodes.Count, Is.EqualTo(2));
-            var node1 = nodes.ElementAtOrDefault(0);
-            Assert.IsNotNull(node1);
-            Assert.That(node1.Name, Is.EqualTo("Node1"));
-
-            var node2 = nodes.ElementAtOrDefault(1);
-            Assert.IsNotNull(node2);
-            Assert.That(node2.Name, Is.EqualTo("Node2"));
-
-            Assert.That(channel.Source, Is.EqualTo(node1));
-            Assert.That(channel.Target, Is.EqualTo(node2));
-
-            Assert.That(node1.Geometry.ToString(), Is.EqualTo("POINT (0 0)"));
-            Assert.That(node2.Geometry.ToString(), Is.EqualTo("POINT (10 0)"));
-        }
-
-        [Test]
-        public void AddExampleDrainageBasinDataTest()
-        {
-            var mocks = new MockRepository();
-            var drainageBasin = mocks.DynamicMock<IDrainageBasin>();
-            var catchments = new EventedList<Catchment>();
-            var wasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>();
-            var link = new HydroLink();
-            drainageBasin.Expect(n => n.Catchments).Return(catchments).Repeat.Any();
-            drainageBasin.Expect(n => n.WasteWaterTreatmentPlants).Return(wasteWaterTreatmentPlants).Repeat.Any();
-            Expect.Call(drainageBasin.AddNewLink(null, null)).IgnoreArguments().Return(link).Repeat.Any();
-            mocks.ReplayAll();
-
-            TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddExampleDrainageBasinData",
-                drainageBasin);
-
-            mocks.VerifyAll();
-
-            Assert.That(catchments.Count, Is.EqualTo(1));
-            var catchment = catchments.FirstOrDefault();
-            Assert.IsNotNull(catchment);
-            Assert.That(catchment.Name, Is.EqualTo("Catchment1"));
-            Assert.That(catchment.CatchmentType, Is.EqualTo(CatchmentType.Unpaved));
-            Assert.That(catchment.Geometry.ToString(), Is.EqualTo("POLYGON ((0 6, 0 12, 10 12, 10 6, 0 6))"));
-            Assert.That(catchment.Basin, Is.EqualTo(drainageBasin));
-
-            Assert.That(wasteWaterTreatmentPlants.Count, Is.EqualTo(1));
-            var wasteWaterTreatmentPlant = wasteWaterTreatmentPlants.FirstOrDefault();
-            Assert.IsNotNull(wasteWaterTreatmentPlant);
-            Assert.That(wasteWaterTreatmentPlant.Name, Is.EqualTo("Plant1"));
-            Assert.That(wasteWaterTreatmentPlant.Geometry.ToString(), Is.EqualTo("POINT (5 5)"));
-
-            Assert.That(link.Geometry.ToString(), Is.EqualTo("LINESTRING (5 9, 5 5)"));
-        }
-
-        [Test]
-        public void AddExampleHydroRegionDataTest()
-        {
-            var mocks = new MockRepository();
-            var hydroRegion = mocks.DynamicMock<IRegion>();
-
-            var subRegions = new EventedList<IRegion>();
-
-            var hydroNetwork = mocks.DynamicMock<IHydroNetwork>();
-            hydroNetwork.Expect(n => n.Nodes).Return(new EventedList<INode>()).Repeat.Once();
-            hydroNetwork.Expect(n => n.Branches).Return(new EventedList<IBranch>()).Repeat.Once();
-
-            hydroNetwork.Expect(n => n.LateralSources).Return(new EventedList<ILateralSource>()).Repeat.Once();
-            subRegions.Add(hydroNetwork);
-
-            var drainageBasin = mocks.DynamicMock<IDrainageBasin>();
-            drainageBasin.Expect(n => n.Catchments).Return(new EventedList<Catchment>()).Repeat.Once();
-            var wasteWaterTreatmentPlant = mocks.Stub<WasteWaterTreatmentPlant>();
-            var wasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>() {wasteWaterTreatmentPlant};
-            drainageBasin.Expect(n => n.WasteWaterTreatmentPlants).Return(wasteWaterTreatmentPlants).Repeat.Twice();
-            subRegions.Add(drainageBasin);
-
-            hydroRegion.Expect(n => n.SubRegions).Return(subRegions).Repeat.Twice();
-
-            var link = new HydroLink();
-            Expect.Call(drainageBasin.AddNewLink(null, null)).IgnoreArguments().Return(link).Repeat.Once();
-            Expect.Call(wasteWaterTreatmentPlant.LinkTo(null)).IgnoreArguments().Return(link).Repeat.Once();
-
-            mocks.ReplayAll();
-
-            TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddExampleHydroRegionData",
-                hydroRegion);
-
-            mocks.VerifyAll();
-
-            Assert.That(link.Geometry.ToString(), Is.EqualTo("LINESTRING (5 5, 5 0)"));
-        }
-
-        [Test]
         public void AddChildRegionDataItemsRegionIsNullSoReturnTest()
         {
             var mocks = new MockRepository();
@@ -283,38 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddChildRegionDataItems",
                 dataItemWithoutRegion);
             mocks.VerifyAll();
-        }
-
-        [Test]
-        public void GetDataItemInfosHydroRegionCreateDataTest()
-        {
-            var appPlugin = new NetworkEditorApplicationPlugin();
-            var hydroRegionDataItemInfo =
-                appPlugin.GetDataItemInfos().FirstOrDefault(dii => dii.ValueType == typeof(HydroRegion));
-
-            Assert.IsNotNull(hydroRegionDataItemInfo);
-            var region = new HydroRegion();
-            var hydroRegion = (HydroRegion) hydroRegionDataItemInfo.CreateData(region);
-            Assert.That(hydroRegion.Name,
-                Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Region));
-            Assert.That(hydroRegion.SubRegions.Count, Is.EqualTo(2));
-            Assert.That(hydroRegion.SubRegions[0].Name,
-                Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Network));
-            Assert.That(hydroRegion.SubRegions[1].Name,
-                Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
-        }
-        [Test]
-        public void GetDataItemInfosHydroRegionAddExampleDataTest()
-        {
-            var appPlugin = new NetworkEditorApplicationPlugin();
-            var hydroRegionDataItemInfo =
-                appPlugin.GetDataItemInfos().FirstOrDefault(dii => dii.ValueType == typeof(HydroRegion));
-
-            Assert.IsNotNull(hydroRegionDataItemInfo);
-            var region = new HydroRegion();
-            var hydroRegion = (HydroRegion)hydroRegionDataItemInfo.CreateData(region);
-            hydroRegionDataItemInfo.AddExampleData(hydroRegion);
-            Assert.That(hydroRegion.Links[0].Geometry.ToString(), Is.EqualTo("LINESTRING (5 5, 5 0)"));
         }
     }
 }

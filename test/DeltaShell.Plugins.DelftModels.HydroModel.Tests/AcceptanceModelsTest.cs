@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -86,16 +87,106 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
         #endregion
 
-        #region AcceptanceModelTests
+        #region TestCaseDefinitions
+        private static DirectoryInfo AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                var uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return new DirectoryInfo(Path.GetDirectoryName(path));
+            }
+        }
 
+        private static IEnumerable<TestCaseData> GetAcceptanceModels()
+        {
+            string repoSourceFolder = AssemblyDirectory.Parent?.Parent?.FullName;
+            string acceptanceModelDirectoryPath = Path.Combine(repoSourceFolder, "AcceptanceModels", "Delft3DFM");
+            var acceptanceModelDirectory = new DirectoryInfo(acceptanceModelDirectoryPath);
+
+            if (!acceptanceModelDirectory.Exists)
+            {
+                return Enumerable.Empty<TestCaseData>();
+            }
+
+            IEnumerable<DirectoryInfo> modelDirectories = acceptanceModelDirectory.EnumerateDirectories();
+            return modelDirectories.SelectMany(GetZipFilesInModelDirectory)
+                                   .SelectMany(GetTestCaseDataInZip);
+        }
+
+        private static IEnumerable<Tuple<FileInfo, bool, DirectoryInfo>> GetZipFilesInModelDirectory(DirectoryInfo modelDirectoryInfo)
+        {
+                FileInfo[] candidateZipFiles = modelDirectoryInfo.EnumerateFiles("*.zip").ToArray();
+                bool hasMultipleZipFiles = candidateZipFiles.Length > 1;
+
+                return candidateZipFiles.Select(fi => new Tuple<FileInfo, bool, DirectoryInfo>(fi, hasMultipleZipFiles, modelDirectoryInfo));
+        }
+
+        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(Tuple<FileInfo, bool, DirectoryInfo> input)
+        {
+            return GetTestCaseDataInZip(input.Item1, input.Item3, input.Item2);
+        }
+
+
+        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(FileInfo candidateZipFile, DirectoryInfo modelDirectory,
+                                                 bool hasMultipleZipFiles)
+        {
+            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName, null);
+
+            string[] relevantMduFilesInZip =
+                filesInZip.Where(p => p.EndsWith(".mdu") && !p.Contains("dimr_expected")).ToArray();
+
+            bool hasMultipleMduFiles = relevantMduFilesInZip.Length> 1;
+
+            foreach (string candidateMduFile in relevantMduFilesInZip)
+            {
+                string baseTestName = modelDirectory.Name;
+                string testName = GetTestName(baseTestName,
+                                              hasMultipleZipFiles,
+                                              hasMultipleMduFiles,
+                                              candidateZipFile.Name,
+                                              candidateMduFile);
+
+                string relativeZipFilePath = Path.Combine(modelDirectory.Name, candidateZipFile.Name);
+                var testCase = new TestCaseData(relativeZipFilePath, candidateMduFile);
+                testCase.SetName(testName);
+
+                yield return testCase;
+            }
+        }
+
+        private static string GetTestName(string testName, 
+                                          bool hasMultipleZipFiles, 
+                                          bool hasMultipleMduFiles,
+                                          string candidateZipFileName, 
+                                          string candidateMduFileName)
+        {
+
+            if (hasMultipleZipFiles && hasMultipleMduFiles)
+            {
+                string zipName = Path.GetFileNameWithoutExtension(candidateZipFileName);
+                string mduName = Path.GetFileNameWithoutExtension(candidateMduFileName);
+                testName += $" ({zipName} - {mduName})";
+            }
+            else if (hasMultipleZipFiles)
+            {
+                string zipName = Path.GetFileNameWithoutExtension(candidateZipFileName);
+                testName += $" ({zipName})";
+            }
+            else if (hasMultipleMduFiles)
+            {
+                string mduName = Path.GetFileNameWithoutExtension(candidateMduFileName);
+                testName += $" ({mduName})";
+            }
+
+            return testName;
+        }
+        #endregion
+
+        #region AcceptanceModelTests
         [Test]
-        [TestCase("c01_Noordzeemodel/Noordzeemodel.zip", @"DeltaShell_Noordzeemodel\noordzee_2d.mdu", TestName = "c01_Noordzeemodel")]
-        [TestCase("c02_Maas_40m/Maas_40m.zip", @"Maas_40m.dsproj_data\Maas_j14_5-v2\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_40m)")]
-        [TestCase("c02_Maas_40m/Maas_DIMR.zip", @"DIMR\dflowfm\Maas_j14_5-v2.mdu", TestName = "c02_Maas_40m (Maas_DIMR)")]
-        [TestCase("c03_Waal_40m/Waal_40m.zip", @"Waal_40m.dsproj_data\Waal_40m\Waal_40m.mdu", TestName = "c03_Waal_40m")]
-        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"d3dfm_vrm_j10-v1\FlowFM_uniWind.mdu", TestName = "c04_Markermeer_Veluwerandmeren (FlowFM_uniWind)")]
-        [TestCase("c04_Markermeer_Veluwerandmeren/d3dfm_vrm_j10-v1.zip", @"d3dfm_vrm_j10-v1\FlowFM_varWind.mdu", TestName = "c04_Markermeer_Veluwerandmeren (FlowFM_varWind)")]
-        [TestCase("c05_Oosterschelde/Oosterschelde.zip", @"Filebased\e02.mdu", TestName = "c05_Oosterschelde")]
+        [TestCaseSource(nameof(GetAcceptanceModels))]
         public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
         {
             // Step 1: Unzip 

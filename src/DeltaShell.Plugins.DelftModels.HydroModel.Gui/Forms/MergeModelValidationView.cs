@@ -8,11 +8,14 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
     public partial class MergeModelValidationView : UserControl, ISuspendibleView, IAdditionalView
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MergeModelValidationView));
+
         private Stopwatch stopwatch = new Stopwatch();
         private Func<object, object, ValidationReport> onMergeValidate;
         private Func<object, object, bool> onMerge;
@@ -149,7 +152,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                     {
                         view.EnsureVisible(issue.Subject);
                     }
-                    catch (Exception) { } //gulp
+                    catch
+                    {
+                        log.DebugFormat("An error occured while calling EnsureVisible on view with name '{0}'", view.Text);
+                    }
                 }
                 return;
             }

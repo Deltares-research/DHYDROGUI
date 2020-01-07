@@ -71,9 +71,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             return ShowModal();
         }
 
-        public virtual void Configure(object importer)
+        public virtual void Configure(object item)
         {
-            var bcFileImporter = importer as BcFileImporter;
+            var bcFileImporter = item as BcFileImporter;
             if (bcFileImporter != null)
             {
                 bcFileImporter.FilePaths = FilePaths;

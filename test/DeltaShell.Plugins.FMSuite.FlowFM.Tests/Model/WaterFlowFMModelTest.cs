@@ -19,10 +19,10 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var weirFormulaChangeCount = 0;
             ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != TypeUtils.GetMemberName<Weir>(w => w.WeirFormula)) return;
+                if (e.PropertyName != nameof(Weir.WeirFormula)) return;
                 weirFormulaChangeCount++;
             };
             // add weir to model

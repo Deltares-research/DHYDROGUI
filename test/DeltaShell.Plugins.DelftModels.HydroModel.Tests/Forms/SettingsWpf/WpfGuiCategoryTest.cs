@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
@@ -46,10 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
-        [TestCase(false, false, true)]
-        [TestCase(true, false, true)]
-        [TestCase(true, true, true)]
-        public void Test_WpfGuiCategory_IsVisible_When_AtLeast_One_Property_Without_CustomControl(bool withCustomControl, bool propertyVisible, bool expectedResult)
+        [TestCase(false, true)]
+        [TestCase(true, true)]
+        public void Test_WpfGuiCategory_IsVisible_When_AtLeast_One_Property_Without_CustomControl(bool propertyVisible, bool expectedResult)
         {
             var dummyCategoryName = "dummyCategory";
 
@@ -63,12 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             var property = category.Properties.FirstOrDefault();
             Assert.IsNotNull(property);
-
-            if (withCustomControl)
-            {
-                property.CustomControl = new UserControl();
-            }
-
+            
             Assert.AreEqual(expectedResult, category.IsVisible);
         }
 

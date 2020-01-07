@@ -544,9 +544,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
 
         private static bool IsIterativeSchemeRelatedProperty(string propertyName)
         {
-            return propertyName == TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.IterationMaximum) ||
-                   propertyName == TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.Tolerance) ||
-                   propertyName == TypeUtils.GetMemberName<WaterQualityModelProperties>(s => s.WriteIterationReport);
+            return propertyName == nameof(IterationMaximum) || propertyName == nameof(Tolerance) ||
+                   propertyName == nameof(WriteIterationReport);
         }
     }
 }

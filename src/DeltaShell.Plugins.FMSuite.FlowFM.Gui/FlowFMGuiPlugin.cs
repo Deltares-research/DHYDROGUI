@@ -95,6 +95,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
+
+            yield return new Feature2DPolygonTreeViewNodePresenter { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroArea.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroArea.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroArea.ThinDamsPluralName, Properties.Resources.thindam) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroArea.FixedWeirsPluralName, Properties.Resources.fixedweir) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroArea.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroArea.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroArea.PumpsPluralName, Properties.Resources.Pump) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroArea.WeirsPluralName, Properties.Resources.Weir) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -668,14 +680,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             CloseAllRelatedMultipleFunctionViews(FlowModels);
         }
 
-        private static readonly string CoordinateSystemMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
+        private static readonly string CoordinateSystemMemberName = nameof(WaterFlowFMModel.CoordinateSystem);
 
-        private static readonly string OutputHisFileStoreMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.OutputHisFileStore);
+        private static readonly string OutputHisFileStoreMemberName = nameof(WaterFlowFMModel.OutputHisFileStore);
 
-        private static readonly string HeatFluxModelTypeMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.HeatFluxModelType);
+        private static readonly string HeatFluxModelTypeMemberName = nameof(WaterFlowFMModel.HeatFluxModelType);
 
         private void ProjectOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

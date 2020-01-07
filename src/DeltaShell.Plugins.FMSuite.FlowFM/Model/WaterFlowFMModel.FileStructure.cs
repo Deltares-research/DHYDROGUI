@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -17,14 +18,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
 
-        private readonly MduFile mduFile = new MduFile();
-
-        public MduFile MduFile => mduFile;
+        /// <summary>
+        /// Gets the mdu file.
+        /// </summary>
+        /// <value>
+        /// The mdu file.
+        /// </value>
+        public MduFile MduFile { get; } = new MduFile();
 
         public Func<string> WorkingDirectoryPathFunc =
-            () => Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+
+        /// <summary>
+        /// Gets the cache file.
+        /// </summary>
+        /// <value>
+        /// The cache file.
+        /// </value>
+        public CacheFile CacheFile => 
+            cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
+
+        private CacheFile cacheFile = null;
 
         protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
         {
@@ -105,7 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (ModelDefinition.ModelName.Equals(Name))
                 {
-                    return HisFilePath;
+                    return !string.IsNullOrEmpty(MduFilePath)
+                               ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.HisFileName)
+                               : null;
                 }
 
                 return Name + FileConstants.HisFileExtension;
@@ -123,7 +141,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (ModelDefinition.ModelName.Equals(Name))
                 {
-                    return MapFilePath;
+                    return !string.IsNullOrEmpty(MduFilePath)
+                               ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.MapFileName)
+                               : null;
                 }
 
                 return Name + FileConstants.MapFileExtension;
@@ -141,7 +161,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (ModelDefinition.ModelName.Equals(Name))
                 {
-                    return ClassMapFilePath;
+                    return !string.IsNullOrEmpty(MduFilePath)
+                               ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.ClassMapFileName)
+                               : null;
                 }
 
                 return Name + FileConstants.ClassMapFileExtension;
@@ -231,30 +253,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 outputSnappedFeaturesPath = value;
 
-                OnOutputSnappedFeaturesPathPropertyChanged(
-                    TypeUtils.GetMemberName<string>(() => OutputSnappedFeaturesPath));
+                OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
             }
         }
-
-        public string ComFilePath =>
-            !string.IsNullOrEmpty(MduFilePath)
-                ? Path.Combine(WorkingDirectoryPath, ModelDefinition.RelativeComFilePath)
-                : null;
-
-        private string HisFilePath =>
-            !string.IsNullOrEmpty(MduFilePath)
-                ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.HisFileName)
-                : null;
-
-        private string MapFilePath =>
-            !string.IsNullOrEmpty(MduFilePath)
-                ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.MapFileName)
-                : null;
-
-        private string ClassMapFilePath =>
-            !string.IsNullOrEmpty(MduFilePath)
-                ? Path.Combine(PersistentOutputDirectoryPath, ModelDefinition.ClassMapFileName)
-                : null;
 
         private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
         {

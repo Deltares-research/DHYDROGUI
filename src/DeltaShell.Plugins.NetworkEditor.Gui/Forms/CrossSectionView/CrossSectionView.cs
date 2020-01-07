@@ -5,28 +5,20 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public partial class CrossSectionView : UserControl, IReusableView, ICrossSectionHistoryCapableView
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionView));
-
         private static readonly Bitmap XYZImage = Properties.Resources.CrossSectionSmallXYZ;
         private static readonly Bitmap YZImage = Properties.Resources.CrossSectionSmall;
         private static readonly Bitmap ZWImage = Properties.Resources.CrossSectionTabulatedSmall;
 
         private bool locked;
         private CrossSectionViewModel crossSectionViewModel;
-        
-        private Func<ICrossSection, IEnumerable<IConveyanceCalculator>> getConveyanceCalculators;
         
         private CrossSectionViewModel CrossSectionViewModel
         {
@@ -88,8 +80,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     //clean up via data
                     definitionView.Data = null;
                 }
-
-                UpdateShowConveyanceButton();
             }
         }
 
@@ -271,68 +261,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 }
             }
         }
-
-        public Func<ICrossSection, IEnumerable<IConveyanceCalculator>> GetConveyanceCalculators
-        {
-            set
-            {
-                getConveyanceCalculators = value;
-                UpdateShowConveyanceButton();
-            }
-        }
-
-        private void UpdateShowConveyanceButton()
-        {
-            panelForConveyanceBtn.Visible = Data != null
-                                            && getConveyanceCalculators != null
-                                            && getConveyanceCalculators(CrossSection).Any()
-                                            && (CrossSection.CrossSectionType == CrossSectionType.YZ ||
-                                                CrossSection.CrossSectionType == CrossSectionType.GeometryBased);
-        }
-
-
-        private void btnShowConveyance_Click(object sender, EventArgs e)
-        {
-            if (getConveyanceCalculators == null) return;
-
-            // TODO: show the user a list with all available conv. calculators instead of selecting the first
-            var calculator = getConveyanceCalculators(CrossSection).FirstOrDefault();
-            if (calculator == null) return;
-
-            IFunction conveyanceTable = null;
-            try
-            {
-                conveyanceTable = calculator.GetConveyance(CrossSection);
-            }
-            catch (Exception)
-            {
-                Log.Error("Failed to get conveyance data");
-                return;
-            }
-
-            if(conveyanceTable == null) return;
-
-            var functionView = new FunctionView
-                {
-                    Data = conveyanceTable,
-                    Dock = DockStyle.Fill
-                };
-                
-            var form = new Form
-                {
-                    Size = new Size(1200, 600),
-                    MinimizeBox = false,
-                    StartPosition = FormStartPosition.CenterScreen,
-                    ShowInTaskbar = false,
-                    TopMost = true,
-                    Text = "Conveyance view"
-                };
-
-            functionView.ChartView.Chart.Legend.ShowCheckBoxes = true;
-            form.Shown += (o, args) => functionView.TableView.BestFitColumns(false);
-            form.Controls.Add(functionView);
-            form.ShowDialog();
-        }
     }
-
 }

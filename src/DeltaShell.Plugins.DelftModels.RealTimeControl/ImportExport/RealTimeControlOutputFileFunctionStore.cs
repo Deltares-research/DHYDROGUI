@@ -264,6 +264,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public bool IsOpen { get { return false; } }
 
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         #endregion
 
     }

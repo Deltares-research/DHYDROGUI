@@ -607,4 +607,19 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel_Running_this_model_requires_the_OutputDirectory_to_be_overwritten_to___0_" xml:space="preserve">
     <value>Running this model requires the OutputDirectory to be overwritten to: {0}</value>
   </data>
+  <data name="RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__Errors_extracted_from_diagnostics_file__2__" xml:space="preserve">
+    <value>The kernel reported the following error(s):{0}{1}{0}(Errors extracted from diagnostics file {2})</value>
+  </data>
+  <data name="RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_" xml:space="preserve">
+    <value>No errors were reported in the diagnostics file {0}</value>
+  </data>
+  <data name="RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_" xml:space="preserve">
+    <value>Unable to read diagnostics file {0}: {1}</value>
+  </data>
+  <data name="MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_" xml:space="preserve">
+    <value>Parameter {0} is not supported by our computational core and will be removed from your input file.</value>
+  </data>
+  <data name="CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_" xml:space="preserve">
+    <value>Could not copy {0} to {1} due to: {2}</value>
+  </data>
 </root>

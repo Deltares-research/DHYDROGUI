@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -149,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var projectFolder = Path.Combine(testDir, "BasicWaqProject.dsproj_data");
 
             var dataDir = TestHelper.GetTestDataDirectory();
-            var hydFilePath = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
+            var hydFilePath = Path.Combine(dataDir, "ValidWaqModels", "UGrid", "f34.hyd");
             var substanceFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
 
             string[] outputTextDocumentsTags = { "ListFileTag", "ProcessFileTag", "MonitoringFileTag", "lastRunLogFileDataItem" };
@@ -189,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     // are not connected to data
                     var outputDataItemValues = waqModel.AllDataItems.Where(di => di.Role.HasFlag(DataItemRole.Output));
                     foreach (var tag in outputTextDocumentsTags) Assert.IsFalse(outputDataItemValues.Any(di => di.Tag == tag));
-                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
+                    foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 
                     app.RunActivity(waqModel);
 
@@ -204,28 +206,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     foreach (var tag in outputFeatureCoveragesTags) CheckFeatureCoverageFunctionStore(outputDataItemValues, tag);
 
                     // Check folder structure after model run
-                    var outputFolderFiles = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
-                    Assert.That(outputFolderFiles.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelRun.Length));
-                    foreach (var filePath in outputFolderFiles)
-                    {
-                        Assert.That(relativePathsThatShouldExistAfterWaqModelRun.Contains(filePath),
-                            $"File at location '{filePath}' should not exist after Water Quality Model run.");
-                    }
-                    
+                    IEnumerable<string> filesAfterModelRun = GetAllFilesPaths(projectFolder);
+
                     waqModel.ClearOutput(); // Clearing output
+
+                    IEnumerable<string> filesAfterClearOutput = GetAllFilesPaths(projectFolder);
 
                     // Check that feature coverage data items are not connected to data
                     foreach (var tag in outputFeatureCoveragesTags)
                         CheckFeatureCoverageFunctionStore(outputDataItemValues, tag, false);
 
                     // Check folder structure after model cleanup
-                    var outputFolderFilesAfterCleanup = Directory.GetFileSystemEntries(projectFolder, "*", SearchOption.AllDirectories).Select(path => FileUtils.GetRelativePath(projectFolder, path)).ToArray();
-                    Assert.That(outputFolderFilesAfterCleanup.Length, Is.EqualTo(relativePathsThatShouldExistAfterWaqModelCleanup.Length));
-                    foreach (var filePath in outputFolderFilesAfterCleanup)
-                    {
-                        Assert.That(relativePathsThatShouldExistAfterWaqModelCleanup.Contains(filePath), 
-                            $"File at location '{filePath}' should not exist after Water Quality Model cleanup.");
-                    }
+                    IEnumerable<string> missingFilesAfterClearOutput = filesAfterModelRun.Except(filesAfterClearOutput);
+                    Assert.That(missingFilesAfterClearOutput.Any(), Is.False,
+                                "No files should be deleted at a clear output.");
                 }
             }
             finally
@@ -234,96 +228,121 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             }
         }
 
-        private readonly string[] relativePathsThatShouldExistAfterWaqModelRun =
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Check_RunningWaterQualityModelTwice_OutputFilesAreNotDuplicated()
         {
-            @"Water_Quality",
-            @"Water_Quality_output",
-            @"Water_Quality\output",
-            @"Water_Quality\output\deltashell.lsp",
-            @"Water_Quality\output\deltashell.lst",
-            @"Water_Quality\output\deltashell_map.nc",
-            @"Water_Quality\output\deltashell.mon",
-            @"Water_Quality\output\deltashell_res.map",
-            @"Water_Quality_output\deltashell-timers.out",
-            @"Water_Quality_output\deltashell.inp",
-            @"Water_Quality_output\includes_deltashell",
-            @"Water_Quality_output\memory_map.out",
-            @"Water_Quality_output\includes_deltashell\B1_sublist.inc",
-            @"Water_Quality_output\includes_deltashell\B1_t0.inc",
-            @"Water_Quality_output\includes_deltashell\B2_numsettings.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
-            @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
-            @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
-            @"Water_Quality_output\includes_deltashell\B3_volumes.inc",
-            @"Water_Quality_output\includes_deltashell\B4_area.inc",
-            @"Water_Quality_output\includes_deltashell\B4_cdispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B4_flows.inc",
-            @"Water_Quality_output\includes_deltashell\B4_length.inc",
-            @"Water_Quality_output\includes_deltashell\B4_nrofexch.inc",
-            @"Water_Quality_output\includes_deltashell\B4_pointers.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundaliases.inc",
-            @"Water_Quality_output\includes_deltashell\B5_bounddata.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundlist.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_aliases.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_data.inc",
-            @"Water_Quality_output\includes_deltashell\B7_constants.inc",
-            @"Water_Quality_output\includes_deltashell\B7_dispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B7_functions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_numerical_options.inc",
-            @"Water_Quality_output\includes_deltashell\B7_parameters.inc",
-            @"Water_Quality_output\includes_deltashell\B7_processes.inc",
-            @"Water_Quality_output\includes_deltashell\B7_segfunctions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_vdiffusion.inc",
-            @"Water_Quality_output\includes_deltashell\B8_initials.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Hisvar.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Mapvar.inc"
-        };
+            using (var tempDirectory = new TemporaryDirectory())
+            using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
+            {
+                //First run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+                CheckDataItems(model);
 
-        private readonly string[] relativePathsThatShouldExistAfterWaqModelCleanup =
+                //Second run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+                CheckDataItems(model);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Slow)]
+        public void Check_RunningWaterQualityModelTwice_ThenSeparateOutputFileContentsReferToTheirOwnRun()
         {
-            @"Water_Quality",
-            @"Water_Quality_output",
-            @"Water_Quality\output",
-            @"Water_Quality_output\deltashell.inp",
-            @"Water_Quality_output\includes_deltashell",
-            @"Water_Quality_output\includes_deltashell\B1_sublist.inc",
-            @"Water_Quality_output\includes_deltashell\B1_t0.inc",
-            @"Water_Quality_output\includes_deltashell\B2_numsettings.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outlocs.inc",
-            @"Water_Quality_output\includes_deltashell\B2_outputtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B2_simtimers.inc",
-            @"Water_Quality_output\includes_deltashell\B3_ugrid.inc",
-            @"Water_Quality_output\includes_deltashell\B3_attributes.inc",
-            @"Water_Quality_output\includes_deltashell\B3_nrofseg.inc",
-            @"Water_Quality_output\includes_deltashell\B3_volumes.inc",
-            @"Water_Quality_output\includes_deltashell\B4_area.inc",
-            @"Water_Quality_output\includes_deltashell\B4_cdispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B4_flows.inc",
-            @"Water_Quality_output\includes_deltashell\B4_length.inc",
-            @"Water_Quality_output\includes_deltashell\B4_nrofexch.inc",
-            @"Water_Quality_output\includes_deltashell\B4_pointers.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundaliases.inc",
-            @"Water_Quality_output\includes_deltashell\B5_bounddata.inc",
-            @"Water_Quality_output\includes_deltashell\B5_boundlist.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_aliases.inc",
-            @"Water_Quality_output\includes_deltashell\B6_loads_data.inc",
-            @"Water_Quality_output\includes_deltashell\B7_constants.inc",
-            @"Water_Quality_output\includes_deltashell\B7_dispersion.inc",
-            @"Water_Quality_output\includes_deltashell\B7_functions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_numerical_options.inc",
-            @"Water_Quality_output\includes_deltashell\B7_parameters.inc",
-            @"Water_Quality_output\includes_deltashell\B7_processes.inc",
-            @"Water_Quality_output\includes_deltashell\B7_segfunctions.inc",
-            @"Water_Quality_output\includes_deltashell\B7_vdiffusion.inc",
-            @"Water_Quality_output\includes_deltashell\B8_initials.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Hisvar.inc",
-            @"Water_Quality_output\includes_deltashell\B9_Mapvar.inc"
-        };
+            using (var tempDirectory = new TemporaryDirectory())
+            using (WaterQualityModel model = CreateWesternScheldtModel(tempDirectory.Path))
+            {
+                //First run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+
+                List<string> contentFirstRun = RetrieveRunContent(model);
+
+                //Second run
+                ActivityRunner.RunActivity(model);
+                Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+
+                List<string> contentSecondRun = RetrieveRunContent(model);
+
+                for (var i = 0; i < contentFirstRun.Count; i++)
+                {
+                    int startIndex = contentFirstRun[i].IndexOf("Execution start", StringComparison.OrdinalIgnoreCase);
+                    string content1 = contentFirstRun[i].Substring(startIndex + 17, 19);
+                    string content2 = contentSecondRun[i].Substring(startIndex + 17, 19);
+
+                    Assert.AreNotEqual(content1, content2);
+                }
+            }
+        }
+
+        private static WaterQualityModel CreateWesternScheldtModel(string tempDirectory)
+        {
+            var waqModel = new WaterQualityModel();
+
+            string originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
+            FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(tempDirectory), string.Empty);
+
+            string hydFilePath = Path.Combine(tempDirectory, "flow-model", "westernscheldt01.hyd");
+            string subFilePath = Path.Combine(tempDirectory, "waq", "sub-files", "bacteria.sub");
+            string boundaryConditionsFilePath = Path.Combine(tempDirectory, "waq", "boundary-conditions", "bacteria.csv");
+
+            new HydFileImporter().ImportItem(hydFilePath, waqModel);
+            new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subFilePath);
+            new DataTableImporter().ImportItem(boundaryConditionsFilePath, waqModel.BoundaryDataManager);
+
+            return waqModel;
+        }
+
+        private static void CheckDataItems(WaterQualityModel waqModel)
+        {
+            //Check data items
+            IList<string> dataItemTags = GetDataItemTags(waqModel);
+
+            string[] expectedDataItemTags =
+            {
+                WaterQualityModel.ListFileDataItemMetaData.Tag,
+                WaterQualityModel.ProcessFileDataItemMetaData.Tag,
+                WaterQualityModel.MonitoringFileDataItemMetaData.Tag
+            };
+
+            foreach (string expectedTag in expectedDataItemTags)
+            {
+                Assert.IsTrue(dataItemTags.Any(t => t == expectedTag),
+                              $"DataItem with tag {expectedTag} not found in dataItems {string.Join(", ", dataItemTags)}");
+            }
+        }
+
+        private static IList<string> GetDataItemTags(WaterQualityModel waqModel)
+        {
+            List<IDataItem> dataItems = waqModel.DataItems.Where(di => di.Role == DataItemRole.Output
+                                                                       && di.ValueType == typeof(TextDocument)).ToList();
+            Assert.IsTrue(dataItems.Any());
+            Assert.AreEqual(3, dataItems.Count);
+            return dataItems.Select(di => di.Tag).ToList();
+        }
+
+        private static List<string> RetrieveRunContent(WaterQualityModel model)
+        {
+            var content = new List<string>
+            {
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ListFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.ProcessFileDataItemMetaData.Tag)
+                                .Value).Content,
+                ((TextDocument) model
+                                .DataItems.Single(di => di.Tag == WaterQualityModel.MonitoringFileDataItemMetaData.Tag)
+                                .Value).Content
+            };
+            return content;
+        }
+        private IEnumerable<string> GetAllFilesPaths(string directory)
+        {
+            return new DirectoryInfo(directory).GetFiles().Select(f => f.FullName);
+        }
 
         private static void CheckFeatureCoverageFunctionStore(IEnumerable<IDataItem> outputDataItemValues, string tag,
             bool connectedToData = true)

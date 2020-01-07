@@ -16,6 +16,12 @@
                  class="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model.WaterQualityModelSettings"
                  column="wq_model_settings_id"/>
 
+    <many-to-one name="OutputFolder"
+                 lazy="false"
+                 cascade="all-delete-orphan"
+                 class="DeltaShell.NGHS.Common.IO.FileBasedFolder, DeltaShell.NGHS.Common"
+                 column="filebased_folder_id"/>
+
 <!-- Mapped via data item:
      * InputFileCommandLine
      * InputFileHybrid

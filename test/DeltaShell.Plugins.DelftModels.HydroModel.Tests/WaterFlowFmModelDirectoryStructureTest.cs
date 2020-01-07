@@ -918,8 +918,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         app.SaveProject();
 
                         var projectFolderBeforeRename =
-                            GetDirectoryStructure(Path.Combine(projectFilePath, modelDirPath), ".",
-                                "mdu");
+                            GetDirectoryStructure(
+                                Path.Combine(projectFilePath, modelDirPath), 
+                                ".",
+                                false,
+                                ".mdu", 
+                                ".cache");
 
                         //Rename
                         model.Name = "FlowFM2";
@@ -942,8 +946,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         Assert.AreEqual("FlowFM2", newMduFileNameWithoutExtension);
 
                         var projectFolderAfterRename =
-                            GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath), ".",
-                                "mdu");
+                            GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath), 
+                                                  ".",
+                                                  false,
+                                                  ".mdu", 
+                                                  ".cache");
                         AssertEqualDirectoryStructure(".", ref projectFolderBeforeRename, ref projectFolderAfterRename);
                     }
                 }
@@ -1207,7 +1214,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     var originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
                     var originalInputDirStructure = GetDirectoryStructure(originalInputFolder,
                                                                           ".",
-                                                                          "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
+                                                                          ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
 
                     // When
                     app.CreateNewProject();
@@ -2339,39 +2346,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static Dictionary<string, Tuple<Tuple<string, string>[], string[]>> GetDirectoryStructure(
             string basePath,
             string relativePath,
-            string ignoreFileExtension = "",
-            bool doChecksum = false)
+            bool doChecksum = false,
+            params string[] ignoreFileExtension)
         {
             var dirStructure = new Dictionary<string, Tuple<Tuple<string, string>[], string[]>>();
-            GetDirectoryStructure(basePath, relativePath, ref dirStructure, ignoreFileExtension, doChecksum);
+            GetDirectoryStructure(basePath, relativePath, ref dirStructure, doChecksum, ignoreFileExtension);
             return dirStructure;
         }
 
         private static void GetDirectoryStructure(
             string basePath, string relativePath,
             ref Dictionary<string, Tuple<Tuple<string, string>[], string[]>> structure,
-            string ignoreFileExtension = "",
-            bool doChecksum = false)
+            bool doChecksum = false,
+            params string[] ignoreFileExtension)
         {
-            var currentPath = Path.Combine(basePath, relativePath);
+            string currentPath = Path.Combine(basePath, relativePath);
 
             // Get relevant data
-            var files = Directory.GetFiles(currentPath);
-            var subdirs = Directory.GetDirectories(currentPath);
+            string[] files = Directory.GetFiles(currentPath);
+            string[] subdirs = Directory.GetDirectories(currentPath);
 
             var filesList = new List<Tuple<string, string>>();
 
             // Format relevant data
             for (var i = 0; i < files.Length; i++)
             {
-                var checksum = doChecksum ? FileUtils.GetChecksum(files[i]) : "";
+                string checksum = doChecksum ? FileUtils.GetChecksum(files[i]) : "";
 
                 files[i] = Path.GetFileName(files[i]);
-                if (ignoreFileExtension == "" || !files[i].Contains(ignoreFileExtension))
+                if (!ignoreFileExtension.Any(fileExtension => files[i].Contains(fileExtension)))
                     filesList.Add(new Tuple<string, string>(files[i], checksum));
             }
 
-            var filesAndChecksums = filesList.ToArray();
+            Tuple<string, string>[] filesAndChecksums = filesList.ToArray();
 
             Array.Sort(files, StringComparer.InvariantCultureIgnoreCase);
 
@@ -2387,7 +2394,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             foreach (var s in subdirs)
             {
-                GetDirectoryStructure(basePath, s, ref structure, ignoreFileExtension, doChecksum);
+                GetDirectoryStructure(basePath, s, ref structure, doChecksum, ignoreFileExtension);
             }
         }
 

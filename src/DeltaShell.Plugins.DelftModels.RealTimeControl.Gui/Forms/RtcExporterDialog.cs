@@ -28,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
-            var exporter = model as RealTimeControlModelExporter;
+            var exporter = item as RealTimeControlModelExporter;
             if (exporter != null)
             {
                 exporter.Directory = Directory;

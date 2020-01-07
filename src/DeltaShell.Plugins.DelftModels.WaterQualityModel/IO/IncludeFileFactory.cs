@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Write the general waq model settings for the run.
         /// </summary>
-        public static string CreateNumSettingsInclude(WaterQualityModelSettings waqSettings)
+        public static string CreateNumSettingsInclude(IWaterQualityModelSettings waqSettings)
         {
             int integrationOptions = waqSettings.NoDispersionIfFlowIsZero ? 1 : 0;
             integrationOptions += waqSettings.NoDispersionOverOpenBoundaries ? 2 : 0;
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Create the include file with output timers.
         /// </summary>
-        public static string CreateOutputTimersInclude(WaterQualityModelSettings waqSettings)
+        public static string CreateOutputTimersInclude(IWaterQualityModelSettings waqSettings)
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
