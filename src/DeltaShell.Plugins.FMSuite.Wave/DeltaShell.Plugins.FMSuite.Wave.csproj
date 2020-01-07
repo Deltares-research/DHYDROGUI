@@ -140,8 +140,10 @@
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodType.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\IWaveBoundaryConditionDefinition.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\IBoundaryConditionParameters.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShape.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShape.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShapeFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShape.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShape.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinition.cs" />
