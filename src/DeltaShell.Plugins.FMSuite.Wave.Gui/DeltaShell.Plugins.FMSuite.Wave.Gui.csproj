@@ -148,6 +148,7 @@
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Editors\Boundaries\ViewModels\Enums\DirectionalSpreadingViewType.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\Enums\PeriodViewType.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverter.cs" />
