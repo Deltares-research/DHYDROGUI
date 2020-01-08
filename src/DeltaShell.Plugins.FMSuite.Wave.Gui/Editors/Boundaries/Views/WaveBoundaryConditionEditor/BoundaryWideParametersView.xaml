@@ -75,7 +75,7 @@
                      Text="{Binding Path=Shape.PeakEnhancementFactor}"
                      TextAlignment="Right"
                      VerticalAlignment="Center"
-                     Style="{StaticResource ControlWithErrorStyle}"
+                     Style="{StaticResource ControlStyle}"
                      IsEnabled="False"
                      attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
             <TextBlock Grid.Column="2"
@@ -99,7 +99,7 @@
                      Text="{Binding Path=Shape.GaussianSpread}"
                      TextAlignment="Right"
                      VerticalAlignment="Center"
-                     Style="{StaticResource ControlWithErrorStyle}"
+                     Style="{StaticResource ControlStyle}"
                      IsEnabled="False"
                      attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
             <TextBlock Grid.Column="2"
