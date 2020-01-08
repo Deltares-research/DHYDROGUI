@@ -44,6 +44,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47570\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47570\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47570\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>

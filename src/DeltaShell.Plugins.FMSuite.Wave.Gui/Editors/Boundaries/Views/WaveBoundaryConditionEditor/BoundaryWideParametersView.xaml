@@ -3,10 +3,149 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
+             xmlns:enums="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums"
+             xmlns:convertersBoundaries="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
+             xmlns:convertersCommon="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:shapes="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.DelftModels.HydroModel.Gui;component/Forms/Styles/CommonSettingsStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <convertersCommon:EnumToDescriptionConverter     x:Key="EnumToDescriptionConverter"/>
+            <convertersBoundaries:TypeToVisibilityConverter  x:Key="TypeToVisibilityConverter" />
+            <convertersBoundaries:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter"/>
+
+            <ObjectDataProvider x:Key="PeriodTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="enums:PeriodViewType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="SpreadingTypes"
+                                MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="enums:DirectionalSpreadingViewType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Grid Style="{StaticResource GridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                <ColumnDefinition Width="{StaticResource UnitLength}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Shape:" 
+                       Style="{StaticResource LabelTextBlockStyle}"/>
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding Path=ShapeTypeList}"
+                      SelectedItem="{Binding Path=ShapeType}"
+                      Style="{StaticResource ControlStyle}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource TypeToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <Grid Style="{StaticResource GridStyle}"
+              Visibility="{Binding Path=ShapeType, 
+                                   Converter={StaticResource TypeToVisibilityConverter},
+                                                             ConverterParameter={x:Type shapes:JonswapViewShape}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                <ColumnDefinition Width="{StaticResource UnitLength}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Peak Enhancement Factor:" 
+                       Style="{StaticResource LabelTextBlockStyle}"/>
+            <TextBox Grid.Column="1"
+                     Text="{Binding Path=Shape.PeakEnhancementFactor}"
+                     TextAlignment="Right"
+                     VerticalAlignment="Center"
+                     Style="{StaticResource ControlWithErrorStyle}"
+                     IsEnabled="False"
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
+            <TextBlock Grid.Column="2"
+                           Text="[-]" 
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           Width="47"/>
+        </Grid>
+        <Grid Style="{StaticResource GridStyle}"
+              Visibility="{Binding Path=ShapeType, 
+                                   Converter={StaticResource TypeToVisibilityConverter},
+                                                             ConverterParameter={x:Type shapes:GaussViewShape}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                <ColumnDefinition Width="{StaticResource UnitLength}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Gaussian Spread:" 
+                       Style="{StaticResource LabelTextBlockStyle}"/>
+            <TextBox Grid.Column="1"
+                     Text="{Binding Path=Shape.GaussianSpread}"
+                     TextAlignment="Right"
+                     VerticalAlignment="Center"
+                     Style="{StaticResource ControlWithErrorStyle}"
+                     IsEnabled="False"
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
+            <TextBlock Grid.Column="2"
+                           Text="[-]" 
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           Width="47"/>
+        </Grid>
+        <Grid Style="{StaticResource GridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                <ColumnDefinition Width="{StaticResource UnitLength}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Period:" 
+                       Style="{StaticResource LabelTextBlockStyle}"/>
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding Source={StaticResource PeriodTypes}}" 
+                      SelectedItem="{Binding Path=PeriodType}"
+                      Style="{StaticResource ControlStyle}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <Grid Style="{StaticResource GridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelLength}"/>
+                <ColumnDefinition Width="{StaticResource ControlLength}"/>
+                <ColumnDefinition Width="{StaticResource UnitLength}"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Directional Spreading:" 
+                       Style="{StaticResource LabelTextBlockStyle}"/>
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding Source={StaticResource SpreadingTypes}}" 
+                      SelectedItem="{Binding Path=DirectionalSpreadingType}"
+                      Style="{StaticResource ControlStyle}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+    </StackPanel>
 </UserControl>
