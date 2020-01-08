@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui;
@@ -350,22 +351,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 LayersReadOnly = false,
             };
 
-            ILayer endPointsDataLayer =
-                CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider,
-                                            model);
-            groupLayer.Layers.Add(endPointsDataLayer);
-            
-            ILayer lineDataLayer = 
-                CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
-                                        model);
-            groupLayer.Layers.Add(lineDataLayer);
-
-            ILayer supportPointsLayer =
-                CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider, model);
-
-            groupLayer.Layers.Add(supportPointsLayer);
+            groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer, model));
 
             return groupLayer;
+        }
+
+        private static IEnumerable<ILayer> CreateBoundaryLayers(BoundaryMapFeaturesContainer featuresProviderContainer, IWaveModel model)
+        {
+            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider,
+                                                     model);
+
+            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
+                                                 model);
+
+            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider,
+                                                  model);
         }
 
         private static ILayer CreateSupportPointsLayer(BoundarySupportPointMapFeatureProvider featureProvider, IWaveModel model)
