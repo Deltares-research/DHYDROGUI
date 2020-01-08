@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.Enums
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
 {
     /// <summary>
     /// <see cref="DirectionalSpreadingViewType"/> defines the possible

@@ -1,7 +1,6 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.Enums;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Enums
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
 {
     /// <summary>
     /// <see cref="WaveBoundaryConditionEditorEnumExtension"/> provides several conversion extensions

@@ -1,8 +1,8 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Enums;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.Enums
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
 {
     [TestFixture]
     public class WaveBoundaryConditionEditorEnumExtensionsTest

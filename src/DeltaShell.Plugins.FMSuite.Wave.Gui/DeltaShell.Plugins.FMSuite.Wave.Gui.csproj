@@ -149,9 +149,9 @@
     </Compile>
     <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
-    <Compile Include="Editors\Boundaries\ViewModels\Enums\DirectionalSpreadingViewType.cs" />
-    <Compile Include="Editors\Boundaries\ViewModels\Enums\PeriodViewType.cs" />
-    <Compile Include="Editors\Boundaries\ViewModels\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
+    <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\Factories\IViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\Factories\ViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Enums
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
 {
     /// <summary>
     /// <see cref="PeriodViewType"/> defines the possible options of
