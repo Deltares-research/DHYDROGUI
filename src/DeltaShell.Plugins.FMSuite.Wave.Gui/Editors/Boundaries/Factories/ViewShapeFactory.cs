@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     /// <see cref="IViewShapeFactory"/> implements the interface to construct the different
     /// <see cref="IViewShape"/>.
     /// </summary>
-    public class ViewShapeFactory
+    public class ViewShapeFactory : IViewShapeFactory
     {
         private readonly Dictionary<Type, Func<IViewShape>> mappingDefault =
          new Dictionary<Type, Func<IViewShape>>();
