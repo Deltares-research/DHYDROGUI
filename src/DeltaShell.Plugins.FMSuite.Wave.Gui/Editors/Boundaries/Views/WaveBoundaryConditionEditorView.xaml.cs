@@ -22,7 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
         {
         }
 
-        public object Data { get; set; }
+        public object Data
+        {
+            get => DataContext;
+            set => DataContext = value;
+        }
+
         public string Text { get; set; }
         public Image Image { get; set; }
         public ViewInfo ViewInfo { get; set; }
