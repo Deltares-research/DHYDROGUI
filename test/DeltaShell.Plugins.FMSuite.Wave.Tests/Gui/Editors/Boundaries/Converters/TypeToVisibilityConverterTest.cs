@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Converters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.Converters
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converters
 {
     [TestFixture]
     public class TypeToVisibilityConverterTest

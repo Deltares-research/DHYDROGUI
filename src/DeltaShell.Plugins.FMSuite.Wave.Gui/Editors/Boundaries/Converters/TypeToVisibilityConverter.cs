@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Converters
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
 {
     /// <summary>
     /// <see cref="TypeToVisibilityConverter"/> defines the <see cref="IValueConverter"/>
