@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             ActivityRunner.RunActivity(waveModel);
 
             Assert.AreEqual(ActivityStatus.Cleaned, waveModel.Status);
+            Assert.IsFalse(waveModel.OutputIsEmpty);
         }
 
         [Test]

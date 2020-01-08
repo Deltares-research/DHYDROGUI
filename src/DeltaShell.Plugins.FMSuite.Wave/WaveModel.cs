@@ -1355,7 +1355,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             ReportProgressText("Reading Swan dia file");
             string swanDiagFile = Path.Combine(outputPath,
-                                               "swn-diag." + Path.GetFileNameWithoutExtension(SafeMdwFileName));
+                                               "swn-diag." + Name);
             var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
            
             if (File.Exists(swanDiagFile))
@@ -1374,14 +1374,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
             else
             {
-                string swanPrintFile = Path.Combine(DimrExportDirectoryPath, "PRINT");
-                if (File.Exists(swanPrintFile))
-                {
-                    swanLog.Content = string.Format("Errors running Swan, content of {0}:", swanPrintFile);
-                    swanLog.Content += Environment.NewLine;
-                    swanLog.Content += Environment.NewLine;
-                    swanLog.Content += new StreamReader(swanPrintFile).ReadToEnd();
-                }
+                Log.WarnFormat(
+                    Resources.WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__,
+                    swanDiagFile);
             }
         }
 

@@ -328,6 +328,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error reading log file: {0}.
+        /// </summary>
+        public static string WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error reading log file: {0}, {1}.
         /// </summary>
         public static string WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_ {

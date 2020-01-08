@@ -426,5 +426,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             var waveModel = new WaveModel();
             Assert.IsFalse(waveModel.IsCoupledToFlow);
         }
+
+        [Test]
+        public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
+        {
+            // Arrange
+            var waveModel = new WaveModel();
+            string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output1Domain");
+            
+            // Act
+            waveModel.ConnectOutput(outputDirectory);
+
+            // Assert
+            Assert.IsFalse(waveModel.OutputIsEmpty);
+            Assert.AreEqual(Path.Combine(outputDirectory, "wavm-Waves.nc"), waveModel.WavmFunctionStores.First().Path);
+           
+            IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == "SwanLogDataItemTag");
+            Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectory, "swn-diag.Waves")),((TextDocument) swanLogDataItem.Value).Content);
+        }
+
+
+        [Test]
+        public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
+        {
+            // Arrange
+            var waveModel = new WaveModel();
+            waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
+           
+            string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
+
+            // Act
+            waveModel.ConnectOutput(outputDirectory);
+
+            // Assert
+            Assert.IsFalse(waveModel.OutputIsEmpty);
+            Assert.AreEqual(2, waveModel.WavmFunctionStores.Count());
+            Assert.AreEqual(Path.Combine(outputDirectory, "wavm-Waves-Outer.nc"), waveModel.WavmFunctionStores.First().Path);
+            Assert.AreEqual(Path.Combine(outputDirectory, "wavm-Waves-Inner.nc"), waveModel.WavmFunctionStores.Last().Path);
+
+            IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == "SwanLogDataItemTag");
+            Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectory, "swn-diag.Waves")), ((TextDocument)swanLogDataItem.Value).Content);
+        }
+
+        [Test]
+        public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
+        {
+            // Arrange
+            var waveModel = new WaveModel {Name = "wave"};
+            string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm");
+
+            // Act
+            waveModel.ConnectOutput(outputDirectory);
+
+            // Assert
+            string expectedMssg = $"Error reading log file: {Path.Combine(outputDirectory, "swn-diag.wave")}";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => waveModel.ConnectOutput(outputDirectory), expectedMssg);
+        }
     }
 }
