@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
-    <Compile Include="Gui\DeltaresColor.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
