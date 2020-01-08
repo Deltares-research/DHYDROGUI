@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             var areEqual = true;
 
             areEqual &= observationPoint1.Name == observationPoint2.Name;
-            areEqual &= observationPoint1.LongName == observationPoint2.LongName;
+            //areEqual &= observationPoint1.LongName == observationPoint2.LongName; //we don't store obs pts longname
             areEqual &= observationPoint1.Chainage.Equals(observationPoint2.Chainage);
 
             areEqual &= observationPoint1.Description == observationPoint2.Description;

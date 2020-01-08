@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var coordinates = new Coordinate[xCoordinates.Length];
                 for (var i = 0; i < coordinates.Length; i++)
                     coordinates[i] = new Coordinate(xCoordinates[i], yCoordinates[i]);
-                structure.Geometry = new LineString(coordinates); 
+                structure.Geometry = coordinates.Length == 1 ? (IGeometry) new Point(coordinates[0]) : (IGeometry)new LineString(coordinates);
             }
 
             property = structure2D.GetProperty(KnownStructureProperties.PolylineFile);

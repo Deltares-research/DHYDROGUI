@@ -77,7 +77,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             var content = categories.Where(c => c.Name == ObservationPointRegion.IniHeader).ToList().First();
 
-            var idProperty = content.Properties.First(p => p.Name == LocationRegion.Id.Key);
+            var idProperty = content.Properties.First(p => p.Name == LocationRegion.ObsId.Key);
             Assert.AreEqual(expectedId.ToString(), idProperty.Value);
 
             var branchIdProperty = content.Properties.First(p => p.Name == LocationRegion.BranchId.Key);

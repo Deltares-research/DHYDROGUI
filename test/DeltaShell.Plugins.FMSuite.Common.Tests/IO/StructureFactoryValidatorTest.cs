@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
@@ -71,16 +72,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             Assert.AreEqual("Structure 'Test' must have geometry specified.", StructureFactoryValidator.Validate(structure));
 
-            structure.AddProperty("x", typeof(double), "5");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "5");
             Assert.AreEqual("Structure 'Test' has property 'x' specified, but 'y' is missing.", StructureFactoryValidator.Validate(structure));
 
-            structure.AddProperty("y", typeof(double), "5");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "5");
             Assert.AreEqual("", StructureFactoryValidator.Validate(structure));
 
-            structure.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == "x");
+            structure.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == StructureRegion.XCoordinates.Key);
             Assert.AreEqual("Structure 'Test' has property 'y' specified, but 'x' is missing.", StructureFactoryValidator.Validate(structure));
 
-            structure.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == "y");
+            structure.Properties.RemoveAllWhere(p => p.PropertyDefinition.FilePropertyName == StructureRegion.YCoordinates.Key);
             structure.AddProperty("polylinefile", typeof(string), "");
             Assert.AreEqual("Structure 'Test' does not have a filename specified for property 'polylinefile'.", StructureFactoryValidator.Validate(structure));
         }
@@ -91,8 +92,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("weir");
             structure.AddProperty("type", typeof(string), "weir");
             structure.AddProperty("id", typeof(string), "Test");
-            structure.AddProperty("x", typeof(double), "5");
-            structure.AddProperty("y", typeof(double), "5");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "5");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "5");
             structure.AddProperty("polylinefile", typeof(string), "testing.pli");
 
             Assert.AreEqual("Structure 'Test' cannot have point geometry and polyline geometry.", StructureFactoryValidator.Validate(structure));
@@ -104,8 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("pump");
             structure.AddProperty("type", typeof(string), "pump");
             structure.AddProperty("id", typeof(string), "Test");
-            structure.AddProperty("x", typeof(double), "5");
-            structure.AddProperty("y", typeof(double), "5");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "5");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "5");
             structure.AddProperty("reduction_factor_no_levels", typeof(int), "1");
 
             Assert.AreEqual("Structure 'Test' with constant reduction factor does not have factor defined.", StructureFactoryValidator.Validate(structure));
@@ -120,8 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("pump");
             structure.AddProperty("type", typeof(string), "pump");
             structure.AddProperty("id", typeof(string), "Test");
-            structure.AddProperty("x", typeof(double), "5");
-            structure.AddProperty("y", typeof(double), "5");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "5");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "5");
             structure.AddProperty("reduction_factor_no_levels", typeof(int), "3");
 
             Assert.AreEqual("Structure 'Test' with multiple reduction factors does not have reference levels defined.", StructureFactoryValidator.Validate(structure));

@@ -772,6 +772,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Ignore("RHU doesn't care about migration")]
         public void ExportIntegratedModelWithRunfallRunoffSetsBoundaryConditionCorrectly()
         {
             var path = TestHelper.GetTestFilePath("SOBEK3-1313\\Flow1D_RR_IntegratedModel.dsproj");

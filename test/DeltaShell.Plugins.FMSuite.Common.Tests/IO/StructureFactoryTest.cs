@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             foreach (var knownProperty in knownProperties)
             {
                 var property = (KnownGeneralStructureProperties) knownProperty;
-                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel) continue;
+                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel || property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection) continue;
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
                 generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
@@ -133,7 +133,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.NotNull(weir);
             
                 var weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
-                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
+                if(weirFormulaValueDictionary.ContainsKey(property))
+                    Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
             }
         }
 
@@ -264,19 +265,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CreateGateWithConstantPropertiesTest()
         {
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", "horizontal_opening_direction");
+            var openingDirectionDefinition = schema.GetDefinition("gate", "gateOpeningHorizontalDirection");
             
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate01");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "500");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.GateSillWidth,typeof(double),"55.7");
-            structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "1");
-            structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "2.8");
-            structure.AddProperty(KnownStructureProperties.GateDoorHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "from_right");
+            structure.AddProperty(StructureRegion.Id.Key, typeof(string), "Gate01");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "500");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
+            structure.AddProperty(StructureRegion.GateCrestLevel.Key, typeof(Steerable), "2");
+            structure.AddProperty(StructureRegion.GateCrestWidth.Key,typeof(double),"55.7");
+            structure.AddProperty(StructureRegion.GateOpeningWidth.Key, typeof(Steerable), "1");
+            structure.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, typeof(Steerable), "2.8");
+            structure.AddProperty(StructureRegion.GateHeight.Key, typeof(double), "10");
+            structure.AddProperty(StructureRegion.GateHorizontalOpeningDirection.Key, openingDirectionDefinition.DataType, "fromRight");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 

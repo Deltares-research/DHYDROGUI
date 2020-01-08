@@ -25,8 +25,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             IniCategory.AddProperty(LocationRegion.Chainage.Key, branchFeature.Chainage, LocationRegion.Chainage.Description, LocationRegion.Chainage.Format);
 
             var networkFeature = branchFeature as IHydroNetworkFeature;
-            //if (networkFeature != null)
-            //    IniCategory.AddProperty(LocationRegion.Name.Key, networkFeature.LongName, LocationRegion.Name.Description);
+            if (networkFeature != null && !(branchFeature is IObservationPoint))
+                IniCategory.AddProperty(LocationRegion.Name.Key, networkFeature.LongName, LocationRegion.Name.Description);
         }
 
         public virtual IEnumerable<DelftIniCategory> CreateIniRegion(IBranchFeature branchFeature)

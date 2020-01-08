@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Grid
             if (discretisationDataModel == null)
             {
                 // no discretisation is found. Return null and try to get the network in another call
-                discretization.Clear();
+                discretization?.Clear();
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.Grid
             }
             else
             {
-                discretization.Clear();
+                discretization?.Clear();
             }
             
         }

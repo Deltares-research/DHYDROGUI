@@ -135,6 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var property1 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property1Name, fileCategoryName);
                 var property2 = AddCustomMultipleFilePropertyToModelDefinition(modelDefinition, property2Name, fileCategoryName);
+                modelDefinition.GetModelProperty(KnownProperties.NetFile).Value = string.Concat(nameWithoutExtension, "_net.nc");
                 //Read
                 mduFile.Read(mduFilePath, modelDefinition, new HydroArea(), new HydroNetwork(), null,null,null, new List<ModelFeatureCoordinateData<FixedWeir>>());
                 Assert.AreEqual(property1Value, property1.GetValueAsString());
