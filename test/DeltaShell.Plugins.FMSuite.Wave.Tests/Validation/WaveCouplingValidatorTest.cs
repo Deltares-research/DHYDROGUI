@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
@@ -23,10 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                Owner = Substitute.For<ICompositeActivity>(),
-                StartTime = DateTime.Now
+                IsCoupledToFlow = true,
+                StartTime = DateTime.Now,
+                TimeStep = new TimeSpan(0, 0, timeStep)
             };
-            waveModel.TimeStep = new TimeSpan(0,0,timeStep);
             var expectedTabName = "General";
             const string expectedMessage = "The coupling time step must be positive.";
 
@@ -49,10 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                Owner = Substitute.For<ICompositeActivity>(),
-                StartTime = DateTime.Now
+                IsCoupledToFlow = true,
+                StartTime = DateTime.Now,
+                TimeStep = new TimeSpan(0, 0, 1)
             };
-            waveModel.TimeStep = new TimeSpan(0, 0, 1);
             const string expectedMessage = "The coupling time step must be positive.";
 
             // When
@@ -71,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var waveModel = new WaveModel())
             {
                 // Given
-                waveModel.Owner = Substitute.For<ICompositeActivity>();
+                waveModel.IsCoupledToFlow = true;
                 waveModel.StartTime = DateTime.Now;
                 waveModel.StopTime = waveModel.StartTime.AddDays(couplingPeriod);
 
@@ -98,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var waveModel = new WaveModel())
             {
                 // Given
-                waveModel.Owner = Substitute.For<ICompositeActivity>();
+                waveModel.IsCoupledToFlow = true;
                 waveModel.StartTime = DateTime.Now;
                 waveModel.StopTime = DateTime.Now.AddDays(1);
 
@@ -119,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                Owner = Substitute.For<ICompositeActivity>(),
+                IsCoupledToFlow = true,
                 StartTime = DateTime.Now
             };
             waveModel.ModelDefinition.ModelReferenceDateTime = waveModel.StartTime.AddDays(1); // Model start time precedes model reference time
@@ -147,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Given
             var waveModel = new WaveModel
             {
-                Owner = Substitute.For<ICompositeActivity>(),
+                IsCoupledToFlow = true,
                 WriteCOM = writeComFile
             };
             waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile).Value = comFilePath;
