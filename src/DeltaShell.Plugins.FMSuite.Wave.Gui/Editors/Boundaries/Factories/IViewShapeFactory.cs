@@ -2,7 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Factories
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 {
     /// <summary>
     /// <see cref="IViewShapeFactory"/> defines the interface to construct the different
