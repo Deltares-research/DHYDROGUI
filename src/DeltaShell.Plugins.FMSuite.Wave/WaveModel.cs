@@ -55,6 +55,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private string progressText;
 
         /// <summary>
+        /// Showing the progress of a run.
+        /// </summary>
+        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
+
+        /// <summary>
         /// Gets a value indicating whether this wave model is online coupled to a fm model.
         /// Always true for wave model inside an integrated model, since waves models can
         /// not run stand-alone in DIMR.
@@ -1103,8 +1108,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return new WaveModelValidator().Validate(this);
         }
 
-        private bool lazyInitializationFlag;
-
         protected override void OnExecute()
         {
             runner.OnExecute();
@@ -1186,6 +1189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected virtual void ReconnectWavmFile(string outputPath)
         {
+            ReportProgressText("Reading output (WAVM) file");
             List<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
             if (domains.Count > 1)
             {
