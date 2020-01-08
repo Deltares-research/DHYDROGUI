@@ -1,5 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
@@ -20,6 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
             this.observedBoundary = observedBoundary ?? throw new ArgumentNullException(nameof(observedBoundary));
 
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary);
+
+            var factory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
+            BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, factory);
         }
 
         /// <summary>
@@ -31,5 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
         /// Gets the <see cref="BoundaryDescriptionViewModel"/>.
         /// </summary>
         public BoundaryDescriptionViewModel DescriptionViewModel { get; }
+
+        /// <summary>
+        /// Gets the <see cref="BoundaryWideParametersViewModel"/>.
+        /// </summary>
+        public BoundaryWideParametersViewModel BoundaryWideParametersViewModel { get; }
     }
 }
