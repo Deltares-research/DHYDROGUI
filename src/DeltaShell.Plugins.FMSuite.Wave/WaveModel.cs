@@ -1362,7 +1362,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 try
                 {
-                    swanLog.Content = "";
+                    swanLog.Content = string.Empty;
                     string log = File.ReadAllText(swanDiagFile);
                     swanLog.Content = log;
                 }

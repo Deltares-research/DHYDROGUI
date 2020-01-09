@@ -428,6 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             // Arrange
@@ -447,6 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             // Arrange
@@ -469,6 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
         {
             // Arrange
