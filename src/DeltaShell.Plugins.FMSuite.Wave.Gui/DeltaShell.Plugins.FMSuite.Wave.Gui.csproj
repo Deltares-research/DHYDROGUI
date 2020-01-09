@@ -153,6 +153,7 @@
     </Compile>
     <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
@@ -166,6 +167,9 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShape.cs" />
     <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
       <DependentUpon>LabeledComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml.cs">
+      <DependentUpon>LabeledValueBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryWideParametersView.xaml.cs">
       <DependentUpon>BoundaryWideParametersView.xaml</DependentUpon>
@@ -440,6 +444,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
