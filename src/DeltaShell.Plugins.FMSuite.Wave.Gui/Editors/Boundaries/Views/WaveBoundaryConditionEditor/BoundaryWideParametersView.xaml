@@ -52,54 +52,18 @@
                                 SelectedItem="{Binding Path=ShapeType}"
                                 ItemsSource="{Binding Path=ShapeTypeList}"
                                 ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}"/>
-        <Grid Style="{StaticResource GridStyle}"
-              Visibility="{Binding Path=ShapeType, 
-                                   Converter={StaticResource TypeToVisibilityConverter},
-                                                             ConverterParameter={x:Type shapes:JonswapViewShape}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}"/>
-                <ColumnDefinition Width="{StaticResource ControlLength}"/>
-                <ColumnDefinition Width="{StaticResource UnitLength}"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Peak Enhancement Factor:" 
-                       Style="{StaticResource LabelTextBlockStyle}"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding Path=Shape.PeakEnhancementFactor}"
-                     TextAlignment="Right"
-                     VerticalAlignment="Center"
-                     Style="{StaticResource ControlStyle}"
-                     IsEnabled="False"
-                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
-            <TextBlock Grid.Column="2"
-                           Text="[-]" 
-                           Style="{StaticResource LabelTextBlockStyle}"
-                           Width="47"/>
-        </Grid>
-        <Grid Style="{StaticResource GridStyle}"
-              Visibility="{Binding Path=ShapeType, 
-                                   Converter={StaticResource TypeToVisibilityConverter},
-                                                             ConverterParameter={x:Type shapes:GaussViewShape}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}"/>
-                <ColumnDefinition Width="{StaticResource ControlLength}"/>
-                <ColumnDefinition Width="{StaticResource UnitLength}"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Gaussian Spread:" 
-                       Style="{StaticResource LabelTextBlockStyle}"/>
-            <TextBox Grid.Column="1"
-                     Text="{Binding Path=Shape.GaussianSpread}"
-                     TextAlignment="Right"
-                     VerticalAlignment="Center"
-                     Style="{StaticResource ControlStyle}"
-                     IsEnabled="False"
-                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text"/>
-            <TextBlock Grid.Column="2"
-                           Text="[-]" 
-                           Style="{StaticResource LabelTextBlockStyle}"
-                           Width="47"/>
-        </Grid>
+        <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                     Converter={StaticResource TypeToVisibilityConverter},
+                                                     ConverterParameter={x:Type shapes:JonswapViewShape}}"
+                                Label="Peak Enhancement Factor:"
+                                ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
+                                Unit="-" />
+        <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                     Converter={StaticResource TypeToVisibilityConverter},
+                                                     ConverterParameter={x:Type shapes:GaussViewShape}}"
+                                Label="Gaussian Spread:"
+                                ValueContent="{Binding Path=Shape.GaussianSpread}"
+                                Unit="-" />
         <common:LabeledComboBox Label="Period:"
                                 SelectedItem="{Binding Path=PeriodType}"
                                 ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
