@@ -908,8 +908,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             string netFilePath = MduFileHelper.GetSubfilePath(filePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            
-            UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(netFilePath), UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath));
+            if(!string.IsNullOrEmpty(netFilePath) && File.Exists(netFilePath))
+                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(netFilePath), UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath));
 
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);
