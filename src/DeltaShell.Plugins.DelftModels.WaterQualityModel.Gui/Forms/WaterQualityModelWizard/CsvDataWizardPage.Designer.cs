@@ -41,7 +41,8 @@
             // 
             // openCsvFileDialog
             // 
-            this.openCsvFileDialog.FileName = "openCsvFileDialog";
+            this.openCsvFileDialog.AutoUpgradeEnabled = false;
+            this.openCsvFileDialog.FileName = "";
             this.openCsvFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
             // importBoundaryDataFile
