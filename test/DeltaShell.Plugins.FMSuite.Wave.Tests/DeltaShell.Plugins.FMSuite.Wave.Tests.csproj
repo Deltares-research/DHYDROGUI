@@ -236,6 +236,7 @@
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\PeriodViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensionsTest.cs" />
