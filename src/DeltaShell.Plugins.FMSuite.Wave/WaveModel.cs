@@ -1038,8 +1038,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
 
-        private string SafeMdwFileName => Path.GetFileName(MdwFilePath).Replace(" ", "_");
-
         public override DateTime StartTime
         {
             get => startTime;
