@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
     {
         private const string StructureCategoryName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
-        public List<string> propertyTypesFromIni = new List<string>();
 
         public StructuresFile()
         {
