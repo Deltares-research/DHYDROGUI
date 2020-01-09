@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
+             xmlns:common="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonElements"
              xmlns:enums="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums"
              xmlns:convertersBoundaries="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters"
              xmlns:convertersCommon="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Converters"
@@ -21,6 +22,14 @@
             <convertersCommon:EnumToDescriptionConverter     x:Key="EnumToDescriptionConverter"/>
             <convertersBoundaries:TypeToVisibilityConverter  x:Key="TypeToVisibilityConverter" />
             <convertersBoundaries:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter"/>
+
+            <DataTemplate x:Key="TypeLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource TypeToDescriptionConverter}}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EnumLabeledComboBoxTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+            </DataTemplate>
 
             <ObjectDataProvider x:Key="PeriodTypes"
                                 MethodName="GetValues" ObjectType="{x:Type system:Enum}">
@@ -39,26 +48,10 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <Grid Style="{StaticResource GridStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}"/>
-                <ColumnDefinition Width="{StaticResource ControlLength}"/>
-                <ColumnDefinition Width="{StaticResource UnitLength}"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Shape:" 
-                       Style="{StaticResource LabelTextBlockStyle}"/>
-            <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding Path=ShapeTypeList}"
-                      SelectedItem="{Binding Path=ShapeType}"
-                      Style="{StaticResource ControlStyle}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource TypeToDescriptionConverter}}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </Grid>
+        <common:LabeledComboBox Label="Shape:"
+                                SelectedItem="{Binding Path=ShapeType}"
+                                ItemsSource="{Binding Path=ShapeTypeList}"
+                                ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}"/>
         <Grid Style="{StaticResource GridStyle}"
               Visibility="{Binding Path=ShapeType, 
                                    Converter={StaticResource TypeToVisibilityConverter},
@@ -107,45 +100,13 @@
                            Style="{StaticResource LabelTextBlockStyle}"
                            Width="47"/>
         </Grid>
-        <Grid Style="{StaticResource GridStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}"/>
-                <ColumnDefinition Width="{StaticResource ControlLength}"/>
-                <ColumnDefinition Width="{StaticResource UnitLength}"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Period:" 
-                       Style="{StaticResource LabelTextBlockStyle}"/>
-            <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource PeriodTypes}}" 
-                      SelectedItem="{Binding Path=PeriodType}"
-                      Style="{StaticResource ControlStyle}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </Grid>
-        <Grid Style="{StaticResource GridStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{StaticResource LabelLength}"/>
-                <ColumnDefinition Width="{StaticResource ControlLength}"/>
-                <ColumnDefinition Width="{StaticResource UnitLength}"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Directional Spreading:" 
-                       Style="{StaticResource LabelTextBlockStyle}"/>
-            <ComboBox Grid.Column="1"
-                      ItemsSource="{Binding Source={StaticResource SpreadingTypes}}" 
-                      SelectedItem="{Binding Path=DirectionalSpreadingType}"
-                      Style="{StaticResource ControlStyle}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </Grid>
+        <common:LabeledComboBox Label="Period:"
+                                SelectedItem="{Binding Path=PeriodType}"
+                                ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
+                                ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
+        <common:LabeledComboBox Label="Directional Spreading:"
+                                SelectedItem="{Binding Path=DirectionalSpreadingType}"
+                                ItemsSource="{Binding Source={StaticResource SpreadingTypes}}"
+                                ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
     </StackPanel>
 </UserControl>
