@@ -239,6 +239,9 @@
     <value>Error reading log file: {0}, {1}</value>
   </data>
   <data name="WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__" xml:space="preserve">
-    <value>Error reading log file: {0}</value>
+    <value>Could not find log file: {0}</value>
+  </data>
+  <data name="WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__" xml:space="preserve">
+    <value>Could not find output (WAVM) file: {0}</value>
   </data>
 </root>

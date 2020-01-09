@@ -1199,10 +1199,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     if (File.Exists(wavmFile))
                     {
                         BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
-
+                        
                         WavmFunctionStores.ElementAt(i).Path = wavmFile;
+                        OutputIsEmpty = false;
 
                         EndEdit();
+                    }
+                    else
+                    {
+                        Log.WarnFormat(
+                            Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
+                            wavmFile);
                     }
                 }
             }
@@ -1214,12 +1221,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
 
                     WavmFunctionStores.First().Path = wavmFile;
+                    OutputIsEmpty = false;
 
                     EndEdit();
                 }
+                else
+                {
+                    Log.WarnFormat(
+                        Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
+                        wavmFile);
+                }
             }
-
-            OutputIsEmpty = false;
         }
 
         protected override void OnClearOutput()

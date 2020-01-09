@@ -328,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error reading log file: {0}.
+        ///   Looks up a localized string similar to Could not find log file: {0}.
         /// </summary>
         public static string WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__ {
             get {
@@ -342,6 +342,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         public static string WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_ {
             get {
                 return ResourceManager.GetString("WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find output (WAVM) file: {0}.
+        /// </summary>
+        public static string WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__", resourceCulture);
             }
         }
         
