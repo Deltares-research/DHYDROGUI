@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             return new DataItem()
             {
-                Value = new FMMapFileFunctionStore(null)
+                Value = new FMMapFileFunctionStore()
                 {
                     Path = path,
                 }

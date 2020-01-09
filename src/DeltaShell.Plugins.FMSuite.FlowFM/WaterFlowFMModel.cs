@@ -2780,7 +2780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     else
                     {
-                        OutputMapFileStore = new FMMapFileFunctionStore(this);
+                        OutputMapFileStore = new FMMapFileFunctionStore();
                         // don't change this to a property setter, because the timing is of great importance.
                         // elsewise, there will be no subscription to the read and Path triggers the Read().
                         OutputMapFileStore.Path = mapFilePath;

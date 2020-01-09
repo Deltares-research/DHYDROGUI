@@ -42,7 +42,6 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
@@ -514,8 +513,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
-            if(mapStore.Links1D2D != null)
-                yield return mapStore.Links1D2D;
+            /*if(mapStore.Links1D2D != null)
+                yield return mapStore.Links1D2D;*/
             
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)
