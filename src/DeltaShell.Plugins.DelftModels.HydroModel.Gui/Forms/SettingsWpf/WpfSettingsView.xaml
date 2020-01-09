@@ -34,8 +34,6 @@
             </valueConverters:ValueConverterGroup>
 
             <!--#region Styles-->
-            <sys:Double x:Key="UnitWidth">47</sys:Double>
-
             <Style x:Key="ControlWithErrorStyle" TargetType="Control" BasedOn="{StaticResource ControlStyle}">
                 <Style.Triggers >
                     <Trigger Property="Validation.HasError" Value="true">
