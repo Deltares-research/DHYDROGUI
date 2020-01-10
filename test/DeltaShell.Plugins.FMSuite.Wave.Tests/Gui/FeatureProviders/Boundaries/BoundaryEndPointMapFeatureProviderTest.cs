@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
                 Assert.That(featureProvider, Is.InstanceOf(typeof(FeatureCollection)));
                 Assert.That(featureProvider.FeatureType, Is.EqualTo(typeof(Feature2DPoint)));
                 Assert.That(featureProvider.Features, Is.Empty);
+                Assert.That(featureProvider.CoordinateSystem, Is.SameAs(coordinateSystem));
             }
         }
 
