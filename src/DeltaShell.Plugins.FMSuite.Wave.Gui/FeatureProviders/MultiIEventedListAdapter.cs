@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 {
@@ -61,15 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         public MultiIEventedListAdapter(Func<TDisplayed, Tuple<TObserved, IEventedList<TObserved>>> obtainObservedValueFunc,
                                         Func<TObserved, TDisplayed> createDisplayedValueFunc)
         {
-            if (obtainObservedValueFunc == null)
-            {
-                throw new ArgumentNullException(nameof(obtainObservedValueFunc));
-            }
-
-            if (createDisplayedValueFunc == null)
-            {
-                throw new ArgumentNullException(nameof(createDisplayedValueFunc));
-            }
+            Ensure.NotNull(obtainObservedValueFunc, nameof(obtainObservedValueFunc));
+            Ensure.NotNull(createDisplayedValueFunc, nameof(createDisplayedValueFunc));
 
             this.obtainObservedValueFunc = obtainObservedValueFunc;
             this.createDisplayedValueFunc = createDisplayedValueFunc;
@@ -120,10 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         /// </exception>
         public void RegisterList(IEventedList<TObserved> observedList)
         {
-            if (observedList == null)
-            {
-                throw new ArgumentNullException(nameof(observedList));
-            }
+            Ensure.NotNull(observedList, nameof(observedList));
 
             AddObservedListContents(observedList);
             SubscribeToObservedList(observedList);
@@ -131,10 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         public void DeregisterList(IEventedList<TObserved> observedList)
         {
-            if (observedList == null)
-            {
-                throw new ArgumentNullException(nameof(observedList));
-            }
+            Ensure.NotNull(observedList, nameof(observedList));
 
             RemoveSourceListContents(observedList);
             UnsubscribeFromSourceList(observedList);
