@@ -10,7 +10,7 @@ using Mono.Addins;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Deltares")]
 [assembly: AssemblyProduct("DeltaShell.Plugins.Sobek")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2008-2013")]
+[assembly: AssemblyCopyright("Copyright © Deltares 2008-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
