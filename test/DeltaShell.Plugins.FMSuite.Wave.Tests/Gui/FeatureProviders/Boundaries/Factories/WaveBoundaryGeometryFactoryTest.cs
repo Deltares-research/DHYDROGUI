@@ -25,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call
             void Call() => new WaveBoundaryGeometryFactory(null, calculatorProvider);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("gridBoundaryProvider"));
         }
 
@@ -39,9 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call
             void Call() => new WaveBoundaryGeometryFactory(gridBoundaryProvider, null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("snappingCalculatorProvider"));
         }
 
@@ -78,16 +78,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call
             void Call() => factory.ConstructBoundaryLineGeometry(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveBoundary"));
         }
 
         [Test]
         public void ConstructBoundaryLineGeometry_ValidInput_ReturnsCorrectLineString()
         {
-            // TODO: (MWT) make this neat
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
@@ -234,12 +233,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
 
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
+            
             // Call
-
             void Call() => factory.ConstructBoundarySupportPoint(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
 
