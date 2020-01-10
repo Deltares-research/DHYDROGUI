@@ -138,7 +138,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         public override void Dispose()
         {
             base.Dispose();
-            UnsubscribeFromEventing();
+            Dispose(true);
+
+            // This has not been done in the parent classes.
+            // In an attempt to do it somewhat correctly here, we suppress it here.
+            GC.SuppressFinalize(this);
+        }
+
+        // Since this class is sealed, this method is private and non-virtual.
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UnsubscribeFromEventing();
+            }
         }
         #endregion
     }
