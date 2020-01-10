@@ -358,8 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
         private static IEnumerable<ILayer> CreateBoundaryLayers(BoundaryMapFeaturesContainer featuresProviderContainer, IWaveModel model)
         {
-            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider,
-                                                     model);
+            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
 
             yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
                                                  model);
@@ -395,6 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 FeatureEditor = new Feature2DEditor(model),
                 Style = new VectorStyle
                 {
+                    // TODO: Figure out whether we want to make these configurable, or whether we want to define a set of predefined values
                     Line = new Pen(Color.Blue, 3f),
                     GeometryType = typeof(ILineString)
                 },
@@ -403,8 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return lineDataLayer;
         }
 
-        private static ILayer CreateBoundaryEndPointLayer(BoundaryEndPointMapFeatureProvider featureProvider,
-                                                          IWaveModel model)
+        private static ILayer CreateBoundaryEndPointLayer(BoundaryEndPointMapFeatureProvider featureProvider)
         {
             var endPointsLayer = new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
             {
