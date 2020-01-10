@@ -22,9 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         public IEnumerable<GridBoundaryCoordinate> GetSnappedEndPoints(IBoundarySnappingCalculator boundarySnappingCalculator, 
                                                                        IEnumerable<Coordinate> coordinates)
         {
-            IEnumerable<Coordinate> distinctCoordinates = coordinates.Distinct(new Coordinate2DEqualityComparer());
+            List<Coordinate> distinctCoordinates = coordinates.Distinct(new Coordinate2DEqualityComparer()).ToList();
 
-            if (distinctCoordinates.Count() < 2)
+            if (distinctCoordinates.Count < 2)
             {
                 throw new ArgumentException("There should be two or more distinct coordinates in coordinates.");
             }
