@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     /// view and data. As such, this feature provider can be seen as a view model
     /// for the line data for the Map.
     /// </remarks>
-    public class BoundaryLineMapFeatureProvider : Feature2DCollection
+    public sealed class BoundaryLineMapFeatureProvider : Feature2DCollection
     {
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryContainer boundaryContainer;
