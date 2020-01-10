@@ -208,17 +208,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             return boundary;
         }
 
-        private static int CountFeaturesChangedFired(IFeatureProvider fc, Action action)
+        private static int CountFeaturesChangedFired(IFeatureProvider fp, Action action)
         {
             var count = 0;
 
-            fc.FeaturesChanged += CountFeaturesChanged;
+            fp.FeaturesChanged += CountFeaturesChanged;
 
             action.Invoke();
 
             void CountFeaturesChanged(object sender, EventArgs e)
             {
-                count++;
+                if (sender == fp && e == EventArgs.Empty)
+                {
+                    count++;
+                }
             }
 
             return count;

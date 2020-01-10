@@ -38,6 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                         "Expected a different GridSide.");
             Assert.That(geometricDefinition.SupportPoints, Is.Not.Null,
                         "Expected that SupportPoints was not null.");
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty,
+                        "Expected that the SupportsPoints are empty upon construction");
         }
 
         [Test]

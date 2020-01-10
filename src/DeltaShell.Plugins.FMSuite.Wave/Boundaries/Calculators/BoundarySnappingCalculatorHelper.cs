@@ -82,8 +82,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <param name="distance">The distance.</param>
         /// <param name="coordinates">The coordinates.</param>
         /// <param name="distanceCalculator">The distance calculator.</param>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the <paramref name="distance"/> exceeds the total distance
+        /// between the coordinates <paramref name="coordinates"/>
+        /// </exception>
+        /// <remarks>
+        /// The behaviour of this method is undefined if <paramref name="coordinates"/>
+        /// or <paramref name="distanceCalculator"/> is <c>null</c>.
+        /// </remarks>
         /// <returns>
-        ///  The coordinate at the specified <paramref name="distance"/>.
+        /// The coordinate at the specified <paramref name="distance"/>.
         /// </returns>
         internal static Coordinate CalculateCoordinateFromDistance(double distance, Coordinate[] coordinates,
                                                                    IDistanceCalculator distanceCalculator)
@@ -100,18 +108,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                 {
                     distance -= distanceBetweenCoordinates;
                 }
-
                 else
                 {
-                    double CalculateCoordinate(double start, double end)
+                    double CalculateCoordinateComponent(double start, double end)
                     {
                         double difference = end - start;
-                        double normalized = difference / distanceBetweenCoordinates;
-                        return start + (normalized * distance);
+                        double normalizedComponent = difference / distanceBetweenCoordinates;
+                        return start + (normalizedComponent * distance);
                     }
 
-                    double x = CalculateCoordinate(startCoordinate.X, endCoordinate.X);
-                    double y = CalculateCoordinate(startCoordinate.Y, endCoordinate.Y);
+                    double x = CalculateCoordinateComponent(startCoordinate.X, endCoordinate.X);
+                    double y = CalculateCoordinateComponent(startCoordinate.Y, endCoordinate.Y);
 
                     return new Coordinate(x, y);
                 }

@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// * <see cref="StartingIndex"/> >= 0;
     /// * <see cref="EndingIndex"/> > <see cref="StartingIndex"/>;
     /// * <see cref="GridSide"/> is a valid enum value;
+    /// * <see cref="SupportPoints"/> is not <c>null</c>;
     /// </remarks>
     public interface IWaveBoundaryGeometricDefinition
     {

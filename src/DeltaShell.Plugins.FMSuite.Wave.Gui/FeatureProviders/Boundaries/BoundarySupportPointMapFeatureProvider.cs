@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     /// to create the appropriate lists. These classes are necessary to play
     /// nice with the framework, and ensure a good separation of concerns between
     /// view and data. As such, this feature provider can be seen as a view model
-    /// for the line data for the Map.
+    /// for the support point data for the Map.
     /// </remarks>
     public class BoundarySupportPointMapFeatureProvider : Feature2DCollection
     {
@@ -45,8 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         public BoundarySupportPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
                                                       IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            this.boundaryContainer = boundaryContainer ?? throw new ArgumentNullException(nameof(boundaryContainer));
-            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+
+            this.boundaryContainer = boundaryContainer;
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
             pointFeatures = new MultiIEventedListAdapter<SupportPoint, SupportPointFeature>(ObtainSupportPointFromFeature,
                                                                                             CreateSupportPointFeature);
@@ -119,6 +123,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                 case NotifyCollectionChangedAction.Reset:
                     DeregisterBoundaries(e.OldItems.Cast<IWaveBoundary>());
                     break;
+                case NotifyCollectionChangedAction.Replace:
+                case NotifyCollectionChangedAction.Move:
+                    throw new NotSupportedException($"{e.Action.ToString()} is not support.");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(e.Action));
             }
@@ -139,8 +146,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         public override void Dispose()
         {
             base.Dispose();
-            DeregisterBoundaries(boundaryContainer.Boundaries);
-            UnsubscribeFromEventing();
+            Dispose(true);
+
+            // This has not been done in the parent classes.
+            // In an attempt to do it somewhat correctly here, we suppress it here.
+            GC.SuppressFinalize(this);
+        }
+
+        // Since this class is sealed, this method is private and non-virtual.
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DeregisterBoundaries(boundaryContainer.Boundaries);
+                UnsubscribeFromEventing();
+            }
         }
 
         #endregion

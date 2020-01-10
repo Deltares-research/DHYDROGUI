@@ -26,10 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// <param name="gridBoundaryProvider">The grid boundary provider.</param>
         /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
         /// <exception cref="ArgumentNullException">
-        /// Throw when any parameter is <c>null</c>.
+        /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public WaveBoundaryGeometryFactory(IGridBoundaryProvider gridBoundaryProvider,
-                               IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
+                                           IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
         {
             Ensure.NotNull(gridBoundaryProvider, nameof(gridBoundaryProvider));
             Ensure.NotNull(snappingCalculatorProvider, nameof(snappingCalculatorProvider));
@@ -92,6 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             Ensure.NotNull(supportPoint, nameof(supportPoint));
 
             IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
+
+            if (calculator == null)
+            {
+                return null;
+            }
+
             Coordinate coordinate = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
 
             return new Point(coordinate);

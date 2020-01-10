@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -42,8 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             }
 
             Distance = distance;
-            GeometricDefinition = geometricDefinition ??
-                                  throw new ArgumentNullException(nameof(geometricDefinition));
+
+            Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
+
+            this.GeometricDefinition = geometricDefinition;
         }
     }
 }

@@ -27,8 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         [Test]
         public void Constructor_GeometricDefinitionNull_ThrowsArgumentNullException()
         {
-            // Setup
-
             // Call
             void Call() => new SupportPoint(random.NextDouble(), null);
 

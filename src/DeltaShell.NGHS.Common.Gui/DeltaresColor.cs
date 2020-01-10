@@ -2,7 +2,6 @@
 
 namespace DeltaShell.NGHS.Common.Gui
 {
-    // TODO: Create Common.Gui project and move to there!
     /// <summary>
     /// Contains the Deltares themed colors.
     /// </summary>

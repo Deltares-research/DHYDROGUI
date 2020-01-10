@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -8,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Geometries;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Factories
@@ -233,12 +235,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
 
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
-            
+
             // Call
             void Call() => factory.ConstructBoundarySupportPoint(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
 
@@ -250,9 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
-            double distance = random.NextDouble();
-
-            SupportPoint supportPoint = CreateSupportPoint(distance);
+            SupportPoint supportPoint = CreateSupportPoint();
 
             double x = random.NextDouble();
             double y = random.NextDouble();
@@ -270,8 +270,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(point.Y, Is.EqualTo(y).Within(1E-15));
         }
 
-        private SupportPoint CreateSupportPoint(double distance)
+        [Test]
+        public void ConstructBoundarySupportPoint_WhenCalculatorIsNull_ReturnsNull()
         {
+            // Setup
+            var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
+
+            calculatorProvider.GetBoundarySnappingCalculator().ReturnsNull();
+
+            // Call
+            IPoint point = factory.ConstructBoundarySupportPoint(CreateSupportPoint());
+
+            // Assert
+            Assert.That(point, Is.Null);
+        }
+
+        private SupportPoint CreateSupportPoint()
+        {
+            double distance = random.NextDouble();
             var gridSide = random.NextEnumValue<GridSide>();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             geometricDefinition.GridSide.Returns(gridSide);

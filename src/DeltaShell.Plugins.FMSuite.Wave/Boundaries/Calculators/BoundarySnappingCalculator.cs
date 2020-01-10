@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -62,10 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
         public Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint)
         {
-            if (supportPoint == null)
-            {
-                throw new ArgumentNullException(nameof(supportPoint));
-            }
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
 
             IWaveBoundaryGeometricDefinition geometricDefinition = supportPoint.GeometricDefinition;
 

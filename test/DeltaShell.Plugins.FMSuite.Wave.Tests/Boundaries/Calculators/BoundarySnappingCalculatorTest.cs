@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class BoundarySnappingCalculatorTest
     {
-        private Random random = new Random();
+        private readonly Random random = new Random();
 
         [Test]
         public void Constructor_ExpectedValues()
@@ -223,6 +223,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Assert
             Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
                                                                     $"But was:  {result}.");
+        }
+
+        [Test]
+        public void CalculateCoordinateFromSupportPoint_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var calculator = new BoundarySnappingCalculator(Substitute.For<IGridBoundary>());
+
+            // Call
+            void Call() => calculator.CalculateCoordinateFromSupportPoint(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception, Has.Property("ParamName").EqualTo("supportPoint"));
         }
 
         private static void SetGridValues(IDiscreteGridPointCoverage grid, int x, int y)
