@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.Common
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="obj"/> is <c>null</c>.
         /// </exception>
-        public static void NotNull<T>(T obj, [CallerMemberName] string paramName = null) where T : class
+        public static void NotNull<T>(T obj, string paramName = null) where T : class
         {
             if (obj == null)
             {
