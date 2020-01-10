@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
@@ -27,10 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         public BoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
                                             ICoordinateSystem coordinateSystem)
         {
-            if (boundaryContainer == null)
-            {
-                throw new ArgumentNullException(nameof(boundaryContainer));
-            }
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
 
             var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
                                                               new WaveBoundaryFactoryHelper(), 
