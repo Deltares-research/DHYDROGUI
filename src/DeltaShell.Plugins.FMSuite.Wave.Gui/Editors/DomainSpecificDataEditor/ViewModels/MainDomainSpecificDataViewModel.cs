@@ -95,15 +95,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private void DomainsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             WaveDomainData waveDomainData = sender as WaveDomainData;
+
+            // Removing exterior domain
+            if (waveDomainData != null && e.PropertyName == nameof(WaveDomainData.SuperDomain) &&
+                waveDomainData.SuperDomain == null && RootDomain.SubDomains.Contains(waveDomainData))
+            {
+                RootDomain = waveDomainData;
+                return;
+            }
+
+            // Adding new exterior domain
             if (waveDomainData != null && e.PropertyName == nameof(WaveDomainData.SuperDomain) &&
                 DomainSpecificDataViewModelsList.All(vm => vm.DomainName != waveDomainData.SuperDomain.Name))
             {
                 RootDomain = waveDomainData.SuperDomain;
             }
+            
         }
 
         private void DomainsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            // Adding/Removing subdomains
                 Update(RootDomain);
         }
 

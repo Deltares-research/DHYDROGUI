@@ -182,8 +182,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 // here we know what to do
                 model.BeginEdit("Delete outer domain ...");
                 WaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
+                newOuterDomain.SuperDomain = null; // First set this to update domain specific view if open before removing subdomains otherwise view will not be updated
                 model.OuterDomain.SubDomains.Clear(); // disconnect
-                newOuterDomain.SuperDomain = null;
                 model.OuterDomain = newOuterDomain;
                 model.EndEdit();
             }
