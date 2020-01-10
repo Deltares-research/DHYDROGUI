@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
     /// <see cref="IWaveBoundaryFactoryHelper"/>.
     /// </summary>
     /// <seealso cref="IWaveBoundaryFactory" />
-    public class WaveBoundaryFactory : IWaveBoundaryFactory
+    public sealed class WaveBoundaryFactory : IWaveBoundaryFactory
     {
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
         private readonly IWaveBoundaryFactoryHelper factoryHelper;
