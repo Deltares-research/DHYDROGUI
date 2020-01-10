@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
 {
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
     /// geometry from <see cref="IWaveBoundary"/>.
     /// </summary>
     /// <seealso cref="IGeometryFactory"/>
-    public class GeometryFactory : IGeometryFactory
+    public sealed class GeometryFactory : IGeometryFactory
     {
         private readonly IGridBoundaryProvider gridBoundaryProvider;
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
@@ -30,18 +31,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         public GeometryFactory(IGridBoundaryProvider gridBoundaryProvider,
                                IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
         {
-            this.gridBoundaryProvider = gridBoundaryProvider ?? 
-                                        throw new ArgumentNullException(nameof(gridBoundaryProvider));
-            this.snappingCalculatorProvider = snappingCalculatorProvider ??
-                                              throw new ArgumentNullException(nameof(snappingCalculatorProvider));
+            Ensure.NotNull(gridBoundaryProvider, nameof(gridBoundaryProvider));
+            Ensure.NotNull(snappingCalculatorProvider, nameof(snappingCalculatorProvider));
+
+            this.gridBoundaryProvider = gridBoundaryProvider;
+            this.snappingCalculatorProvider = snappingCalculatorProvider;
         }
 
         public ILineString ConstructBoundaryLineGeometry(IWaveBoundary waveBoundary)
         {
-            if (waveBoundary == null)
-            {
-                throw new ArgumentNullException(nameof(waveBoundary));
-            }
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
 
             IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
 
@@ -53,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             IWaveBoundaryGeometricDefinition geomDefinition = waveBoundary.GeometricDefinition;
             int nElements = geomDefinition.EndingIndex - geomDefinition.StartingIndex + 1;
 
-            IEnumerable<Coordinate> relevantCoordinates = 
+            IEnumerable<Coordinate> relevantCoordinates =
                 gridBoundary[geomDefinition.GridSide]
                     .Skip(waveBoundary.GeometricDefinition.StartingIndex)
                     .Take(nElements)
@@ -64,10 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
         public IEnumerable<IPoint> ConstructBoundaryEndPoints(IWaveBoundary waveBoundary)
         {
-            if (waveBoundary == null)
-            {
-                throw new ArgumentNullException(nameof(waveBoundary));
-            }
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
 
             IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
 
@@ -87,16 +83,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             return new[]
             {
                 new Point(firstCoordinate),
-                new Point(lastCoordinate),
+                new Point(lastCoordinate)
             };
         }
 
         public IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint)
         {
-            if (supportPoint == null)
-            {
-                throw new ArgumentNullException(nameof(supportPoint));
-            }
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
 
             IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
             Coordinate coordinate = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
@@ -104,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             return new Point(coordinate);
         }
 
-        private Coordinate GetCoordinate(int index, GridSide side, IGridBoundary boundary)
+        private static Coordinate GetCoordinate(int index, GridSide side, IGridBoundary boundary)
         {
             // TODO: (MWT) Fix this ToArray
             GridBoundaryCoordinate gridBoundaryCoordinate = boundary[side].ToArray()[index];
