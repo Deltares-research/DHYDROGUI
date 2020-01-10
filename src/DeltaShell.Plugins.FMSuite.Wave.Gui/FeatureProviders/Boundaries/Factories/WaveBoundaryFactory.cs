@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -34,20 +35,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                     IWaveBoundaryFactoryHelper factoryHelper,
                                     IUniqueBoundaryNameProvider nameProvider)
         {
-            this.snappingCalculatorProvider = snappingCalculatorProvider ??
-                throw new ArgumentNullException(nameof(snappingCalculatorProvider));
-            this.factoryHelper = factoryHelper ??
-                throw new ArgumentNullException(nameof(factoryHelper));
-            this.nameProvider = nameProvider ??
-                throw new ArgumentNullException(nameof(nameProvider));
+            Ensure.NotNull(snappingCalculatorProvider, nameof(snappingCalculatorProvider));
+            Ensure.NotNull(factoryHelper, nameof(factoryHelper));
+            Ensure.NotNull(nameProvider, nameof(nameProvider));
+
+            this.snappingCalculatorProvider = snappingCalculatorProvider;
+            this.factoryHelper = factoryHelper;
+            this.nameProvider = nameProvider;
         }
 
         public IWaveBoundary ConstructWaveBoundary(ILineString geometry)
         {
-            if (geometry == null)
-            {
-                throw new ArgumentNullException(nameof(geometry));
-            }
+            Ensure.NotNull(geometry, nameof(geometry));
 
             IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
             if (calculator == null)
