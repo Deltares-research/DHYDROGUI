@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// The minimal distance found between <paramref name="coordinates"/> and <paramref name="coordinateSrc"/>,
         /// and the sequence of indices of coordinates in <paramref name="coordinates"/> that are at this distance
         /// given the <see cref="distanceCalculator"/>.
+        /// </returns>
         /// <remarks>
         /// It is a assumed that no parameter is <c>null</c>, the behaviour is undefined in case this happens.
         /// </remarks>
