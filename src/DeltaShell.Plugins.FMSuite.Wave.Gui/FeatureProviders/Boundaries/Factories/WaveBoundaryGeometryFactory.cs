@@ -11,24 +11,24 @@ using DeltaShell.NGHS.Common;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
 {
     /// <summary>
-    /// <see cref="GeometryFactory"/> implements the methods to construct
+    /// <see cref="WaveBoundaryGeometryFactory"/> implements the methods to construct
     /// geometry from <see cref="IWaveBoundary"/>.
     /// </summary>
-    /// <seealso cref="IGeometryFactory"/>
-    public sealed class GeometryFactory : IGeometryFactory
+    /// <seealso cref="IWaveBoundaryGeometryFactory"/>
+    public sealed class WaveBoundaryGeometryFactory : IWaveBoundaryGeometryFactory
     {
         private readonly IGridBoundaryProvider gridBoundaryProvider;
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
 
         /// <summary>
-        /// Creates a new of the <see cref="GeometryFactory"/>.
+        /// Creates a new of the <see cref="WaveBoundaryGeometryFactory"/>.
         /// </summary>
         /// <param name="gridBoundaryProvider">The grid boundary provider.</param>
         /// <param name="snappingCalculatorProvider">The snapping calculator provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Throw when any parameter is <c>null</c>.
         /// </exception>
-        public GeometryFactory(IGridBoundaryProvider gridBoundaryProvider,
+        public WaveBoundaryGeometryFactory(IGridBoundaryProvider gridBoundaryProvider,
                                IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
         {
             Ensure.NotNull(gridBoundaryProvider, nameof(gridBoundaryProvider));

@@ -11,8 +11,8 @@ using SharpMap.Data.Providers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using SharpMap.Api;
-using IGeometryFactory = DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories.IGeometryFactory;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 {
@@ -21,13 +21,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
     {
         private readonly Random random = new Random();
         private IBoundaryContainer boundaryContainer;
-        private IGeometryFactory geometryFactory;
+        private IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         [SetUp]
         public void SetUp()
         {
             boundaryContainer = Substitute.For<IBoundaryContainer>();
-            geometryFactory = Substitute.For<IGeometryFactory>();
+            waveBoundaryGeometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         {
             // Call
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 // Assert
                 Assert.That(featureProvider, Is.InstanceOf<Feature2DCollection>());
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         public void Constructor_BoundaryContainerNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new BoundarySupportPointMapFeatureProvider(null, geometryFactory);
+            void Call() => new BoundarySupportPointMapFeatureProvider(null, waveBoundaryGeometryFactory);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -63,14 +63,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("geometryFactory"));
+            Assert.That(exception, Has.Property("ParamName").EqualTo("waveBoundaryGeometryFactory"));
         }
 
         [Test]
         public void AddGeometry_Add_IFeature_ThrowsNotSupportedException()
         {
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 // Call
                 void Call() => featureProvider.Add(Substitute.For<IGeometry>());
@@ -92,10 +92,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
             var geometry = Substitute.For<IPoint>();
-            geometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
+            waveBoundaryGeometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
 
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 // Call
                 void Call() => boundary.GeometricDefinition.SupportPoints.Add(supportPoint);
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 removeBoundary.Invoke(boundaryContainer);
 
@@ -149,10 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
             var geometry = Substitute.For<IPoint>();
-            geometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
+            waveBoundaryGeometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
 
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 boundaryContainer.Boundaries.Add(boundary);
 
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var feature = Substitute.For<IFeature>();
 
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 void Call() => featureProvider.Add(feature);
                 Assert.Throws<NotSupportedException>(Call);
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             var features = Substitute.For<IList>();
 
             using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
-                                                                                    geometryFactory))
+                                                                                    waveBoundaryGeometryFactory))
             {
                 void Call() => featureProvider.Features = features;
                 Assert.Throws<NotSupportedException>(Call);

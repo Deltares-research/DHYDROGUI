@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Factories
 {
     [TestFixture]
-    public class GeometryFactoryTest
+    public class WaveBoundaryGeometryFactoryTest
     {
         private readonly Random random = new Random(37);
 
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
 
             // Call
-            void Call() => new GeometryFactory(null, calculatorProvider);
+            void Call() => new WaveBoundaryGeometryFactory(null, calculatorProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
 
             // Call
-            void Call() => new GeometryFactory(gridBoundaryProvider, null);
+            void Call() => new WaveBoundaryGeometryFactory(gridBoundaryProvider, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
             void Call() => factory.ConstructBoundaryLineGeometry(null);
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
 
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var gridSide = random.NextEnumValue<GridSide>();
             const int expectedStartingIndex = 3;
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
             void Call() => factory.ConstructBoundaryEndPoints(null);
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             IGridBoundary gridBoundary = null;
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var gridBoundary = Substitute.For<IGridBoundary>();
 
             gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
 
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
 
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
             // Call
 
             void Call() => factory.ConstructBoundarySupportPoint(null);
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            var factory = new GeometryFactory(gridBoundaryProvider, calculatorProvider);
+            var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             double distance = random.NextDouble();
 

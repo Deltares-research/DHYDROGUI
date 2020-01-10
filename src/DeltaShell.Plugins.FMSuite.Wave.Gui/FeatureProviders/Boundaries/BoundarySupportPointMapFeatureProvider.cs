@@ -7,10 +7,10 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
-using IGeometryFactory = DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories.IGeometryFactory;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 {
@@ -32,21 +32,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     {
         private readonly MultiIEventedListAdapter<SupportPoint, SupportPointFeature> pointFeatures;
         private readonly IBoundaryContainer boundaryContainer;
-        private readonly IGeometryFactory geometryFactory;
+        private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundarySupportPointMapFeatureProvider"/> class.
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
-        /// <param name="geometryFactory">The geometry factory.</param>
+        /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public BoundarySupportPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
-                                                      IGeometryFactory geometryFactory)
+                                                      IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
             this.boundaryContainer = boundaryContainer ?? throw new ArgumentNullException(nameof(boundaryContainer));
-            this.geometryFactory = geometryFactory ?? throw new ArgumentNullException(nameof(geometryFactory));
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
 
             pointFeatures = new MultiIEventedListAdapter<SupportPoint, SupportPointFeature>(ObtainSupportPointFromFeature,
                                                                                             CreateSupportPointFeature);
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
             return new SupportPointFeature
             {
                 ObservedSupportPoint = supportPoint,
-                Geometry = geometryFactory.ConstructBoundarySupportPoint(supportPoint)
+                Geometry = waveBoundaryGeometryFactory.ConstructBoundarySupportPoint(supportPoint)
             };
         }
 

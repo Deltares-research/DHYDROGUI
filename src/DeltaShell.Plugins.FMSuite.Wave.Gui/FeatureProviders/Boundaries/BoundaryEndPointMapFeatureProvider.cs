@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
-using IGeometryFactory = DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories.IGeometryFactory;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 {
@@ -36,26 +36,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     public class BoundaryEndPointMapFeatureProvider : FeatureCollection
     {
         private readonly IBoundaryContainer boundaryContainer;
-        private readonly IGeometryFactory geometryFactory;
+        private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryEndPointMapFeatureProvider"/>.
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <param name="geometryFactory">The geometry factory.</param>
+        /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="boundaryContainer"/> or
-        /// <paramref name="geometryFactory"/> is <c>null</c>.
+        /// <paramref name="waveBoundaryGeometryFactory"/> is <c>null</c>.
         /// </exception>
         public BoundaryEndPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
                                                   ICoordinateSystem coordinateSystem, 
-                                                  IGeometryFactory geometryFactory)
+                                                  IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
             this.boundaryContainer = boundaryContainer ?? 
                                      throw new ArgumentNullException(nameof(boundaryContainer));
-            this.geometryFactory = geometryFactory ??
-                                   throw new ArgumentNullException(nameof(geometryFactory));
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ??
+                                   throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
 
             CoordinateSystem = coordinateSystem;
             FeatureType = typeof(Feature2DPoint);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         public override IList Features
         {
             get => boundaryContainer.Boundaries
-                                    .SelectMany(boundary => geometryFactory.ConstructBoundaryEndPoints(boundary))
+                                    .SelectMany(boundary => waveBoundaryGeometryFactory.ConstructBoundaryEndPoints(boundary))
                                     .Select(p => new Feature2DPoint {Geometry = p})
                                     .ToList();
             set => throw new NotSupportedException("This is currently not supported, implement when needed.");

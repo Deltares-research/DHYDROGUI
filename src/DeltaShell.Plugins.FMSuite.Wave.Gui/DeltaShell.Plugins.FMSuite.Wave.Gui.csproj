@@ -285,12 +285,12 @@
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProvider.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Factories\GeometryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IUniqueBoundaryNameProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IWaveBoundaryFactoryHelper.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\UniqueBoundaryNameProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelper.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Factories\IGeometryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\SupportPointFeature.cs" />

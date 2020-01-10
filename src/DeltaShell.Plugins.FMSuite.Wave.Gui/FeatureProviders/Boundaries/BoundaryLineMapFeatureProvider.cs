@@ -7,7 +7,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
-using IGeometryFactory = DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories.IGeometryFactory;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 {
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryContainer boundaryContainer;
         private readonly IWaveBoundaryFactory waveBoundaryFactory;
-        private readonly IGeometryFactory geometryFactory;
+        private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         // TODO: (MWT) move these to a helper class, so they can be easily tested?
         private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
@@ -43,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
             return new BoundaryLineFeature()
             {
                 ObservedWaveBoundary = waveBoundary,
-                Geometry = geometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
+                Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
             };
         }
 
@@ -52,16 +51,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
         /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
-        /// <param name="geometryFactory">The geometryFactory.</param>
+        /// <param name="waveBoundaryGeometryFactory">The waveBoundaryGeometryFactory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
         public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer, 
                                               IWaveBoundaryFactory waveBoundaryFactory,
-                                              IGeometryFactory geometryFactory)
+                                              IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
             this.waveBoundaryFactory = waveBoundaryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryFactory));
-            this.geometryFactory = geometryFactory ?? throw new ArgumentNullException(nameof(geometryFactory));
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
 
             this.boundaryContainer = boundaryContainer ?? 
                                      throw new ArgumentNullException(nameof(boundaryContainer));

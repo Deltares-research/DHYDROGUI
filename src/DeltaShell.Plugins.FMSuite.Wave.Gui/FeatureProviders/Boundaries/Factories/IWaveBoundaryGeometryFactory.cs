@@ -7,10 +7,10 @@ using GeoAPI.Geometries;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
 {
     /// <summary>
-    /// <see cref="IGeometryFactory"/> provides the methods to construct
+    /// <see cref="IWaveBoundaryGeometryFactory"/> provides the methods to construct
     /// geometry from a <see cref="IWaveBoundary"/>.
     /// </summary>
-    public interface IGeometryFactory
+    public interface IWaveBoundaryGeometryFactory
     {
         /// <summary>
         /// Constructs a <see cref="ILineString"/> from the given

@@ -10,7 +10,6 @@ using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
-using IGeometryFactory = DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories.IGeometryFactory;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 {
@@ -23,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer,
@@ -42,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         {
             // Setup
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
             void Call() => new BoundaryLineMapFeatureProvider(null, waveBoundaryFactory, geometryFactory);
@@ -57,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
         {
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
             void Call() => new BoundaryLineMapFeatureProvider(boundaryContainer, null, geometryFactory);
@@ -88,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
 
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, 
@@ -114,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryContainer, 
                                                                             waveBoundaryFactory, 
@@ -143,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             var geometry = Substitute.For<ILineString>();
             var boundary = Substitute.For<IWaveBoundary>();
@@ -172,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             var geometry = Substitute.For<ILineString>();
             var boundary = Substitute.For<IWaveBoundary>();
@@ -214,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             var feature = Substitute.For<IFeature>();
 
@@ -233,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var geometryFactory = Substitute.For<IGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             var features = Substitute.For<IList>();
 
