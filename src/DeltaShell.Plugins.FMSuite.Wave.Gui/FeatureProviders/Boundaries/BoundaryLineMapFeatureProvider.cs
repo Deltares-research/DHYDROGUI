@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.Feature;
@@ -59,11 +60,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                                               IWaveBoundaryFactory waveBoundaryFactory,
                                               IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            this.waveBoundaryFactory = waveBoundaryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryFactory));
-            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ?? throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(waveBoundaryFactory, nameof(waveBoundaryFactory));
+            Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
 
-            this.boundaryContainer = boundaryContainer ?? 
-                                     throw new ArgumentNullException(nameof(boundaryContainer));
+            this.waveBoundaryFactory = waveBoundaryFactory;
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
+
+            this.boundaryContainer = boundaryContainer;
 
             lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
                                                                                             CreateBoundaryLineFeature);
