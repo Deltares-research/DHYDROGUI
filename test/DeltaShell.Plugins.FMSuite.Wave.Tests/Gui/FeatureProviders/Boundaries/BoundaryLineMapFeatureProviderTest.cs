@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("geometryFactory"));
+            Assert.That(exception.ParamName, Is.EqualTo("waveBoundaryGeometryFactory"));
         }
 
         [Test]
