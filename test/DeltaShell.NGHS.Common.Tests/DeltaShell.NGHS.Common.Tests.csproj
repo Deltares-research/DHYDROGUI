@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
+    <Compile Include="EnsureTest.cs" />
     <Compile Include="Gui\DeltaresColorTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
