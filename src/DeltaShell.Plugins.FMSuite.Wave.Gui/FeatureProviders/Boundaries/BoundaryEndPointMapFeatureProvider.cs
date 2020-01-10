@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
     ///   model it is sufficient.
     /// </remarks>
     /// <seealso cref="FeatureCollection"/>
-    public class BoundaryEndPointMapFeatureProvider : FeatureCollection
+    public sealed class BoundaryEndPointMapFeatureProvider : FeatureCollection
     {
         private readonly IBoundaryContainer boundaryContainer;
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
