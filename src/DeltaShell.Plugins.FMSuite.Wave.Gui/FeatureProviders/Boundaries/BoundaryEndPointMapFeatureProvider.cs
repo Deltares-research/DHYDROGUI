@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -52,10 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
                                                   ICoordinateSystem coordinateSystem, 
                                                   IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            this.boundaryContainer = boundaryContainer ?? 
-                                     throw new ArgumentNullException(nameof(boundaryContainer));
-            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory ??
-                                   throw new ArgumentNullException(nameof(waveBoundaryGeometryFactory));
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+
+            this.boundaryContainer = boundaryContainer;
+            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
             CoordinateSystem = coordinateSystem;
             FeatureType = typeof(Feature2DPoint);
