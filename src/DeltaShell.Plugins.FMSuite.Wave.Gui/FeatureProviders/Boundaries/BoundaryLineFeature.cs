@@ -1,5 +1,4 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
@@ -13,16 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// <summary>
         /// Gets or sets the observed <see cref="IWaveBoundary"/>.
         /// </summary>
-        public IWaveBoundary ObservedWaveBoundary
-        {
-            get;
-            set;
-        }
-
-        public override IGeometry Geometry
-        {
-            get;
-            set;
-        }
+        public IWaveBoundary ObservedWaveBoundary { get; set; }
     }
 }
