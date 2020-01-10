@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
 
         }
 
-        private IEventedList<IWaveBoundary> GetEventedList()
+        private static IEventedList<IWaveBoundary> GetEventedList()
         {
             var geomDef1 = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var object1 = Substitute.For<IWaveBoundary>();
@@ -147,10 +147,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
 
         private MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> GetAdapterWithRegisteredList(IEventedList<IWaveBoundary> list)
         {
-            var listOriginal = list.ToArray();
+            IWaveBoundary[] listOriginal = list.ToArray();
             Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainObservedValueFunc(IWaveBoundaryGeometricDefinition geomDef)
             {
-                foreach (var value in listOriginal)
+                foreach (IWaveBoundary value in listOriginal)
                 {
                     if (value.GeometricDefinition == geomDef)
                     {
@@ -171,8 +171,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             return adapter;
 
         }
-
-        // TODO refactor these tests
 
         [Test]
         public void GivenAnAdapterWithARegisteredList_WhenAnElementIsAddedToThisList_ThenTheAdapterIsUpdated()
@@ -294,7 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
                 GetAdapterWithRegisteredList(list);
             adapter.RegisterList(list);
 
-            var itemToRemove = list[0];
+            IWaveBoundary itemToRemove = list[0];
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var newItem = Substitute.For<IWaveBoundary>();
             newItem.GeometricDefinition.Returns(geometricDefinition);
@@ -323,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
 
             object lastSender = null;
             NotifyCollectionChangedEventArgs lastArgs = null;
-            int nCalls = 0;
+            var nCalls = 0;
 
             void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
             {
@@ -434,11 +432,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
                 GetAdapterWithRegisteredList(list);
             adapter.RegisterList(list);
 
-            var itemToRemove = list.Last();
+            IWaveBoundary itemToRemove = list.Last();
 
             object lastSender = null;
             NotifyCollectionChangedEventArgs lastArgs = null;
-            int nCalls = 0;
+            var nCalls = 0;
 
             void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
             {
@@ -485,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
 
             object lastSender = null;
             NotifyCollectionChangedEventArgs lastArgs = null;
-            int nCalls = 0;
+            var nCalls = 0;
 
             void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
             {
@@ -1043,6 +1041,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             Assert.That(exception, Has.Message.EqualTo("Currently not supported, implement when needed"));
         }
 
+        [Test]
+        public void Indexer_IList_ReturnsCorrectValue()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            var adapterList = (IList) adapter;
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                // Call
+                object result = adapterList[i];
+
+                // Assert
+                Assert.That(result, Is.SameAs(list[i].GeometricDefinition));
+            }
+        }
+
+        [Test]
+        public void Indexer_EventedList_ReturnsCorrectValue()
+        {
+            // Setup
+            IEventedList<IWaveBoundary> list = 
+                GetEventedList();
+            MultiIEventedListAdapter<IWaveBoundary, IWaveBoundaryGeometricDefinition> adapter =
+                GetAdapterWithRegisteredList(list);
+            adapter.RegisterList(list);
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                // Call
+                IWaveBoundaryGeometricDefinition result = adapter[i];
+
+                // Assert
+                Assert.That(result, Is.SameAs(list[i].GeometricDefinition));
+            }
+        }
+
+        [Test]
         public void SetTDisplayed_ThrowsUnsupportedException()
         {
             // Setup
@@ -1364,5 +1405,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             Assert.That(adapter[0], Is.SameAs(element0));
             Assert.That(adapter[1], Is.SameAs(element1));
         }
+
     }
 }
