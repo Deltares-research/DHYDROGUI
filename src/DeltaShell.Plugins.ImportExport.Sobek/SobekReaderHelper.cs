@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using DeltaShell.Sobek.Readers;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {

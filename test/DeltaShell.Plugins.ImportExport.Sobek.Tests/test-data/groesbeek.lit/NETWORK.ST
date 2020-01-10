@@ -1,0 +1,23 @@
+ST_1.0
+STRU id '5' nm '' ci 'tmp5' lc 0.5 stru
+STRU id '18' nm '' ci 'tmp18' lc 0.5 stru
+STRU id 'l_8176-22' nm '' ci '891' lc .141421356224962 stru 
+STRU id 'l_8238_04-7' nm '' ci '892' lc .447213595499958 stru 
+STRU id 'l_8333_02-8333_03' nm '' ci '893' lc 1.85000000000189 stru 
+STRU id 'l_8363_01-8363_02' nm '' ci '894' lc 1.51327459503985 stru 
+STRU id 'l_8533-8' nm '' ci '895' lc .349999999991269 stru 
+STRU id 'l_8540-3' nm '' ci '896' lc .961769203079785 stru 
+STRU id 'l_8544_02-8544_03' nm '' ci '897' lc 1.82482875909521 stru 
+STRU id 'l_8672_02-8672_03' nm '' ci '898' lc 1.40801278402646 stru 
+STRU id 'l_8672_02-8672_03_2' nm '' ci '899' lc 1.40801278402646 stru 
+STRU id 'l_8391_01-WR-8391_02' nm '' ci '900' lc 1.58902485822218 stru 
+STRU id 'l_8717-WR-16' nm '' ci '901' lc 5.00000000029104E-02 stru 
+STRU id 'l_23-21' nm '' ci '902' lc .111803398881497 stru 
+STRU id 'l_23-24' nm '' ci '903' lc .111803398881497 stru 
+STRU id 'l_8238_05-26' nm '' ci '904' lc .583095189493514 stru 
+STRU id 'l_8333_01-8333_02' nm '' ci '905' lc .514781507059527 stru 
+STRU id 'l_8363-8363_02' nm '' ci '906' lc .651920240513568 stru 
+STRU id 'l_8544_01-8544_03' nm '' ci '907' lc .961769203084324 stru 
+STRU id 'l_8672_01-8672_02' nm '' ci '908' lc .509901951357566 stru 
+STRU id 'l_PP231-9935' nm '' ci '909' lc 11.1755313072864 stru 
+STRU id 'l_17-8027' nm '' ci '910' lc 703.008257419512 stru 

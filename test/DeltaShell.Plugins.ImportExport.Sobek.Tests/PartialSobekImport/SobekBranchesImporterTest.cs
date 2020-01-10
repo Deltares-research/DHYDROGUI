@@ -147,5 +147,25 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(2, network.Branches.First(b => b.Name == "5").OrderNumber);
             Assert.AreEqual(2, network.Branches.First(b => b.Name == "7").OrderNumber);
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportPipesFromSobekUrbanModel()
+        {
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
+            var branchesFromSobekImporter = new SobekBranchesImporter
+            {
+                TargetObject = new HydroNetwork(),
+                PathSobek = pathToSobekNetwork
+            };
+
+            branchesFromSobekImporter.Import();
+
+            var network = (HydroNetwork)branchesFromSobekImporter.TargetObject;
+            Assert.AreEqual(870, network.Nodes.Count);
+            Assert.AreEqual(914, network.Branches.Count);
+            Assert.AreEqual(868, network.Manholes.Count());
+            Assert.AreEqual(912, network.Pipes.Count());
+        }
     }
 }

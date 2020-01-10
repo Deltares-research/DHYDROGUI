@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         private static WaterFlowModel1D GetWaterFlowModel1D(string path)
         {
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = importer.ImportItem(path);
 
             if(model is ICompositeActivity)
@@ -561,7 +561,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithHeightFlowStorageWidthCrossSections()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var heightFlowStorageWidthCrossSections = flowModel1D.Network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.ZW);
@@ -585,7 +585,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadModelWithRougnessInterpolationTypeIsBlock()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\254_000.lit\1\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var mainSection = flowModel1D.RoughnessSections.FirstOrDefault(rs => rs.Name.ToLower() == "main");
@@ -606,7 +606,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadShiftedProfile()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var network = model.Network;
@@ -646,7 +646,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             var path = TestHelper.GetTestDataDirectory() + @"\POup_GV.lit\7\network.tp";
 
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(path);
 
             var branchehWithoutCrossSections = model.Network.Channels.Where(c => c.CrossSections.Count() == 0);
@@ -661,7 +661,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\J_10BANK_v2.sbk\6\DEFTOP.1";
             
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = importer.ImportItem(pathToSobekNetwork);
 
             Assert.IsNotNull(model);
@@ -677,7 +677,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\J_10BANK_v2.sbk\6\DEFTOP.1";
 
-            var importer = new SobekWaterFlowModel1DToModelImporter();
+            var importer = new SobekModelToWaterFlowFMImporter();
             importer.TargetItem = new WaterFlowModel1D();
             var model = importer.ImportItem(pathToSobekNetwork);
 
@@ -697,7 +697,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             var modelPath = TestHelper.GetTestDataDirectory() + @"\\steady.lit\2\NETWORK.TP";
             var settingsPath = TestHelper.GetTestDataDirectory() + @"\\steady.lit\2\SETTINGS.DAT";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model1D = ((HydroModel)importer.ImportItem(modelPath)).Models.OfType<WaterFlowModel1D>().First();
 
             var parameterSettings = model1D.ParameterSettings;
@@ -727,7 +727,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadFlowModelTimersFromMeteo()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\FlowTimersFromMeteo\TimersFromMeteo.lit\1\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var startTime = new DateTime(1996, 1, 1, 0, 0, 0);
@@ -742,7 +742,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadFlowModelTimersNotFromMeteo()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\FlowTimersFromMeteo\TimersFromMeteo.lit\2\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var startTime = new DateTime(1996, 1, 1, 1, 0, 0);

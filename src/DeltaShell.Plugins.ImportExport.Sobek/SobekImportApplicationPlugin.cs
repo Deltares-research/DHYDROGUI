@@ -16,17 +16,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public override string Name
         {
-            get { return "Sobek import"; }
+            get { return "Sobek Network import"; }
         }
 
         public override string DisplayName
         {
-            get { return "SOBEK Import Plugin"; }
+            get { return "SOBEK Network Import Plugin"; }
         }
 
         public override string Description
         {
-            get { return "Plugin that provides functionality to import from the SOBEK2 format."; }
+            get { return "Plugin that provides functionality to import from the SOBEK2 Network format."; }
         }
 
         public override string Version
@@ -39,11 +39,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "3.5.0.0"; }
         }
 
+        
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new SobekHydroModelImporter();
-            yield return new SobekWaterFlowModel1DToModelImporter();
-            yield return new SobekWindImporter();
+            yield return new SobekModelToWaterFlowFmImporterToImporterToWaterFlowFmImporterOnRootImporter();
+            yield return new SobekModelToWaterFlowFMImporter();
+            yield return new SobekNetworkImporter();
+            yield return new SobekNetworkToNetworkImporter();
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()

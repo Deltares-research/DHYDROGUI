@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DelftTools.Hydro.Roughness;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         public void ImportMaasCsvPerBranchJustForMainAndCheckIntegration()
         {
             //import maas
-            var modelImporter = new SobekWaterFlowModel1DImporter {TargetItem = new WaterFlowModel1D()};
+            var modelImporter = new SobekModelToIntegratedModelImporter { TargetItem = new WaterFlowModel1D()};
 
             var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
             var flowModel = (WaterFlowModel1D) modelImporter.ImportItem(modelPath);
@@ -75,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport.Rough
         public void ImportMaasCsvPerBranchAndCheckIntegration()
         {
             //import maas
-            var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
+            var modelImporter = new SobekModelToIntegratedModelImporter { TargetItem = new WaterFlowModel1D() };
 
             var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFTOP.1");
             var flowModel = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);

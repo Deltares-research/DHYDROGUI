@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.WarnFormat("Valve data file [{0}] not found; skipping...", valveDataPath);
                 return new List<SobekValveData>();
             }
-            return new SobekValveDataReader().Read(valveDataPath).ToList();
+            return SobekValveDataReader.ReadValveData(valveDataPath);
         }
 
         private void CreateStructure(Channel channel, double offset, Dictionary<string, SobekStructureDefinition> definitions, IEnumerable<IBranchStructureBuilder> structureBuilders, params string[] structureIds)

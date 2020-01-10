@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadRiverProfileWithMainChannelAnFloodplain1()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var rtcMmodel = ((ICompositeActivity) importer.ImportItem(pathToSobekNetwork)).Activities.OfType<RealTimeControlModel>().First();
             var model = rtcMmodel.ControlledModels.OfType<WaterFlowModel1D>().First();
             var network = model.Network;
@@ -672,7 +672,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             string pathToSobekModel = TestHelper.GetTestFilePath(@"LinkageNodes\network.tp");
 
             //import existing network and model + default boundary conditions
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekModel);
             var network = flowModel1D.Network;
 
@@ -693,7 +693,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // import model and network.
             var pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\LinkageNodes\network.tp";
 
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekModel);
             var network = flowModel1D.Network;
 
@@ -723,7 +723,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNotSupportedEngelundAndSetToDefault()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\120_001.lit\3\network.tp";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(pathToSobekNetwork);
 
             var mainRoughnessSection = model.RoughnessSections.FirstOrDefault(s => s.Name.ToLower() == "main");
@@ -741,7 +741,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadComplexNetwork()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\network2\network.tp";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(pathToSobekModel);
 
             var network = flowModel1D.Network;
@@ -822,7 +822,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             InitializeSobekLicense();
 
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
             var pathToSobekNetwork = TestHelper.GetTestFilePath(@"SW_max_1.lit\3\network.tp");
             var importedModel = (WaterFlowModel1D) modelImporter.ImportItem(pathToSobekNetwork);
             RunModel(importedModel);
@@ -869,7 +869,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             //runs the test with a altered version of the sw_max model.
             //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_zRect.lit\3\network.tp";
             var importedModel = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             Assert.AreEqual(importedModel.LateralSourceData.Count, importedModel.Network.LateralSources.Count());
@@ -885,7 +885,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             //runs the test with a altered version of the sw_max model.
             //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekNetworkImporter();
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"SW_zRect.lit\3\network.tp");
             var importedModel = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             RunModel(importedModel);
@@ -1142,7 +1142,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithRiverFriction()
         {
             var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var model = (WaterFlowModel1D)importer.ImportItem(path);
             var network = model.Network;
 
@@ -1201,7 +1201,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithYzFriction()
         {
             var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
 
             Assert.AreEqual(18, flowModel1D.RoughnessSections.Count);
@@ -1250,7 +1250,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(2, sobekFriction.SobekBedFrictionList.Count); // 2 BDFR records
 
             path = TestHelper.GetTestDataDirectory() + @"\profshft.lit\1\network.tp";
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
 
             var main = flowModel1D.RoughnessSections.FirstOrDefault(rs => rs.Name.ToUpper().Contains("MAIN"));
@@ -1302,7 +1302,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var path = TestHelper.GetTestFilePath(@"Coquitlam-Vancouver-Canada\Network\NETWORK.TP");
 
             //import existing network and model + default boundary conditions
-            var importer = new SobekWaterFlowModel1DImporter();
+            var importer = new SobekModelToIntegratedModelImporter();
             var flowModel1D = (WaterFlowModel1D)importer.ImportItem(path);
 
             // set initial conditions

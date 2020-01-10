@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.Plugins.ImportExport.Sobek.Readers;
-using DeltaShell.Plugins.ImportExport.Sobek.SobekData;
+using DeltaShell.Sobek.Readers.Readers;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {

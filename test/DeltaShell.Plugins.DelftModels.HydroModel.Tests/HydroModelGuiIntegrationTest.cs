@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void ImportMaasModelSaveAndLoadGivesException_Tools4693()
         {
             const string projectPath = "Maas.dsproj";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
 
             var modelPath =
                 TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void ImportHKTGModelSaveAndLoadGivesException_Tools6984()
         {
             const string projectPath = "HKTG.dsproj";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
 
             var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var importedModel = (IModel)modelImporter.ImportItem(modelPath);

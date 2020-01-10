@@ -12,17 +12,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     {
         public override string Name
         {
-            get { return "Sobek import (UI)"; }
+            get { return "Sobek Network import (UI)"; }
         }
 
         public override string DisplayName
         {
-            get { return "SOBEK Import Plugin (UI)"; }
+            get { return "SOBEK Network Import Plugin (UI)"; }
         }
 
         public override string Description
         {
-            get { return "Plugin that provides functionality to import from sobek legacy format"; }
+            get { return "Plugin that provides functionality to import from sobek network legacy format"; }
         }
 
         public override string Version
@@ -33,6 +33,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         public override string FileFormatVersion
         {
             get { return "3.5.0.0"; }
+        }
+
+        public override IEnumerable<ViewInfo> GetViewInfoObjects()
+        {
+            yield return new ViewInfo<SobekHydroModelImporter, ImportSobekHydroModelWizardDialog>
+            {
+                GetViewName = (v, o) => v.Title
+            };
+            yield return new ViewInfo<SobekNetworkImporter, ImportPartialSobekWizardDialog>
+                {
+                    GetViewName = (v, o) => v.Title
+                };
         }
     }
 }

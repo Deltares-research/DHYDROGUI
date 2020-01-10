@@ -126,6 +126,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.46844-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -137,6 +141,36 @@
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\BranchStructureBuilderBase.cs" />
+    <Compile Include="Builders\BridgeBuilder.cs" />
+    <Compile Include="Builders\ChannelStructureBuilder.cs" />
+    <Compile Include="Builders\CulvertBuilder.cs" />
+    <Compile Include="Builders\IBranchStructureBuilder.cs" />
+    <Compile Include="Builders\PumpBuilder.cs" />
+    <Compile Include="Builders\WeirBuilder.cs" />
+    <Compile Include="Importers\PartialSobekImporterBase.cs" />
+    <Compile Include="Importers\SobekBoundaryConditionsImporter.cs" />
+    <Compile Include="Importers\SobekBranchesImporter.cs" />
+    <Compile Include="Importers\SobekCaseDataReader.cs" />
+    <Compile Include="Importers\SobekComputationalGridImporter.cs" />
+    <Compile Include="Importers\SobekControllersTriggersImporter.cs" />
+    <Compile Include="Importers\SobekCrossSectionsImporter.cs" />
+    <Compile Include="Importers\SobekLateralSourcesDataImporter.cs" />
+    <Compile Include="Importers\SobekLateralSourcesImporter.cs" />
+    <Compile Include="Importers\SobekLinkageNodeImporter.cs" />
+    <Compile Include="Importers\SobekMeasurementStationsImporter.cs" />
+    <Compile Include="Importers\SobekMeteoDataImporterHelper.cs" />
+    <Compile Include="Importers\SobekRetentionImporter.cs" />
+    <Compile Include="Importers\SobekRoughnessImporter.cs" />
+    <Compile Include="Importers\SobekSettingsImporter.cs" />
+    <Compile Include="Importers\SobekStructuresImporter.cs" />
+    <Compile Include="Importers\ToDictionaryExtensions.cs" />
+    <Compile Include="Model1DBoundaryNodeDataBuilder.cs" />
+    <Compile Include="NumUtils.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="PartialSobekImporterBuilder.cs" />
     <Compile Include="PartialSobekImporter\ToDictionaryExtensions.cs" />
     <Compile Include="PartialSobekImporter\SobekLinkageNodeImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekMeteoDataImporterHelper.cs" />
@@ -170,8 +204,12 @@
     <Compile Include="PartialSobekImporter\SobekSaltImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekSettingsImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekStructuresImporter.cs" />
-    <Compile Include="SobekWaterFlowModel1DToModelImporter.cs" />
+    <Compile Include="SobekReaderHelper.cs" />
+    <Compile Include="SobekValveDataReader.cs" />
+    <Compile Include="SobekModelToIntegratedModelImporter.cs" />
+    <Compile Include="SobekModelToWaterFlowFMImporter.cs" />
     <Compile Include="SobekWindImporter.cs" />
+    <Compile Include="StringUtils.cs" />
     <Compile Include="Wizard\ImportPartialSobekWizardDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,12 +259,22 @@
     <Compile Include="SobekImportApplicationPlugin.cs" />
     <Compile Include="SobekNetworkImporter.cs" />
     <Compile Include="SobekWaterFlowModel1DReaderHelper.cs" />
-    <Compile Include="SobekWaterFlowModel1DImporter.cs" />
     <Compile Include="TimeSeriesHelper.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataBuilder.cs" />
     <Compile Include="WeirBuilder.cs" />
     <Compile Include="WeirNamer.cs" />
     <None Include="GenerateParserFiles.cmd" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.GenerateResource.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csprojAssemblyReference.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll.postsharp" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.GenerateResource.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csprojAssemblyReference.cache" />
+    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.dll.postsharp" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\PostSharpHost.config" />
+    <None Include="Scripts\Libraries\Sobek2Functions.py" />
     <None Include="Uml\SobekImportExportOverview.cd" />
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +313,14 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
+      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
       <Project>{5EA08B58-6125-4D81-8767-8152D1CA2FBD}</Project>
       <Name>DeltaShell.Sobek.Readers</Name>
@@ -275,6 +331,15 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Properties.Resources.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.ImportPartialSobekWizardDialog.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekModelsWizardPage.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekPartsWizardPage.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SobekModelSelectFileWizardPage.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Properties.Resources.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.ImportPartialSobekWizardDialog.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.SelectSobekPartsWizardPage.resources" />
+    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.SobekModelSelectFileWizardPage.resources" />
     <EmbeddedResource Include="Wizard\ImportPartialSobekWizardDialog.resx">
       <DependentUpon>ImportPartialSobekWizardDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -317,6 +382,21 @@
     <None Include="packages.config" />
     <None Include="Resources\sobek.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.dll" />
+    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
+    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.SobekNetwork.dll" />
+    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.SobekNetwork.pdb" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.dll" />
+    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.pdb" />
+    <Content Include="obj\Debug\PostSharp\dependencies.txt" />
+    <Content Include="obj\Debug\TempPE\Properties.Resources.Designer.cs.dll" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

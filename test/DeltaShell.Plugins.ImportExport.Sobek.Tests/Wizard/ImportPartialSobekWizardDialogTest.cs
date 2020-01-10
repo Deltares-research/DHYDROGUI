@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
         public void ShowDialogForSobekWaterFlowModel1DImporter()
         {
             var dialog = new ImportPartialSobekWizardDialog();
-            dialog.Data = new SobekWaterFlowModel1DImporter();
+            dialog.Data = new SobekModelToIntegratedModelImporter();
             WindowsFormsTestHelper.ShowModal(dialog);
         }
     }

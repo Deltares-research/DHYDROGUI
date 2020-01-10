@@ -278,10 +278,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     return GetCrossSectionDefinitionZW(sobekCrossSectionDefinition);
                 case SobekCrossSectionDefinitionType.AsymmetricalTrapezoidal:
                     return GetCrossSectionDefinitionYZ(sobekCrossSectionDefinition);
-                //case SobekCrossSectionDefinitionType.ClosedCircle: wait for implementation closed branches
-                //    return GetCrossSectionDefinitionClosedCircle(sobekCrossSectionDefinition);
-                //case SobekCrossSectionDefinitionType.EggShapedWidth: wait for implementation closed branches
-                //    return GetCrossSectionDefinitionEggShape(sobekCrossSectionDefinition);
+                case SobekCrossSectionDefinitionType.ClosedCircle:
+                    return GetCrossSectionDefinitionClosedCircle(sobekCrossSectionDefinition);
+                case SobekCrossSectionDefinitionType.EggShapedWidth:
+                    return GetCrossSectionDefinitionEggShape(sobekCrossSectionDefinition);
                 case SobekCrossSectionDefinitionType.Trapezoidal:
                     return GetCrossSectionDefinitionTrapezoidal(sobekCrossSectionDefinition);
                 default:

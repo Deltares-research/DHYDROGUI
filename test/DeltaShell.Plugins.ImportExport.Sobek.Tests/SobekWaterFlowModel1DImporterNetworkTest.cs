@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //   DS = Database structure
 
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LinkageNodes\network.tp";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
 
             // The expected result is that the original branch 1 is split in 5 branches
             WaterFlowModel1D waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ImportReadsAllCrossSections()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
             
             var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             IHydroNetwork network = waterFlowModel1D.Network;
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ImportNetworkWithWeirs()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
             var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
             IHydroNetwork network = waterFlowModel1D.Network;
             Assert.IsNotNull(network);

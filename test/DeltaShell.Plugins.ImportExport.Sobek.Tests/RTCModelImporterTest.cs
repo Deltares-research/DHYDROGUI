@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         private IModel ImportModelFromSobek(string pathToSobekNetwork)
         {
-            var modelImporter = new SobekWaterFlowModel1DImporter();
+            var modelImporter = new SobekModelToIntegratedModelImporter();
             return (IModel)modelImporter.ImportItem(pathToSobekNetwork);
         }
 

@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.Tests.ImportExport
         {
             const string ncPath = "sloterplas_net.nc"; // D:\\
 
-            var modelImporter = new SobekWaterFlowModel1DImporter { TargetItem = new WaterFlowModel1D() };
+            var modelImporter = new SobekModelToIntegratedModelImporter { TargetItem = new WaterFlowModel1D() };
 
             var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ExpSBI.lit\1\NETWORK.TP");
             var model = (WaterFlowModel1D)modelImporter.ImportItem(modelPath);

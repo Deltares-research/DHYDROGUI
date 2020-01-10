@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.WizardPages;
+using DeltaShell.Plugins.ImportExport.Sobek.Wizard;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {
@@ -87,7 +88,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             }
             else if (page == selectSobekModelsWizardPage)
             {
-                importer.useFlow = selectSobekModelsWizardPage.ImportFlow;
+                importer.useFm = selectSobekModelsWizardPage.ImportFlow;
                 importer.useRR = selectSobekModelsWizardPage.ImportRR;
                 importer.useRTC = selectSobekModelsWizardPage.ImportFlow; 
 

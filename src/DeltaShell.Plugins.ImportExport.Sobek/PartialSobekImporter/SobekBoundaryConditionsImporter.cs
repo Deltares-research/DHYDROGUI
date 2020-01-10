@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return new Dictionary<string, string>();
             }
 
-            var sobekBoundaryLocations = new SobekBoundaryLocationReader { SobekType =  SobekType }.Read(path).Where(b => b.SobekBoundaryLocationType == SobekBoundaryLocationType.Node);
+            var sobekBoundaryLocations = new SobekBoundaryLocationReader { SobekType = SobekType }.Read(path).Where(b => b.SobekBoundaryLocationType == SobekBoundaryLocationType.Node);
 
             return sobekBoundaryLocations.ToDictionaryWithErrorDetails(path, l => l.Id, l => l.ConnectionId);
         }

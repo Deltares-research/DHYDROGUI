@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -29,24 +31,46 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var networkBranchGeometryPath = GetFilePath(SobekFileNames.SobekNetworkBrancheGeometryFileName);
 
             var createdNodes = new SobekNetworkNodeFileReader().Read(networkPath)
-                                .Concat(new SobekNetworkLinkageNodeFileReader().Read(networkPath).Cast<SobekNode>())
-                                .ToDictionaryWithErrorDetails(networkPath, n => n.ID, n => CreateHydroNode(n, HydroNetwork));
+                .Concat(new SobekNetworkLinkageNodeFileReader().Read(networkPath).Cast<SobekNode>())
+                .ToDictionaryWithErrorDetails(networkPath, n => n.ID, n => CreateHydroNode(n, HydroNetwork));
 
-            var createdChannels = new SobekNetworkBranchFileReader().Read(networkPath)
-                                .ToDictionaryWithErrorDetails(networkPath, b => b.TextID, b => CreateBranch(b, createdNodes, HydroNetwork));
-            
-            ReadAndUpdateBranchGeometry(networkBranchGeometryPath, createdChannels, SobekType);
+            UpdateNodesToManholes(nodesPath, networkPath, createdNodes);
+
+            var createdBranches = new SobekNetworkBranchFileReader().Read(networkPath)
+                                .ToDictionaryWithErrorDetails(networkPath, b => b.TextID, b => CreateBranchOrPipe(b, createdNodes, HydroNetwork));
+
+            ReadAndUpdateBranchGeometry(networkBranchGeometryPath, createdBranches, SobekType);
 
             var nodesLookup = HydroNetwork.Nodes.ToDictionary(n => n.Name);
             var branchesLookUp = HydroNetwork.Branches.ToDictionary(b => b.Name);
 
             AddToNetwork(createdNodes, nodesLookup, HydroNetwork);
-            AddToNetwork(createdChannels, branchesLookUp, nodesLookup, HydroNetwork);
+            AddToNetwork(createdBranches, branchesLookUp, nodesLookup, HydroNetwork);
+
 
             ReadAndUpdateBranchOrderNumber(nodesPath, HydroNetwork, branchesLookUp);
         }
 
-        private static void AddToNetwork(IDictionary<string, IChannel> createdChannels, IDictionary<string, IBranch> branchesLookUp, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
+        private void UpdateNodesToManholes(string nodesPath, string networkPath, Dictionary<string, INode> createdNodes)
+        {
+            var manholeReader = new SobekRetentionsReader(){Sobek2Import =  true};
+            var manholes = manholeReader.Read(nodesPath)
+                .Cast<Retention>()
+                .ToDictionaryWithErrorDetails(networkPath, c => c.Name,
+                    c => CreateManholeWithOneCompartment(c, HydroNetwork));
+            foreach (var manholeKeyValuePair in manholes)
+            {
+                if (createdNodes.ContainsKey(manholeKeyValuePair.Key))
+                {
+                    var manhole = manholeKeyValuePair.Value;
+                    var node = createdNodes[manholeKeyValuePair.Key];
+                    manhole.Geometry = node.Geometry;
+                    createdNodes[manholeKeyValuePair.Key] = manhole;
+                }
+            }
+        }
+
+        private static void AddToNetwork(IDictionary<string, IBranch> createdChannels, IDictionary<string, IBranch> branchesLookUp, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
         {
             foreach (var channel in createdChannels.Values)
             {
@@ -67,7 +91,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static void AddToNetwork(IDictionary<string, IHydroNode> createdNodes, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
+        private static void AddToNetwork(IDictionary<string, INode> createdNodes, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
         {
             foreach (var node in createdNodes.Values)
             {
@@ -87,7 +111,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <summary>
         /// Updates branches that where read from network.tp with geometry as stored in network.cp
         /// </summary>
-        private static void ReadAndUpdateBranchGeometry(string filePath, IDictionary<string, IChannel> createdChannels, SobekType sobekType)
+        private static void ReadAndUpdateBranchGeometry(string filePath, IDictionary<string, IBranch> createdChannels, SobekType sobekType)
         {
             ThrowWhenFileNotExist(filePath);
 
@@ -96,7 +120,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             foreach (var branchId in createdChannels.Keys)
             {
-                var branch = createdChannels[branchId];
+                var branch = createdChannels[branchId] as IChannel;
+
+                if (branch == null) continue;//pipe has a geometry based on source and target node, so skip
+
                 var branchGeometry = branchGeometryLookUp.ContainsKey(branchId)
                                          ? branchGeometryLookUp[branchId]
                                          : null;
@@ -117,10 +144,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     branch.Geometry.Length.ToString("G4"), percentage.ToString("N2"));
             }
         }
-        
-        private static IChannel CreateBranch(SobekBranch sobekBranch, IDictionary<string, IHydroNode> createdNodes, INetwork hydroNetwork)
+    
+        private static IBranch CreateBranchOrPipe(SobekBranch sobekBranch, IDictionary<string, INode> createdNodes, INetwork hydroNetwork)
         {
-            return new Channel(createdNodes[sobekBranch.StartNodeID], createdNodes[sobekBranch.EndNodeID], sobekBranch.Length)
+            var fromNode = createdNodes[sobekBranch.StartNodeID];
+            var toNode = createdNodes[sobekBranch.EndNodeID];
+
+            var fromManhole = fromNode as Manhole;
+            var toManhole = toNode as Manhole;
+            if (fromManhole != null & toManhole != null) //is a pipe
+            {
+                return new Pipe
+                {
+                    Name = sobekBranch.TextID,
+                    LongName = sobekBranch.Name,
+                    Network = hydroNetwork,
+                    IsLengthCustom = true,
+                    Length = sobekBranch.Length,
+                    Geometry = new LineString(new[] { fromManhole.Geometry.Coordinate, toManhole.Geometry.Coordinate }),
+                    Material = SewerProfileMapping.SewerProfileMaterial.Unknown,
+                    SourceCompartment = fromManhole.Compartments.FirstOrDefault(),
+                    TargetCompartment = toManhole.Compartments.FirstOrDefault(),
+                };
+            }
+
+            return new Channel(fromNode, toNode, sobekBranch.Length)
             {
                 Name = sobekBranch.TextID,
                 LongName = sobekBranch.Name,
@@ -129,7 +177,33 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             };
         }
 
-        private static IHydroNode CreateHydroNode(SobekNode sobekNode, INetwork hydroNetwork)
+        private static IManhole CreateManholeWithOneCompartment(Retention retention,
+            IHydroNetwork hydroNetwork)
+        {
+            var dimension = 0.0;
+            if (retention.StorageArea > 0.0) dimension = Math.Pow(retention.StorageArea, 0.5);
+
+            var compartment = new Compartment
+            {
+                Name = retention.Name,
+                ManholeLength = dimension,
+                ManholeWidth = dimension,
+                Shape = CompartmentShape.Square,
+                BottomLevel = retention.BedLevel,
+                FloodableArea = retention.StreetStorageArea,
+                SurfaceLevel = retention.StreetLevel,
+                //retention.StreetStorage,
+                //retention.WellStorage,
+
+            };
+            var manhole = new Manhole(retention.Name);
+            manhole.Compartments.Add(compartment);
+            compartment.ParentManhole = manhole;
+
+            return manhole;
+        }
+
+        private static INode CreateHydroNode(SobekNode sobekNode, INetwork hydroNetwork)
         {
             return new HydroNode
             {

@@ -6,12 +6,12 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using log4net;
 
@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekHydroModelImporter));
 
         private const string RtcWorkflowName = "RTC";
-        private const string Flow1DWorkflowName = "Flow1D";
+        private const string FlowFMWorkflowName = "FlowFM";
         private const string RRWorkflowName = "RR"; 
 
         public bool enableWaqOutput;
         public bool useRR;
         public bool useRTC;
-        public bool useFlow = true;
+        public bool useFm = true;
 
         private bool shouldCancel;
         private IPartialSobekImporter importer;
@@ -39,9 +39,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         }
 
-        public SobekHydroModelImporter(bool useRR, bool useRTC = true, bool useFlow = true)
+        public SobekHydroModelImporter(bool useRR, bool useRTC = true, bool useFm = true)
         {
-            this.useFlow = useFlow;
+            this.useFm = useFm;
             this.useRR = useRR;
             this.useRTC = useRTC;
         }
@@ -50,12 +50,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string Name
         {
-            get { return "SOBEK Model"; }
+            get { return "Sobek 2 Model"; }
         }
         public string Description { get { return Name; } }
         public string Category
         {
-            get { return "SOBEK"; }
+            get { return "1D / 2D"; }
         }
 
         public Bitmap Image
@@ -65,7 +65,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof (HydroModel); }
+            get
+            {
+                yield return typeof(HydroModel);
+                yield return typeof(WaterFlowFMModel);
+            }
         }
 
         public bool CanImportOn(object targetObject)
@@ -113,6 +117,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             // Configure the TargetObject of the IPartialSobekImporter part of the importer
             TargetObject = target ?? CreateHydroModel();
+            var targetIsEmptyProject = target as Project;
+            if (targetIsEmptyProject != null && !targetIsEmptyProject.RootFolder.GetAllModelsRecursive().Any())
+            {
+                TargetObject = CreateHydroModel();
+                //targetIsEmptyProject.BeginEdit(new DefaultEditAction("Import Sobek 2 model into Project"));
+                //targetIsEmptyProject.RootFolder.Add(CreateHydroModel());
+            }
 
             if (ShouldCancel)
             {
@@ -142,8 +153,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             finally
             {
                 importer = null; // make sure we keep no more references to the partial importers
+                //targetIsEmptyProject?.EndEdit();
             }
         }
+
 
         # endregion
 
@@ -183,7 +196,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             // In case an RTC model is present, but doesn't contain any control groups, the RTC model is removed. 
             var hydroModel = TargetObject as HydroModel;
-            if (hydroModel == null) return;
+            if (hydroModel == null)
+            {
+                var targetObjectIsProject = TargetObject as Project;
+                if (targetObjectIsProject == null)
+                    return;
+                hydroModel = targetObjectIsProject.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().FirstOrDefault();
+            }
 
             bool rtcFound = false;
 
@@ -200,20 +219,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             // Make sure that the workflow is adapted to the one indicated in the SETTINGS.DAT file. 
             AdaptWorkflow(rtcFound);
 
-            var waterFlowModel1D = hydroModel.Activities.OfType<WaterFlowModel1D>().FirstOrDefault();
-            if (waterFlowModel1D == null) return;
+            var waterFlowFMModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
+            if (waterFlowFMModel == null) return;
 
-            waterFlowModel1D.HydFileOutput = enableWaqOutput;
+            waterFlowFMModel.HydFileOutput = enableWaqOutput;
 
             if (enableWaqOutput)
             {
                 log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
             }
 
-            waterFlowModel1D.Network?.MakeNamesUnique<ICompositeBranchStructure>();
-            
-            WaterFlowModel1DImporterHelper.AdaptExistingUseThatcherHarlemanPropertyToNewDispersionFormulationTypeProperty(waterFlowModel1D);
-            WaterFlowModel1DImporterHelper.AdaptExistingDispersionCoverageToNewDispersionCoverages(waterFlowModel1D);
+            waterFlowFMModel.Network?.MakeNamesUnique<ICompositeBranchStructure>();
         }
 
         public bool IsActive { get; set; }
@@ -321,12 +337,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var hydroModelBuilder = new HydroModelBuilder();
 
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.SobekModels);
+            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.RHUModels);
 
-            if (!useFlow)
+            if (!useFm)
             {
-                var flow = hydroModel.Activities.First(m => m is WaterFlowModel1D);
-                hydroModel.Activities.Remove(flow);
+                var fm = hydroModel.Activities.First(m => m is WaterFlowFMModel);
+                hydroModel.Activities.Remove(fm);
             }
 
             if (!useRR)
@@ -406,7 +422,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                             // A new step in the sequential activity, so add existing parallel activities to the sequential activities, and start a new group of parallel activities. 
 
                             // If an RTC group is detected, but not included as parallel to the flow module, add it. 
-                            if (parallelActivities.Contains(Flow1DWorkflowName) && !parallelActivities.Contains(RtcWorkflowName) && rtcFound)
+                            if (parallelActivities.Contains(FlowFMWorkflowName) && !parallelActivities.Contains(RtcWorkflowName) && rtcFound)
                             {
                                 parallelActivities.Add(RtcWorkflowName);
                             }
@@ -436,7 +452,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
 
                 // If an RTC group is detected, but not included as parallel to the flow module, add it. 
-                if (parallelActivities.Contains(Flow1DWorkflowName) && !parallelActivities.Contains(RtcWorkflowName) && rtcFound)
+                if (parallelActivities.Contains(FlowFMWorkflowName) && !parallelActivities.Contains(RtcWorkflowName) && rtcFound)
                 {
                     parallelActivities.Add(RtcWorkflowName);
                 }
@@ -472,9 +488,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 return RRWorkflowName;
             }
-            if (description.StartsWith("CF") && useFlow) 
+            if (description.StartsWith("CF") && useFm)  // CF is old Flow1D, need to map on FM
             {
-                return Flow1DWorkflowName;
+                return FlowFMWorkflowName;
             }
             if (description.StartsWith("RTC") && useRTC)
             {
