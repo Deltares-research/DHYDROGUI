@@ -250,6 +250,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
             return result;
         }
 
+        /// <summary>
+        /// Create a new <typeparamref name="TDisplayed"/> in place from the provided parameters.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="observedFeature">The observed feature.</param>
+        /// <returns> The created <typeparamref name="TDisplayed"/> value. </returns>
+        /// <remarks>
+        /// If <see cref="nextAdd"/> is set, the new value will be inserted
+        /// at the specified <see cref="nextAdd"/> location, otherwise it will
+        /// be appended to the internal list.
+        /// </remarks>
         private TDisplayed Emplace(IEventedList<TObserved> container, TObserved observedFeature)
         {
             var newGoalValue = CreateDisplayedValue(observedFeature);
