@@ -191,8 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         private void HandleCollectionChangedReplaced(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
         {
-            var removedItems = RemoveItems(observedList, e.OldItems);
-            var addedItems = AddItems(observedList, e.NewItems);
+            IList removedItems = RemoveItems(observedList, e.OldItems);
+            IList addedItems = AddItems(observedList, e.NewItems);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                                           NotifyCollectionChangedAction.Replace,
                                           addedItems,
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         private void HandleCollectionChangedAdd(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
         {
-            var addedItems = AddItems(observedList, e.NewItems);
+            IList addedItems = AddItems(observedList, e.NewItems);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                                           NotifyCollectionChangedAction.Add,
                                           addedItems));
@@ -209,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 
         private void HandleCollectionChangedRemove(IEventedList<TObserved> observedList, NotifyCollectionChangedEventArgs e)
         {
-            var removedItems = RemoveItems(observedList, e.OldItems);
+            IList removedItems = RemoveItems(observedList, e.OldItems);
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(
                                           NotifyCollectionChangedAction.Remove,
                                           removedItems));
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         {
             var result = new List<TDisplayed>();
 
-            foreach (var addedItem in addedItems)
+            foreach (object addedItem in addedItems)
             {
                 if (!(addedItem is TObserved addedObservedItem))
                 {
@@ -263,7 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
         /// </remarks>
         private TDisplayed Emplace(IEventedList<TObserved> container, TObserved observedFeature)
         {
-            var newGoalValue = CreateDisplayedValue(observedFeature);
+            TDisplayed newGoalValue = CreateDisplayedValue(observedFeature);
             var newElement = new Tuple<TDisplayed, IEventedList<TObserved>>(newGoalValue, container);
 
             if (nextAdd != null)
