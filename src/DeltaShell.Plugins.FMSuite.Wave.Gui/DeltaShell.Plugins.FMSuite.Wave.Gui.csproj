@@ -307,9 +307,11 @@
     </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModel.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModel.cs" />
+    <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
     <Compile Include="Layers\WaveLayerIcons.cs" />
     <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
+    <Compile Include="Layers\WaveMapLayerProvider.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
