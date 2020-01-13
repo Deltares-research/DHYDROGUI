@@ -49,5 +49,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             Assert.That(supportPoint.Distance, Is.EqualTo(expectedDistance));
             Assert.That(supportPoint.GeometricDefinition, Is.SameAs(geometricDefinition));
         }
+
+        [Test]
+        public void SetDistance_InvalidDistance_ThrowsArgumentOutOfRangeException()
+        {
+            // Setup
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            // Call
+            var supportPoint = new SupportPoint(0, geometricDefinition);
+
+            void Call() => supportPoint.Distance = -1 * random.NextDouble();
+            // Assert
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("Distance"));
+        }
     }
 }

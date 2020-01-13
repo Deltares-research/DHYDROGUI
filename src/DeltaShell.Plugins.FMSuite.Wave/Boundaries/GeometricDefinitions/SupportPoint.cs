@@ -8,13 +8,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// </summary>
     public class SupportPoint
     {
+        private double distance;
+
         /// <summary>
         /// Gets the distance.
         /// </summary>
         /// <value>
         /// The distance from the start index of the <see cref="IWaveBoundaryGeometricDefinition"/>.
         /// </value>
-        public double Distance { get; }
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when setting with <paramref name="value"/> smaller than 0.
+        /// </exception>
+        public double Distance
+        {
+            get => distance;
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(Distance));
+                }
+
+                distance = value;
+            }
+        }
 
         /// <summary>
         /// Gets the geometric definition.
