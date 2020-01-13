@@ -160,6 +160,7 @@
     <Compile Include="Editors\Boundaries\Factories\IViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\ViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Validation\FieldValidator.cs" />
+    <Compile Include="Editors\Boundaries\Validation\PositiveDoubleValidationRule.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\GaussViewShape.cs" />
