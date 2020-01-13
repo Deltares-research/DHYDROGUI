@@ -277,6 +277,7 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\VelocityTypeTest.cs" />
     <Compile Include="Gui\Layers\Providers\WaveDomainDataLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WaveLayerSubProviderTestFixture.cs" />
     <Compile Include="Gui\Layers\Providers\WaveModelLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\WaveLayerFactoryTest.cs" />
     <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
