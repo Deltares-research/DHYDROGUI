@@ -9,99 +9,23 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class WaveDomainDataLayerSubProviderTest
+    public class WaveDomainDataLayerSubProviderTest : WaveLayerSubProviderTestFixture
     {
-        [Test]
-        public void Constructor_ExpectedValues()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+        private readonly WaveDomainData domainData = new WaveDomainData("Domain");
 
-            // Call
-            var subProvider = new WaveDomainDataLayerSubProvider(factory);
+        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+            (factory) => new WaveDomainDataLayerSubProvider(factory);
 
-            // Assert
-            Assert.That(subProvider, Is.InstanceOf<IWaveLayerSubProvider>());
-        }
+        protected override object GetValidSourceData() => domainData;
 
-        [Test]
-        public void Constructor_FactoryNull_ThrowsArgumentNullException()
-        {
-            // Call | Assert
-            void Call() => new WaveDomainDataLayerSubProvider(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
+        protected override object GetValidParentData() => null;
 
-            Assert.That(exception.ParamName, Is.EqualTo("factory"));
-        }
+        protected override object GetInvalidSourceData() => new object();
 
-        [Test]
-        public void CanCreateLayerFor_ValidWaveDomainDataAndAnyParentData_ReturnsTrue()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveDomainDataLayerSubProvider(factory);
+        protected override object GetInvalidParentData() => null;
 
-            var domainData = new WaveDomainData("Domain");
-
-            // Call
-            bool result = subProvider.CanCreateLayerFor(domainData, null);
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-
-        [Test]
-        public void CanCreateLayerFor_AnySourceDataNotWaveDomainData_ReturnsFalse()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveDomainDataLayerSubProvider(factory);
-
-            var obj = new object();
-
-            // Call
-            bool result = subProvider.CanCreateLayerFor(obj, null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [Test]
-        public void CreateLayer_ValidDomainDataAndAnyParentData_ReturnsExpectedLayer()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveDomainDataLayerSubProvider(factory);
-
-            var domainData = new WaveDomainData("Domain");
-            var layer = Substitute.For<ILayer>();
-
-            factory.CreateWaveDomainDataLayer(domainData).Returns(layer);
-
-            // Call
-            ILayer result = subProvider.CreateLayer(domainData, null);
-
-            // Assert
-            Assert.That(result, Is.SameAs(layer));
-            factory.Received(1).CreateWaveDomainDataLayer(domainData);
-        }
-
-        [Test]
-        public void CreateLayer_AnyDataNotWaveDomainData_ReturnsNull()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveDomainDataLayerSubProvider(factory);
-
-            var obj = new object();
-
-            // Call
-            ILayer result = subProvider.CreateLayer(obj, null);
-
-            // Assert
-            Assert.That(result, Is.Null);
-            factory.DidNotReceiveWithAnyArgs().CreateWaveDomainDataLayer(null);
-        }
+        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
+            FactoryMock.CreateWaveDomainDataLayer(domainData);
 
         [Test]
         public void GenerateChildLayerObjects_AnyDataNotDomainData_ReturnsEmptyEnumerable()
