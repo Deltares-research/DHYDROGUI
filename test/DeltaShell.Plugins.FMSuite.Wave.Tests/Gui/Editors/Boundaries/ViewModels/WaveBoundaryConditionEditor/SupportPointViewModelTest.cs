@@ -32,6 +32,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
 
+        [Test]
+        public void Constructor_SetsCorrectValue()
+        {
+            // Assert
+            Assert.That(viewModel.SupportPoint, Is.SameAs(supportPoint));
+        }
+
         [TestCase(false, false, 0)]
         [TestCase(false, true, 1)]
         [TestCase(true, false, 1)]

@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <seealso cref="INotifyPropertyChanged" />
     public class SupportPointViewModel : INotifyPropertyChanged
     {
-        private readonly SupportPoint supportPoint;
+        private bool isEnabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointViewModel" /> class.
@@ -24,10 +24,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public SupportPointViewModel(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
-            this.supportPoint = supportPoint;
+            SupportPoint = supportPoint;
         }
 
-        private bool isEnabled;
+        /// <summary>
+        /// Gets the support point.
+        /// </summary>
+        /// <value>
+        /// The support point.
+        /// </value>
+        public SupportPoint SupportPoint { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.
@@ -58,15 +64,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </value>
         public double Distance
         {
-            get => supportPoint.Distance;
+            get => SupportPoint.Distance;
             set
             {
-                if (!(Math.Abs(supportPoint.Distance - value) > 1E-15))
+                if (!(Math.Abs(SupportPoint.Distance - value) > 1E-15))
                 {
                     return;
                 }
 
-                supportPoint.Distance = value;
+                SupportPoint.Distance = value;
                 OnPropertyChanged();
             }
         }
