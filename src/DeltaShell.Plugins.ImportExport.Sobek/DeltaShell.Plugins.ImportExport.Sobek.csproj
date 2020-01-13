@@ -167,9 +167,6 @@
     <Compile Include="Importers\ToDictionaryExtensions.cs" />
     <Compile Include="Model1DBoundaryNodeDataBuilder.cs" />
     <Compile Include="NumUtils.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="PartialSobekImporterBuilder.cs" />
     <Compile Include="PartialSobekImporter\ToDictionaryExtensions.cs" />
     <Compile Include="PartialSobekImporter\SobekLinkageNodeImporter.cs" />
@@ -264,12 +261,6 @@
     <Compile Include="WeirBuilder.cs" />
     <Compile Include="WeirNamer.cs" />
     <None Include="GenerateParserFiles.cmd" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.CoreCompileInputs.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.GenerateResource.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csprojAssemblyReference.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll.postsharp" />
-    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="obj\Debug\PostSharpHost.config" />
     <None Include="Scripts\Libraries\Sobek2Functions.py" />
     <None Include="Uml\SobekImportExportOverview.cd" />
   </ItemGroup>
@@ -329,11 +320,6 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Properties.Resources.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.ImportPartialSobekWizardDialog.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekModelsWizardPage.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekPartsWizardPage.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SobekModelSelectFileWizardPage.resources" />
     <EmbeddedResource Include="Wizard\ImportPartialSobekWizardDialog.resx">
       <DependentUpon>ImportPartialSobekWizardDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -375,15 +361,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\sobek.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.dll" />
-    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
-    <Content Include="obj\Debug\PostSharp\dependencies.txt" />
-    <Content Include="obj\Debug\TempPE\Properties.Resources.Designer.cs.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
