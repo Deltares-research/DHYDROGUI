@@ -12,99 +12,23 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class WaveModelLayerSubProviderTest
+    public class WaveModelLayerSubProviderTest : WaveLayerSubProviderTestFixture
     {
-        [Test]
-        public void Constructor_ExpectedValues()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
+        private readonly WaveModel waveModel = new WaveModel {OuterDomain = new WaveDomainData("Domain")};
 
-            // Call
-            var subProvider = new WaveModelLayerSubProvider(factory);
+        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+            factory => new WaveModelLayerSubProvider(factory);
 
-            // Assert
-            Assert.That(subProvider, Is.InstanceOf<IWaveLayerSubProvider>());
-        }
+        protected override object GetValidSourceData() => waveModel;
 
-        [Test]
-        public void Constructor_FactoryNull_ThrowsArgumentNullException()
-        {
-            // Call | Assert
-            void Call() => new WaveModelLayerSubProvider(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
+        protected override object GetValidParentData() => null;
 
-            Assert.That(exception.ParamName, Is.EqualTo("factory"));
-        }
+        protected override object GetInvalidSourceData() => new object();
 
-        [Test]
-        public void CanCreateLayerFor_ValidModelAndAnyParentData_ReturnsTrue()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
+        protected override object GetInvalidParentData() => null;
 
-            var model = new WaveModel();
-
-            // Call
-            bool result = subProvider.CanCreateLayerFor(model, null);
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-
-        [Test]
-        public void CanCreateLayerFor_AnySourceDataNotAModel_ReturnsFalse()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
-
-            var obj = new object();
-
-            // Call
-            bool result = subProvider.CanCreateLayerFor(obj, null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [Test]
-        public void CreateLayer_ValidModelAndAnyParentData_ReturnsExpectedLayer()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
-
-            var model = new WaveModel();
-            var layer = Substitute.For<ILayer>();
-
-            factory.CreateModelGroupLayer(model).Returns(layer);
-
-            // Call
-            ILayer result = subProvider.CreateLayer(model, null);
-
-            // Assert
-            Assert.That(result, Is.SameAs(layer));
-            factory.Received(1).CreateModelGroupLayer(model);
-        }
-
-        [Test]
-        public void CreateLayer_AnyDataNotAModel_ReturnsNull()
-        {
-            // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
-
-            var obj = new object();
-
-            // Call
-            ILayer result = subProvider.CreateLayer(obj, null);
-
-            // Assert
-            Assert.That(result, Is.Null);
-            factory.DidNotReceiveWithAnyArgs().CreateModelGroupLayer(null);
-        }
+        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
+            FactoryMock.CreateModelGroupLayer(waveModel);
 
         [Test]
         public void GenerateChildLayerObjects_NotModelAsData_ReturnsEmptyEnumerable()
@@ -127,10 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void GenerateChildLayerObjects_ModelAsData_ReturnsExpectedItems()
         {
             // Setup
-            var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
-
-            var waveModel = new WaveModel {OuterDomain = new WaveDomainData("Domain"),};
+            IWaveLayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             IList<object> result = subProvider.GenerateChildLayerObjects(waveModel).ToList();
