@@ -167,6 +167,7 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\IViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\JonswapViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShape.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPointViewModel.cs" />
     <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
       <DependentUpon>LabeledComboBox.xaml</DependentUpon>
     </Compile>
@@ -325,6 +326,7 @@
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
