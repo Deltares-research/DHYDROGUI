@@ -268,10 +268,6 @@
     <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.GenerateResource.cache" />
     <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csprojAssemblyReference.cache" />
     <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll.postsharp" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.CoreCompileInputs.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.GenerateResource.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csprojAssemblyReference.cache" />
-    <None Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.dll.postsharp" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="obj\Debug\PostSharpHost.config" />
     <None Include="Scripts\Libraries\Sobek2Functions.py" />
@@ -338,10 +334,6 @@
     <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekModelsWizardPage.resources" />
     <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SelectSobekPartsWizardPage.resources" />
     <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.Wizard.SobekModelSelectFileWizardPage.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Properties.Resources.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.ImportPartialSobekWizardDialog.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.SelectSobekPartsWizardPage.resources" />
-    <EmbeddedResource Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.Wizard.SobekModelSelectFileWizardPage.resources" />
     <EmbeddedResource Include="Wizard\ImportPartialSobekWizardDialog.resx">
       <DependentUpon>ImportPartialSobekWizardDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -387,14 +379,9 @@
   <ItemGroup>
     <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.dll" />
     <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
-    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.SobekNetwork.dll" />
-    <Content Include="obj\Debug\Before-PostSharp\DeltaShell.Plugins.ImportExport.SobekNetwork.pdb" />
     <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.dll" />
     <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.Sobek.pdb" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.dll" />
-    <Content Include="obj\Debug\DeltaShell.Plugins.ImportExport.SobekNetwork.pdb" />
     <Content Include="obj\Debug\PostSharp\dependencies.txt" />
     <Content Include="obj\Debug\TempPE\Properties.Resources.Designer.cs.dll" />
   </ItemGroup>
