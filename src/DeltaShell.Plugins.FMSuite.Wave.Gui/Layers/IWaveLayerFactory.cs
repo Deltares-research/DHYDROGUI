@@ -43,5 +43,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when <paramref name="snappedFeatures"/> is <c>null</c>.
         /// </exception>
         ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures);
+
+        /// <summary>
+        /// Creates a new output layer with the given <paramref name="domainName"/>.
+        /// </summary>
+        /// <param name="domainName">Name of the domain.</param>
+        /// <param name="overrideLayerName">if set to <c>true</c> use the <paramref name="domainName"/> verbatim.</param>
+        /// <returns>
+        /// A new output <see cref="ILayer"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="domainName"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false);
     }
 }
