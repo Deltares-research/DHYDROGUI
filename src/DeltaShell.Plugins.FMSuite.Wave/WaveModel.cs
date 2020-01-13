@@ -1083,18 +1083,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private double previousProgress = 0;
         private readonly DimrRunner runner;
         public override IBasicModelInterface BMIEngine => runner.Api;
+
         protected override void OnInitialize()
         {
             previousProgress = 0;
-            
-            ReportProgressText("Initializing");
 
-            if (Directory.Exists(DimrExportDirectoryPath))
-            {
-                DisconnectOutput();
-                FileUtils.DeleteIfExists(DimrExportDirectoryPath);
-                FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath);
-            }
+            ReportProgressText("Initializing");
+            
+            DisconnectOutput();
+            FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
 
             runner.OnInitialize();
 
@@ -1194,41 +1191,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 for (var i = 0; i < domains.Count; ++i)
                 {
                     string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
-                    if (File.Exists(wavmFile))
-                    {
-                        BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
-                        
-                        WavmFunctionStores.ElementAt(i).Path = wavmFile;
-                        OutputIsEmpty = false;
-
-                        EndEdit();
-                    }
-                    else
-                    {
-                        Log.WarnFormat(
-                            Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
-                            wavmFile);
-                    }
+                    ConnectWavmFile(wavmFile, i);
                 }
             }
             else
             {
                 string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
-                if (File.Exists(wavmFile))
-                {
-                    BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
+                ConnectWavmFile(wavmFile, 0);
+            }
+        }
 
-                    WavmFunctionStores.First().Path = wavmFile;
-                    OutputIsEmpty = false;
+        private void ConnectWavmFile(string wavmFile, int i)
+        {
+            if (File.Exists(wavmFile))
+            {
+                BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
 
-                    EndEdit();
-                }
-                else
-                {
-                    Log.WarnFormat(
-                        Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
-                        wavmFile);
-                }
+                WavmFunctionStores.ElementAt(i).Path = wavmFile;
+                OutputIsEmpty = false;
+
+                EndEdit();
+            }
+            else
+            {
+                Log.WarnFormat(
+                    Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
+                    wavmFile);
             }
         }
 
@@ -1372,7 +1360,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 try
                 {
-                    swanLog.Content = string.Empty;
                     string log = File.ReadAllText(swanDiagFile);
                     swanLog.Content = log;
                 }
@@ -1614,7 +1601,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void DisconnectOutput()
         {
-            OnClearOutput();
+            if (!OutputIsEmpty)
+            {
+                OnClearOutput();
+            }
         }
 
         public virtual void ConnectOutput(string outputPath)
