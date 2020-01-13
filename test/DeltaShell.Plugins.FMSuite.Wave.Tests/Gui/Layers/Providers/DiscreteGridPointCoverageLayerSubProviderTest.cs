@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using NSubstitute;
@@ -43,5 +44,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
         protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
             FactoryMock.CreateGridLayer(gridCoverage, model.CoordinateSystem);
+
+        [Test]
+        public void Constructor_GetWaveModelsFuncNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new DiscreteGridPointCoverageLayerSubProvider(FactoryMock, null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("getWaveModelsFunc"));
+        }
+
+        [Test]
+        public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
+        {
+            // Setup
+            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+
+            // Call
+            IEnumerable<object> result = subProvider.GenerateChildLayerObjects(gridCoverage);
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void CreateLayer_ParentWavmFileFunctionStore_NoCoordinateSystem()
+        {
+            // Setup
+            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            var parent = new WavmFileFunctionStore("dummy.nc");
+
+            FactoryMock.CreateGridLayer(gridCoverage, null).Returns(LayerMock);
+
+            // Call
+            ILayer layer = subProvider.CreateLayer(gridCoverage, parent);
+
+            // Assert
+            Assert.That(layer, Is.SameAs(LayerMock));
+            FactoryMock.Received(1).CreateGridLayer(gridCoverage, null);
+        }
     }
 }
