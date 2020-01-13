@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -127,5 +128,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
         /// </exception>
         ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel);
+
+        /// <summary>
+        /// Creates the boundary group layer.
+        /// </summary>
+        /// <param name="featuresProviderContainer">The features container.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// A new boundary group layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
+                                   IWaveModel model);
     }
 }
