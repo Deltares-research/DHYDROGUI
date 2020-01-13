@@ -330,7 +330,6 @@
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
