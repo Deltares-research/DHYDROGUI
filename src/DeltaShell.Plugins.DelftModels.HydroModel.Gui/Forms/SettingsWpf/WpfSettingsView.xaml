@@ -297,7 +297,7 @@
         <!--#endregion-->
 
         <!-- GUI Subcategory -->
-        <DataTemplate x:Key="subCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
+        <DataTemplate x:Key="SubCategoryTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
             <Expander Style="{StaticResource SubCategoryExpanderStyle}" >
                 <Border>
@@ -310,7 +310,7 @@
         </DataTemplate>
 
         <!-- GUI CUSTOM SubCategory -->
-        <DataTemplate x:Key="subCategoryCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
+        <DataTemplate x:Key="SubCategoryCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
             <Expander Style="{StaticResource SubCategoryExpanderStyle}">
                 <ContentControl Content="{Binding CustomControl}"/>
@@ -318,7 +318,7 @@
         </DataTemplate>
 
         <!-- GUI Category -->
-        <DataTemplate x:Key="tabContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
+        <DataTemplate x:Key="TabContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <ItemsControl
                 ItemsSource="{Binding SubCategories}" 
                 ItemTemplateSelector="{StaticResource TemplateSelector}">
@@ -331,7 +331,7 @@
         </DataTemplate>
 
         <!-- GUI Custom Category -->
-        <DataTemplate x:Key="tabCustomContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
+        <DataTemplate x:Key="TabCustomContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
             <ContentControl Content="{Binding CustomControl}"/>
         </DataTemplate>
