@@ -313,6 +313,7 @@
     <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveSnappedFeaturesGroupLayerDataLayerSubProvider.cs" />
     <Compile Include="Layers\WaveLayerIcons.cs" />
     <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
