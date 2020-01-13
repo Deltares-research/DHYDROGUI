@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 ImportGwswNetworkInRrModel(elementTypesList, rrModel, fmModel?.Network);
                 if (hydroModel != null)
                 {
-                    AddRRtoFMNwrwLinks(elementTypesList, rrModel, fmModel);
+                    //AddRRtoFMNwrwLinks(rrModel, fmModel.Network, fmModel.LateralSourcesData);
                     //todo: Add workflow
                     //if (fmModel != null) hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 2 && w.Activities.OfType<IWaterFlowFMModel>().Any() && w.Activities.OfType<RainfallRunoffModel>().Any());
                     //else hydroModel.CurrentWorkflow = hydroModel.Workflows.First(w => w.Activities.Count == 1 && w.Activities.OfType<RainfallRunoffModel>().Any());
@@ -128,16 +128,19 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         }
 
-        private void AddRRtoFMNwrwLinks(List<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IWaterFlowFMModel fmModel)
+        private void AddRRtoFMNwrwLinks(RainfallRunoffModel rrModel, IHydroNetwork network, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
-            foreach (var nwrwDischargeData in rrModel.NwrwDischargeData)
+            var nwrwRrData = rrModel.UrbanRrData.OfType<IUrbanRrData>().FirstOrDefault();
+            if (nwrwRrData == null) return; // There must be somthing read else we cant link!
+            
+            foreach (var nwrwDischargeData in nwrwRrData.UrbanRrDischargeDefinitions.OfType<NwrwDischargeData>())
             {
                 if (nwrwDischargeData.DischargeType == DischargeType.DryWeatherFlow)
                 {
-                    IBranch branch = fmModel.Network.Branches.FirstOrDefault(b => b.Name == nwrwDischargeData.Name);
+                    IBranch branch = network.Branches.FirstOrDefault(b => b.Name.Equals(nwrwDischargeData.Name, StringComparison.InvariantCultureIgnoreCase));
                     if (branch == null)
                     {
-                        INode node = fmModel.Network.Nodes.FirstOrDefault(b => b.Name == nwrwDischargeData.Name);
+                        INode node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nwrwDischargeData.Name, StringComparison.InvariantCultureIgnoreCase));
                         if (node != null) branch = node.IncomingBranches.FirstOrDefault();
                     }
 
@@ -148,19 +151,23 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         branch.BranchFeatures.Add(lateralSource);
 
                         // add link from Nwrw Catchment to newly created lateral
-                        var catchment = rrModel.ModelData.OfType<NwrwData>().FirstOrDefault(cmd => cmd.Name.Equals(lateralSource.Name));
+                        // Link is between files by name oppervlakte.csv and debiet.csv with field UNI_IDE
+                        var catchment = rrModel.ModelData.OfType<NwrwData>().FirstOrDefault(nd =>nd.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase));
                         if (catchment != null)
                         {
                             var hydroLink = new HydroLink(catchment.Catchment, lateralSource);
-                            catchment.Catchment.Links.Add(hydroLink);
+                            catchment.Catchment.LinkTo(lateralSource);
+                            
+                            //catchment.Catchment.Links.Add(hydroLink);
+                            //lateralSource.Links.Add(hydroLink);
                         }
 
                         // at FM-side, create lateral data of type REALTIME
-                        Model1DLateralSourceData model1DLateralSourceData = fmModel.LateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
+                        Model1DLateralSourceData model1DLateralSourceData = lateralSourcesData.FirstOrDefault(lsd =>lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
                         model1DLateralSourceData.Name = lateralSource.Name;
                         model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                         model1DLateralSourceData.Flow = 0d;
-
+                        
                     }
                 }
             }
@@ -180,12 +187,25 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
 
-            var nodeNameLookup = new HashSet<string>(network.Nodes.Select(n => n.Name));
-            var branchNameLookup = new HashSet<string>(network.Branches.Select(n => n.Name));
+            var nodeNameLookup = new HashSet<string>(network.Nodes.Select(n => n.Name.ToLower()));
+            var branchNameLookup = new HashSet<string>(network.Branches.Select(n => n.Name.ToLower()));
 
             var listOfErrors = new List<string>();
+            var nwrwRrData = rrModel.UrbanRrData.OfType<NwrwRrData>().FirstOrDefault();
+            if (nwrwRrData != null && featureElements.Count > 0)
+            {
+                //clear / or always add, we now decide clear...
+                nwrwRrData.Clear();
+
+            }
             for (int i = 0; i < featureElements.Count; i++)
             {
+                
+                if(nwrwRrData == null)
+                {
+                    nwrwRrData = new NwrwRrData();
+                    rrModel.UrbanRrData.Add(nwrwRrData);
+                }
                 var e = featureElements[i];
                 try
                 {
@@ -199,7 +219,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
                     //todo: refactor
                     // only add gwsw data if a node/connection with same unique name already exists in the network, or when we are dealing with NwrwGlobalData or NwrwDryWeatherFlowDefinition
-                    if (e is NwrwGlobalData || e is NwrwDryWeatherFlowDefinition || nodeNameLookup.Contains(e.Name) || branchNameLookup.Contains(e.Name))
+                    if (e is NwrwGlobalData || e is NwrwDryWeatherFlowDefinition || nodeNameLookup.Contains(e.Name.ToLower()) || branchNameLookup.Contains(e.Name.ToLower()))
                         e.AddNwrwCatchmentModelDataToModel(rrModel);
                 }
                 catch (Exception exception)

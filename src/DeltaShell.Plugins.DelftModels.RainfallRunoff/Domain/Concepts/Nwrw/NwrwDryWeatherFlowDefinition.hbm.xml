@@ -3,18 +3,16 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw"
                    assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
-  <class name="NwrwDryWeatherFlowDefinition" table="rr_dryweatherflowdef" lazy="false">
+  <subclass 
+    name="NwrwDryWeatherFlowDefinition" 
+    extends="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition"
+    lazy="false"
+    discriminator-value="rr_dryweatherflowdef" >
 
-    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property">
-      <generator class="increment" />
-    </id>
-
-    <property name="Name"/>
     <property name="DayNumber"/>
     <property name="DistributionType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DwfDistributionType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
     <property name="DailyVolume"/>
     <property name="HourlyPercentageDailyVolume"/>
 
-
-  </class>
+  </subclass>
 </hibernate-mapping>

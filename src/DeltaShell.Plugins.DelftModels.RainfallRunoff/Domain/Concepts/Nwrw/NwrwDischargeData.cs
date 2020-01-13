@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Data;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -19,9 +20,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         Lateral
     }
 
-    public class NwrwDischargeData : Unique<long>, INwrwFeature
+    public class NwrwDischargeData : Unique<long>, INwrwFeature, IUrbanRrDefinition
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDischargeData));
         public string Name { get; set; }
+        public string Remark { get; set; }
         public DischargeType DischargeType { get; set; }
         public string DischargeId { get; set; }
         public double PollutingUnits { get; set; }
@@ -30,9 +33,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null || rrModel.NwrwDischargeData.Any(dd => dd.Equals(this))) return;
 
-            rrModel.NwrwDischargeData.Add(this);
+            var nwrwRrData = rrModel?.UrbanRrData.OfType<NwrwRrData>().FirstOrDefault();
+            if (nwrwRrData == null)
+            {
+                Log.Warn($"Could not add {nameof(NwrwDischargeData)} to {nameof(RainfallRunoffModel)}");
+                return;
+            }
+            nwrwRrData?.UrbanRrDischargeDefinitions.Add(this);
         }
     }
 }

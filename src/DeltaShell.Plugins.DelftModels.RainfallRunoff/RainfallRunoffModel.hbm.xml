@@ -43,22 +43,10 @@
       <element type="System.String"/>
     </list>
     
-    <list name="NwrwDryWeatherFlowDefinitions" cascade="all-delete-orphan">
-      <key column="parent_dryweatherflowdef_id"/>
+    <list name="UrbanRrData" cascade="all-delete-orphan">
+      <key column="parent_urbanrrdata_id"/>
       <index column="index_in_parent"/>
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwDryWeatherFlowDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
-    </list>
-
-    <list name="NwrwDischargeData" cascade="all-delete-orphan">
-      <key column="parent_dischargedata_id"/>
-      <index column="index_in_parent"/>
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwDischargeData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
-    </list>
-
-    <list name="NwrwGlobalData" cascade="all-delete-orphan">
-      <key column="parent_globaldata_id"/>
-      <index column="index_in_parent"/>
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwGlobalData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
     </list>
 
 

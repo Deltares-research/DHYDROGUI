@@ -40,45 +40,40 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity(FireOnCollectionChange = false)]
     public class NwrwData : CatchmentModelData, INwrwFeature
     {
-        private IDictionary<NwrwSurfaceType, double> surfaceLevelDict = new Dictionary<NwrwSurfaceType, double>();
-        private IList<NwrwSpecialArea> specialAreas = new List<NwrwSpecialArea>();
-
         //nhib
         public NwrwData(): base(null) { }
 
         public NwrwData(Catchment catchment) : base(catchment){ }
 
 
-        public IDictionary<NwrwSurfaceType, double> SurfaceLevelDict
-        {
-            get { return surfaceLevelDict; }
-            set
-            {
-                surfaceLevelDict = value; 
-            }
-        }
-
+        public IDictionary<NwrwSurfaceType, double> SurfaceLevelDict { get; set; } = new Dictionary<NwrwSurfaceType, double>();
         public string DryWeatherFlowId { get; set; }
         public string MeteoStationId { get; set; }
         public int NumberOfPeople { get; set; }
+
+
+        // Pluvius only
         public int NumberOfSpecialAreas { get; set; }
 
-        public IList<NwrwSpecialArea> SpecialAreas
-        {
-            get { return specialAreas; }
-            set { specialAreas = value; }
-        }
-
-        public double AreaAdjustmentFactor { get; set; }
-
+        // Pluvius only
+        public IList<NwrwSpecialArea> SpecialAreas { get; set; } = new List<NwrwSpecialArea>();
 
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
             if(rrModel == null || rrModel.ModelData.Any(cmd => cmd.Name == this.Name)) return;
-            
-            rrModel.ModelData.Add(this);
+
+            if (!rrModel.Basin.Catchments.Contains(this.Catchment))
+            {
+                rrModel.Basin.Catchments.Add(this.Catchment);
+            }
+
+            if (rrModel.Basin.Catchments.Contains(this.Catchment) && !rrModel.ModelData.Contains(this))
+            {
+                rrModel.ModelData.Add(this);
+                rrModel.FireModelDataAdded(this);
+            }
         }
     }
 

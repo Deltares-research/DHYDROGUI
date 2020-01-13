@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwGlobalData, DeltaShell.Plugins.DelftModels.RainfallRunoff" table="rr_nwrw_global_data" lazy="false">
-
-    <id name="Id" column="NwrwGlobalDataID" type="Int64" unsaved-value="0" access="property">
-      <generator class="increment" />
-    </id>
-
-    <property name="Name"/>
+  <subclass 
+    name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwGlobalData, DeltaShell.Plugins.DelftModels.RainfallRunoff" 
+    extends="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition"
+    lazy="false"
+    discriminator-value="rr_nwrw_global_data" >
+    
     <property name="SurfaceType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSurfaceType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
     <property name="SurfaceStorage"/>
     <property name="InfiltrationCapacityMax"/>
@@ -15,5 +14,5 @@
     <property name="InfiltrationCapacityRecovery"/>
     <property name="RunoffDelay"/>
 
-  </class>
+  </subclass>
 </hibernate-mapping>

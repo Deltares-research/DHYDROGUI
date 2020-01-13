@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw"
+                   assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+
+  <class name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrData, DeltaShell.Plugins.DelftModels.RainfallRunoff"
+         lazy="false"
+         table="rr_nwrw_urban_rr_data" >
+    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property" >
+      <generator class="increment" />
+    </id>
+    <discriminator column="type" type="string"/>
+    <list name="UrbanRrGlobalDefinitions" cascade="all-delete-orphan">
+      <key column="parent_urbanrrglobaldefinition_id"/>
+      <index column="index_in_parent"/>
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+    </list>
+
+    <list name="UrbanRrFlowDefinitions" cascade="all-delete-orphan">
+      <key column="parent_urbanrrflowdefinition_id"/>
+      <index column="index_in_parent"/>
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+    </list>
+
+    <list name="UrbanRrDischargeDefinitions" cascade="all-delete-orphan">
+      <key column="parent_urbanrrdischargedefinition_id"/>
+      <index column="index_in_parent"/>
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+    </list>
+  </class>
+</hibernate-mapping>

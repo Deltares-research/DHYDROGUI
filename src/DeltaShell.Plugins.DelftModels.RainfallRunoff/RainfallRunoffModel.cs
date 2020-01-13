@@ -151,9 +151,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 };
 
             ModelData = new EventedList<CatchmentModelData>();
-            NwrwGlobalData = new List<NwrwGlobalData>();
-            NwrwDryWeatherFlowDefinitions = new List<NwrwDryWeatherFlowDefinition>();
-            NwrwDischargeData = new List<NwrwDischargeData>();
             BoundaryData = new EventedList<RunoffBoundaryData>();
             MeteoStations = new EventedList<string>();
             TemperatureStations = new EventedList<string>();
@@ -634,11 +631,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             BubbleCollectionChangedEvent(sender ,e);
         }
-
-        public IList<NwrwGlobalData> NwrwGlobalData { get; private set; }
-        public IList<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions { get; private set; }
-        public IList<NwrwDischargeData> NwrwDischargeData { get; private set; }
         
+        public IList<IUrbanRrData> UrbanRrData { get; set; } = new List<IUrbanRrData>();
 
         public IEventedList<RunoffBoundaryData> BoundaryData
         {

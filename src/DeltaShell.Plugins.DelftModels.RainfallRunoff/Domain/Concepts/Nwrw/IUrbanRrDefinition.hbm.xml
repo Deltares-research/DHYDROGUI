@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw"
+                   assembly="DeltaShell.Plugins.DelftModels.RainfallRunoff">
+  <class name="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"
+         lazy="false"
+         table="rr_nwrw_urban_rr_definition" >
+    <id name="Id" column="id" type="Int64" unsaved-value="0" access="property" >
+      <generator class="increment" />
+    </id>
+    <discriminator column="type" type="string"/>
+    <property name="Name"/>
+    <property name="Remark"/>
+  </class>
+</hibernate-mapping>
