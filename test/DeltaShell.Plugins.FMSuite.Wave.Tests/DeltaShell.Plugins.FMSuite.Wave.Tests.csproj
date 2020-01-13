@@ -241,6 +241,7 @@
     <Compile Include="Gui\Editors\Boundaries\Enums\PeriodViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensionsTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Factories\ViewShapeFactoryTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Validation\FieldValidatorTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModelTest.cs" />
