@@ -88,5 +88,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData,
                                        ICoordinateSystem coordinateSystem);
+
+        /// <summary>
+        /// Creates a new obstacle layer from the obstacles within
+        /// <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the obstacle features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateObstacleLayer(IWaveModel waveModel);
+
+        /// <summary>
+        /// Creates a new observation points layer from the observation points
+        /// within <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the observation points features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateObservationPointsLayer(IWaveModel waveModel);
+
+        /// <summary>
+        /// Creates a new observation cross-section layer from the observation cross sections
+        /// within <paramref name="waveModel"/>.
+        /// </summary>
+        /// <param name="waveModel">The wave model.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the observation cross-sections features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel);
     }
 }

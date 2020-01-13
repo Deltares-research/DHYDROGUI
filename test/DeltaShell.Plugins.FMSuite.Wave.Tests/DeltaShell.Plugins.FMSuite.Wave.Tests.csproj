@@ -278,7 +278,11 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\VelocityTypeTest.cs" />
     <Compile Include="Gui\Layers\Providers\DiscreteGridPointCoverageLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\Feature2DLayerSubProviderTestFixture.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationCrossSectionLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationPointLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObstacleDataLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObstacleLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\WaveDomainDataLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\WaveLayerSubProviderTestFixture.cs" />
     <Compile Include="Gui\Layers\Providers\WaveModelLayerSubProviderTest.cs" />

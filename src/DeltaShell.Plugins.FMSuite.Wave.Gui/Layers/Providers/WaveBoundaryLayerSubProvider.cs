@@ -1,48 +1,35 @@
 ﻿using System.Collections.Generic;
-using DelftTools.Utils.Collections.Generic;
-using GeoAPI.Geometries;
+using DeltaShell.Plugins.FMSuite.Wave.Layers;
+using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
+using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
-using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
-    // TODO: remove this once old boundaries are retired.
-    public class WaveBoundaryLayerSubProvider : IWaveLayerSubProvider
+    // TODO: Remove once old boundaries are retired.
+    public sealed class WaveBoundaryLayerSubProvider : Feature2DLayerSubProvider
     {
+        public WaveBoundaryLayerSubProvider(IWaveLayerFactory factory) : base(factory) {}
+
         private static readonly string modelName = typeof(WaveModel).Name;
 
-        public bool CanCreateLayerFor(object sourceData, object parentData)
-        {
-            return sourceData is IEventedList<WaveBoundaryCondition> &&
-                   parentData is IWaveModel;
-        }
+        protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
+            Equals(features, model.Boundaries);
 
-        public ILayer CreateLayer(object sourceData, object parentData)
+        protected override ILayer CreateFeatureLayer(IWaveModel model)
         {
-            if (!(sourceData is IEventedList<WaveBoundaryCondition> boundaryConditions &&
-                  parentData is IWaveModel model))
+            return new VectorLayer(WaveLayerNames.BoundaryLayerName)
             {
-                return null;
-            }
-
-            return new VectorLayer(WaveLayerNames.BoundaryConditionLayerName)
-            {
-                DataSource = new Feature2DCollection().Init(boundaryConditions, "BoundaryCondition", modelName,
-                                                            model.CoordinateSystem),
-                Style = new VectorStyle
-                {
-                    Symbol = WaveLayerIcons.CoordinateBasedBoundary,
-                    GeometryType = typeof(IPoint)
-                },
-                NameIsReadOnly = true
+                DataSource = new Feature2DCollection().Init(model.Boundaries, "Boundary", modelName,
+                                                            model.CoordinateSystem, model.GetGridSnappedBoundary),
+                FeatureEditor = new Feature2DEditor(model),
+                Style = WaveModelLayerStyles.BoundaryStyle,
+                NameIsReadOnly = true,
+                Selectable = !model.BoundaryIsDefinedBySpecFile
             };
         }
 
-        public IEnumerable<object> GenerateChildLayerObjects(object data)
-        {
-            yield break;
-        }
     }
 }

@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 };
             }
 
-            if (data is EventedList<WaveObstacle> obstacleData)
+            if (data is IEventedList<WaveObstacle> obstacleData)
             {
                 return WaveLayerFactory.CreateObstacleDataLayer(obstacleData, model.CoordinateSystem);
             }

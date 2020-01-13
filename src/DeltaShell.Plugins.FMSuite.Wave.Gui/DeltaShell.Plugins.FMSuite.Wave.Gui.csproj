@@ -315,8 +315,14 @@
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModel.cs" />
     <Compile Include="Layers\IWaveLayerFactory.cs" />
     <Compile Include="Layers\Providers\DiscreteGridPointCoverageLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\Feature2DLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleDataLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\Sp2BoundaryLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveBoundaryConditionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveBoundaryLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
