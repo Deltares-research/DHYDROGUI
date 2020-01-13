@@ -142,7 +142,7 @@
 
         <!--#region WpfGuiProperty data templates-->
 
-        <!-- DataTemplate for strings,integers and doubles -->
+        <!-- DataTemplate for strings, integers and doubles -->
         <DataTemplate x:Key="TextBoxTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}" >
             <Grid Style="{StaticResource GridStyle}">
                 <Grid.ColumnDefinitions>
@@ -301,14 +301,10 @@
             <!-- Display your BaseViewModel data items here -->
             <Expander Style="{StaticResource SubCategoryExpanderStyle}" >
                 <Border>
-                    <ScrollViewer
-                        HorizontalScrollBarVisibility="Auto"
-                        VerticalScrollBarVisibility="Hidden">
-                        <ItemsControl 
-                            ItemsSource="{Binding Properties}"
-                            ItemTemplateSelector="{StaticResource TemplateSelector}">
-                        </ItemsControl>
-                    </ScrollViewer>
+                    <ItemsControl
+                        ItemsSource="{Binding Properties}"
+                        ItemTemplateSelector="{StaticResource TemplateSelector}">
+                    </ItemsControl>
                 </Border>
             </Expander>
         </DataTemplate>
@@ -317,52 +313,41 @@
         <DataTemplate x:Key="subCategoryCustomTemplate" DataType="{x:Type settingsWpf:WpfGuiSubCategory}">
             <!-- Display your BaseViewModel data items here -->
             <Expander Style="{StaticResource SubCategoryExpanderStyle}">
-                <ScrollViewer 
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Hidden">
-                    <ContentControl Content="{Binding CustomControl}"/>
-                </ScrollViewer>
+                <ContentControl Content="{Binding CustomControl}"/>
             </Expander>
         </DataTemplate>
 
         <!-- GUI Category -->
         <DataTemplate x:Key="tabContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
-            <!-- Bind to the whole data item (a collection) here -->
-            <ScrollViewer 
-                VerticalScrollBarVisibility="Auto"
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <ItemsControl 
-                    ItemsSource="{Binding SubCategories}" 
-                    ItemTemplateSelector="{StaticResource TemplateSelector}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+            <ItemsControl
+                ItemsSource="{Binding SubCategories}" 
+                ItemTemplateSelector="{StaticResource TemplateSelector}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </DataTemplate>
 
         <!-- GUI Custom Category -->
         <DataTemplate x:Key="tabCustomContentTemplate" DataType="{x:Type settingsWpf:WpfGuiCategory}">
             <!-- Bind to the whole data item (a collection) here -->
-            <ScrollViewer 
-                VerticalScrollBarVisibility="Auto"
-                Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
-                <ContentControl Content="{Binding CustomControl}"/>
-            </ScrollViewer>
+            <ContentControl Content="{Binding CustomControl}"/>
         </DataTemplate>
     </UserControl.Resources>
 
-    <TabControl 
-        x:Name="MainTabControl"
-        ItemsSource="{Binding Path=SettingsCategories}"
-        ContentTemplateSelector="{StaticResource TemplateSelector}"
-        SelectionChanged="MainTabControlOnSelectionChanged">
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding Path=CategoryName}"/>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-    </TabControl>
+    <ScrollViewer>
+        <TabControl 
+            x:Name="MainTabControl"
+            ItemsSource="{Binding Path=SettingsCategories}"
+            ContentTemplateSelector="{StaticResource TemplateSelector}"
+            SelectionChanged="MainTabControlOnSelectionChanged">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=CategoryName}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+        </TabControl>
+    </ScrollViewer>
 </UserControl>
