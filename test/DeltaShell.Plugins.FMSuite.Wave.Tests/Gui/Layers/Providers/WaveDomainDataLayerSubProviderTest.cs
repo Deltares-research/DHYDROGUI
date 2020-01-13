@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         {
             // Setup
             var factory = Substitute.For<IWaveLayerFactory>();
-            var subProvider = new WaveModelLayerSubProvider(factory);
+            var subProvider = new WaveDomainDataLayerSubProvider(factory);
 
             var obj = new object();
 
