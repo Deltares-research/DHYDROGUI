@@ -316,6 +316,7 @@
     <Compile Include="Layers\IWaveLayerFactory.cs" />
     <Compile Include="Layers\Providers\DiscreteGridPointCoverageLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObstacleDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveBoundaryLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />

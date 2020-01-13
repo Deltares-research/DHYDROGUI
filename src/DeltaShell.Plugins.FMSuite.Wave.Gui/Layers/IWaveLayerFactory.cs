@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -73,5 +74,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
                                ICoordinateSystem coordinateSystem);
+
+        /// <summary>
+        /// Creates a new obstacle data layer.
+        /// </summary>
+        /// <param name="obstacleData">The obstacle data.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new <see cref="ILayer"/> visualising the obstacle data features.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any of the parameters is <c>null</c>.
+        /// </exception>
+        ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData,
+                                       ICoordinateSystem coordinateSystem);
     }
 }
