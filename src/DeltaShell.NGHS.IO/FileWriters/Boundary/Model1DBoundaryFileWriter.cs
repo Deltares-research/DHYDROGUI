@@ -36,16 +36,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             string bcForcingHeader)
         {
             var categories = new List<IDelftIniCategory>();
-            var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
-            categories.AddRange( model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
-            if (useSalt)
+            if (lateralSourcesData != null)
             {
-                categories.AddRange(model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinitionForSalt(startTime, lsd, bcForcingHeader)));
-            }
+                var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
+                categories.AddRange( model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinition(startTime, lsd, bcForcingHeader)));
+                if (useSalt)
+                {
+                    categories.AddRange(model1DLateralSourceDatas.Select(lsd => GenerateLateralDischargeDefinitionForSalt(startTime, lsd, bcForcingHeader)));
+                }
 
-            if (useTemperature)
-            {
-                categories.AddRange(Enumerable.Select(model1DLateralSourceDatas, lsd => GenerateLateralDischargeDefinitionForTemperature(startTime, lsd, bcForcingHeader)));
+                if (useTemperature)
+                {
+                    categories.AddRange(Enumerable.Select(model1DLateralSourceDatas, lsd => GenerateLateralDischargeDefinitionForTemperature(startTime, lsd, bcForcingHeader)));
+                }
             }
 
             return categories;
@@ -54,20 +57,24 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
         public IEnumerable<IDelftIniCategory> GenerateModel1DNodeBoundaryDelftIniCategories(DateTime startTime, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, bool useSalt, bool useTemperature, string bcBoundaryHeader)
         {
             var categories = new List<IDelftIniCategory>();
-            var boundaryNodeData = boundaryConditions1D.Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None).ToList();
-            categories.AddRange(boundaryNodeData.Select(data => GenerateBoundaryConditionDefinition(startTime, data, bcBoundaryHeader)));
-            
-            if (useSalt)
+            if (boundaryConditions1D != null)
             {
-                var salinityBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.SaltConditionType != SaltBoundaryConditionType.None);
-                categories.AddRange(salinityBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForSalt(startTime, data, bcBoundaryHeader)));
+                var boundaryNodeData = boundaryConditions1D.Where(bc => bc.DataType != Model1DBoundaryNodeDataType.None).ToList();
+                categories.AddRange(boundaryNodeData.Select(data => GenerateBoundaryConditionDefinition(startTime, data, bcBoundaryHeader)));
+            
+                if (useSalt)
+                {
+                    var salinityBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.SaltConditionType != SaltBoundaryConditionType.None);
+                    categories.AddRange(salinityBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForSalt(startTime, data, bcBoundaryHeader)));
+                }
+
+                if (useTemperature)
+                {
+                    var temperatureBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.TemperatureConditionType != TemperatureBoundaryConditionType.None);
+                    categories.AddRange(temperatureBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForTemperature(startTime, data, bcBoundaryHeader)));
+                }
             }
 
-            if (useTemperature)
-            {
-                var temperatureBoundaryNodeDatas = boundaryNodeData.Where(bnd => bnd.TemperatureConditionType != TemperatureBoundaryConditionType.None);
-                categories.AddRange(temperatureBoundaryNodeDatas.Select(data => GenerateBoundaryConditionDefinitionForTemperature(startTime, data, bcBoundaryHeader)));
-            }
             return categories;
         }
 

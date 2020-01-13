@@ -173,6 +173,7 @@ namespace Sobek.IntegrationTests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Ignore("CF DLL is not in dimr set anymore")]
         public void Given1d2dCoupledModelWhenDimrExportThenDimrExportedFile()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })

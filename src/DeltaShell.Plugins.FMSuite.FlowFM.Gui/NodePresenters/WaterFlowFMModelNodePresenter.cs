@@ -123,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks);
             yield return new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters");
             yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");
-            yield return model.Inflows;
         }
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)

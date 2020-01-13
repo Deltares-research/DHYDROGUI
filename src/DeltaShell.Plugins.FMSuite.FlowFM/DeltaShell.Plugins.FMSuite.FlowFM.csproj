@@ -186,7 +186,6 @@
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="IO\BcmFile.cs" />
     <Compile Include="IO\BcmFileFlowBoundaryDataBuilder.cs" />
-    <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\Exporters\FMGridPartitionExporter.cs" />
     <Compile Include="IO\Exporters\FMModelPartitionExporter.cs" />

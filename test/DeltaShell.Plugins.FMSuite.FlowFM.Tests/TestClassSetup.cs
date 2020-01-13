@@ -1,5 +1,8 @@
-﻿using System.Windows.Threading;
+﻿using System;
+using System.Windows.Threading;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
@@ -11,6 +14,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     [SetUpFixture]
     public class TestClassSetup
     {
+        [SetUp]
+        public void Setup()
+        {
+            if (!UriParser.IsKnownScheme("pack"))
+                new System.Windows.Application();
+            if (Map.CoordinateSystemFactory == null)
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         [TearDown]
         public void TearDownWPFGuiAndWorkerThread()
         {

@@ -615,6 +615,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 RoughnessSections.Insert(0, roughnessSection);
             }
+            else if (roughnessSection.GetDefaultRoughnessType() != RoughnessType.WhiteColebrook)
+            {
+                roughnessSection.SetDefaultRoughnessType(RoughnessType.WhiteColebrook);
+                roughnessSection.SetDefaultRoughnessValue(0.003);
+            }
             settingSewerRoughness = false;
         }
         public virtual void UpdateRoughnessSections()

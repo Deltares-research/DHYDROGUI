@@ -587,9 +587,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
             Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName), Is.EqualTo(1));
-            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
+            Assert.That(roughnessSections.ElementAt(1).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
 
-            var sewerRoughnessSection = roughnessSections.First();
+            var sewerRoughnessSection = roughnessSections.ElementAt(1);
             Assert.That(sewerRoughnessSection.GetDefaultRoughnessValue(), Is.EqualTo(0.003));
             Assert.That(sewerRoughnessSection.GetDefaultRoughnessType(), Is.EqualTo(RoughnessType.WhiteColebrook));
         }
@@ -606,7 +606,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(roughnessSections, "Roughness sections of the FM model were not instantiated.");
             Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.MainSectionTypeName), Is.EqualTo(1));
             Assert.That(roughnessSections.Count(rs => rs.Name == RoughnessDataSet.SewerSectionTypeName), Is.EqualTo(1));
-            Assert.That(roughnessSections.ElementAt(0).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
+            Assert.That(roughnessSections.ElementAt(1).Name, Is.EqualTo(RoughnessDataSet.SewerSectionTypeName));
         }
 
         [Test]
@@ -1212,8 +1212,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameToPathThatIsPointingToASubFolderOfMduFolder_ThenGroupNameIsPointingToItsReferencingStructureFile()
         {
             // Make local copy of project
+            const string testOutputFolder = @"TestOutput";
             const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            var filePath = Path.Combine(testOutputFolder, baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
             var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
             TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
 
@@ -1223,15 +1224,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Import dry points
             fmModel.Area.Gates.Add(new Gate2D
             {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
             });
             fmModel.Area.Pumps.Add(new Pump2D
             {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
             });
             fmModel.Area.Weirs.Add(new Weir2D
             {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")
             });
 
             // Check that group name gives a relative path from the mdu folder
@@ -1244,8 +1245,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenFmModel_WhenAddingAStructureWithAreaFeatureGroupNameEqualToPathThatIsNotReferencedByAStructureFile_ThenGroupNameIsEqualToDefaultStructuresFileNameInTheSameFolder()
         {
             // Make local copy of project
+            const string testOutputFolder = @"TestOutput";
             const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
+            var filePath = Path.Combine(testOutputFolder, baseFolderPath, "MduFileWithoutFeatureFileReferences/FlowFM.mdu");
             var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
             TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
 
@@ -1255,7 +1257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Import dry points
             fmModel.Area.Gates.Add(new Gate2D
             {
-                GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")
+                GroupName = Path.Combine(Directory.GetCurrentDirectory(), testOutputFolder, baseFolderPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")
             });
 
             // Check that group name gives a relative path from the mdu folder

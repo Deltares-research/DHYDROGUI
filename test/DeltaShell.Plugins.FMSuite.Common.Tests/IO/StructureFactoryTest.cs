@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("pump");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "pump01");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "680");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "2");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
@@ -203,8 +203,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("weir");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "680");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
             structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
@@ -233,8 +233,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var structure = new Structure2D("weir");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_moving");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "680");
+            structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_crest_level.tim");
             structure.AddProperty(KnownStructureProperties.CrestWidth, typeof (double), "23.5");
             structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");

@@ -149,6 +149,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
+        private void CreateDataItemsNotAvailableInPreviousVersion()
+        {
+            if (GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag) == null)
+            {
+                AddNetworkToModel();
+            }
+        }
+
         private void AddNetworkToModel()
         {
             // network
@@ -2448,6 +2456,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnLoad(string mduPath)
         {
+            CreateDataItemsNotAvailableInPreviousVersion();
             LoadStateFromMdu(mduPath);
             
             FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections);

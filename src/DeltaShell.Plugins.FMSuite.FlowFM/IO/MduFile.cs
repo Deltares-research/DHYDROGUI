@@ -174,8 +174,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
-
-            FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections);
+            if(targetMduFilePath != null &&
+               network != null &&
+               hydroArea != null &&
+               roughnessSections != null)
+                FeatureFile1D2DWriter.Write1D2DFeatures(targetMduFilePath, modelDefinition, network, hydroArea, roughnessSections);
 
             // write at the end in case of updated file paths
             WriteProperties(targetMduFilePath, modelDefinition.Properties, writeExtForcings, writeFeatures, useNetCDFMapFormat:false, disableFlowNodeRenumbering:disableFlowNodeRenumbering);
@@ -351,8 +354,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var newFormatBoundaryConditions = newBoundaryConditions.Any();
             var hasNewBoundaries = newBoundaries.Any();
 
-            var hasModel1dBoundaryConditions = boundaryConditions1D.Any();
-            var hasLateralSourcesData = lateralSourcesData.Any();
+            var hasModel1dBoundaryConditions = boundaryConditions1D != null && boundaryConditions1D.Any();
+            var hasLateralSourcesData = lateralSourcesData != null && lateralSourcesData.Any();
             // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;

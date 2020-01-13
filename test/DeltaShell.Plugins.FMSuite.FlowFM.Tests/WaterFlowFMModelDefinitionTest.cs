@@ -25,6 +25,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using NetTopologySuite.Extensions.Geometries;
+using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
@@ -1037,7 +1038,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(KnownProperties.Wrishp_dryarea)]
         [TestCase(KnownProperties.Wrishp_enc)]
         [TestCase(KnownProperties.Wrishp_src)]
-        [TestCase(KnownProperties.Wrishp_pump)] 
+        [TestCase(KnownProperties.Wrishp_pump)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-278
         public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");

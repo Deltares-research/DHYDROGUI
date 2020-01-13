@@ -1,9 +1,12 @@
-﻿using DeltaShell.NGHS.IO.Properties;
+﻿using System;
+using DeltaShell.NGHS.IO.Properties;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGrid1D2DLinks : AGrid<IUGrid1D2DLinksApi>
-    { 
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(UGrid1D2DLinks));
         public UGrid1D2DLinks(string file, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : base(file, mode)
         {
             GridApi = GridApiFactory.CreateNew1D2DLinks();
@@ -43,7 +46,21 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public void Read1D2DLinks(out int[] mesh1DPointIdx, out int[] mesh2DFaceIdx, out int[] linkTYpe, out string[] linkIds, out string[] linkLongNames)
         {
-            var uGrid1D2DLinksApi = GetValidGridApi(Resources.UGrid1D2DLinks_Read1D2DLinks_Couldn_t_read_links);
+            IUGrid1D2DLinksApi uGrid1D2DLinksApi;
+            try
+            {
+                uGrid1D2DLinksApi = GetValidGridApi(Resources.UGrid1D2DLinks_Read1D2DLinks_Couldn_t_read_links);
+            }
+            catch (Exception e)
+            {
+                log.Warn(e.Message);
+                mesh1DPointIdx = new int[] { };
+                mesh2DFaceIdx = new int[] { };
+                linkTYpe = new int[] { };
+                linkIds = new string[] { };
+                linkLongNames = new string[] { };
+                return;
+            }
 
             var ierr = uGrid1D2DLinksApi.Read1D2DLinks(out mesh1DPointIdx, out mesh2DFaceIdx, out linkTYpe, out linkIds, out linkLongNames);
 

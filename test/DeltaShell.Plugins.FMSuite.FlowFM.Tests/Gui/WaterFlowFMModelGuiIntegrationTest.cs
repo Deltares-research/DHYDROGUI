@@ -36,6 +36,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using BasicModelInterface;
+using DeltaShell.Dimr;
 using Control = System.Windows.Controls.Control;
 using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
 using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
@@ -71,6 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     var project = app.Project;
                     project.RootFolder.Add(model);
+                    DimrApiDataSet.LogFileLevel = Level.All;
+                    DimrApiDataSet.FeedbackLevel = Level.All;
 
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
@@ -88,7 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             new Coordinate(100, 100), new Coordinate(150, 100)
                         })
                     });
-
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
