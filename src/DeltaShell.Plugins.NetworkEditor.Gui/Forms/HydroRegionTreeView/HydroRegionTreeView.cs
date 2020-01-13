@@ -33,15 +33,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ClonableToolStripMenuItem buttonMenuFeatureOpen;
         private ToolStripSeparator toolStripSeparator8;
         private ClonableToolStripMenuItem buttonMenuFeatureCut;
-        private ClonableToolStripMenuItem buttonMenuFeatureCopy;
         private ClonableToolStripMenuItem buttonMenuFeatureDelete;
         private ClonableToolStripMenuItem buttonDataItemRename;
         private ContextMenuStrip contextMenuNetwork;
         private ClonableToolStripMenuItem buttonMenuNetworkAddBranch;
-        private ClonableToolStripMenuItem buttonMenuNetworkPaste;
         private ContextMenuStrip contextMenuBranch;
-        private ClonableToolStripMenuItem buttonMenuBranchCopy;
-        private ClonableToolStripMenuItem buttonMenuBranchPaste;
         private ClonableToolStripMenuItem buttonMenuBranchDelete;
         private ClonableToolStripMenuItem buttonMenuBranchRename;
         private ClonableToolStripMenuItem buttonMenuBranchAddCS;
@@ -63,7 +59,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
             AddNodePresenters(guiPlugin);
 
-            TreeView.KeyDown += TreeViewKeyDown;
             Controls.Add(TreeView);
         }
 
@@ -145,35 +140,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             SynchronizingGuiSelection = false;
         }
 
-        private void TreeViewKeyDown(object sender, KeyEventArgs e)
-        {          
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.C)
-            {
-                if (TreeView.SelectedNode.Tag is IBranch || TreeView.SelectedNode.Tag is IBranchFeature)
-                {
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature) TreeView.SelectedNode.Tag);
-                }
-            }
-
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.V)
-            {
-                if (TreeView.SelectedNode.Tag is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                {
-                    ButtonMenuFeaturePasteIntoClick(sender, e);   
-                }
-
-                if (TreeView.SelectedNode.Tag is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                {
-                    ButtonMenuBranchPasteClick(sender, e);
-                }
-
-                if (TreeView.SelectedNode.Tag is IHydroNetwork && HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
-                {
-                    handleButtonPaste_Click(sender, e);
-                }
-            }
-        }
-
         #region IView Members
 
         object IView.Data
@@ -222,7 +188,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             var isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
             if (tag is IHydroNetwork)
             {
-                buttonMenuNetworkPaste.Enabled = HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard();
                 return new MenuItemContextMenuStripAdapter(contextMenuNetwork);
             }
             if (tag is IEventedList<Route>)
@@ -265,7 +230,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             if (tag is IChannel)
             {
                 buttonMenuBranchZoomTo.Enabled = isActiveViewMapView;
-                buttonMenuBranchPaste.Enabled = HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard();
                 return new MenuItemContextMenuStripAdapter(contextMenuBranch);
             }
             if (tag is HydroRegion)
@@ -277,45 +241,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 ITreeNodePresenter p = treeNode.Presenter;
                 
                 var parentNodeData = TreeView.SelectedNode.Parent.Tag;
-                var clipBoardFeature = HydroNetworkCopyAndPasteHelper.GetBranchFeatureFromClipBoard();
                 buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
                 buttonMenuFeatureCut.Enabled = p.CanRemove(parentNodeData, tag);
-                buttonMenuFeatureCopy.Enabled = (tag is IBranchFeature);
-                buttonMenuFeaturePasteInto.Enabled = ((tag is IBranchFeature) && clipBoardFeature != null && clipBoardFeature.GetType() == tag.GetType() && !(tag is ICompositeBranchStructure));
                 buttonMenuFeatureZoomTo.Enabled = isActiveViewMapView;
                 var contextMenuAdapter = new MenuItemContextMenuStripAdapter(contextMenuFeature);
-
-//                if (tag is Catchment)
-//                {
-//                    //$%$*()#$*) stupid context menus this is crazy
-//
-//                    var catchment = tag as Catchment;
-//
-//                    var catchmentTypeMenu = new ChangeCatchmentTypeContextMenuHandler().Build(new[] {catchment});
-//                    var strip = new ContextMenuStrip();
-//                    strip.Items.Add(catchmentTypeMenu);
-//
-//                    var featureMenuItems = contextMenuAdapter.ContextMenuStrip.Items.OfType<ToolStripItem>().ToList();
-//                    foreach (var item in featureMenuItems)
-//                    {
-//                        var clonableMenuitem = item as ClonableToolStripMenuItem;
-//                        if (clonableMenuitem != null)
-//                        {
-//                            strip.Items.Add(clonableMenuitem.Clone());
-//                        }
-//                        else if (item is ToolStripSeparator)
-//                        {
-//                            strip.Items.Add(new ToolStripSeparator());
-//                        }
-//                        else
-//                        {
-//                            throw new NotSupportedException(string.Format("Toolstrip menu item: {0} must be clonable",
-//                                                                          item));
-//                        }
-//                    }
-//                    return new MenuItemContextMenuStripAdapter(strip);
-//                }
-
+                
                 return contextMenuAdapter;
             }
             return null;
@@ -359,19 +289,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
                 NetworkHelper.AddChannelToHydroNetwork(network, channel);
                 channel.Name = HydroNetworkHelper.GetUniqueFeatureName(network, channel);
-            }
-        }
-
-        private void handleButtonPaste_Click(object sender, EventArgs e)
-        {
-            if (SelectedNetwork == null)
-                return;
-
-            string errorMessage;
-            if (!HydroNetworkCopyAndPasteHelper.PasteChannelToNetwork(SelectedNetwork, out errorMessage))
-            {
-                MessageBox.Show(errorMessage, "Confirm", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
         }
 
@@ -477,15 +394,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             }
         }
 
-        private void ButtonMenuFeatureCopyClick(object sender, EventArgs e)
-        {
-            var branchFeature = TreeView.SelectedNode.Tag as IBranchFeature;
-            if (branchFeature != null)
-            {
-                HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(branchFeature);
-            }
-        }
-
         private void ButtonMenuFeatureCutClick(object sender, EventArgs e)
         {
 
@@ -519,57 +427,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             crossSection.Definition.ShiftLevel(formPasteCrossSection.Shift);
             crossSection.Name =  HydroNetworkHelper.GetUniqueFeatureName(region,crossSection);
             gui.Selection = crossSection;
-        }
-
-        private void ButtonMenuBranchCopyClick(object sender, EventArgs e)
-        {
-            var branch = TreeView.SelectedNode.Tag as IBranch;
-            if (branch != null)
-            {
-                HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(branch);
-            }
-        }
-
-        private void ButtonMenuBranchPasteClick(object sender, EventArgs e)
-        {
-            var branch = TreeView.SelectedNode.Tag as IChannel;
-            if (branch == null) return;
-
-            var source = HydroNetworkCopyAndPasteHelper.GetBranchFeatureFromClipBoard();
-            if (source == null) return;
-
-            var formPasteBranchFeature = new FormPasteBranchFeature
-                                             {
-                                                 Branch = branch,
-                                                 Title = string.Format("Paste branch feature {0} into channel {1}", source.Name, branch.Name)
-                                             };
-
-            if (source is ICrossSection)
-            {
-                formPasteBranchFeature.textBoxShift.Enabled = true;
-                formPasteBranchFeature.textBoxShift.Visible = true;
-                formPasteBranchFeature.labelShift.Visible = true;
-            }
-
-            if (DialogResult.OK != formPasteBranchFeature.ShowDialog()) return;
-
-            string errorMessage;
-            if (!HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(branch, formPasteBranchFeature.Chainage, out errorMessage))
-            {
-                MessageBox.Show(errorMessage, "Confirm", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void ButtonMenuFeaturePasteIntoClick(object sender, EventArgs e)
-        {
-            var branchFeature = TreeView.SelectedNode.Tag as IBranchFeature;
-            if (branchFeature == null) return;
-
-            string errorMessage;
-            if (!HydroNetworkCopyAndPasteHelper.PasteBranchFeatureIntoBranchFeature(branchFeature, out errorMessage))
-            {
-                MessageBox.Show(errorMessage, "Confirm", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void AddSectionTypeToolStripMenuItemClick(object sender, EventArgs e)

@@ -600,9 +600,7 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewData.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
-    <Compile Include="Helpers\HydroNetworkCopyAndPasteHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
-    <Compile Include="MapTools\CopyBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
@@ -610,8 +608,6 @@
     <Compile Include="MapTools\ImportBranchesFromSelectionMapTool.cs" />
     <Compile Include="MapTools\ImportBranchFeaturesFromSelectedFeaturesMapTool.cs" />
     <Compile Include="MapTools\ImportCrossSectionsFromCsvMapTool.cs" />
-    <Compile Include="MapTools\PasteBranchFeaturesMapTool.cs" />
-    <Compile Include="MapTools\PasteIntoBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />

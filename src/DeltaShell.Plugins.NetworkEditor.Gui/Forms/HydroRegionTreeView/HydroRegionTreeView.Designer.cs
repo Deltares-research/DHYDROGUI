@@ -18,14 +18,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.changeCatchmentTypeToolStripMenuItem = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.buttonMenuFeatureCut = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
-            this.buttonMenuFeatureCopy = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
-            this.buttonMenuFeaturePasteInto = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuFeatureDelete = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonDataItemRename = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.buttonMenuFeatureProperties = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.contextMenuNetwork = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.buttonMenuNetworkPaste = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuNetworkRename = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.buttonMenuNetworkAddBranch = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
@@ -34,8 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.contextMenuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.buttonMenuBranchZoomTo = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.buttonMenuBranchCopy = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
-            this.buttonMenuBranchPaste = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchDelete = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.buttonMenuBranchRename = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -77,8 +72,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.changeCatchmentTypeToolStripMenuItem,
             this.toolStripSeparator8,
             this.buttonMenuFeatureCut,
-            this.buttonMenuFeatureCopy,
-            this.buttonMenuFeaturePasteInto,
             this.buttonMenuFeatureDelete,
             this.buttonDataItemRename,
             this.toolStripSeparator3,
@@ -152,25 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuFeatureCut.Text = "C&ut";
             this.buttonMenuFeatureCut.Click += new System.EventHandler(this.ButtonMenuFeatureCutClick);
             // 
-            // buttonMenuFeatureCopy
-            // 
-            this.buttonMenuFeatureCopy.Enabled = false;
-            this.buttonMenuFeatureCopy.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.CopyHS;
-            this.buttonMenuFeatureCopy.Name = "buttonMenuFeatureCopy";
-            this.buttonMenuFeatureCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.buttonMenuFeatureCopy.Size = new System.Drawing.Size(259, 22);
-            this.buttonMenuFeatureCopy.Text = "&Copy";
-            this.buttonMenuFeatureCopy.Click += new System.EventHandler(this.ButtonMenuFeatureCopyClick);
-            // 
-            // buttonMenuFeaturePasteInto
-            // 
-            this.buttonMenuFeaturePasteInto.Enabled = false;
-            this.buttonMenuFeaturePasteInto.Name = "buttonMenuFeaturePasteInto";
-            this.buttonMenuFeaturePasteInto.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.buttonMenuFeaturePasteInto.Size = new System.Drawing.Size(259, 22);
-            this.buttonMenuFeaturePasteInto.Text = "Paste into";
-            this.buttonMenuFeaturePasteInto.Click += new System.EventHandler(this.ButtonMenuFeaturePasteIntoClick);
-            // 
             // buttonMenuFeatureDelete
             // 
             this.buttonMenuFeatureDelete.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.DeleteHS;
@@ -202,7 +176,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             // contextMenuNetwork
             // 
             this.contextMenuNetwork.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.buttonMenuNetworkPaste,
             this.buttonMenuNetworkRename,
             this.toolStripSeparator6,
             this.buttonMenuNetworkAddBranch,
@@ -210,16 +183,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.buttonMenuNetworkProperties});
             this.contextMenuNetwork.Name = "contextMenuNetwork";
             this.contextMenuNetwork.Size = new System.Drawing.Size(144, 104);
-            // 
-            // buttonMenuNetworkPaste
-            // 
-            this.buttonMenuNetworkPaste.Enabled = false;
-            this.buttonMenuNetworkPaste.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.PasteHS;
-            this.buttonMenuNetworkPaste.Name = "buttonMenuNetworkPaste";
-            this.buttonMenuNetworkPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.buttonMenuNetworkPaste.Size = new System.Drawing.Size(143, 22);
-            this.buttonMenuNetworkPaste.Text = "&Paste";
-            this.buttonMenuNetworkPaste.Click += new System.EventHandler(this.handleButtonPaste_Click);
             // 
             // buttonMenuNetworkRename
             // 
@@ -259,8 +222,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.contextMenuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonMenuBranchZoomTo,
             this.toolStripSeparator7,
-            this.buttonMenuBranchCopy,
-            this.buttonMenuBranchPaste,
             this.buttonMenuBranchDelete,
             this.buttonMenuBranchRename,
             this.toolStripSeparator1,
@@ -288,25 +249,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(193, 6);
-            // 
-            // buttonMenuBranchCopy
-            // 
-            this.buttonMenuBranchCopy.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.CopyHS;
-            this.buttonMenuBranchCopy.Name = "buttonMenuBranchCopy";
-            this.buttonMenuBranchCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.buttonMenuBranchCopy.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchCopy.Text = "&Copy";
-            this.buttonMenuBranchCopy.Click += new System.EventHandler(this.ButtonMenuBranchCopyClick);
-            // 
-            // buttonMenuBranchPaste
-            // 
-            this.buttonMenuBranchPaste.Enabled = false;
-            this.buttonMenuBranchPaste.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.PasteHS;
-            this.buttonMenuBranchPaste.Name = "buttonMenuBranchPaste";
-            this.buttonMenuBranchPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.buttonMenuBranchPaste.Size = new System.Drawing.Size(196, 22);
-            this.buttonMenuBranchPaste.Text = "&Paste...";
-            this.buttonMenuBranchPaste.Click += new System.EventHandler(this.ButtonMenuBranchPasteClick);
             // 
             // buttonMenuBranchDelete
             // 
@@ -498,7 +440,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ClonableToolStripMenuItem buttonMenuNetworkProperties;
         private ClonableToolStripMenuItem buttonMenuFeatureZoomTo;
         private ClonableToolStripMenuItem buttonMenuBranchZoomTo;
-        private ClonableToolStripMenuItem buttonMenuFeaturePasteInto;
         private ClonableToolStripMenuItem addSectionTypeToolStripMenuItem;
         private ClonableToolStripMenuItem buttonMenuBranchAddExtraResistance;
         private ClonableToolStripMenuItem buttonMenuBranchAddObservationPoint;
