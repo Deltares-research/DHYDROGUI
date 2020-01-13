@@ -9,7 +9,6 @@ using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
-    // TODO: add corresponding test
     /// <summary>
     /// <see cref="WavmFileFunctionStoreLayerSubProvider"/> implements the
     /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="WavmFileFunctionStore"/>.
