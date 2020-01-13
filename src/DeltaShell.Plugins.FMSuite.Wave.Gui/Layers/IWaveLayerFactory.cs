@@ -1,5 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
@@ -56,5 +58,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when <paramref name="domainName"/> is <c>null</c>.
         /// </exception>
         ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false);
+
+        /// <summary>
+        /// Creates a new grid layer from the given <paramref name="discreteGrid"/>
+        /// and <paramref name="coordinateSystem"/>.
+        /// </summary>
+        /// <param name="discreteGrid">The discrete grid.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new grid <see cref="ILayer"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="discreteGrid"/> is <c>null</c>.
+        /// </exception>
+        ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
+                               ICoordinateSystem coordinateSystem);
     }
 }

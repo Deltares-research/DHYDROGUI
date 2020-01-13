@@ -314,6 +314,7 @@
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModel.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModel.cs" />
     <Compile Include="Layers\IWaveLayerFactory.cs" />
+    <Compile Include="Layers\Providers\DiscreteGridPointCoverageLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
