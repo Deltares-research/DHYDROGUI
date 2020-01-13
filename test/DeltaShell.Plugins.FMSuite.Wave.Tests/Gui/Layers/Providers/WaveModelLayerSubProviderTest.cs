@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NSubstitute;
@@ -21,6 +22,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
             // Assert
             Assert.That(subProvider, Is.InstanceOf<IWaveLayerSubProvider>());
+        }
+
+        [Test]
+        public void Constructor_FactoryNull_ThrowsArgumentNullException()
+        {
+            // Call | Assert
+            void Call() => new WaveModelLayerSubProvider(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("factory"));
         }
 
         [Test]

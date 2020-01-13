@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates a new <see cref="WaveModelLayerSubProvider"/>.
         /// </summary>
-        /// <param name="factory">The factory.</param>
+        /// <param name="factory">The factory to build the layers with.</param>
         public WaveModelLayerSubProvider(IWaveLayerFactory factory)
         {
             Ensure.NotNull(factory, nameof(factory));
