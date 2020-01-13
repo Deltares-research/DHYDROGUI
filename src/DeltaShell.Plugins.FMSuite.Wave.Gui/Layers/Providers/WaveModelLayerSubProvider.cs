@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
@@ -37,7 +41,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
-            yield break;
+            if (!(data is WaveModel model))
+            {
+                yield break;
+            }
+
+            yield return new WaveSnappedFeaturesGroupLayerData(model);
+
+            yield return new BoundaryMapFeaturesContainer(model.BoundaryContainer, model.CoordinateSystem);
+
+            yield return model.BoundaryConditions;
+            yield return model.Boundaries;
+            yield return model.Sp2Boundaries;
+            yield return model.Obstacles;
+            yield return model.ObservationPoints;
+            yield return model.ObservationCrossSections;
+
+            foreach (WaveDomainData waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+            {
+                yield return waveDomain;
+            }
+
+            IEnumerable<WavmFileFunctionStore> relevantFunctionStores =
+                model.WavmFunctionStores.Where(fs => fs.Functions.Any() && 
+                                                     !string.IsNullOrEmpty(fs.Path));
+            foreach (WavmFileFunctionStore wavmFunctionStore in relevantFunctionStores)
+            {
+                yield return wavmFunctionStore;
+            }
         }
     }
 }
