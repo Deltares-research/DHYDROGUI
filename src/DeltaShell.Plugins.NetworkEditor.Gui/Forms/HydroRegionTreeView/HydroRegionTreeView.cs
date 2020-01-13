@@ -16,7 +16,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresent
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
