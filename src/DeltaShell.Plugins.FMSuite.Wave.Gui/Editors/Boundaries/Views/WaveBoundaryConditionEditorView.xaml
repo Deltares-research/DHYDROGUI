@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <components:BoundaryDescriptionView Grid.Column="0" Grid.Row="0" DataContext="{ Binding Path=DescriptionViewModel }" />
-        <components:BoundaryGeometryView Grid.Column="1" Grid.Row="0" />
+        <components:BoundaryGeometryView Grid.Column="1" Grid.Row="0" DataContext="{Binding Path=GeometryViewModel}" />
         <components:BoundaryWideParametersView Grid.Column="0" Grid.Row="1" DataContext="{ Binding Path=BoundaryWideParametersViewModel }"/>
     </Grid>
 </UserControl>
