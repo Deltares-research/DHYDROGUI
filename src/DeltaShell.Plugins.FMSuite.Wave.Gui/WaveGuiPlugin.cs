@@ -31,13 +31,15 @@ using System.Linq;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     [Extension(typeof(IPlugin))]
     public class WaveGuiPlugin : GuiPlugin
     {
-        private WaveModelMapLayerProvider mapLayerProvider;
+        private IMapLayerProvider mapLayerProvider;
 
         public override string Name => "Delft3D Wave (Gui)";
 
@@ -364,18 +366,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                          ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
                                                          : Enumerable.Empty<WaveModel>();
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return mapLayerProvider ?? (mapLayerProvider = new WaveModelMapLayerProvider
-                                               {
-                                                   GetWaveModels = () =>
-                                                       Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
-                                                       Enumerable.Empty<WaveModel>()
-                                               });
-            }
-        }
+        private IEnumerable<WaveModel> GetWaveModels() =>
+            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
+            Enumerable.Empty<WaveModel>();
+
+        public override IMapLayerProvider MapLayerProvider => 
+            mapLayerProvider 
+            ?? (mapLayerProvider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(GetWaveModels));
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
