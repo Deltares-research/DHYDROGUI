@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common;
 using NetTopologySuite.Extensions.Features;
@@ -60,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// <summary>
         /// Creates the actual <see cref="ILayer"/>.
         /// </summary>
-        /// <param name="parentData"> The model with which the layer should be created.</param>
+        /// <param name="model"> The model with which the layer should be created.</param>
         /// <returns> The created <see cref="ILayer"/>. </returns>
         protected abstract ILayer CreateFeatureLayer(IWaveModel model);
 
