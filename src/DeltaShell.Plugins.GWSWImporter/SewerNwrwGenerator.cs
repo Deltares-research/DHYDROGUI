@@ -12,7 +12,10 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
     {
        public static NwrwData CreateNewNwrwSurfaceData(GwswElement gwswElement)
         {
-            var nwrwData = new NwrwData(new Catchment());
+            //var catchment = new Catchment() {CatchmentType = CatchmentType.NWRW, IsGeometryDerivedFromAreaSize = true};
+            var catchment = Catchment.CreateDefault();
+            catchment.CatchmentType = CatchmentType.NWRW;
+            var nwrwData = new NwrwData(catchment);
             nwrwData.SurfaceLevelDict = new Dictionary<NwrwSurfaceType, double>();
             nwrwData.Name = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.UniqueId).ValueAsString;
             nwrwData.MeteoStationId = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.MeteoStationId).ValueAsString;

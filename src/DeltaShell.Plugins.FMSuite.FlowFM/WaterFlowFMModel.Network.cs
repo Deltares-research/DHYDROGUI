@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var hydroNetworkParent = Network.Parent;
             fmRegion?.SubRegions?.Add(Network);
             Network.Parent = hydroNetworkParent;
+            if (NetworkDiscretization != null) NetworkDiscretization.Network = Network;
         }
 
         public virtual void UnSubscribeFromNetwork()
@@ -76,11 +77,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             ((INotifyCollectionChanged) Network).CollectionChanged -= NetworkCollectionChanged;
             ((INotifyPropertyChanged) Network).PropertyChanged -= NetworkPropertyChanged;
-            ((INotifyPropertyChanged) Network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
+            ((INotifyPropertyChanged) Network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
 
             var hydroNetworkParent = Network.Parent;
             fmRegion?.SubRegions?.Remove(Network);
             Network.Parent = hydroNetworkParent;
+            if (NetworkDiscretization != null) NetworkDiscretization.Network = null;
         }
 
         [EditAction]

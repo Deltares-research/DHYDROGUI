@@ -590,7 +590,7 @@
     <Content Include="Link1d2d\Link1D2DCoverage.hbm.xml">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Resources\nwrw.bmp" />
+    <None Include="Resources\nwrw.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

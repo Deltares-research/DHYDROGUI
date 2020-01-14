@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Data;
+using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
@@ -29,6 +30,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public string DischargeId { get; set; }
         public double PollutingUnits { get; set; }
         public double Surface { get; set; }
+
+        public void SetGeometry(IGeometry geometry)
+        {
+            
+        }
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {

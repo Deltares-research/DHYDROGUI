@@ -173,6 +173,6 @@
     <value>We cannot add compartment {0} as target of sewer connection {1}, because it has no parent manhole.</value>
   </data>
   <data name="nwrw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\nwrw.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\nwrw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

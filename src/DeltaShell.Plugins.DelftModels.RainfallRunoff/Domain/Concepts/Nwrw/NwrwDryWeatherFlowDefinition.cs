@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
+using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
@@ -38,6 +39,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public int DayNumber { get; set; }
         public double DailyVolume { get; set; }
         public double[] HourlyPercentageDailyVolume { get; set; }
+
+        public void SetGeometry(IGeometry geometry)
+        {
+            
+        }
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {

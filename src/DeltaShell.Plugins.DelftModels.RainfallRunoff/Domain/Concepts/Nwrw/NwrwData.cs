@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -58,6 +59,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         // Pluvius only
         public IList<NwrwSpecialArea> SpecialAreas { get; set; } = new List<NwrwSpecialArea>();
 
+
+        public void SetGeometry(IGeometry geometry)
+        {
+            Catchment.Geometry = geometry;
+            var area = SurfaceLevelDict.Values.Sum();
+            if (area>0)
+                Catchment.SetAreaSize(area);
+            CalculationArea = Catchment.AreaSize;
+        }
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {

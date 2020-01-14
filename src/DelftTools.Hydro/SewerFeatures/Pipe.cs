@@ -119,6 +119,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [EditAction]
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
         {
+            return;
             if (NotifyCollectionChangedEventArgs.Action != NotifyCollectionChangeAction.Add) return;
             if (!(NotifyCollectionChangedEventArgs.Item is LateralSource))
             {
