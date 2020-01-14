@@ -59,10 +59,6 @@
                 <fluent:ToggleButton x:Name="ButtonAddNewLateralSource" Header="Add Lateral Source" ToolTip="Add Lateral Source" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\LateralSourceSmall.png" Click="ButtonAddNewLateralSource_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewRetention" Header="Add Retention" ToolTip="Add Retention" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Retention.png" Click="ButtonAddNewRetention_Click" SizeDefinition="Small,Small,Small"/>
                 <fluent:ToggleButton x:Name="ButtonAddNewObservationPoint" Header="Add Observation Point" ToolTip="Add Observation Point" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png" Click="ButtonAddNewObservationPoint_Click" SizeDefinition="Small,Small,Small"/>
-                <Separator />
-
-                <!-- others -->
-                <fluent:ToggleButton x:Name="ButtonAddNewRoute" Header="Add Route" ToolTip="Add Route" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\routes.png" Click="ButtonAddNewRoute_Click" SizeDefinition="Small,Small,Small" fluent:KeyTip.Keys="R"/>
             </fluent:RibbonGroupBox>
             
             <fluent:RibbonGroupBox Header="Basin" x:Name="DrainageBasin" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">

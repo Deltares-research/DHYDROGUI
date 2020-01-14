@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
@@ -191,28 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             eventedCoverages.Remove(dataItem);
             
             Mocks.VerifyAll();
-
-            called.Should("Delegate not called once!").Be.EqualTo(1);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void DelegateCalledOnRouteRemove()
-        {
-            int called = 0;
-
-            var project = new Project();
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            var route = HydroNetworkHelper.AddNewRouteToNetwork(network);
-
-            project.RootFolder.Add(network);
-
-            new NetworkSideViewCoverageManager(route, (INotifyCollectionChange) project, null)
-                {
-                    OnRouteRemoved = delegate { called++; }
-                };
-
-            network.Routes.RemoveAt(0);
 
             called.Should("Delegate not called once!").Be.EqualTo(1);
         }

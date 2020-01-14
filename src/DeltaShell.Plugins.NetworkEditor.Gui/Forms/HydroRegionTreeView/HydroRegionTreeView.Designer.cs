@@ -50,14 +50,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.addSharedCrossSectionDefinitionToolStripMenuItem = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.zWTabulatedToolStripMenuItem = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.yZToolStripMenuItem = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
-            this.contextMenuRoutes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addRouteToolStripMenuItem = new DelftTools.Controls.Swf.ClonableToolStripMenuItem();
             this.contextMenuFeature.SuspendLayout();
             this.contextMenuNetwork.SuspendLayout();
             this.contextMenuBranch.SuspendLayout();
             this.contextMenuCrossSectionSectionTypes.SuspendLayout();
             this.contextMenuSharedCrossSectionDefinitions.SuspendLayout();
-            this.contextMenuRoutes.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuFeature
@@ -392,21 +389,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.yZToolStripMenuItem.Text = "YZ";
             this.yZToolStripMenuItem.Click += new System.EventHandler(this.YZToolStripMenuItemClick);
             // 
-            // contextMenuRoutes
-            // 
-            this.contextMenuRoutes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addRouteToolStripMenuItem});
-            this.contextMenuRoutes.Name = "contextMenuRoutes";
-            this.contextMenuRoutes.Size = new System.Drawing.Size(153, 48);
-            // 
-            // addRouteToolStripMenuItem
-            // 
-            this.addRouteToolStripMenuItem.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.route;
-            this.addRouteToolStripMenuItem.Name = "addRouteToolStripMenuItem";
-            this.addRouteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.addRouteToolStripMenuItem.Text = "Add Route";
-            this.addRouteToolStripMenuItem.Click += new System.EventHandler(this.AddRouteToolStripMenuItemClick);
-            // 
             // HydroRegionTreeView
             // 
             this.Name = "HydroRegionTreeView";
@@ -415,9 +397,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.contextMenuBranch.ResumeLayout(false);
             this.contextMenuCrossSectionSectionTypes.ResumeLayout(false);
             this.contextMenuSharedCrossSectionDefinitions.ResumeLayout(false);
-            this.contextMenuRoutes.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
         private ClonableToolStripMenuItem buttonMenuFeatureOpenWith;
@@ -428,7 +408,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripSeparator toolStripSeparator7;
         private ContextMenuStrip contextMenuSharedCrossSectionDefinitions;
-        private ContextMenuStrip contextMenuRoutes;
         private ClonableToolStripMenuItem buttonMenuBranchAddWeir;
         private ClonableToolStripMenuItem buttonMenuBranchAddPump;
         private ClonableToolStripMenuItem buttonMenuBranchCulvert;
@@ -449,8 +428,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private ClonableToolStripMenuItem showUsageToolStripMenuItem;
         private ClonableToolStripMenuItem setAsDefaultToolStripMenuItem;
         private ClonableToolStripMenuItem placeOnEmptyBranchesToolStripMenuItem;
-        private ClonableToolStripMenuItem addRouteToolStripMenuItem;
         private ClonableToolStripMenuItem changeCatchmentTypeToolStripMenuItem;
-
     }
 }

@@ -183,7 +183,6 @@
     <Compile Include="Commands\AddNewLateralSourceCommand.cs" />
     <Compile Include="Commands\AddNewLinkCommand.cs" />
     <Compile Include="Commands\AddNewNetworkLocationCommand.cs" />
-    <Compile Include="Commands\AddNewNetworkRouteCommand.cs" />
     <Compile Include="Commands\AddNewObservationPointCommand.cs" />
     <Compile Include="Commands\AddNewPumpCommand.cs" />
     <Compile Include="Commands\AddNewRetentionCommand.cs" />

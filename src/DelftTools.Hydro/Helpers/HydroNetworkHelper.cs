@@ -27,39 +27,6 @@ namespace DelftTools.Hydro.Helpers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
 
-        public static Route AddNewRouteToNetwork(IHydroNetwork network)
-        {
-            var route = new Route {Name = "route_" + GetAvailableRouteNumber(network)};
-
-            network.BeginEdit(new DefaultEditAction("Add new route to network"));
-            route.Network = network;
-            network.Routes.Add(route);
-            network.EndEdit();
-
-            return route;
-        }
-
-        private static int GetAvailableRouteNumber(IHydroNetwork network)
-        {
-            var lastNr = 0;
-
-            foreach (Route route in network.Routes.Reverse())
-            {
-                try
-                {
-                    lastNr = int.Parse(route.Name.Split('_')[1]);
-                    break;
-                }
-                catch (Exception)
-                {
-                    //don't do anything: exception on split or on parse: non standard name
-                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
-                }
-            }
-
-            return lastNr + 1;
-        }
-
         /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
         /// </summary>

@@ -16,7 +16,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresent
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
@@ -188,10 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             if (tag is IHydroNetwork)
             {
                 return new MenuItemContextMenuStripAdapter(contextMenuNetwork);
-            }
-            if (tag is IEventedList<Route>)
-            {
-                return new MenuItemContextMenuStripAdapter(contextMenuRoutes);
             }
             if (tag is IEventedList<ICrossSectionDefinition>)
             {
@@ -461,14 +456,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                                                               SelectedNetwork.SharedCrossSectionDefinitions, "");
 
                 SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
-            }
-        }
-        
-        private void AddRouteToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (SelectedNetwork != null)
-            {
-                HydroNetworkHelper.AddNewRouteToNetwork(SelectedNetwork);
             }
         }
 
