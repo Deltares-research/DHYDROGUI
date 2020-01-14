@@ -28,14 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <summary> The wave model name. </summary>
         private static readonly string waveModelName = typeof(WaveModel).Name;
 
-        /// <summary>
-        /// Creates a new model layer from the given <paramref name="waveModel"/>.
-        /// </summary>
-        /// <param name="waveModel">The wave model.</param>
-        /// <returns>A new <see cref="ILayer"/> containing teh model.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="waveModel"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateModelGroupLayer(WaveModel waveModel)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
@@ -47,33 +39,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new <see cref="WaveDomainData"/> layer.
-        /// </summary>
-        /// <param name="domain">The domain.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> of the <see cref="WaveDomainData"/>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="domain"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateWaveDomainDataLayer(WaveDomainData domain)
         {
             Ensure.NotNull(domain, nameof(domain));
             return new GroupLayer(WaveLayerNames.GetDomainLayerName(domain.Name));
         }
 
-        /// <summary>
-        /// Creates a new obstacle layer from the obstacles within
-        /// <paramref name="waveModel"/>.
-        /// </summary>
-        /// <param name="waveModel">The wave model.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the obstacle features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateObstacleLayer(IWaveModel waveModel)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
@@ -94,17 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new obstacle data layer.
-        /// </summary>
-        /// <param name="obstacleData">The obstacle data.</param>
-        /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the obstacle data features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when any of the parameters is <c>null</c>.
-        /// </exception>
         public ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData, 
                                               ICoordinateSystem coordinateSystem)
         {
@@ -125,17 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new observation points layer from the observation points
-        /// within <paramref name="waveModel"/>.
-        /// </summary>
-        /// <param name="waveModel">The wave model.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the observation points features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateObservationPointsLayer(IWaveModel waveModel)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
@@ -156,17 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new observation cross-section layer from the observation cross sections
-        /// within <paramref name="waveModel"/>.
-        /// </summary>
-        /// <param name="waveModel">The wave model.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the observation cross-sections features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="waveModel"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel)
         {
             Ensure.NotNull(waveModel, nameof(waveModel));
@@ -187,16 +125,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new snapped features layer from the <paramref name="snappedFeatures"/>.
-        /// </summary>
-        /// <param name="snappedFeatures">The snapped features.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the snapped features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="snappedFeatures"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures)
         {
             Ensure.NotNull(snappedFeatures, nameof(snappedFeatures));
@@ -222,17 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return groupLayer;
         }
 
-        /// <summary>
-        /// Creates a new output layer with the given <paramref name="domainName"/>.
-        /// </summary>
-        /// <param name="domainName">Name of the domain.</param>
-        /// <param name="overrideLayerName">if set to <c>true</c> use the <paramref name="domainName"/> verbatim.</param>
-        /// <returns>
-        /// A new output <see cref="ILayer"/>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="domainName"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false)
         {
             Ensure.NotNull(domainName, nameof(domainName));
@@ -246,18 +163,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates a new grid layer from the given <paramref name="discreteGrid"/>
-        /// and <paramref name="coordinateSystem"/>.
-        /// </summary>
-        /// <param name="discreteGrid">The discrete grid.</param>
-        /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <returns>
-        /// A new grid <see cref="ILayer"/>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="discreteGrid"/> is <c>null</c>.
-        /// </exception>
         public ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
                                              ICoordinateSystem coordinateSystem)
         {
@@ -295,17 +200,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        /// <summary>
-        /// Creates the boundary group layer.
-        /// </summary>
-        /// <param name="featuresProviderContainer">The features container.</param>
-        /// <param name="model">The model.</param>
-        /// <returns>
-        /// A new boundary group layer.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is <c>null</c>.
-        /// </exception>
         public ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
                                           IWaveModel model)
         {
