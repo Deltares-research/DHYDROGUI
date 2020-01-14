@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
@@ -37,10 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateModelGroupLayer(WaveModel waveModel)
         {
-            if (waveModel == null)
-            {
-                throw new ArgumentNullException(nameof(waveModel));
-            }
+            Ensure.NotNull(waveModel, nameof(waveModel));
 
             return new ModelGroupLayer
             {
@@ -61,11 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateWaveDomainDataLayer(WaveDomainData domain)
         {
-            if (domain == null)
-            {
-                throw new ArgumentNullException(nameof(domain));
-            }
-
+            Ensure.NotNull(domain, nameof(domain));
             return new GroupLayer(WaveLayerNames.GetDomainLayerName(domain.Name));
         }
 
@@ -82,10 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateObstacleLayer(IWaveModel waveModel)
         {
-            if (waveModel == null)
-            {
-                throw new ArgumentNullException(nameof(waveModel));
-            }
+            Ensure.NotNull(waveModel, nameof(waveModel));
 
             return new VectorLayer(WaveLayerNames.ObstacleLayerName)
             {
@@ -117,10 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData, 
                                               ICoordinateSystem coordinateSystem)
         {
-            if (obstacleData == null)
-            {
-                throw new ArgumentNullException(nameof(obstacleData));
-            }
+            Ensure.NotNull(obstacleData, nameof(obstacleData));
 
             return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
             {
@@ -150,10 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateObservationPointsLayer(IWaveModel waveModel)
         {
-            if (waveModel == null)
-            {
-                throw new ArgumentNullException(nameof(waveModel));
-            }
+            Ensure.NotNull(waveModel, nameof(waveModel));
 
             return new VectorLayer(WaveLayerNames.ObservationPointLayerName)
             {
@@ -184,10 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateObservationCrossSectionLayer(IWaveModel waveModel)
         {
-            if (waveModel == null)
-            {
-                throw new ArgumentNullException(nameof(waveModel));
-            }
+            Ensure.NotNull(waveModel, nameof(waveModel));
 
             return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
             {
@@ -217,10 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures)
         {
-            if (snappedFeatures == null)
-            {
-                throw new ArgumentNullException(nameof(snappedFeatures));
-            }
+            Ensure.NotNull(snappedFeatures, nameof(snappedFeatures));
 
             var groupLayer = new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName);
             foreach (FeatureCollection snappedFeaturesData in snappedFeatures.ChildData)
@@ -256,10 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </exception>
         public ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false)
         {
-            if (domainName == null)
-            {
-                throw new ArgumentNullException(nameof(domainName));
-            }
+            Ensure.NotNull(domainName, nameof(domainName));
 
             string layerName = overrideLayerName ? domainName 
                                    : WaveLayerNames.GetOutputLayerName(domainName);
@@ -285,10 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
                                              ICoordinateSystem coordinateSystem)
         {
-            if (discreteGrid == null)
-            {
-                throw new ArgumentNullException(nameof(discreteGrid));
-            }
+            Ensure.NotNull(discreteGrid, nameof(discreteGrid));
 
             return discreteGrid is CurvilinearGrid 
                        ? CreateCurvilinearGridLayer(discreteGrid, coordinateSystem) 
@@ -336,15 +309,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
                                           IWaveModel model)
         {
-            if (featuresProviderContainer == null)
-            {
-                throw new ArgumentNullException(nameof(featuresProviderContainer));
-            }
-
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+            Ensure.NotNull(featuresProviderContainer, nameof(featuresProviderContainer));
+            Ensure.NotNull(model, nameof(model));
 
             var groupLayer = new GroupLayer(WaveLayerNames.SpatiallyVaryingBoundaryLayerName)
             {
