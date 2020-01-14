@@ -8,7 +8,6 @@ using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
@@ -19,8 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
     public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private readonly WaterFlowFMModel waterFlowFmModel;
-
         #region Map file constants
 
         private const string NSedSusName = "nSedSus";
@@ -60,12 +57,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private Dictionary<string, UnstructuredGridCoverage> velocityCoverages =
             new Dictionary<string, UnstructuredGridCoverage>();
 
-        // nhib
-        protected FMMapFileFunctionStore() {}
-
-        public FMMapFileFunctionStore(WaterFlowFMModel waterFlowFmModel)
+        /// <summary>
+        /// Creates a new instance of <see cref="FMMapFileFunctionStore"/>.
+        /// </summary>
+        /// <remarks> This class needs a parameterless constructor because of NHibernate functionality. </remarks>
+        public FMMapFileFunctionStore()
         {
-            this.waterFlowFmModel = waterFlowFmModel;
             DisableCaching = true;
         }
 

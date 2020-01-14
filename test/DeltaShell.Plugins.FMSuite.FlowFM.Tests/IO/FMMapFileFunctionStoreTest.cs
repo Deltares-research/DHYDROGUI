@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var simpleBoxMapFileName = "sedimentation_map.nc";
                 var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var bendprofMapFileName = "bendprof_map.nc";
                 var mapFilePath = Path.Combine(tempDir, bendprofMapFileName);
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path =  mapFilePath
                 };
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var simpleBoxMapFileName = "bendprof_map.nc";
                 var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var simpleBoxMapFileName = "bendprof_map.nc";
                 var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var simpleBoxMapFileName = "bendprof_map.nc";
                 var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var zmDfmMapFile = "bendprof_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var zmDfmMapFile = "simplebox_hex7_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var zmDfmMapFile = "my_map.nc";
                 var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
                     Path = mapFilePath
                 };
@@ -412,9 +412,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string mapFilePath = Path.Combine(tempDir.Path, mapFileName);
 
 
-                var store = new FMMapFileFunctionStore(null)
+                var store = new FMMapFileFunctionStore
                 {
-                    Path = mapFilePath,
+                    Path = mapFilePath
                 };
 
 

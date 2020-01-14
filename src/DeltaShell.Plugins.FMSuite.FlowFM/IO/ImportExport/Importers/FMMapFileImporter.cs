@@ -46,11 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            return new DataItem()
+            return new DataItem
             {
-                Value = new FMMapFileFunctionStore(null)
+                Value = new FMMapFileFunctionStore
                 {
-                    Path = path,
+                    Path = path
                 }
             };
         }
