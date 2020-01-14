@@ -51,10 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             "u0"
         };
 
-        private UnstructuredGrid grid;
         private readonly IList<ITimeSeries> boundaryCellValues = new List<ITimeSeries>();
 
-        private Dictionary<string, UnstructuredGridCoverage> velocityCoverages =
+        private readonly Dictionary<string, UnstructuredGridCoverage> velocityCoverages =
             new Dictionary<string, UnstructuredGridCoverage>();
 
         /// <summary>
@@ -66,21 +65,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             DisableCaching = true;
         }
 
-        public UnstructuredGrid Grid => grid;
+        public UnstructuredGrid Grid { get; private set; }
 
-        public ICoordinateSystem CoordinateSystem
+        public void SetCoordinateSystem(ICoordinateSystem coordinateSystem)
         {
-            set
+            if (Grid != null)
             {
-                if (grid != null)
-                {
-                    grid.CoordinateSystem = value;
-                }
-                else
-                {
-                    log.Warn(Resources
-                                 .FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
-                }
+                Grid.CoordinateSystem = coordinateSystem;
+            }
+            else
+            {
+                log.Warn(Resources
+                             .FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
             }
         }
 
@@ -390,11 +386,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 // UGrid standard
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Face:
-                    return new UnstructuredGridCellCoverage(grid, true) {Name = coverageName};
+                    return new UnstructuredGridCellCoverage(Grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Edge:
-                    return new UnstructuredGridEdgeCoverage(grid, true) {Name = coverageName};
+                    return new UnstructuredGridEdgeCoverage(Grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Node:
-                    return new UnstructuredGridVertexCoverage(grid, true) {Name = coverageName};
+                    return new UnstructuredGridVertexCoverage(Grid, true) {Name = coverageName};
                 case GridApiDataSet.UGridAttributeConstants.LocationValues.Volume:
                     log.WarnFormat(
                         Resources.FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation,
@@ -403,9 +399,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 // backwards compatibility
                 case NFlowElemName:
-                    return new UnstructuredGridCellCoverage(grid, true) {Name = coverageName};
+                    return new UnstructuredGridCellCoverage(Grid, true) {Name = coverageName};
                 case NFlowLinkName:
-                    return new UnstructuredGridFlowLinkCoverage(grid, true) {Name = coverageName};
+                    return new UnstructuredGridFlowLinkCoverage(Grid, true) {Name = coverageName};
                 case NNetLinkName:
                 case NFlowElemBndName:
                     log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_NetlinkDimensionCurrentyNotSupported,
@@ -621,7 +617,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void UpdateGrid()
         {
             // import the grid from the map file if there is no model grid available
-            grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
+            Grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
         }
     }
 }

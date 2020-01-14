@@ -8,12 +8,10 @@ using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -330,28 +328,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenMapFileAndSetCoordinateSystemShouldChangeCoordinateSystem()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-            var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, "zm_dfm_map.zip");
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
-                var zmDfmMapFile = "simplebox_hex7_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-
                 var store = new FMMapFileFunctionStore
                 {
-                    Path = mapFilePath
+                    Path = Path.Combine(tempDir, "simplebox_hex7_map.nc")
                 };
-                var grid = (UnstructuredGrid)TypeUtils.GetField(store, "grid");
-                Assert.AreEqual(28992, grid.CoordinateSystem.AuthorityCode); // Amersfoort RD new
-                store.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); // WGS84
-                grid = (UnstructuredGrid)TypeUtils.GetField(store, "grid");
-                Assert.That(grid.CoordinateSystem, Is.Not.Null);
-                Assert.That(grid.CoordinateSystem.AuthorityCode, Is.EqualTo(4326));
+
+                Assert.AreEqual(28992, store.Grid.CoordinateSystem.AuthorityCode); // Amersfoort RD new
+
+                store.SetCoordinateSystem(new OgrCoordinateSystemFactory().CreateFromEPSG(4326)); // WGS84
+                Assert.That(store.Grid.CoordinateSystem, Is.Not.Null);
+                Assert.That(store.Grid.CoordinateSystem.AuthorityCode, Is.EqualTo(4326));
             });
         }
 
