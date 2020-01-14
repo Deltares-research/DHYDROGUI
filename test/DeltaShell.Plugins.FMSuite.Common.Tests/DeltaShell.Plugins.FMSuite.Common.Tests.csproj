@@ -86,7 +86,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47570\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
