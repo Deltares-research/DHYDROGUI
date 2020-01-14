@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 
             BoundaryLineMapFeatureProvider = 
                 new BoundaryLineMapFeatureProvider(boundaryContainer,
+                                                   coordinateSystem,
                                                    waveBoundaryFactory,
                                                    geometryFactory);
             BoundaryEndPointMapFeatureProvider = 

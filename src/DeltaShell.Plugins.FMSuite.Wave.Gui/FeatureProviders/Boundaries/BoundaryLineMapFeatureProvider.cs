@@ -5,6 +5,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
@@ -51,18 +52,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// Creates a new <see cref="BoundaryLineMapFeatureProvider"/>.
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
         /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
         /// <param name="waveBoundaryGeometryFactory">The waveBoundaryGeometryFactory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
         public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer, 
+                                              ICoordinateSystem coordinateSystem, 
                                               IWaveBoundaryFactory waveBoundaryFactory,
                                               IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
             Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
             Ensure.NotNull(waveBoundaryFactory, nameof(waveBoundaryFactory));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+
+            CoordinateSystem = coordinateSystem;
 
             this.waveBoundaryFactory = waveBoundaryFactory;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
