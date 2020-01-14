@@ -17,7 +17,6 @@ using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 {
@@ -25,13 +24,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
     public class WaveLayerFactoryTest
     {
         [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            var factory = new WaveLayerFactory();
+
+            // Assert
+            Assert.That(factory, Is.InstanceOf<IWaveLayerFactory>());
+        }
+
+        [Test]
         public void CreateModelGroupLayer_ValidModel_ReturnsCorrectResults()
         {
             // Setup
             var waveModel = new WaveModel();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateModelGroupLayer(waveModel);
+            ILayer layer = factory.CreateModelGroupLayer(waveModel);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<ModelGroupLayer>(), 
@@ -47,8 +57,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateModelGroupLayer_WaveModelNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateModelGroupLayer(null);
+            void Call() => factory.CreateModelGroupLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -61,9 +74,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Setup
             var expectedDomainName = "DomainName";
             var domain = new WaveDomainData(expectedDomainName);
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateWaveDomainDataLayer(domain);
+            ILayer layer = factory.CreateWaveDomainDataLayer(domain);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
@@ -75,8 +89,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateWaveDomainDataLayer_DomainNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateWaveDomainDataLayer(null);
+            void Call() => factory.CreateWaveDomainDataLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -88,9 +105,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var model = new WaveModel();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateObstacleLayer(model);
+            ILayer layer = factory.CreateObstacleLayer(model);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<VectorLayer>(),
@@ -102,8 +120,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateObstacleLayer_WaveModelNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateObstacleLayer(null);
+            void Call() => factory.CreateObstacleLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -115,9 +136,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var model = new WaveModel();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateObservationPointsLayer(model);
+            ILayer layer = factory.CreateObservationPointsLayer(model);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<VectorLayer>(),
@@ -129,8 +151,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateObservationPointsLayer_WaveModelNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateObservationPointsLayer(null);
+            void Call() => factory.CreateObservationPointsLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -143,9 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Setup
             var obstacleData = new EventedList<WaveObstacle>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateObstacleDataLayer(obstacleData, 
+            ILayer layer = factory.CreateObstacleDataLayer(obstacleData, 
                                                                     coordinateSystem);
 
             // Assert
@@ -160,9 +186,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
+            var factory = new WaveLayerFactory();
 
             // Call
-            void Call() => WaveLayerFactory.CreateObstacleDataLayer(null, coordinateSystem);
+            void Call() => factory.CreateObstacleDataLayer(null, coordinateSystem);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -174,9 +201,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var model = new WaveModel();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateObservationCrossSectionLayer(model);
+            ILayer layer = factory.CreateObservationCrossSectionLayer(model);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<VectorLayer>(),
@@ -188,8 +216,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateObservationCrosSectionsLayer_WaveModelNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateObservationCrossSectionLayer(null);
+            void Call() => factory.CreateObservationCrossSectionLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -202,9 +233,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Setup
             var model = new WaveModel();
             var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
+            ILayer layer = factory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
@@ -220,8 +252,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateSnappedFeaturesLayer_SnappedFeaturesNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateSnappedFeaturesLayer(null);
+            void Call() => factory.CreateSnappedFeaturesLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -238,9 +273,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Setup
             var model = new WaveModel();
             var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
+            ILayer layer = factory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
@@ -256,8 +292,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void CreateOutputLayer_DomainNameNull_ThrowsArgumentNullException()
         {
+            // Setup
+            var factory = new WaveLayerFactory();
+
             // Call
-            void Call() => WaveLayerFactory.CreateOutputLayer(null);
+            void Call() => factory.CreateOutputLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -281,8 +320,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                 Name = gridName,
             };
 
+            var factory = new WaveLayerFactory();
+
             // Call
-            ILayer layer = WaveLayerFactory.CreateGridLayer(grid, coordinateSystem);
+            ILayer layer = factory.CreateGridLayer(grid, coordinateSystem);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<CurvilinearGridLayer>(),
@@ -303,8 +344,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
+            var factory = new WaveLayerFactory();
+
             // Call
-            ILayer layer = WaveLayerFactory.CreateGridLayer(grid, coordinateSystem);
+            ILayer layer = factory.CreateGridLayer(grid, coordinateSystem);
 
             // Assert
             Assert.That(layer, Is.InstanceOf<CurvilinearVertexCoverageLayer>(),
@@ -319,9 +362,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
+            var factory = new WaveLayerFactory();
 
             // Call
-            void Call() => WaveLayerFactory.CreateGridLayer(null, coordinateSystem);
+            void Call() => factory.CreateGridLayer(null, coordinateSystem);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -338,9 +382,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
                                                                             coordinateSystem);
             var model = Substitute.For<IWaveModel>();
+            var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = WaveLayerFactory.CreateBoundaryLayer(featureProviderContainer, 
+            ILayer layer = factory.CreateBoundaryLayer(featureProviderContainer, 
                                                                 model);
 
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
@@ -377,9 +422,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             var model = Substitute.For<IWaveModel>();
+            var factory = new WaveLayerFactory();
 
             // Call
-            void Call() => WaveLayerFactory.CreateBoundaryLayer(null, model);
+            void Call() => factory.CreateBoundaryLayer(null, model);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -395,9 +441,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
                                                                             coordinateSystem);
+            var factory = new WaveLayerFactory();
 
             // Call
-            void Call() => WaveLayerFactory.CreateBoundaryLayer(featureProviderContainer, null);
+            void Call() => factory.CreateBoundaryLayer(featureProviderContainer, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);

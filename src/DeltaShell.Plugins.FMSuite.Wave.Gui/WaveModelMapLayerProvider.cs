@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     public class WaveModelMapLayerProvider : IMapLayerProvider
     {
         private static readonly string modelName = typeof(WaveModel).Name;
+        private readonly IWaveLayerFactory factory = new WaveLayerFactory();
 
         // TODO this need to be further split up.
         /// <summary>
@@ -48,17 +49,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         {
             if (data is WaveModel waveModel)
             {
-                return WaveLayerFactory.CreateModelGroupLayer(waveModel);
+                return factory.CreateModelGroupLayer(waveModel);
             }
 
             if (data is WaveDomainData domainData)
             {
-                return WaveLayerFactory.CreateWaveDomainDataLayer(domainData);
+                return factory.CreateWaveDomainDataLayer(domainData);
             }
 
             if (data is WaveSnappedFeaturesGroupLayerData snappedFeaturesGroupLayerData)
             {
-                return WaveLayerFactory.CreateSnappedFeaturesLayer(snappedFeaturesGroupLayerData);
+                return factory.CreateSnappedFeaturesLayer(snappedFeaturesGroupLayerData);
             }
 
             var model = parent as IWaveModel;
@@ -72,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (data is IDiscreteGridPointCoverage discreteGrid)
             {
                 ICoordinateSystem coordinateSystem = GetGridCoordinateSystem(parent, model, discreteGrid);
-                return WaveLayerFactory.CreateGridLayer(discreteGrid, coordinateSystem);
+                return factory.CreateGridLayer(discreteGrid, coordinateSystem);
             }
 
             // Model dependent layers
@@ -99,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             if (data is IEventedList<WaveObstacle> obstacleData)
             {
-                return WaveLayerFactory.CreateObstacleDataLayer(obstacleData, model.CoordinateSystem);
+                return factory.CreateObstacleDataLayer(obstacleData, model.CoordinateSystem);
             }
 
             if (data is IEnumerable<Feature2D> features) { 
@@ -137,23 +138,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                 if (Equals(features, model.Obstacles))
                 {
-                    return WaveLayerFactory.CreateObstacleLayer(model);
+                    return factory.CreateObstacleLayer(model);
                 }
 
                 if (Equals(features, model.ObservationCrossSections))
                 {
-                    return WaveLayerFactory.CreateObservationCrossSectionLayer(model);
+                    return factory.CreateObservationCrossSectionLayer(model);
                 }
 
                 if (Equals(features, model.ObservationPoints))
                 {
-                    return WaveLayerFactory.CreateObservationPointsLayer(model);
+                    return factory.CreateObservationPointsLayer(model);
                 }
             }
 
             if (data is BoundaryMapFeaturesContainer featuresContainer)
             {
-                return WaveLayerFactory.CreateBoundaryLayer(featuresContainer, model);
+                return factory.CreateBoundaryLayer(featuresContainer, model);
             }
 
             return null;
@@ -177,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return ownerWaveModel?.CoordinateSystem;
         }
 
-        private static ILayer GetOutputLayer(WavmFileFunctionStore wavmFileFunctionStore, IWaveModel model)
+        private ILayer GetOutputLayer(WavmFileFunctionStore wavmFileFunctionStore, IWaveModel model)
         {
             string domainName = wavmFileFunctionStore.Path;
             var overrideDomainName = true;
@@ -195,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
-            return WaveLayerFactory.CreateOutputLayer(domainName, overrideDomainName);
+            return factory.CreateOutputLayer(domainName, overrideDomainName);
         }
 
         /// <summary>
