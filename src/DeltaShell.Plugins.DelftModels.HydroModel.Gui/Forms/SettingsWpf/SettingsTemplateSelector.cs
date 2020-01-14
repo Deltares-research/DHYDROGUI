@@ -18,29 +18,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var fe = (FrameworkElement)container;
-            /*CHECK FIRST FOR CUSTOM CONTROLS*/
+            // CHECK FIRST FOR CUSTOM CONTROLS
             if (item is WpfGuiCategory)
             {
                 var category = item as WpfGuiCategory;
                 if(!category.HasCustomControl)
-                    return fe.FindResource("tabContentTemplate") as DataTemplate;
-                return fe.FindResource("tabCustomContentTemplate") as DataTemplate;
+                    return fe.FindResource("TabContentTemplate") as DataTemplate;
+                return fe.FindResource("TabCustomContentTemplate") as DataTemplate;
             }
             
             if (item is WpfGuiSubCategory)
             {
                 var subCategory = item as WpfGuiSubCategory;
                 if (!subCategory.HasCustomControl)
-                    return fe.FindResource("subCategoryTemplate") as DataTemplate;
-                return fe.FindResource("subCategoryCustomTemplate") as DataTemplate;
+                    return fe.FindResource("SubCategoryTemplate") as DataTemplate;
+                return fe.FindResource("SubCategoryCustomTemplate") as DataTemplate;
             }
 
             if (!(item is WpfGuiProperty)) return base.SelectTemplate(item, container);
             
             var property = item as WpfGuiProperty;
 
-            /* There were not any custom controls, so go ahead with the regular templates*/
-            /*Todo: make a switch or create a dictionary for this. */
+            // There were not any custom controls, so go ahead with the regular templates
+            // Todo: make a switch or create a dictionary for this. 
             var type = property.ValueType;
             if (type == typeof(string)
                 || type == typeof(double)

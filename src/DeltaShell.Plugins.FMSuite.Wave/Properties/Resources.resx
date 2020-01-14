@@ -235,4 +235,13 @@
   <data name="WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_" xml:space="preserve">
     <value>Communications file '{0}' does not exist.</value>
   </data>
+  <data name="WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_" xml:space="preserve">
+    <value>Error reading log file: {0}, {1}</value>
+  </data>
+  <data name="WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__" xml:space="preserve">
+    <value>Could not find log file: {0}</value>
+  </data>
+  <data name="WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__" xml:space="preserve">
+    <value>Could not find output (WAVM) file: {0}</value>
+  </data>
 </root>

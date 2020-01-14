@@ -181,44 +181,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        public void ReleaseCopiedBranchFeatureOnProjectClosing()
-        {
-            var gui = Mocks.DynamicMock<IGui>();
-            var documentViews = Mocks.DynamicMock<IViewList>();
-
-            using (var mapView = new MapView())
-            {
-                var application = Mocks.DynamicMock<IApplication>();
-                application.Stub(a => a.FileExporters).Return(new List<IFileExporter>());
-
-                var project = new Project(); // Project is pretty lightweight don't need to mock here
-
-                Expect.Call(documentViews.ActiveView).Return(mapView);
-                Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
-                Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
-                Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
-
-                application.ProjectClosing += null;
-                var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
-
-                Mocks.ReplayAll();
-
-                using (var pluginGui = new NetworkEditorGuiPlugin { Gui = gui })
-                {
-                    pluginGui.Activate();
-
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(new Bridge());
-                    Assert.IsTrue(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
-
-                    projectClosingRaiser.Raise(project);
-                    Assert.IsFalse(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
-                }
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
             using (var gui = new DeltaShellGui())

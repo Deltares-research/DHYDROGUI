@@ -196,6 +196,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void ReconnectHistoryFile(string hisFilePath, bool switchTo)
         {
+            if (OutputMapFileStore != null && OutputMapFileStore.Grid == null)
+            {
+                Log.Warn("Associated output files are unsupported, these will not be loaded");
+                OutputMapFileStore = null;
+                return;
+            }
+
             if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
