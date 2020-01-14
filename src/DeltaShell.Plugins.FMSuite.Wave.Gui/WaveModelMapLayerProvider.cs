@@ -98,11 +98,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 };
             }
 
-            if (data is IEventedList<WaveObstacle> obstacleData)
-            {
-                return factory.CreateObstacleDataLayer(obstacleData, model.CoordinateSystem);
-            }
-
             if (data is IEnumerable<Feature2D> features) { 
 
                 if (Equals(features, model.Boundaries))

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -59,26 +58,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 {
                     Line = new Pen(Color.Red, 3f),
                     GeometryType = typeof(ILineString)
-                },
-                NameIsReadOnly = true
-            };
-        }
-
-        public ILayer CreateObstacleDataLayer(IEventedList<WaveObstacle> obstacleData, 
-                                              ICoordinateSystem coordinateSystem)
-        {
-            Ensure.NotNull(obstacleData, nameof(obstacleData));
-
-            return new VectorLayer(WaveLayerNames.ObstacleDataLayerName)
-            {
-                DataSource = new Feature2DCollection().Init(obstacleData, 
-                                                            "WaveObstacleData", 
-                                                            waveModelName,
-                                                            coordinateSystem),
-                Style = new VectorStyle
-                {
-                    Symbol = WaveLayerIcons.ObstacleData,
-                    GeometryType = typeof(IPoint)
                 },
                 NameIsReadOnly = true
             };

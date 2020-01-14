@@ -324,7 +324,6 @@
     <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
-    <Compile Include="Layers\Providers\ObstacleDataLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\Sp2BoundaryLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveBoundaryConditionLayerSubProvider.cs" />

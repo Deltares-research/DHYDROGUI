@@ -163,40 +163,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         }
 
         [Test]
-        public void CreateObstacleDataLayer_ValidArguments_ReturnsCorrectResults()
-        {
-            // Setup
-            var obstacleData = new EventedList<WaveObstacle>();
-            var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            var factory = new WaveLayerFactory();
-
-            // Call
-            ILayer layer = factory.CreateObstacleDataLayer(obstacleData, 
-                                                                    coordinateSystem);
-
-            // Assert
-            Assert.That(layer, Is.InstanceOf<VectorLayer>(),
-                        $"Expected the result to be an instance of {nameof(VectorLayer)}");
-            Assert.That(layer.Name, Is.EqualTo("Obstacle Data"),
-                        "Expected the layer to have a different name.");
-        }
-
-        [Test]
-        public void CreateObstacleDataLayer_ObstacleData_ThrowsArgumentNullException()
-        {
-            // Setup
-            var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            var factory = new WaveLayerFactory();
-
-            // Call
-            void Call() => factory.CreateObstacleDataLayer(null, coordinateSystem);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("obstacleData"));
-        }
-
-        [Test]
         public void CreateObservationCrossSectionsLayer_ValidWaveModel_ReturnsCorrectResults()
         {
             // Setup

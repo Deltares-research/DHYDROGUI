@@ -13,11 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string ObstacleLayerName = "Obstacles";
 
         /// <summary>
-        /// The obstacle data layer name
-        /// </summary>
-        public const string ObstacleDataLayerName = "Obstacle Data";
-
-        /// <summary>
         /// The boundary layer name
         /// </summary>
         public const string BoundaryLayerName = "Boundaries";
