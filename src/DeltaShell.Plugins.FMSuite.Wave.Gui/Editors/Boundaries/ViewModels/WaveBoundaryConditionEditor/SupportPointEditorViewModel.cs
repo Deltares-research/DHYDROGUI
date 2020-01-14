@@ -23,7 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
         private ObservableCollection<SupportPointViewModel> viewModels;
         private SupportPointViewModel selectedViewModel;
-        private double newDistance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointListViewModel" /> class.
@@ -108,6 +107,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// The remove support point command.
         /// </value>
         public ICommand RemoveSupportPointCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the new distance.
+        /// </summary>
+        /// <value>
+        /// The new distance.
+        /// </value>
+        /// <remarks>This property is binded in the view.</remarks>
+        public double NewDistance { get; set; }
 
         private void InitializeViewModels()
         {
