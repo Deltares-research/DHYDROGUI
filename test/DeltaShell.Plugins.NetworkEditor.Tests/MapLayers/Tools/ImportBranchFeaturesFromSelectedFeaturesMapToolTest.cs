@@ -19,7 +19,6 @@ using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
-using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
@@ -95,49 +94,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             mapControl.Controls.Add(executeToolButton);
 
             WindowsFormsTestHelper.ShowModal(mapControl);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void ImportSelectedFeaturesAsPumps()
-        {
-            var tool = new ImportBranchFeaturesFromSelectedFeaturesMapTool(l => l.Equals(networkLayer)) { Tolerance = 10 };
-            mapControl.Tools.Add(tool);
-
-            // add layer with 3 features
-            var geometries = new Collection<IGeometry> { new Point(20, 20), new Point(20, 25), new Point(20, 40) };
-            var featureTable = new DataTableFeatureProvider(geometries);
-            
-            var attributesTable = featureTable.AttributesTable;
-            
-            attributesTable.Columns.Add("Name", typeof (string));
-            attributesTable.Rows[0]["Name"] = "feature1";
-            attributesTable.Rows[1]["Name"] = "feature2";
-            attributesTable.Rows[2]["Name"] = "feature3";
-
-            var vectorLayer = new VectorLayer { DataSource = featureTable };
-            map.Layers.Add(vectorLayer);
-
-            // select all 3 features
-            var feature1 = featureTable.GetFeature(0);
-            var feature2 = featureTable.GetFeature(1);
-            var feature3 = featureTable.GetFeature(2);
-
-            mapControl.SelectTool.AddSelection(vectorLayer, feature1);
-            mapControl.SelectTool.AddSelection(vectorLayer, feature2);
-            mapControl.SelectTool.AddSelection(vectorLayer, feature3);
-            
-            // imports
-            tool.ImportSelectedFeaturesAsBranchFeatures(weirLayer);
-
-            network.Weirs.Count()
-                .Should().Be.EqualTo(2);
-            
-            network.Weirs.First().Name
-                .Should().Be.EqualTo("feature1");
-
-            network.Weirs.ElementAt(1).Name
-                .Should().Be.EqualTo("feature2");
         }
     }
 }
