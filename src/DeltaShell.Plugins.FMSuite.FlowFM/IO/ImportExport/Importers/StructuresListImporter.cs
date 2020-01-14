@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public override string Name => GetStructuresName();
 
-        public override string Category => "D-Flow FM 2D/3D";
+        public override string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
         public override string Description => string.Empty;
 

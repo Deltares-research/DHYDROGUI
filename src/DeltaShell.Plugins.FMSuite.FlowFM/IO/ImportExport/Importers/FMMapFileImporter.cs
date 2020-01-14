@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class FMMapFileImporter : IFileImporter
     {
-        public string Name => "Flexible Mesh Map File";
+        public string Name => Resources.FMMapFileImporter_Name_Flexible_Mesh_Map_File;
 
-        public string Category => "D-Flow FM 2D/3D";
+        public string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
         public string Description => string.Empty;
 
