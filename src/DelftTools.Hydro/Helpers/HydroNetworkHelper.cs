@@ -4,14 +4,18 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.LinearReferencing;
 
 namespace DelftTools.Hydro.Helpers
 {
@@ -23,6 +27,92 @@ namespace DelftTools.Hydro.Helpers
     public class HydroNetworkHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
+
+        public static void UpdateChannelNames(IChannel splittedChannel, IChannel newChannel)
+        {
+            newChannel.Name = splittedChannel.Name + "_B";
+            splittedChannel.Name = splittedChannel.Name + "_A";
+
+            if (!string.IsNullOrEmpty(splittedChannel.LongName))
+            {
+                newChannel.LongName = splittedChannel.LongName + "_B";
+                splittedChannel.LongName = splittedChannel.LongName + "_A";
+            }
+        }
+
+        /// <summary>
+        /// Splits a channel at the given chainage.
+        /// All channel features are updated. Renames using _A (for old) ,and _B for new
+        /// </summary>
+        /// <param name="channel"> </param>
+        /// <param name="geometryOffset"> </param>
+        public static IHydroNode SplitChannelAtNode(IChannel channel, double geometryOffset)
+        {
+            if (geometryOffset != channel.Geometry.Length && geometryOffset != 0)
+            {
+                var channelSplitAction = new BranchSplitAction();
+                channel.Network.BeginEdit(channelSplitAction);
+
+                SplitResult result = NetworkHelper.SplitBranchAtNode(channel, geometryOffset);
+
+                UpdateChannelNames(channel, (IChannel) result.NewBranch);
+
+                //update the action before calling endedit..other entities might use the data.
+                channelSplitAction.SplittedBranch = channel;
+                channelSplitAction.NewBranch = result.NewBranch;
+
+                channel.Network.EndEdit();
+                return (IHydroNode) result.NewNode;
+            }
+
+            return null;
+        }
+
+        public static Route AddNewRouteToNetwork(IHydroNetwork network)
+        {
+            var route = new Route {Name = "route_" + GetAvailableRouteNumber(network)};
+
+            network.BeginEdit(new DefaultEditAction("Add new route to network"));
+            route.Network = network;
+            network.Routes.Add(route);
+            network.EndEdit();
+
+            return route;
+        }
+
+        private static int GetAvailableRouteNumber(IHydroNetwork network)
+        {
+            var lastNr = 0;
+
+            foreach (Route route in network.Routes.Reverse())
+            {
+                try
+                {
+                    lastNr = int.Parse(route.Name.Split('_')[1]);
+                    break;
+                }
+                catch (Exception)
+                {
+                    //don't do anything: exception on split or on parse: non standard name
+                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
+                }
+            }
+
+            return lastNr + 1;
+        }
+
+        /// <summary>
+        /// Splits a branch at the given coordinate.
+        /// All branch features are updated
+        /// </summary>
+        /// <param name="branch"> </param>
+        /// <param name="coordinate"> </param>
+        public static IHydroNode SplitChannelAtNode(IChannel branch, Coordinate coordinate)
+        {
+            var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
+            double offset = lengthIndexedLine.Project(coordinate);
+            return SplitChannelAtNode(branch, offset);
+        }
 
         /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
@@ -324,6 +414,76 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
+        /// Switches the direction of the branch
+        /// </summary>
+        /// <param name="branch"> </param>
+        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
+        {
+            var branchReverseAction = new BranchReverseAction(branch);
+            branch.Network.BeginEdit(branchReverseAction);
+
+            INode fromNode = branch.Source;
+            INode toNode = branch.Target;
+
+            branch.Target = null; // Prevents IsConnectedToMultipleBranches from becoming true when false
+            branch.Source = toNode;
+            branch.Target = fromNode;
+
+            // Reverse the linestring geometry
+            var vertices = new List<Coordinate>();
+            for (int i = branch.Geometry.Coordinates.Length - 1; i >= 0; i--)
+            {
+                vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
+            }
+
+            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
+
+            ReverseBranchBranchFeatures(branch);
+
+            branch.Network.EndEdit();
+        }
+
+        /// <summary>
+        /// Update the offsets of the branchFeatures. The location on the map are not changed merely there offset
+        /// relative to the start of the branch.
+        /// </summary>
+        /// <param name="branch"> </param>
+        private static void ReverseBranchBranchFeatures(IBranch branch)
+        {
+            IBranchFeature[] reversedBranchFeatures = branch.BranchFeatures.Reverse().ToArray();
+
+            double length = branch.Length;
+            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
+            {
+                branchFeature.SetBeingMoved(true);
+                branchFeature.Chainage =
+                    BranchFeature.SnapChainage(length, length - branchFeature.Chainage - branchFeature.Length);
+            }
+
+            branch.BranchFeatures.Clear();
+            branch.BranchFeatures.AddRange(reversedBranchFeatures);
+
+            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
+            {
+                branchFeature.SetBeingMoved(false);
+            }
+        }
+
+        /// <summary>
+        /// Removes structureFeatures without structures. StructureFeatures are helper/container
+        /// object that are created/deleted automatically.
+        /// </summary>
+        public static void RemoveUnusedCompositeStructures(IHydroNetwork network)
+        {
+            foreach (ICompositeBranchStructure structure in network
+                                                            .CompositeBranchStructures
+                                                            .Where(s => s.Structures.Count == 0).ToArray())
+            {
+                structure.Branch.BranchFeatures.Remove(structure);
+            }
+        }
+
+        /// <summary>
         /// Sets the default name of a specific feature.
         /// </summary>
         /// <param name="region"> </param>
@@ -408,6 +568,50 @@ namespace DelftTools.Hydro.Helpers
             }
 
             AddStructureToComposite(compositeBranchStructure, structure);
+        }
+
+        /// <summary>
+        /// Removes a structure from the hydro network
+        /// </summary>
+        /// <param name="structure"> </param>
+        public static void RemoveStructure(IStructure1D structure)
+        {
+            IBranch channel = structure.Branch;
+            if (channel == null)
+            {
+                return; // Do nothing if structure is not on a branch
+            }
+
+            channel.Network.BeginEdit("Delete " + structure.Name);
+
+            channel.BranchFeatures.Remove(structure);
+            RemoveFromChannel(structure, channel);
+
+            channel.Network.EndEdit();
+        }
+
+        [EditAction]
+        private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
+        {
+            if (null == structure.ParentStructure)
+            {
+                return;
+            }
+
+            structure.ParentStructure.Structures.Remove(structure);
+            structure.Branch = null;
+            if (structure.ParentStructure.Structures.Count != 0)
+            {
+                return;
+            }
+
+            channel.BranchFeatures.Remove(structure.ParentStructure);
+            structure.ParentStructure.Branch = null;
+        }
+
+        public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
+        {
+            return GetSnakeHydroNetwork(false, points);
         }
 
         public static IHydroNetwork GetSnakeHydroNetwork(bool generateIDs, params Point[] points)

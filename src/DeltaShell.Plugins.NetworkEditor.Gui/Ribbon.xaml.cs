@@ -47,6 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
+        private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
         private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
@@ -104,6 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
+                yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
                 yield return addNewCatchmentPolderCommand;
                 yield return addNewCatchmentPavedCommand;
@@ -169,6 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
             
+            ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
             // catchment tools
@@ -407,6 +410,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
         {
             addNewObservationPointCommand.Execute();
+            ValidateItems();
+        }
+
+        private void ButtonAddNewRoute_Click(object sender, RoutedEventArgs e)
+        {
+            addNewRouteCommand.Execute();
             ValidateItems();
         }
 

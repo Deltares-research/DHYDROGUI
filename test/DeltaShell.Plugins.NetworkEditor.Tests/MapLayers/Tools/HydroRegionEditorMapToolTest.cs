@@ -7,6 +7,8 @@ using DelftTools.Controls.Swf;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -16,11 +18,14 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Layers;
@@ -43,6 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         private static MapControl mapControl;
         private static IHydroNetwork network;
         private ILayer channelLayer;
+        private ILayer pumpLayer;
         private ILayer nodeLayer;
         private ILayer crossSectionLayer;
 
@@ -54,6 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             network = new HydroNetwork();
             hydroNetworkLayer = (HydroRegionMapLayer) MapLayerProviderHelper.CreateLayersRecursive(network, null,new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
             channelLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel));
+            pumpLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Pump));
             nodeLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(HydroNode));
             crossSectionLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(CrossSection));
 
@@ -110,6 +117,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.AreEqual(3, network.Nodes.Count);
             Assert.AreEqual(network.Branches[0].Source, network.Branches[1].Source);
             Assert.AreEqual(0, network.Branches[0].Source.NodeFeatures.Count);
+        }
+
+        [Test]
+        public void InsertNodeWithContextMenuTools9599()
+        {
+            SetUp();
+            Add2BranchesUsingGeometry(hydroNetworkLayer);
+
+            var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool)mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
+
+            // select branch
+            mapControl.SelectTool.Select(network.Branches.First());
+            
+            // build context menu
+            var items = hydroNetworkEditorMapTool.GetContextMenuItems(new Coordinate(10, 10));
+
+            // grab 'insert node' menu item
+            var insertNodeItem = items.Select(i => i.MenuItem).OfType<ToolStripItem>().FirstOrDefault(i => i.Text == "Insert Node");
+            Assert.IsNotNull(insertNodeItem);
+
+            // click it
+            insertNodeItem.PerformClick();
+
+            // expect the first branch was split
+            Assert.AreEqual(3, network.Branches.Count);
         }
 
         [Test]
@@ -178,6 +210,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             // Add a second cross section but do not place it at a branch
             // expect exception, geometry doesn't fit, can't find branch
             crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(150 45, 150 55)")); 
+        }
+
+        [Test]
+        public void SimpleStructureTest()
+        {
+            SetUp();
+            // This test checks the implicit adding and deleting of StructureFeature objects
+            // when structures are added and deleted.
+            Add2BranchesUsingGeometry(hydroNetworkLayer);
+
+            pumpLayer.DataSource.Add(GeometryFromWKT.Parse("POINT(40 40)"));
+            Assert.AreEqual(2, network.Structures.Count());
+            Assert.AreEqual(1, network.Pumps.Count());
+            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
+            Assert.AreEqual(1, network.CompositeBranchStructures.First().Structures.Count);
+
+            // upgrade to compound structure
+            pumpLayer.DataSource.Add(GeometryFromWKT.Parse("POINT(40 40)"));
+            Assert.AreEqual(2, network.Pumps.Count());
+            Assert.AreEqual(3, network.Structures.Count());
+            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
+            Assert.AreEqual(2, network.CompositeBranchStructures.First().Structures.Count);
+
+            // use feature interactor to modify (also delete) features
+            IStructure1D structure = network.Pumps.First();
+            IFeatureInteractor featureInteractor = mapControl.SelectTool.GetFeatureInteractor(pumpLayer, structure);
+
+            featureInteractor.Delete();
+
+            Assert.AreEqual(1, network.Pumps.Count());
+            Assert.AreEqual(2, network.Structures.Count());
+            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
+            Assert.AreEqual(1, network.CompositeBranchStructures.First().Structures.Count);
+
+            structure = network.Pumps.First();
+            featureInteractor = mapControl.SelectTool.GetFeatureInteractor(pumpLayer, structure);
+            featureInteractor.Delete();
+            Assert.AreEqual(0, network.Structures.Count());
         }
 
         [Test]
@@ -350,6 +420,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             {
                 hydroNetworkLayer.Region = null;
                 var tool = new HydroRegionEditorMapTool { MapControl = mapControl };
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void BranchSetCustomLengthAndMoveCalculationPoint()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new[] { new Point(0, 0), new Point(100, 0) });
+            INetworkCoverage coverage = new Discretization() {Network = network};
+
+            var branch = network.Branches[0];
+            branch.IsLengthCustom = true;
+            branch.Length *= 2;
+
+            var networkLocation = new NetworkLocation(branch, 120);
+            coverage.Locations.AddValues(new[] { networkLocation });
+            using (var coverageView = new CoverageView { Data = coverage })
+            {
+                var mapView = coverageView.ChildViews.OfType<MapView>().First();
+                var networkLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
+                networkLayer.ShowInLegend = false;
+                mapView.MapControl.Map.Layers.Add(networkLayer);
+                HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
+
+                WindowsFormsTestHelper.ShowModal(
+                    coverageView,
+                    f =>
+                        {
+                            mapView.MapControl.SelectTool.Select(networkLocation);
+
+                            var moveTool = mapView.MapControl.MoveTool;
+                            var args = new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0);
+                            moveTool.OnMouseDown(networkLocation.Geometry.Coordinate, args);
+                            moveTool.OnMouseMove(new Coordinate(50, 0), args);
+                            var newpos = new Coordinate(50, 0);
+                            moveTool.OnMouseUp(newpos, args);
+
+                            Assert.AreEqual(newpos, networkLocation.Geometry.Coordinate);
+                            Assert.AreEqual(100, networkLocation.Chainage);
+                        });
             }
         }
     }

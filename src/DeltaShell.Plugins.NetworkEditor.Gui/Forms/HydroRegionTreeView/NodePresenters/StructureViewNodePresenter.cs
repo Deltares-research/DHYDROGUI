@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections;
@@ -29,6 +30,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, T data)
         {
             node.Text = data.Name;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, T nodeData)
+        {
+            HydroNetworkHelper.RemoveStructure(nodeData);
+            return true;
         }
 
         public override bool CanRenameNode(ITreeNode node)

@@ -299,6 +299,7 @@
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRuleTest.cs" />
+    <Compile Include="MapLayers\Editors\StructureEditorTest.cs" />
     <Compile Include="Forms\ChartEditors\FixedRectangleShapeEditorTest.cs" />
     <Compile Include="Forms\ChartEditors\RectangleShapeEditorTest.cs" />
     <Compile Include="Forms\ChartEditors\RectangleSeriesShapeFeatureTest.cs" />
@@ -343,6 +344,7 @@
     <Compile Include="TestModelWithHydroNetwork.cs" />
     <Compile Include="MapLayers\Tools\ImportBranchFeaturesFromSelectedFeaturesMapToolTest.cs" />
     <Compile Include="MapLayers\Editors\BranchNodeTopologyTest.cs" />
+    <Compile Include="MapLayers\Editors\StructureToCompositeStructureTopologyTest.cs" />
     <Compile Include="MapLayers\Tools\HydroRegionEditorMapToolTest.cs" />
     <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
