@@ -35,7 +35,6 @@ using SharpMap.Styles;
 using SharpMap.UI.Forms;
 using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
@@ -680,12 +679,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                                     })
                         };
                 }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Insert Node", null, (s, e) => InsertNode(channels))
-                    };
                 
                 yield return new MapToolContextMenuItem
                     {
@@ -719,35 +712,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                         MenuItem = new ToolStripMenuItem("Shift Level...", null, (s, e) => LevelShift(crossSections))
                     };
             }
-        }
-
-        private void InsertNode(IList<IChannel> channels)
-        {
-            if (contextMenuWorldPosition == null)
-                return;
-
-            if (channels == null || !channels.Any())
-            {
-                return;
-            }
-
-            IChannel branch;
-            if (channels.Count == 1)
-            {
-                branch = channels.First();
-            }
-            else
-            {
-                var point = new Point(contextMenuWorldPosition);
-                var distanceLookup = channels.ToDictionary(c => c, c => c.Geometry.Distance(point));
-                var lowestDistance = distanceLookup.Min(kvp => kvp.Value);
-
-                branch = distanceLookup.First(kvp => Math.Abs(kvp.Value - lowestDistance) < 0.000000001).Key;
-            }
-            
-            HydroNetworkHelper.SplitChannelAtNode(branch, contextMenuWorldPosition);
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
         }
 
         private static bool IsOriented(IBranchFeature branchFeature)

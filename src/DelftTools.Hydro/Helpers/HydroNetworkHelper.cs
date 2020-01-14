@@ -15,7 +15,6 @@ using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.LinearReferencing;
 
 namespace DelftTools.Hydro.Helpers
 {
@@ -27,46 +26,6 @@ namespace DelftTools.Hydro.Helpers
     public class HydroNetworkHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
-
-        public static void UpdateChannelNames(IChannel splittedChannel, IChannel newChannel)
-        {
-            newChannel.Name = splittedChannel.Name + "_B";
-            splittedChannel.Name = splittedChannel.Name + "_A";
-
-            if (!string.IsNullOrEmpty(splittedChannel.LongName))
-            {
-                newChannel.LongName = splittedChannel.LongName + "_B";
-                splittedChannel.LongName = splittedChannel.LongName + "_A";
-            }
-        }
-
-        /// <summary>
-        /// Splits a channel at the given chainage.
-        /// All channel features are updated. Renames using _A (for old) ,and _B for new
-        /// </summary>
-        /// <param name="channel"> </param>
-        /// <param name="geometryOffset"> </param>
-        public static IHydroNode SplitChannelAtNode(IChannel channel, double geometryOffset)
-        {
-            if (geometryOffset != channel.Geometry.Length && geometryOffset != 0)
-            {
-                var channelSplitAction = new BranchSplitAction();
-                channel.Network.BeginEdit(channelSplitAction);
-
-                SplitResult result = NetworkHelper.SplitBranchAtNode(channel, geometryOffset);
-
-                UpdateChannelNames(channel, (IChannel) result.NewBranch);
-
-                //update the action before calling endedit..other entities might use the data.
-                channelSplitAction.SplittedBranch = channel;
-                channelSplitAction.NewBranch = result.NewBranch;
-
-                channel.Network.EndEdit();
-                return (IHydroNode) result.NewNode;
-            }
-
-            return null;
-        }
 
         public static Route AddNewRouteToNetwork(IHydroNetwork network)
         {
@@ -99,19 +58,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             return lastNr + 1;
-        }
-
-        /// <summary>
-        /// Splits a branch at the given coordinate.
-        /// All branch features are updated
-        /// </summary>
-        /// <param name="branch"> </param>
-        /// <param name="coordinate"> </param>
-        public static IHydroNode SplitChannelAtNode(IChannel branch, Coordinate coordinate)
-        {
-            var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
-            double offset = lengthIndexedLine.Project(coordinate);
-            return SplitChannelAtNode(branch, offset);
         }
 
         /// <summary>

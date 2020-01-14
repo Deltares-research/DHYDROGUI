@@ -13,7 +13,6 @@ using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors;
@@ -33,13 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            // exceptional case for nodes
-            if (layer.DataSource.FeatureType == typeof(HydroNode))
-            {
-                var branch = (IChannel)NetworkHelper.GetNearestBranch(Network.Branches, geometry, 0.1);
-                return HydroNetworkHelper.SplitChannelAtNode(branch, geometry.Coordinate);
-            }
-
             var newFeature = layer.FeatureEditor.CreateNewFeature != null
                                       ? CreateNewFeature(layer)
                                       : (IFeature)Activator.CreateInstance(layer.DataSource.FeatureType);
