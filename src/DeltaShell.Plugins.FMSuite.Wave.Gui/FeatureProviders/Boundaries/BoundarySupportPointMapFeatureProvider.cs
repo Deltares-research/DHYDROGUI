@@ -9,6 +9,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
@@ -40,14 +41,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
         /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public BoundarySupportPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
+                                                      ICoordinateSystem coordinateSystem,
                                                       IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
             Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+
+            CoordinateSystem = coordinateSystem;
 
             this.boundaryContainer = boundaryContainer;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;

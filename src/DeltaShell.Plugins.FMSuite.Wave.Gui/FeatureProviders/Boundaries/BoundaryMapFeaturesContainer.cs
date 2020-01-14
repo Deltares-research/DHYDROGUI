@@ -47,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
 
             SupportPointMapFeatureProvider =
                 new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+                                                           coordinateSystem,
                                                            geometryFactory);
         }
 
