@@ -7,6 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <local:SupportPointEditorView Grid.Column="0" DataContext="{Binding Path=SupportPointEditorViewModel}"></local:SupportPointEditorView>
     </Grid>
 </UserControl>
