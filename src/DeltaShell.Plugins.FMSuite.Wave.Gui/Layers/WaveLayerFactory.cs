@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common;
