@@ -1091,7 +1091,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ReportProgressText("Initializing");
             
             DisconnectOutput();
-            FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
+            
+            if (DimrExportDirectoryPath != null)
+            {
+                FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
+            }
 
             runner.OnInitialize();
 
