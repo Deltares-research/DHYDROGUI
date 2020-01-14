@@ -14,7 +14,6 @@ using DelftTools.Units;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -347,72 +346,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        public void SideViewCanDrawFeatureCoverages()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
-            var channel = network.Channels.First();
-            var yzCoordinates = new List<Coordinate>
-                                                  {
-                                                      new Coordinate(0.0, 18.0),
-                                                      new Coordinate(100.0, 0.0),
-                                                      new Coordinate(150.0, 10.0),
-                                                      new Coordinate(300.0, 10.0),
-                                                      new Coordinate(350.0, 18.0),
-                                                      new Coordinate(500.0, 18.0)
-                                                  };
-
-            CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(channel, 20.0, yzCoordinates, "crosssection1");
-            
-            var location1 = new NetworkLocation(channel, 0.0);
-            var location2 = new NetworkLocation(channel, 20.0);
-            
-            var weir = new Weir("weir1");
-            NetworkHelper.AddBranchFeatureToBranch(weir, channel, 50);
-
-            var weirFeatureCoverage = FeatureCoverage.GetTimeDependentFeatureCoverage<Weir>();
-            var waterLevelNetworkCoverage = new NetworkCoverage("water Level", true) { Network = network };
-            
-            weirFeatureCoverage.Components[0].Unit = new Unit("m AD", "m AD");
-            waterLevelNetworkCoverage.Components[0].Unit = new Unit("m AD", "m AD");
-
-            weirFeatureCoverage.Features.Add(weir);         
-            var time = DateTime.Now;
-            var timeStep = new TimeSpan(0, 0, 10, 0);
-            const int timsteps = 20;
-            for (int i = 0; i < timsteps; i++)
-            {
-                waterLevelNetworkCoverage[time, location1] = 18.0d + i%20;
-                waterLevelNetworkCoverage[time, location2] = 16.0d + i % 20;
-                weirFeatureCoverage[time, weir] = 16.0d + i%10;
-                time += timeStep;
-            }
-
-            var locations = new[]
-                            {
-                                new NetworkLocation(channel, 10.0),
-                                new NetworkLocation(channel, 100.0)
-                            };
-
-            var route = RouteHelper.CreateRoute(locations);
-            var coverages = new ICoverage[] {waterLevelNetworkCoverage, weirFeatureCoverage};
-            var networkSideViewCoverageManager = new NetworkSideViewCoverageManager(route, null, coverages);
-            var sideViewDataController = new NetworkSideViewDataController(route, networkSideViewCoverageManager);
-            
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView { Data = route, DataController = sideViewDataController, Text = "sideview" };
-            
-            Assert.AreEqual(timsteps, sideView.Times.Count());
-
-            var navigationControl = new TimeSeriesNavigator
-            {
-                Data = sideView, // time
-                Dock = DockStyle.Bottom
-            };
-
-            WindowsFormsTestHelper.ShowModal(new List<Control> { sideView, navigationControl}, waterLevelNetworkCoverage);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
         public void SideViewRespondsToTimeSerieNavigatorAndAdjustsCrestLevel()
         {
             var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();                        
@@ -706,27 +639,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             viewData.AllFeatureCoverages.Add(featureCoverage);
             viewData.AddRenderedCoverage(featureCoverage); // (*) enabling/disabling this line used to give different results
             // (black boxes around structures and crosssections diseappeared when line was enabled)
-
-            WindowsFormsTestHelper.ShowModal(sideView);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void CreateSideViewForFullCoverage()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0), new Point(100, 150));
-
-            var location1 = new NetworkLocation(network.Branches[0], 0);
-            var location2 = new NetworkLocation(network.Branches[0], 100);
-            var location3 = new NetworkLocation(network.Branches[1], 150);
-            var locations = new[] { location1, location2, location3 };
-
-            var route = RouteHelper.CreateRoute(locations);
-
-            var networkSideViewCoverageManager = new NetworkSideViewCoverageManager(route, null, null);
-            var sideViewDataController = new NetworkSideViewDataController(route, networkSideViewCoverageManager);
-
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView { Data = route, DataController = sideViewDataController, Text = "sideview" };
 
             WindowsFormsTestHelper.ShowModal(sideView);
         }

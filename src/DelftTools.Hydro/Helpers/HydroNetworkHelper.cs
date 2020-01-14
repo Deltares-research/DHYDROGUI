@@ -451,11 +451,6 @@ namespace DelftTools.Hydro.Helpers
             structure.ParentStructure.Branch = null;
         }
 
-        public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
-        {
-            return GetSnakeHydroNetwork(false, points);
-        }
-
         public static IHydroNetwork GetSnakeHydroNetwork(bool generateIDs, params Point[] points)
         {
             var network = new HydroNetwork();

@@ -12,10 +12,8 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -567,47 +565,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        public void MoveCulvertToOtherBranch2Issue4237()
-        {
-            //demonstrates issue 4237..
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            using (var repository = factory.CreateNew())
-            {
-                repository.Create(path);
-
-                var project = repository.GetProject();
-
-                //create a L-shaped network with a culvert 
-                var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0), new Point(20, 20));
-                var branch1 = hydroNetwork.Branches[0];
-                var branch2 = hydroNetwork.Branches[1];
-
-                var culvert = Culvert.CreateDefault();
-                branch1.BranchFeatures.Add(culvert);
-                culvert.Branch = branch1;
-
-                //add it to a project and save
-                project.RootFolder.Add(hydroNetwork);
-                repository.SaveOrUpdate(project);
-
-                branch1.BranchFeatures.Remove(culvert);
-                branch2.BranchFeatures.Add(culvert);
-                culvert.Branch = branch2;
-
-                repository.SaveOrUpdate(project);
-            }
-
-            //relead culvert
-            using (var repository = factory.CreateNew())
-            {
-                repository.Open(path);
-                var culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
-
-                Assert.IsNotNull(culvert);
-            }
-        }
-
-        [Test]
         public void SaveLoadWeir()
         {
             var weir = new Weir
@@ -707,29 +664,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 Assert.AreEqual(new Point(50,0), lateral.Geometry);
             }
-        }
-
-        [Test]
-        public void SaveLoadDiffuseLateralSource()
-        {
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
-            var branch1 = hydroNetwork.Branches[0];
-
-            var lateralSource = new LateralSource
-            {
-                Name = "Source1",
-                Chainage = 10,
-            };
-            branch1.BranchFeatures.Add(lateralSource);
-            lateralSource.Branch = branch1;
-            HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 40);
-            
-            var retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
-
-            Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
-            Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
-            Assert.AreEqual(lateralSource.IsDiffuse, retrievedLateralSource.IsDiffuse);
-            Assert.AreEqual(lateralSource.Length, retrievedLateralSource.Length);
         }
 
         [Test]

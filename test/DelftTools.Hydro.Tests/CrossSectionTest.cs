@@ -199,39 +199,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        public void ChangeInDefinitionUpdatesGeometry()
-        {
-            //v-shaped cs 100 wide
-            var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ("");
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 100, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(100, 100, 0);
-            crossSectionDefinitionYZ.Thalweg = 50;
-
-            //horizontal line
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0,0),new Point(100,0));
-            var branch = network.Channels.First();
-            ICrossSection crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSectionDefinitionYZ, 50);
-            
-
-            var expectedGeometry = new LineString(new[] {new Coordinate(50, 50), new Coordinate(50, -50)});
-            //use equals exact because rounding errors occur
-            Assert.IsTrue(expectedGeometry.EqualsExact(crossSection.Geometry, 0.0001));
-            
-            //action : change the profile
-            crossSectionDefinitionYZ.YZDataTable[0].Yq = -20;
-            
-            expectedGeometry = new LineString(new[] { new Coordinate(50, 70), new Coordinate(50, -50) });
-            Assert.IsTrue(expectedGeometry.EqualsExact(crossSection.Geometry, 0.0001));
-
-            //action: change the thalweg
-            crossSectionDefinitionYZ.Thalweg = 40;
-
-            expectedGeometry = new LineString(new[] { new Coordinate(50, 60), new Coordinate(50, -60) });
-            Assert.IsTrue(expectedGeometry.EqualsExact(crossSection.Geometry, 0.0001));
-        }
-
-        [Test]
         public void ChangingCrossSectionNameIsSingleEditAction()
         {
             var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ("");

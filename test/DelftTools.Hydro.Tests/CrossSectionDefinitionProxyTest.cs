@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -64,48 +61,6 @@ namespace DelftTools.Hydro.Tests
             ((INotifyPropertyChange)proxyDefinition).PropertyChanged += (s, e) => { callCount++; };
             proxyDefinition.InnerDefinition = CrossSectionDefinitionYZ.CreateDefault();
             Assert.AreEqual(1,callCount);
-        }
-
-        [Test]
-        public void ChangeOfInnerDefinitionThalwegUpdatesGeometryOfCrossSection()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
-
-            var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
-            var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
-
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
-
-            var geometryBefore = cs.Geometry;
-
-            innerDefinition.Thalweg += 1;
-
-            var geometryAfter = cs.Geometry;
-
-            Console.WriteLine((object) geometryBefore);
-            Console.WriteLine((object) geometryAfter);
-
-            Assert.AreNotEqual(geometryBefore, geometryAfter);
-        }
-
-        [Test]
-        [Category(DelftTools.TestUtils.TestCategory.WorkInProgress)] // crashes from time to time
-        public void ChangeOfInnerDefinitionProfileUpdatesGeometryOfCrossSection()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-
-            var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
-            var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
-
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
-
-            var geometryBefore = cs.Geometry;
-
-            innerDefinition.ZWDataTable.AddCrossSectionZWRow(-5, 200, 50);
-
-            var geometryAfter = cs.Geometry;
-
-            Assert.AreNotEqual(geometryBefore, geometryAfter);
         }
 
         private static void AssertLevelShiftsWork(ICrossSectionDefinition innerDefinition)
