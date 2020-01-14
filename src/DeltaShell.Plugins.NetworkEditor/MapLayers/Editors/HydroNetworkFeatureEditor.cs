@@ -94,14 +94,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
             else if (feature is ICompositeBranchStructure)
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is IWeir)
-                featureInteractor = new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
-            else if (feature is ICulvert)
-                featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
-            else if (feature is IBridge)
-                featureInteractor = new StructureInteractor<Bridge>(layer, feature, vectorStyle, Network);
-            else if (feature is IPump)
-                featureInteractor = new StructureInteractor<Pump>(layer, feature, vectorStyle, Network);
             else if (feature is ICrossSection)
                 featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network)
                 {
@@ -123,8 +115,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
             else if (feature is ObservationPoint)
                 featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
-            else if (feature is IExtraResistance)
-                featureInteractor = new StructureInteractor<ExtraResistance>(layer, feature, vectorStyle, Network);
 
             if (featureInteractor is INetworkFeatureInteractor)
             {
