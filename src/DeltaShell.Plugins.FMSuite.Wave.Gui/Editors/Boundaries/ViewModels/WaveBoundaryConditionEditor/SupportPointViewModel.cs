@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             get => SupportPoint.Distance;
             set
             {
-                if (!(Math.Abs(SupportPoint.Distance - value) > 1E-15))
+                if ((Math.Abs(SupportPoint.Distance - value) <= 1E-15))
                 {
                     return;
                 }

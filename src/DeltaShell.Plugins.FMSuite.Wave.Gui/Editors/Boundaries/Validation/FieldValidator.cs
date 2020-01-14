@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation
         public static bool IsPositiveDouble(string value, CultureInfo cultureInfo)
         {
             bool result = double.TryParse(value, NumberStyles.Any, cultureInfo, out double doubleValue);
-            if (result == false || doubleValue < 0 || double.IsNaN(doubleValue))
+            if (!result || doubleValue < 0 || double.IsNaN(doubleValue))
             {
                 return false;
             }
