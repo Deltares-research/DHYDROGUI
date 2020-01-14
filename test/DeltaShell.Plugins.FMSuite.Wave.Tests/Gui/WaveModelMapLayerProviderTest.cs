@@ -32,35 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             ShowModelLayers(model);
         }
 
-        [Test]
-        public void Test_GetWaveModelsFunction_ShouldGetCorrectModels()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                gui.Plugins.Add(new SharpMapGisGuiPlugin { Gui = gui });
-                var waveGuiPlugin = new WaveGuiPlugin() { Gui = gui };         
-                gui.Plugins.Add(waveGuiPlugin);
-
-                var modelOne = new WaveModel();
-                var modelTwo = new WaveModel();
-
-                gui.Application = new DeltaShellApplication { Project = new Project() };
-                var app = gui.Application;
-                app.Project.RootFolder.Add(modelOne);
-                app.Project.RootFolder.Add(modelTwo);
-
-                var mapLayerProvider = waveGuiPlugin.MapLayerProvider as WaveModelMapLayerProvider;
-
-                Assert.NotNull(mapLayerProvider);
-
-                var models = mapLayerProvider.GetWaveModels.Invoke().ToList();
-
-                Assert.AreEqual(2, models.Count);
-                Assert.IsTrue(models.Contains(modelOne));
-                Assert.IsTrue(models.Contains(modelTwo));
-            }
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void CreateLayer_WithDiscreteGridPointCoverage_ThenCurvilinearVertexCoverageLayerWithExpectedValuesIsReturned(bool isEditable)
