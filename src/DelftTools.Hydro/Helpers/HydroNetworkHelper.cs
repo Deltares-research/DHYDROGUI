@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
-using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -410,45 +408,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             AddStructureToComposite(compositeBranchStructure, structure);
-        }
-
-        /// <summary>
-        /// Removes a structure from the hydro network
-        /// </summary>
-        /// <param name="structure"> </param>
-        public static void RemoveStructure(IStructure1D structure)
-        {
-            IBranch channel = structure.Branch;
-            if (channel == null)
-            {
-                return; // Do nothing if structure is not on a branch
-            }
-
-            channel.Network.BeginEdit("Delete " + structure.Name);
-
-            channel.BranchFeatures.Remove(structure);
-            RemoveFromChannel(structure, channel);
-
-            channel.Network.EndEdit();
-        }
-
-        [EditAction]
-        private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
-        {
-            if (null == structure.ParentStructure)
-            {
-                return;
-            }
-
-            structure.ParentStructure.Structures.Remove(structure);
-            structure.Branch = null;
-            if (structure.ParentStructure.Structures.Count != 0)
-            {
-                return;
-            }
-
-            channel.BranchFeatures.Remove(structure.ParentStructure);
-            structure.ParentStructure.Branch = null;
         }
 
         public static IHydroNetwork GetSnakeHydroNetwork(bool generateIDs, params Point[] points)

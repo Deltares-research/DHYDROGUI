@@ -1525,12 +1525,5 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.That(nameAlreadyExistCreateNew, Is.Not.Null);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(link.Name));
         }
-
-        [Test]
-        public void RemoveStructureOnDisconnectedStructureShouldNotCrashTools9784()
-        {
-            var weir = new Weir();
-            Assert.DoesNotThrow(() => HydroNetworkHelper.RemoveStructure(weir));
-        }
     }
 }
