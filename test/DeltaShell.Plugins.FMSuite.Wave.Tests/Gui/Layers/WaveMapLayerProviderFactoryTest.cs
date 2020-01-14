@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         public void GetSubProviders_GetWaveModelsNull_ThrowsArgumentNullException()
         {
-            void Call() => WaveMapLayerProviderFactory.GetSubProviders(null);
+            void Call() => WaveMapLayerProviderFactory.GetSubProviders(null).ToList();
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("getWaveModelsFunc"));
