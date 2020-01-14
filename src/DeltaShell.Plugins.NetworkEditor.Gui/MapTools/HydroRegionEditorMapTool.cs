@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -679,12 +678,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                                     })
                         };
                 }
-                
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
-                    };
             }
 
             var networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
@@ -712,54 +705,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                         MenuItem = new ToolStripMenuItem("Shift Level...", null, (s, e) => LevelShift(crossSections))
                     };
             }
-        }
-
-        private static bool IsOriented(IBranchFeature branchFeature)
-        {
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                return ((ICompositeBranchStructure) branchFeature).Structures.Any(IsOriented);
-            }
-            if (branchFeature is BranchStructure)
-            {
-                return true;
-            }
-            var crossSection = branchFeature as ICrossSection;
-            if (crossSection != null)
-            {
-                return crossSection.CrossSectionType == CrossSectionType.YZ ||
-                       crossSection.CrossSectionType == CrossSectionType.GeometryBased;
-            }
-            return false;
-        }
-
-        private void ReverseBranch(IEnumerable<IChannel> channels)
-        {
-            if (channels.Any(c => c.BranchFeatures.Any(IsOriented)))
-            {
-                var result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes) return;
-            }
-            foreach (var channel in channels)
-            {
-                HydroNetworkHelper.ReverseBranch(channel);
-            }
-            MapControl.Refresh();
-        }
-
-        public void ReverseBranch(IChannel branch)
-        {
-            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
-            {
-                var result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes) return;
-            }
-            HydroNetworkHelper.ReverseBranch(branch);
-            MapControl.Refresh();
         }
 
         private static void ToggleFixedGridPoint(IDiscretization discretization, IEnumerable<INetworkLocation> networkLocations)

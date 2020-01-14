@@ -11,7 +11,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -324,62 +323,6 @@ namespace DelftTools.Hydro.Helpers
 
             chainages.AddRange(structureChainages);
             chainages.Sort();
-        }
-
-        /// <summary>
-        /// Switches the direction of the branch
-        /// </summary>
-        /// <param name="branch"> </param>
-        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
-        {
-            var branchReverseAction = new BranchReverseAction(branch);
-            branch.Network.BeginEdit(branchReverseAction);
-
-            INode fromNode = branch.Source;
-            INode toNode = branch.Target;
-
-            branch.Target = null; // Prevents IsConnectedToMultipleBranches from becoming true when false
-            branch.Source = toNode;
-            branch.Target = fromNode;
-
-            // Reverse the linestring geometry
-            var vertices = new List<Coordinate>();
-            for (int i = branch.Geometry.Coordinates.Length - 1; i >= 0; i--)
-            {
-                vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
-            }
-
-            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
-
-            ReverseBranchBranchFeatures(branch);
-
-            branch.Network.EndEdit();
-        }
-
-        /// <summary>
-        /// Update the offsets of the branchFeatures. The location on the map are not changed merely there offset
-        /// relative to the start of the branch.
-        /// </summary>
-        /// <param name="branch"> </param>
-        private static void ReverseBranchBranchFeatures(IBranch branch)
-        {
-            IBranchFeature[] reversedBranchFeatures = branch.BranchFeatures.Reverse().ToArray();
-
-            double length = branch.Length;
-            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
-            {
-                branchFeature.SetBeingMoved(true);
-                branchFeature.Chainage =
-                    BranchFeature.SnapChainage(length, length - branchFeature.Chainage - branchFeature.Length);
-            }
-
-            branch.BranchFeatures.Clear();
-            branch.BranchFeatures.AddRange(reversedBranchFeatures);
-
-            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
-            {
-                branchFeature.SetBeingMoved(false);
-            }
         }
 
         /// <summary>
