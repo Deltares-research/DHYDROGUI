@@ -24,6 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// </summary>
         /// <param name="factory">The factory to build the layers with.</param>
         /// <param name="getWaveModelsFunc"> Function to retrieve the WaveModels. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw when <paramref name="factory"/> or
+        /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
+        /// </exception>
         public WavmFileFunctionStoreLayerSubProvider(IWaveLayerFactory factory, 
                                                      Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {

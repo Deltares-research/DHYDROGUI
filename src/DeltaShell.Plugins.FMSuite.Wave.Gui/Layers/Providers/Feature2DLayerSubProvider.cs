@@ -22,6 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// Creates a new <see cref="Feature2DLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory">The factory.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// </exception>
         protected Feature2DLayerSubProvider(IWaveLayerFactory factory)
         {
             Ensure.NotNull(factory, nameof(factory));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DeltaShell.NGHS.Common;
 using SharpMap.Api.Layers;
 
@@ -17,6 +18,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// Creates a new <see cref="WaveDomainDataLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory">The factory to build the layers with.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// </exception>
         public WaveDomainDataLayerSubProvider(IWaveLayerFactory factory)
         {
             Ensure.NotNull(factory, nameof(factory));

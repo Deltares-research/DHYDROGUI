@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
@@ -21,6 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// Creates a new <see cref="WaveModelLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory">The factory to build the layers with.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw when <paramref name="factory"/> is <c>null</c>.
+        /// </exception>
         public WaveModelLayerSubProvider(IWaveLayerFactory factory)
         {
             Ensure.NotNull(factory, nameof(factory));
