@@ -162,6 +162,7 @@
     <Compile Include="Editors\Boundaries\Validation\FieldValidator.cs" />
     <Compile Include="Editors\Boundaries\Validation\PositiveDoubleValidationRule.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\GaussViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\IViewShape.cs" />
