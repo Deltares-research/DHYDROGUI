@@ -36,6 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         "Expected DescriptionViewModel to be set.");
             Assert.That(viewModel.BoundaryWideParametersViewModel, Is.Not.Null,
                         "Expected BoundaryWideParametersViewModel to be set.");
+            Assert.That(viewModel.GeometryViewModel, Is.Not.Null,
+                        "Expected GeometryViewModel to be set.");
         }
 
         [Test]
