@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
@@ -20,7 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         // TODO (MWT) Verify whether we should add an Extension method to verify the IBoundaryConditionParameters as being valid
         public UniformDataComponent(IBoundaryConditionParameters data)
         {
-            Data = data ?? throw new ArgumentNullException(nameof(data));
+            Ensure.NotNull(data, nameof(data));
+            Data = data;
         }
 
         /// <summary>
@@ -32,7 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         public IBoundaryConditionParameters Data
         {
             get => data;
-            set => data = value ?? throw new ArgumentNullException(nameof(value));
+            set
+            {
+                Ensure.NotNull(value, nameof(value));
+                data = value;
+            }
         }
 
         private IBoundaryConditionParameters data;
