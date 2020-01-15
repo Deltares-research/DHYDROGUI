@@ -593,7 +593,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var waveModel = new WaveModel { Name = "wave" })
             {
                 // Arrange
-                // var waveModel = new WaveModel {Name = "wave"};
                 string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm");
                 string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
 
