@@ -18,10 +18,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// The coordinate based boundary icon.
         /// </summary>
         public static readonly Bitmap CoordinateBasedBoundary = Resources.boundary;
-
-        /// <summary>
-        /// The obstacle data icon.
-        /// </summary>
-        public static readonly Bitmap ObstacleData = Properties.Resources.wall_brick;
     }
 }
