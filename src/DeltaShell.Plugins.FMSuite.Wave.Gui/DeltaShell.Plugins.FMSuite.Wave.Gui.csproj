@@ -45,7 +45,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Wpf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47618\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47798\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
