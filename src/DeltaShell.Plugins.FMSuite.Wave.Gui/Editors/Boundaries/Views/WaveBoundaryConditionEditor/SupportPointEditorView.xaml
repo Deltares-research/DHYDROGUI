@@ -19,6 +19,7 @@
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="BorderThickness" Value="0"></Setter>
             <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
         </Style>
 
         <Style x:Key="ListViewItemStyle" TargetType="ListViewItem">
@@ -35,10 +36,16 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ListViewStyle" TargetType="ListView">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="-1"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
     </UserControl.Resources>
 
     <GroupBox Header="Support points">
-        <Grid HorizontalAlignment="Left" Margin="10,10,0,0" >
+        <Grid Margin="10,10,0,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"></ColumnDefinition>
                 <ColumnDefinition Width="120"></ColumnDefinition>
@@ -49,50 +56,55 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <TextBox HorizontalAlignment="Left" Width="100" Grid.Column="1" Name="AddNewDistanceTextBox">
+            <TextBox Name="AddNewDistanceTextBox" 
+                     HorizontalAlignment="Left" 
+                     Width="100" 
+                     Grid.Column="1" Grid.Row="0" >
                 <Binding Path="NewDistance"  ValidatesOnDataErrors="True" >
                     <Binding.ValidationRules>
                         <validation:PositiveDoubleValidationRule ValidatesOnTargetUpdated="True"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox>
-            <Button Grid.Column="2" Style="{StaticResource ButtonStyle}" 
-                    Command="{Binding Path=AddSupportPointCommand}" 
-                    CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}" HorizontalAlignment="Left">
+
+            <Button Command="{Binding Path=AddSupportPointCommand}" 
+                    CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}"
+                    Grid.Column="2" Grid.Row="0" 
+                    Style="{StaticResource ButtonStyle}">
                 <Image Source="{StaticResource AddImg}" />
             </Button>
 
-            <ListView ItemsSource="{Binding Path=ViewModels}" BorderThickness="0"
-                          SelectedItem="{Binding Path= SelectedViewModel}" 
-                           HorizontalAlignment="Left" Padding="-1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <ListView ItemsSource="{Binding Path=ViewModels}" 
+                      SelectedItem="{Binding Path= SelectedViewModel}" 
+                      Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                      Style="{StaticResource ListViewStyle}">
                 <ListView.ItemContainerStyle>
                     <StaticResource ResourceKey="ListViewItemStyle"/>
                 </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:SupportPointViewModel}">
-                            <Grid Margin="0,2,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20"></ColumnDefinition>
-                                    <ColumnDefinition Width="120"></ColumnDefinition>
-                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:SupportPointViewModel}">
+                        <Grid Margin="0,2,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"></ColumnDefinition>
+                                <ColumnDefinition Width="120"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                                <RadioButton HorizontalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" GroupName="selection" IsChecked="{Binding RelativeSource={RelativeSource
-                                Mode=FindAncestor, 
-                                AncestorType={x:Type ListBoxItem}},
-                                Path=IsSelected}"/>
+                            <RadioButton GroupName="selection" 
+                                         IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"/>
 
-                                <views:SupportPointView DataContext="{Binding}" Grid.Column="1" HorizontalAlignment="Left"/>
+                            <views:SupportPointView DataContext="{Binding}" HorizontalAlignment="Left" Grid.Column="1"/>
 
-                                <Button Grid.Column="2" Command="{Binding Path=DataContext.RemoveSupportPointCommand, 
-                                    RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
-                                        CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}"  >
-                                    <Image Source="{StaticResource DeleteImg}" />
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                            <Button Command="{Binding Path=DataContext.RemoveSupportPointCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
+                                    CommandParameter="{Binding}" 
+                                    Grid.Column="2" 
+                                    Style="{StaticResource ButtonStyle}">
+                                <Image Source="{StaticResource DeleteImg}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </GroupBox>
 </UserControl>
