@@ -174,6 +174,9 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPointEditorViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPointViewModel.cs" />
+    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml.cs">
+      <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
       <DependentUpon>LabeledComboBox.xaml</DependentUpon>
     </Compile>
@@ -487,6 +490,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
