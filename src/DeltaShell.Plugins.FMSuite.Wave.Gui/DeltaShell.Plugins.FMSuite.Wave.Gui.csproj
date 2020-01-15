@@ -183,6 +183,9 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersView.xaml.cs">
       <DependentUpon>ConstantParametersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantConstantParametersView.xaml.cs">
+      <DependentUpon>SpatiallyVariantConstantParametersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformConstantParametersView.xaml.cs">
       <DependentUpon>UniformConstantParametersView.xaml</DependentUpon>
     </Compile>
@@ -505,6 +508,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantConstantParametersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
