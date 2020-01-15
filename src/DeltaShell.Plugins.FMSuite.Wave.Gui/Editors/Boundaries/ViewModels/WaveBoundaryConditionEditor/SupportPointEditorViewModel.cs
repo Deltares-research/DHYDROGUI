@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 case NotifyCollectionChangedAction.Reset:
                     throw new NotSupportedException(nameof(e.Action));
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(e.Action));
+                    throw new InvalidOperationException(e.Action.ToString());
             }
         }
 
