@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+{
+    /// <summary>
+    /// <see cref="SpatiallyVaryingDataComponent"/> defines a data component consisting
+    /// of an optional data object per support point.
+    /// </summary>
+    /// <seealso cref="IBoundaryConditionDataComponent" />
+    public class SpatiallyVaryingDataComponent : IBoundaryConditionDataComponent
+    {
+        private readonly Dictionary<SupportPoint, IBoundaryConditionParameters> data = 
+            new Dictionary<SupportPoint, IBoundaryConditionParameters>();
+
+        /// <summary>
+        /// Gets the dictionary containing the data.
+        /// </summary>
+        public IReadOnlyDictionary<SupportPoint, IBoundaryConditionParameters> Data => data;
+
+        /// <summary>
+        /// Add the specified <paramref name="supportPoint"/> and corresponding
+        /// <paramref name="parameters"/>.
+        /// </summary>
+        /// <param name="supportPoint">The support point.</param>
+        /// <param name="parameters">The parameter data.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <paramref name="supportPoint"/> already exists within Data.
+        /// </exception>
+        public void AddParameters(SupportPoint supportPoint, IBoundaryConditionParameters parameters)
+        {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
+            Ensure.NotNull(parameters, nameof(parameters));
+
+            if (data.ContainsKey(supportPoint))
+            {
+                throw new InvalidOperationException($"Support point: {supportPoint} already exists within Data.");
+            }
+
+            data[supportPoint] = parameters;
+        }
+
+        /// <summary>
+        /// Removes the specified <paramref name="supportPoint"/>.
+        /// </summary>
+        /// <param name="supportPoint">The support point to remove.</param>
+        public void RemoveSupportPoint(SupportPoint supportPoint) =>
+            data.Remove(supportPoint);
+
+        /// <summary>
+        /// Replaces the <paramref name="oldSupportPoint"/> with the new
+        /// <paramref name="newSupportPoint"/>.
+        /// </summary>
+        /// <param name="oldSupportPoint">The old support point.</param>
+        /// <param name="newSupportPoint">The new support point.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any argument is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <paramref name="oldSupportPoint"/> does not exist within Data or
+        /// when <paramref name="newSupportPoint"/> already exists within Data.
+        /// </exception>
+        public void ReplaceSupportPoint(SupportPoint oldSupportPoint, 
+                                        SupportPoint newSupportPoint)
+        {
+            Ensure.NotNull(oldSupportPoint, nameof(oldSupportPoint));
+            Ensure.NotNull(newSupportPoint, nameof(newSupportPoint));
+
+            if (!data.ContainsKey(oldSupportPoint))
+            {
+                throw new InvalidOperationException($"Support point: {oldSupportPoint} does not exist within Data.");
+            }
+
+            AddParameters(newSupportPoint, Data[oldSupportPoint]);
+            RemoveSupportPoint(oldSupportPoint);
+        }
+
+        /// <summary>
+        /// Clears the <see cref="Data"/> of this <see cref="SpatiallyVaryingDataComponent"/>.
+        /// </summary>
+        public void Clear() => data.Clear();
+    }
+}

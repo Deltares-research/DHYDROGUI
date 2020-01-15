@@ -134,6 +134,7 @@
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculatorProvider.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\IBoundaryConditionDataComponent.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\DataComponents\SpatiallyVaryingDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\UniformDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParameters.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionDirectionalSpreadingType.cs" />
