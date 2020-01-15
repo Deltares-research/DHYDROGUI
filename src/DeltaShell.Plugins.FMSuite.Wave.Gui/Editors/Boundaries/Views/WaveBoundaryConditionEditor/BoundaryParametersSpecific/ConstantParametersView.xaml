@@ -16,16 +16,16 @@
     </UserControl.Resources>
     <StackPanel>
         <commonElements:LabeledValueBox Label="Height:"
-                                        ValueContent="0"
+                                        ValueContent="{Binding Path=Height}"
                                         Unit="m" />
         <commonElements:LabeledValueBox Label="Period:"
-                                        ValueContent="1"
+                                        ValueContent="{Binding Path=Period}"
                                         Unit="h" />
         <commonElements:LabeledValueBox Label="Direction:"
-                                        ValueContent="0"
+                                        ValueContent="{Binding Path=Direction}"
                                         Unit="-" />
         <commonElements:LabeledValueBox Label="Spreading:"
-                                        ValueContent="4"
+                                        ValueContent="{Binding Path=Spreading}"
                                         Unit="-" />
     </StackPanel>
 </UserControl>
