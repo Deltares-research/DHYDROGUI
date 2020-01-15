@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:components="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
+             xmlns:subcomponents="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.BoundaryParametersSpecific"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -19,5 +20,6 @@
         <components:BoundaryDescriptionView Grid.Column="0" Grid.Row="0" DataContext="{ Binding Path=DescriptionViewModel }" />
         <components:BoundaryGeometryView Grid.Column="1" Grid.Row="0" DataContext="{Binding Path=GeometryViewModel}" />
         <components:BoundaryWideParametersView Grid.Column="0" Grid.Row="1" DataContext="{ Binding Path=BoundaryWideParametersViewModel }"/>
+        <subcomponents:UniformConstantParametersView Grid.Column="1" Grid.Row="1"/>
     </Grid>
 </UserControl>

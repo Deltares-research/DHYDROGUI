@@ -5,9 +5,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
     /// <summary>
     /// Interaction logic for ConstantParametersView.xaml
     /// </summary>
-    public partial class ConstantParameters : UserControl
+    public partial class ConstantParametersView : UserControl
     {
-        public ConstantParameters()
+        public ConstantParametersView()
         {
             InitializeComponent();
         }
