@@ -6,7 +6,22 @@
              xmlns:validation="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor"
              xmlns:views="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
-             mc:Ignorable="d">
+             mc:Ignorable="d" >
+
+    <UserControl.Resources>
+
+        <ImageSource x:Key="AddImg" >pack://application:,,,/DeltaShell.Plugins.FMSuite.Wave.Gui;component/Resources/add.png</ImageSource>
+        <ImageSource x:Key="DeleteImg">pack://application:,,,/DeltaShell.Plugins.FMSuite.Wave.Gui;component/Resources/delete.png</ImageSource>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="17"></Setter>
+            <Setter Property="Height" Value="17"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+        </Style>
+
+    </UserControl.Resources>
 
     <GroupBox Header="Support points">
         <Grid HorizontalAlignment="Left" Margin="10,10,0,0">
@@ -28,9 +43,12 @@
                 </Binding>
             </TextBox>
 
-            <Button Grid.Column="2" 
+            <Button Grid.Column="2" Style="{StaticResource ButtonStyle}" 
                         Command="{Binding Path=AddSupportPointCommand}" 
-                            CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}">+</Button>
+                            CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}">
+                <Image Source="{StaticResource AddImg}" />
+            </Button>
+
 
             <ListView ItemsSource="{Binding Path=ViewModels}" BorderThickness="0"
                           SelectedItem="{Binding Path= SelectedViewModel}" 
@@ -62,13 +80,15 @@
                             <RadioButton HorizontalAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" GroupName="selection" IsChecked="{Binding RelativeSource={RelativeSource
                                 Mode=FindAncestor, 
                                 AncestorType={x:Type ListBoxItem}},
-                                Path=IsSelected}"></RadioButton>
+                                Path=IsSelected}"/>
 
                             <views:SupportPointView DataContext="{Binding}" Grid.Column="1" HorizontalAlignment="Left"/>
 
                             <Button Grid.Column="2" Command="{Binding Path=DataContext.RemoveSupportPointCommand, 
                                     RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" 
-                                        CommandParameter="{Binding}" HorizontalAlignment="Left">X</Button>
+                                        CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}"  >
+                                <Image Source="{StaticResource DeleteImg}" />
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -564,6 +564,8 @@
     <None Include="packages.config" />
     <None Include="Resources\hurricane2.png" />
     <None Include="Resources\folder.png" />
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\delete.png" />
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>
