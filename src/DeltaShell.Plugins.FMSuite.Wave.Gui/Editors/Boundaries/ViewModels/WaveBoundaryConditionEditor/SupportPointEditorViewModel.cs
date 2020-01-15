@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         /// <summary>
-        /// Gets or sets the view models.
+        /// Gets the view models.
         /// </summary>
         /// <value>
         /// The view models.
@@ -92,7 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <value>
         /// The new distance.
         /// </value>
-        /// <remarks>This property is binded in the view.</remarks>
         public double NewDistance { get; set; }
 
         private ObservableCollection<SupportPointViewModel> GetSortedViewModels()
