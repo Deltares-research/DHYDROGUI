@@ -10,6 +10,7 @@
             <ColumnDefinition Width="100"></ColumnDefinition>
             <ColumnDefinition Width="20"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+
         <TextBox Grid.Column="0">
             <Binding Path="Distance">
                 <Binding.ValidationRules>
@@ -17,6 +18,9 @@
                 </Binding.ValidationRules>
             </Binding>
         </TextBox>
-        <CheckBox Grid.Column="1" IsChecked="{Binding Path=IsEnabled}" HorizontalAlignment="Center" VerticalAlignment="Center"></CheckBox>
+        <CheckBox IsChecked="{Binding Path=IsEnabled}" 
+                  Grid.Column="1"
+                  HorizontalAlignment="Center" 
+                  VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
