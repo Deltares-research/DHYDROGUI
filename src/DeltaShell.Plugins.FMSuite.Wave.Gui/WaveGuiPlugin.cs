@@ -31,6 +31,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 
@@ -198,7 +199,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Description = "Spatially Varying Boundary Editor",
                 GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
-                GetViewData = data => new WaveBoundaryConditionEditorViewModel(data),
+                GetViewData = data =>
+                {
+                    IBoundaryContainer boundaryContainer =
+                        WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data)).BoundaryContainer;
+
+                    var geometryFactory = new WaveBoundaryGeometryFactory(boundaryContainer,
+                                                                          boundaryContainer);
+
+                    return new WaveBoundaryConditionEditorViewModel(data, geometryFactory);
+                },
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
 

@@ -8,10 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
-            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <local:SupportPointEditorView Grid.Column="0" DataContext="{Binding Path=SupportPointEditorViewModel}"></local:SupportPointEditorView>
+        <local:SupportPointEditorView Grid.Column="0" DataContext="{Binding Path=SupportPointEditorViewModel}"/>
+        <local:GeometryPreviewView Grid.Column="1" DataContext="{Binding Path=GeometryPreviewViewModel}" />
     </Grid>
 </UserControl>

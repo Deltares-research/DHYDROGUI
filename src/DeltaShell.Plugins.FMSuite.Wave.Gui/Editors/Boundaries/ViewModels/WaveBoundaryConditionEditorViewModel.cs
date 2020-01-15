@@ -1,8 +1,10 @@
 ﻿using System;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 {
@@ -14,18 +16,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
         /// Creates a new <see cref="WaveBoundaryConditionEditorViewModel"/>.
         /// </summary>
         /// <param name="observedBoundary"> The observed boundary. </param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="observedBoundary"/> is <c>null</c>.
+        /// <param name="geometryFactory"> The geometry factory required for the geometry preview. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="observedBoundary"/> or <paramref name="geometryFactory"/> is <c>null</c>.
         /// </exception>
-        public WaveBoundaryConditionEditorViewModel(IWaveBoundary observedBoundary)
-        { 
-            this.observedBoundary = observedBoundary ?? throw new ArgumentNullException(nameof(observedBoundary));
+        public WaveBoundaryConditionEditorViewModel(IWaveBoundary observedBoundary,
+                                                    IWaveBoundaryGeometryFactory geometryFactory)
+        {
+            Ensure.NotNull(observedBoundary, nameof(observedBoundary));
+            Ensure.NotNull(geometryFactory, nameof(geometryFactory));
+
+            this.observedBoundary = observedBoundary;
 
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary);
 
-            var factory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
-            BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, factory);
-            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary.GeometricDefinition);
+            var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
+            BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, 
+                                                                                  viewShapeFactory);
+            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
+                                                              geometryFactory);
         }
 
         /// <summary>

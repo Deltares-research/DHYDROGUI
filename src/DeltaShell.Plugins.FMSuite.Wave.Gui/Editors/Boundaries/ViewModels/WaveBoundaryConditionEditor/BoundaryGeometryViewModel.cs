@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.NGHS.Common;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
@@ -12,19 +13,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Creates a new instance of the <see cref="BoundaryGeometryViewModel" /> class.
         /// </summary>
-        /// <param name="observedGeometricDefinition"> The observed geometric definition. </param>
+        /// <param name="waveBoundary"> The observed <see cref="IWaveBoundary"/>.</param>
+        /// <param name="geometryFactory"> The geometry factory. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="observedGeometricDefinition" /> is <c> null </c>.
+        /// Thrown when <paramref name="waveBoundary"/> or
+        /// <paramref name="geometryFactory"/> is <c> null </c>.
         /// </exception>
-        public BoundaryGeometryViewModel(IWaveBoundaryGeometricDefinition observedGeometricDefinition)
+        public BoundaryGeometryViewModel(IWaveBoundary waveBoundary,
+                                         IWaveBoundaryGeometryFactory geometryFactory)
         {
-            Ensure.NotNull(observedGeometricDefinition, nameof(observedGeometricDefinition));
-            SupportPointEditorViewModel = new SupportPointEditorViewModel(observedGeometricDefinition);
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
+            Ensure.NotNull(geometryFactory, nameof(geometryFactory));
+
+            SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary.GeometricDefinition);
+            GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, geometryFactory);
         }
 
         /// <summary>
         /// Gets the <see cref="SupportPointEditorViewModel" />.
         /// </summary>
         public SupportPointEditorViewModel SupportPointEditorViewModel { get; }
+
+        /// <summary>
+        /// Gets the <see cref="GeometryPreviewViewModel"/>.
+        /// </summary>
+        public GeometryPreviewViewModel GeometryPreviewViewModel { get; }
     }
 }
