@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
@@ -71,7 +72,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             void Call() => viewModel.Distance = setValue;
 
             // Assert
-            viewModel.AssertPropertyChangedFired(Call, expectedPropChangedCount, nameof(viewModel.Distance));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropChangedCount, nameof(viewModel.Distance), (e) =>
+            {
+                var extendedEventArgs = e as PropertyChangedExtendedEventArgs;
+                Assert.That(extendedEventArgs, Is.Not.Null);
+                Assert.That(extendedEventArgs.OriginalValue, Is.EqualTo(originalValue));
+            });
             Assert.That(supportPoint.Distance, Is.EqualTo(setValue).Within(1E-15));
         }
     }
