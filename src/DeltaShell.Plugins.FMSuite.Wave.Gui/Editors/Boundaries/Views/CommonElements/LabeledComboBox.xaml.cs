@@ -9,6 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
     /// </summary>
     public partial class LabeledComboBox : UserControl
     {
+        /// <summary>
+        /// The label property
+        /// </summary>
         public static readonly DependencyProperty LabelProperty = 
             DependencyProperty.Register(nameof(Label), 
                                         typeof(string), 
@@ -16,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
-        /// Gets or sets the label of this <see cref="LabeledComboBoxControl"/>.
+        /// Gets or sets the label of this <see cref="LabeledComboBox"/>.
         /// </summary>
         public string Label
         {
@@ -35,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
-        /// Gets or sets the selected item of this <see cref="LabeledComboBoxControl"/>.
+        /// Gets or sets the selected item of this <see cref="LabeledComboBox"/>.
         /// </summary>
         public object SelectedItem
         {
@@ -53,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                         new PropertyMetadata(default(IEnumerable)));
 
         /// <summary>
-        /// Gets or sets the items source of this <see cref="LabeledComboBoxControl"/>.
+        /// Gets or sets the items source of this <see cref="LabeledComboBox"/>.
         /// </summary>
         public IEnumerable ItemsSource
         {
@@ -72,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
-        /// Gets or sets the item template of this <see cref="LabeledComboBoxControl"/>.
+        /// Gets or sets the item template of this <see cref="LabeledComboBox"/>.
         /// </summary>
         public DataTemplate ItemTemplate
         {

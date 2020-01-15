@@ -8,6 +8,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
     /// </summary>
     public partial class LabeledValueBox : UserControl
     {
+        /// <summary>
+        /// The label property
+        /// </summary>
         public static readonly DependencyProperty LabelProperty = 
             DependencyProperty.Register(nameof(Label), 
                                         typeof(string), 
@@ -15,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                         new PropertyMetadata(default(string)));
 
         /// <summary>
-        /// Gets or sets the label of this <see cref="LabeledValueBoxControl"/>.
+        /// Gets or sets the label of this <see cref="LabeledValueBox"/>.
         /// </summary>
         public string Label
         {
@@ -43,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
-        /// Gets or sets the Value of this <see cref="LabeledValueBoxControl"/>.
+        /// Gets or sets the Value of this <see cref="LabeledValueBox"/>.
         /// </summary>
         public string ValueContent
         {
@@ -52,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
         }
 
         /// <summary>
-        /// Gets or sets the unit of this <see cref="LabeledValueBoxControl"/>.
+        /// Gets or sets the unit of this <see cref="LabeledValueBox"/>.
         /// </summary>
         public string Unit
         {
@@ -60,6 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
             set => SetValue(UnitProperty, value);
         }
 
+        /// <summary>
+        /// Creates a new <see cref="LabeledValueBox"/>.
+        /// </summary>
         public LabeledValueBox()
         {
             InitializeComponent();
