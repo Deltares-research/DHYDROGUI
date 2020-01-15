@@ -3,7 +3,7 @@
 namespace DeltaShell.NGHS.Common.Eventing
 {
     /// <summary>
-    /// Provides data for the <see cref="INotifyPropertyChangedExtended.PropertyChanged" /> event.
+    /// Provides extended data for the <see cref="INotifyPropertyChanged.PropertyChanged" /> event.
     /// </summary>
     /// <seealso cref="PropertyChangedEventArgs" />
     public class PropertyChangedExtendedEventArgs : PropertyChangedEventArgs

@@ -56,9 +56,7 @@
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
     <Compile Include="Ensure.cs" />
-    <Compile Include="Eventing\INotifyPropertyChangedExtended.cs" />
     <Compile Include="Eventing\PropertyChangedExtendedEventArgs.cs" />
-    <Compile Include="Eventing\PropertyChangedExtendedEventHandler.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
