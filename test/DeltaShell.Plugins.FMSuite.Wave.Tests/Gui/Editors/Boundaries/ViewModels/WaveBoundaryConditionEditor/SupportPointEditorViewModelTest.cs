@@ -105,6 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             double value = random.NextDouble();
+            viewModel.NewDistance = value;
 
             // Call
             viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
@@ -132,6 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             double value = random.NextDouble();
             viewModel.ViewModels.Add(GetSupportPointViewModel(value));
+            viewModel.NewDistance = value;
 
             // Call
             viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
