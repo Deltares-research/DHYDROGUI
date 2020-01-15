@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 
@@ -174,6 +175,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             geometricDefinition.SupportPoints.Add(addedViewModel.SupportPoint);
 
+            addedViewModel.PropertyChanged += OnSupportPointModelPropertyChanged;
+
             if (ViewModels.Count == 1)
             {
                 SelectedViewModel = ViewModels[0];
@@ -184,6 +187,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private void OnViewModelRemoved(SupportPointViewModel viewModel)
         {
             geometricDefinition.SupportPoints.Remove(viewModel.SupportPoint);
+
+            viewModel.PropertyChanged -= OnSupportPointModelPropertyChanged;
 
             if (SelectedViewModel == viewModel)
             {
@@ -221,6 +226,52 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             return false;
+        }
+
+        private void OnSupportPointModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is SupportPointViewModel supportPointViewModel)
+                || e.PropertyName != nameof(SupportPointViewModel.Distance)
+                || !(e is PropertyChangedExtendedEventArgs eExtended))
+            {
+                return;
+            }
+
+            OnViewModelDistanceChanged(supportPointViewModel, (double)eExtended.OriginalValue);
+        }
+
+        private void OnViewModelDistanceChanged(SupportPointViewModel supportPointViewModel, double originalDistance)
+        {
+            double newDistance = supportPointViewModel.Distance;
+
+            IEnumerable<SupportPointViewModel> viewModelsToCheck = ViewModels.Except(new[]
+            {
+                supportPointViewModel
+            });
+
+            if (DistanceExists(viewModelsToCheck, newDistance))
+            {
+                supportPointViewModel.Distance = originalDistance;
+            }
+            else
+            {
+                ReplaceViewModel(supportPointViewModel);
+            }
+        }
+
+        private void ReplaceViewModel(SupportPointViewModel oldViewModel)
+        {
+            bool isSelected = SelectedViewModel == oldViewModel;
+
+            RemoveViewModel(oldViewModel);
+
+            SupportPointViewModel newViewModel = CreateSupportPointViewModel(oldViewModel.Distance);
+            AddViewModel(newViewModel);
+
+            if (isSelected)
+            {
+                SelectedViewModel = newViewModel;
+            }
         }
 
         private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
