@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public class SupportPointEditorViewModel : INotifyPropertyChanged
     {
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
-        private ObservableCollection<SupportPointViewModel> viewModels;
         private SupportPointViewModel selectedViewModel;
 
         /// <summary>
@@ -36,7 +35,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             RemoveSupportPointCommand = new RelayCommand(RemoveSupportPointAction);
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
 
-            InitializeViewModels();
+            ViewModels = GetSortedViewModels();
+            ViewModels.CollectionChanged += OnViewModelCollectionChanged;
+
             SelectedViewModel = ViewModels.FirstOrDefault();
         }
 
@@ -46,31 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <value>
         /// The view models.
         /// </value>
-        public ObservableCollection<SupportPointViewModel> ViewModels
-        {
-            get => viewModels;
-            private set
-            {
-                if (viewModels == value)
-                {
-                    return;
-                }
-
-                if (viewModels != null)
-                {
-                    viewModels.CollectionChanged -= OnViewModelCollectionChanged;
-                }
-
-                viewModels = value;
-
-                if (viewModels != null)
-                {
-                    viewModels.CollectionChanged += OnViewModelCollectionChanged;
-                }
-
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<SupportPointViewModel> ViewModels { get; }
 
         /// <summary>
         /// Gets or sets the selected view model.
@@ -118,14 +95,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <remarks>This property is binded in the view.</remarks>
         public double NewDistance { get; set; }
 
-        private void InitializeViewModels()
+        private ObservableCollection<SupportPointViewModel> GetSortedViewModels()
         {
             IOrderedEnumerable<SupportPoint> sortedSupportPoints = geometricDefinition.SupportPoints
                                                                                       .OrderBy(sp => sp.Distance);
             IEnumerable<SupportPointViewModel> sortedViewModels = sortedSupportPoints
                 .Select(sp => new SupportPointViewModel(sp));
 
-            ViewModels = new ObservableCollection<SupportPointViewModel>(sortedViewModels);
+            return new ObservableCollection<SupportPointViewModel>(sortedViewModels);
         }
 
         private void AddSupportPointAction(object value)
