@@ -114,27 +114,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 return;
             }
 
-            if (ViewModels.Any(vm => Math.Abs(vm.Distance - NewDistance) < 1E-15))
+            if (DistanceExists(ViewModels, NewDistance))
             {
                 return;
             }
 
-            var newSupportPoint = new SupportPoint(NewDistance, geometricDefinition);
-            var newViewModel = new SupportPointViewModel(newSupportPoint);
+            SupportPointViewModel newViewModel = CreateSupportPointViewModel(NewDistance);
+            AddViewModel(newViewModel);
+        }
 
-            if (TryFindInsertIndex(NewDistance, out int index))
+        private SupportPointViewModel CreateSupportPointViewModel(double distance)
+        {
+            var newSupportPoint = new SupportPoint(distance, geometricDefinition);
+            return new SupportPointViewModel(newSupportPoint);
+        }
+
+        private void AddViewModel(SupportPointViewModel viewModel)
+        {
+            if (TryFindInsertIndex(viewModel.Distance, out int index))
             {
-                ViewModels.Insert(index, newViewModel);
+                ViewModels.Insert(index, viewModel);
             }
             else
             {
-                ViewModels.Add(newViewModel);
+                ViewModels.Add(viewModel);
             }
         }
 
         private void RemoveSupportPointAction(object viewModel)
         {
-            ViewModels.Remove((SupportPointViewModel) viewModel);
+            RemoveViewModel((SupportPointViewModel) viewModel);
+        }
+
+        private void RemoveViewModel(SupportPointViewModel viewModel)
+        {
+            ViewModels.Remove(viewModel);
         }
 
         private void OnViewModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -207,6 +221,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             return false;
+        }
+
+        private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
+        {
+            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < 1E-15);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
