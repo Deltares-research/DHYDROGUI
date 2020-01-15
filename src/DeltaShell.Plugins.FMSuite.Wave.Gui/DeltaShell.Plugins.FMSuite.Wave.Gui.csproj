@@ -178,6 +178,9 @@
     <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml.cs">
       <DependentUpon>LabeledValueBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParameters.xaml.cs">
+      <DependentUpon>ConstantParameters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryWideParametersView.xaml.cs">
       <DependentUpon>BoundaryWideParametersView.xaml</DependentUpon>
     </Compile>
@@ -493,6 +496,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParameters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
