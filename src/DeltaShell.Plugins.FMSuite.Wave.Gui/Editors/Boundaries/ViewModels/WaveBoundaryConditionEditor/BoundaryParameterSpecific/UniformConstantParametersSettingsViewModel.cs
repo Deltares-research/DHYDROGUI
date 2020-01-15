@@ -1,24 +1,25 @@
 ﻿using System;
 using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="UniformConstantParametersViewModel"/> defines the view model for the UniformConstantParametersView.
+    /// <see cref="UniformConstantParametersSettingsViewModel"/> defines the view model for the ConstantParametersSettingsView.
     /// </summary>
-    public class UniformConstantParametersViewModel
+    public class UniformConstantParametersSettingsViewModel
     {
         /// <summary>
-        /// Creates a new <see cref="UniformConstantParametersViewModel"/>.
+        /// Creates a new <see cref="UniformConstantParametersSettingsViewModel"/>.
         /// </summary>
         /// <param name="activeParametersViewModel"> The vie data to be displayed.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="activeParametersViewModel"/> is <c>null</c>.
         /// </exception>
-        public UniformConstantParametersViewModel(ConstantParametersViewModel activeParametersViewModel)
+        public UniformConstantParametersSettingsViewModel(ConstantParameters parameters)
         {
-            Ensure.NotNull(activeParametersViewModel, nameof(activeParametersViewModel));
-            ActiveParametersViewModel = activeParametersViewModel;
+            Ensure.NotNull(parameters, nameof(parameters));
+            ActiveParametersViewModel = new ConstantParametersViewModel(parameters);
         }
 
         /// <summary>

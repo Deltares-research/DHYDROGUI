@@ -6,29 +6,28 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParametersSpecific
 {
     [TestFixture]
-    public class UniformConstantParametersViewModelTest
+    public class UniformConstantParametersSettingsViewModelTest
     {
         [Test]
         public void Constructor_ExpectedValues()
         {
             // Setup
             var parameters = new ConstantParameters(0, 0, 0, 0);
-            var parametersViewModel = new ConstantParametersViewModel(parameters);
 
             // Call
-            var viewModel = new UniformConstantParametersViewModel(parametersViewModel);
+            var viewModel = new UniformConstantParametersSettingsViewModel(parameters);
 
             // Assert
-            Assert.That(viewModel.ActiveParametersViewModel, Is.SameAs(parametersViewModel));
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
         }
 
         [Test]
         public void Constructor_ActiveParametersViewModelNull_ThrowsArgumentNullException()
         {
-            void Call() => new UniformConstantParametersViewModel(null);
+            void Call() => new UniformConstantParametersSettingsViewModel(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("activeParametersViewModel"));
+            Assert.That(exception.ParamName, Is.EqualTo("parameters"));
         }
     }
 }

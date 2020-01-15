@@ -20,6 +20,6 @@
         <components:BoundaryDescriptionView Grid.Column="0" Grid.Row="0" DataContext="{ Binding Path=DescriptionViewModel }" />
         <components:BoundaryGeometryView Grid.Column="1" Grid.Row="0" DataContext="{Binding Path=GeometryViewModel}" />
         <components:BoundaryWideParametersView Grid.Column="0" Grid.Row="1" DataContext="{ Binding Path=BoundaryWideParametersViewModel }"/>
-        <subcomponents:UniformConstantParametersView Grid.Column="1" Grid.Row="1"/>
+        <subcomponents:ConstantParametersSettingsView Grid.Column="1" Grid.Row="1"/>
     </Grid>
 </UserControl>

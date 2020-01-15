@@ -3,11 +3,11 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.BoundaryParametersSpecific
 {
     /// <summary>
-    /// Interaction logic for SpatiallyVariantConstantParametersView.xaml
+    /// Interaction logic for ConstantParametersSettingsView.xaml
     /// </summary>
-    public partial class SpatiallyVariantConstantParametersView : UserControl
+    public partial class ConstantParametersSettingsView : UserControl
     {
-        public SpatiallyVariantConstantParametersView()
+        public ConstantParametersSettingsView()
         {
             InitializeComponent();
         }
