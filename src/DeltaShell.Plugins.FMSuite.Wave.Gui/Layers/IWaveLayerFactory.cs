@@ -1,5 +1,4 @@
 ﻿using System;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;

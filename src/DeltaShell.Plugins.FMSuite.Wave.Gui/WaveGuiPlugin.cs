@@ -33,7 +33,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
