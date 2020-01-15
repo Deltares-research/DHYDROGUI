@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -143,6 +145,68 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SubViewModels[0].Distance, Is.EqualTo(value).Within(1E-15));
         }
 
+        [TestCase(0, 1, 2)]
+        [TestCase(0, 2, 1)]
+        [TestCase(1, 0, 2)]
+        [TestCase(1, 2, 0)]
+        [TestCase(2, 0, 1)]
+        [TestCase(2, 1, 0)]
+        public void ExecuteAddSupportPointCommand_NewViewModelIsInsertedAtCorrectIndex(double existingDistanceA,
+                                                                                       double existingDistanceB,
+                                                                                       double newDistance)
+        {
+            // Setup
+            IEnumerable<SupportPointViewModel> existingViewModels = new[]
+                {
+                    existingDistanceA,
+                    existingDistanceB
+                }.OrderBy(d => d)
+                 .Select(GetSupportPointViewModel)
+                 .ToArray();
+            viewModel.ViewModels.AddRange(existingViewModels);
+
+            viewModel.NewDistance = newDistance;
+
+            // Call
+            viewModel.AddSupportPointCommand.Execute(newDistance.ToString(CultureInfo.CurrentCulture));
+
+            // Assert
+            double[] orderedDistances = {0, 1, 2};
+            orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d)));
+
+            Assert.That(SupportPoints, Has.Count.EqualTo(3));
+            SubViewModels.ForEach(vm => Assert.That(SupportPoints, Contains.Item(vm.SupportPoint)));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ExecuteAddSupportPointCommand_MultipleTimes_AllViewModelsAreSortedOnDistance()
+        {
+            // Setup
+            double[] distances =
+            {
+                random.NextDouble(),
+                random.NextDouble(),
+                random.NextDouble(),
+                random.NextDouble(),
+                random.NextDouble(),
+            };
+
+            // Calls
+            distances.ForEach(d =>
+            {
+                viewModel.NewDistance = d;
+                viewModel.AddSupportPointCommand.Execute(d.ToString(CultureInfo.CurrentCulture));
+            });
+
+            // Assert
+            double[] orderedDistances = distances.OrderBy(d => d).ToArray();
+            orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d)));
+
+            Assert.That(SupportPoints, Has.Count.EqualTo(5));
+            SubViewModels.ForEach(vm => Assert.That(SupportPoints, Contains.Item(vm.SupportPoint)));
+        }
+
         [Test]
         public void ExecuteRemoveSupportPointCommand_RemovesViewModel()
         {
@@ -193,34 +257,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SupportPoints, Has.Count.EqualTo(2));
             Assert.That(SupportPoints, Contains.Item(firstSubViewModel.SupportPoint));
             Assert.That(SupportPoints, Contains.Item(newSubViewModel.SupportPoint));
-
-            Assert.That(SubViewModels[1].Distance, Is.GreaterThan(SubViewModels[0].Distance));
-        }
-
-        [Test]
-        public void AddViewModels_AllViewModelsAreSortedOnDistance()
-        {
-            // Setup
-            double[] distances =
-            {
-                random.NextDouble(),
-                random.NextDouble(),
-                random.NextDouble(),
-                random.NextDouble(),
-                random.NextDouble(),
-            };
-
-            // Calls
-            distances.ForEach(d => viewModel.ViewModels.Add(GetSupportPointViewModel(d)));
-
-            // Assert
-            double[] orderedDistances = distances.OrderBy(d => d).ToArray();
-            orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d)));
-
-            // Assert
-            Assert.That(SupportPoints, Has.Count.EqualTo(5));
-            SubViewModels.ForEach(vm => Assert.That(SupportPoints, Contains.Item(vm.SupportPoint)));
-            Assert.That(viewModel.SelectedViewModel.Distance, Is.EqualTo(distances[0]));
         }
 
         [Test]

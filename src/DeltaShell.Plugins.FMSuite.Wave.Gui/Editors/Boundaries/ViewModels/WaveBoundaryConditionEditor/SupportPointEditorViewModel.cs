@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DeltaShell.NGHS.Common;
@@ -145,7 +144,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             var newSupportPoint = new SupportPoint(NewDistance, geometricDefinition);
-            ViewModels.Add(new SupportPointViewModel(newSupportPoint));
+            var newViewModel = new SupportPointViewModel(newSupportPoint);
+
+            if (TryFindInsertIndex(NewDistance, out int index))
+            {
+                ViewModels.Insert(index, newViewModel);
+            }
+            else
+            {
+                ViewModels.Add(newViewModel);
+            }
         }
 
         private void RemoveSupportPointAction(object viewModel)
@@ -181,8 +189,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 SelectedViewModel = ViewModels[0];
                 return;
             }
-
-            ViewModels = new ObservableCollection<SupportPointViewModel>(ViewModels.OrderBy(vm => vm.Distance));
         }
 
         private void OnViewModelRemoved(SupportPointViewModel viewModel)
@@ -193,6 +199,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             {
                 SelectedViewModel = ViewModels.FirstOrDefault();
             }
+        }
+
+        private bool TryFindInsertIndex(double distance, out int index)
+        {
+            index = -1;
+
+            if (!ViewModels.Any())
+            {
+                return false;
+            }
+
+            if (distance < ViewModels[0].Distance)
+            {
+                index = 0;
+                return true;
+            }
+
+            if (distance > ViewModels.Last().Distance)
+            {
+                return false;
+            }
+
+            for (var i = 0; i + 1 < ViewModels.Count; i++)
+            {
+                if (ViewModels[i].Distance < distance && distance < ViewModels[i + 1].Distance)
+                {
+                    index = i + 1;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
