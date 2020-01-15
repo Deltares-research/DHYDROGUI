@@ -47,30 +47,32 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <StackPanel>
-        <common:LabeledComboBox Label="Shape:"
-                                SelectedItem="{Binding Path=ShapeType}"
-                                ItemsSource="{Binding Path=ShapeTypeList}"
-                                ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}"/>
-        <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
-                                                     Converter={StaticResource TypeToVisibilityConverter},
-                                                     ConverterParameter={x:Type shapes:JonswapViewShape}}"
-                                Label="Peak Enhancement Factor:"
-                                ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
-                                Unit="-" />
-        <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
-                                                     Converter={StaticResource TypeToVisibilityConverter},
-                                                     ConverterParameter={x:Type shapes:GaussViewShape}}"
-                                Label="Gaussian Spread:"
-                                ValueContent="{Binding Path=Shape.GaussianSpread}"
-                                Unit="-" />
-        <common:LabeledComboBox Label="Period:"
-                                SelectedItem="{Binding Path=PeriodType}"
-                                ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
-                                ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
-        <common:LabeledComboBox Label="Directional Spreading:"
-                                SelectedItem="{Binding Path=DirectionalSpreadingType}"
-                                ItemsSource="{Binding Source={StaticResource SpreadingTypes}}"
-                                ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
-    </StackPanel>
+    <GroupBox Header="Parameters">
+        <StackPanel Margin="10">
+            <common:LabeledComboBox Label="Shape:"
+                                    SelectedItem="{Binding Path=ShapeType}"
+                                    ItemsSource="{Binding Path=ShapeTypeList}"
+                                    ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}"/>
+            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                         Converter={StaticResource TypeToVisibilityConverter},
+                                                         ConverterParameter={x:Type shapes:JonswapViewShape}}"
+                                    Label="Peak Enhancement Factor:"
+                                    ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
+                                    Unit="-" />
+            <common:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+                                                         Converter={StaticResource TypeToVisibilityConverter},
+                                                         ConverterParameter={x:Type shapes:GaussViewShape}}"
+                                    Label="Gaussian Spread:"
+                                    ValueContent="{Binding Path=Shape.GaussianSpread}"
+                                    Unit="-" />
+            <common:LabeledComboBox Label="Period:"
+                                    SelectedItem="{Binding Path=PeriodType}"
+                                    ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
+                                    ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
+            <common:LabeledComboBox Label="Directional Spreading:"
+                                    SelectedItem="{Binding Path=DirectionalSpreadingType}"
+                                    ItemsSource="{Binding Source={StaticResource SpreadingTypes}}"
+                                    ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}"/>
+        </StackPanel>
+    </GroupBox>
 </UserControl>
