@@ -21,9 +21,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation
         /// </returns>
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            return FieldValidator.IsPositiveDouble((string) value, cultureInfo)
-                       ? new ValidationResult(true, null)
-                       : new ValidationResult(false, null);
+            bool result = double.TryParse((string) value, NumberStyles.Any, cultureInfo, out double doubleValue);
+            if (result && doubleValue >= 0 && !double.IsNaN(doubleValue))
+            {
+                return new ValidationResult(true, null);
+            }
+
+            return new ValidationResult(false, null);
         }
     }
 }

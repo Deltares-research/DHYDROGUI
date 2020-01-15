@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DeltaShell.NGHS.Common;
@@ -129,19 +131,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void AddSupportPointAction(object value)
         {
-            var distanceString = (string) value;
-            if (!FieldValidator.IsPositiveDouble(distanceString, CultureInfo.CurrentCulture))
+            ValidationResult result =
+                new PositiveDoubleValidationRule().Validate(value, CultureInfo.CurrentCulture);
+
+            if (!result.IsValid)
             {
                 return;
             }
 
-            double distance = double.Parse(distanceString, NumberStyles.Any, CultureInfo.CurrentCulture);
-            if (ViewModels.Any(vm => Math.Abs(vm.Distance - distance) < 1E-15))
+            if (ViewModels.Any(vm => Math.Abs(vm.Distance - NewDistance) < 1E-15))
             {
                 return;
             }
 
-            var newSupportPoint = new SupportPoint(distance, geometricDefinition);
+            var newSupportPoint = new SupportPoint(NewDistance, geometricDefinition);
             ViewModels.Add(new SupportPointViewModel(newSupportPoint));
         }
 
