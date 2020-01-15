@@ -119,9 +119,8 @@ namespace DelftTools.Hydro.SewerFeatures
         [EditAction]
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
         {
-            return;
             if (NotifyCollectionChangedEventArgs.Action != NotifyCollectionChangeAction.Add) return;
-            if (!(NotifyCollectionChangedEventArgs.Item is LateralSource))
+            if (!(NotifyCollectionChangedEventArgs.Item is LateralSource) && !(NotifyCollectionChangedEventArgs.Item is HydroLink))
             {
                 NotifyCollectionChangedEventArgs.Cancel = true;
                 Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);

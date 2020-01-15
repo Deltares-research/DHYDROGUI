@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         {
             var nwrwRrData = rrModel.UrbanRrData.OfType<IUrbanRrData>().FirstOrDefault();
             if (nwrwRrData == null) return; // There must be somthing read else we cant link!
-            const string prefix = "gwsw_input_";
+            
             foreach (var nwrwDischargeData in nwrwRrData.UrbanRrDischargeDefinitions.OfType<NwrwDischargeData>())
             {
                 if (nwrwDischargeData.DischargeType == DischargeType.DryWeatherFlow)
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     if (branch != null)
                     {
                         // add lateral to branch
-                        LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = prefix+nwrwDischargeData.Name };
+                        LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = nwrwDischargeData.Name };
                         lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
                         branch.BranchFeatures.Add(lateralSource);
 

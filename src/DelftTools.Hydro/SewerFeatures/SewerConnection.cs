@@ -37,7 +37,6 @@ namespace DelftTools.Hydro.SewerFeatures
         public SewerConnection(string name)
             : base(name, null, null, 0)
         {
-            Links = new EventedList<HydroLink>();
         }
 
         public double LevelSource { get; set; }
@@ -309,9 +308,8 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            return;
             if (e.Action != NotifyCollectionChangeAction.Add) return;
-            if (!BranchFeatures.Any()) return;
+            if (!BranchFeatures.Any() || e.Item is HydroLink || e.Item is LateralSource|| e.Item is CompositeBranchStructure) return;
 
             var compositeStructures = BranchFeatures.Where(bf => !(bf is LateralSource)).OfType<CompositeBranchStructure>().ToList();
             if (!compositeStructures.Any() ||
