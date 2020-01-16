@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -534,7 +533,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
             {
                 return !data.ModelSettings.NumericalScheme.IsIterativeCalculationScheme();
             }
-            else if (propertyName == TypeUtils.GetMemberName(() => data.HorizontalDispersion))
+            else if (propertyName == nameof(data.HorizontalDispersion))
             {
                 return data.Dispersion[0].IsUnstructuredGridCellCoverage();
             }
