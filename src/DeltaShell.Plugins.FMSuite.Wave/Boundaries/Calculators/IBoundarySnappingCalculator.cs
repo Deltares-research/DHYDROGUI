@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -59,5 +60,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// The coordinate of the location of the <paramref name="supportPoint"/>.
         /// </returns>
         Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint);
+
+        /// <summary>
+        /// Calculates the distance between two boundary indices.
+        /// </summary>
+        /// <param name="indexA">The first index.</param>
+        /// <param name="indexB">The second index.</param>
+        /// <param name="gridSide">The grid side.</param>
+        /// <returns>
+        /// The distance between <paramref name="indexA"/> and <paramref name="indexB"/>.
+        /// </returns>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="gridSide"/> is not defined.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="indexA"/> or <paramref name="indexB"/> are smaller than 0
+        /// or when they are equal to or larger than the number of coordinates of the <see cref="IGridBoundary"/>
+        /// at the specified <param name="gridSide"></param>
+        /// </exception>
+        double CalculateDistanceBetweenBoundaryIndices(int indexA, int indexB, GridSide gridSide);
     }
 }

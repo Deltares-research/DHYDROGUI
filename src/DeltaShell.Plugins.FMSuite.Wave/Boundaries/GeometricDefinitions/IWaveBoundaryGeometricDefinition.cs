@@ -41,6 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         GridSide GridSide { get; }
 
         /// <summary>
+        /// Gets the length of this <see cref="IWaveBoundary"/>.
+        /// </summary>
+        double Length { get; }
+
+        /// <summary>
         /// Gets the support points defined on this <see cref="IWaveBoundaryGeometricDefinition"/>.
         /// </summary>
         /// <value>

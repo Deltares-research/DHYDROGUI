@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.Common.Tests
@@ -29,6 +30,45 @@ namespace DeltaShell.NGHS.Common.Tests
             // Call | Assert
             void Call() => Ensure.NotNull(obj, nameof(obj));
             Assert.DoesNotThrow(Call);
+        }
+
+        [Test]
+        public void IsDefined_NotDefined_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            const string name = "value";
+
+            // Call
+            void Call() => Ensure.IsDefined((TestEnum) 0, name);
+
+            // Assert
+            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(name));
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(TestEnum.A)]
+        [TestCase(TestEnum.B)]
+        [TestCase(TestEnum.C)]
+        public void IsDefined_Defined_DoesNotThrow(object value)
+        {
+            // Setup
+            const string name = "value";
+
+            // Call
+            void Call() => Ensure.IsDefined((TestEnum) value, name);
+
+            // Assert
+            Assert.DoesNotThrow(Call);
+        }
+
+        private enum TestEnum
+        {
+            A = 1,
+            B = 2,
+            C = 3
         }
     }
 }

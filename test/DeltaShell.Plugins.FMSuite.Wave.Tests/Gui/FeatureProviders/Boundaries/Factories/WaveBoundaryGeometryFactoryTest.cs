@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -99,6 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             var gridSide = random.NextEnumValue<GridSide>();
+            double length = random.NextDouble();
             const int expectedStartingIndex = 3;
             const int expectedEndingIndex = 6;
 
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(gridCoordinates[i]).Returns(coordinates[i]);
             }
 
-            var waveBoundaryGeomDef = new WaveBoundaryGeometricDefinition(expectedStartingIndex, expectedEndingIndex, gridSide);
+            var waveBoundaryGeomDef = new WaveBoundaryGeometricDefinition(expectedStartingIndex, expectedEndingIndex, gridSide, length);
             var waveBoundary = Substitute.For<IWaveBoundary>();
             waveBoundary.GeometricDefinition.Returns(waveBoundaryGeomDef);
 
@@ -192,10 +192,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             const int firstIndex = 5;
             const int lastIndex = 10;
             var gridSide = random.NextEnumValue<GridSide>();
+            double length = random.NextDouble();
             
             var geometricDefinition = new WaveBoundaryGeometricDefinition(firstIndex, 
                                                                           lastIndex, 
-                                                                          gridSide);
+                                                                          gridSide,
+                                                                          length);
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
 
             var gridBoundaryCoordinates = Enumerable.Range(0, lastIndex * 2)

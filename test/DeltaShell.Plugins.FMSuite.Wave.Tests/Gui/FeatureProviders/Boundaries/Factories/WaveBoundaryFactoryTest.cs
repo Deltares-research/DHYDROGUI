@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             geometry.Coordinates.Returns(coordinates);
             helper.GetSnappedEndPoints(calculator, coordinates).Returns(snappedCoordinates);
-            helper.GetGeometricDefinition(snappedCoordinates).Returns(geometricDefinition);
+            helper.GetGeometricDefinition(snappedCoordinates, calculator).Returns(geometricDefinition);
             helper.GetConditionDefinition().Returns(conditionDefinition);
 
             // Call
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(boundary.Name, Is.EqualTo(name));
 
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
-            helper.Received(1).GetGeometricDefinition(snappedCoordinates);
+            helper.Received(1).GetGeometricDefinition(snappedCoordinates, calculator);
             helper.Received(1).GetConditionDefinition();
             nameProvider.Received(1).GetUniqueName();
         }
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             geometry.Coordinates.Returns(coordinates);
             helper.GetSnappedEndPoints(calculator, coordinates).Returns(snappedCoordinates);
-            helper.GetGeometricDefinition(snappedCoordinates).Returns(geometricDefinition);
+            helper.GetGeometricDefinition(snappedCoordinates, calculator).Returns(geometricDefinition);
 
             // Call
             IWaveBoundary boundary = factory.ConstructWaveBoundary(geometry);
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Assert
             Assert.That(boundary, Is.Null);
             helper.Received(1).GetSnappedEndPoints(calculator, coordinates);
-            helper.Received(1).GetGeometricDefinition(snappedCoordinates);
+            helper.Received(1).GetGeometricDefinition(snappedCoordinates, calculator);
             helper.DidNotReceive().GetConditionDefinition();
             nameProvider.DidNotReceive().GetUniqueName();
         }

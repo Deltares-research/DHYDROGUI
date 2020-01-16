@@ -61,6 +61,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             return closestIndices.Item1.Select(i => gridEnvelope[i]);
         }
 
+        public double CalculateDistanceBetweenBoundaryIndices(int indexA, int indexB, GridSide gridSide)
+        {
+            Ensure.IsDefined(gridSide, nameof(gridSide));
+
+            ValidateCoordinate(indexA, nameof(indexA), gridSide);
+            ValidateCoordinate(indexB, nameof(indexB), gridSide);
+
+            int startIndex = Math.Min(indexA, indexB);
+            int endIndex   = Math.Max(indexA, indexB);
+
+            int nCoordinates = endIndex - startIndex + 1;
+            Coordinate[] coordinates =
+                GridBoundary[gridSide].Skip(startIndex)
+                                      .Take(nCoordinates)
+                                      .Select(GridBoundary.GetWorldCoordinateFromBoundaryCoordinate)
+                                      .ToArray();
+
+            double distance = 0;
+            for (var i = 0; i < nCoordinates - 1; i++)
+            {
+                distance += DistanceCalculator.CalculateDistance(coordinates[i], coordinates[i + 1]);
+            }
+
+            return distance;
+        }
+
+        private void ValidateCoordinate(int index, string indexName, GridSide gridSide)
+        {
+            int sideLength = GridBoundary[gridSide].Count();
+
+            if (index < 0 || index >= sideLength)
+            {
+                throw new ArgumentOutOfRangeException(indexName);
+            }
+        }
+
         public Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));

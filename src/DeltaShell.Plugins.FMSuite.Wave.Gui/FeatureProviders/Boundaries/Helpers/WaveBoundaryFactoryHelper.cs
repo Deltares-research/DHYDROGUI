@@ -40,14 +40,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
             return firstSnappedCoordinates.Concat(lastSnappedCoordinates);
         }
 
-
-        public IWaveBoundaryGeometricDefinition GetGeometricDefinition(IEnumerable<GridBoundaryCoordinate> snappedCoordinates)
+        public IWaveBoundaryGeometricDefinition GetGeometricDefinition(IEnumerable<GridBoundaryCoordinate> snappedCoordinates, IBoundarySnappingCalculator calculator)
         {
             IEnumerable<IGrouping<GridSide, GridBoundaryCoordinate>> groupedCoordinates =
                 snappedCoordinates.GroupBy(x => x.GridSide)
                                   .Where(group => group.Count() >= 2);
 
-            IWaveBoundaryGeometricDefinition candidate = null;
+            var candidateFound = false;
+
+            var startIndexCandidate = 0;
+            var endIndexCandidate = 0;
+            var gridSideCandidate = GridSide.North;
+            double lengthCandidate = 0;
 
             foreach (IGrouping<GridSide, GridBoundaryCoordinate> coordinateGroup in groupedCoordinates)
             {
@@ -55,18 +59,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
                 int last = coordinateGroup.Max(x => x.Index);
 
                 if (first == last ||
-                    (candidate != null &&
-                     last - first < candidate.EndingIndex - candidate.StartingIndex))
+                    (candidateFound && last - first < endIndexCandidate - startIndexCandidate))
                 {
                     continue;
                 }
 
-                candidate = new WaveBoundaryGeometricDefinition(first,
-                                                                last,
-                                                                coordinateGroup.Key);
+                candidateFound = true;
+
+                startIndexCandidate = first;
+                endIndexCandidate = last;
+                gridSideCandidate = coordinateGroup.Key;
+                lengthCandidate = calculator.CalculateDistanceBetweenBoundaryIndices(first, last, coordinateGroup.Key);
             }
 
-            return candidate;
+            return candidateFound
+                       ? new WaveBoundaryGeometricDefinition(startIndexCandidate, endIndexCandidate, gridSideCandidate, lengthCandidate)
+                       : null;
         }
 
         public IWaveBoundaryConditionDefinition GetConditionDefinition()

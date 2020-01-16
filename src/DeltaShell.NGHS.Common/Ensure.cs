@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DeltaShell.NGHS.Common
 {
@@ -24,6 +25,24 @@ namespace DeltaShell.NGHS.Common
             if (obj == null)
             {
                 throw new ArgumentNullException(paramName);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified value is a defined <see cref="Enum"/>;
+        /// if it is not, then an <see cref="InvalidEnumArgumentException"/> is thrown.
+        /// </summary>
+        /// <typeparam name="T">The type of the object</typeparam>
+        /// <param name="value">The value to check.</param>
+        /// <param name="name">The name of <paramref name="value"/>.</param>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="value"/> is not a definedn <see cref="Enum"/>
+        /// </exception>
+        public static void IsDefined<T>(T value, string name)
+        {
+            if (!Enum.IsDefined(typeof(T), value))
+            {
+                throw new InvalidEnumArgumentException(name);
             }
         }
     }

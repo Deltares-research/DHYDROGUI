@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// <param name="startingIndex">Index of the starting.</param>
         /// <param name="endingIndex">Index of the ending.</param>
         /// <param name="gridSide">The grid side.</param>
+        /// <param name="length">The length of the wave boundary.</param>
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when <see cref="GridSide"/> is an invalid enum value.
         /// </exception>
@@ -26,7 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// </exception>
         public WaveBoundaryGeometricDefinition(int startingIndex,
                                                int endingIndex,
-                                               GridSide gridSide)
+                                               GridSide gridSide,
+                                               double length)
         {
             if (startingIndex < 0)
             {
@@ -38,9 +40,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 throw new ArgumentException($"StartingIndex: '{startingIndex}' should be smaller than EndingIndex: {endingIndex}.");
             }
 
+            if (length <= 0)
+            {
+                throw new ArgumentException($"Length: '{length}' should be larger than or equal to zero.");
+            }
+
             GridSide = gridSide;
             this.startingIndex = startingIndex;
             this.endingIndex = endingIndex;
+            Length = length;
 
             SupportPoints = new EventedList<SupportPoint>();
         }
@@ -105,6 +113,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         }
 
         private GridSide gridSide = GridSide.North;
+
+        public double Length { get; }
 
         public IEventedList<SupportPoint> SupportPoints { get; }
     }

@@ -39,13 +39,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// Gets the geometric definition from the provided <paramref name="snappedCoordinates"/>.
         /// </summary>
         /// <param name="snappedCoordinates">The snapped coordinates.</param>
+        /// <param name="calculator">The boundary snapping calculator.</param>
         /// <returns>
         /// A <see cref="IWaveBoundaryGeometricDefinition"/> describing the
         /// <paramref name="snappedCoordinates"/>. If no
         /// <see cref="IWaveBoundaryGeometricDefinition"/> could be constructed,
         /// then <c>null</c> is returned.
         /// </returns>
-        IWaveBoundaryGeometricDefinition GetGeometricDefinition(IEnumerable<GridBoundaryCoordinate> snappedCoordinates);
+        /// <remarks>
+        /// <paramref name="calculator"/> is assumed to not be <c>null</c>.
+        /// </remarks>
+        IWaveBoundaryGeometricDefinition GetGeometricDefinition(IEnumerable<GridBoundaryCoordinate> snappedCoordinates,
+                                                                IBoundarySnappingCalculator calculator);
 
         /// <summary>
         /// Gets the default condition definition.

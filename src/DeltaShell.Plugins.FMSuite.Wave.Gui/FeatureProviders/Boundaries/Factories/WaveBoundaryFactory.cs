@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                   geometry.Coordinates);
 
             IWaveBoundaryGeometricDefinition geometricDefinition = 
-                factoryHelper.GetGeometricDefinition(snappedCoordinates);
+                factoryHelper.GetGeometricDefinition(snappedCoordinates, calculator);
 
             if (geometricDefinition == null)
             {

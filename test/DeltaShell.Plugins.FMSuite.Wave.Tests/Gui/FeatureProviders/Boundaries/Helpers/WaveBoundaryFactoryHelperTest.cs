@@ -191,6 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             get
             {
+                double length = new Random().NextDouble();
+
                 const int indexFirst = 0;
                 const int indexLast = 10;
                 var coordinateFirst = new GridBoundaryCoordinate(GridSide.East, indexFirst);
@@ -203,9 +205,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 };
 
                 yield return new TestCaseData(coordinatesValid, 
-                                              new WaveBoundaryGeometricDefinition(indexFirst, 
-                                                                                  indexLast, 
-                                                                                  GridSide.East));
+                                              new WaveBoundaryGeometricDefinition(indexFirst,
+                                                                                  indexLast,
+                                                                                  GridSide.East,
+                                                                                  length));
 
                 GridBoundaryCoordinate[] coordinatesValidExtra = new[]
                 {
@@ -219,7 +222,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 yield return new TestCaseData(coordinatesValidExtra, 
                                               new WaveBoundaryGeometricDefinition(indexFirst, 
                                                                                   indexLast, 
-                                                                                  GridSide.East));
+                                                                                  GridSide.East,
+                                                                                  length));
 
                 var coordinateFirstSmall = new GridBoundaryCoordinate(GridSide.West, 0);
                 var coordinateLastSmall  = new GridBoundaryCoordinate(GridSide.West, 3);
@@ -235,21 +239,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 yield return new TestCaseData(coordinatesValidExtraDifferentSide, 
                                               new WaveBoundaryGeometricDefinition(indexFirst, 
                                                                                   indexLast, 
-                                                                                  GridSide.East));
+                                                                                  GridSide.East,
+                                                                                  length));
             }
         }
 
         [Test]
         [TestCaseSource(nameof(TestCaseDataGetGeometricDefinitionNotNull))]
-        public void GivenAValidEnumerableOfGridBoundaryCoordinates_WhenGetGeometricDefinitionIsCalled_ThenTheExpectedCandidateIsReturned(IEnumerable<GridBoundaryCoordinate> coordinates, 
-                                                                                                                                     IWaveBoundaryGeometricDefinition expectedDefinition)
+        public void GivenAValidEnumerableOfGridBoundaryCoordinates_WhenGetGeometricDefinitionIsCalled_ThenTheExpectedCandidateIsReturned(IEnumerable<GridBoundaryCoordinate> coordinates,
+                                                                                                                                         IWaveBoundaryGeometricDefinition expectedDefinition)
         {
             // Given
             var factoryHelper = new WaveBoundaryFactoryHelper();
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
+            calculator.CalculateDistanceBetweenBoundaryIndices(expectedDefinition.StartingIndex,
+                                                               expectedDefinition.StartingIndex,
+                                                               expectedDefinition.GridSide)
+                      .ReturnsForAnyArgs(expectedDefinition.Length);
             // When
             IWaveBoundaryGeometricDefinition result = 
-                factoryHelper.GetGeometricDefinition(coordinates);
+                factoryHelper.GetGeometricDefinition(coordinates, calculator);
 
             // Then
             Assert.That(result.StartingIndex, Is.EqualTo(expectedDefinition.StartingIndex),
@@ -257,6 +267,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result.EndingIndex, Is.EqualTo(expectedDefinition.EndingIndex),
                         "Expected a different ending index:");
             Assert.That(result.GridSide, Is.EqualTo(expectedDefinition.GridSide),
+                        "Expected a different grid side:");
+            Assert.That(result.Length, Is.EqualTo(expectedDefinition.Length),
                         "Expected a different grid side:");
         }
 
@@ -300,10 +312,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Given
             var factoryHelper = new WaveBoundaryFactoryHelper();
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
             // When
             IWaveBoundaryGeometricDefinition result =
-                factoryHelper.GetGeometricDefinition(coordinates);
+                factoryHelper.GetGeometricDefinition(coordinates, calculator);
 
             // Then
             Assert.That(result, Is.Null);
