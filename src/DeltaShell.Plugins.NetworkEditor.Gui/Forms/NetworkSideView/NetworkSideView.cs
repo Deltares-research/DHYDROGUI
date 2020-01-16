@@ -23,7 +23,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
@@ -1112,7 +1111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 var data = (NetworkSideViewDataController)sender;
 
-                if (e.PropertyName.Equals(TypeUtils.GetMemberName(() => data.WaterLevelNetworkCoverage)))
+                if (e.PropertyName.Equals(nameof(data.WaterLevelNetworkCoverage)))
                 {
                     UnsubscribeTimeNavigator();
                     CreateAndSubscribeTimeNavigator();
@@ -1120,10 +1119,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 var interestingMembers = new[]
                                       {
-                                          TypeUtils.GetMemberName(() => data.WaterLevelNetworkCoverage),
-                                          TypeUtils.GetMemberName(() => data.ProfileNetworkCoverages),
-                                          TypeUtils.GetMemberName(() => data.RenderedNetworkCoverages),
-                                          TypeUtils.GetMemberName(() => data.RenderedFeatureCoverages)
+                                          nameof(data.WaterLevelNetworkCoverage),
+                                          nameof(data.ProfileNetworkCoverages),
+                                          nameof(data.RenderedNetworkCoverages),
+                                          nameof(data.RenderedFeatureCoverages)
                                       };
 
                 if (interestingMembers.Contains(e.PropertyName))

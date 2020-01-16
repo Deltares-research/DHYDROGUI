@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 
@@ -152,7 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         void PumpPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => pump.ControlDirection))
+            if (e.PropertyName == nameof(pump.ControlDirection))
             {
                 SetSideCheckboxes(pump.ControlDirection);
             }
