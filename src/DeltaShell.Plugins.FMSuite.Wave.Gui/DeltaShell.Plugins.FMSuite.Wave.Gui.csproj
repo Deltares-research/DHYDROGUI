@@ -156,7 +156,9 @@
     <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
     <Compile Include="Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverter.cs" />
     <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\ForcingViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\SpatialDefinitionViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
     <Compile Include="Editors\Boundaries\Factories\IViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\ViewShapeFactory.cs" />
