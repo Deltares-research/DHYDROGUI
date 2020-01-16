@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaveModelProperty) sender;
-            if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            if (e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.BedFriction,
                                                                     StringComparison.InvariantCultureIgnoreCase))
@@ -677,7 +677,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             var feature2D = sender as Feature2D;
 
             if (snappingGeometry || feature2D == null ||
-                e.PropertyName != TypeUtils.GetMemberName(() => feature2D.Geometry))
+                e.PropertyName != nameof(feature2D.Geometry))
             {
                 return;
             }
