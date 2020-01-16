@@ -28,7 +28,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             this.observedBoundary = observedBoundary;
 
-            DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary);
+            var dataComponentFactory = new ViewDataComponentFactory();
+            DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
+                                                                    dataComponentFactory);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
             BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, 
