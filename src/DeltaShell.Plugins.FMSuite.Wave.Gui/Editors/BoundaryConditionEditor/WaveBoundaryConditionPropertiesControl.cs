@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using DelftTools.Utils.Binding;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 
@@ -45,8 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             if (waveBoundaryCondition != null)
             {
                 uniformityBox.DataBindings.Add(new Binding("SelectedValue", waveBoundaryCondition,
-                                                           TypeUtils.GetMemberName(
-                                                               () => waveBoundaryCondition.SpatialDefinitionType),
+                                                           nameof(waveBoundaryCondition.SpatialDefinitionType),
                                                            false,
                                                            DataSourceUpdateMode.OnPropertyChanged));
             }

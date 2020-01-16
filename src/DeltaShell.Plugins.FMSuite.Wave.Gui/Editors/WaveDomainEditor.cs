@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Binding;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 
@@ -106,42 +105,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             SpectralDomainData spectralDomain = data.SpectralDomainData;
 
             useDefaultDirSpaceCBox.DataBindings.Add(new Binding("Checked", spectralDomain,
-                                                                TypeUtils.GetMemberName(
-                                                                    () => spectralDomain.UseDefaultDirectionalSpace)));
+                                                                nameof(spectralDomain.UseDefaultDirectionalSpace)));
             nDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                 TypeUtils.GetMemberName(() => spectralDomain.NDir)));
+                                                 nameof(spectralDomain.NDir)));
             startDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                     TypeUtils.GetMemberName(() => spectralDomain.StartDir)));
+                                                     nameof(spectralDomain.StartDir)));
             endDirBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                   TypeUtils.GetMemberName(() => spectralDomain.EndDir)));
+                                                   nameof(spectralDomain.EndDir)));
 
             useDefaultFreqSpaceCBox.DataBindings.Add(new Binding("Checked", spectralDomain,
-                                                                 TypeUtils.GetMemberName(
-                                                                     () => spectralDomain.UseDefaultFrequencySpace)));
+                                                                 nameof(spectralDomain.UseDefaultFrequencySpace)));
             nrOfFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                     TypeUtils.GetMemberName(() => spectralDomain.NFreq)));
+                                                     nameof(spectralDomain.NFreq)));
             lowFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                    TypeUtils.GetMemberName(() => spectralDomain.FreqMin)));
+                                                    nameof(spectralDomain.FreqMin)));
             highFreqBox.DataBindings.Add(new Binding("Text", spectralDomain,
-                                                     TypeUtils.GetMemberName(() => spectralDomain.FreqMax)));
+                                                     nameof(spectralDomain.FreqMax)));
 
             useDefaultMeteoCBox.DataBindings.Add(new Binding("Checked", data,
                                                              nameof(WaveDomainData.UseGlobalMeteoData)));
 
             HydroFromFlowSettings hydroData = data.HydroFromFlowData;
             useDefaultHydroCBox.DataBindings.Add(new Binding("Checked", hydroData,
-                                                             TypeUtils.GetMemberName(
-                                                                 () => hydroData.UseDefaultHydroFromFlowSettings)));
+                                                             nameof(hydroData.UseDefaultHydroFromFlowSettings)));
             bedlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
-                                                     TypeUtils.GetMemberName(() => hydroData.BedLevelUsage)));
+                                                     nameof(hydroData.BedLevelUsage)));
             waterlevelBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
-                                                       TypeUtils.GetMemberName(() => hydroData.WaterLevelUsage)));
+                                                       nameof(hydroData.WaterLevelUsage)));
             velocityBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
-                                                     TypeUtils.GetMemberName(() => hydroData.VelocityUsage)));
+                                                     nameof(hydroData.VelocityUsage)));
             velocityTypeBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
-                                                         TypeUtils.GetMemberName(() => hydroData.VelocityUsageType)));
+                                                         nameof(hydroData.VelocityUsageType)));
             windBox.DataBindings.Add(new Binding("SelectedValue", hydroData,
-                                                 TypeUtils.GetMemberName(() => hydroData.WindUsage)));
+                                                 nameof(hydroData.WindUsage)));
         }
 
         private void CircleRBtnOnCheckedChanged(object sender, EventArgs eventArgs)
