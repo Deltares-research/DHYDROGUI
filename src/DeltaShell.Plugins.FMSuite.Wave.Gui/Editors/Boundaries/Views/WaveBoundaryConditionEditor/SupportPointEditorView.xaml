@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:validation="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation"
-             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor"
              xmlns:views="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
+             xmlns:supportPoints="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints"
              mc:Ignorable="d" >
 
     <UserControl.Resources>
@@ -82,7 +82,7 @@
                     <StaticResource ResourceKey="ListViewItemStyle"/>
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewModels:SupportPointViewModel}">
+                    <DataTemplate DataType="{x:Type supportPoints:SupportPointViewModel}">
                         <Grid Margin="0,2,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"></ColumnDefinition>

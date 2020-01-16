@@ -173,8 +173,8 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\IViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\JonswapViewShape.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShape.cs" />
-    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPointEditorViewModel.cs" />
-    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPointViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModel.cs" />
     <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml.cs">
       <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
     </Compile>

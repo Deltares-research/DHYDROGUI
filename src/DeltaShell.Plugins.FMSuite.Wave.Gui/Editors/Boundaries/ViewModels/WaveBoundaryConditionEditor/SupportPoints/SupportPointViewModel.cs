@@ -5,7 +5,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {
     /// <summary>
     /// <see cref="SupportPointViewModel" /> defines the view model for the support point view

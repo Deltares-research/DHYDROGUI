@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor

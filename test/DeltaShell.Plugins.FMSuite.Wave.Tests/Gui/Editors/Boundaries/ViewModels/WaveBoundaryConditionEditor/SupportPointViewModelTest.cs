@@ -2,7 +2,7 @@
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
 using NUnit.Framework;
 
