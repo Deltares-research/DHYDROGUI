@@ -274,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 supportPointViewModel
             });
 
-            if (DistanceExists(viewModelsToCheck, newDistance))
+            if (DistanceExists(viewModelsToCheck, newDistance) || newDistance > maxDistance)
             {
                 supportPointViewModel.Distance = originalDistance;
             }
