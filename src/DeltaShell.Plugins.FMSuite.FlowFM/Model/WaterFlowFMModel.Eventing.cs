@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaterFlowFMProperty) sender;
-            if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            if (e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                                                                    StringComparison.InvariantCultureIgnoreCase))
