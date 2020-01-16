@@ -111,7 +111,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                                        .Select(x => GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(x))
                                        .ToArray();
 
-            return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(supportPoint.Distance, coordinates, DistanceCalculator);
+            double distance = supportPoint.Distance;
+            if (Math.Abs(distance) < 1E-15)
+            {
+                return coordinates.First();
+            }
+
+            if (Math.Abs(distance - geometricDefinition.Length) < 1E-15)
+            {
+                return coordinates.Last();
+            }
+
+            return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance, coordinates, DistanceCalculator);
         }
     }
 }
