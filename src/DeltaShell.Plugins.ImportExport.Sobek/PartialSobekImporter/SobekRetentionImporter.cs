@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             var sobekRetentionsReader = new SobekRetentionsReader();
-            sobekRetentionsReader.Sobek2Import = SobekType == SobekType.Sobek212;
+            sobekRetentionsReader.Sobek2Import = SobekType == DeltaShell.Sobek.Readers.SobekType.Sobek212;
             var sobekRetsobekRetentions = sobekRetentionsReader.Read(retentionPath).ToList();
 
             if (!sobekRetsobekRetentions.Any()) return;
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
             var retentions = HydroNetwork.Retentions.ToDictionary(r => r.Name, r => r);
 
-            if (SobekType == SobekType.Sobek212)
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.Sobek212)
             {
                 if (netterFileExists)
                 {
@@ -100,12 +100,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var sobekValveData = GetSobekValveData();
 
 
-            var structurebuilders = new List<IBranchStructureBuilder>
+            var structurebuilders = new List<Builders.IBranchStructureBuilder>
                                         {
-                                            new WeirBuilder(sobekCrossSectionDefinitions),
-                                            new PumpBuilder(),
-                                            new BridgeBuilder(sobekCrossSectionDefinitions),
-                                            new CulvertBuilder(sobekCrossSectionDefinitions,sobekValveData)
+                                            new Builders.WeirBuilder(sobekCrossSectionDefinitions),
+                                            new Builders.PumpBuilder(),
+                                            new Builders.BridgeBuilder(sobekCrossSectionDefinitions),
+                                            new Builders.CulvertBuilder(sobekCrossSectionDefinitions,sobekValveData)
                                         };
 
             var splitBranches = new List<ChannelToSplit>();
@@ -216,10 +216,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (nodes.ContainsKey(retention.Name))
                 {
-                    if(readNodeTypes != null)
+                    if (readNodeTypes != null)
                     {
                         //verification if node is declared in netter file as lateral source
-                        if(!readNodeTypes.ContainsKey(retention.Name) || (readNodeTypes[retention.Name] != "SBK_LATERALFLOW" &&  readNodeTypes[retention.Name] != "SBK_CHANNEL_STORCONN&LAT" && !readNodeTypes[retention.Name].StartsWith("SBK_CONN&LAT")))
+                        if (!readNodeTypes.ContainsKey(retention.Name) || (readNodeTypes[retention.Name] != "SBK_LATERALFLOW" && readNodeTypes[retention.Name] != "SBK_CHANNEL_STORCONN&LAT" && !readNodeTypes[retention.Name].StartsWith("SBK_CONN&LAT")))
                         {
                             continue;
                         }
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private IList<SobekValveData> GetSobekValveData()
         {
-            if (SobekType == SobekType.SobekRE)
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE)
             {
                 // SobekRe has no culverts and thus no valves
                 return new List<SobekValveData>();
@@ -261,10 +261,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.WarnFormat("Valve data file [{0}] not found; skipping...", valveDataPath);
                 return new List<SobekValveData>();
             }
-            return SobekValveDataReader.ReadValveData(valveDataPath);
+            return new DeltaShell.Sobek.Readers.Readers.SobekValveDataReader().Read(valveDataPath).ToList();
         }
 
-        private void CreateStructure(Channel channel, double offset, Dictionary<string, SobekStructureDefinition> definitions, IEnumerable<IBranchStructureBuilder> structureBuilders, params string[] structureIds)
+        private void CreateStructure(Channel channel, double offset, Dictionary<string, SobekStructureDefinition> definitions, IEnumerable<Builders.IBranchStructureBuilder> structureBuilders, params string[] structureIds)
         {
             ICompositeBranchStructure compositeStructure = null;
 

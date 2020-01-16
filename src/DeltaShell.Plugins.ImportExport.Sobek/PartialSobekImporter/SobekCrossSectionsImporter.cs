@@ -8,6 +8,7 @@ using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Sobek.Readers.Readers;
@@ -70,9 +71,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.Error("Network has no branches; can not import cross sections.");
                 return;
             }
-            
+
             ClearUnusedCrossSectionSectionTypes();
-            
+
             // network.cr: contains locations of the several cross sections
             var locationsPath = GetFilePath(SobekFileNames.SobekNetworkLocationsFileName);
             IList<SobekBranchLocation> locations = new SobekCrossSectionsReader().Read(locationsPath).ToList();
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             // four types currently supported:
             // ZW, YZ, Standard (Rectangle, Round)
             var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
-            
+
             //profile.dat: ref level and geometry of cross section at locaton
             var mappings = new SobekProfileDatFileReader().Read(GetFilePath(SobekFileNames.SobekProfileDataFileName)).ToList();
 
@@ -93,8 +94,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var defPath = GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName);
             var crossSectionDefinitionsLookup = crossSectionDefinitionReader.Read(defPath)
                                                         .ToDictionaryWithErrorDetails(defPath, d => d.ID);
-            
-            if(mappings.Count > 0)
+
+            if (mappings.Count > 0)
             {
                 branches = HydroNetwork.Branches.ToDictionary(b => b.Name);
             }
@@ -137,6 +138,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         continue;
                     }
 
+                    var definition = definitionIDToDefinition[sobekCrossSectionMapping.DefinitionId];
+
+                    if (definition == null)
+                    {
+                        continue;
+                    }
+
                     var offset = location.Offset;
 
                     if (offset > branch.Length)
@@ -147,50 +155,51 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         offset = branch.Length;
                     }
 
-                    //since during creation the cs is added to the network immediately, delete existing cs first
-                    if (crossSectionLookup.ContainsKey(location.ID))
+                    var pipe = branch as Pipe;
+                    if (pipe != null)
                     {
-                        var existingBranch = HydroNetwork.Branches.FirstOrDefault(b => b.Name == branch.Name);
-                        if (existingBranch != null)
+                        SetPipeProperties(pipe, definition, sobekCrossSectionMapping, offset);
+                    }
+                    else
+                    {
+                        //since during creation the cs is added to the network immediately, delete existing cs first
+                        if (crossSectionLookup.ContainsKey(location.ID))
                         {
-                            existingBranch.BranchFeatures.Remove(crossSectionLookup[location.ID]);
+                            var existingBranch = HydroNetwork.Branches.FirstOrDefault(b => b.Name == branch.Name);
+                            if (existingBranch != null)
+                            {
+                                existingBranch.BranchFeatures.Remove(crossSectionLookup[location.ID]);
+                            }
                         }
+
+                        var definitionToUse = (ICrossSectionDefinition)definition.Clone();
+
+                        ICrossSection crossSection = new CrossSection(definitionToUse);
+                        NetworkHelper.AddBranchFeatureToBranch(crossSection, branch, offset);
+
+                        crossSection.Name = location.ID;
+                        crossSection.LongName = location.Name;
+                        crossSection2Definition[crossSection] =
+                            crossSectionDefinitionsLookup[sobekCrossSectionMapping.DefinitionId];
+
+                        // Reference level as used in sobek is not stored in cross section; correct z values.
+                        if (crossSection.Definition.IsProxy)
+                        {
+                            ((CrossSectionDefinitionProxy)crossSection.Definition).LevelShift =
+                                sobekCrossSectionMapping.RefLevel1;
+                        }
+                        else if (sobekCrossSectionMapping.RefLevel1 != 0.0)
+                        {
+                            crossSection.Definition.ShiftLevel(sobekCrossSectionMapping.RefLevel1);
+                        }
+
+                        // link the cross section to the definition so we can later update the friction
+                        if (!crossSectionUsage.ContainsKey(sobekCrossSectionMapping.DefinitionId))
+                        {
+                            crossSectionUsage[sobekCrossSectionMapping.DefinitionId] = new List<ICrossSection>();
+                        }
+                        crossSectionUsage[sobekCrossSectionMapping.DefinitionId].Add(crossSection);
                     }
-
-                    var definition = definitionIDToDefinition[sobekCrossSectionMapping.DefinitionId];
-
-                    if (definition == null)
-                    {
-                        continue;
-                    }
-
-                    var definitionToUse = (ICrossSectionDefinition) definition.Clone();
-
-                    ICrossSection crossSection = new CrossSection(definitionToUse);
-                    NetworkHelper.AddBranchFeatureToBranch(crossSection, branch, offset);
-
-                    crossSection.Name = location.ID;
-                    crossSection.LongName = location.Name;
-                    crossSection2Definition[crossSection] =
-                        crossSectionDefinitionsLookup[sobekCrossSectionMapping.DefinitionId];
-
-                    // Reference level as used in sobek is not stored in cross section; correct z values.
-                    if (crossSection.Definition.IsProxy)
-                    {
-                        ((CrossSectionDefinitionProxy) crossSection.Definition).LevelShift =
-                            sobekCrossSectionMapping.RefLevel1;
-                    }
-                    else if (sobekCrossSectionMapping.RefLevel1 != 0.0)
-                    {
-                        crossSection.Definition.ShiftLevel(sobekCrossSectionMapping.RefLevel1);
-                    }
-
-                    // link the cross section to the definition so we can later update the friction
-                    if (!crossSectionUsage.ContainsKey(sobekCrossSectionMapping.DefinitionId))
-                    {
-                        crossSectionUsage[sobekCrossSectionMapping.DefinitionId] = new List<ICrossSection>();
-                    }
-                    crossSectionUsage[sobekCrossSectionMapping.DefinitionId].Add(crossSection);
                 }
             }
             finally
@@ -199,6 +208,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     HydroNetwork.EndEdit();
                 }
+            }
+        }
+
+        private void SetPipeProperties(Pipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping, double offset)
+        {
+            pipe.CrossSectionDefinition = definition;
+            if (Math.Abs(offset) < double.Epsilon)
+            {
+                pipe.LevelSource = sobekCrossSectionMapping.RefLevel1;
+            }
+            else
+            {
+                pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
             }
         }
 

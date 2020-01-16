@@ -11,9 +11,9 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekLinkageNodeImporter: PartialSobekImporterBase
+    public class SobekLinkageNodeImporter : PartialSobekImporterBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekSettingsImporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekLinkageNodeImporter));
 
         public SobekLinkageNodeImporter()
         {
@@ -37,15 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var lstCalcPointsToAddToDiscretization = new List<NetworkLocation>();
 
-            var waterFlowModel1D = TryGetModel<WaterFlowModel1D>();
-
-
             ImportLinkageNode(ref lstCalcPointsToAddToDiscretization);
-
-            if (waterFlowModel1D != null)
-            {
-                UpdateDiscretization(waterFlowModel1D.NetworkDiscretization, lstCalcPointsToAddToDiscretization);
-            }
         }
 
         /// <summary>
@@ -58,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var channels = HydroNetwork.Channels.ToDictionary(c => c.Name, c => c);
             var highestOrderNumber = HydroNetwork.Channels.Select(c => c.OrderNumber).Max();
 
-            if(highestOrderNumber < 1)
+            if (highestOrderNumber < 1)
             {
                 highestOrderNumber = 1; //starts order number with 1
             }
@@ -99,13 +91,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                 //list of calculation points to add to the discretization
                 lstCalcPointsToAddToDiscretization.Add(new NetworkLocation(branchToSplit, branchToSplit.Length));
-                    //last point first branch
+                //last point first branch
                 lstCalcPointsToAddToDiscretization.Add(new NetworkLocation(secondBranch, 0.0));
-                    //first point second branch
+                //first point second branch
                 lstCalcPointsToAddToDiscretization.Add(new NetworkLocation(secondBranch, secondBranch.Length));
-                    //last point second branch
+                //last point second branch
 
-                
+
 
                 var originalBranchName = linkageNodes[i].BranchID;
 
@@ -136,13 +128,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             foreach (var networkLocation in lstCalcPointsToAddToDiscretization)
             {
-                if(Math.Abs(networkLocation.Chainage) < BranchFeature.Epsilon)
+                if (Math.Abs(networkLocation.Chainage) < BranchFeature.Epsilon)
                 {
-                    AddOrMoveFirstCalculationPoint(discretization,networkLocation);
+                    AddOrMoveFirstCalculationPoint(discretization, networkLocation);
                 }
                 else
                 {
-                    AddOrMoveLastCalculationPoint(discretization, networkLocation); 
+                    AddOrMoveLastCalculationPoint(discretization, networkLocation);
                 }
             }
 
@@ -155,7 +147,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var branch = networkLocation.Branch;
             var gridPoints = discretization.Locations.Values.Where(nl => nl.Branch == branch).ToArray();
             var n = gridPoints.Length - 1;
-             
+
             if (n < 1 || branch.Length - gridPoints[n].Chainage > 0.25) // at least 2 grid points per branch (begin & end), validation minimum distance validation criteria
             {
                 discretization[new NetworkLocation(branch, branch.Length)] = 1.0;

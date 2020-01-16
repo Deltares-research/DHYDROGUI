@@ -11,8 +11,8 @@ using log4net;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
-{ 
-    public class SobekLateralSourcesImporter: PartialSobekImporterBase
+{
+    public class SobekLateralSourcesImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekLateralSourcesImporter));
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
             var sobekBoundaryLocationReader = new SobekBoundaryLocationReader { SobekType = SobekType };
             var branches = HydroNetwork.Branches.ToDictionary(b => b.Name, b => b);
-            var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name,n => n);
+            var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
 
             var lateralsAtNode = new List<SobekBoundaryLocation>();
 
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 targetLateralSource.CopyFrom(lateralSource);
                 targetLateralSource.Chainage = lateralSource.Chainage;
                 targetLateralSource.Geometry = lateralSource.Geometry;
-                if(targetLateralSource.Branch != branch)
+                if (targetLateralSource.Branch != branch)
                 {
                     targetLateralSource.Branch.BranchFeatures.Remove(targetLateralSource);
                     NetworkHelper.AddBranchFeatureToBranch(targetLateralSource, branch, lateralSource.Chainage);

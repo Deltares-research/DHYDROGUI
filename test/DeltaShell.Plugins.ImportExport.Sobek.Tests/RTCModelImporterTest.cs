@@ -1,6 +1,6 @@
 ﻿using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
@@ -33,12 +33,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        public void ImportNoControllerTriggersModelReturnsAWaterFlowModel()
+        public void ImportNoControllerTriggersModelReturnsAWaterFlowFMModel()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var model = ImportModelFromSobek(pathToSobekNetwork);
 
-            Assert.IsTrue(model is WaterFlowModel1D);
+            Assert.IsTrue(model is WaterFlowFMModel);
         }
 
         [Test]

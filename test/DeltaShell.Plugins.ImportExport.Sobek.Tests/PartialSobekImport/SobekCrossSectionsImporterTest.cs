@@ -170,12 +170,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            //eggshape and closedcircle not imported yet: wait for implementation closed branch
-            // Assert.AreEqual(22, hydroNetwork.CrossSections.Count()); 
-            //Assert.AreEqual(11, hydroNetwork.CrossSections.Where(t => t.CrossSectionType == CrossSectionType.Standard).Count());
-
-            Assert.AreEqual(18, hydroNetwork.CrossSections.Count());
-            Assert.AreEqual(7, hydroNetwork.CrossSections.Where(t => t.CrossSectionType == CrossSectionType.Standard).Count());
+            Assert.AreEqual(22, hydroNetwork.CrossSections.Count()); 
+            Assert.AreEqual(11, hydroNetwork.CrossSections.Where(t => t.CrossSectionType == CrossSectionType.Standard).Count());
 
             var definition = hydroNetwork.CrossSections.Where(
                 cs => cs.CrossSectionType == CrossSectionType.ZW && !cs.Definition.IsProxy).Select(
@@ -183,6 +179,32 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             Assert.AreEqual(0.0, definition.Sections[0].MinY);
             Assert.AreEqual(2.0, definition.Sections[0].MaxY);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportPipeProfilesTest()
+        {
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
+            var hydroNetwork = new HydroNetwork();
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekCrossSectionsImporter() });
+            importer.Import();
+
+            //global check
+            Assert.AreEqual(912, hydroNetwork.Pipes.Count());
+
+            //cross-section check
+            Assert.AreEqual(29, hydroNetwork.SharedCrossSectionDefinitions.Count());
+
+            //each pipe profile should be in shared cross-section definitions
+
+            foreach (var pipe in hydroNetwork.Pipes)
+            {
+                Assert.IsFalse(pipe.CrossSectionDefinition.IsProxy);
+                Assert.IsTrue(hydroNetwork.SharedCrossSectionDefinitions.Any(scsd => scsd.Name.Equals(pipe.CrossSectionDefinitionName)));
+            }
+
         }
     }
 }

@@ -5,7 +5,9 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -16,7 +18,7 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekComputationalGridImporter: PartialSobekImporterBase
+    public class SobekComputationalGridImporter : PartialSobekImporterBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekComputationalGridImporter));
 
@@ -34,35 +36,35 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             Log.DebugFormat("Importing computational grid ...");
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+            var waterFlowFMModel = GetModel<WaterFlowFMModel>();
 
             var channels = HydroNetwork.Channels.ToDictionary(c => c.Name, c => c);
 
             try
             {
-                waterFlowModel1D.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
-                waterFlowModel1D.NetworkDiscretization.Clear();
-                ImportCalculationGrids(waterFlowModel1D.NetworkDiscretization, channels);
-                ImportFixedGridPointData(waterFlowModel1D.NetworkDiscretization);
+                waterFlowFMModel.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
+                waterFlowFMModel.NetworkDiscretization.Clear();
+                ImportCalculationGrids(waterFlowFMModel.NetworkDiscretization, channels);
+                ImportFixedGridPointData(waterFlowFMModel.NetworkDiscretization);
             }
             catch (Exception exception)
             {
                 Log.ErrorFormat("Error reading computational grid: {0}", exception.Message);
             }
 
-            if (SobekType == SobekType.SobekRE)
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE)
             {
                 // for sobekRe import generate a default grid for branches that have no grid points
-                var theHaves = waterFlowModel1D.NetworkDiscretization.Locations.Values.Select(s => s.Branch).Distinct();
+                var theHaves = waterFlowFMModel.NetworkDiscretization.Locations.Values.Select(s => s.Branch).Distinct();
                 foreach (var channel in HydroNetwork.Branches)
                 {
                     if (theHaves.Contains(channel) || !(channel is IChannel)) continue;
 
                     Log.InfoFormat("Generate default grid (on cross sections) for branch {0}.", channel.Name);
-                    HydroNetworkHelper.GenerateDiscretization(waterFlowModel1D.NetworkDiscretization, channel as IChannel,
+                    HydroNetworkHelper.GenerateDiscretization(waterFlowFMModel.NetworkDiscretization, channel as IChannel,
                                                               /*minimumCellLength*/0.5, /*gridAtStructure*/false,
-                                                              /*structureDistance*/0.0, /*gridAtCrossSection*/true, 
-                                                              /*gridAtLaterals*/false, /*gridAtFixedLength*/false, 
+                                                              /*structureDistance*/0.0, /*gridAtCrossSection*/true,
+                                                              /*gridAtLaterals*/false, /*gridAtFixedLength*/false,
                                                               /*fixedLength*/0.0);
                 }
             }
@@ -102,7 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 foreach (CalcGrid grid in calcGrids.OrderBy(g => HydroNetwork.Branches.IndexOf(channels[g.BranchID])))
                 {
                     var branch = channels[grid.BranchID];
-                    
+
                     var branchLocations = CreateFractionSegment(branch, grid,
                                           branch.Structures.Where(s => s is ICompositeBranchStructure).OrderBy(
                                               s => s.Chainage).Select(s => s.Chainage).ToList());
@@ -112,7 +114,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         locations.AddRange(branchLocations);
                     }
                 }
-
+                //change stupid duplicate names of locations
+                //NamingHelper.MakeNamesUnique(locations.GroupBy(l => l.Name).Where(g => g.Count() > 1).SelectMany(g => g));
+                NamingHelper.MakeNamesUnique(locations);
+                NamingHelper.MakeNamesUnique(locations);
                 networkDiscretization.Locations.SetValues(locations);
             }
             else
@@ -133,7 +138,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (!grid.GridPoints.Any())
             {
-                if (SobekType != SobekType.SobekRE)
+                if (SobekType != DeltaShell.Sobek.Readers.SobekType.SobekRE)
                 {
                     Log.WarnFormat("No computational grid points defined for channel {0}", branch.Name);
                 }
@@ -173,19 +178,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             foreach (var gridPoint in grid.GridPoints)
             {
                 SobekCalcGridPoint point = gridPoint;
-                if(ignoreOffsets.Any(o => Math.Abs(o - point.Offset) < BranchFeature.Epsilon))
+                if (ignoreOffsets.Any(o => Math.Abs(o - point.Offset) < BranchFeature.Epsilon))
                 {
                     skippedPoints.Add(gridPoint.Offset);
                     continue;
                 }
                 // last point will always put on top end node to avoid rounding errors
                 var networkLocation = new NetworkLocation
-                                          {
-                                              Branch = branch,
-                                              Chainage = BranchFeature.SnapChainage(branch.Length, gridPoint.Offset),
-                                              Name = gridPoint.Id,
-                                              LongName = gridPoint.Name
-                                          };
+                {
+                    Branch = branch,
+                    Chainage = BranchFeature.SnapChainage(branch.Length, gridPoint.Offset),
+                    Name = gridPoint.Id,
+                    LongName = gridPoint.Name
+                };
                 networkLocations.Add(networkLocation);
             }
             if (skippedPoints.Count > 0)

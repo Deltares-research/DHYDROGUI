@@ -10,7 +10,7 @@ using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekMeasurementStationsImporter: PartialSobekImporterBase
+    public class SobekMeasurementStationsImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekMeasurementStationsImporter));
 
@@ -47,13 +47,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (!branches.ContainsKey(measurementLocation.BranchId))
                 {
-                    log.ErrorFormat("Could not import measurement location '{0} - {1}' because branch '{2}' doesn't exist.", measurementLocation.Id,measurementLocation.Name, measurementLocation.BranchId);
+                    log.ErrorFormat("Could not import measurement location '{0} - {1}' because branch '{2}' doesn't exist.", measurementLocation.Id, measurementLocation.Name, measurementLocation.BranchId);
                     continue;
                 }
 
                 var offset = measurementLocation.Chainage;
                 var branch = branches[measurementLocation.BranchId];
-                
+
                 if (offset > branch.Length)
                 {
                     log.ErrorFormat("The chainage of lateral source '{0} - {1}' is out of the branch length. The chainage has been set from {2} to {3}.", measurementLocation.Id, measurementLocation.Name, offset, branch.Length);

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
-{
-    public static class SobekMeteoDataImporterHelper
+{ public static class SobekMeteoDataImporterHelper
     {
         public static void ReadTimersFromMeteo(IList<DateTime> times, DateTime simulationStartTime, DateTime simulationStopTime, out DateTime startTime, out DateTime stopTime)
         {

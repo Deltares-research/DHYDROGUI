@@ -12,7 +12,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekStructuresImporter: PartialSobekImporterBase
+    public class SobekStructuresImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekRetentionImporter));
 
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            var channelStructureBuilder = new ChannelStructureBuilder(
+            var channelStructureBuilder = new Builders.ChannelStructureBuilder(
                 channels,
                 new SobekNetworkStructureReader().Read(structureLocationPath),
                 definitions,
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             channelStructureBuilder.SetStructuresOnChannels(HydroNetwork.Structures);
 
-            if (SobekType == SobekType.SobekRE)
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE)
             {
                 // SobekRe XRST records in deffrc.3 in 2.12 in friction.dat (already imported)
                 var extraFrictionFile = GetFilePath(SobekFileNames.SobekExtraFrictionFileName);
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private IList<SobekValveData> GetSobekValveData()
         {
-            if (SobekType == SobekType.SobekRE)
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE)
             {
                 // SobekRe has no culverts and thus no valves
                 return new List<SobekValveData>();
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.WarnFormat("Valve data file [{0}] not found; skipping...", valveDataPath);
                 return new List<SobekValveData>();
             }
-            return SobekValveDataReader.ReadValveData(valveDataPath);
+            return new DeltaShell.Sobek.Readers.Readers.SobekValveDataReader().Read(valveDataPath).ToList();
         }
 
         private static bool ValidateStructureFilesExist(string structureLocationPath, string structureMappingPath, string structureDefinitionPath)
@@ -149,13 +149,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var offset = extraFriction.Chainage;
             var geometry = GeometryHelper.GetPointGeometry(channel, offset);
 
-            if(extraResistances.ContainsKey(extraFriction.Id))
+            if (extraResistances.ContainsKey(extraFriction.Id))
             {
                 var extraResistance = extraResistances[extraFriction.Id];
                 extraResistance.LongName = extraFriction.Name;
                 extraResistance.FrictionTable.Clear();
                 FunctionHelper.AddDataTableRowsToFunction(extraFriction.Table, extraResistance.FrictionTable);
-                if(extraResistance.Branch != channel)
+                if (extraResistance.Branch != channel)
                 {
                     extraResistance.Branch.BranchFeatures.Remove(extraResistance);
                     extraResistance.Branch = channel;
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             else
             {
-                var compositeStructure = ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(channel, offset, geometry);
+                var compositeStructure = Builders.ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(channel, offset, geometry);
                 var extraResistance = new ExtraResistance
                 {
                     Name = extraFriction.Id,

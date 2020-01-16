@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -11,7 +12,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekBoundaryConditionsImporter: PartialSobekImporterBase
+    public class SobekBoundaryConditionsImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekBoundaryConditionsImporter));
 
@@ -31,16 +32,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
             var boundaryConditionToFeatureLookup = CreateLookUpDictionary();
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
-            var useSalt = waterFlowModel1D.UseSalt;
-            var useTemperature = waterFlowModel1D.UseTemperature;
+            var waterFlowFMModel = GetModel<WaterFlowFMModel>();
+            var useSalt = waterFlowFMModel.UseSalinity;
+            var useTemperature = waterFlowFMModel.UseTemperature;
 
             var sobekBoundaryConditionReader = new SobekBoundaryConditionReader();
             var boundaryC = sobekBoundaryConditionReader.Read(initialPath);
 
             foreach (var condition in boundaryC)
             {
-                var flowBoundaryConditionData = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(condition);
+                var flowBoundaryConditionData = Model1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(condition);
                 var nodeId = boundaryConditionToFeatureLookup.ContainsKey(condition.ID) ? boundaryConditionToFeatureLookup[condition.ID] : null;
 
                 if (nodeId == null)
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 flowBoundaryConditionData.UseSalt = useSalt;
                 flowBoundaryConditionData.UseTemperature = useTemperature;
 
-                if ((SobekType == SobekType.SobekRE) && (!nodes[nodeId].IsConnectedToMultipleBranches) && (condition.BoundaryType == SobekFlowBoundaryConditionType.Flow))
+                if ((SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE) && (!nodes[nodeId].IsConnectedToMultipleBranches) && (condition.BoundaryType == SobekFlowBoundaryConditionType.Flow))
                 {
                     // RE defines positive flow along the branch, hence at the end of a branch a boundary has a positive Q, 
                     // this means a flow out of the system. If the direction of the branch is flipped, the same positive Q 
@@ -84,10 +85,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
 
-                waterFlowModel1D.ReplaceBoundaryCondition(flowBoundaryConditionData);
+                waterFlowFMModel.ReplaceBoundaryCondition(flowBoundaryConditionData);
             }
         }
-        
+
         private Dictionary<string, string> CreateLookUpDictionary()
         {
             string path = GetFilePath(SobekFileNames.SobekBoundaryConditionsLocationsFileName);

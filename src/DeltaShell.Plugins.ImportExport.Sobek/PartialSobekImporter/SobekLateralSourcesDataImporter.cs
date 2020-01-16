@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -14,7 +15,7 @@ using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    public class SobekLateralSourcesDataImporter: PartialSobekImporterBase
+    public class SobekLateralSourcesDataImporter : PartialSobekImporterBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekLateralSourcesDataImporter));
 
@@ -28,7 +29,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             log.DebugFormat("Importing lateral source data ...");
 
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+            var waterFlowFMModel = GetModel<WaterFlowFMModel>();
+
 
             string lateralPath = GetFilePath(SobekFileNames.SobekLaterSourcesFileName);
             if (!File.Exists(lateralPath))
@@ -43,7 +45,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             // reuse WaterFlowModel1DLateralSourceData object already in model.
             var lateralSourceDataMapping = new Dictionary<IFeature, Model1DLateralSourceData>();
-            foreach (Model1DLateralSourceData flowModel1DLateralSourceData in waterFlowModel1D.LateralSourceData)
+            foreach (Model1DLateralSourceData flowModel1DLateralSourceData in waterFlowFMModel.LateralSourcesData)
             {
                 lateralSourceDataMapping[flowModel1DLateralSourceData.Feature] = flowModel1DLateralSourceData;
             }
@@ -54,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     var waterFlowModel1DLateralSourceData = lateralSourceDataMapping[lateralSources[sobekLateralFlow.Id]];
                     waterFlowModel1DLateralSourceData.Data.Clear();
-                    ConvertToLateralSourceData(sobekLateralFlow, waterFlowModel1DLateralSourceData, SobekFileNames.SobekType == SobekType.SobekRE);
+                    ConvertToLateralSourceData(sobekLateralFlow, waterFlowModel1DLateralSourceData, SobekFileNames.SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE);
                 }
                 else
                 {
@@ -76,7 +78,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             else
             {
-                ConvertToLateralSourceDataFrom212(sobekLateralFlow, model1DLateralSourceData); 
+                ConvertToLateralSourceDataFrom212(sobekLateralFlow, model1DLateralSourceData);
             }
         }
 

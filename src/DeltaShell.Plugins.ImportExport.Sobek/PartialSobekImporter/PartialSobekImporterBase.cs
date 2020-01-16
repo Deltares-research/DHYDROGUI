@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -18,10 +20,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         public PartialSobekImporterBase()
         {
-             SobekFileNames = new SobekFileNames();
+            SobekFileNames = new DeltaShell.Sobek.Readers.SobekFileNames();
         }
 
-        public abstract string DisplayName {get;}
+        public abstract string DisplayName { get; }
 
         public string PathSobek
         {
@@ -45,11 +47,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     throw new DirectoryNotFoundException(string.Format("The path {0} doesn't exist", BaseDir));
                 }
 
-                SobekFileNames.SobekType = SobekReaderHelper.GetSobekType(pathSobek);
-                SobekType = SobekReaderHelper.GetSobekType(pathSobek);
+                SobekFileNames.SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
+                SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
             }
         }
-        
+
         public object TargetObject { get; set; }
 
         public IPartialSobekImporter PartialSobekImporter { get; set; }
@@ -103,7 +105,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         public bool ShouldCancel
         {
-            get { return shouldCancel; } 
+            get { return shouldCancel; }
             set
             {
                 shouldCancel = value;
@@ -119,9 +121,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         public Action<IPartialSobekImporter> AfterImport { get; set; }
 
-        protected SobekFileNames SobekFileNames { get; private set; }
+        protected DeltaShell.Sobek.Readers.SobekFileNames SobekFileNames { get; private set; }
 
-        protected SobekType SobekType { get; set; }
+        protected DeltaShell.Sobek.Readers.SobekType SobekType { get; set; }
 
         private IHydroNetwork hydroNetwork; // cache hydro network
 
@@ -159,6 +161,145 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 hydroNetwork = GetNetworkFromModels();
                 return hydroNetwork;
             }
+        }
+
+        protected T TryGetModel<T>() where T : class, IModel
+        {
+            if (TargetObject == null)
+            {
+                throw new ArgumentException("To object has not been set.");
+            }
+
+            if (TargetObject is T)
+            {
+                return (T)TargetObject;
+            }
+
+            if (TargetObject is ICompositeActivity)
+            {
+                var returnModel = ((ICompositeActivity)TargetObject).Activities.OfType<T>().FirstOrDefault();
+
+                if (returnModel != null)
+                {
+                    return returnModel;
+                }
+
+                //could be a recursive method, but just 2 layers...
+                foreach (var compositeModel in ((ICompositeActivity)TargetObject).Activities.OfType<ICompositeActivity>())
+                {
+                    returnModel = compositeModel.Activities.OfType<T>().FirstOrDefault();
+                    if (returnModel != null)
+                    {
+                        return returnModel;
+                    }
+                }
+
+            }
+            if (TargetObject is Project)
+            {
+                return ((Project)TargetObject).RootFolder.GetAllModelsRecursive().OfType<T>().FirstOrDefault();
+            }
+            return null;
+        }
+
+        protected T GetModel<T>() where T : class, IModel
+        {
+            var model = TryGetModel<T>();
+            if (model == null)
+            {
+                throw new ArgumentException("To object does not have a " + typeof(T));
+            }
+            return model;
+        }
+
+        private IHydroNetwork GetNetworkFromModels()
+        {
+            if (TargetObject == null)
+            {
+                return null;
+            }
+
+            if (TargetObject is HydroModel)
+            {
+                var hydroModel = TargetObject as IHydroModel;
+                var network = hydroModel.Region.SubRegions.OfType<HydroNetwork>().FirstOrDefault();
+                if (network != null)
+                {
+                    return network;
+                }
+            }
+
+            if (TargetObject is ICompositeActivity)
+            {
+                foreach (var model in ((ICompositeActivity)TargetObject).Activities.OfType<IModel>())
+                {
+                    var network = GetNetworkOfModel(model);
+                    if (network != null)
+                    {
+                        return network;
+                    }
+                }
+
+                //could be a recursive method, but just 2 layers...
+                foreach (var compositeModel in ((ICompositeActivity)TargetObject).Activities.OfType<ICompositeActivity>())
+                {
+                    foreach (var model in compositeModel.Activities.OfType<IModel>())
+                    {
+                        var network = GetNetworkOfModel(model);
+                        if (network != null)
+                        {
+                            return network;
+                        }
+                    }
+                }
+
+            }
+
+            if (TargetObject is IModel)
+            {
+                return GetNetworkOfModel((IModel)TargetObject);
+            }
+
+            if (TargetObject is Project)
+            {
+                foreach (var model in ((Project)TargetObject).RootFolder.GetAllModelsRecursive())
+                {
+                    var network = GetNetworkOfModel(model);
+                    if (network != null)
+                    {
+                        return network;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private IHydroNetwork GetNetworkOfModel(IModel model)
+        {
+            Type modelType = model.GetType();
+
+            PropertyInfo[] propertyInfos = modelType.GetProperties();
+            var numberPropertyInfo = propertyInfos.FirstOrDefault(pi => pi.Name == "Network");
+            if (numberPropertyInfo != null)
+            {
+                return (IHydroNetwork)numberPropertyInfo.GetValue(model, null);
+            }
+
+            return null;
+        }
+
+        protected abstract void PartialImport();
+
+        protected static void ThrowWhenFileNotExist(string fileName)
+        {
+            if (!File.Exists(fileName))
+                throw new FileNotFoundException(string.Format("The file {0} doesn't exist", fileName));
+        }
+
+        protected string GetFilePath(string fileName)
+        {
+            return Path.Combine(BaseDir, fileName);
         }
 
         protected DrainageBasin DrainageBasin
@@ -248,129 +389,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return rrModel.Basin;
             }
             return null;
-        }
-
-        protected T TryGetModel<T>() where T: class, IModel
-        {
-            if (TargetObject == null)
-            {
-                throw new ArgumentException("To object has not been set.");
-            }
-
-            if (TargetObject is T)
-            {
-                return (T)TargetObject;
-            }
-
-            if (TargetObject is ICompositeActivity)
-            {
-                var returnModel = ((ICompositeActivity)TargetObject).Activities.OfType<T>().FirstOrDefault();
-
-                if (returnModel != null)
-                {
-                    return returnModel;
-                }
-
-                //could be a recursive method, but just 2 layers...
-                foreach (var compositeModel in ((ICompositeActivity)TargetObject).Activities.OfType<ICompositeActivity>())
-                {
-                    returnModel = compositeModel.Activities.OfType<T>().FirstOrDefault();
-                    if (returnModel != null)
-                    {
-                        return returnModel;
-                    }
-                }
-
-            }
-            return null;
-        }
-
-        protected T GetModel<T>() where T : class, IModel
-        {
-            var model = TryGetModel<T>();
-            if (model == null)
-            {
-                throw new ArgumentException("To object does not have a " + typeof (T));
-            }
-            return model;
-        }
-
-        private IHydroNetwork GetNetworkFromModels()
-        {
-            if (TargetObject == null)
-            {
-                return null;
-            }
-            
-            if (TargetObject is HydroModel)
-            {
-                var hydroModel = TargetObject as IHydroModel;
-                var network = hydroModel.Region.SubRegions.OfType<HydroNetwork>().FirstOrDefault();
-                if (network != null)
-                {
-                    return network;
-                }
-            }
-
-            if (TargetObject is ICompositeActivity)
-            {
-                foreach (var model in ((ICompositeActivity)TargetObject).Activities.OfType<IModel>())
-                {
-                    var network = GetNetworkOfModel(model);
-                    if(network != null)
-                    {
-                        return network;
-                    }
-                }
-
-                //could be a recursive method, but just 2 layers...
-                foreach (var compositeModel in ((ICompositeActivity)TargetObject).Activities.OfType<ICompositeActivity>())
-                {
-                    foreach (var model in compositeModel.Activities.OfType<IModel>())
-                    {
-                        var network = GetNetworkOfModel(model);
-                        if (network != null)
-                        {
-                            return network;
-                        }
-                    }
-                }
-
-            }
-
-            if (TargetObject is IModel)
-            {
-                return GetNetworkOfModel((IModel)TargetObject);
-            }
-
-            return null;
-        }
-
-        private IHydroNetwork GetNetworkOfModel(IModel model)
-        {
-            Type modelType = model.GetType();
-
-            PropertyInfo[] propertyInfos = modelType.GetProperties();
-            var numberPropertyInfo = propertyInfos.FirstOrDefault(pi => pi.Name == "Network" );
-            if (numberPropertyInfo != null)
-            {
-                return (IHydroNetwork) numberPropertyInfo.GetValue(model, null);
-            }
-
-            return null;
-        }
-
-        protected abstract void PartialImport();
-
-        protected static void ThrowWhenFileNotExist(string fileName)
-        {
-            if (!File.Exists(fileName))
-                throw new FileNotFoundException(string.Format("The file {0} doesn't exist", fileName));
-        }
-
-        protected string GetFilePath(string fileName)
-        {
-            return Path.Combine(BaseDir, fileName);
         }
 
         private string BaseDir { get; set; }

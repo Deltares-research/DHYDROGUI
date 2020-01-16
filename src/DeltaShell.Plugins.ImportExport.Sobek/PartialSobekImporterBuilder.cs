@@ -7,19 +7,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
-using SobekBoundaryConditionsImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekBoundaryConditionsImporter;
-using SobekBranchesImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekBranchesImporter;
-using SobekComputationalGridImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekComputationalGridImporter;
-using SobekControllersTriggersImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekControllersTriggersImporter;
-using SobekCrossSectionsImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekCrossSectionsImporter;
-using SobekLateralSourcesDataImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekLateralSourcesDataImporter;
-using SobekLateralSourcesImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekLateralSourcesImporter;
-using SobekLinkageNodeImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekLinkageNodeImporter;
-using SobekMeasurementStationsImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekMeasurementStationsImporter;
-using SobekRetentionImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekRetentionImporter;
-using SobekRoughnessImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekRoughnessImporter;
-using SobekSettingsImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekSettingsImporter;
-using SobekStructuresImporter = DeltaShell.Plugins.ImportExport.Sobek.Importers.SobekStructuresImporter;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
@@ -189,7 +176,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return BuildPartialSobekImporter(sobekPath, realTimeControlModel, GetRealTimeControlModelImporters());
         }
 
-        private static SobekControllersTriggersImporter[] GetRealTimeControlModelImporters()
+        private static IEnumerable<IPartialSobekImporter> GetRealTimeControlModelImporters()
         {
             return new[] { new SobekControllersTriggersImporter() };
         }

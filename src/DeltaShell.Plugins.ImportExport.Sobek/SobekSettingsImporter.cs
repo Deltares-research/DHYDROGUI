@@ -5,12 +5,13 @@ using System.Linq;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
-namespace DeltaShell.Plugins.ImportExport.Sobek.Importers
+namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     public class SobekSettingsImporter : PartialSobekImporterBase
     {

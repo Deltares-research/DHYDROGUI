@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -27,17 +30,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         protected override void PartialImport()
         {
             log.DebugFormat("Importing Controllers and Triggers ...");
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+            var waterFlowModel1D = GetModel<WaterFlowFMModel>();
 
             var realTimeControlModel = RealTimeControlModel;
 
-            if(realTimeControlModel == null)
+            if (realTimeControlModel == null)
             {
                 log.ErrorFormat("To object is not a RealTimeControlModel. Importing controllers and triggers has been skipped");
                 return;
             }
 
-            var controlledStructures = ImportControlledStructures(); 
+            var controlledStructures = ImportControlledStructures();
 
             if (controlledStructures.Count == 0)
             {
@@ -46,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            sobekControllers = ImportControllers(waterFlowModel1D.TimeStep, SobekType == SobekType.Sobek212);
+            sobekControllers = ImportControllers(waterFlowModel1D.TimeStep, SobekType == DeltaShell.Sobek.Readers.SobekType.Sobek212);
             sobekTriggers = ImportTriggers();
 
             foreach (var sobekStructureMapping in controlledStructures)
@@ -57,13 +60,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     log.ErrorFormat("Unable to link controlled structure {0} to imported structure in model; skipped.", sobekStructureMapping.StructureId);
                 }
-                
+
                 ControlGroupBuilder.CreateControlGroupForStructureAndAddToRtcModel(sobekStructureMapping,
                                                                                       structure,
                                                                                       waterFlowModel1D,
                                                                                       realTimeControlModel,
                                                                                       sobekControllers, sobekTriggers);
-            } 
+            }
 
             //if (realTimeControlModel.ControlGroups.Count > 0) //All controllers declaired in the Sobek files can be inactive
             //{
@@ -94,6 +97,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         return rtc;
                     }
                 }
+
+                if (TargetObject is Project)
+                {
+                    return ((Project)TargetObject).RootFolder.GetAllModelsRecursive().OfType<RealTimeControlModel>().FirstOrDefault();
+                }
+
                 throw new NotSupportedException("Rtc not found in TargetObject");
             }
         }
@@ -101,7 +110,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private IList<SobekStructureMapping> ImportControlledStructures()
         {
             var path = GetFilePath(SobekFileNames.SobekStructuresFileName);
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
                 log.ErrorFormat("File {0} doesn't exist. Reading controlled structures has been skipped...");
                 return new List<SobekStructureMapping>();
@@ -139,7 +148,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var controllers = new SobekControllerReader().Read(path);
 
-            Dictionary<string, SobekController> dicControllers= new Dictionary<string, SobekController>();
+            Dictionary<string, SobekController> dicControllers = new Dictionary<string, SobekController>();
             foreach (var sobekController in controllers)
             {
                 if (!dicControllers.ContainsKey(sobekController.Id))

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
-using DeltaShell.Sobek.Readers;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -19,8 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekSettingsImporter));
 
         private SobekCaseSettings sobekCaseSettings;
-        private WaterFlowModel1D waterFlowModel1D;
-        private WaterFlowModel1DOutputSettingData outputSettings; 
+        private WaterFlowFMModel waterFlowFMModel;
 
         public override string DisplayName
         {
@@ -31,9 +28,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             Log.DebugFormat("Importing model settings ...");
 
-            waterFlowModel1D = GetModel<WaterFlowModel1D>();
-            outputSettings = waterFlowModel1D.OutputSettings; 
-            if (SobekType == SobekType.Sobek212)
+            waterFlowFMModel = GetModel<WaterFlowFMModel>();
+
+            if (SobekType == DeltaShell.Sobek.Readers.SobekType.Sobek212)
             {
                 ImportSobek212Settings();
             }
@@ -79,18 +76,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 path = GetFilePath("DEFRUN.1");
                 sobekCaseSettings = new SobekReDefRun1Reader().Read(path).First();
-                waterFlowModel1D.StartTime = sobekCaseSettings.StartTime;
-                waterFlowModel1D.StopTime = sobekCaseSettings.StopTime;
-                waterFlowModel1D.TimeStep = sobekCaseSettings.TimeStep;
-                waterFlowModel1D.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
-                waterFlowModel1D.OutputSettings.StructureOutputTimeStep = sobekCaseSettings.OutPutTimeStep;
+                waterFlowFMModel.StartTime = sobekCaseSettings.StartTime;
+                waterFlowFMModel.StopTime = sobekCaseSettings.StopTime;
+                waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
+                waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
 
-                waterFlowModel1D.SaveStateStartTime = waterFlowModel1D.StartTime;
-                waterFlowModel1D.SaveStateStopTime = waterFlowModel1D.StopTime;
-                waterFlowModel1D.OutputTimeStep = waterFlowModel1D.OutputTimeStep;
+                waterFlowFMModel.SaveStateStartTime = waterFlowFMModel.StartTime;
+                waterFlowFMModel.SaveStateStopTime = waterFlowFMModel.StopTime;
+                waterFlowFMModel.OutputTimeStep = waterFlowFMModel.OutputTimeStep;
 
                 path = GetFilePath("DEFRUN.2");
-                var sobekReDefRun2Reader = new SobekReDefRun2Reader {SobekCaseSettingsInstance = sobekCaseSettings};
+                var sobekReDefRun2Reader = new SobekReDefRun2Reader { SobekCaseSettingsInstance = sobekCaseSettings };
                 sobekReDefRun2Reader.Read(path).First();
                 sobekCaseSettings = sobekReDefRun2Reader.SobekCaseSettingsInstance;
             }
@@ -116,7 +112,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 Log.Error("No wind data available.");
                 return;
             }
-            ImportWind(sobekCaseData);
         }
 
         private SobekCaseData GetSobekCaseData()
@@ -142,20 +137,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return buiFileReader.ReadBuiHeaderData(sobekCaseData.BuiDataPath) ? buiFileReader.MeasurementTimes : new List<DateTime>();
         }
 
-        private void ImportWind(SobekCaseData sobekCaseData)
-        {
-            string path = GetFilePath(sobekCaseData.WindDataPath);
-            
-            if (!File.Exists(path))
-            {
-                Log.WarnFormat("Could not locate wind data file {0}; ignored", path);
-                return;
-            }
-
-            var sobekWindImporter = new SobekWindImporter();
-            sobekWindImporter.ImportItem(path, waterFlowModel1D.Wind);
-        }
-
         private void SetModelParameters()
         {
             // Simulation
@@ -171,12 +152,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 sobekCaseSettings.StopTime = stopTime;
             }
 
-            waterFlowModel1D.StartTime = sobekCaseSettings.StartTime;
-            waterFlowModel1D.StopTime = sobekCaseSettings.StopTime;
-            waterFlowModel1D.TimeStep = sobekCaseSettings.TimeStep;
-            waterFlowModel1D.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
-            waterFlowModel1D.OutputSettings.StructureOutputTimeStep = sobekCaseSettings.OutPutTimeStep;
+            waterFlowFMModel.StartTime = sobekCaseSettings.StartTime;
+            waterFlowFMModel.ReferenceTime = sobekCaseSettings.StartTime;
+            waterFlowFMModel.StopTime = sobekCaseSettings.StopTime;
+            waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
+            waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
+            waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = sobekCaseSettings.TimeStep.TotalSeconds;
 
+            /*
             SetCaseSettingsToParameterSettings("LateralLocation", sobekCaseSettings.LateralLocation);
             SetCaseSettingsToParameterSettings("NoNegativeQlatWhenThereIsNoWater", sobekCaseSettings.NoNegativeQlatWhenThereIsNoWater);
             SetCaseSettingsToParameterSettings("MaxLoweringCrossAtCulvert", sobekCaseSettings.MaxLoweringCrossAtCulvert);
@@ -218,9 +201,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 SetCaseSettingsToParameterSettings("Momdilution1D", sobekCaseSettings.Momdilution1D);
             }
-
+            */
             // RiverOptions
-            SetCaseSettingsToParameterSettings("TransitionHeightSD", ParameterCategory.AdvancedOptions, sobekCaseSettings.TransitionHeightSummerDike);
+            //SetCaseSettingsToParameterSettings("TransitionHeightSD", ParameterCategory.AdvancedOptions, sobekCaseSettings.TransitionHeightSummerDike);
         }
 
         /// <summary>
@@ -231,7 +214,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// </summary>
         /// <param name="parameterName"></param>
         /// <param name="p"></param>
-        private void SetCaseSettingsToParameterSettings(string parameterName, params object[] p)
+        /*private void SetCaseSettingsToParameterSettings(string parameterName, params object[] p)
         {
             var parameterCategory = (ParameterCategory?)((p.Length == 2) ? p[0] : null);
             var valueIndex = (p.Length == 2) ? 1 : 0;
@@ -263,7 +246,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 Log.Warn(String.Format("Case setting {0} can not be imported, model parameter setting not available.",
                                        parameterName));
             }
-        }
+        }*/
 
         private void SetOutputSettings()
         {
@@ -317,12 +300,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             // This is an odd one: it selects 15 output settings at once and is accessed differently. 
             if (sobekCaseSettings.RiverSubsectionParameters)
             {
-                outputSettings.SubSections = AggregationOptions.Current;
+                //outputSettings.SubSections = AggregationOptions.Current;
             }
         }
 
         private void ConditionallyAddOutputSetting(bool add, QuantityType quantityType, ElementSet elementSet)
         {
+            /*
             if (add)
             {
                 var engineParameter = outputSettings.GetEngineParameter(quantityType, elementSet);
@@ -330,7 +314,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     engineParameter.AggregationOptions = AggregationOptions.Current;
                 }    
-            }
+            }*/
         }
 
     }

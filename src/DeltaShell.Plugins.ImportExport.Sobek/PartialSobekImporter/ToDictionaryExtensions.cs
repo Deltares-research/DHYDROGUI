@@ -58,13 +58,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             string suffix;
             switch (number)
             {
-                case 1: suffix = "st";
+                case 1:
+                    suffix = "st";
                     break;
-                case 2: suffix = "nd";
+                case 2:
+                    suffix = "nd";
                     break;
-                case 3: suffix = "rd";
+                case 3:
+                    suffix = "rd";
                     break;
-                default: suffix = "th";
+                default:
+                    suffix = "th";
                     break;
             }
 
