@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
         private SupportPointViewModel selectedViewModel;
+        private double maxDistance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointListViewModel" /> class.
@@ -32,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
             this.geometricDefinition = geometricDefinition;
+            maxDistance = geometricDefinition.Length;
 
             RemoveSupportPointCommand = new RelayCommand(RemoveSupportPointAction);
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
@@ -46,16 +48,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void AddEndingSupportPoints()
         {
-            var distanceBegin = 0;
-            if (!DistanceExists(ViewModels, distanceBegin))
+            if (!DistanceExists(ViewModels, 0))
             {
-                AddViewModel(CreateSupportPointViewModel(distanceBegin));
+                AddViewModel(CreateSupportPointViewModel(0));
             }
 
-            var distanceEnd = geometricDefinition.Length;
-            if (!DistanceExists(ViewModels, distanceEnd))
+            if (!DistanceExists(ViewModels, maxDistance))
             {
-                AddViewModel(CreateSupportPointViewModel(distanceEnd));
+                AddViewModel(CreateSupportPointViewModel(maxDistance));
             }
         }
 
@@ -161,6 +161,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void RemoveSupportPointAction(object viewModel)
         {
+            var supportPointViewModel = (SupportPointViewModel) viewModel;
+
+            double distance = supportPointViewModel.Distance;
+            if (Math.Abs(distance) < 1E-15 || Math.Abs(distance - maxDistance) < 1E-15)
+            {
+                return;
+            }
+
             RemoveViewModel((SupportPointViewModel) viewModel);
         }
 
