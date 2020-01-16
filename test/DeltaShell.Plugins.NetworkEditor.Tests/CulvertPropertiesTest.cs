@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using NUnit.Framework;
 
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         {
                             CulvertType = CulvertType.Siphon
                     }
-                }.DynamicReadOnlyValidationMethod(TypeUtils.GetMemberName(() => new Culvert { CulvertType = CulvertType.Siphon }.AllowNegativeFlow))); // When the culvert is a siphon the allownegativeflow property is readonly
+                }.DynamicReadOnlyValidationMethod(nameof(Culvert.AllowNegativeFlow))); // When the culvert is a siphon the AllowNegativeFlow property is readonly
         }
     }
 }
