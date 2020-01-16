@@ -75,13 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
                 double originalValue = SupportPoint.Distance;
                 SupportPoint.Distance = value;
-                OnPropertyChanged(nameof(Distance), originalValue);
+                OnPropertyChanged(originalValue);
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null, object originalValue = null)
+        protected virtual void OnPropertyChanged(object originalValue = null, [CallerMemberName] string propertyName = null)
 
         {
             PropertyChanged?.Invoke(this, new PropertyChangedExtendedEventArgs(propertyName, originalValue));
