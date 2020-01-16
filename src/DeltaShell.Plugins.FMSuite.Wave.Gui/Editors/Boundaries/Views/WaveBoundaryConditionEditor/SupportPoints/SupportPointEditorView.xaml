@@ -7,6 +7,7 @@
              xmlns:views="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor"
              xmlns:supportPoints="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints"
              xmlns:supportPoints1="clr-namespace:DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.SupportPoints"
+             xmlns:attachedProperties="clr-namespace:DelftTools.Controls.Wpf.AttachedProperties;assembly=DelftTools.Controls.Wpf"
              mc:Ignorable="d" >
 
     <UserControl.Resources>
@@ -60,7 +61,13 @@
             <TextBox Name="AddNewDistanceTextBox" 
                      HorizontalAlignment="Left" 
                      Width="120" 
-                     Grid.Column="1" Grid.Row="0" >
+                     Grid.Column="1" Grid.Row="0"
+                     attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter"
+                                Command="{Binding Path=AddSupportPointCommand}" 
+                                CommandParameter="{Binding ElementName=AddNewDistanceTextBox, Path=Text}"/>
+                </TextBox.InputBindings>
                 <Binding Path="NewDistance"  ValidatesOnDataErrors="True" >
                     <Binding.ValidationRules>
                         <validation:PositiveDoubleValidationRule ValidatesOnTargetUpdated="True"/>
