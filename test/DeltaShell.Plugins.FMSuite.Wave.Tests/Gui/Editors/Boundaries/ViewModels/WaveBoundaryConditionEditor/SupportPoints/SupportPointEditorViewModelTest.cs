@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetUp()
         {
             geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10);
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>());
             viewModel = new SupportPointEditorViewModel(geometricDefinition);
         }

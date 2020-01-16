@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
         private SupportPointViewModel selectedViewModel;
-        private double maxDistance;
+        private readonly double maxDistance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointListViewModel" /> class.
@@ -39,24 +40,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
 
             ViewModels = GetSortedViewModels();
-            AddEndingSupportPoints();
 
-            ViewModels.CollectionChanged += OnViewModelCollectionChanged;
+            Subscribe();
 
             SelectedViewModel = ViewModels.FirstOrDefault();
         }
 
-        private void AddEndingSupportPoints()
+        private void Subscribe()
         {
-            if (!DistanceExists(ViewModels, 0))
-            {
-                AddViewModel(CreateSupportPointViewModel(0));
-            }
+            ViewModels.CollectionChanged += OnViewModelCollectionChanged;
+            ViewModels.ForEach(SubscribeViewModel);
+        }
 
-            if (!DistanceExists(ViewModels, maxDistance))
-            {
-                AddViewModel(CreateSupportPointViewModel(maxDistance));
-            }
+        private void SubscribeViewModel(SupportPointViewModel viewModel)
+        {
+            viewModel.PropertyChanged += OnSupportPointModelPropertyChanged;
+        }
+
+        private void UnsubscribeViewModel(SupportPointViewModel viewModel)
+        {
+            viewModel.PropertyChanged -= OnSupportPointModelPropertyChanged;
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 return;
             }
 
-            if (NewDistance >= geometricDefinition.Length || DistanceExists(ViewModels, NewDistance))
+            if (!IsInRange(NewDistance) || DistanceExists(NewDistance))
             {
                 return;
             }
@@ -163,18 +166,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             var supportPointViewModel = (SupportPointViewModel) viewModel;
 
-            double distance = supportPointViewModel.Distance;
-            if (Math.Abs(distance) < 1E-15 || Math.Abs(distance - maxDistance) < 1E-15)
+            if (IsEndPoint(supportPointViewModel.Distance))
             {
                 return;
             }
 
-            RemoveViewModel((SupportPointViewModel) viewModel);
-        }
-
-        private void RemoveViewModel(SupportPointViewModel viewModel)
-        {
-            ViewModels.Remove(viewModel);
+            ViewModels.Remove(supportPointViewModel);
         }
 
         private void OnViewModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -200,12 +197,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             geometricDefinition.SupportPoints.Add(addedViewModel.SupportPoint);
 
-            addedViewModel.PropertyChanged += OnSupportPointModelPropertyChanged;
+            SubscribeViewModel(addedViewModel);
 
             if (ViewModels.Count == 1)
             {
                 SelectedViewModel = ViewModels[0];
-                return;
             }
         }
 
@@ -213,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             geometricDefinition.SupportPoints.Remove(viewModel.SupportPoint);
 
-            viewModel.PropertyChanged -= OnSupportPointModelPropertyChanged;
+            UnsubscribeViewModel(viewModel);
 
             if (SelectedViewModel == viewModel)
             {
@@ -262,19 +258,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 return;
             }
 
-            OnViewModelDistanceChanged(supportPointViewModel, (double)eExtended.OriginalValue);
+            OnViewModelDistanceChanged(supportPointViewModel, (double) eExtended.OriginalValue);
         }
 
         private void OnViewModelDistanceChanged(SupportPointViewModel supportPointViewModel, double originalDistance)
         {
             double newDistance = supportPointViewModel.Distance;
+            if (IsEndPoint(originalDistance) && !DistanceExists(originalDistance))
+            {
+                supportPointViewModel.Distance = originalDistance;
+                return;
+            }
 
             IEnumerable<SupportPointViewModel> viewModelsToCheck = ViewModels.Except(new[]
             {
                 supportPointViewModel
             });
 
-            if (DistanceExists(viewModelsToCheck, newDistance) || newDistance > maxDistance)
+            if (!IsInRange(newDistance) || DistanceExists(viewModelsToCheck, newDistance))
             {
                 supportPointViewModel.Distance = originalDistance;
             }
@@ -288,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             bool isSelected = SelectedViewModel == oldViewModel;
 
-            RemoveViewModel(oldViewModel);
+            ViewModels.Remove(oldViewModel);
 
             SupportPointViewModel newViewModel = CreateSupportPointViewModel(oldViewModel.Distance);
             AddViewModel(newViewModel);
@@ -297,6 +298,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             {
                 SelectedViewModel = newViewModel;
             }
+        }
+
+        private bool IsInRange(double distance)
+        {
+            return 0 <= distance && distance <= maxDistance;
+        }
+
+        private bool IsEndPoint(double distance)
+        {
+            return Math.Abs(distance) < 1E-15 || Math.Abs(distance - maxDistance) < 1E-15;
+        }
+
+        private bool DistanceExists(double distance)
+        {
+            return DistanceExists(ViewModels, distance);
         }
 
         private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
