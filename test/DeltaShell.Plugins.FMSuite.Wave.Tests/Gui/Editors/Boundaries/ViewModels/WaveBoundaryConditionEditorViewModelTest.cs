@@ -1,6 +1,8 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
@@ -20,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var shape = new GaussShape();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = new UniformDataComponent(Substitute.For<IBoundaryConditionParameters>());
 
             conditionDefinition.Shape = shape;
 
