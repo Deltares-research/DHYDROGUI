@@ -37,9 +37,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
 
             ViewModels = GetSortedViewModels();
+            AddEndingSupportPoints();
+
             ViewModels.CollectionChanged += OnViewModelCollectionChanged;
 
             SelectedViewModel = ViewModels.FirstOrDefault();
+        }
+
+        private void AddEndingSupportPoints()
+        {
+            var distanceBegin = 0;
+            if (!DistanceExists(ViewModels, distanceBegin))
+            {
+                AddViewModel(CreateSupportPointViewModel(distanceBegin));
+            }
+
+            var distanceEnd = geometricDefinition.Length;
+            if (!DistanceExists(ViewModels, distanceEnd))
+            {
+                AddViewModel(CreateSupportPointViewModel(distanceEnd));
+            }
         }
 
         /// <summary>
@@ -115,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 return;
             }
 
-            if (DistanceExists(ViewModels, NewDistance))
+            if (NewDistance >= geometricDefinition.Length || DistanceExists(ViewModels, NewDistance))
             {
                 return;
             }
