@@ -50,7 +50,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             this.endingIndex = endingIndex;
             Length = length;
 
-            SupportPoints = new EventedList<SupportPoint>();
+            SupportPoints = new EventedList<SupportPoint>
+            {
+                new SupportPoint(0, this),
+                new SupportPoint(Length, this)
+            };
         }
 
         public int StartingIndex

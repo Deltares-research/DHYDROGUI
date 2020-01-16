@@ -40,10 +40,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                         "Expected a different GridSide.");
             Assert.That(geometricDefinition.Length, Is.EqualTo(length),
                         "Expected a different Length.");
-            Assert.That(geometricDefinition.SupportPoints, Is.Not.Null,
+
+            var supportPoints = geometricDefinition.SupportPoints;
+            Assert.That(supportPoints, Is.Not.Null,
                         "Expected that SupportPoints was not null.");
-            Assert.That(geometricDefinition.SupportPoints, Is.Empty,
-                        "Expected that the SupportsPoints are empty upon construction");
+            Assert.That(supportPoints, Has.Count.EqualTo(2),
+                        "Expected that the SupportsPoints holds two instances.");
+            Assert.That(supportPoints[0].Distance, Is.EqualTo(0), 
+                        "Expected that first SupportPoint has a Distance of 0");
+            Assert.That(supportPoints[1].Distance, Is.EqualTo(length),
+                        $"Expected that second SupportPoint is equal to the Length {length}.");
         }
 
         [Test]
