@@ -86,20 +86,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
         }
 
-        [TestCaseSource(nameof(SelectedViewModelCases))]
-        public void SetSelectedViewModel_WithOtherValue_PropertyChangedFiredOnce(SupportPointViewModel originalValue,
-                                                                                 SupportPointViewModel setValue,
-                                                                                 int expectedPropertyChangedCount)
+        [Test]
+        public void SetSelectedViewModel_WithOtherValue_PropertyChangedFiredOnce()
         {
             // Setup
+            viewModel.SelectedViewModel = GetSupportPointViewModel();
+
+            // Call
+            void Call() => viewModel.SelectedViewModel = GetSupportPointViewModel();
+
+            // Assert
+            viewModel.AssertPropertyChangedFired(Call, 1, nameof(viewModel.SelectedViewModel));
+        }
+
+        [Test]
+        public void SetSelectedViewModel_WithSameValue_PropertyChangedNotFired()
+        {
+            // Setup
+            SupportPointViewModel originalValue = GetSupportPointViewModel();
             viewModel.SelectedViewModel = originalValue;
 
             // Call
-            void Call() => viewModel.SelectedViewModel = setValue;
+            void Call() => viewModel.SelectedViewModel = originalValue;
 
             // Assert
-            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount,
-                                                 nameof(viewModel.SelectedViewModel));
+            viewModel.AssertPropertyChangedFired(Call, 0, nameof(viewModel.SelectedViewModel));
         }
 
         [Test]
@@ -307,14 +318,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private SupportPoint GetSupportPoint(double distance)
         {
             return new SupportPoint(distance, geometricDefinition);
-        }
-
-        private IEnumerable<TestCaseData> SelectedViewModelCases()
-        {
-            SupportPointViewModel subViewModel = GetSupportPointViewModel();
-
-            yield return new TestCaseData(subViewModel, subViewModel, 0);
-            yield return new TestCaseData(subViewModel, GetSupportPointViewModel(), 1);
         }
     }
 }
