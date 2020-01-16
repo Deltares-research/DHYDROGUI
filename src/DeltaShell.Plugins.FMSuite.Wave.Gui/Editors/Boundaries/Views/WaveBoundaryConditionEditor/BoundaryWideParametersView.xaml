@@ -15,10 +15,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/DeltaShell.Plugins.DelftModels.HydroModel.Gui;component/Forms/Styles/CommonSettingsStyle.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <convertersCommon:EnumToDescriptionConverter     x:Key="EnumToDescriptionConverter"/>
             <convertersBoundaries:TypeToVisibilityConverter  x:Key="TypeToVisibilityConverter" />
             <convertersBoundaries:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter"/>
