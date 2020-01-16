@@ -6,7 +6,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -187,31 +186,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.That(timeSeriesList.Count, Is.EqualTo(2));
             Assert.That(IsEmptyTimeSeries(timeSeriesList),
                         "After disconnecting the output, the time series list of the observation variable output should be empty.");
-        }
-
-        [TestCase("bloominp.d09")]
-        [TestCase("bloominp.frm")]
-        [TestCase("deltashell-timers.out")]
-        [TestCase("memory_map.out")]
-        [Category(TestCategory.DataAccess)]
-        public void Disconnect_WhenSpecifiedFileIsInExplicitWorkingDirectory_FileShouldBeDeleted(string fileName)
-        {
-            // Setup
-            using (var model = new WaterQualityModel())
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string tempDirPath = tempDirectory.Path;
-                string filePath = Path.Combine(tempDirPath, fileName);
-                model.ExplicitWorkingDirectory = tempDirPath;
-                File.WriteAllText(filePath, "");
-
-                // Call
-                WaterQualityOutputDisconnector.Disconnect(model);
-
-                // Assert
-                Assert.That(!File.Exists(filePath),
-                            "File should be deleted from Explicit Working Directory.");
-            }
         }
 
         private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(
