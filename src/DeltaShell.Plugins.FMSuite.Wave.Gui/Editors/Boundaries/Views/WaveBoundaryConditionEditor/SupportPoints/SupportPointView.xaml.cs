@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBoundaryConditionEditor.SupportPoints
 {
     /// <summary>
     /// Interaction logic for SupportPointView.xaml

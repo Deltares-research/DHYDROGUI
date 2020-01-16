@@ -196,10 +196,10 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\GeometryPreviewView.xaml.cs">
       <DependentUpon>GeometryPreviewView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPointEditorView.xaml.cs">
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorView.xaml.cs">
       <DependentUpon>SupportPointEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPointView.xaml.cs">
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointView.xaml.cs">
       <DependentUpon>SupportPointView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverter.cs" />
@@ -528,11 +528,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPointEditorView.xaml">
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPointView.xaml">
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
