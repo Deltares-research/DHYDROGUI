@@ -162,6 +162,7 @@
     <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
     <Compile Include="Editors\Boundaries\Factories\IViewDataComponentFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\IViewShapeFactory.cs" />
+    <Compile Include="Editors\Boundaries\Factories\ViewDataComponentFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\ViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Validation\PositiveDoubleValidationRule.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
