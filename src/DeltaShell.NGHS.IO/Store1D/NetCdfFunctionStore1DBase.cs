@@ -363,7 +363,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         public void SwitchTo(string newPath)
         {
-            Path = newPath;
+            path = newPath;
         }
 
         public virtual void Delete()

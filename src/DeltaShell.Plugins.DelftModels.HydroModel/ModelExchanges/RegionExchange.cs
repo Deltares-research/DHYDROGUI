@@ -10,10 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges
         public RegionExchange(HydroLink link)
         {
             SourceName = GetExchangeIdentifier(link.Source);
+            SourceType = link.Source?.GetType().AssemblyQualifiedName;
             TargetName = GetExchangeIdentifier(link.Target);
+            TargetType = link.Target?.GetType().AssemblyQualifiedName;
             LinkName = link.Name;
             LinkGeometryWkt = new WKTWriter().Write(link.Geometry);
         }
+
+        [DataMember]
+        public string TargetType { get; set; }
+
+        [DataMember]
+        public string SourceType { get; set; }
 
         private static string GetExchangeIdentifier(IHydroObject hydroObject)
         {

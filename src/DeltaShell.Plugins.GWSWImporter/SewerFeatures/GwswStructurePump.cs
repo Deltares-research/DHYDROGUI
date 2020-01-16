@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 
@@ -10,10 +11,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
         {
         }
 
-        protected override ISewerConnection GetNewSewerConnectionWithPump()
+        protected override ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
         {
             var sewerConnection = new SewerConnection(Name);
-            sewerConnection.AddStructureToBranch(this);
+            var composite = sewerConnection.AddStructureToBranch(this);
+            composite.Name = HydroNetworkHelper.GetUniqueFeatureName(hydroNetwork, composite);
             return sewerConnection;
         }
 

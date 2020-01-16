@@ -2708,9 +2708,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void SaveOutput()
         {
             var oldMapFilePath = OutputMapFileStore == null ? null : OutputMapFileStore.Path;
+            var oldFM1DFilePath = oldMapFilePath != null || Output1DFileStore == null ? null : Output1DFileStore.Path;
             var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
 
-            if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
+            if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower() )
+                
             {
                 var directory = Path.GetDirectoryName(MapFilePath);
                 if (!Directory.Exists(directory))
@@ -2719,7 +2721,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 File.Copy(oldMapFilePath, MapFilePath, true);
             }
-            else if (oldMapFilePath == null && File.Exists(MapFilePath))
+            else if (oldMapFilePath == null && oldFM1DFilePath != null && Path.GetFullPath(oldFM1DFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
+            {
+                var directory = Path.GetDirectoryName(MapFilePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+                File.Copy(oldFM1DFilePath, MapFilePath, true);
+            }
+            else if (oldMapFilePath == null && oldFM1DFilePath == null && File.Exists(MapFilePath))
             {
                 File.Delete(MapFilePath);
             }

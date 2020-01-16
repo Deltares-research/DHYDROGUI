@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
@@ -303,8 +304,9 @@ namespace DelftTools.Hydro.Structures
         {
             var sewerConnection = new SewerConnection(Name);
             SetSewerConnectionProperties(sewerConnection);
-            
-            sewerConnection.AddStructureToBranch(this);
+
+            var composite = sewerConnection.AddStructureToBranch(this);
+            composite.Name = HydroNetworkHelper.GetUniqueFeatureName(hydroNetwork, composite);
             sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
         }
 

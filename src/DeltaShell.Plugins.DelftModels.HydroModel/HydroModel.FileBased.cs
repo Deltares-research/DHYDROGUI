@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 using log4net;
 using NetTopologySuite.Extensions.IO;
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (!regionExchangeInfos.Any()) return;
 
-            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r, r => r.AllHydroObjects.ToLookup(ho => ho.Name, ho => ho, StringComparer.InvariantCultureIgnoreCase));
+            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r, r => r.AllHydroObjects.GroupBy(ho => TypeUtils.Unproxy(ho).GetType()).ToDictionary(g => g.Key, g => g.ToDictionary(ho => ho.Name, ho=> ho, StringComparer.InvariantCultureIgnoreCase)));
             var regionByNameLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r.Name, StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var regionExchangeInfo in regionExchangeInfos)
@@ -98,20 +99,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 foreach (var regionExchange in regionExchangeInfo.Exchanges)
                 {
-                    var hasSourceHydroObject = regionObjectsLookup[sourceRegion].Contains(regionExchange.SourceName) && regionObjectsLookup[sourceRegion][regionExchange.SourceName].Any(ho => ho.CanBeLinkSource);
-                    var hasTargetHydroObject = regionObjectsLookup[targetRegion].Contains(regionExchange.TargetName) && regionObjectsLookup[targetRegion][regionExchange.TargetName].Any(ho => ho.CanBeLinkTarget);
-                    
+                    var sourceType = Type.GetType(regionExchange.SourceType);
+                    Dictionary<string, IHydroObject> sourceHydroObjectTypes = null;
+                    var hasSourceHydroObjectType = sourceType != null && regionObjectsLookup[sourceRegion].TryGetValue(sourceType, out sourceHydroObjectTypes);
+
+                    IHydroObject source = null;
+                    var hasSourceHydroObject = hasSourceHydroObjectType &&
+                                               sourceHydroObjectTypes.TryGetValue(regionExchange.SourceName,out source) && 
+                                               source.CanBeLinkSource;
+
+                    var targetType = Type.GetType(regionExchange.TargetType);
+                    Dictionary<string, IHydroObject> targetHydroObjectTypes = null;
+                    var hasTargetHydroObjectType = targetType != null && regionObjectsLookup[targetRegion].TryGetValue(targetType, out targetHydroObjectTypes);
+
+                    IHydroObject target = null;
+                    var hasTargetHydroObject = hasTargetHydroObjectType && 
+                                               targetHydroObjectTypes.TryGetValue(regionExchange.SourceName,out target) && 
+                                               target.CanBeLinkTarget;
+
                     if (!hasSourceHydroObject || !hasTargetHydroObject)
                     {
-                        log.Error($"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
+                        log.Error(
+                            $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
                         continue;
                     }
 
-                    Region.Links.Add(new HydroLink(regionObjectsLookup[sourceRegion][regionExchange.SourceName].First(ho => ho.CanBeLinkSource), regionObjectsLookup[targetRegion][regionExchange.TargetName].First(ho => ho.CanBeLinkTarget))
+                    //var source = regionObjectsLookup[sourceRegion][regionExchange.SourceName].First(ho => ho.CanBeLinkSource);
+                    //var target = regionObjectsLookup[targetRegion][regionExchange.TargetName].First(ho => ho.CanBeLinkTarget);
+                    if (source.CanLinkTo(target))
                     {
-                        Name = regionExchange.LinkName,
-                        Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt)
-                    });
+                        Region.Links.Add(new HydroLink(source, target)
+                            {
+                                Name = regionExchange.LinkName,
+                                Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt)
+                            });
+                    }
                 }
             }
         }

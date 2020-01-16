@@ -102,16 +102,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void UpdateNetworkAndDiscretisationAfterPathSet()
         {
-            if (!File.Exists(Path)) return;
+            var netFilePath = Path;
+            if (!File.Exists(netFilePath)) return;
             int numberOfNetworks;
-            using (var uGridNetwork = new UGridNetwork(Path))
+            using (var uGridNetwork = new UGridNetwork(netFilePath))
             {
                 numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
             }
             if (numberOfNetworks != 1) return;
 
             int numberOfNetworkDiscretisations;
-            using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(Path))
+            using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath))
             {
                 numberOfNetworkDiscretisations = uGridNetworkDiscretisation.GetNumberOfNetworkDiscretisations();
             }
@@ -121,11 +122,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
 
-                var branchData = UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path);
+                var branchData = UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath);
                 outputNetwork.Nodes.Clear();
                 outputNetwork.Branches.Clear();
                 outputDiscretization.Clear();
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, outputDiscretization, outputNetwork, null, branchData);
+                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, null, branchData);
 
                 foreach (var hydroObject in outputNetwork.AllHydroObjects)
                 {
