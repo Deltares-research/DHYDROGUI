@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 {
@@ -38,5 +39,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
         SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent);
+
+        /// <summary>
+        /// Constructs the <see cref="IParametersSettingsViewModel"/> corresponding
+        /// with the provided <paramref name="dataComponent"/>.
+        /// </summary>
+        /// <param name="dataComponent">The data component.</param>
+        /// <returns>
+        /// The <see cref="IParametersSettingsViewModel"/> corresponding
+        /// with the provided <paramref name="dataComponent"/>.
+        /// </returns>
+        IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent);
     }
 }
