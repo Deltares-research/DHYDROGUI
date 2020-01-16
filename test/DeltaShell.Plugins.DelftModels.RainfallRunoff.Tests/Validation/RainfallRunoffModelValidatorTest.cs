@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
         private RainfallRunoffModel CreateValidMiniModel()
         {
-            var file = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
+            var file = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
             var composite = RainfallRunoffIntegrationTestHelper.ImportModel(file);
             return composite.Activities.OfType<RainfallRunoffModel>().First();
         }

@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var modelImporter = new SobekModelToIntegratedModelImporter();
 
             var modelPath =
-                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
+                TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\JAMM2010.sbk\40\DEFTOP.1");
             var importedModel = (IModel)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel);
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             const string projectPath = "HKTG.dsproj";
             var modelImporter = new SobekModelToIntegratedModelImporter();
 
-            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
+            var modelPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"HKTG.lit\1\NETWORK.TP");
             var importedModel = (IModel)modelImporter.ImportItem(modelPath);
 
             app.Project.RootFolder.Items.Add(importedModel);

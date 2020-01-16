@@ -24,7 +24,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {
     [TestFixture]
-    public class SobekwaterFlowFMModelImporterTest
+    public class SobekWaterFlowFMModelImporterTest
     {
         /// <summary>
         /// 04/03/2014 (SSD, i7-4900MQ): 

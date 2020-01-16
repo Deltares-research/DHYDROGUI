@@ -41,7 +41,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         public void ReadFrictionAdige()
         {
             // source: P:\sobek\maintenance\Jira\18001-19000\18131\DBS2SBK\Ars-7864\1\ADIGE.lit\6\
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"friction\friction.dat");
             string defFileText = File.ReadAllText(path, Encoding.Default);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(199, sobekFriction.CrossSectionFrictionList.Count);
@@ -298,7 +298,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void SobekFrictionOfSW_MAXTest()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\FRICTION.DAT");
             string defFileText = File.ReadAllText(path);
             SobekFriction sobekFriction = SobekFrictionDatFileReader.GetSobekFriction(defFileText);
             Assert.AreEqual(12, sobekFriction.SobekBedFrictionList.Count());
@@ -536,7 +536,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.DataAccess)]
         public void ReadMultipleFrictionDefinitionsFromFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"friction\friction.dat");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"friction\friction.dat");
 
             var sobekFriction = new SobekFrictionDatFileReader().ReadSobekFriction(path);
 

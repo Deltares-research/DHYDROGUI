@@ -67,7 +67,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void ReadFile()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFDIS.2");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFDIS.2");
             var localDispersions = new SobekSaltLocalDispersionReader().Read(path);
             Assert.AreEqual(134, localDispersions.Count());
             var localDispersion = localDispersions.Where(sb => sb.Id == "5591118").FirstOrDefault();

@@ -12,7 +12,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         [Category(TestCategory.Integration)]
         public void Test()
         {
-            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowModel1DImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\PARSEN.INI");
+            var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\PARSEN.INI");
 
             var getSobekReIniSettings = SobekReIniSettingsReader.GetSobekReIniSettings(path);
 

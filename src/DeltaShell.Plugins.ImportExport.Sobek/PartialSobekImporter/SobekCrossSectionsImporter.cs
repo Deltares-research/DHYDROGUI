@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     var pipe = branch as Pipe;
                     if (pipe != null)
                     {
-                        SetPipeProperties(pipe, definition, sobekCrossSectionMapping, offset);
+                        SetPipeProperties(pipe, definition, sobekCrossSectionMapping);
                     }
                     else
                     {
@@ -211,17 +211,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void SetPipeProperties(Pipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping, double offset)
+        private void SetPipeProperties(Pipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
         {
             pipe.CrossSectionDefinition = definition;
-            if (Math.Abs(offset) < double.Epsilon)
-            {
-                pipe.LevelSource = sobekCrossSectionMapping.RefLevel1;
-            }
-            else
-            {
-                pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
-            }
+            pipe.LevelSource = sobekCrossSectionMapping.RefLevel2;
+            pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
         }
 
         private static Dictionary<string, ICrossSectionDefinition> GetDefinitionIDToDefinitionDictionary(IEnumerable<SobekCrossSectionMapping> mappings, Dictionary<string, SobekCrossSectionDefinition> sobekCrossSectionDefinitionsLookup, IHydroNetwork hydroNetwork)
