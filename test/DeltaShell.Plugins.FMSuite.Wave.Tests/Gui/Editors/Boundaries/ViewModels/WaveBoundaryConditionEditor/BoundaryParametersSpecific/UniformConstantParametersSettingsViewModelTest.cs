@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new UniformConstantParametersSettingsViewModel(parameters);
 
             // Assert
+            Assert.That(viewModel, Is.InstanceOf<IConstantParametersSettingsViewModel>());
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
         }
 

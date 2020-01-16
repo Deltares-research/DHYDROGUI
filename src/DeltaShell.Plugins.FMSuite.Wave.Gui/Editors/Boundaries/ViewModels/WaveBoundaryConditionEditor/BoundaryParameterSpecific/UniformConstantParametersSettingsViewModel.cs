@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="UniformConstantParametersSettingsViewModel"/> defines the view model for the ConstantParametersSettingsView.
     /// </summary>
-    public class UniformConstantParametersSettingsViewModel
+    public class UniformConstantParametersSettingsViewModel : IConstantParametersSettingsViewModel
     {
         /// <summary>
         /// Creates a new <see cref="UniformConstantParametersSettingsViewModel"/>.

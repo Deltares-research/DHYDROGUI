@@ -168,6 +168,8 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ConstantParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\IConstantParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\IParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformConstantParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\GeometryPreviewViewModel.cs" />
