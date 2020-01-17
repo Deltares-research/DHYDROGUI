@@ -265,6 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Call
             double value = calculator.CalculateDistanceBetweenBoundaryIndices(indexA, indexB, random.NextEnumValue<GridSide>());
 
+            // Assert
             Assert.That(value, Is.EqualTo(expectedDistance));
         }
 
