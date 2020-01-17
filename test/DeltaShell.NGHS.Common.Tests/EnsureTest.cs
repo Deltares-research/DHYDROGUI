@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.Common.Tests
 
             // Assert
             var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo(name));
+            Assert.That(exception.Message, Is.EqualTo(name));
         }
 
         [TestCase(1)]
