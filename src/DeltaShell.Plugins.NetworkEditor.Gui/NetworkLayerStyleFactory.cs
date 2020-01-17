@@ -70,6 +70,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return CreatePointStyle(Properties.Resources.LateralSourceMap);
             }
 
+            if (networkObjects is IEnumerable<IManhole>)
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Shape = ShapeType.Ellipse,
+                    ShapeSize = 11,
+                    Fill = new SolidBrush(Color.Orange),
+                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
+                };
+            }
+
             if (networkObjects is IEnumerable<IRetention>)
             {
                 return CreatePointStyle(Properties.Resources.Retention);
@@ -228,20 +240,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                                     new CategorialThemeItem("False", branchStyle, null, false)
                                                 }
                            };
-            }
-
-            if (networkObjects is IEnumerable<IManhole>)
-            {
-                var onSingleBranchesStyle = new VectorStyle
-                {
-                    GeometryType = typeof(IPoint),
-                    Shape = ShapeType.Ellipse,
-                    ShapeSize = 11,
-                    Fill = new SolidBrush(Color.Orange),
-                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
-                };
-                
-                return new CategorialTheme { DefaultStyle = onSingleBranchesStyle };
             }
 
             const int lineWidth = 3;
