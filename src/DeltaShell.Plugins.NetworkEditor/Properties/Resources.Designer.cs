@@ -131,6 +131,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Setting group names {0} / {1}.
+        /// </summary>
+        public static string GroupablePointCloudImporter_Setting_group_names__0_____1_ {
+            get {
+                return ResourceManager.GetString("GroupablePointCloudImporter_Setting_group_names__0_____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap guide {
