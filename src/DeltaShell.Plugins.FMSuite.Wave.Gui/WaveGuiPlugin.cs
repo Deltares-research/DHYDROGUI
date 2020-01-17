@@ -31,6 +31,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 
@@ -212,6 +213,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             yield return boundaryViewInfo;
+            yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo, 
+                                                                     f => f.ObservedWaveBoundary);
             // TODO: (MWT) add connection with  the map here as above.
 
             // obstacles
