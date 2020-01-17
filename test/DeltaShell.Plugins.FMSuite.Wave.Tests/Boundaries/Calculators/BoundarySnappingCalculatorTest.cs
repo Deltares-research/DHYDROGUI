@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions;
@@ -237,6 +239,73 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("supportPoint"));
+        }
+
+        [TestCase(0, 1, 1)]
+        [TestCase(1, 3, 2)]
+        [TestCase(2, 5, 3)]
+        [TestCase(3, 7, 4)]
+        [TestCase(4, 9, 5)]
+        [TestCase(9, 8, 1)]
+        [TestCase(8, 6, 2)]
+        [TestCase(7, 4, 3)]
+        [TestCase(6, 2, 4)]
+        [TestCase(5, 0, 5)]
+        public void CalculateDistanceBetweenBoundaryIndices_CorrectValueIsReturned(int indexA, int indexB, double expectedDistance)
+        {
+            // Setup
+            const int x = 10;
+            const int y = 10;
+
+            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
+            SetGridValues(grid, x, y);
+
+            var calculator = new BoundarySnappingCalculator(gridBoundary);
+
+            // Call
+            double value = calculator.CalculateDistanceBetweenBoundaryIndices(indexA, indexB, random.NextEnumValue<GridSide>());
+
+            Assert.That(value, Is.EqualTo(expectedDistance));
+        }
+
+        [TestCase(2, -1, "indexB" )]
+        [TestCase(2, 5, "indexB")]
+        [TestCase(-1, 2, "indexA")]
+        [TestCase(5, 2, "indexA")]
+        public void CalculateDistanceBetweenBoundaryIndices_IndexOutOfRange_ThrowsArgumentOutOfRangeException(int indexA, int indexB, string paramName)
+        {
+            // Setup
+            const int x = 4;
+            const int y = 4;
+
+            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
+            var calculator = new BoundarySnappingCalculator(gridBoundary);
+
+            // Call
+            void Call() => calculator.CalculateDistanceBetweenBoundaryIndices(indexA,
+                                                                              indexB,
+                                                                              random.NextEnumValue<GridSide>());
+
+            // Assert
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(paramName));
+        }
+
+        [Test]
+        public void CalculateDistanceBetweenBoundaryIndices_UndefinedGridSide_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            var gridBoundary = Substitute.For<IGridBoundary>();
+            var calculator = new BoundarySnappingCalculator(gridBoundary);
+
+            // Call
+            void Call() => calculator.CalculateDistanceBetweenBoundaryIndices(random.Next(),
+                                                                              random.Next(),
+                                                                              0);
+
+            // Assert
+            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("gridSide"));
         }
 
         private static void SetGridValues(IDiscreteGridPointCoverage grid, int x, int y)
