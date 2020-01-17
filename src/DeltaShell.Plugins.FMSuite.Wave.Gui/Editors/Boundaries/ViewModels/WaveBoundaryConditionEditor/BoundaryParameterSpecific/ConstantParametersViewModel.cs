@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.Common;
+﻿using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
@@ -9,28 +8,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// </summary>
     public class ConstantParametersViewModel
     {
-        private readonly ConstantParameters observedConstantParameters;
-
         /// <summary>
         /// Creates a new <see cref="ConstantParametersViewModel"/>.
         /// </summary>
         /// <param name="parameters"> The observed constant parameters. </param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="parameters"/> is <c>null</c>;
         /// </exception>
         public ConstantParametersViewModel(ConstantParameters parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            observedConstantParameters = parameters;
+            ObservedParameters = parameters;
         }
+
+        /// <summary>
+        /// Gets the observed parameters.
+        /// </summary>
+        public ConstantParameters ObservedParameters { get; }
 
         /// <summary>
         /// Gets or sets the height.
         /// </summary>
         public double Height
         {
-            get => observedConstantParameters.Height;
-            set => observedConstantParameters.Height = value;
+            get => ObservedParameters.Height;
+            set => ObservedParameters.Height = value;
         }
 
         /// <summary>
@@ -38,8 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public double Period
         {
-            get => observedConstantParameters.Period;
-            set => observedConstantParameters.Period = value;
+            get => ObservedParameters.Period;
+            set => ObservedParameters.Period = value;
         }
 
         /// <summary>
@@ -47,8 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public double Direction
         {
-            get => observedConstantParameters.Direction;
-            set => observedConstantParameters.Direction = value;
+            get => ObservedParameters.Direction;
+            set => ObservedParameters.Direction = value;
         }
 
         /// <summary>
@@ -56,8 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public double Spreading
         {
-            get => observedConstantParameters.Spreading;
-            set => observedConstantParameters.Spreading = value;
+            get => ObservedParameters.Spreading;
+            set => ObservedParameters.Spreading = value;
         }
     }
 }

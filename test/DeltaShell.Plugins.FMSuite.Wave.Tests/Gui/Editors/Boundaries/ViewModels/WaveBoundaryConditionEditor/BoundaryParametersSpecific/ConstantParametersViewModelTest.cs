@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new ConstantParametersViewModel(parameters);
 
             // Assert
+            Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
             Assert.That(viewModel.Height,    Is.EqualTo(parameters.Height));
             Assert.That(viewModel.Period,    Is.EqualTo(parameters.Period));
             Assert.That(viewModel.Direction, Is.EqualTo(parameters.Direction));
