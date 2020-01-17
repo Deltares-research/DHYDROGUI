@@ -5,8 +5,10 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="UniformConstantParametersSettingsViewModel"/> defines the view model for the ConstantParametersSettingsView.
+    /// <see cref="UniformConstantParametersSettingsViewModel"/> defines the view model for the
+    /// ConstantParametersSettingsView given uniform data.
     /// </summary>
+    /// <seealso cref="IConstantParametersSettingsViewModel" />
     public class UniformConstantParametersSettingsViewModel : IConstantParametersSettingsViewModel
     {
         /// <summary>
