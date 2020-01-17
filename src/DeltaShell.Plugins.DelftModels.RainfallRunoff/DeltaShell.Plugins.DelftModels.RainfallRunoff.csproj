@@ -51,17 +51,16 @@
     <Compile Include="CatchmentCoverageMaintainer.cs" />
     <Compile Include="Domain\Concepts\GreenhouseDataProperties.cs" />
     <Compile Include="Domain\Concepts\HbvDataProperties.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\IUrbanRrData.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\IUrbanRrDefinition.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwGlobalData.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\INwrwFeature.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDischargeData.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwDefinition.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileReader.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwRegion.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwRrData.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwSpecialArea.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwSurfaceData.cs" />
     <Compile Include="Domain\Concepts\OpenWaterDataProperties.cs" />
     <Compile Include="Domain\Concepts\Polder\PolderConceptProperties.cs" />
     <Compile Include="Domain\Concepts\SacramentoData.cs" />
@@ -301,7 +300,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwRrData.hbm.xml" />
     <EmbeddedResource Include="FixedFiles\CROPFACT" />
     <EmbeddedResource Include="FixedFiles\BERGCOEF" />
     <EmbeddedResource Include="FixedFiles\CROP_OW.PRN" />
@@ -388,16 +386,7 @@
     <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwGlobalData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDischargeData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\IUrbanRrData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Concepts\Nwrw\IUrbanRrDefinition.hbm.xml" />
+    <EmbeddedResource Include="Domain\Concepts\Nwrw\NwrwDefinition.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

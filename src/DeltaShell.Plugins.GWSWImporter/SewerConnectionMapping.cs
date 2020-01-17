@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             public const string DischargeId = "DISCHARGE_ID";
             public const string DischargeType = "DISCHARGE_TYPE";
             public const string PollutingUnits = "POLLUTING_UNITS";
+            public const string RunoffDefinitionFile = "WWF_ID";
         }
     }
 }

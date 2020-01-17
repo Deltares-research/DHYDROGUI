@@ -42,11 +42,17 @@
       <index column="index_in_parent"/>
       <element type="System.String"/>
     </list>
-    
-    <list name="UrbanRrData" cascade="all-delete-orphan">
-      <key column="parent_urbanrrdata_id"/>
+
+    <list name="NwrwDryWeatherFlowDefinitions" cascade="all-delete-orphan">
+      <key column="parent_dryweatherflowdef_id"/>
       <index column="index_in_parent"/>
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.IUrbanRrData, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwDryWeatherFlowDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
+    </list>
+
+    <list name="NwrwDefinitions" cascade="all-delete-orphan">
+      <key column="parent_nwrwdef_id"/>
+      <index column="index_in_parent"/>
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwDefinition, DeltaShell.Plugins.DelftModels.RainfallRunoff"  />
     </list>
 
 

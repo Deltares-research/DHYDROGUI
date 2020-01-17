@@ -8,20 +8,28 @@
 
     <key column="Id"/>
 
-    <property name="Name" />
-    <property name="MeteoStationId" />
+    <property name="NodeOrBranchId" />
+    <property name="DischargeType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DischargeType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
     <property name="DryWeatherFlowId" />
-    <property name="NumberOfSpecialAreas" />
-    <property name="NumberOfPeople" />
-    <list name="SpecialAreas" access="property" lazy="true" cascade="all">
-      <key column="nwrw_special_area_key"/>
-      <index column="nwrw_special_area_index" />
-      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSpecialArea, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
-    </list>
     <map name="SurfaceLevelDict" access="property" table="nwrw_surface_level_dictionary" cascade="save-update">
       <key column="nwrw_data_dict_id"/>
       <index column="NwrwSurfaceType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSurfaceType, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
       <element column="Value" type="System.Double" />
     </map>
+    <property name="MeteoStationId" />
+    <property name="NumberOfPeople" />
+
+    <property name="NumberOfSpecialAreas" />
+    <list name="SpecialAreas" access="property" lazy="true" cascade="all">
+      <key column="nwrw_special_area_key"/>
+      <index column="nwrw_special_area_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSpecialArea, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
+    </list>
+
+
+
+
+
+
   </joined-subclass>
 </hibernate-mapping>

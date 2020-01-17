@@ -25,37 +25,46 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         Constant,
     }
 
-    public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature, IUrbanRrDefinition
+    /// <summary>
+    /// Object for storing dry weather flow definitions from verloop.csv.
+    /// </summary>
+    /// <seealso cref="INwrwFeature" />
+    public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
-        public NwrwDryWeatherFlowDefinition()
-        {
-            HourlyPercentageDailyVolume = new double[24];
-        }
 
-        public string Name { get; set; }
-        public string Remark { get; set; }
-        public DwfDistributionType DistributionType { get; set; }
-        public int DayNumber { get; set; }
-        public double DailyVolume { get; set; }
-        public double[] HourlyPercentageDailyVolume { get; set; }
+        public string Name { get; set; } //VER_IDE
+        public string DryWeatherFlowId { get; set; } // VER_IDE
+        public DwfDistributionType DistributionType { get; set; } // VER_TYPE
+        public int DayNumber { get; set; } // VER_DAG
+        public double DailyVolume { get; set; } // VER_VOL
+        public double[] HourlyPercentageDailyVolume { get; set; } = new double[24]; // U00_DAG -- U23_DAG
+        public string Remark { get; set; } // ALG_TOE
 
-        public void SetGeometry(IGeometry geometry)
+        public void SetGeometry(NwrwData nwrwData, IGeometry geometry)
         {
-            
         }
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
-            var rrModel = model as RainfallRunoffModel;
+           var rrModel = model as RainfallRunoffModel;
 
-            var nwrwRrData = rrModel?.UrbanRrData.OfType<NwrwRrData>().FirstOrDefault();
-            if (nwrwRrData == null)
+            if (rrModel == null || rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Equals(this)))
             {
                 Log.Warn($"Could not add {nameof(NwrwDryWeatherFlowDefinition)} to {nameof(RainfallRunoffModel)}");
                 return;
             }
-            nwrwRrData?.UrbanRrFlowDefinitions.Add(this);
+
+            // The kernel only supports DWF definitions of type 'DAG' or
+            // of type 'CST' where VER_DAG is empty.
+            if (this.DistributionType == DwfDistributionType.Variable || 
+                (this.DistributionType == DwfDistributionType.Constant && this.DayNumber != default(int)))
+            {
+                Log.Warn($"Could not add {nameof(NwrwDryWeatherFlowDefinition)} to {nameof(RainfallRunoffModel)}. This distribution type is not yet supported.");
+                return;
+            }
+            
+            rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
         }
     }
 }
