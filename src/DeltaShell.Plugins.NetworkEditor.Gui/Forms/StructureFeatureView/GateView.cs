@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -328,25 +327,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return;
             }
 
-            if (TypeUtils.GetMemberName(() => gate.UseSillLevelTimeSeries) == e.PropertyName)
+            if (nameof(gate.UseSillLevelTimeSeries) == e.PropertyName)
             {
                 sillLevelCheckBox.Checked = gate.UseSillLevelTimeSeries;
                 ConfigureSillLevelTimeSeries();
             }
 
-            if (TypeUtils.GetMemberName(() => gate.UseOpeningWidthTimeSeries) == e.PropertyName)
+            if (nameof(gate.UseOpeningWidthTimeSeries) == e.PropertyName)
             {
                 openingWidthCheckBox.Checked = gate.UseOpeningWidthTimeSeries;
                 ConfigureOpeningWidthTimeSeries();
             }
 
-            if (TypeUtils.GetMemberName(() => gate.UseLowerEdgeLevelTimeSeries) == e.PropertyName)
+            if (nameof(gate.UseLowerEdgeLevelTimeSeries) == e.PropertyName)
             {
                 lowerEdgeLevelCheckBox.Checked = gate.UseLowerEdgeLevelTimeSeries;
                 ConfigureLowerEdgeLevelTimeSeries();
             }
 
-            if (TypeUtils.GetMemberName(() => gate.SillWidth) == e.PropertyName)
+            if (nameof(gate.SillWidth) == e.PropertyName)
             {
                 UpdateUseSillWidth();
             }

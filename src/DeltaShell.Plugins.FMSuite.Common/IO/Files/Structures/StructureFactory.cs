@@ -285,8 +285,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             SetTimeSeriesProperty(structure2D, KnownGeneralStructureProperties.CrestLevel.GetDescription(), structuresSubFilesReferenceFilePath,
                                   refDate, weir,
-                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                                  nameof(weir.UseCrestLevelTimeSeries),
+                                  nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
         }
@@ -336,21 +336,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
                                                    KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                                                    structuresSubFilesReferenceFilePath, refDate, gsWeirFormula,
-                                                   TypeUtils.GetMemberName(
-                                                       () => gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gsWeirFormula.HorizontalDoorOpeningWidth),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
+                                                   nameof(gsWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
+                                                   nameof(gsWeirFormula.HorizontalDoorOpeningWidth),
+                                                   nameof(gsWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
                                                    KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
                                                    structuresSubFilesReferenceFilePath, refDate, gsWeirFormula,
-                                                   TypeUtils.GetMemberName(
-                                                       () => gsWeirFormula.UseLowerEdgeLevelTimeSeries),
-                                                   TypeUtils.GetMemberName(() => gsWeirFormula.LowerEdgeLevel),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gsWeirFormula.LowerEdgeLevelTimeSeries));
+                                                   nameof(gsWeirFormula.UseLowerEdgeLevelTimeSeries),
+                                                   nameof(gsWeirFormula.LowerEdgeLevel),
+                                                   nameof(gsWeirFormula.LowerEdgeLevelTimeSeries));
 
             return gsWeirFormula;
         }
@@ -372,8 +367,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                   ? double.NaN
                                   : FMParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, structuresSubFilesReferenceFilePath, refDate, weir,
-                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                                  nameof(weir.UseCrestLevelTimeSeries),
+                                  nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
         }
@@ -412,8 +407,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                   : FMParser.FromString<double>(crestWidthString);
 
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, structuresSubFilesReferenceFilePath, refDate, weir,
-                                  TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                                  TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                                  nameof(weir.UseCrestLevelTimeSeries),
+                                  nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
         }
@@ -456,22 +451,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                    KnownStructureProperties.GateLowerEdgeLevel,
                                                    structuresSubFilesReferenceFilePath, refDate,
                                                    gateWeirFormula,
-                                                   TypeUtils.GetMemberName(
-                                                       () => gateWeirFormula.UseLowerEdgeLevelTimeSeries),
-                                                   TypeUtils.GetMemberName(() => gateWeirFormula.LowerEdgeLevel),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gateWeirFormula.LowerEdgeLevelTimeSeries));
+                                                   nameof(gateWeirFormula.UseLowerEdgeLevelTimeSeries),
+                                                   nameof(gateWeirFormula.LowerEdgeLevel),
+                                                   nameof(gateWeirFormula.LowerEdgeLevelTimeSeries));
 
             SetTimeSeriesPropertyInsideWeirFormula(structure2D,
                                                    KnownStructureProperties.GateOpeningWidth,
                                                    structuresSubFilesReferenceFilePath, refDate,
                                                    gateWeirFormula,
-                                                   TypeUtils.GetMemberName(
-                                                       () => gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gateWeirFormula.HorizontalDoorOpeningWidth),
-                                                   TypeUtils.GetMemberName(
-                                                       () => gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
+                                                   nameof(gateWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries),
+                                                   nameof(gateWeirFormula.HorizontalDoorOpeningWidth),
+                                                   nameof(gateWeirFormula.HorizontalDoorOpeningWidthTimeSeries));
 
             return gateWeirFormula;
         }

@@ -1204,7 +1204,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             hydroData.Stub(d => d.FilePath).Return(TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd")).Repeat.Any();
 
-            TypeUtils.SetPrivatePropertyValue(waterQualityModel, TypeUtils.GetMemberName(() => waterQualityModel.HydroData), hydroData);
+            TypeUtils.SetPrivatePropertyValue(waterQualityModel, nameof(waterQualityModel.HydroData), hydroData);
 
             waterQualityModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "substance" });
 

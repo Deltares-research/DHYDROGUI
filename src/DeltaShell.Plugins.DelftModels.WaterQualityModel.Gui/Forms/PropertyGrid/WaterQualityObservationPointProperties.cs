@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGrid
@@ -23,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
         [DynamicVisibleValidationMethod]
         public override bool IsPropertyVisible(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberName(() => Z))
+            if (propertyName == nameof(Z))
             {
                 return ObservationPointType == ObservationPointType.SinglePoint;
             }

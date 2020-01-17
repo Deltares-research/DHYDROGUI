@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -83,12 +82,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //TODO: pick up imports, etc. for refreshes
-            if ((Equals(sender, Model) && e.PropertyName == TypeUtils.GetMemberName(() => Model.Name)) ||
-                (Model.Boundaries.Contains(sender) &&
-                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)) ||
+            if (Equals(sender, Model) && e.PropertyName == nameof(Model.Name) ||
+                Model.Boundaries.Contains(sender) && e.PropertyName == nameof(Feature2D.Name) ||
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
-                (Model.Pipes.Contains(sender) &&
-                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)))
+                Model.Pipes.Contains(sender) && e.PropertyName == nameof(Feature2D.Name))
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
 
             {

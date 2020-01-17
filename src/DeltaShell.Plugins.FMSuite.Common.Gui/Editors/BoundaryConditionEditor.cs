@@ -10,7 +10,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
@@ -642,7 +641,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             var bc = sender as BoundaryCondition;
             if (bc == null) return;
             if (bc.IsEditing) return;
-            if (!geometryPanelRefreshRequired && e.PropertyName.Equals(TypeUtils.GetMemberName(() => bc.IsEditing)))
+            if (!geometryPanelRefreshRequired && e.PropertyName.Equals(nameof(bc.IsEditing)))
                 return;
             RefreshSupportPointsListBox();
             if (selectedSupportPointIndex < BoundaryConditionSet.Feature.Geometry.Coordinates.Count())
@@ -659,14 +658,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         private void BoundaryPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => BoundaryConditionSet.Feature.Name))
+            if (e.PropertyName == nameof(BoundaryConditionSet.Feature.Name))
             {
                 RefreshSupportPointsListBox();
                 supportPointListBox.SelectedIndex = SelectedSupportPointIndex;
                 UpdateSupportPointsListBox();
                 return;
             }
-            if (e.PropertyName == TypeUtils.GetMemberName(() => BoundaryConditionSet.Feature.Geometry))
+            if (e.PropertyName == nameof(BoundaryConditionSet.Feature.Geometry))
             {
                 var pointCountChanged = false;
                 if (boundaryConditionSet.Feature.Geometry.Coordinates.Count() != supportPointListBox.Items.Count)

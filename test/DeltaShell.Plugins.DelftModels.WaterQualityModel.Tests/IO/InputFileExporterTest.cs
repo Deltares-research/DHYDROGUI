@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var waqModel = new WaterQualityModel();
             var inputFileExporter = new InputFileExporter();
 
-            TypeUtils.SetPrivatePropertyValue(waqModel, TypeUtils.GetMemberName(() => waqModel.HydroData), hydroData);
+            TypeUtils.SetPrivatePropertyValue(waqModel, nameof(waqModel.HydroData), hydroData);
 
             TestHelper.AssertLogMessageIsGenerated(() => inputFileExporter.Export(null, ""), "Can't export model ''. It is not a valid water quality model.");
             TestHelper.AssertLogMessageIsGenerated(() => inputFileExporter.Export(waqModel, ""), "Water quality model is not valid. Please check the validation report.");

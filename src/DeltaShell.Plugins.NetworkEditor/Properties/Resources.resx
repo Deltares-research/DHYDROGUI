@@ -184,4 +184,7 @@
   <data name="NetworkEditorApplicationPlugin_HandleSubRegionCollectionChanged__0__is_not_supported_on_the_hydro_region_collection" xml:space="preserve">
     <value>{0} is not supported on the hydro region collection</value>
   </data>
+  <data name="GroupablePointCloudImporter_Setting_group_names__0_____1_" xml:space="preserve">
+    <value>Setting group names {0} / {1}</value>
+  </data>
 </root>

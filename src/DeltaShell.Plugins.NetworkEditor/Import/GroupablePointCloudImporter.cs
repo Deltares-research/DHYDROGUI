@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -17,31 +16,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
     public class GroupablePointCloudImporter : PointCloudImporter<GroupablePointFeature>
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(GroupablePointCloudImporter));
-        private ImportProgressChangedDelegate progressChanged;
         private const int GroupNameProgressTextInterval = 1000;
-
+        
         public override bool CanImportOnRootLevel
         {
             get { return false; }
-        }
-
-        /// <summary>
-        /// Used for updating the progress text during an import.
-        /// </summary>
-        public override ImportProgressChangedDelegate ProgressChanged
-        {
-            get { return base.ProgressChanged; }
-            set
-            {
-                progressChanged = value;
-                // We only want to invoke the first invocation of base.ProgressChanged and as
-                // we are adding an import step, we increase the amount of steps by 1.
-                base.ProgressChanged = (name, current, total) =>
-                {
-                    if(current == 2) return;
-                    progressChanged?.Invoke(name, current, total + 1);
-                };
-            }
         }
 
         public Func<IList<GroupablePointFeature>, string> GetBaseFolder { get; set; }
@@ -66,6 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                     return onImportItem;
                 }
 
+                TotalNumberOfProgressSteps = 3;
                 var importedFeatures = new List<GroupablePointFeature>();
                 onImportItem = base.OnImportItem(path, importedFeatures);
 
@@ -103,13 +83,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             {
                 var numOfFeaturesLeft = numOfFeaturesToAdd - startIndex;
                 var listToAdd = numOfFeaturesLeft > GroupNameProgressTextInterval
-                    ? newFeatures.GetRange(startIndex, GroupNameProgressTextInterval)
-                    : newFeatures.GetRange(startIndex, numOfFeaturesLeft);
+                                    ? newFeatures.GetRange(startIndex, GroupNameProgressTextInterval)
+                                    : newFeatures.GetRange(startIndex, numOfFeaturesLeft);
                 AddFeatures(listToAdd, originalFeatures, groupName);
-                progressChanged?.Invoke($"Setting group names {startIndex} / {newFeatures.Count}", 2, 3);
+                UpdateProgress(string.Format(Properties.Resources.GroupablePointCloudImporter_Setting_group_names__0_____1_, startIndex, newFeatures.Count), 2);
             }
 
-            progressChanged?.Invoke(string.Format(Resources.PointCloudImporter_OnImportItem_Finished_importing__0__point_features, numOfFeaturesToAdd), 3, 3);
+            UpdateProgress(string.Format(Resources.PointCloudImporter_OnImportItem_Finished_importing__0__point_features, numOfFeaturesToAdd), 3);
             region?.EndEdit();
         }
 

@@ -13,7 +13,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
@@ -122,7 +121,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             var network = Data.Network;
 
-            if ((Equals(sender, network)) && (e.PropertyName == TypeUtils.GetMemberName(()=>network.IsEditing)))
+            if (Equals(sender, network) && e.PropertyName == nameof(network.IsEditing))
             {
                 if (!network.IsEditing) // finished editing...
                 {
