@@ -138,6 +138,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             SupportPointViewModel newViewModel = CreateSupportPointViewModel(NewDistance);
             AddViewModel(newViewModel);
+
+            if (ViewModels.HasExactlyOneValue())
+            {
+                SelectedViewModel = ViewModels[0];
+            }
         }
 
         private SupportPointViewModel CreateSupportPointViewModel(double distance)
@@ -160,11 +165,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             geometricDefinition.SupportPoints.Add(viewModel.SupportPoint);
 
             SubscribeViewModel(viewModel);
-
-            if (ViewModels.HasExactlyOneValue())
-            {
-                SelectedViewModel = ViewModels[0];
-            }
         }
 
         private void RemoveSupportPointAction(object viewModel)
@@ -176,7 +176,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 return;
             }
 
-            ViewModels.Remove(supportPointViewModel);
+            RemoveViewModel(supportPointViewModel);
+
+            if (SelectedViewModel == null)
+            {
+                SelectedViewModel = ViewModels.FirstOrDefault();
+            }
         }
 
         private void RemoveViewModel(SupportPointViewModel viewModel)
@@ -186,11 +191,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             geometricDefinition.SupportPoints.Remove(viewModel.SupportPoint);
 
             UnsubscribeViewModel(viewModel);
-
-            if (SelectedViewModel == viewModel)
-            {
-                SelectedViewModel = ViewModels.FirstOrDefault();
-            }
         }
 
         private bool TryFindInsertIndex(double distance, out int index)
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             bool isSelected = SelectedViewModel == oldViewModel;
 
-            ViewModels.Remove(oldViewModel);
+            RemoveViewModel(oldViewModel);
 
             SupportPointViewModel newViewModel = CreateSupportPointViewModel(oldViewModel.Distance);
 
