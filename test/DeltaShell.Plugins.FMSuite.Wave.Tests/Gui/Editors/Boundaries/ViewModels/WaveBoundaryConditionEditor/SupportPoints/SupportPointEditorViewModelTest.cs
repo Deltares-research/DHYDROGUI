@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     public class SupportPointEditorViewModelTest
     {
         private readonly Random random = new Random();
-        private const double maxDistance = 10;
         private SupportPointEditorViewModel viewModel;
         private IWaveBoundaryGeometricDefinition geometricDefinition;
+
         private IEventedList<SupportPoint> SupportPoints => geometricDefinition.SupportPoints;
         private ObservableCollection<SupportPointViewModel> SubViewModels => viewModel.ViewModels;
 
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetUp()
         {
             geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            geometricDefinition.Length.Returns(maxDistance);
+            geometricDefinition.Length.Returns(10);
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>());
             viewModel = new SupportPointEditorViewModel(geometricDefinition);
         }
@@ -220,14 +220,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void ExecuteAddSupportPointCommand_OutsideAllowedRange_ViewModelIsNotAdded()
-        {
-            double distance = maxDistance + random.NextDouble();
-            viewModel.NewDistance = distance;
-            viewModel.AddSupportPointCommand.Execute(distance.ToString(CultureInfo.CurrentCulture));
-        }
-
-        [Test]
         public void ExecuteRemoveSupportPointCommand_RemovesViewModel()
         {
             // Setup
@@ -239,21 +231,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(SubViewModels.Contains(subViewModel), Is.False);
-        }
-
-        [TestCase(0)]
-        [TestCase(maxDistance)]
-        public void ExecuteRemoveSupportPointCommand_WhenViewModelIsEndPoint_ViewModelIsNotRemoved(double distance)
-        {
-            // Setup
-            SupportPointViewModel subViewModel = GetSupportPointViewModel(distance);
-            viewModel.ViewModels.Add(subViewModel);
-
-            // Call
-            viewModel.RemoveSupportPointCommand.Execute(subViewModel);
-
-            // Assert
-            Assert.That(SubViewModels.Contains(subViewModel), Is.True);
         }
 
         [Test]
@@ -327,49 +304,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SupportPoints, Has.Count.EqualTo(1));
             Assert.That(SupportPoints.Contains(firstSubViewModel.SupportPoint));
             Assert.That(viewModel.SelectedViewModel, Is.SameAs(firstSubViewModel));
-        }
-
-        [Test]
-        public void GivenASubViewModel_WhenTheDistanceChanges_ValueIsValid_ThenViewModelIsReplaced()
-        {
-            // Setup
-            SupportPointViewModel originalSubViewModel = GetSupportPointViewModel(random.NextDouble());
-            viewModel.ViewModels.Add(originalSubViewModel);
-
-            double nextValue = random.NextDouble();
-
-            // Call
-            originalSubViewModel.Distance = nextValue;
-
-            // Assert
-            Assert.That(SubViewModels.HasExactlyOneValue());
-
-            SupportPointViewModel subViewModel = SubViewModels[0];
-            Assert.That(subViewModel, Is.Not.SameAs(originalSubViewModel));
-            Assert.That(subViewModel.Distance, Is.EqualTo(nextValue));
-        }
-
-        [Test]
-        public void GivenASubViewModel_WhenTheDistanceChanges_ValueAlreadyExists_ThenViewModelIsNotReplacedAndHasOriginalValue()
-        {
-            // Setup
-            double existingDistance = random.NextDouble();
-            SupportPointViewModel existingSubViewModel = GetSupportPointViewModel(existingDistance);
-            viewModel.ViewModels.Add(existingSubViewModel);
-
-            double originalValue = random.NextDouble();
-            SupportPointViewModel originalSubViewModel = GetSupportPointViewModel(originalValue);
-            viewModel.ViewModels.Add(originalSubViewModel);
-
-            // Call
-            originalSubViewModel.Distance = existingDistance;
-
-            // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(2));
-
-            SupportPointViewModel subViewModel = SubViewModels.Single(m => m != existingSubViewModel);
-            Assert.That(subViewModel, Is.SameAs(originalSubViewModel));
-            Assert.That(subViewModel.Distance, Is.EqualTo(originalValue));
         }
 
         private SupportPointViewModel GetSupportPointViewModel(double distance)
