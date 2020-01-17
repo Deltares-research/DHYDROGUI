@@ -1109,21 +1109,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             //TODO: get a list going with types and properties.. try to keep it refactor proof.
             if (sender is NetworkSideViewDataController)
             {
-                var data = (NetworkSideViewDataController)sender;
-
-                if (e.PropertyName.Equals(nameof(data.WaterLevelNetworkCoverage)))
+                if (e.PropertyName.Equals(nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage)))
                 {
                     UnsubscribeTimeNavigator();
                     CreateAndSubscribeTimeNavigator();
                 }
 
-                var interestingMembers = new[]
-                                      {
-                                          nameof(data.WaterLevelNetworkCoverage),
-                                          nameof(data.ProfileNetworkCoverages),
-                                          nameof(data.RenderedNetworkCoverages),
-                                          nameof(data.RenderedFeatureCoverages)
-                                      };
+                string[] interestingMembers = 
+                {
+                    nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage),
+                    nameof(NetworkSideViewDataController.ProfileNetworkCoverages),
+                    nameof(NetworkSideViewDataController.RenderedNetworkCoverages),
+                    nameof(NetworkSideViewDataController.RenderedFeatureCoverages)
+                };
 
                 if (interestingMembers.Contains(e.PropertyName))
                 {

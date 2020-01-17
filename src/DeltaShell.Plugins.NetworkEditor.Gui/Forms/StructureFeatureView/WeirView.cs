@@ -80,16 +80,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetConstants()
         {
-            var gatedWeirFormula = new GatedWeirFormula();
-            var generalStructureWeirFormula = new GeneralStructureWeirFormula();
+            useMaxFlowNegPropertyName = nameof(GatedWeirFormula.UseMaxFlowNeg);
+            useMaxFlowPosPropertyName = nameof(GatedWeirFormula.UseMaxFlowPos);
+            gateOpeningPropertyName = nameof(GatedWeirFormula.GateOpening);
+            useLowerEdgeLevelTimeSeriesPropertyName = nameof(GatedWeirFormula.UseLowerEdgeLevelTimeSeries);
 
-            useMaxFlowNegPropertyName = nameof(gatedWeirFormula.UseMaxFlowNeg);
-            useMaxFlowPosPropertyName = nameof(gatedWeirFormula.UseMaxFlowPos);
-            gateOpeningPropertyName = nameof(gatedWeirFormula.GateOpening);
-            useLowerEdgeLevelTimeSeriesPropertyName = nameof(gatedWeirFormula.UseLowerEdgeLevelTimeSeries);
-
-            bedLevelStructureCenterPropertyName = nameof(generalStructureWeirFormula.BedLevelStructureCentre);
-            widthStructureCenterPropertyName = nameof(generalStructureWeirFormula.WidthStructureCentre);
+            bedLevelStructureCenterPropertyName = nameof(GeneralStructureWeirFormula.BedLevelStructureCentre);
+            widthStructureCenterPropertyName = nameof(GeneralStructureWeirFormula.WidthStructureCentre);
         }
 
         private void ConfigureTimeDependentControls()
@@ -183,13 +180,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 RenderFormulaControls();
             }
-            if (weir.CanBeTimedependent)
+
+            if (weir.CanBeTimedependent && e.PropertyName == nameof(weir.UseCrestLevelTimeSeries))
             {
-                if (nameof(weir.UseCrestLevelTimeSeries) == e.PropertyName)
-                {
-                    CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
-                    ConfigureUseCrestLevelTimeSeries();
-                }
+                CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
+                ConfigureUseCrestLevelTimeSeries();
             }
 
             RenderControls();
