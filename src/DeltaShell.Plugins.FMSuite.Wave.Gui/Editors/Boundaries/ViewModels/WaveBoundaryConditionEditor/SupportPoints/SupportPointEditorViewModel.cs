@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void Subscribe()
         {
-            ViewModels.CollectionChanged += OnViewModelCollectionChanged;
             ViewModels.ForEach(SubscribeViewModel);
         }
 
@@ -157,6 +156,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             {
                 ViewModels.Add(viewModel);
             }
+
+            geometricDefinition.SupportPoints.Add(viewModel.SupportPoint);
+
+            SubscribeViewModel(viewModel);
+
+            if (ViewModels.HasExactlyOneValue())
+            {
+                SelectedViewModel = ViewModels[0];
+            }
         }
 
         private void RemoveSupportPointAction(object viewModel)
@@ -171,39 +179,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ViewModels.Remove(supportPointViewModel);
         }
 
-        private void OnViewModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void RemoveViewModel(SupportPointViewModel viewModel)
         {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Remove:
-                    OnViewModelRemoved((SupportPointViewModel) e.OldItems[0]);
-                    break;
-                case NotifyCollectionChangedAction.Add:
-                    OnViewModelAdded((SupportPointViewModel) e.NewItems[0]);
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Reset:
-                    throw new NotSupportedException(nameof(e.Action));
-                default:
-                    throw new InvalidOperationException(e.Action.ToString());
-            }
-        }
+            ViewModels.Remove(viewModel);
 
-        private void OnViewModelAdded(SupportPointViewModel addedViewModel)
-        {
-            geometricDefinition.SupportPoints.Add(addedViewModel.SupportPoint);
-
-            SubscribeViewModel(addedViewModel);
-
-            if (ViewModels.HasExactlyOneValue())
-            {
-                SelectedViewModel = ViewModels[0];
-            }
-        }
-
-        private void OnViewModelRemoved(SupportPointViewModel viewModel)
-        {
             geometricDefinition.SupportPoints.Remove(viewModel.SupportPoint);
 
             UnsubscribeViewModel(viewModel);
