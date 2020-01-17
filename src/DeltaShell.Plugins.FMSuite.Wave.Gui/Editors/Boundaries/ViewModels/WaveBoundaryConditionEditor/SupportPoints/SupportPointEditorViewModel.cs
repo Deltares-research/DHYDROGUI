@@ -24,16 +24,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
         private SupportPointViewModel selectedViewModel;
-        private readonly double maxDistance;
+
+        private double MaxDistance => geometricDefinition.Length;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SupportPointListViewModel" /> class.
+        /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
         /// </summary>
         public SupportPointEditorViewModel(IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
             this.geometricDefinition = geometricDefinition;
-            maxDistance = geometricDefinition.Length;
 
             RemoveSupportPointCommand = new RelayCommand(RemoveSupportPointAction);
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             RemoveViewModel(supportPointViewModel);
 
-            if (SelectedViewModel == null)
+            if (SelectedViewModel == null || SelectedViewModel == supportPointViewModel)
             {
                 SelectedViewModel = ViewModels.FirstOrDefault();
             }
@@ -262,12 +262,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private bool IsOutsideRange(double distance)
         {
-            return distance < 0 || distance > maxDistance;
+            return distance < 0 || distance > MaxDistance;
         }
 
         private bool IsEndPoint(double distance)
         {
-            return Math.Abs(distance) < 1E-15 || Math.Abs(distance - maxDistance) < 1E-15;
+            return Math.Abs(distance) < 1E-15 || Math.Abs(distance - MaxDistance) < 1E-15;
         }
 
         private bool DistanceExists(double distance)
