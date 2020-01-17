@@ -130,12 +130,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ValidationResult result =
                 new PositiveDoubleValidationRule().Validate(value, CultureInfo.CurrentCulture);
 
-            if (!result.IsValid)
-            {
-                return;
-            }
-
-            if (!IsInRange(NewDistance) || DistanceExists(NewDistance))
+            if (!result.IsValid
+                || !IsInRange(NewDistance)
+                || DistanceExists(NewDistance))
             {
                 return;
             }
@@ -199,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             SubscribeViewModel(addedViewModel);
 
-            if (ViewModels.Count == 1)
+            if (ViewModels.HasExactlyOneValue())
             {
                 SelectedViewModel = ViewModels[0];
             }
@@ -264,20 +261,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private void OnViewModelDistanceChanged(SupportPointViewModel supportPointViewModel, double originalDistance)
         {
             double newDistance = supportPointViewModel.Distance;
-            if (IsEndPoint(originalDistance) && !DistanceExists(originalDistance))
-            {
-                supportPointViewModel.Distance = originalDistance;
-                return;
-            }
 
             IEnumerable<SupportPointViewModel> viewModelsToCheck = ViewModels.Except(new[]
             {
                 supportPointViewModel
             });
 
-            if (!IsInRange(newDistance) || DistanceExists(viewModelsToCheck, newDistance))
+            if (IsEndPoint(originalDistance) || !IsInRange(newDistance) || DistanceExists(viewModelsToCheck, newDistance))
             {
+                UnsubscribeViewModel(supportPointViewModel);
+
                 supportPointViewModel.Distance = originalDistance;
+
+                SubscribeViewModel(supportPointViewModel);
             }
             else
             {
@@ -292,6 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ViewModels.Remove(oldViewModel);
 
             SupportPointViewModel newViewModel = CreateSupportPointViewModel(oldViewModel.Distance);
+
             AddViewModel(newViewModel);
 
             if (isSelected)
