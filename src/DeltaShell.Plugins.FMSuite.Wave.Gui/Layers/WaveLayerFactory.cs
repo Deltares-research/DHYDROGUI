@@ -209,11 +209,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
             {
+                ShowInTreeView = false,
                 DataSource = featureProvider,
                 ReadOnly = true,
                 Selectable = false,
                 NameIsReadOnly = true,
                 FeatureEditor = new Feature2DEditor(model),
+                ShowInLegend = false,
                 Style = new VectorStyle
                 {
                     Fill = new SolidBrush(DeltaresColor.LightBlue),
@@ -227,9 +229,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             var lineDataLayer = new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
             {
+                ShowInTreeView = false,
                 DataSource = featureProvider,
                 NameIsReadOnly = true,
                 FeatureEditor = new Feature2DEditor(model),
+                ReadOnly = true,
+                ShowInLegend = false,
+                
                 Style = new VectorStyle
                 {
                     // TODO: Figure out whether we want to make these configurable, or whether we want to define a set of predefined values
@@ -245,6 +251,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             var endPointsLayer = new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
             {
+                ShowInTreeView = false,
+                ShowInLegend = false,
                 DataSource = featureProvider,
                 Selectable = false,
                 ReadOnly = true,
