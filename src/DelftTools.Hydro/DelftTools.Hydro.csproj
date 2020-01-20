@@ -230,7 +230,6 @@
     <Compile Include="IObservationPoint.cs" />
     <Compile Include="IRetention.cs" />
     <Compile Include="LandBoundary2D.cs" />
-    <Compile Include="LateralSourceGridCell.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
     <Compile Include="ObservationPoint.cs" />
     <Compile Include="CrossSections\CrossSectionDefinition.cs" />
@@ -478,9 +477,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\unpaved.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="LateralSourceGridCell.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RunoffBoundary.hbm.xml">
