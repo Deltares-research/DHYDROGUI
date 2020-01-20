@@ -19,8 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="SupportPointEditorViewModel" /> defines the view model for the support point editor view.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    public class SupportPointEditorViewModel : INotifyPropertyChanged
+    public class SupportPointEditorViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
         private SupportPointViewModel selectedViewModel;
@@ -285,6 +284,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ViewModels.ForEach(SubscribeViewModel);
         }
 
+        private void Unsubscribe()
+        {
+            ViewModels.ForEach(UnsubscribeViewModel);
+        }
+
         private void SubscribeViewModel(SupportPointViewModel viewModel)
         {
             viewModel.PropertyChanged += OnSupportPointModelPropertyChanged;
@@ -300,6 +304,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Dispose()
+        {
+            Unsubscribe();
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose();
         }
     }
 }
