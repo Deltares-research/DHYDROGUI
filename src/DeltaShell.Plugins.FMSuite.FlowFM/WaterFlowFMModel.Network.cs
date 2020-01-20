@@ -70,6 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             fmRegion?.SubRegions?.Add(Network);
             Network.Parent = hydroNetworkParent;
             if (NetworkDiscretization != null) NetworkDiscretization.Network = Network;
+            RoughnessSections?.ForEach(rs => rs.Network = Network);
         }
 
         public virtual void UnSubscribeFromNetwork()
