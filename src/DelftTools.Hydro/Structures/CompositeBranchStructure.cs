@@ -22,17 +22,6 @@ namespace DelftTools.Hydro.Structures
         private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeBranchStructure));
 
         private IEventedList<IStructure1D> structures;
-        private ICompositeBranchStructure parentStructure;
-
-        /// <summary>
-        /// implements new ParentStructure to hide FeatureAttribute which is confusing for user for composite structure
-        /// </summary>
-        [Aggregation]
-        public new virtual ICompositeBranchStructure ParentStructure
-        {
-            get => base.ParentStructure;
-            set => base.ParentStructure = value;
-        }
 
         [NoNotifyPropertyChange]
         public override double Chainage
@@ -110,12 +99,6 @@ namespace DelftTools.Hydro.Structures
             Structures = new EventedList<IStructure1D>();
             base.Chainage = offset;
             base.Name = name;
-        }
-
-        ICompositeBranchStructure IStructure1D.ParentStructure
-        {
-            get => parentStructure;
-            set => parentStructure = value;
         }
 
         /// <summary>
