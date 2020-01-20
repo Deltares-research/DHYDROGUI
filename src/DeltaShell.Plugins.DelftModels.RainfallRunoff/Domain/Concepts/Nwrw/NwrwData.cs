@@ -61,7 +61,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
         public string NodeOrBranchId { get; set; } // UNI_IDE (debiet.csv or oppervlak.csv)
         public DischargeType DischargeType { get; set; } // DEB_TYPE (debiet.csv)
-        public string DryWeatherFlowId { get; set; } // VER_IDE (debiet.csv)
+        public string DryWeatherFlowIdInhabitant { get; set; } // VER_IDE (debiet.csv)
+        public string DryWeatherFlowIdCompany { get; set; } // VER_IDE (debiet.csv)
         public IDictionary<NwrwSurfaceType, double> SurfaceLevelDict { get; set; } = new Dictionary<NwrwSurfaceType, double>(); // AFV_IDE and AFV_OPP (oppervlak.csv)
         public string MeteoStationId { get; set; } // NSL_STA (oppervlak.csv)
         public double NumberOfPeople { get; set; } // AVV_ENH (debiet.csv)

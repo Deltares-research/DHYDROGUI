@@ -10,7 +10,8 @@
 
     <property name="NodeOrBranchId" />
     <property name="DischargeType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DischargeType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
-    <property name="DryWeatherFlowId" />
+    <property name="DryWeatherFlowIdInhabitant" />
+    <property name="DryWeatherFlowIdCompany" />
     <map name="SurfaceLevelDict" access="property" table="nwrw_surface_level_dictionary" cascade="save-update">
       <key column="nwrw_data_dict_id"/>
       <index column="NwrwSurfaceType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSurfaceType, DeltaShell.Plugins.DelftModels.RainfallRunoff" />

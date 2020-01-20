@@ -164,11 +164,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.NumberOfPeople = value; }
         }
 
-        [Description("Dry weather flow identification")]
-        public string DryWeatherFlowId
+        [Description("DWF definition (inhabitant)")]
+        public string DryWeatherFlowIdInhabitant
         {
-            get { return data.DryWeatherFlowId; }
-            set { data.DryWeatherFlowId = value; }
+            get { return data.DryWeatherFlowIdInhabitant; }
+            set { data.DryWeatherFlowIdInhabitant = value; }
+        }
+
+        [Description("DWF definition (company)")]
+        public string DryWeatherFlowIdCompany
+        {
+            get { return data.DryWeatherFlowIdCompany; }
+            set { data.DryWeatherFlowIdCompany = value; }
         }
 
         [Description("Meteostation identification")]

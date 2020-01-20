@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                         data.NumberOfPeople = ParseInt(values[++i], LineNumber, parseErrors);
                         break;
                     case NwrwRegion.DryWeatherFlowIdKey:
-                        data.DryWeatherFlowId = ParseString(values[++i], LineNumber);
+                        data.DryWeatherFlowIdInhabitant = ParseString(values[++i], LineNumber);
                         break;
                     case NwrwRegion.MeteostationIdKey:
                         data.MeteoStationName = ParseString(values[++i], LineNumber);

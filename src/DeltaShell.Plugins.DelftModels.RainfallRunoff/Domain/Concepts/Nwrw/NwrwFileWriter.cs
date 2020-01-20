@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
         private string AddDryWeatherFlowIdProperty(NwrwData nwrwData)
         {
-            return $"{NwrwRegion.DryWeatherFlowIdKey} '{nwrwData.DryWeatherFlowId}' ";
+            return $"{NwrwRegion.DryWeatherFlowIdKey} '{nwrwData.DryWeatherFlowIdInhabitant}' ";
         }
 
         private string AddNumberOfPeopleProperty(NwrwData nwrwData)

@@ -31,6 +31,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// <seealso cref="INwrwFeature" />
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
+        public static readonly string INHABITANT_DWF = "Inwoner";
+        public static readonly string COMPANY_DWF = "Bedrijf";
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
 
         public string Name { get; set; } //VER_IDE
@@ -57,11 +60,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             // The kernel only supports DWF definitions of type 'DAG' or
             // of type 'CST' where VER_DAG is empty.
-            if (this.DistributionType == DwfDistributionType.Variable || 
-                (this.DistributionType == DwfDistributionType.Constant && this.DayNumber != default(int)))
+            if (DistributionType == DwfDistributionType.Variable || 
+                (DistributionType == DwfDistributionType.Constant && DayNumber != default(int)))
             {
-                Log.Warn($"Could not add {nameof(NwrwDryWeatherFlowDefinition)} to {nameof(RainfallRunoffModel)}. This distribution type is not yet supported.");
+                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type is not yet supported.");
                 return;
+            }
+
+            // We only support names that start with 'Inwoner' or 'Bedrijf'
+            // See issue FM1D2D-535.
+            if (!DryWeatherFlowId.StartsWith(INHABITANT_DWF, StringComparison.InvariantCultureIgnoreCase) &&
+                !DryWeatherFlowId.StartsWith(COMPANY_DWF, StringComparison.InvariantCultureIgnoreCase))
+            {
+                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. '{DryWeatherFlowId}' is not a valid name.");
             }
             
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);

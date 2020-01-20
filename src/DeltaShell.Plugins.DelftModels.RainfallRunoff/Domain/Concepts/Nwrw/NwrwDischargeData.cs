@@ -13,6 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// </summary>
     public class NwrwDischargeData : INwrwFeature
     {
+        
+
+
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDischargeData));
         public string Name { get; set; } // UNI_IDE
         public DischargeType DischargeType { get; set; } // DEB_TYPE
@@ -29,15 +33,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-
             // Only set the geometry if the catchment does not yet contain any Surface
             if (nwrwData.SurfaceLevelDict.Count == 0)
             {
                 nwrwData.Catchment.Geometry = geometry;
             }
             
-
-
             //If we only Discharge data and no Surface data, set the area to the
             //magic number 100 to make these catchments visible in the GUI.
             if (Math.Abs(nwrwData.CalculationArea) < 0.001)
@@ -58,13 +59,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             if (this.DischargeType == DischargeType.Lateral)
             {
-                Log.Warn($"Could not add {nameof(NwrwDischargeData)} to {nameof(RainfallRunoffModel)}. Discharge type {nameof(DischargeType.Lateral)} is not yet supported.");
+                Log.Warn($"Could not add '{DryWeatherFlowId}' to {nameof(RainfallRunoffModel)}. Discharge type '{nameof(DischargeType.Lateral)}' is not yet supported.");
                 return;
             }
 
             if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(this.DryWeatherFlowId)))
             {
-                Log.Warn($"Could not add {nameof(NwrwDischargeData)} to {nameof(RainfallRunoffModel)}. No definition found for {this.DryWeatherFlowId}.");
+                Log.Warn($"Could not add '{DryWeatherFlowId}' to {nameof(RainfallRunoffModel)}. No definition found for {DryWeatherFlowId}.");
                 return;
             }
 
@@ -85,15 +86,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             nwrwData.NumberOfPeople = this.NumberOfPeople;
             nwrwData.LateralSurface = this.LateralSurface;
 
-            // Add the moment the kernel does not support multiple DWF definitions per node/branch.
-            // For now, we decided to check if the catchment already has a DWF definition.
-            // If so, we do not add any other DWF definitions to the same catchment.
-            if (nwrwData.DryWeatherFlowId != null)
+            // Add the moment the kernel does not support multiple DWF definitions per catchment.
+            // For now, we decided that a catchment can have 1 DWF with a name starting with 'Inwoner'
+            // and 1 DWF statrting with 'Bedrijf'. This will be implemented in both the kernel and GUI.
+            // See issue FM1D2D-535.
+            if (DryWeatherFlowId.StartsWith(NwrwDryWeatherFlowDefinition.INHABITANT_DWF, StringComparison.InvariantCultureIgnoreCase) && 
+                nwrwData.DryWeatherFlowIdInhabitant == null)
             {
-                Log.Warn($"Could not add {this.DryWeatherFlowId} definition. Multiple dry weather flow definitions per catchment are not yet supported.");
-                return;
+                nwrwData.DryWeatherFlowIdInhabitant = DryWeatherFlowId;
             }
-            nwrwData.DryWeatherFlowId = this.DryWeatherFlowId;
+            else if (DryWeatherFlowId.StartsWith(NwrwDryWeatherFlowDefinition.COMPANY_DWF, StringComparison.InvariantCultureIgnoreCase) && 
+                     nwrwData.DryWeatherFlowIdCompany == null)
+            {
+                nwrwData.DryWeatherFlowIdCompany = DryWeatherFlowId;
+            }
+            else
+            {
+                Log.Warn($"Could not add '{DryWeatherFlowId}' definition to '{Name}'.");
+            }
         }
     }
 }
