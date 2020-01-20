@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
                 model.OuterDomain = domainData;
 
-                var innerDomainData = new WaveDomainData("inner-name1");
+                var innerDomainData = new WaveDomainData("old-inner-name");
                 innerDomainData.Grid = new CurvilinearGrid(5, 5, new List<double>(), new List<double>(), null);
                 innerDomainData.SuperDomain = model.OuterDomain;
 
@@ -127,12 +127,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
                 IGridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
 
-                var innerDomainData2 = new WaveDomainData("inner-name2");
-                innerDomainData2.Grid = new CurvilinearGrid(5, 5, new List<double>(), new List<double>(), null);
-                innerDomainData2.SuperDomain = model.OuterDomain;
+                var newInnerDomain = new WaveDomainData("new-inner-name");
+                newInnerDomain.Grid = new CurvilinearGrid(5, 5, new List<double>(), new List<double>(), null);
+                newInnerDomain.SuperDomain = model.OuterDomain;
 
                 // When
-                model.OuterDomain.SubDomains[0] = innerDomainData2;
+                model.OuterDomain.SubDomains[0] = newInnerDomain;
 
                 // Then
                 Assert.That(boundaryContainer.GetBoundarySnappingCalculator(), Is.SameAs(initialCalculator));
