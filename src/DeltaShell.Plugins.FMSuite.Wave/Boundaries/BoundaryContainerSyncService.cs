@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// </summary>
     public class BoundaryContainerSyncService
     {
-        private readonly IBoundaryContainer boundaryContainer;
+        private readonly WaveModel model;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryContainerSyncService"/>.
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 throw new ArgumentNullException(nameof(model));
             }
 
-            boundaryContainer = model.BoundaryContainer;
+            this.model = model;
 
             ((INotifyPropertyChange) model.OuterDomain).PropertyChanged += OnOuterGridChanged;
             ((INotifyPropertyChange) model).PropertyChanging += OnOuterDomainChanging;
@@ -40,13 +40,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         private void OnOuterGridChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!(sender is WaveDomainData outerDomain && 
+            if (!(sender is WaveDomainData outerDomainData &&
+                  outerDomainData == model.OuterDomain &&
                   e?.PropertyName == nameof(WaveDomainData.Grid)))
             {
                 return;
             }
 
-            HandleGridChanged(outerDomain.Grid);
+            HandleGridChanged(((WaveDomainData) sender).Grid);
         }
 
         private void OnOuterDomainChanging(object sender, PropertyChangingEventArgs e)
@@ -74,8 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         private void HandleGridChanged(IDiscreteGridPointCoverage outerDomainGrid)
         {
-            boundaryContainer.Boundaries.Clear();
-            boundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
+            model.BoundaryContainer.Boundaries.Clear();
+            model.BoundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
         }
 
         private static IGridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)

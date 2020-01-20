@@ -102,5 +102,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                 Assert.That(boundaryContainer.GetGridBoundary(), Is.SameAs(gridBoundary));
             }
         }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAModelWithABoundaryContainerSyncService_WhenTheInnerDomainIsChanged_ThenTheBoundaryContainerIsNotUpdated()
+        {
+            // Given
+            using (var model = new WaveModel())
+            {
+                var domainData = new WaveDomainData("name");
+                domainData.Grid = new CurvilinearGrid(10, 10, new List<double>(), new List<double>(), null);
+
+                model.OuterDomain = domainData;
+
+                var innerDomainData = new WaveDomainData("inner-name1");
+                innerDomainData.Grid = new CurvilinearGrid(5, 5, new List<double>(), new List<double>(), null);
+                innerDomainData.SuperDomain = model.OuterDomain;
+
+                model.OuterDomain.SubDomains.Add(innerDomainData);
+
+                IBoundaryContainer boundaryContainer = model.BoundaryContainer;
+                boundaryContainer.Boundaries.Add(Substitute.For<IWaveBoundary>());
+
+                IBoundarySnappingCalculator initialCalculator = boundaryContainer.GetBoundarySnappingCalculator();
+                IGridBoundary intialGridBoundary = boundaryContainer.GetGridBoundary();
+
+                var innerDomainData2 = new WaveDomainData("inner-name2");
+                innerDomainData2.Grid = new CurvilinearGrid(5, 5, new List<double>(), new List<double>(), null);
+                innerDomainData2.SuperDomain = model.OuterDomain;
+
+                // When
+                model.OuterDomain.SubDomains[0] = innerDomainData2;
+
+                // Then
+                Assert.That(boundaryContainer.GetBoundarySnappingCalculator(), Is.SameAs(initialCalculator));
+                Assert.That(boundaryContainer.GetGridBoundary(), Is.SameAs(intialGridBoundary));
+                Assert.That(boundaryContainer.Boundaries.Count, Is.EqualTo(1));
+            }
+        }
     }
 }
