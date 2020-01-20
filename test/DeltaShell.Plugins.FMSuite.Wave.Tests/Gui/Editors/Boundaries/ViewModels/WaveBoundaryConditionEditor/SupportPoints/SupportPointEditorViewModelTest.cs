@@ -34,6 +34,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel = new SupportPointEditorViewModel(geometricDefinition);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            viewModel.Dispose();
+        }
+
         [Test]
         public void Constructor_GeometricDefinitionNull_ThrownArgumentNullException()
         {

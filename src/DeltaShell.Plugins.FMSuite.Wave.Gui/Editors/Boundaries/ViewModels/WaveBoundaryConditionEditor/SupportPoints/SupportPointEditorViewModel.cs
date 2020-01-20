@@ -306,14 +306,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Dispose()
+        public void Dispose()
         {
             Unsubscribe();
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose();
         }
     }
 }
