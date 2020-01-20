@@ -29,6 +29,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
         /// </summary>
+        /// <param name="geometricDefinition">The observed geometric definition.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="geometricDefinition"/> is <c>null</c>.
+        /// </exception>
         public SupportPointEditorViewModel(IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
@@ -45,10 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         /// <summary>
-        /// Gets the view models.
+        /// Gets the view models of the support points.
         /// </summary>
         /// <value>
-        /// The view models.
+        /// The view models of the support points.
         /// </value>
         public ObservableCollection<SupportPointViewModel> ViewModels { get; }
 

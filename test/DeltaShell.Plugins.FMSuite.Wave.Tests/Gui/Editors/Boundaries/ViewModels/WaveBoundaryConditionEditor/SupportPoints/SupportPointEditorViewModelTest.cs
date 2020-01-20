@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void Constructor_GeometricDefinitionNull_ThrownArgumentNullException()
+        public void Constructor_GeometricDefinitionNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new SupportPointEditorViewModel(null);

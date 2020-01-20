@@ -46,6 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
                 snappedCoordinates.GroupBy(x => x.GridSide)
                                   .Where(group => group.Count() >= 2);
 
+            // TODO: improve this method. Discuss with Maarten.
             var candidateFound = false;
 
             var startIndexCandidate = 0;

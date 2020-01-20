@@ -241,17 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(exception, Has.Property("ParamName").EqualTo("supportPoint"));
         }
 
-        [TestCase(0, 1, 1)]
-        [TestCase(1, 3, 2)]
-        [TestCase(2, 5, 3)]
-        [TestCase(3, 7, 4)]
-        [TestCase(4, 9, 5)]
-        [TestCase(9, 8, 1)]
-        [TestCase(8, 6, 2)]
-        [TestCase(7, 4, 3)]
-        [TestCase(6, 2, 4)]
-        [TestCase(5, 0, 5)]
-        public void CalculateDistanceBetweenBoundaryIndices_CorrectValueIsReturned(int indexA, int indexB, double expectedDistance)
+        [Test]
+        public void CalculateDistanceBetweenBoundaryIndices_CorrectValueIsReturned()
         {
             // Setup
             const int x = 10;
@@ -262,11 +253,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
 
             var calculator = new BoundarySnappingCalculator(gridBoundary);
 
+            int indexA = random.Next(9);
+            int indexB = random.Next(9);
+
             // Call
             double value = calculator.CalculateDistanceBetweenBoundaryIndices(indexA, indexB, random.NextEnumValue<GridSide>());
 
             // Assert
-            Assert.That(value, Is.EqualTo(expectedDistance));
+            Assert.That(value, Is.EqualTo(Math.Abs(indexA - indexB)));
         }
 
         [TestCase(2, -1, "indexB" )]

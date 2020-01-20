@@ -16,7 +16,8 @@ namespace DeltaShell.NGHS.IO.TestUtils
         /// <param name="action">The action to perform.</param>
         /// <param name="expectedCount">Expected number of times property changed is fired.</param>
         /// <param name="propertyName">Name of the property.</param>
-        public static void AssertPropertyChangedFired(this INotifyPropertyChanged npc, Action action, int expectedCount, string propertyName = null, Action<PropertyChangedEventArgs> ValidateEventArgs = null)
+        /// <param name="validateEventArgs">Action to validate the <see cref="PropertyChangedEventArgs"/>.</param>
+        public static void AssertPropertyChangedFired(this INotifyPropertyChanged npc, Action action, int expectedCount, string propertyName = null, Action<PropertyChangedEventArgs> validateEventArgs = null)
         {
             var propertyChangedCount = 0;
 
@@ -31,7 +32,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     propertyChangedCount++;
                 }
 
-                ValidateEventArgs?.Invoke(e);
+                validateEventArgs?.Invoke(e);
             }
 
             Assert.That(propertyChangedCount, Is.EqualTo(expectedCount), "Property changed count");
