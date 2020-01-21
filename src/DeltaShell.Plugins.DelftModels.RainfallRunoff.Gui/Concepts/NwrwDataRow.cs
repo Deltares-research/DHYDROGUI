@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
         [Description("Number of people")]
-        public double NumberOfPeople
+        public int NumberOfPeople
         {
             get { return data.NumberOfPeople; }
             set { data.NumberOfPeople = value; }

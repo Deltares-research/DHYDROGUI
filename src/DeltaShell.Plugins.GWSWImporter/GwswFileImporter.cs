@@ -147,39 +147,57 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         private void AddRRtoFMNwrwLinks(RainfallRunoffModel rrModel, IHydroNetwork network, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
+            IList<string> listOfErrors = new List<string>();
+
             foreach (var nwrwData in rrModel.ModelData.OfType<NwrwData>())
             {
-                IBranch branch = network.Branches.FirstOrDefault(b => b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (branch == null)
+                try
                 {
-                    INode node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
-                    if (node != null) branch = node.IncomingBranches.FirstOrDefault();
-                }
+                    IBranch branch = network.Branches.FirstOrDefault(b => b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
+                    if (branch == null)
+                    {
+                        INode node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
+                        if (node != null) branch = node.IncomingBranches.FirstOrDefault();
+                    }
 
-                if (branch != null)
+                    if (branch != null)
+                    {
+                        // add lateral to branch
+                        LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = nwrwData.Name };
+                        lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+                        branch.BranchFeatures.Add(lateralSource);
+
+                        // create hydrolink
+                        var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
+                        hydroLink.Geometry = new LineString(new[] { nwrwData.Catchment.InteriorPoint.Coordinate, lateralSource.Geometry.Coordinate });
+
+                        // at FM-side, create lateral data of type REALTIME
+                        Model1DLateralSourceData model1DLateralSourceData = lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
+                        model1DLateralSourceData.Name = lateralSource.Name;
+                        model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
+                        model1DLateralSourceData.Flow = 0d;
+                    }
+                }
+                catch (Exception e)
                 {
-                    // add lateral to branch
-                    LateralSource lateralSource = new LateralSource { Branch = branch, Chainage = branch.Length, Name = nwrwData.Name };
-                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
-                    branch.BranchFeatures.Add(lateralSource);
-
-                    // create hydrolink
-                    var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
-                    hydroLink.Geometry = new LineString(new[] { nwrwData.Catchment.InteriorPoint.Coordinate, lateralSource.Geometry.Coordinate });
-                    
-                    // at FM-side, create lateral data of type REALTIME
-                    Model1DLateralSourceData model1DLateralSourceData = lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
-                    model1DLateralSourceData.Name = lateralSource.Name;
-                    model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-                    model1DLateralSourceData.Flow = 0d;
-
+                    listOfErrors.Add($"Could not create hydrolink between the Rainfall Runoff Model and Flow FM Model: {e.Message}");
                 }
+            }
+
+            if (listOfErrors.Any())
+            {
+                Log.ErrorFormat($"While adding hydrolinks between Rainfall Runoff Model and Flow FM Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
             }
         }
 
         private void ImportGwswNetworkInRrModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel, IHydroNetwork network)
         {
-            var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList).ToList();
+            var errorsDuringImport = new List<string>();
+            var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList, errorsDuringImport).ToArray();
+            if (errorsDuringImport.Any())
+            {
+                Log.Error($"One or more errors occured during the import process: { string.Join(Environment.NewLine, errorsDuringImport)}");
+            }
             if (rrModel == null || network == null || ShouldCancel) return;
             ReportProgress("Adding features to Rainfall Runoff Model.");
             AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network);
@@ -214,10 +232,9 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         e is NwrwDryWeatherFlowDefinition ||
                         e.Name != null && networkFeatureNameAndGeometries.ContainsKey(e.Name))
                     {
-                        e.AddNwrwCatchmentModelDataToModel(rrModel);
-
                         if (e.Name != null && networkFeatureNameAndGeometries.ContainsKey(e.Name))
-                            e.SetGeometry(rrModel.ModelData.OfType<NwrwData>().FirstOrDefault(md => md.NodeOrBranchId == e.Name), networkFeatureNameAndGeometries[e.Name]);
+                            e.Geometry = networkFeatureNameAndGeometries[e.Name];
+                        e.AddNwrwCatchmentModelDataToModel(rrModel);
                     }
 
                 }
@@ -255,39 +272,40 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         private GwswImportManager ImportManager { get; }
 
-        private IEnumerable<INwrwFeature> ImportGwswDatabaseForRr(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList)
+        private IEnumerable<INwrwFeature> ImportGwswDatabaseForRr(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, IList<string> errorsDuringImport)
         {
             // Surface types (oppervlak.csv)
             var surfaceElements = elementTypesList.Where(k => k.Key == SewerFeatureType.Surface).Select(k => k.Value).ToArray();
-            foreach (var feature in CreateNwrwFeatures(surfaceElements, GwswNwrwGenerator.CreateNewNwrwSurfaceData))
+            foreach (var feature in CreateNwrwFeatures(surfaceElements, GwswNwrwGenerator.CreateNewNwrwSurfaceData, errorsDuringImport))
             {
                 yield return feature;
             }
 
             // Runoff types (nwrw.csv)
             var runOffElements = elementTypesList.Where(k => k.Key == SewerFeatureType.Runoff).Select(k => k.Value).ToArray();
-            foreach (var feature in CreateNwrwFeatures(runOffElements, GwswNwrwGenerator.CreateNewNwrwRunoffDefinition))
+            foreach (var feature in CreateNwrwFeatures(runOffElements, GwswNwrwGenerator.CreateNewNwrwRunoffDefinition, errorsDuringImport))
             {
                 yield return feature;
             }
 
             // Distribution types (verloop.csv)
             var dryWeatherFlowElements = elementTypesList.Where(k => k.Key == SewerFeatureType.Distribution).Select(k => k.Value).ToArray();
-            foreach (var feature in CreateNwrwFeatures(dryWeatherFlowElements, GwswNwrwGenerator.CreateNewNwrwDryWeatherFlowDefinition))
+            foreach (var feature in CreateNwrwFeatures(dryWeatherFlowElements, GwswNwrwGenerator.CreateNewNwrwDryWeatherFlowDefinition, errorsDuringImport))
             {
                 yield return feature;
             }
 
             // Discharge types (debiet.csv)
             var dischargeElements = elementTypesList.Where(k => k.Key == SewerFeatureType.Discharge).Select(k => k.Value).ToArray();
-            foreach (var feature in CreateNwrwFeatures(dischargeElements, GwswNwrwGenerator.CreateNewNwrwDischargeData))
+            foreach (var feature in CreateNwrwFeatures(dischargeElements, GwswNwrwGenerator.CreateNewNwrwDischargeData, errorsDuringImport))
             {
                 yield return feature;
             }
         }
 
         private IEnumerable<INwrwFeature> CreateNwrwFeatures(IEnumerable<GwswElement> elementTypesCollection,
-            Func<GwswElement, INwrwFeature> createNwrwFeatureFunc)
+            Func<GwswElement, IList<string>, INwrwFeature> createNwrwFeatureFunc,
+            IList<string> listOfErrorsGenerated)
         {
             var totalNrOfElements = elementTypesCollection.Count();
             var currentStep = 1;
@@ -302,7 +320,9 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     SetProgress("Generating Rainfall Runoff features", currentStep, totalNrOfElements);
                 }
 
-                yield return createNwrwFeatureFunc(gwswElement);
+                yield return createNwrwFeatureFunc(gwswElement, listOfErrorsGenerated);
+                
+                
 
                 currentStep++;
             }

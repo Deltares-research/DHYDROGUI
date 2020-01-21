@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Utils.Collections.Generic;
+﻿using DelftTools.Hydro;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
 using log4net;
+using System;
+using System.ComponentModel;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -44,26 +38,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double[] HourlyPercentageDailyVolume { get; set; } = new double[24]; // U00_DAG -- U23_DAG
         public string Remark { get; set; } // ALG_TOE
 
-        public void SetGeometry(NwrwData nwrwData, IGeometry geometry)
-        {
-        }
+        public IGeometry Geometry { get; set; }
+
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
            var rrModel = model as RainfallRunoffModel;
 
-            if (rrModel == null || rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Equals(this)))
+            if (rrModel == null || rrModel.NwrwDryWeatherFlowDefinitions.Contains(this))
             {
-                Log.Warn($"Could not add {nameof(NwrwDryWeatherFlowDefinition)} to {nameof(RainfallRunoffModel)}");
+                Log.Warn($"Could not add {Name} DWF definition to {nameof(RainfallRunoffModel)}.");
                 return;
             }
 
             // The kernel only supports DWF definitions of type 'DAG' or
             // of type 'CST' where VER_DAG is empty.
-            if (DistributionType == DwfDistributionType.Variable || 
-                (DistributionType == DwfDistributionType.Constant && DayNumber != default(int)))
+            if (DistributionType == DwfDistributionType.Variable)
             {
-                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type is not yet supported.");
+                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
+                return;
+            }
+
+            if (DistributionType == DwfDistributionType.Constant && DayNumber != default(int))
+            {
+                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
                 return;
             }
 
@@ -73,6 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 !DryWeatherFlowId.StartsWith(COMPANY_DWF, StringComparison.InvariantCultureIgnoreCase))
             {
                 Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. '{DryWeatherFlowId}' is not a valid name.");
+                return;
             }
             
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);

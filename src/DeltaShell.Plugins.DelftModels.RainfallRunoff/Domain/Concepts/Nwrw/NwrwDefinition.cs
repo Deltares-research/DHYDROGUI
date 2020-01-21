@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Hydro;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
 using log4net;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -27,9 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double RunoffSlope { get; set; } // AFV_HEL
         public string Remark { get; set; } // ALG_TOE
 
-        public void SetGeometry(NwrwData nwrwData, IGeometry geometry)
-        {
-        }
+ 
+        public IGeometry Geometry { get; set; }
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
@@ -37,9 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             if (rrModel == null || rrModel.NwrwDefinitions.Any(nd => nd.SurfaceType.Equals(this.SurfaceType)))
             {
-                Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}");
+                Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
                 return;
             }
+
             rrModel?.NwrwDefinitions.Add(this);
         }
     }

@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     public interface INwrwFeature : INameable
     {
-        void SetGeometry(NwrwData nwrwData, IGeometry geometry);
+        IGeometry Geometry { get; set; }
         void AddNwrwCatchmentModelDataToModel(IHydroModel model);
     }
 }

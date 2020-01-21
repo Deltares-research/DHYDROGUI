@@ -56,6 +56,7 @@
     <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDefinition.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwEnums.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileReader.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwRegion.cs" />
