@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47956\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf, Version=1.4.0.47956, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47956\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
@@ -79,6 +83,10 @@
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.47956\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -99,6 +107,7 @@
     <Compile Include="EnsureTest.cs" />
     <Compile Include="Gui\DeltaresColorTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
+    <Compile Include="Layers\MapLayerProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

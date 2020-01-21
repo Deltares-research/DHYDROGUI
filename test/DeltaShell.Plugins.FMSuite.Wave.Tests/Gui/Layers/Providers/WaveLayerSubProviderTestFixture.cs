@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using NSubstitute;
 using NUnit.Framework;

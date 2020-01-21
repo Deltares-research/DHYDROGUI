@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using SharpMap.Api.Layers;
 

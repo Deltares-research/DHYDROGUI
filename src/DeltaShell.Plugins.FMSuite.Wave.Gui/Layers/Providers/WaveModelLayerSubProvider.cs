@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -11,7 +11,7 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
-    /// <see cref="WaveMapLayerProvider"/> implements the
+    /// <see cref="WaveModelLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveModel"/>.
     /// </summary>
     /// <seealso cref="ILayerSubProvider" />

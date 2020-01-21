@@ -2,7 +2,7 @@
 using DelftTools.Shell.Gui;
 using SharpMap.Api.Layers;
 
-namespace DeltaShell.NGHS.Common.Gui
+namespace DeltaShell.NGHS.Common.Gui.Layers
 {
     /// <summary>
     /// <see cref="ILayerSubProvider"/> provides an interface for

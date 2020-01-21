@@ -601,7 +601,9 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
+    <Compile Include="Layers\NetworkEditorLayerFactory.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
+    <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
@@ -778,6 +780,16 @@
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">

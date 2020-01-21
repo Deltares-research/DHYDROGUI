@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using SharpMap.Api.Layers;
 

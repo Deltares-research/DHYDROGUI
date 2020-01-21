@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;

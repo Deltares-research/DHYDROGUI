@@ -357,7 +357,6 @@
     <Compile Include="Layers\WaveLayerIcons.cs" />
     <Compile Include="Layers\WaveLayerNames.cs" />
     <Compile Include="Layers\WaveLayerFactory.cs" />
-    <Compile Include="Layers\WaveMapLayerProvider.cs" />
     <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />

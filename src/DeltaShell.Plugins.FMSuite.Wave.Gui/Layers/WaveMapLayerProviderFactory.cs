@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DeltaShell.NGHS.Common;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public static IMapLayerProvider ConstructMapLayerProvider(Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
             ILayerSubProvider[] subProviders = GetSubProviders(getWaveModelsFunc).ToArray();
-            var provider = new WaveMapLayerProvider();
+            var provider = new MapLayerProvider();
 
             provider.RegisterSubProviders(subProviders);
 

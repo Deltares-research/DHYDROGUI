@@ -1,4 +1,8 @@
-﻿using DelftTools.Shell.Gui;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Shell.Gui;
+using DeltaShell.NGHS.Common.Gui.Layers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
 {
@@ -15,9 +19,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
         /// <returns> A configured <see cref="IMapLayerProvider"/> for the NetworkEditor plugin. </returns>
         public IMapLayerProvider CreateMapLayerProvider()
         {
-            var provider = new NetworkEditorMapLayerProvider();
+            var layerProvider = new MapLayerProvider();
+            ILayerSubProvider[] subLayerProviders = GetSubLayerProviders().ToArray();
 
-            return provider;
+            layerProvider.RegisterSubProviders(subLayerProviders);
+
+            return layerProvider;
+        }
+
+        internal IEnumerable<ILayerSubProvider> GetSubLayerProviders()
+        {
+            var layerFactory = new NetworkEditorLayerFactory();
+
+            yield return new HydroAreaLayerProvider(layerFactory);
         }
     }
 }
