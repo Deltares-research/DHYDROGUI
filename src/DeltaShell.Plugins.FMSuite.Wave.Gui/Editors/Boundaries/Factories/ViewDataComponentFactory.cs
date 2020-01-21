@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
@@ -29,9 +28,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             switch (dataComponent)
             {
-                case UniformDataComponent _:
+                case UniformDataComponent<ConstantParameters> _:
                     return SpatialDefinitionViewType.Uniform;
-                case SpatiallyVaryingDataComponent _:
+                case SpatiallyVaryingDataComponent<ConstantParameters> _:
                     return SpatialDefinitionViewType.SpatiallyVarying;
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
@@ -44,29 +43,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             switch (dataComponent)
             {
-                case UniformDataComponent uniformDataComponent:
-                    return ConstructUniformParametersSettingsViewModel(uniformDataComponent);
-                case SpatiallyVaryingDataComponent spatiallyVaryingDataComponent:
-                    return ConstructSpatiallyVaryingParametersSettingsViewModel(spatiallyVaryingDataComponent);
+                case UniformDataComponent<ConstantParameters> uniformDataComponent:
+                    return new UniformConstantParametersSettingsViewModel(uniformDataComponent.Data);
+                case SpatiallyVaryingDataComponent<ConstantParameters> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantConstantParametersSettingsViewModel(spatiallyVaryingDataComponent.Data);
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }
-        }
-
-        private static IParametersSettingsViewModel ConstructUniformParametersSettingsViewModel(UniformDataComponent dataComponent)
-        {
-            switch (dataComponent.Data)
-            {
-                case ConstantParameters constantParameters:
-                    return new UniformConstantParametersSettingsViewModel(constantParameters);
-                default:
-                    throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
-            }
-        }
-
-        private static IParametersSettingsViewModel ConstructSpatiallyVaryingParametersSettingsViewModel(SpatiallyVaryingDataComponent dataComponent)
-        {
-            throw new NotImplementedException();
         }
     }
 }

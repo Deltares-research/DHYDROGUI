@@ -6,17 +6,17 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.DataComponents
 {
-    [TestFixture]
-    public class UniformDataTest
+    [TestFixture(typeof(ConstantParameters))]
+    public class UniformDataComponentTest<T> where T : class, IBoundaryConditionParameters
     {
         [Test]
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var data = Substitute.For<IBoundaryConditionParameters>();
+            var data = DataComponentTestUtils.ConstructParameters<T>();
 
             // Call
-            var uniformDataComponent = new UniformDataComponent(data);
+            var uniformDataComponent = new UniformDataComponent<T>(data);
 
             // Assert
             Assert.That(uniformDataComponent, Is.InstanceOf<IBoundaryConditionDataComponent>());
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void Constructor_DataNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new UniformDataComponent(null);
+            void Call() => new UniformDataComponent<T>(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void SetData_ValueNull_ThrowsArgumentNullException()
         {
             // Setup
-            var data = Substitute.For<IBoundaryConditionParameters>();
-            var uniformDataComponent = new UniformDataComponent(data);
+            var data = DataComponentTestUtils.ConstructParameters<T>();
+            var uniformDataComponent = new UniformDataComponent<T>(data);
 
             // Call
             void Call() => uniformDataComponent.Data = null;

@@ -64,8 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
         private static IEnumerable<TestCaseData> GetSpatialDefinitionData()
         {
-            yield return  new TestCaseData(new UniformDataComponent(Substitute.For<IBoundaryConditionParameters>()), SpatialDefinitionViewType.Uniform);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent(), SpatialDefinitionViewType.SpatiallyVarying);
+            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters>(new ConstantParameters(0.0, 0.0, 0.0, 0.0)), SpatialDefinitionViewType.Uniform);
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters>(), SpatialDefinitionViewType.SpatiallyVarying);
         }
 
         [Test]

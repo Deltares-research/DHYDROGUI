@@ -341,10 +341,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Peak));
             Assert.That(conditionDefinition.DirectionalSpreadingType, Is.EqualTo(BoundaryConditionDirectionalSpreadingType.Power));
 
-            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent;
+            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent<ConstantParameters>;
             Assert.That(dataComponent, Is.Not.Null);
 
-            var data = dataComponent.Data as ConstantParameters;
+            var data = dataComponent.Data;
             Assert.That(data, Is.Not.Null);
             Assert.That(data.Height, Is.EqualTo(0.0));
             Assert.That(data.Period, Is.EqualTo(1.0));

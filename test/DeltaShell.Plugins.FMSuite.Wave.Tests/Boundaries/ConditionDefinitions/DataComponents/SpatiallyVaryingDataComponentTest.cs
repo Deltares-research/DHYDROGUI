@@ -8,14 +8,15 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.DataComponents
 {
-    [TestFixture]
-    public class SpatiallyVaryingDataComponentTest
+    [TestFixture(typeof(ConstantParameters))]
+    public class SpatiallyVaryingDataComponentTest<T> where T : class, IBoundaryConditionParameters
     {
+
         [Test]
-        public void Constructor_ExpectedResults()
+        public void Constructor_ConstantParameters_ExpectedResults()
         {
             // Call
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Assert
             Assert.That(dataComponent, Is.InstanceOf<IBoundaryConditionDataComponent>());
@@ -30,9 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var supportPoint = new SupportPoint(20, geometricDef);
 
-            var parameters = Substitute.For<IBoundaryConditionParameters>();
-
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var parameters = DataComponentTestUtils.ConstructParameters<T>();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call
             dataComponent.AddParameters(supportPoint, parameters);
@@ -47,8 +47,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void AddParameter_SupportPointNull_ThrowsArgumentNullException()
         {
             // Setup
-            var parameters = Substitute.For<IBoundaryConditionParameters>();
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var parameters = DataComponentTestUtils.ConstructParameters<T>();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call | Assert
             void Call() => dataComponent.AddParameters(null, parameters);
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var supportPoint = new SupportPoint(20, geometricDef);
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call | Assert
             void Call() => dataComponent.AddParameters(supportPoint, null);
@@ -78,8 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var supportPoint = new SupportPoint(20, geometricDef);
-            var parameters = Substitute.For<IBoundaryConditionParameters>();
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var parameters = DataComponentTestUtils.ConstructParameters<T>();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
             dataComponent.AddParameters(supportPoint, parameters);
 
             // Call | Assert
@@ -95,9 +95,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var supportPoint = new SupportPoint(20, geometricDef);
 
-            var parameters = Substitute.For<IBoundaryConditionParameters>();
+            var parameters = DataComponentTestUtils.ConstructParameters<T>();
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
             dataComponent.AddParameters(supportPoint, parameters);
 
             Assert.That(dataComponent.Data.ContainsKey(supportPoint),
@@ -118,9 +118,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var oldSupportPoint = new SupportPoint(20, geometricDef);
 
-            var parameters = Substitute.For<IBoundaryConditionParameters>();
+            var parameters = DataComponentTestUtils.ConstructParameters<T>();
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
             dataComponent.AddParameters(oldSupportPoint, parameters);
 
             Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint),
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var newSupportPoint = new SupportPoint(20, geometricDef);
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call | Assert
             void Call() => dataComponent.ReplaceSupportPoint(null, newSupportPoint);
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var oldSupportPoint = new SupportPoint(20, geometricDef);
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call | Assert
             void Call() => dataComponent.ReplaceSupportPoint(oldSupportPoint, null);
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var oldSupportPoint = new SupportPoint(20, geometricDef);
             var newSupportPoint = new SupportPoint(50, geometricDef);
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Call | Assert
             void Call() => dataComponent.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
@@ -194,10 +194,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var oldSupportPoint = new SupportPoint(20, geometricDef);
             var newSupportPoint = new SupportPoint(50, geometricDef);
-            var oldParameters = Substitute.For<IBoundaryConditionParameters>();
-            var newParameters = Substitute.For<IBoundaryConditionParameters>();
 
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var oldParameters = DataComponentTestUtils.ConstructParameters<T>();
+            var newParameters = DataComponentTestUtils.ConstructParameters<T>();
+
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
             dataComponent.AddParameters(oldSupportPoint, oldParameters);
             dataComponent.AddParameters(newSupportPoint, newParameters);
 
@@ -212,13 +213,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            var dataComponent = new SpatiallyVaryingDataComponent();
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             const int nElements = 6;
             for (var i = 0; i < nElements; i++)
             {
                 var supportPoint = new SupportPoint(20 * (i + 1), geometricDef);
-                var parameters = Substitute.For<IBoundaryConditionParameters>();
+                var parameters = DataComponentTestUtils.ConstructParameters<T>();
                 
                 dataComponent.AddParameters(supportPoint, parameters);
             }

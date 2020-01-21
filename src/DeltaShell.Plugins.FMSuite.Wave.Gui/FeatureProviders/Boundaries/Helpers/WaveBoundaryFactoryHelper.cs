@@ -86,11 +86,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
                 BoundaryConditionPeriodType.Peak;
             const BoundaryConditionDirectionalSpreadingType directionalSpreading =
                 BoundaryConditionDirectionalSpreadingType.Power;
-            var dataComponent = new UniformDataComponent(
-                new ConstantParameters(0.0, 
-                                       1.0, 
-                                       0.0, 
-                                       4.0));
+            var dataComponent = 
+                new UniformDataComponent<ConstantParameters>(
+                    new ConstantParameters(0.0,
+                                           1.0, 
+                                           0.0, 
+                                           4.0));
 
             return new WaveBoundaryConditionDefinition(shape, 
                                                        periodType, 

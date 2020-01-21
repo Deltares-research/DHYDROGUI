@@ -5,23 +5,26 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
     /// <summary>
-    /// <see cref="UniformDataComponent"/> defines a data component consisting
-    /// of a uniform data object for all support points.
+    /// <see cref="UniformDataComponent{T}"/> defines a data component consisting
+    /// of a <see cref="IBoundaryConditionParameters"/> defined for the whole
+    /// <see cref="IWaveBoundary"/>.
     /// </summary>
+    /// <typeparam name="T">
+    /// The type of <see cref="IBoundaryConditionParameters"/>.
+    /// </typeparam>
     /// <seealso cref="IBoundaryConditionDataComponent" />
-    public class UniformDataComponent : IBoundaryConditionDataComponent
+    public class UniformDataComponent<T> : IBoundaryConditionDataComponent where T : IBoundaryConditionParameters
     {
         /// <summary>
-        /// Creates a new <see cref="UniformDataComponent"/>.
+        /// Creates a new <see cref="UniformDataComponent{T}"/>.
         /// </summary>
-        /// <param name="data">The data of this .</param>
+        /// <param name="data">The data of this <see cref="UniformDataComponent{T}"/>.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="data"/> is <c>null</c>.
         /// </exception>
-        // TODO (MWT) Verify whether we should add an Extension method to verify the IBoundaryConditionParameters as being valid
-        public UniformDataComponent(IBoundaryConditionParameters data)
+        public UniformDataComponent(T data)
         {
-            Ensure.NotNull(data, nameof(data));
+            Ensure.NotNull((IBoundaryConditionParameters) data, nameof(data));
             Data = data;
         }
 
@@ -31,16 +34,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
-        public IBoundaryConditionParameters Data
+        public T Data
         {
             get => data;
             set
             {
-                Ensure.NotNull(value, nameof(value));
+                Ensure.NotNull((IBoundaryConditionParameters) value, nameof(value));
                 data = value;
             }
         }
 
-        private IBoundaryConditionParameters data;
+        private T data;
     }
 }

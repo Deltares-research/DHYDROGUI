@@ -7,19 +7,22 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
     /// <summary>
-    /// <see cref="SpatiallyVaryingDataComponent"/> defines a data component consisting
-    /// of an optional data object per support point.
+    /// <see cref="SpatiallyVaryingDataComponent{T}"/> defines a data component consisting
+    /// of an optional <see cref="IBoundaryConditionParameters"/> per support point.
     /// </summary>
+    /// <typeparam name="T">
+    /// The type of <see cref="IBoundaryConditionParameters"/>.
+    /// </typeparam>
     /// <seealso cref="IBoundaryConditionDataComponent" />
-    public class SpatiallyVaryingDataComponent : IBoundaryConditionDataComponent
+    public class SpatiallyVaryingDataComponent<T> : IBoundaryConditionDataComponent where T : IBoundaryConditionParameters
     {
-        private readonly Dictionary<SupportPoint, IBoundaryConditionParameters> data = 
-            new Dictionary<SupportPoint, IBoundaryConditionParameters>();
+        private readonly Dictionary<SupportPoint, T> data = 
+            new Dictionary<SupportPoint, T>();
 
         /// <summary>
         /// Gets the dictionary containing the data.
         /// </summary>
-        public IReadOnlyDictionary<SupportPoint, IBoundaryConditionParameters> Data => data;
+        public IReadOnlyDictionary<SupportPoint, T> Data => data;
 
         /// <summary>
         /// Add the specified <paramref name="supportPoint"/> and corresponding
@@ -33,10 +36,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         /// <exception cref="InvalidOperationException">
         /// Thrown when <paramref name="supportPoint"/> already exists within Data.
         /// </exception>
-        public void AddParameters(SupportPoint supportPoint, IBoundaryConditionParameters parameters)
+        public void AddParameters(SupportPoint supportPoint, T parameters)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
-            Ensure.NotNull(parameters, nameof(parameters));
+            Ensure.NotNull((IBoundaryConditionParameters) parameters, nameof(parameters));
 
             if (data.ContainsKey(supportPoint))
             {

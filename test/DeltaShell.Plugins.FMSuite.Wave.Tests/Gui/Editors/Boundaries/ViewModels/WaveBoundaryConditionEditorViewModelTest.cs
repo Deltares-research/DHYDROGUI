@@ -22,7 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var shape = new GaussShape();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            conditionDefinition.DataComponent = new UniformDataComponent(Substitute.For<IBoundaryConditionParameters>());
+            conditionDefinition.DataComponent = 
+                new UniformDataComponent<ConstantParameters>(
+                    new ConstantParameters(0.0, 
+                                           0.0, 
+                                           0.0, 
+                                           0.0));
 
             conditionDefinition.Shape = shape;
 
