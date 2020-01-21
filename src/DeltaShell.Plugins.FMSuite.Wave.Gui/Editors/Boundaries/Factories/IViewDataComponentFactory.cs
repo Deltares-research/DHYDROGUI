@@ -50,5 +50,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// with the provided <paramref name="dataComponent"/>.
         /// </returns>
         IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent);
+
+        /// <summary>
+        /// Constructs the <see cref="IBoundaryConditionDataComponent"/> corresponding
+        /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
+        /// </summary>
+        /// <param name="forcingType">The <see cref="ForcingViewType"/>.</param>
+        /// <param name="spatialDefinition">The <see cref="SpatialDefinitionViewType"/>.</param>
+        /// <returns>
+        /// The <see cref="IBoundaryConditionDataComponent"/> corresponding
+        /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
+        /// </returns>
+        IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType, 
+                                                                                SpatialDefinitionViewType spatialDefinition);
     }
 }
