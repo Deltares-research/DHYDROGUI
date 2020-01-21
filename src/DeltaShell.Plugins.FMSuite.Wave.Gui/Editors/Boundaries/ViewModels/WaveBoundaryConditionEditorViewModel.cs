@@ -1,6 +1,8 @@
 ﻿using System;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
@@ -28,7 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             this.observedBoundary = observedBoundary;
 
-            var dataComponentFactory = new ViewDataComponentFactory();
+            var modelDataComponentFactory =
+                new BoundaryConditionDataComponentFactory(new BoundaryParametersFactory());
+            var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory);
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
                                                                     dataComponentFactory);
 

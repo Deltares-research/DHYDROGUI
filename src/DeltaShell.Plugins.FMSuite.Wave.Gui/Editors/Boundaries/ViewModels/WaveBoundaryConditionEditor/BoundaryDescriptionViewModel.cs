@@ -32,13 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             this.observedBoundary = observedBoundary;
             this.dataComponentFactory = dataComponentFactory;
-
-            forcingType = 
-                this.dataComponentFactory.GetForcingType(observedBoundary.ConditionDefinition
-                                                                    .DataComponent);
-            spatialDefinition = 
-                this.dataComponentFactory.GetSpatialDefinition(observedBoundary.ConditionDefinition
-                                                                          .DataComponent);
         }
 
         /// <summary>
@@ -64,7 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public ForcingViewType ForcingType
         {
-            get => forcingType;
+            get => dataComponentFactory.GetForcingType(observedBoundary.ConditionDefinition
+                                                                       .DataComponent);
             set
             {
                 if (value == ForcingType)
@@ -72,19 +66,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                forcingType = value;
+                observedBoundary.ConditionDefinition.DataComponent =
+                    dataComponentFactory.ConstructBoundaryConditionDataComponent(value, SpatialDefinition);
                 OnPropertyChanged();
             }
         }
-
-        private ForcingViewType forcingType = ForcingViewType.Constant;
 
         /// <summary>
         /// Gets or sets the spatial definition.
         /// </summary>
         public SpatialDefinitionViewType SpatialDefinition
         {
-            get => spatialDefinition;
+            get => dataComponentFactory.GetSpatialDefinition(observedBoundary.ConditionDefinition
+                                                                             .DataComponent);
             set
             {
                 if (value == SpatialDefinition)
@@ -92,12 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                spatialDefinition = value;
+                observedBoundary.ConditionDefinition.DataComponent =
+                    dataComponentFactory.ConstructBoundaryConditionDataComponent(ForcingType, value);
                 OnPropertyChanged();
             }
         }
-
-        private SpatialDefinitionViewType spatialDefinition = SpatialDefinitionViewType.Uniform;
 
         /// <summary>
         /// Occurs when a property value changes.
