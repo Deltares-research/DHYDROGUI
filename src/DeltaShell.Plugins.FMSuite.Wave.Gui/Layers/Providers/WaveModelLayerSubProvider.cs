@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -11,10 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="WaveMapLayerProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="WaveModel"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveModel"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class WaveModelLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public class WaveModelLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
 

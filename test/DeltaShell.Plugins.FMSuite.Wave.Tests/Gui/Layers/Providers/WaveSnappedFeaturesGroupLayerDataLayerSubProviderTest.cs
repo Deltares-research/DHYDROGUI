@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         private readonly WaveSnappedFeaturesGroupLayerData snappedFeaturesData = 
             new WaveSnappedFeaturesGroupLayerData(new WaveModel());
 
-        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new WaveSnappedFeaturesGroupLayerDataLayerSubProvider(factory);
 
         protected override object GetValidSourceData() =>
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             IEnumerable<object> result = subProvider.GenerateChildLayerObjects(GetValidSourceData());

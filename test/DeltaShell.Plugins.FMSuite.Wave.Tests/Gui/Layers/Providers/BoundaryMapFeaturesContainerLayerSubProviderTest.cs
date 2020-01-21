@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
                                                                                                    null);
         private readonly IWaveModel model = Substitute.For<IWaveModel>();
 
-        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new BoundaryMapFeaturesContainerLayerSubProvider(factory);
 
         protected override object GetValidSourceData() => container;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             IEnumerable<object> result = subProvider.GenerateChildLayerObjects(container);

@@ -601,6 +601,7 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
+    <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />

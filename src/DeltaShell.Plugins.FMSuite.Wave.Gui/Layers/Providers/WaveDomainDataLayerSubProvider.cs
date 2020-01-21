@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="WaveDomainDataLayerSubProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="WaveDomainData"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveDomainData"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class WaveDomainDataLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public class WaveDomainDataLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
 

@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.Common;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
+using DeltaShell.NGHS.Common.Gui;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
@@ -15,11 +15,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
     /// <seealso cref="IMapLayerProvider" />
     public class WaveMapLayerProvider : IMapLayerProvider
     {
-        private readonly IList<IWaveLayerSubProvider> subProviders = new List<IWaveLayerSubProvider>();
+        private readonly IList<ILayerSubProvider> subProviders = new List<ILayerSubProvider>();
 
         public ILayer CreateLayer(object data, object parentData)
         {
-            IWaveLayerSubProvider validSubProvider = subProviders.FirstOrDefault(lp => lp.CanCreateLayerFor(data, parentData));
+            ILayerSubProvider validSubProvider = subProviders.FirstOrDefault(lp => lp.CanCreateLayerFor(data, parentData));
             return validSubProvider?.CreateLayer(data, parentData);
         }
 
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Register the provided <paramref name="providers"/> within this <see cref="WaveMapLayerProvider"/>.
         /// </summary>
         /// <param name="providers"> The providers to be registered. </param>
-        public void RegisterSubProviders(IList<IWaveLayerSubProvider> providers)
+        public void RegisterSubProviders(IList<ILayerSubProvider> providers)
         {
             Ensure.DoesNotContainNullObjects(providers, nameof(providers));
             subProviders.AddRange(providers);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NetTopologySuite.Extensions.Features;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             return model;
         }
 
-        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } = 
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } = 
             (factory) => new ObservationCrossSectionLayerSubProvider(factory);
 
         protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>

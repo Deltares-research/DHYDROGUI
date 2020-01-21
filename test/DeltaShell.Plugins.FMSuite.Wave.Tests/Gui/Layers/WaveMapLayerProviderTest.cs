@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
 using NetTopologySuite.Extensions.Coverages;
 using NSubstitute;
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception.ParamName, Is.EqualTo("providers"));
         }
 
-        private static WaveMapLayerProvider GetMapLayerProviderWithSubProviders(IList<IWaveLayerSubProvider> subProviders)
+        private static WaveMapLayerProvider GetMapLayerProviderWithSubProviders(IList<ILayerSubProvider> subProviders)
         {
             var mapLayerProvider = new WaveMapLayerProvider();
             mapLayerProvider.RegisterSubProviders(subProviders);
@@ -57,25 +57,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         private static IEnumerable<TestCaseData> GetSubProviders()
         {
-            var prov0 = Substitute.For<IWaveLayerSubProvider>();
-            var prov1 = Substitute.For<IWaveLayerSubProvider>();
-            var prov2 = Substitute.For<IWaveLayerSubProvider>();
-            var prov3 = Substitute.For<IWaveLayerSubProvider>();
+            var prov0 = Substitute.For<ILayerSubProvider>();
+            var prov1 = Substitute.For<ILayerSubProvider>();
+            var prov2 = Substitute.For<ILayerSubProvider>();
+            var prov3 = Substitute.For<ILayerSubProvider>();
 
-            yield return new TestCaseData(new List<IWaveLayerSubProvider>());
-            yield return new TestCaseData(new List<IWaveLayerSubProvider> { prov0 });
-            yield return new TestCaseData(new List<IWaveLayerSubProvider>
+            yield return new TestCaseData(new List<ILayerSubProvider>());
+            yield return new TestCaseData(new List<ILayerSubProvider> { prov0 });
+            yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
                 prov1,
             });
-            yield return new TestCaseData(new List<IWaveLayerSubProvider>
+            yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
                 prov1,
                 prov2,
             });
-            yield return new TestCaseData(new List<IWaveLayerSubProvider>
+            yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
                 prov1,
@@ -83,17 +83,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             });
         }
 
-        private static void ConfigureAsCannotCreateLayerFor(IEnumerable<IWaveLayerSubProvider> subProviders, object sourceData, object parentData)
+        private static void ConfigureAsCannotCreateLayerFor(IEnumerable<ILayerSubProvider> subProviders, object sourceData, object parentData)
         {
-            foreach (IWaveLayerSubProvider subProv in subProviders)
+            foreach (ILayerSubProvider subProv in subProviders)
             {
                 subProv.CanCreateLayerFor(sourceData, parentData).Returns(false);
             }
         }
 
-        private IWaveLayerSubProvider CreateCorrectSubProviderForData(object sourceData, object parentData, out ILayer layer)
+        private ILayerSubProvider CreateCorrectSubProviderForData(object sourceData, object parentData, out ILayer layer)
         {
-            var correctProvider = Substitute.For<IWaveLayerSubProvider>();
+            var correctProvider = Substitute.For<ILayerSubProvider>();
             correctProvider.CanCreateLayerFor(sourceData, parentData).Returns(true);
 
             layer = Substitute.For<ILayer>();
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
-        public void CanCreateLayerFor_NoValidSubProvider_ReturnsFalse(IList<IWaveLayerSubProvider> subProviders)
+        public void CanCreateLayerFor_NoValidSubProvider_ReturnsFalse(IList<ILayerSubProvider> subProviders)
         {
             // Setup
             var sourceData = new object();
@@ -122,14 +122,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
-        public void CanCreateLayerFor_ValidSubProvider_ReturnsTrue(IList<IWaveLayerSubProvider> subProviders)
+        public void CanCreateLayerFor_ValidSubProvider_ReturnsTrue(IList<ILayerSubProvider> subProviders)
         {
             // Setup
             var sourceData = Substitute.For<IWaveModel>();
             var parentData = Substitute.For<IWaveModel>();
 
             ConfigureAsCannotCreateLayerFor(subProviders, sourceData, parentData);
-            IWaveLayerSubProvider correctProvider = CreateCorrectSubProviderForData(sourceData, parentData, out ILayer _);
+            ILayerSubProvider correctProvider = CreateCorrectSubProviderForData(sourceData, parentData, out ILayer _);
 
             subProviders.Add(correctProvider);
             
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
-        public void CreateLayer_NoValidSubProvider_ReturnsNull(IList<IWaveLayerSubProvider> subProviders)
+        public void CreateLayer_NoValidSubProvider_ReturnsNull(IList<ILayerSubProvider> subProviders)
         {
             // Setup
             var sourceData = Substitute.For<IWaveModel>();
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
-        public void CreateLayer_ValidSubProvider_ReturnsCorrectLayer(IList<IWaveLayerSubProvider> subProviders)
+        public void CreateLayer_ValidSubProvider_ReturnsCorrectLayer(IList<ILayerSubProvider> subProviders)
         {
             // Setup
             var sourceData = Substitute.For<IWaveModel>();
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             ConfigureAsCannotCreateLayerFor(subProviders, sourceData, parentData);
 
-            IWaveLayerSubProvider correctProvider = CreateCorrectSubProviderForData(sourceData, parentData, out ILayer layer);
+            ILayerSubProvider correctProvider = CreateCorrectSubProviderForData(sourceData, parentData, out ILayer layer);
             subProviders.Add(correctProvider);
             
             WaveMapLayerProvider mapLayerProvider = GetMapLayerProviderWithSubProviders(subProviders);
@@ -185,13 +185,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             correctProvider.Received(1).CreateLayer(sourceData, parentData);
         }
 
-        private static void ConfigureChildDataItems(IEnumerable<IWaveLayerSubProvider> subProviders, 
+        private static void ConfigureChildDataItems(IEnumerable<ILayerSubProvider> subProviders, 
                                                     object data,
                                                     out IEnumerable<object> childObjects)
         {
             var childObjectsGenerated = new List<object>();
 
-            foreach (IWaveLayerSubProvider prov in subProviders)
+            foreach (ILayerSubProvider prov in subProviders)
             {
                 IList<IWaveModel> objs = Enumerable.Range(0, 3).Select(_ => Substitute.For<IWaveModel>()).ToList();
                 prov.GenerateChildLayerObjects(data).Returns(objs);
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
-        public void ChildLayerObjects_ReturnsCorrectLayer(IList<IWaveLayerSubProvider> subProviders)
+        public void ChildLayerObjects_ReturnsCorrectLayer(IList<ILayerSubProvider> subProviders)
         {
             // Setup
             var data = Substitute.For<IWaveModel>();
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Assert
             Assert.That(result, Is.EquivalentTo(childObjects));
 
-            foreach (IWaveLayerSubProvider subProvider in subProviders)
+            foreach (ILayerSubProvider subProvider in subProviders)
             {
                 subProvider.Received(1).GenerateChildLayerObjects(data);
             }

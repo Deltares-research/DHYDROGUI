@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 
@@ -9,10 +10,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="Feature2DLayerSubProvider"/> partially implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="IEventedList{Feature2D}"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IEventedList{Feature2D}"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public abstract class Feature2DLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public abstract class Feature2DLayerSubProvider : ILayerSubProvider
     {
         /// <summary>
         /// Gets the factory.

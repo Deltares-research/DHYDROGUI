@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         private readonly IDiscreteGridPointCoverage gridCoverage = Substitute.For<IDiscreteGridPointCoverage>();
         private readonly IWaveModel model = GetModelWithCoordinateSystem();
 
-        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new DiscreteGridPointCoverageLayerSubProvider(factory, getModelsFunc);
 
         protected override object GetValidSourceData() => gridCoverage;
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             IEnumerable<object> result = subProvider.GenerateChildLayerObjects(gridCoverage);
@@ -73,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void CreateLayer_ParentWavmFileFunctionStore_NoCoordinateSystem()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
             var parent = new WavmFileFunctionStore("dummy.nc");
 
             FactoryMock.CreateGridLayer(gridCoverage, null).Returns(LayerMock);

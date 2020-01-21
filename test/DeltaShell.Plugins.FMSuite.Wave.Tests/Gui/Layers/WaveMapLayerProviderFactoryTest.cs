@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NUnit.Framework;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         public void GetSubProviders_ReturnsExpectedResults()
         {
             // Call
-            IList<IWaveLayerSubProvider> result = WaveMapLayerProviderFactory.GetSubProviders(Enumerable.Empty<WaveModel>)?.ToList();
+            IList<ILayerSubProvider> result = WaveMapLayerProviderFactory.GetSubProviders(Enumerable.Empty<WaveModel>)?.ToList();
 
             // Assert
             Assert.That(result, Is.Not.Null);

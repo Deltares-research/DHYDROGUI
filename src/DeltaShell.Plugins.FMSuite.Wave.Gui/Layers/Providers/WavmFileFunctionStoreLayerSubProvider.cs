@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using SharpMap.Api.Layers;
 
@@ -11,10 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="WavmFileFunctionStoreLayerSubProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="WavmFileFunctionStore"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="WavmFileFunctionStore"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class WavmFileFunctionStoreLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public class WavmFileFunctionStoreLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
         private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;

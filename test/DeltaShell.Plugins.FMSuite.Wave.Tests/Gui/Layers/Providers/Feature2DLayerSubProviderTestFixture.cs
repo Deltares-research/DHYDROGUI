@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
+using DeltaShell.NGHS.Common.Gui;
 using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             IEnumerable<object> result = subProvider.GenerateChildLayerObjects(RelevantFeature);

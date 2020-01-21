@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NSubstitute;
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     {
         private readonly WaveDomainData domainData = new WaveDomainData("Domain");
 
-        protected override Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; } =
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new WaveDomainDataLayerSubProvider(factory);
 
         protected override object GetValidSourceData() => domainData;

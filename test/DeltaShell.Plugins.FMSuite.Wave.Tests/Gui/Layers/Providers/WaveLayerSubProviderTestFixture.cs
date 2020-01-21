@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
@@ -11,17 +10,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public abstract class WaveLayerSubProviderTestFixture
     {
-        protected IWaveLayerSubProvider ConstructSubProvider()
+        protected ILayerSubProvider ConstructSubProvider()
         {
             return ConstructSubProvider(FactoryMock);
         }
 
-        private IWaveLayerSubProvider ConstructSubProvider(IWaveLayerFactory factory)
+        private ILayerSubProvider ConstructSubProvider(IWaveLayerFactory factory)
         {
             return ConstructorCall.Invoke(factory);
         }
 
-        protected abstract Func<IWaveLayerFactory, IWaveLayerSubProvider> ConstructorCall { get; }
+        protected abstract Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; }
 
         protected IWaveLayerFactory FactoryMock;
         protected ILayer LayerMock;
@@ -58,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void CanCreateLayerFor_InvalidData_ReturnsFalse()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             bool result = subProvider.CanCreateLayerFor(GetInvalidSourceData(), GetInvalidParentData());
@@ -71,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void CanCreateLayerFor_ValidData_ReturnsTrue()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             bool result = subProvider.CanCreateLayerFor(GetValidSourceData(), GetValidParentData());
@@ -86,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void CreateLayer_ValidData_ReturnsExpectedResults()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
             ExpectedCall(FactoryMock).Returns(LayerMock);
 
             // Call
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         public void CreateLayer_InvalidData_ReturnsNull()
         {
             // Setup
-            IWaveLayerSubProvider subProvider = ConstructSubProvider();
+            ILayerSubProvider subProvider = ConstructSubProvider();
 
             // Call
             ILayer result = subProvider.CreateLayer(GetInvalidSourceData(), GetInvalidParentData());

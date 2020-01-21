@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using SharpMap.Api.Layers;
 
@@ -8,10 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="BoundaryMapFeaturesContainerLayerSubProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="BoundaryMapFeaturesContainer"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="BoundaryMapFeaturesContainer"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class BoundaryMapFeaturesContainerLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public class BoundaryMapFeaturesContainerLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
 

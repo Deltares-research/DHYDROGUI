@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using NSubstitute;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             var subProvider = new WavmFileFunctionStoreLayerSubProvider(factory, GetModels);
 
             // Assert
-            Assert.That(subProvider, Is.InstanceOf<IWaveLayerSubProvider>());
+            Assert.That(subProvider, Is.InstanceOf<ILayerSubProvider>());
         }
 
         [Test]

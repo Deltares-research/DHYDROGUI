@@ -344,7 +344,6 @@
     <Compile Include="Layers\Providers\BoundaryMapFeaturesContainerLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\DiscreteGridPointCoverageLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\Feature2DLayerSubProvider.cs" />
-    <Compile Include="Layers\Providers\IWaveLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />

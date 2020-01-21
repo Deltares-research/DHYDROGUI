@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -12,10 +13,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="DiscreteGridPointCoverageLayerSubProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="IDiscreteGridPointCoverage"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IDiscreteGridPointCoverage"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class DiscreteGridPointCoverageLayerSubProvider :IWaveLayerSubProvider 
+    /// <seealso cref="ILayerSubProvider" />
+    public class DiscreteGridPointCoverageLayerSubProvider : ILayerSubProvider 
     {
         private readonly IWaveLayerFactory factory;
         private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;

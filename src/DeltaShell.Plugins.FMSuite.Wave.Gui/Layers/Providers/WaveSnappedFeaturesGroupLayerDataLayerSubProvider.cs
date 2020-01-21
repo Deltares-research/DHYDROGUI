@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using SharpMap.Api.Layers;
 
@@ -8,10 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
     /// <see cref="WaveSnappedFeaturesGroupLayerDataLayerSubProvider"/> implements the
-    /// <see cref="IWaveLayerSubProvider"/> for data of type <see cref="WaveSnappedFeaturesGroupLayerData"/>.
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveSnappedFeaturesGroupLayerData"/>.
     /// </summary>
-    /// <seealso cref="IWaveLayerSubProvider" />
-    public class WaveSnappedFeaturesGroupLayerDataLayerSubProvider : IWaveLayerSubProvider
+    /// <seealso cref="ILayerSubProvider" />
+    public class WaveSnappedFeaturesGroupLayerDataLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
 

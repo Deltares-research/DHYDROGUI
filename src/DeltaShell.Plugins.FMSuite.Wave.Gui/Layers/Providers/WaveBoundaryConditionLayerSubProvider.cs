@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui;
 using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
@@ -9,7 +10,7 @@ using SharpMap.Styles;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     // TODO: remove this once old boundaries are retired.
-    public class WaveBoundaryConditionLayerSubProvider : IWaveLayerSubProvider
+    public class WaveBoundaryConditionLayerSubProvider : ILayerSubProvider
     {
         private static readonly string modelName = typeof(WaveModel).Name;
 
