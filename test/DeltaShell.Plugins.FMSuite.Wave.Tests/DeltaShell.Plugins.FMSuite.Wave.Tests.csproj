@@ -310,7 +310,6 @@
     <Compile Include="Gui\WaveBoundaryConditionEditorTest.cs" />
     <Compile Include="Gui\WaveBoundaryConditionListViewTest.cs" />
     <Compile Include="Gui\WaveDomainEditorTest.cs" />
-    <Compile Include="Gui\WaveModelMapLayerProviderTest.cs" />
     <Compile Include="Gui\WaveModelNodePresenterTest.cs" />
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
     <Compile Include="Gui\WaveSettingsHelperTest.cs" />
