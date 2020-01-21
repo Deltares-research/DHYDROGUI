@@ -392,7 +392,6 @@
     <Compile Include="WaveGridBasedDataSource.cs" />
     <Compile Include="WaveGuiPlugin.cs" />
     <Compile Include="WaveMapViewDecorator.cs" />
-    <Compile Include="WaveModelMapLayerProvider.cs" />
     <Compile Include="WaveModelUIDescription.cs" />
     <Compile Include="WaveSettingsHelper.cs" />
     <Compile Include="WaveModelTreeShortcut.cs" />
