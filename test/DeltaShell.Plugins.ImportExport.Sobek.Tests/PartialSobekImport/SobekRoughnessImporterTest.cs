@@ -6,6 +6,7 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
@@ -21,19 +22,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportRoughness()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow 1d");
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekCrossSectionsImporter(), new SobekRoughnessImporter() });
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekCrossSectionsImporter(), new SobekRoughnessImporter() });
 
             importer.Import();
 
-            var network = waterFlowModel1DModel.Network;
+            var network = waterFlowFmModel.Network;
 
-            Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 
-            Assert.IsNotNull(waterFlowModel1DModel.RoughnessSections);
-            Assert.Greater(waterFlowModel1DModel.RoughnessSections.Count,0);
-            Assert.AreEqual(network.CrossSectionSectionTypes.Count, waterFlowModel1DModel.RoughnessSections.Count);
+            Assert.IsNotNull(waterFlowFmModel.RoughnessSections);
+            Assert.Greater(waterFlowFmModel.RoughnessSections.Count,0);
+            Assert.AreEqual(network.CrossSectionSectionTypes.Count, waterFlowFmModel.RoughnessSections.Count);
         }
 
         [Test]
@@ -41,11 +42,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportReverseRoughness()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REVERSE.sbk\3\DEFTOP.1";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow 1d");
 
-            Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel,
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel,
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
@@ -55,15 +56,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.IsTrue(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsTrue(waterFlowFmModel.UseReverseRoughness);
 
-            var network = waterFlowModel1DModel.Network;
+            var network = waterFlowFmModel.Network;
             var channelA = network.Branches[0];
             var channelB = network.Branches[1];
             var channelC = network.Branches[2];
             var channelD = network.Branches[3];
             var channelE = network.Branches[4];
-            var sections = waterFlowModel1DModel.RoughnessSections;
+            var sections = waterFlowFmModel.RoughnessSections;
             var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
             var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
             
@@ -119,12 +120,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportReverseRoughnessNDB()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow 1d");
 
-            Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
-                                                                                 waterFlowModel1DModel,
+                                                                                 waterFlowFmModel,
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
@@ -134,13 +135,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            var network = waterFlowModel1DModel.Network;
-            var sections = waterFlowModel1DModel.RoughnessSections;
+            var network = waterFlowFmModel.Network;
+            var sections = waterFlowFmModel.RoughnessSections;
             var reverseMain = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
             var reverseFp1 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
             var reverseFp2 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain2());
 
-            Assert.IsTrue(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsTrue(waterFlowFmModel.UseReverseRoughness);
             Assert.IsNotNull(sections);
             Assert.Greater(sections.Count, 0);
             Assert.AreEqual(network.CrossSectionSectionTypes.Count*2, sections.Count);
@@ -167,11 +168,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportRoughnessWhereYZCrossSectionHasNoFrictionDataShouldTakeTheMainValueOfTheBranch() //Review Witteveen en Bos
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Twentekanaal.lit\3\Network.TP";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow 1d");
 
-            Assert.IsFalse(waterFlowModel1DModel.UseReverseRoughness);
+            Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowModel1DModel,
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel,
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
@@ -181,9 +182,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            var network = waterFlowModel1DModel.Network;
+            var network = waterFlowFmModel.Network;
             var crossSection = network.CrossSections.FirstOrDefault(cd => cd.Name == "cross_H_35600");
-            var roughnessSection = waterFlowModel1DModel.RoughnessSections.First(rs => rs.Name == "Main");
+            var roughnessSection = waterFlowFmModel.RoughnessSections.First(rs => rs.Name == "Main");
 
             Assert.IsNotNull(crossSection);
 
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\12\network.tp";
 
-            var flowModel = new WaterFlowModel1D("water flow 1d");
+            var flowModel = new WaterFlowFMModel("water flow 1d");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel,
                                                                                  new IPartialSobekImporter[]
@@ -212,6 +213,41 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             TestHelper.AssertIsFasterThan(38000, importer.Import); //on my pc: 13sec, was 75sec.. more to gain though
 
             Assert.AreEqual(10960, flowModel.RoughnessSections.GetMainRoughnessSection().RoughnessNetworkCoverage.Locations.Values.Count);
+        }
+
+        [Test]
+        public void ImportRoughnessUrban()
+        {
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
+
+            var flowModel = new WaterFlowFMModel();
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel,
+                new IPartialSobekImporter[]
+                {
+                    new SobekBranchesImporter(),
+                    new SobekRoughnessImporter()
+                });
+            importer.Import();
+
+            Assert.IsNotNull(flowModel.RoughnessSections.GetMainRoughnessSection());
+
+            var sewerRoughness =
+                flowModel.RoughnessSections.First(rs => rs.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
+            Assert.IsNotNull(sewerRoughness);
+            Assert.AreEqual(sewerRoughness.GetDefaultRoughnessType(), RoughnessType.WhiteColebrook);
+            Assert.AreEqual(sewerRoughness.GetDefaultRoughnessValue(), 0.003);
+            Assert.Greater(sewerRoughness.RoughnessNetworkCoverage.GetValues<double>().Count, 0);
+
+
+            var pipeToCheck = flowModel.Network.Pipes.FirstOrDefault(p => p.Name.Equals("1"));
+            var nRoughnessLocationPipeToChecks = sewerRoughness.RoughnessNetworkCoverage.Locations.AllValues.Count(l => pipeToCheck != null && l.Branch.Equals(pipeToCheck));
+            Assert.AreEqual(1, nRoughnessLocationPipeToChecks);
+
+            //BDFR id '1' ci '1' mf 4 mt cp 0 0.004 0 mr cp 0 0.004 0 s1 6 s2 6 bdfr//
+            var roughnessLocation = sewerRoughness.RoughnessNetworkCoverage.Locations.AllValues.First(l => pipeToCheck != null && l.Branch.Equals(pipeToCheck));
+            Assert.AreEqual(0.004, sewerRoughness.RoughnessNetworkCoverage[roughnessLocation]);
+
         }
     }
 }

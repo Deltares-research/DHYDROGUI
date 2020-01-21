@@ -8,6 +8,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
@@ -40,6 +41,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var main = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName);
             var floodPlain1 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName);
             var floodPlain2 = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName);
+            var sewerFriction = GetCrossSectionSectionType(RoughnessDataSet.SewerSectionTypeName);
 
             var frictionFile = GetFilePath(SobekFileNames.SobekFrictionFileName);
             if (!File.Exists(frictionFile))
@@ -66,6 +68,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 SetMainAndFloodPlainRoughness(main, floodPlain1, floodPlain2, sobekFriction);
             }
 
+            SetSewerRoughness(sewerFriction, sobekFriction);
+
             if (ShouldCancel)
             {
                 return;
@@ -73,6 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             SetCrossSectionFrictionsToRougnessCoverages(sobekFriction);
         }
+
 
         private void SetCrossSectionFrictionsToRougnessCoverages(SobekFriction sobekFriction)
         {
@@ -239,6 +244,37 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
         }
 
+        private void SetSewerRoughness(CrossSectionSectionType sewerFriction, SobekFriction sobekFriction)
+        {
+            var waterFlowFMModel = GetModel<WaterFlowFMModel>();
+
+            var sewerSection = GetRoughnessSection(sewerFriction.Name);
+
+            var pipes = waterFlowFMModel.Network.Pipes.ToDictionary(p => p.Name, p => p);
+
+
+            // process all BDFR records
+            foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                if (!pipes.ContainsKey(sobekBedFriction.BranchId))
+                {
+                    continue;
+                }
+                var pipe = pipes[sobekBedFriction.BranchId];
+
+                if (sewerSection != null)
+                {
+                    SetRoughnessToSection(sewerSection, pipe, sobekBedFriction);
+                }
+            }
+            coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
+        }
+
         private bool SobekBedFrictionContainsReverseRoughness(SobekFriction sobekFriction)
         {
             foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
@@ -260,7 +296,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return false;
         }
 
-        private void SetPositiveAndNegativeRoughnessToSection(RoughnessSection section, IChannel channel, SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData)
+        private void SetPositiveAndNegativeRoughnessToSection(RoughnessSection section, IBranch branch, SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData)
         {
             section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
             try
@@ -268,9 +304,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 var waterFlowFMModel = GetModel<WaterFlowFMModel>();
 
                 SetSobekBedFrictionToRoughnessCoverage(sobekBedFrictionData, sobekMainBedFrictionData,
-                                                       true, section, channel);
+                                                       true, section, branch);
 
-                SetAndCheckInterpolationRoughnessCoverage(sobekBedFrictionData.Positive, section, channel);
+                SetAndCheckInterpolationRoughnessCoverage(sobekBedFrictionData.Positive, section, branch);
 
                 //is there a reverse roughness defined (not same as normal roughness)?
                 if (waterFlowFMModel.UseReverseRoughness)
@@ -285,16 +321,33 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         ((ReverseRoughnessSection)reverseRoughnessSection).UseNormalRoughness = false;
 
                         SetSobekBedFrictionToRoughnessCoverage(sobekBedFrictionData, sobekMainBedFrictionData,
-                                                               false, reverseRoughnessSection, channel);
+                                                               false, reverseRoughnessSection, branch);
 
                         SetAndCheckInterpolationRoughnessCoverage(sobekBedFrictionData.Negative, reverseRoughnessSection,
-                                                                  channel);
+                                                                  branch);
                     }
                 }
             }
             finally
             {
                 section.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = false;
+            }
+        }
+
+        private void SetRoughnessToSection(RoughnessSection sewerSection, IPipe pipe, SobekBedFriction sobekBedFriction)
+        {
+            sewerSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = true;
+            try
+            {
+                sewerSection.RoughnessNetworkCoverage[new NetworkLocation(pipe, 0)] = new object[]
+                {
+                    sobekBedFriction.MainFriction.Positive.FrictionConst,
+                    (int)sobekBedFriction.MainFriction.FrictionType
+                };
+            }
+            finally
+            {
+                sewerSection.RoughnessNetworkCoverage.SkipInterpolationForNewLocation = false;
             }
         }
 
@@ -319,7 +372,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            // if the BDFR record is contained in the GLFR record the friction for the main channel is
+            // if the BDFR record is contained in the GLFR record the friction for the main branch is
             // also used for yz cross sections
             if (!Enum.IsDefined(typeof(RoughnessType), (int)sobekFriction.GlobalBedFrictionList.First().MainFriction.FrictionType))
             {
@@ -379,7 +432,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
 
         private static void SetSobekBedFrictionToRoughnessCoverage(SobekBedFrictionData sobekBedFrictionData, SobekBedFrictionData sobekMainBedFrictionData, bool usePositive,
-            RoughnessSection roughnessSection, IChannel channel)
+            RoughnessSection roughnessSection, IBranch channel)
         {
             var bedFrictionData = sobekBedFrictionData;
             if (sobekBedFrictionData.FrictionType == SobekBedFrictionType.CopyOfMain)
@@ -399,7 +452,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                                                             DefaultRoughnessType
                                                                                         };
 
-                log.WarnFormat("Friction type {0} of frictionpart {1} is not supported. The default roughness of channel {2} has been set to {3} constant value {4}",
+                log.WarnFormat("Friction type {0} of frictionpart {1} is not supported. The default roughness of branch {2} has been set to {3} constant value {4}",
                     sobekBedFrictionData.FrictionType,
                     roughnessSection.RoughnessNetworkCoverage.Name,
                     channel.Name,
@@ -446,7 +499,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private readonly IList<RoughnessNetworkCoverage> coveragesWithInterpolationSet = new List<RoughnessNetworkCoverage>();
 
-        private void SetAndCheckInterpolationRoughnessCoverage(SobekBedFrictionDirectionData sobekBedFrictionDirectionData, RoughnessSection roughnessSection, IChannel channel)
+        private void SetAndCheckInterpolationRoughnessCoverage(SobekBedFrictionDirectionData sobekBedFrictionDirectionData, RoughnessSection roughnessSection, IBranch channel)
         {
             var coverageName = roughnessSection.Name;
 
@@ -456,15 +509,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 coverage.Arguments[0].InterpolationType = sobekBedFrictionDirectionData.Interpolation;
                 coveragesWithInterpolationSet.Add(coverage);
-                log.WarnFormat("Interpolation {0} (of channel {1} ({2})) has been set as network-wide interpolation for roughness section '{3}'. Only a single interpolation type for entire network is supported.",
-                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.LongName, coverageName);
+                log.WarnFormat("Interpolation {0} (of branch {1} ({2})) has been set as network-wide interpolation for roughness section '{3}'. Only a single interpolation type for entire network is supported.",
+                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.Name, coverageName);
             }
 
             if (sobekBedFrictionDirectionData.Interpolation != coverage.Arguments[0].InterpolationType &&
                 sobekBedFrictionDirectionData.Interpolation != SobekBedFrictionDirectionData.InterpolationNotSetValue)
             {
-                log.WarnFormat("Interpolation {0} of channel {1} ({2}) cannot be set for roughness section '{3}'. Only one interpolation type supported for entire network. Interpolation is {4}.",
-                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.LongName, coverageName,
+                log.WarnFormat("Interpolation {0} of branch {1} ({2}) cannot be set for roughness section '{3}'. Only one interpolation type supported for entire network. Interpolation is {4}.",
+                    sobekBedFrictionDirectionData.Interpolation, channel.Name, channel.Name, coverageName,
                     coverage.Arguments[0].InterpolationType);
             }
         }
@@ -476,7 +529,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <param name="bedFrictionData"></param>
         /// <param name="roughnessSection"></param>
         /// <param name="functionOfH"></param>
-        private static void AddFunctionNetworkLocationsToCoverage(IChannel channel, SobekBedFrictionData bedFrictionData, RoughnessSection roughnessSection, IFunction functionOfH)
+        private static void AddFunctionNetworkLocationsToCoverage(IBranch channel, SobekBedFrictionData bedFrictionData, RoughnessSection roughnessSection, IFunction functionOfH)
         {
             foreach (double chainage in functionOfH.Arguments[0].Values)
             {
@@ -598,7 +651,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 d[new NetworkLocation(branch, offset)] = new DelftTools.Utils.Tuple<double, int>(DefaultRoughnessValue, (int)DefaultRoughnessType);
 
                 log.WarnFormat(
-                    "Friction type {0} of channel {1} is not supported. The roughness has been set to {2} constant value {3}",
+                    "Friction type {0} of branch {1} is not supported. The roughness has been set to {2} constant value {3}",
                     sobekFrictionSegment.FrictionType,
                     branch.Name,
                     DefaultRoughnessType,

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
@@ -208,6 +209,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             //CRDS id 'Round 1000 mm' nm 'Round 1000 mm' ty 4 bl 0 rd  .5 crds//
             //CRSN id 'l_D00230-D00231' di 'Round 1000 mm'  rl  26.25 ll  26.23 crsn//
             //CRSN id 'l_D00230-D00231' nm '' ci '1' lc 6.72681202353685 crsn//
+            //BDFR id '1' ci '1' mf 4 mt cp 0 0.004 0 mr cp 0 0.004 0 s1 6 s2 6 bdfr//
 
             var pipeToCheck = hydroNetwork.Pipes.FirstOrDefault(p => p.Name.Equals("1"));
             Assert.IsNotNull(pipeToCheck);
@@ -215,8 +217,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.True(pipeToCheck.CrossSectionDefinition.CrossSectionType  == CrossSectionType.Standard);
             Assert.AreEqual(26.23, pipeToCheck.LevelSource, 0.001);
             Assert.AreEqual(26.25, pipeToCheck.LevelTarget, 0.001);
-
-
+            Assert.AreEqual(pipeToCheck.Material,SewerProfileMapping.SewerProfileMaterial.Unknown);
         }
     }
 }
