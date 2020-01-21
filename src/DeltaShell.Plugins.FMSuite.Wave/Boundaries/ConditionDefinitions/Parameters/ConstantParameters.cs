@@ -20,11 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// <param name="direction">The direction.</param>
         /// <param name="spreading">The spreading.</param>
         public ConstantParameters(double height,
-                                           double period,
-                                           double direction,
-                                           double spreading)
+                                  double period,
+                                  double direction,
+                                  double spreading)
         {
-            // TODO (MWT) verify what the correct values are for doubles in here
             Height = height;
             Period = period;
             Direction = direction;
