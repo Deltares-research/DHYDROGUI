@@ -207,9 +207,11 @@
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparerTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionDirectionalSpreadingTypeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\DataComponents\BoundaryConditionDataComponentFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\DataComponentTestUtils.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\SpatiallyVaryingDataComponentTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\UniformDataComponentTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Parameters\BoundaryParametersFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactoryTest.cs" />
