@@ -21,13 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <returns>A configured <see cref="IMapLayerProvider"/> for the Waves plugin.</returns>
         public static IMapLayerProvider ConstructMapLayerProvider(Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
-            IList<IWaveLayerSubProvider> subProviders = GetSubProviders(getWaveModelsFunc).ToList();
+            IWaveLayerSubProvider[] subProviders = GetSubProviders(getWaveModelsFunc).ToArray();
             var provider = new WaveMapLayerProvider();
 
-            foreach (IWaveLayerSubProvider subProvider in subProviders)
-            {
-                provider.RegisterSubProvider(subProvider);
-            }
+            provider.RegisterSubProviders(subProviders);
 
             return provider;
         }
@@ -37,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         /// <param name="getWaveModelsFunc">Function to obtain all the Wave models within the application.</param>
         /// <returns>The enumerable of <see cref="IWaveLayerSubProvider"/> required for the Waves plugin.</returns>
-        public static IEnumerable<IWaveLayerSubProvider> GetSubProviders(Func<IEnumerable<WaveModel>> getWaveModelsFunc)
+        internal static IEnumerable<IWaveLayerSubProvider> GetSubProviders(Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
             Ensure.NotNull(getWaveModelsFunc, nameof(getWaveModelsFunc));
             var factory = new WaveLayerFactory();

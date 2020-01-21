@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using DelftTools.Utils.Collections;
 
 namespace DeltaShell.NGHS.Common
 {
@@ -26,6 +28,23 @@ namespace DeltaShell.NGHS.Common
             {
                 throw new ArgumentNullException(paramName);
             }
+        }
+
+        /// <summary>
+        /// Verifies that the specified <paramref name="collection"/> is not <c>null</c>
+        /// and that all its elements are not <c>null</c>.
+        /// </summary>
+        /// <typeparam name="T"> The type of the collection. </typeparam>
+        /// <param name="collection"> The collection to check. </param>
+        /// <param name="paramName"> The name of <paramref name="collection"/>. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown in case <paramref name="collection"/> is <c>null</c> or in case on of its
+        /// elements is <c>null</c>.
+        /// </exception>
+        public static void DoesNotContainNullObjects<T>(IList<T> collection, string paramName) where T : class
+        {
+            NotNull(collection, paramName);
+            collection.ForEach(e => NotNull(e, paramName));
         }
 
         /// <summary>

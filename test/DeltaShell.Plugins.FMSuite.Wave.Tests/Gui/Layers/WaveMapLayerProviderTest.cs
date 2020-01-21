@@ -40,22 +40,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var mapLayerProvider = new WaveMapLayerProvider();
 
             // Call
-            void Call() => mapLayerProvider.RegisterSubProvider(null);
+            void Call() => mapLayerProvider.RegisterSubProviders(null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("provider"));
+            Assert.That(exception.ParamName, Is.EqualTo("providers"));
         }
 
-        private static WaveMapLayerProvider GetMapLayerProviderWithSubProviders(IEnumerable<IWaveLayerSubProvider> subProviders)
+        private static WaveMapLayerProvider GetMapLayerProviderWithSubProviders(IList<IWaveLayerSubProvider> subProviders)
         {
             var mapLayerProvider = new WaveMapLayerProvider();
-
-            foreach (IWaveLayerSubProvider waveLayerSubProvider in subProviders)
-            {
-                mapLayerProvider.RegisterSubProvider(waveLayerSubProvider);
-            }
-
+            mapLayerProvider.RegisterSubProviders(subProviders);
+            
             return mapLayerProvider;
         }
 

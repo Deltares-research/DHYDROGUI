@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -18,3 +19,5 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1b9f065e-107d-4547-9d95-4bc14092e08f")]
+
+[assembly: InternalsVisibleTo("DeltaShell.Plugins.FMSuite.Wave.Tests")]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using NUnit.Framework;
 
@@ -59,6 +60,68 @@ namespace DeltaShell.NGHS.Common.Tests
 
             // Call
             void Call() => Ensure.IsDefined((TestEnum) value, name);
+
+            // Assert
+            Assert.DoesNotThrow(Call);
+        }
+
+        [Test]
+        public void DoesNotContainNullObjects_NullCollection_ThrowsArgumentNullException()
+        {
+            // Setup
+            IList<object> collection = null;
+
+            // Call
+            void Call() => Ensure.DoesNotContainNullObjects(collection, nameof(collection));
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            // Assert
+            Assert.That(exception.ParamName, Is.EqualTo(nameof(collection)));
+        }
+
+        [Test]
+        public void DoesNotContainNullObjects_EmptyCollection_ThrowsArgumentNullException()
+        {
+            // Setup
+            IList<object> collection = new List<object>();
+
+            // Call
+            void Call() => Ensure.DoesNotContainNullObjects(collection, nameof(collection));
+
+            // Assert
+            Assert.DoesNotThrow(Call);
+        }
+
+        [Test]
+        public void DoesNotContainNullObjects_CollectionWithNullElement_ThrowsArgumentNullException()
+        {
+            // Setup
+            IList<object> collection = new List<object>
+            {
+                null,
+                new object()
+            };
+
+            // Call
+            void Call() => Ensure.DoesNotContainNullObjects(collection, nameof(collection));
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            // Assert
+            Assert.That(exception.ParamName, Is.EqualTo(nameof(collection)));
+        }
+
+        [Test]
+        public void DoesNotContainNullObjects_CollectionWithoutNullElements_ThrowsArgumentNullException()
+        {
+            // Setup
+            IList<object> collection = new List<object>
+            {
+                new object(),
+                new object()
+            };
+
+            // Call
+            void Call() => Ensure.DoesNotContainNullObjects(collection, nameof(collection));
 
             // Assert
             Assert.DoesNotThrow(Call);

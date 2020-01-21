@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using SharpMap.Api.Layers;
@@ -33,13 +34,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         /// <summary>
-        /// Register the provided <paramref name="provider"/> within this <see cref="WaveMapLayerProvider"/>.
+        /// Register the provided <paramref name="providers"/> within this <see cref="WaveMapLayerProvider"/>.
         /// </summary>
-        /// <param name="provider"> The provider to be registered. </param>
-        public void RegisterSubProvider(IWaveLayerSubProvider provider)
+        /// <param name="providers"> The providers to be registered. </param>
+        public void RegisterSubProviders(IList<IWaveLayerSubProvider> providers)
         {
-            Ensure.NotNull(provider, nameof(provider));
-            subProviders.Add(provider);
+            Ensure.DoesNotContainNullObjects(providers, nameof(providers));
+            subProviders.AddRange(providers);
         }
     }
 }
