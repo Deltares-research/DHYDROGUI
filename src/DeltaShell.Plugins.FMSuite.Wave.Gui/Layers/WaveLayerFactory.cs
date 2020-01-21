@@ -256,6 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 DataSource = featureProvider,
                 Selectable = false,
                 ReadOnly = true,
+                NameIsReadOnly = true,
                 Style = new VectorStyle
                 {
                     Fill = Brushes.Gray,

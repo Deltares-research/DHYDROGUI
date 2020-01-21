@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -368,6 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to exist.");
             Assert.That(lineLayer, Is.InstanceOf(typeof(VectorLayer)),
                         $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectMapTreeBehaviourSubBoundaryLayer(lineLayer);
 
             ILayer endPointsLayer =
                 groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryEndPointsLayerName);
@@ -375,6 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to exist.");
             Assert.That(endPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
                         $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectMapTreeBehaviourSubBoundaryLayer(endPointsLayer);
 
             ILayer supportPointsLayer =
                 groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundarySupportPointsLayerName);
@@ -421,22 +422,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                                                             BoundaryMapFeaturesContainer featureProviderContainer)
         {
             Assert.That(supportPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
-                        $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
+                        $"Expected the layer with name '{WaveLayerNames.BoundarySupportPointsLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectMapTreeBehaviourSubBoundaryLayer(supportPointsLayer);
 
             Assert.That(supportPointsLayer.DataSource,
                         Is.EqualTo(featureProviderContainer.SupportPointMapFeatureProvider));
-            Assert.That(supportPointsLayer.ReadOnly, Is.True);
             Assert.That(supportPointsLayer.Selectable, Is.False);
-            Assert.That(supportPointsLayer.NameIsReadOnly, Is.True);
-            Assert.That(supportPointsLayer.FeatureEditor, Is.Not.Null);
 
-            var vectorLayer = supportPointsLayer as VectorLayer;
-            Assert.That(vectorLayer, Is.Not.Null);
+            var vectorLayer = (VectorLayer)supportPointsLayer;
             Assert.That(vectorLayer.Style.GeometryType, Is.EqualTo(typeof(IPoint)));
 
             var solidBrush = vectorLayer.Style.Fill as SolidBrush;
             Assert.That(solidBrush, Is.Not.Null);
             Assert.That(solidBrush.Color.Equals(DeltaresColor.LightBlue));
+        }
+
+        private static void AssertCorrectMapTreeBehaviourSubBoundaryLayer(ILayer layer)
+        {
+            Assert.That(layer.ReadOnly, Is.True);
+            Assert.That(layer.ShowInTreeView, Is.False);
+            Assert.That(layer.ShowInLegend, Is.False);
+            Assert.That(layer.NameIsReadOnly, Is.True);
+            Assert.That(layer.FeatureEditor, Is.Not.Null);
         }
     }
 }
