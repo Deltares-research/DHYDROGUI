@@ -70,7 +70,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                 return null;
             }
 
-            var data = new NwrwFileReader().ReadNwrwFile(path).ToList();
+            List<NwrwData> data = new NwrwFileReader().ReadNwrwFile(path).ToList();
+
             if (data.Count == 0)
             {
                 // throw new Exception()
