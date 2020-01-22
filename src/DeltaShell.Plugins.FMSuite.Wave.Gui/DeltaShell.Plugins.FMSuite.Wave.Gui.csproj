@@ -165,6 +165,7 @@
     <Compile Include="Editors\Boundaries\Factories\ViewDataComponentFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\ViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IAnnounceDataComponentChanged.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\WaveBoundaryConditionEditorMediator.cs" />
     <Compile Include="Editors\Boundaries\Validation\PositiveDoubleValidationRule.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModel.cs" />

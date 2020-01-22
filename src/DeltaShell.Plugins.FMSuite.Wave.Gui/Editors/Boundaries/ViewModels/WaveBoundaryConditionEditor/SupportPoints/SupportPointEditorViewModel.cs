@@ -12,6 +12,8 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 
@@ -48,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             SelectedViewModel = ViewModels.FirstOrDefault();
 
-            IsEnabled = false;
+            IsEnabled = ShouldBeEnabled();
         }
 
         /// <summary>
@@ -96,6 +98,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         private bool isEnabled;
+
+        // TODO: Verify whether we want to move this to the ViewDataComponentFactory, 
+        // or move to separate function. Preferably it should only be defined in one place.
+        private bool ShouldBeEnabled()
+        {
+            return waveBoundary.ConditionDefinition.DataComponent is SpatiallyVaryingDataComponent<ConstantParameters>;
+        }
+
+        public void ReceiveDataComponentChanged()
+        {
+            IsEnabled = ShouldBeEnabled();
+        }
 
         /// <summary>
         /// Gets the add support point command.

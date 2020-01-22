@@ -3,6 +3,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using NSubstitute;
 using NUnit.Framework;
@@ -48,9 +49,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
                                                                      expectedForcingType, 
                                                                      expectedSpatialDefinition);
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
 
             // Assert
             Assert.That(viewModel.Name, Is.EqualTo(expectedName), 
@@ -66,9 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var factory = Substitute.For<IViewDataComponentFactory>();
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryDescriptionViewModel(null, factory);
+            void Call() => new BoundaryDescriptionViewModel(null, factory, announceDataComponentChanged);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
@@ -81,13 +84,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var boundary = Substitute.For<IWaveBoundary>();
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryDescriptionViewModel(boundary, null);
+            void Call() => new BoundaryDescriptionViewModel(boundary, null, announceDataComponentChanged);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentFactory"),
+                        "Expected a different ParamName:");
+        }
+
+        [Test]
+        public void Constructor_AnnounceDataComponentChangedNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var boundary = Substitute.For<IWaveBoundary>();
+            var factory = Substitute.For<IViewDataComponentFactory>();
+
+            // Call
+            void Call() => new BoundaryDescriptionViewModel(boundary, factory, null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            // Assert
+            Assert.That(exception.ParamName, Is.EqualTo("announceDataComponentChanged"),
                         "Expected a different ParamName:");
         }
 
@@ -101,8 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
                                                                      ForcingViewType.Constant,
                                                                      SpatialDefinitionViewType.SpatiallyVarying);
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
 
             // Call
             viewModel.Name = expectedName;

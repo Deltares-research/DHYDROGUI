@@ -5,6 +5,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
@@ -16,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundary observedBoundary;
         private readonly IViewDataComponentFactory dataComponentFactory;
+        private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
 
         /// <summary>
         /// Creates a new instance of the <see cref="BoundaryDescriptionViewModel"/>.
@@ -25,13 +27,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when <paramref name="observedBoundary"/> is <c>null</c>.
         /// </exception>
         public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary, 
-                                            IViewDataComponentFactory dataComponentFactory)
+                                            IViewDataComponentFactory dataComponentFactory,
+                                            IAnnounceDataComponentChanged announceDataComponentChanged)
         {
             Ensure.NotNull(observedBoundary, nameof(observedBoundary));
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+            Ensure.NotNull(announceDataComponentChanged, nameof(announceDataComponentChanged));
 
             this.observedBoundary = observedBoundary;
             this.dataComponentFactory = dataComponentFactory;
+            this.announceDataComponentChanged = announceDataComponentChanged;
         }
 
         /// <summary>
@@ -69,6 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 observedBoundary.ConditionDefinition.DataComponent =
                     dataComponentFactory.ConstructBoundaryConditionDataComponent(value, SpatialDefinition);
                 OnPropertyChanged();
+                announceDataComponentChanged.AnnounceDataComponentChanged();
             }
         }
 
@@ -89,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 observedBoundary.ConditionDefinition.DataComponent =
                     dataComponentFactory.ConstructBoundaryConditionDataComponent(ForcingType, value);
                 OnPropertyChanged();
+                announceDataComponentChanged.AnnounceDataComponentChanged();
             }
         }
 

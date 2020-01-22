@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCompon
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
@@ -32,15 +33,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var modelDataComponentFactory =
                 new BoundaryConditionDataComponentFactory(new BoundaryParametersFactory());
+
             var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
+                                                              geometryFactory);
+
+            var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel);
+
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
-                                                                    dataComponentFactory);
+                                                                    dataComponentFactory, 
+                                                                    mediator);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
             BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, 
                                                                                   viewShapeFactory);
-            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
-                                                              geometryFactory);
         }
 
         /// <summary>
