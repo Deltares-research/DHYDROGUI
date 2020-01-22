@@ -11,30 +11,30 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class ThinDamsLayerProviderTest : Feature2DLayerProviderTest<ThinDam2D>
+    public class FixedWeirsLayerProviderTest : Feature2DLayerProviderTest<FixedWeir>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {
-            return new ThinDamsLayerProvider();
+            return new FixedWeirsLayerProvider();
         }
 
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.ThinDams.Add(new ThinDam2D());
-            hydroArea.ThinDams.Add(new ThinDam2D());
+            hydroArea.FixedWeirs.Add(new FixedWeir());
+            hydroArea.FixedWeirs.Add(new FixedWeir());
 
             return hydroArea;
         }
 
-        protected override IEventedList<ThinDam2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<FixedWeir> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.ThinDams;
+            return hydroArea.FixedWeirs;
         }
 
         protected override Color ExpectedVectorStyleColor()
         {
-            return Color.Red;
+            return Color.Purple;
         }
 
         protected override float ExpectedVectorStyleLineWidth()

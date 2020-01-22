@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.Common.Gui.Layers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -20,7 +21,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData)
         {
             return sourceData is HydroArea hydroArea
-                       ? NetworkEditorLayerFactory.CreateAreaLayer(hydroArea)
+                       ? new AreaLayer
+                       {
+                           HydroArea = hydroArea,
+                           NameIsReadOnly = true
+                       }
                        : null;
         }
 

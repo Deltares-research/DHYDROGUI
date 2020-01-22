@@ -11,19 +11,19 @@ using SharpMap.Layers;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
-    /// <see cref="ThinDamsLayerProvider"/> implements the
-    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IEventedList{ThinDam2D}"/>.
+    /// <see cref="FixedWeirsLayerProvider"/> implements the
+    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IEventedList{FixedWeir}"/>.
     /// </summary>
     /// <seealso cref="ILayerSubProvider" />
-    public class ThinDamsLayerProvider : Feature2DLayerProvider<ThinDam2D>
+    public class FixedWeirsLayerProvider : Feature2DLayerProvider<FixedWeir>
     {
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
-            return new VectorLayer(HydroArea.ThinDamsPluralName)
+            return new VectorLayer(HydroArea.FixedWeirsPluralName)
             {
                 FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = AreaLayerStyles.ThinDamStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.ThinDams, "ThinDam", "NetworkEditorModelName", hydroArea.CoordinateSystem),
+                Style = AreaLayerStyles.FixedWeirStyle,
+                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.FixedWeirs, "FixedWeir", "NetworkEditorModelName", hydroArea.CoordinateSystem),
                 NameIsReadOnly = true
             };
         }

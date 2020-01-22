@@ -55,6 +55,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
         }
 
         [Test]
+        public void CreateAreaLayer_ValidHydroArea_ReturnsExpectedHydroAreaLayer()
+        {
+            // Arrange
+            var provider = new HydroAreaLayerProvider();
+            var hydroArea = new HydroArea();
+
+            // Act
+            var areaLayer = provider.CreateLayer(hydroArea, Substitute.For<object>()) as AreaLayer;
+
+            // Assert
+            Assert.IsNotNull(areaLayer);
+            Assert.That(areaLayer.HydroArea, Is.SameAs(hydroArea));
+            Assert.IsTrue(areaLayer.NameIsReadOnly);
+        }
+
+        [Test]
         [TestCaseSource(nameof(GetTypes))]
         public void GenerateChildLayerObjects_DataOfTypeHydroArea_ReturnsExpectedCollections(Type structureCollectionType)
         {

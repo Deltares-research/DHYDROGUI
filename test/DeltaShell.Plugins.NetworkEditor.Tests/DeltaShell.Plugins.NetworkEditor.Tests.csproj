@@ -259,7 +259,8 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
-    <Compile Include="Gui\Layers\NetworkEditorLayerFactoryTest.cs" />
+    <Compile Include="Gui\Layers\Providers\Feature2DLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
@@ -369,6 +370,11 @@
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">

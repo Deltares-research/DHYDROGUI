@@ -601,8 +601,9 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
-    <Compile Include="Layers\NetworkEditorLayerFactory.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
+    <Compile Include="Layers\Providers\Feature2DLayerProvider.cs" />
+    <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
     <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />

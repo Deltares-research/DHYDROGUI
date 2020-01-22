@@ -90,18 +90,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             }
         }
 
-        public static VectorStyle GateStyle
-        {
-            get
-            {
-                return new VectorStyle
-                           {
-                               Line = new Pen(Color.SteelBlue, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
-            }
-        }
-
         public static VectorStyle BoundariesStyle
         {
             get
