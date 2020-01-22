@@ -280,9 +280,8 @@
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
-      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
+      <Project>{3038ff2f-a3b0-462e-8c41-30dfe1247822}</Project>
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
       <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>

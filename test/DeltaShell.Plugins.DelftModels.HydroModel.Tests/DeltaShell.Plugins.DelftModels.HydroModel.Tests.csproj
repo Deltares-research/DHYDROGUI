@@ -245,9 +245,6 @@
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
-    <Compile Include="Iterative1D2DCouplerLinkFeatureCollectionTest.cs" />
-    <Compile Include="Iterative1D2DCouplerLinkTest.cs" />
-    <Compile Include="Iterative1D2DCouplerTest.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -261,8 +258,6 @@
     <Compile Include="ViewModels\TimeDependentModelBaseViewModelUnitTests.cs" />
     <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
     <Compile Include="WaterFlowFMModelRtcTest.cs" />
-    <Compile Include="WaterFlowFMModelWaveTest.cs" />
-    <Compile Include="WaterFlowModel1DBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -315,35 +310,14 @@
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui\DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui.csproj">
-      <Project>{7B38A997-DDBE-40F6-B609-9460C47232EE}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
-      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj">
-      <Project>{0d371464-c886-433d-912d-84a3ef0ade01}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
-      <Project>{803D13C0-3274-4C83-AE54-5D828B3338F2}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.Fews\DeltaShell.Plugins.Fews.csproj">
-      <Project>{df36566f-25e2-4514-9715-163b50b87aac}</Project>
-      <Name>DeltaShell.Plugins.Fews</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
       <Project>{7f3d15d6-3425-47a6-afd4-9b6e054ee8be}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
+      <Project>{96cd03f1-2715-4827-95e1-3277a2deadae}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
@@ -355,24 +329,9 @@
       <Name>DeltaShell.Plugins.FMSuite.Common</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
-      <Project>{96CD03F1-2715-4827-95E1-3277A2DEADAE}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
       <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj">
-      <Project>{9BFE4F50-7809-4BB6-A967-51B08E7359F5}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
-      <Project>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">

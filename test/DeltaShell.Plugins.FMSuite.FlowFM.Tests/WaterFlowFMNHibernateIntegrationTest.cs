@@ -17,8 +17,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis;
@@ -603,7 +601,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
 
                 //guis : FM+Wave
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
@@ -611,7 +608,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
                 
                 gui.Run();
 
@@ -633,7 +629,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
                 app.Plugins.Add(new RealTimeControlApplicationPlugin());
 
                 //guis : FM+Wave+RTC
@@ -642,7 +637,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
                 gui.Plugins.Add(new RealTimeControlGuiPlugin());
 
                 gui.Run();

@@ -185,11 +185,6 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
-      <Project>{803D13C0-3274-4C83-AE54-5D828B3338F2}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
       <Project>{33e367f7-fc78-4e22-8213-4374cbfb86cb}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common</Name>
@@ -200,24 +195,9 @@
       <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
-      <Project>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils\DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils.csproj">
-      <Project>{CA5F0591-734F-4B4B-9B64-38F811E5B068}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel.TestUtils</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj">
-      <Project>{E4E30624-F4E6-4DAF-97A7-08E131E0C598}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

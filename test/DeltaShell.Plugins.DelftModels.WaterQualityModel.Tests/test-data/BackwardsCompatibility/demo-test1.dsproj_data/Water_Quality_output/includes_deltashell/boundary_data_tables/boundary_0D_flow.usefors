@@ -1,8 +1,0 @@
-USEFOR 'NH4' 'NH4'
-USEFOR 'NO3' 'NO3'
-USEFOR 'POC1' 'DetC'
-USEFOR 'PON1' 'DetN'
-USEFOR 'POP1' 'DetP'
-USEFOR 'PO4' 'PO4'
-USEFOR 'Si' 'Si'
-USEFOR 'Continuity' 'Continuity'

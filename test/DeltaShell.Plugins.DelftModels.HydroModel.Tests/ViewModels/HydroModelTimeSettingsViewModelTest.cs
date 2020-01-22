@@ -9,7 +9,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.Wave;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -184,30 +183,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.IsFalse(hydroModel.OverrideTimeStep);
         }
 
-        private HydroModel GetTestHydroModel(string fmModelName, string waveModelName, DateTime initialStartTime, DateTime initialStopTime, TimeSpan timeStep)
-        {
-            // Initialization
-            var hydroModel = new HydroModel();
-            var fmModel = new WaterFlowFMModel
-            {
-                Name = fmModelName,
-                StartTime = initialStartTime,
-                StopTime = initialStopTime,
-                TimeStep = timeStep
-            };
-            var waveModel = new WaveModel
-            {
-                Name = waveModelName,
-                StartTime = initialStartTime,
-                StopTime = initialStopTime,
-                TimeStep = timeStep
-            };
-
-            hydroModel.Activities.Add(fmModel);
-            hydroModel.Activities.Add(waveModel);
-
-            return hydroModel;
-        }
         
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
@@ -370,129 +345,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             hydroModel.Activities.Add(rtcModel);
 
             return hydroModel;
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void TestSubModelStartTimeChanged()
-        {
-            var initialStartTime = DateTime.Now;
-            var initialStopTime = DateTime.Now;
-            var timeStep = new TimeSpan(1, 0, 0);
-            var newStartTime = initialStartTime.AddYears(-3);
-            var modelName1 = "FM Model";
-            var modelName2 = "Wave Model";
-
-            var hydroModel = GetTestHydroModel(modelName1, modelName2, initialStartTime, initialStopTime, timeStep);
-            var fmModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName1);
-            var waveModel = (WaveModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName2);
-            if(fmModel == null || waveModel == null) Assert.Fail();
-
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
-
-            Assert.AreEqual(initialStartTime, viewModel.StartTime);
-            Assert.AreEqual(2, viewModel.Models.Count);
-
-            var fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
-            if (fmModelViewModel == null) Assert.Fail();
-            fmModelViewModel.StartTime = newStartTime;
-
-            Assert.AreEqual(newStartTime, fmModel.StartTime);
-            Assert.AreEqual(initialStartTime, waveModel.StartTime);
-            Assert.AreEqual(newStartTime, hydroModel.StartTime);
-            Assert.AreEqual(newStartTime, viewModel.StartTime);
-            Assert.AreEqual(false, viewModel.StartTimeSynchronisationEnabled);
-            Assert.AreEqual(false, hydroModel.OverrideStartTime);
-
-            viewModel.StartTimeSynchronisationEnabled = true;
-            Assert.AreEqual(newStartTime, fmModel.StartTime);
-            Assert.AreEqual(newStartTime, waveModel.StartTime);
-            Assert.AreEqual(newStartTime, hydroModel.StartTime);
-            Assert.AreEqual(newStartTime, viewModel.StartTime);
-            Assert.AreEqual(true, viewModel.StartTimeSynchronisationEnabled);
-            Assert.AreEqual(true, hydroModel.OverrideStartTime);
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void TestSubModelStopTimeChanged()
-        {
-            var initialStartTime = DateTime.Now;
-            var initialStopTime = initialStartTime.AddDays(1);
-            var timeStep = new TimeSpan(1, 0, 0);
-            var newStopTime = initialStartTime.AddYears(3);
-            var modelName1 = "FM Model";
-            var modelName2 = "Wave Model";
-
-            var hydroModel = GetTestHydroModel(modelName1, modelName2, initialStartTime, initialStopTime, timeStep);
-            var fmModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName1);
-            var waveModel = (WaveModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName2);
-            if (fmModel == null || waveModel == null) Assert.Fail();
-
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
-
-            Assert.AreEqual(initialStartTime, viewModel.StartTime);
-            Assert.AreEqual(2, viewModel.Models.Count);
-
-            var fmModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName1);
-            Assert.NotNull(fmModelViewModel);
-            fmModelViewModel.StopTime = newStopTime;
-
-            Assert.AreEqual(newStopTime, fmModel.StopTime);
-            Assert.AreEqual(initialStopTime, waveModel.StopTime);
-            Assert.AreEqual(newStopTime, hydroModel.StopTime);
-            Assert.AreEqual(newStopTime, viewModel.StopTime);
-            Assert.AreEqual(false, viewModel.StopTimeSynchronisationEnabled);
-            Assert.AreEqual(false, hydroModel.OverrideStopTime);
-
-            viewModel.StopTimeSynchronisationEnabled = true;
-            Assert.AreEqual(newStopTime, fmModel.StopTime);
-            Assert.AreEqual(newStopTime, waveModel.StopTime);
-            Assert.AreEqual(newStopTime, hydroModel.StopTime);
-            Assert.AreEqual(newStopTime, viewModel.StopTime);
-            Assert.AreEqual(true, viewModel.StopTimeSynchronisationEnabled);
-            Assert.AreEqual(true, hydroModel.OverrideStopTime);
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void TestSubModelTimeStepChanged()
-        {
-            var initialStartTime = DateTime.Now;
-            var initialStopTime = initialStartTime.AddDays(1);
-            var initialTimeStep = new TimeSpan(1, 0, 0);
-            var newTimeStep = new TimeSpan(0, 15, 0);
-            var modelName1 = "FM Model";
-            var modelName2 = "Wave Model";
-
-            var hydroModel = GetTestHydroModel(modelName1, modelName2, initialStartTime, initialStopTime, initialTimeStep);
-            var fmModel = (WaterFlowFMModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName1);
-            var waveModel = (WaveModel)hydroModel.Activities.FirstOrDefault(m => m.Name == modelName2);
-            if (fmModel == null || waveModel == null) Assert.Fail();
-
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
-
-            Assert.AreEqual(initialStartTime, viewModel.StartTime);
-            Assert.AreEqual(2, viewModel.Models.Count);
-
-            var waveModelViewModel = viewModel.Models.FirstOrDefault(m => m.Name == modelName2);
-            Assert.NotNull(waveModelViewModel);
-            waveModelViewModel.TimeStep = newTimeStep;
-
-            Assert.AreEqual(initialTimeStep, fmModel.TimeStep);
-            Assert.AreEqual(newTimeStep, waveModel.TimeStep);
-            Assert.AreEqual(newTimeStep, hydroModel.TimeStep);
-            Assert.AreEqual(newTimeStep, viewModel.TimeStep);
-            Assert.AreEqual(false, viewModel.TimeStepSynchronisationEnabled);
-            Assert.AreEqual(false, hydroModel.OverrideTimeStep);
-
-            viewModel.TimeStepSynchronisationEnabled = true;
-            Assert.AreEqual(newTimeStep, fmModel.TimeStep);
-            Assert.AreEqual(newTimeStep, waveModel.TimeStep);
-            Assert.AreEqual(newTimeStep, hydroModel.TimeStep);
-            Assert.AreEqual(newTimeStep, viewModel.TimeStep);
-            Assert.AreEqual(true, viewModel.TimeStepSynchronisationEnabled);
-            Assert.AreEqual(true, hydroModel.OverrideTimeStep);
         }
 
         [Test]

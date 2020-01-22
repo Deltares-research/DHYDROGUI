@@ -1,4 +1,0 @@
-Name,Chainage,RoughnessType,SectionType,Dependance,Interpolation,Pos/neg ,R_pos_constant,Q_pos,R_pos_f(Q),H_pos,R_pos__f(h),R_neg_constant,Q_neg,R_neg_f(Q),H_neg,R_neg_f(h)
-P_1378,Getijms1__203.48,meta,,,,ZW,,,142,782,0,142,1,4.67,3.17,251,542,0,0
-P_1378,Getijms1__203.48,geom,-5.22,11,11,,,,,,,,,,,,,,
-P_1378,Getijms1__203.48,geom,-4.16,84,84,,,,,,,,,,,,,,

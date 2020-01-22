@@ -21,15 +21,8 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
-using DeltaShell.Plugins.Fews;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
@@ -101,7 +94,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.Plugins.Add(new DimrGuiPlugin());
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
                 gui.Plugins.Add(new HydroModelGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -109,13 +101,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.Plugins.Add(new ScriptingGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new ToolboxGuiPlugin());
-                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
 
                 var app = gui.Application;
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -123,7 +113,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 app.Plugins.Add(new ScriptingApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                 gui.Run();
 
@@ -231,13 +220,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new SobekImportGuiPlugin());
                 gui.Plugins.Add(new ToolboxGuiPlugin());
-                gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
-                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
                     
                 var app = gui.Application;
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new FewsApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new HydroModelApplicationPlugin());
                 app.Plugins.Add(new NetCdfApplicationPlugin());
@@ -248,8 +234,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 app.Plugins.Add(new ScriptingApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
                 gui.Run();
 
@@ -409,9 +393,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var fmModel = timeDependentModel as WaterFlowFMModel;
             if (fmModel != null) report = fmModel.Validate();
-            
-            var model1D = timeDependentModel as WaterFlowModel1D;
-            if (model1D != null) report = model1D.Validate();
             
             if (report == null)
                 throw new NotImplementedException(string.Format("Unable to Validate Root Model: {0}, did you forget to add support for this model type?", timeDependentModel.Name));

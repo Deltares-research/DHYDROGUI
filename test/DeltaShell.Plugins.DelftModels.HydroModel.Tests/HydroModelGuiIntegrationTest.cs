@@ -27,9 +27,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.Gui;
-using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -37,9 +34,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.Wave;
-using DeltaShell.Plugins.FMSuite.Wave.Gui;
-using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.ImportExport.Sobek;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Plugins.NetCDF;
@@ -96,12 +90,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
             app.Plugins.Add(new HydroModelApplicationPlugin());
             app.Plugins.Add(new RealTimeControlApplicationPlugin());
-            app.Plugins.Add(new WaterFlowModel1DApplicationPlugin());
             app.Plugins.Add(new RainfallRunoffApplicationPlugin());
-            app.Plugins.Add(new WaterQualityModelApplicationPlugin());
             app.Plugins.Add(new NetCdfApplicationPlugin());
             app.Plugins.Add(new FlowFMApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
 
             gui.Plugins.Add(new ProjectExplorerGuiPlugin());
             gui.Plugins.Add(new CommonToolsGuiPlugin());
@@ -109,10 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             gui.Plugins.Add(new NetworkEditorGuiPlugin());
             gui.Plugins.Add(new HydroModelGuiPlugin());
             gui.Plugins.Add(new RealTimeControlGuiPlugin());
-            gui.Plugins.Add(new WaterFlowModel1DGuiPlugin());
             gui.Plugins.Add(new RainfallRunoffGuiPlugin());
             gui.Plugins.Add(new FlowFMGuiPlugin());
-            gui.Plugins.Add(new WaveGuiPlugin());
 
             gui.Run();
         }
@@ -187,186 +176,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             app.ExportProjectItem(hydroModel, filename + "_1.dsproj", true);
 
             app.SaveProjectAs("_2.dsproj"); //bang, exception!
-        }
-
-        /// <summary>
-        /// TOOLS-22846 dictates as issue that the combobox is not filled after a route layer is added to network
-        /// this test will verify that the combo box could get updated when in a
-        /// sobek model the computational grid layer is activated.
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void EmptyCoverageDropdownBoxGetsUpdatedAfterCoverageGridSelection()
-        {
-            /* create a integrated model */
-            var hydroModel = HydroModel.BuildModel(ModelGroup.SobekModels);
-            var project = app.Project;
-
-            /* add it to you project */
-            project.RootFolder.Add(hydroModel);
-
-            var mainWindow = (MainWindow)gui.MainWindow;
-
-            // wait until gui starts
-            mainWindow.Loaded += delegate
-            {
-                /* get the water flow 1d model */
-                var model = hydroModel.Activities.OfType<WaterFlowModel1D>().First() as IModel;
-                Assert.NotNull(model);
-                
-                /* get the computational grid of the waterflow 1d model */
-                var discretization = model.DataItems.Select(di => di.Value).OfType<IDiscretization>().First();
-                
-                /* get the network of the waterflow 1d model */
-                var network = model.DataItems.Select(di => di.Value).OfType<IHydroNetwork>().First();
-
-                /* open the view for the integrated model (so the 'Map' tab is enabled which contains the coverage combobox) */
-                gui.CommandHandler.OpenView(hydroModel, typeof(ProjectItemMapView));
-
-                /* get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(mainWindow, "MainWindowRibbon");
-                var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
-                var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
-                var wrapPanel = group.Items.OfType<WrapPanel>().First();
-                var comboBox = wrapPanel.Children.OfType<ComboBox>().First(c => c.Name == "ComboBoxSelectNetworkCoverage");
-
-                Assert.NotNull(comboBox);
-                
-                /* attach event to see how many times the selected item attibute is set */
-                var count = 0;
-                comboBox.SelectionChanged += (s, e) => { count++; };
-                
-                /* check if combobox is still empty! */
-                Assert.IsFalse(comboBox.HasItems);
-
-                /* add simple branch */
-                var node1 = new HydroNode() {Geometry = new Point(0, 0)};
-                var node2 = new HydroNode() {Geometry = new Point(1000, 0)};
-
-                var channel = new Channel(node1, node2)
-                {
-                    Geometry = new LineString(new[] {node1.Geometry.Coordinate, node2.Geometry.Coordinate})
-                };
-                network.Nodes.AddRange(new []{node1, node2});
-                network.Branches.Add(channel);
-
-                /* make computational grid layer visible */
-                var projectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().First();
-                projectItemMapView.EnsureVisible(projectItemMapView.MapView.GetLayerForData(discretization));
-                mainWindow.ValidateItems();
-
-                /* check if the computational grid is added to the combobox as ONLY one */
-                Assert.AreEqual(1, count);
-                Assert.IsTrue(comboBox.HasItems);
-                Assert.AreEqual(1, comboBox.Items.Count);
-                var layer = comboBox.Items[0] as Layer;
-                Assert.IsNotNull(layer);
-                Assert.AreEqual("Computational Grid", layer.Name);
-
-                /* validate that the computational grid is the selected item */
-                var selected = comboBox.SelectedItem as Layer;
-                Assert.IsNotNull(selected);
-                Assert.AreEqual("Computational Grid", selected.Name);
-                
-            };
-            WpfTestHelper.ShowModal(mainWindow);
-        }
-
-        /// <summary>
-        /// TOOLS-22846 dictates as issue that the combobox is not filled after a route layer is added to network
-        /// this test will verify that the combo box could get updated when in a
-        /// sobek model the computational grid layer is activated and then a route is added.
-        /// </summary>
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void CoverageDropdownBoxWithComputationalGridSelectedGetsUpdatedAfterRouteAdd_22846()
-        {
-            // create a integrated model
-            var hydroModel = HydroModel.BuildModel(ModelGroup.SobekModels);
-            var project = app.Project;
-
-            // add it to you project
-            project.RootFolder.Add(hydroModel);
-
-            var mainWindow = (MainWindow)gui.MainWindow;
-
-            // wait until gui starts
-            mainWindow.Loaded += delegate
-            {
-                // get the water flow 1d model
-                var model = hydroModel.Activities.OfType<WaterFlowModel1D>().First() as IModel;
-                Assert.NotNull(model);
-
-                // get the computational grid of the waterflow 1d model
-                var discretization = model.DataItems.Select(di => di.Value).OfType<IDiscretization>().First();
-                
-                // get the network of the waterflow 1d model
-                var network = model.DataItems.Select(di => di.Value).OfType<IHydroNetwork>().First();
-
-                // open the view for the integrated model (so the 'Map' tab is enabled which contains the coverage combobox)
-                gui.CommandHandler.OpenView(hydroModel, typeof(ProjectItemMapView));
-
-                // get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(mainWindow, "MainWindowRibbon");
-                var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
-                var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
-                var wrapPanel = group.Items.OfType<WrapPanel>().First();
-                var comboBox = wrapPanel.Children.OfType<ComboBox>().First(c => c.Name == "ComboBoxSelectNetworkCoverage");
-
-                Assert.NotNull(comboBox);
-
-                // attach event to see how many times the selected item attibute is set
-                var count = 0;
-                comboBox.SelectionChanged += (s, e) => { count++; };
-
-                // check if combobox is still empty!
-                Assert.IsFalse(comboBox.HasItems);
-
-                // add simple branch
-                var node1 = new HydroNode() { Geometry = new Point(0, 0) };
-                var node2 = new HydroNode() { Geometry = new Point(1000, 0) };
-
-                var channel = new Channel(node1, node2)
-                {
-                    Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate })
-                };
-                network.Nodes.AddRange(new[] { node1, node2 });
-                network.Branches.Add(channel);
-
-                // make computational grid layer visible
-                var projectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().First();
-                projectItemMapView.EnsureVisible(projectItemMapView.MapView.GetLayerForData(discretization));
-                mainWindow.ValidateItems();
-
-                // check if the computational grid is added to the combobox as ONLY one
-                Assert.AreEqual(1, count);
-                Assert.IsTrue(comboBox.HasItems);
-                Assert.AreEqual(1, comboBox.Items.Count);
-                var layer = comboBox.Items[0] as Layer;
-                Assert.IsNotNull(layer);
-                Assert.AreEqual("Computational Grid", layer.Name);
-
-                // add a route to the network
-                new AddNewNetworkRouteCommand().Execute();
-
-                // check if the route (route_1) is added to the combobox, this is selected and that componational grid is also in the combobox list
-                Assert.AreEqual(3, count); // why 3x???
-                Assert.IsTrue(comboBox.HasItems);
-                Assert.AreEqual(2, comboBox.Items.Count);
-                var routeLayer = comboBox.Items[0] as Layer;
-                Assert.IsNotNull(routeLayer);
-                Assert.AreEqual("route_1", routeLayer.Name);
-                var cgLayer = comboBox.Items[1] as Layer;
-                Assert.IsNotNull(cgLayer);
-                Assert.AreEqual("Computational Grid", cgLayer.Name);
-
-                // validate that the just added route is the selected item
-                var selected = comboBox.SelectedItem as Layer;
-                Assert.IsNotNull(selected);
-                Assert.AreEqual("route_1", selected.Name);
-                
-            };
-            WpfTestHelper.ShowModal(mainWindow);
         }
 
         [Test]
@@ -598,43 +407,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.That(targetFmModel.Name, Is.StringContaining("har"));
             };
             WpfTestHelper.ShowModal(mainWindow);
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void WaveModelShouldBeReplacedWhenImportedInIntegratedModel()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"waveFlowFM\wave\te0.mdw");
-            mdwPath = TestHelper.CreateLocalCopy(mdwPath);
-
-            /* create a integrated model */
-            var hydroModel = HydroModel.BuildModel(ModelGroup.FMWaveRtcModels);
-            var project = app.Project;
-
-            /* add it to you project */
-            project.RootFolder.Add(hydroModel);
-
-            var mainWindow = (MainWindow)gui.MainWindow;
-                
-            // wait until gui starts
-            Action mainWindowShown = delegate
-            {
-               /* get the wave model */
-                var waveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
-                Assert.NotNull(waveModel);
-                Assert.That(waveModel.Name, Is.StringContaining("Waves"));
-
-                var waveImporter = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
-                Assert.IsNotNull(waveImporter);
-                waveImporter.ImportItem(mdwPath, waveModel);
-
-                var targetWaveModel = hydroModel.Activities.OfType<WaveModel>().FirstOrDefault();
-                Assert.IsNotNull(targetWaveModel);
-                Assert.That(targetWaveModel.Name, Is.StringContaining("te0"));
-            };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
-
-
         }
     }
 }

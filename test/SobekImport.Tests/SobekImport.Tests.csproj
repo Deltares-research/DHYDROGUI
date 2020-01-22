@@ -197,11 +197,6 @@
       <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
-      <Project>{803D13C0-3274-4C83-AE54-5D828B3338F2}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterQualityModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>

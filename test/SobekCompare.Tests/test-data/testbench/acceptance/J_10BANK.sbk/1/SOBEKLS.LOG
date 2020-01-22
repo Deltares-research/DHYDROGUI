@@ -1,9 +1,0 @@
-010312  High Froude numbers (See froude file)
-000131  Maximum Froude number in cell = 0.85
-000141  (Time step      2 Iter. step  331 Branch Grenms3a X=      0.00)
-000151  Maximum Froude number in grid point = 0.98
-000141  (Time step      2 Iter. step  298 Branch Grensms2 X=  31344.00)
-010322          1          timesteps without convergence (See residu file)
-010331  Minumum number of iterations         1
-010341  Maximum number of iterations       500
-010351  Mean number of iterations         2
