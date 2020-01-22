@@ -46,6 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             Subscribe();
 
             SelectedViewModel = ViewModels.FirstOrDefault();
+
+            IsEnabled = false;
         }
 
         /// <summary>
@@ -76,6 +78,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 OnPropertyChanged();
             }
         }
+
+        public bool IsEnabled
+        {
+            get => isEnabled;
+            set
+            {
+                if (value == isEnabled)
+                {
+                    return;
+                }
+
+                isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isEnabled;
 
         /// <summary>
         /// Gets the add support point command.

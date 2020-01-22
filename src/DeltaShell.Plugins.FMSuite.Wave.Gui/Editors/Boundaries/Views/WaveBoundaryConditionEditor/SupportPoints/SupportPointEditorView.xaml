@@ -46,7 +46,7 @@
 
     </UserControl.Resources>
 
-    <GroupBox Header="Support points">
+    <GroupBox Header="Support points" IsEnabled="{Binding Path=IsEnabled}">
         <Grid Margin="10,10,0,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"></ColumnDefinition>
