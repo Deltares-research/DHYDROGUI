@@ -216,6 +216,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ImportRoughnessUrban()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";

@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
@@ -154,6 +157,36 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 {
                     network.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
                 });
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportUrbanLateralsToManholes()
+        {
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
+
+            var flowModel = new WaterFlowFMModel();
+
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel,
+                new IPartialSobekImporter[]
+                {
+                    new SobekBranchesImporter(),
+                    new SobekLateralSourcesImporter()
+                });
+            importer.Import();
+
+            Assert.IsNotNull(flowModel);
+            Assert.IsNotNull(flowModel.Network);
+            Assert.IsNotNull(flowModel.Network.LateralSources);
+            Assert.Greater(flowModel.Network.LateralSources.Count(),0);
+
+            //FLBX id 'l_D00230-D00231' nm '' ci '1' lc 6.72681202353685 flbx
+            //"1","","D00230","D00231",0,2,192954.8,421288.9,192964.8,421297.9,13.4536240470737,0,0,0
+            //In sewer systems we want to have laterals on the node. Move the lateral to the end of the node so it will be treated as a lateral on the node.
+            var pipeToCheck = flowModel.Network.Pipes.FirstOrDefault(p => p.Name.Equals("1"));
+            Assert.AreEqual(1, flowModel.Network.LateralSources.Count(ls => ls.Branch.Equals(pipeToCheck) & ls.Chainage.IsEqualTo(pipeToCheck.Length, 0.001) ));
+
+
         }
     }
 }

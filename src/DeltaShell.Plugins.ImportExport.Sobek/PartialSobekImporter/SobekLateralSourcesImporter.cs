@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -75,6 +76,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         offset = branch.Length;
                     }
 
+                    offset = MoveLateralToNodeForSewerSystems(branch, offset);
+
                     LateralSource lateralSource = new LateralSource
                     {
                         Branch = branch,
@@ -138,6 +141,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// In sewer system we've laterals on the nodes
+        /// If sewer system move node to the end of the pipe so it will treated as a lateral on the node
+        /// </summary>
+        /// <param name="branch"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        private double MoveLateralToNodeForSewerSystems(IBranch branch, double offset)
+        {
+            if (branch is IPipe)
+            {
+                return branch.Length;
+            }
+
+            return offset;
         }
 
         private void AddOrReplaceLateralSource(IBranch branch, LateralSource lateralSource, Dictionary<string, ILateralSource> lateralSources)
