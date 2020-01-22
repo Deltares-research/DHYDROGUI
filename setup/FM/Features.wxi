@@ -14,10 +14,6 @@
     <?include FMPlugin_FeatureContent.wxi?>
   </Feature>
 
-  <Feature Id="Wave" Title="!(loc.WaveFeatureName)" Description="!(loc.WaveFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
-    <?include ..\Wave\WavePlugin_FeatureContent.wxi?>
-  </Feature>
-
   <Feature Id="RTC" Title="!(loc.RTCFeatureName)" Description ="!(loc.RTCFeatureDescription)" Level="1" Absent="allow" AllowAdvertise="no">
     <?include ..\RealTimeControl\RealTimeControl_FeatureContent.wxi?>
   </Feature>
@@ -25,12 +21,4 @@
   <Feature Id="RainfallRunoffModel" Title="!(loc.RRFeatureName)" Description="!(loc.RRFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
     <?include ..\Sobek\RR_FeatureContent.wxi?>
   </Feature>
-
-
-  <?ifndef var.NOWAQ?>
-  <Feature Id="Waq" Title="!(loc.WaqFeatureName)" Description ="!(loc.WaqFeatureDescription)" Absent="allow" Level="1000" AllowAdvertise="no">
-    <?include ..\Waq\WaqPlugin_FeatureContent.wxi?>
-  </Feature>
-  <?endif?>
-
 </Include>

@@ -3,11 +3,5 @@
   
   <?include Manuals\FMManuals.wxi?>
   <?include ..\RealTimeControl\Manuals\RTCManuals.wxi?>
-  <?include ..\Wave\Manuals\WaveManuals.wxi?>
   <?include ..\Dimr\Manuals\DIMRManuals.wxi?>
-  
-  <?ifndef var.NOWAQ?>
-  <?include ..\Waq\Manuals\WaqManuals.wxi?>
-  <?endif?>
-
 </Include>
