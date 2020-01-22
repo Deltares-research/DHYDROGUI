@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DelftTools.Shell.Gui;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.NGHS.Common.Gui.Layers
@@ -8,7 +7,7 @@ namespace DeltaShell.NGHS.Common.Gui.Layers
     /// <see cref="ILayerSubProvider"/> provides an interface for
     /// layer sub provider. Each <see cref="ILayerSubProvider"/> should be
     /// responsible for creating one type of layer. These sub-providers are
-    /// then presented as one <see cref="IMapLayerProvider"/>.
+    /// then presented as one <see cref="MapLayerProvider"/>.
     /// </summary>
     public interface ILayerSubProvider
     {

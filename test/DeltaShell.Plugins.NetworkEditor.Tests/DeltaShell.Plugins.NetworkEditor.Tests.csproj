@@ -259,6 +259,9 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
+    <Compile Include="Gui\Layers\NetworkEditorLayerFactoryTest.cs" />
+    <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />

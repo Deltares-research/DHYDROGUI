@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DelftTools.Hydro;
-using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using SharpMap.Api.Layers;
 
@@ -14,21 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// <seealso cref="ILayerSubProvider" />
     public class HydroAreaLayerProvider : ILayerSubProvider
     {
-        private readonly NetworkEditorLayerFactory layerFactory;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="HydroAreaLayerProvider"/>.
-        /// </summary>
-        /// <param name="layerFactory"> The factory to create the layers with. </param>
-        /// <exception cref="ArgumentNullException">
-        /// Throw when <paramref name="layerFactory"/> is <c>null</c>.
-        /// </exception>
-        public HydroAreaLayerProvider(NetworkEditorLayerFactory layerFactory)
-        {
-            Ensure.NotNull(layerFactory, nameof(layerFactory));
-            this.layerFactory = layerFactory;
-        }
-
         public bool CanCreateLayerFor(object sourceData, object parentData)
         {
             return sourceData is HydroArea;
@@ -37,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData)
         {
             return sourceData is HydroArea hydroArea
-                       ? layerFactory.CreateAreaLayer(hydroArea)
+                       ? NetworkEditorLayerFactory.CreateAreaLayer(hydroArea)
                        : null;
         }
 

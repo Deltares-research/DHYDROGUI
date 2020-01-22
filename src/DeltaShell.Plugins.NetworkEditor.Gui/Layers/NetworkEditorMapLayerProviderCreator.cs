@@ -29,9 +29,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
 
         internal IEnumerable<ILayerSubProvider> GetSubLayerProviders()
         {
-            var layerFactory = new NetworkEditorLayerFactory();
-
-            yield return new HydroAreaLayerProvider(layerFactory);
+            yield return new HydroAreaLayerProvider();
+            yield return new ThinDamsLayerProvider();
         }
     }
 }

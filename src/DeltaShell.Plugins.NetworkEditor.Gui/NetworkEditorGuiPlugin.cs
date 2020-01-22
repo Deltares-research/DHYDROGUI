@@ -70,14 +70,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ContextMenuStrip calculationGridMenu;
         private ContextMenuStrip hydroRegionContextMenu;
         private ContextMenuStrip convertCoordinateSystemContextMenu;
-        private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private IGui gui;
 
         public NetworkEditorGuiPlugin()
         {
             InitializeComponent();
             Instance = this;
-            networkEditorMapLayerProvider = new NetworkEditorMapLayerProvider();
+            //TODO: substitute the next line for 'MapLayerProvider = new NetworkEditorMapLayerProviderCreator().CreateMapLayerProvider();'
+            MapLayerProvider = new NetworkEditorMapLayerProvider();
         }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }
@@ -464,10 +464,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return networkEditorMapLayerProvider; }
-        }
+        public override IMapLayerProvider MapLayerProvider { get; }
 
         public IView HydroRegionContents
         {

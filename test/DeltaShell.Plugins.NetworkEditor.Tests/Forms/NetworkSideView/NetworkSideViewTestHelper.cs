@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         private static void ShowSideViewFor(NetworkSideViewDataController viewData, IBranchFeature branchFeature)
         {
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            var sideView = new NetworkEditor.Gui.Forms.NetworkSideView.NetworkSideView
                                {
                                    Data = viewData.NetworkRoute,
                                    DataController = viewData,
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             NetworkHelper.AddBranchFeatureToBranch(feature, network.Branches[0], 50);
 
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            var sideView = new NetworkEditor.Gui.Forms.NetworkSideView.NetworkSideView
                                {
                                    Data = viewData.NetworkRoute,
                                    DataController = viewData
