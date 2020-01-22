@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
         public RRFlowDimrConfigModelCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
         {
             // create mapping for rr => flow
-            if (source is RainfallRunoffModel sourceRainfallRunoffModel)
+            if (source is IRainfallRunoffModel sourceRainfallRunoffModel)
             {
                 if (!(target is IDimrModel targetDimr)) return;
 
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             }
 
             // create mapping for flow => rr
-            if (target is RainfallRunoffModel targetRainfallRunoffModel)
+            if (target is IRainfallRunoffModel targetRainfallRunoffModel)
             {
                 var unpavedCatchments = targetRainfallRunoffModel.Basin.Catchments.Where(c => Equals(c.CatchmentType, CatchmentType.Unpaved)).ToList();
                 if (unpavedCatchments.Count == 0) return;

@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return Path.Combine(BaseDir, fileName);
         }
 
-        protected DrainageBasin DrainageBasin
+        protected IDrainageBasin DrainageBasin
         {
             get
             {
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private DrainageBasin GetDrainageBasinFromModels()
+        private IDrainageBasin GetDrainageBasinFromModels()
         {
             if (TargetObject == null)
             {
@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             if (TargetObject is HydroModel)
             {
                 var hydroModel = TargetObject as HydroModel;
-                var basin = hydroModel.Region.SubRegions.OfType<DrainageBasin>().FirstOrDefault();
+                var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().FirstOrDefault();
                 if (basin != null)
                 {
                     return basin;
@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return null;
         }
 
-        private DrainageBasin GetDrainageBasinOfModel(IModel model)
+        private IDrainageBasin GetDrainageBasinOfModel(IModel model)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel != null)

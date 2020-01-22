@@ -17,6 +17,7 @@ namespace DelftTools.Hydro
         IEventedList<Catchment> Catchments { get; }
         IEventedList<WasteWaterTreatmentPlant> WasteWaterTreatmentPlants { get; set; }
         IEnumerable<Catchment> AllCatchments { get; }
+        IEventedList<RunoffBoundary> Boundaries { get; }
     }
 
  

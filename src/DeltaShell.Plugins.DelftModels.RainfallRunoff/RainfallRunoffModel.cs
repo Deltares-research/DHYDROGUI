@@ -238,9 +238,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         [NoNotifyPropertyChange]
-        public DrainageBasin Basin
+        public IDrainageBasin Basin
         {
-            get { return (DrainageBasin) GetDataItemValueByTag(RainfallRunoffModelDataSet.BasinTag); }
+            get { return (IDrainageBasin) GetDataItemValueByTag(RainfallRunoffModelDataSet.BasinTag); }
             set
             {
                 if (!basinSyncer.IsDifferentBasin(value))
@@ -803,7 +803,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return clone;
         }
 
-        public static void RefreshBasinRelatedData(RainfallRunoffModel clone, DrainageBasin originalBasin)
+        public static void RefreshBasinRelatedData(RainfallRunoffModel clone, IDrainageBasin originalBasin)
         {
             if (Equals(clone.Basin, originalBasin))
                 return;
@@ -1276,7 +1276,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         #endregion
     }
 
-    public interface IRainfallRunoffModel : IHydroModel
+    public interface IRainfallRunoffModel : IHydroModel, IDimrModel
     {
         DateTime CurrentTime { get; }
         
@@ -1289,6 +1289,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         CatchmentModelData GetCatchmentModelData(Catchment c);
 
         IEventedList<RunoffBoundaryData> BoundaryData { get; }
+        IDrainageBasin Basin { get; set; }
 
         //duplicates PostSharps PropertyChanged, but that one cannot be included on the interface
         event PropertyChangedEventHandler ModelPropertyChanged;

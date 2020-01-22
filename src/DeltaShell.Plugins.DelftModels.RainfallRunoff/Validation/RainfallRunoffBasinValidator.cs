@@ -6,11 +6,11 @@ using DelftTools.Utils.Validation;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
-    public class RainfallRunoffBasinValidator : IValidator<RainfallRunoffModel, DrainageBasin>
+    public class RainfallRunoffBasinValidator : IValidator<RainfallRunoffModel, IDrainageBasin>
     {
         #region IValidator<RainfallRunoffModel,DrainageBasin> Members
 
-        public ValidationReport Validate(RainfallRunoffModel rootObject, DrainageBasin target)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IDrainageBasin target)
         {
             var issues = new List<ValidationIssue>();
 

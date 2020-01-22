@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     public class RainfallRunoffBasinSynchronizer
     {
         private readonly RainfallRunoffCatchmentModelDataFactory modelDataFactory = new RainfallRunoffCatchmentModelDataFactory();
-        private DrainageBasin subscribedBasin;
+        private IDrainageBasin subscribedBasin;
         private IDataItem subscribedBasinDataItem;
         private bool linking;
-        private DrainageBasin preLinkBasin;
+        private IDrainageBasin preLinkBasin;
 
         public RainfallRunoffBasinSynchronizer(RainfallRunoffModel model)
         {
@@ -41,12 +41,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private RainfallRunoffModel Model { get; set; }
 
-        private DrainageBasin Basin
+        private IDrainageBasin Basin
         {
             get { return Model.Basin; }
         }
 
-        public bool IsDifferentBasin(DrainageBasin otherBasin)
+        public bool IsDifferentBasin(IDrainageBasin otherBasin)
         {
             return otherBasin != subscribedBasin;
         }

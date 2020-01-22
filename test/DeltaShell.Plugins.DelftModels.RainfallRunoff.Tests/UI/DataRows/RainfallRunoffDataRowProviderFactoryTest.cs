@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
             catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.OpenWater});
             catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Sacramento});
             catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Hbv});
+            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.NWRW});
             model.Basin.Catchments.Add(catchment);
 
             foreach(var modelData in model.GetAllModelData())

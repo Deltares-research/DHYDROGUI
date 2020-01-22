@@ -81,6 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             source.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             source.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
             ((IDimrModel)source).Expect(m => m.ShortName).Return("rr").Repeat.Any();
+            
 
             // our 'f1d' model
             var target = mocks.StrictMultiMock<IModel>(typeof(IDimrModel));
@@ -102,11 +103,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var links = new EventedList<HydroLink>() {new HydroLink() {Source =  catchment1, Target = targetObj} };
             catchment1.Expect(c => c.Links).Return(links).Repeat.Any();
 
-            var basin = mocks.PartialMock<DrainageBasin>();
+            
             var catchmentsList = new List<Catchment>{catchment1};
             var catchments = mocks.DynamicMock<IEventedList<Catchment>>();
 
             catchments.Expect(c => c.GetEnumerator()).Return(catchmentsList.GetEnumerator());
+            var basin = mocks.StrictMock<IDrainageBasin>();
+            source.Expect(m => m.Basin).Return(basin).Repeat.Any();
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
             ((IHydroModel)source).Expect(m => m.Region).Return(basin).Repeat.Any();
             ((IDimrModel)source).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
