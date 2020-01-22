@@ -6,6 +6,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
@@ -20,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private const double maxDistance = 10;
 
         private SupportPointEditorViewModel viewModel;
+        private IWaveBoundary waveBoundary;
         private IWaveBoundaryGeometricDefinition geometricDefinition;
 
         private IEventedList<SupportPoint> SupportPoints => geometricDefinition.SupportPoints;
@@ -31,7 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             geometricDefinition.Length.Returns(maxDistance);
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>());
-            viewModel = new SupportPointEditorViewModel(geometricDefinition);
+
+            waveBoundary = Substitute.For<IWaveBoundary>();
+            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
+
+            viewModel = new SupportPointEditorViewModel(waveBoundary);
         }
 
         [TearDown]
@@ -48,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("geometricDefinition"));
+            Assert.That(exception.ParamName, Is.EqualTo("waveBoundary"));
         }
 
         [Test]
@@ -78,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             distances.ForEach(d => geometricDefinition.SupportPoints.Add(GetSupportPoint(d)));
 
             // Call
-            viewModel = new SupportPointEditorViewModel(geometricDefinition);
+            viewModel = new SupportPointEditorViewModel(waveBoundary);
 
             // Assert
             Assert.That(SubViewModels, Is.Not.Null);

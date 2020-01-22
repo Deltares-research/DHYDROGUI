@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
 
-            SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary.GeometricDefinition);
+            SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary);
             GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, geometryFactory);
         }
 
