@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
 {
     /// <summary>
     /// <see cref="IAnnounceDataComponentChanged"/> defines the interface
