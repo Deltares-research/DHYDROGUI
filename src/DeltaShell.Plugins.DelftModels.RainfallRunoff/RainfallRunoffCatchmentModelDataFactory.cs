@@ -1,6 +1,7 @@
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
@@ -25,6 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     return new SacramentoData(catchment);
                 case CatchmentType.HbvTypeName:
                     return new HbvData(catchment);
+                case CatchmentType.NwrwTypeName:
+                    return new NwrwData(catchment);
                 default:
                     return null;
             }

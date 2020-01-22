@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-            var nwrwData = rrModel.ModelData?.OfType<NwrwData>()?.FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
+            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
             if (nwrwData == null)
             {
                 nwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name);

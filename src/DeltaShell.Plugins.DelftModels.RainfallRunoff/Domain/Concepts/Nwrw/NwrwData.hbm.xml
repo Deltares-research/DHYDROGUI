@@ -9,16 +9,18 @@
     <key column="Id"/>
 
     <property name="NodeOrBranchId" />
-    <property name="DischargeType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DischargeType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
-    <property name="DryWeatherFlowIdInhabitant" />
-    <property name="DryWeatherFlowIdCompany" />
     <map name="SurfaceLevelDict" access="property" table="nwrw_surface_level_dictionary" cascade="save-update">
       <key column="nwrw_data_dict_id"/>
       <index column="NwrwSurfaceType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.NwrwSurfaceType, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
       <element column="Value" type="System.Double" />
     </map>
     <property name="MeteoStationId" />
-    <property name="NumberOfPeople" />
+
+    <list name="DryWeatherFlows" access="property" lazy="true" cascade="all">
+      <key column="nwrw_dwf_id_key"/>
+      <index column="nwrw_dwf_id_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DryWeatherFlow, DeltaShell.Plugins.DelftModels.RainfallRunoff" />
+    </list>
 
     <property name="NumberOfSpecialAreas" />
     <list name="SpecialAreas" access="property" lazy="true" cascade="all">

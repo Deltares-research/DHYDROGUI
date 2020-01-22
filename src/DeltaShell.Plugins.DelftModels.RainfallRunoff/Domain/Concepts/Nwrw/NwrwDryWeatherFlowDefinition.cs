@@ -25,9 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// <seealso cref="INwrwFeature" />
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
-        public static readonly string INHABITANT_DWF = "Inwoner";
-        public static readonly string COMPANY_DWF = "Bedrijf";
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
 
         public string Name { get; set; } //VER_IDE
@@ -65,15 +62,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-            // We only support names that start with 'Inwoner' or 'Bedrijf'
-            // See issue FM1D2D-535.
-            if (!DryWeatherFlowId.StartsWith(INHABITANT_DWF, StringComparison.InvariantCultureIgnoreCase) &&
-                !DryWeatherFlowId.StartsWith(COMPANY_DWF, StringComparison.InvariantCultureIgnoreCase))
-            {
-                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. '{DryWeatherFlowId}' is not a valid name.");
-                return;
-            }
-            
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
         }
     }

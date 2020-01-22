@@ -1045,6 +1045,8 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/GreenhouseEnum
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvDataProperties.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/INwrwFeature.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.hbm.xml -text
@@ -1056,7 +1058,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWe
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileWriter.cs -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwRegion.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSurfaceData.cs -text

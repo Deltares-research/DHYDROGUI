@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
 
@@ -157,25 +158,52 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlatStretched] = value; }
         }
 
-        [Description("Number of people")]
-        public int NumberOfPeople
+        [Description("Number of units (dwf1)")]
+        public int NumberOfUnitsFirstDwf
         {
-            get { return data.NumberOfPeople; }
-            set { data.NumberOfPeople = value; }
+            get
+            {
+                return data.DryWeatherFlows.Count >= 1
+                    ? data.DryWeatherFlows[0].NumberOfUnits
+                    : 0;
+            }
+            set { data.DryWeatherFlows[0].NumberOfUnits = value; }
         }
 
-        [Description("DWF definition (inhabitant)")]
-        public string DryWeatherFlowIdInhabitant
+        [Description("DWF definition (dwf1)")]
+        public string FirstDryWeatherFlowId
         {
-            get { return data.DryWeatherFlowIdInhabitant; }
-            set { data.DryWeatherFlowIdInhabitant = value; }
+            get
+            {
+                return data.DryWeatherFlows.Count >= 1
+                    ? data.DryWeatherFlows[0].DryWeatherFlowId
+                    : String.Empty;
+            }
+            set { data.DryWeatherFlows[0].DryWeatherFlowId = value; }
         }
 
-        [Description("DWF definition (company)")]
-        public string DryWeatherFlowIdCompany
+        [Description("Number of units (dwf2)")]
+        public int NumberOfUnitsLastDwf
         {
-            get { return data.DryWeatherFlowIdCompany; }
-            set { data.DryWeatherFlowIdCompany = value; }
+            get
+            {
+                return data.DryWeatherFlows.Count >= 2
+                    ? data.DryWeatherFlows[1].NumberOfUnits
+                    : 0;
+            }
+            set { data.DryWeatherFlows[1].NumberOfUnits = value; }
+        }
+
+        [Description("DWF definition (dwf2)")]
+        public string LastFirstDryWeatherFlowId
+        {
+            get
+            {
+                return data.DryWeatherFlows.Count >= 2
+                    ? data.DryWeatherFlows[1].DryWeatherFlowId
+                    : String.Empty;
+            }
+            set { data.DryWeatherFlows[1].DryWeatherFlowId = value; }
         }
 
         [Description("Meteostation identification")]

@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         {
             IList<string> listOfErrors = new List<string>();
 
-            foreach (var nwrwData in rrModel.ModelData.OfType<NwrwData>())
+            foreach (var nwrwData in rrModel.GetAllModelData().OfType<NwrwData>())
             {
                 try
                 {

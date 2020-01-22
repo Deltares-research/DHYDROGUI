@@ -1,6 +1,6 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,23 +12,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// <seealso cref="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData" />
     /// <seealso cref="INwrwFeature" />
     [Entity(FireOnCollectionChange = false)]
-    public class NwrwData : CatchmentModelData
+    public partial class NwrwData : CatchmentModelData
     {
+        public const string DEFAULT_DWA_ID = "DefaultDWA";
         //nhib
         public NwrwData(): base(null) { }
 
-        public NwrwData(Catchment catchment) : base(catchment){ }
+        public NwrwData(Catchment catchment) : base(catchment)
+        {
+            NodeOrBranchId = Name;
+            DryWeatherFlows.Add(new DryWeatherFlow{DryWeatherFlowId = DEFAULT_DWA_ID });
+        }
 
 
         public string NodeOrBranchId { get; set; } // UNI_IDE (debiet.csv or oppervlak.csv)
-        public DischargeType DischargeType { get; set; } // DEB_TYPE (debiet.csv)
-        public string DryWeatherFlowIdInhabitant { get; set; } // VER_IDE (debiet.csv)
-        public string DryWeatherFlowIdCompany { get; set; } // VER_IDE (debiet.csv)
+        public IList<DryWeatherFlow> DryWeatherFlows { get; set; } = new List<DryWeatherFlow>(); // VER_IDE and AVV_ENH (debiet.csv)
         public IDictionary<NwrwSurfaceType, double> SurfaceLevelDict { get; set; } = new Dictionary<NwrwSurfaceType, double>(); // AFV_IDE and AFV_OPP (oppervlak.csv)
         public string MeteoStationId { get; set; } // NSL_STA (oppervlak.csv)
-        public int NumberOfPeople { get; set; } // AVV_ENH (debiet.csv)
         public double LateralSurface { get; set; } // AFV_OPP (debiet.csv, when DischargeType == 'LAT')
-
         public int NumberOfSpecialAreas { get; set; }
         public IList<NwrwSpecialArea> SpecialAreas { get; set; } = new List<NwrwSpecialArea>();
 
@@ -44,8 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             // If we only Discharge data and no Surface data, set the area to the
             // magic number 100 to make these catchments visible in the GUI.
-            else if (SurfaceLevelDict.Count == 0 && DischargeType != DischargeType.None && 
-                     Catchment.IsGeometryDerivedFromAreaSize)
+            else if (SurfaceLevelDict.Count == 0 && Catchment.IsGeometryDerivedFromAreaSize)
             {
                 Catchment.SetAreaSize(100);
             }
@@ -66,13 +66,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             catchment.Name = name;
             rrModel.Basin.Catchments.Add(catchment);
 
-            var nwrwData = new NwrwData(catchment);
-            nwrwData.NodeOrBranchId = name;
-            rrModel.ModelData?.Add(nwrwData);
-            rrModel.FireModelDataAdded(nwrwData);
+            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.Catchment.Equals(catchment));
 
             return nwrwData;
         }
     }
-
 }

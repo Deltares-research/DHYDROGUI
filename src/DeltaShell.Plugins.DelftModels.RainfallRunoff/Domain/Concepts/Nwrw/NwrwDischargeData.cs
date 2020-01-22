@@ -49,39 +49,55 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-            var nwrwData = rrModel.ModelData?.OfType<NwrwData>()?.FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
+            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
             if (nwrwData == null)
             {
                 nwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name);
             }
 
-            nwrwData.DischargeType = DischargeType;
-            nwrwData.NumberOfPeople = NumberOfPeople;
+            AddDryWeatherFlowToNwrwCatchment(nwrwData);
+
             nwrwData.LateralSurface = LateralSurface;
 
             nwrwData.Catchment.Geometry = Geometry;
             nwrwData.Catchment.IsGeometryDerivedFromAreaSize = true;
 
-            // Add the moment the kernel does not support multiple DWF definitions per catchment.
-            // For now, we decided that a catchment can have 1 DWF with a name starting with 'Inwoner'
-            // and 1 DWF statrting with 'Bedrijf'. This will be implemented in both the kernel and GUI.
+            nwrwData.UpdateCatchmentAreaSize();
+        }
+
+        private void AddDryWeatherFlowToNwrwCatchment(NwrwData nwrwData)
+        {
+            // Only two dry weather flow ids per catchment are supported.
             // See issue FM1D2D-535.
-            if (DryWeatherFlowId.StartsWith(NwrwDryWeatherFlowDefinition.INHABITANT_DWF, StringComparison.InvariantCultureIgnoreCase) && 
-                nwrwData.DryWeatherFlowIdInhabitant == null)
+            if (nwrwData.DryWeatherFlows.Count >= 2)
             {
-                nwrwData.DryWeatherFlowIdInhabitant = DryWeatherFlowId;
-            }
-            else if (DryWeatherFlowId.StartsWith(NwrwDryWeatherFlowDefinition.COMPANY_DWF, StringComparison.InvariantCultureIgnoreCase) && 
-                     nwrwData.DryWeatherFlowIdCompany == null)
-            {
-                nwrwData.DryWeatherFlowIdCompany = DryWeatherFlowId;
-            }
-            else
-            {
-                Log.Warn($"Could not add '{DryWeatherFlowId}' definition to '{Name}'.");
+                Log.Warn($"Could not add {DryWeatherFlowId} to {Name}. A maximum of two dry weather flow ids per catchment are currently supported.");
+                return;
             }
 
-            nwrwData.UpdateCatchmentAreaSize();
+            var dryweatherFlow = new DryWeatherFlow()
+            {
+                DryWeatherFlowId = DryWeatherFlowId,
+                NumberOfUnits = NumberOfPeople
+            };
+
+            if (nwrwData.DryWeatherFlows.Count == 1)
+            {
+                if (nwrwData.DryWeatherFlows[0].DryWeatherFlowId == NwrwData.DEFAULT_DWA_ID)
+                {
+                    nwrwData.DryWeatherFlows[0] = dryweatherFlow;
+                }
+                else
+                {
+                    nwrwData.DryWeatherFlows.Add(dryweatherFlow);
+                }
+                
+            }
+            else if (nwrwData.DryWeatherFlows.Count == 0)
+            {
+                nwrwData.DryWeatherFlows.Add(dryweatherFlow);
+            }
+            
         }
     }
 }
