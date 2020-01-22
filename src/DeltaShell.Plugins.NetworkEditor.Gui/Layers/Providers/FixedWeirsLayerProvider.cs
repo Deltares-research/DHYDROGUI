@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
             return new VectorLayer(HydroArea.FixedWeirsPluralName)
             {
                 FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = AreaLayerStyles.FixedWeirStyle,
+                Style = HydroAreaLayerStyles.FixedWeirStyle,
                 DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.FixedWeirs, "FixedWeir", "NetworkEditorModelName", hydroArea.CoordinateSystem),
                 NameIsReadOnly = true
             };

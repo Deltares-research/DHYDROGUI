@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                             {
                                 AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
                             },
-                        Style = AreaLayerStyles.BoundariesStyle,
+                        Style = HydroAreaLayerStyles.BoundariesStyle,
                         NameIsReadOnly = true,
                         ShowInLegend = false
                     };
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                                            fmModel.CoordinateSystem),
                         FeatureEditor =
                             new Feature2DEditor(fmModel),
-                        Style = AreaLayerStyles.SourcesAndSinksStyle,
+                        Style = HydroAreaLayerStyles.SourcesAndSinksStyle,
                         NameIsReadOnly = true,
                         CustomRenderers =
                             new IFeatureRenderer[]

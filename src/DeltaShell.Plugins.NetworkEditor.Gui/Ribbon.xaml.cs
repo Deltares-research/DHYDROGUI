@@ -63,18 +63,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showSideViewCommand = new ShowSideViewCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
-        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName){LayerType = typeof(AreaLayer)};
-        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(AreaLayer) };
-        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(AreaLayer)};
+        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName){LayerType = typeof(HydroAreaLayer)};
+        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(HydroAreaLayer)};
 
         public Ribbon()
         {

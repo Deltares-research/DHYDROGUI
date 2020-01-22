@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData)
         {
             return sourceData is HydroArea hydroArea
-                       ? new AreaLayer
+                       ? new HydroAreaLayer
                        {
                            HydroArea = hydroArea,
                            NameIsReadOnly = true

@@ -169,8 +169,8 @@
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionZWCsvImportExportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
-    <Compile Include="MapLayers\AreaLayer.cs" />
-    <Compile Include="MapLayers\AreaLayerStyles.cs" />
+    <Compile Include="MapLayers\HydroAreaLayer.cs" />
+    <Compile Include="MapLayers\HydroAreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
     <Compile Include="MapLayers\Editors\CatchmentFeatureEditor.cs" />

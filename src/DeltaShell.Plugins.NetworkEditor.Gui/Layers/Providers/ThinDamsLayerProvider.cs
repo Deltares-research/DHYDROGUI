@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
             return new VectorLayer(HydroArea.ThinDamsPluralName)
             {
                 FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = AreaLayerStyles.ThinDamStyle,
+                Style = HydroAreaLayerStyles.ThinDamStyle,
                 DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.ThinDams, "ThinDam", "NetworkEditorModelName", hydroArea.CoordinateSystem),
                 NameIsReadOnly = true
             };

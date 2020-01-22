@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var area2D = data as HydroArea;
             if (area2D != null)
             {
-                return new AreaLayer { HydroArea = area2D, NameIsReadOnly = true };
+                return new HydroAreaLayer { HydroArea = area2D, NameIsReadOnly = true };
             }
 
             var hydroRegion = data as IHydroRegion;
@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.ObservationPointStyle,
+                        Style = HydroAreaLayerStyles.ObservationPointStyle,
                         DataSource = new HydroAreaFeature2DCollection (area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint", modelName, area2DParent.CoordinateSystem)
                     };
                 }
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.DryPointStyle,
+                        Style = HydroAreaLayerStyles.DryPointStyle,
                         DataSource =
                             new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryPoints, "DryPoint", modelName, area2DParent.CoordinateSystem)
                     };
@@ -415,7 +415,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.DryAreaStyle,
+                        Style = HydroAreaLayerStyles.DryAreaStyle,
                         DataSource = ds
                     };
                 }
@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.ObsCrossSectionStyle,
+                    Style = HydroAreaLayerStyles.ObsCrossSectionStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationCrossSections, "ObservationCrossSection",
                                                        modelName, area2DParent.CoordinateSystem),
@@ -445,7 +445,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new VectorLayer(HydroArea.PumpsPluralName)
                 {
                     NameIsReadOnly = true,
-                    Style = AreaLayerStyles.PumpStyle,
+                    Style = HydroAreaLayerStyles.PumpStyle,
                     DataSource = areaFeature2DCollection,
                     FeatureEditor = new Feature2DEditor(area2DParent)
                     {
@@ -464,7 +464,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new VectorLayer(HydroArea.WeirsPluralName)
                 {
                     NameIsReadOnly = true,
-                    Style = AreaLayerStyles.WeirStyle,
+                    Style = HydroAreaLayerStyles.WeirStyle,
                     DataSource = feature2DCollection,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
@@ -478,7 +478,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.ThinDamStyle,
+                    Style = HydroAreaLayerStyles.ThinDamStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams, "ThinDam", modelName,
                                                        area2DParent.CoordinateSystem)
@@ -492,7 +492,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.LandBoundaryStyle,
+                    Style = HydroAreaLayerStyles.LandBoundaryStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries, "LandBoundary", modelName,
                             area2DParent.CoordinateSystem)
@@ -506,7 +506,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     NameIsReadOnly = true,
                     FeatureEditor =
                         new HydroAreaFeatureEditor(area2DParent) {CreateNewFeature = l => new Embankment {Region = area2DParent}},
-                    Style = AreaLayerStyles.EmbankmentStyle,
+                    Style = HydroAreaLayerStyles.EmbankmentStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment", modelName,
                             area2DParent.CoordinateSystem),
@@ -535,7 +535,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Opacity = (float) 0.25,
-                    Style = AreaLayerStyles.EnclosureStyle,                  
+                    Style = HydroAreaLayerStyles.EnclosureStyle,                  
                     DataSource = ds,
                     CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
                 };
@@ -548,7 +548,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.FixedWeirStyle,
+                    Style = HydroAreaLayerStyles.FixedWeirStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
                             area2DParent.CoordinateSystem)
@@ -562,7 +562,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.BridgePillarStyle,
+                    Style = HydroAreaLayerStyles.BridgePillarStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar", modelName,
                             area2DParent.CoordinateSystem)

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             ILayer layer = provider.CreateLayer(Substitute.For<HydroArea>(), Substitute.For<object>());
 
             // Assert
-            Assert.That(layer, Is.TypeOf<AreaLayer>());
+            Assert.That(layer, Is.TypeOf<HydroAreaLayer>());
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             var hydroArea = new HydroArea();
 
             // Act
-            var areaLayer = provider.CreateLayer(hydroArea, Substitute.For<object>()) as AreaLayer;
+            var areaLayer = provider.CreateLayer(hydroArea, Substitute.For<object>()) as HydroAreaLayer;
 
             // Assert
             Assert.IsNotNull(areaLayer);

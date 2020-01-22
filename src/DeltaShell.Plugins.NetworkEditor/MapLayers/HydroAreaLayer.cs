@@ -6,7 +6,7 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 {
     [Entity(FireOnCollectionChange = false)]
-    public class AreaLayer : HydroRegionMapLayer
+    public class HydroAreaLayer : HydroRegionMapLayer
     {
         private HydroArea hydroArea;
         private bool layersInitialized;

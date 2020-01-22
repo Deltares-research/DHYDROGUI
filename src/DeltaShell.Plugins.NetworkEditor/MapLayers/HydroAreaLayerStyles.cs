@@ -4,7 +4,7 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 {
-    public static class AreaLayerStyles
+    public static class HydroAreaLayerStyles
     {
         public static VectorStyle LandBoundaryStyle
         {
