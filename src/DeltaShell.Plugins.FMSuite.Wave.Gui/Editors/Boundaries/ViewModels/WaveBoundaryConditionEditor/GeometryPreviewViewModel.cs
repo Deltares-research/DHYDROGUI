@@ -11,8 +11,6 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
-    // TODO (MWT): Replace this with a new view / view model that utilises a new class instead of GeometryPreview
-    // TODO (MWT): This will fix the problem with not showing the selected boundary point.
     /// <summary>
     /// <see cref="GeometryPreviewViewModel"/> implements the view model for the geometry preview view.
     /// </summary>
