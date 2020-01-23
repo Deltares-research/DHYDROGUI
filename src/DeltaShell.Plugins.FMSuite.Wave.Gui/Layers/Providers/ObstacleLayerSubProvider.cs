@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 {
     /// <summary>
-    /// <see cref="ObstacleDataLayerSubProvider"/> implements
+    /// <see cref="ObstacleLayerSubProvider"/> implements
     /// <see cref="Feature2DLayerSubProvider"/> for <see cref="WaveModel.Obstacles"/>.
     /// </summary>
     /// <seealso cref="Feature2DLayerSubProvider" />
     public class ObstacleLayerSubProvider : Feature2DLayerSubProvider
     {
-        // TODO: verify behaviour of ObstacleDataLayer vs ObstacleLayer        
         /// <summary>
         /// Creates a new <see cref="ObstacleLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory"> The factory to create the layers with. </param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Throw when <paramref name="factory"/> is <c>null</c>.
         /// </exception>
         public ObstacleLayerSubProvider(IWaveLayerFactory factory) : base(factory) {}
