@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel"/> defines the view model for the
     /// ConstantParametersSettingsView given spatially varying data.
     /// </summary>
-    /// <seealso cref="IConstantParametersSettingsViewModel" />
+    /// <seealso cref="ConstantParametersSettingsViewModel" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public sealed class SpatiallyVariantConstantParametersSettingsViewModel : IConstantParametersSettingsViewModel, INotifyPropertyChanged
+    public sealed class SpatiallyVariantConstantParametersSettingsViewModel : ConstantParametersSettingsViewModel, INotifyPropertyChanged
     {
         private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters> supportPointToParametersMapping;
 
@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.supportPointToParametersMapping = supportPointToParametersMapping;
         }
 
-        public ConstantParametersViewModel ActiveParametersViewModel
+        public override ConstantParametersViewModel ActiveParametersViewModel
         {
             get => activeParametersViewModel;
-            private set
+            protected set
             {
                 if (value == ActiveParametersViewModel)
                 {

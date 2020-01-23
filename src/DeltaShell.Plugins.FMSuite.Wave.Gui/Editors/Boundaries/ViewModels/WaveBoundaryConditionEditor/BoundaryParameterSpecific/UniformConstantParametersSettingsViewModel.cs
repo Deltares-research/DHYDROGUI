@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.Common;
+﻿using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
@@ -8,15 +7,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="UniformConstantParametersSettingsViewModel"/> defines the view model for the
     /// ConstantParametersSettingsView given uniform data.
     /// </summary>
-    /// <seealso cref="IConstantParametersSettingsViewModel" />
-    public class UniformConstantParametersSettingsViewModel : IConstantParametersSettingsViewModel
+    /// <seealso cref="ConstantParametersSettingsViewModel" />
+    public sealed class UniformConstantParametersSettingsViewModel : ConstantParametersSettingsViewModel
     {
         /// <summary>
         /// Creates a new <see cref="UniformConstantParametersSettingsViewModel"/>.
         /// </summary>
-        /// <param name="activeParametersViewModel"> The vie data to be displayed.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="activeParametersViewModel"/> is <c>null</c>.
+        /// <param name="parameters"> The vie data to be displayed.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="parameters"/> is <c>null</c>.
         /// </exception>
         public UniformConstantParametersSettingsViewModel(ConstantParameters parameters)
         {
@@ -27,6 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Get the currently displayed <see cref="ConstantParametersViewModel"/>.
         /// </summary>
-        public ConstantParametersViewModel ActiveParametersViewModel { get; }
+        public override ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
     }
 }

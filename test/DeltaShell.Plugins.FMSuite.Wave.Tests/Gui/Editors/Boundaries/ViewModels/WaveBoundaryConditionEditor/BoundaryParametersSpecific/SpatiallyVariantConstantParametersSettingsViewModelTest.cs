@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel(dictionary);
 
             // Assert
-            Assert.That(viewModel, Is.InstanceOf<IConstantParametersSettingsViewModel>());
+            Assert.That(viewModel, Is.InstanceOf<ConstantParametersSettingsViewModel>());
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, 
                         "Expected ActiveParametersViewModel to be null upon construction.");
         }
