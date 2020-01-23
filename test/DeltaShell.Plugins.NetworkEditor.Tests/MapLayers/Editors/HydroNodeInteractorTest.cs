@@ -189,9 +189,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
             var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSectionDef, 10);
 
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, -5, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(10, 0, 0);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 0);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, -5);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(10, 0);
             
             var interactor = new HydroNodeInteractor(null, node2, null, null);
             const double deltaX = 20;

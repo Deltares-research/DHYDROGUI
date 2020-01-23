@@ -302,12 +302,12 @@ namespace DelftTools.Hydro.Helpers
         public static void SetDefaultYZTableAndUpdateThalWeg(this CrossSectionDefinitionYZ crossSectionDefinition,double width = DefaultCrossSectionWidth)
         {
             crossSectionDefinition.YZDataTable.BeginLoadData();
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((4 * width / 18), 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((6 * width / 18), -10.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((12 * width / 18), -10.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((14 * width / 18), 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(width, 0.0, 0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((4 * width / 18), 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((6 * width / 18), -10.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((12 * width / 18), -10.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((14 * width / 18), 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(width, 0.0);
             crossSectionDefinition.YZDataTable.EndLoadData();
 
             crossSectionDefinition.Thalweg = crossSectionDefinition.Width / 2;
@@ -537,7 +537,7 @@ namespace DelftTools.Hydro.Helpers
 
             foreach (var yzCoordinate in yzCoordinates)
             {
-                csDef.YZDataTable.AddCrossSectionYZRow(yzCoordinate.X, yzCoordinate.Y, 0.0);
+                csDef.YZDataTable.AddCrossSectionYZRow(yzCoordinate.X, yzCoordinate.Y);
             }
             csDef.Thalweg = 0.0;
         }

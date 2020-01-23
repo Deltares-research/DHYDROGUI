@@ -21,12 +21,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
             AddFrictionData(crossSectionDefinition);
             // can't create a protected base function! (because CrossSectionDefinitionXYZ != CrossSectionDefinitionYZ)
-            var xyzCrossSectionDefinition = crossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition as CrossSectionDefinitionXYZ : crossSectionDefinition as CrossSectionDefinitionXYZ;
-            if (xyzCrossSectionDefinition == null) return IniCategory;
-
-            var deltaZStorage = xyzCrossSectionDefinition.XYZDataTable.Select(row => row.DeltaZStorage);
-            IniCategory.AddProperty(DefinitionPropertySettings.DeltaZStorage, deltaZStorage);
-
+            
             return IniCategory;
         }
 

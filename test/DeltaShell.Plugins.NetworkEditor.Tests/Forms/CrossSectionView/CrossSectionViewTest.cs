@@ -92,13 +92,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         private static ICrossSection GetYZCrossSectionOnHydroNetwork()
         {
             var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ();
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8, 0);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8);
 
             
             var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);

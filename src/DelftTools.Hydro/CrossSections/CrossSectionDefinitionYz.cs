@@ -213,7 +213,7 @@ namespace DelftTools.Hydro.CrossSections
             
             table.BeginLoadData();
             foreach (var row in YZDataTable)
-                table.AddCrossSectionYZRow(row.Yq, row.Z, row.DeltaZStorage);
+                table.AddCrossSectionYZRow(row.Yq, row.Z);
             table.EndLoadData();
             
             clone.YZDataTable = table;

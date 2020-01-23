@@ -72,8 +72,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
 
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(10, 15, 7);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(20, 16, 8);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(10, 15);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(20, 16);
 
             var cs1 = new CrossSection(crossSectionDefinition) { LongName = "LongName" };
 

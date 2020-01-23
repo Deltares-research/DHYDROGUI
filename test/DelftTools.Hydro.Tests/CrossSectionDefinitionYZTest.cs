@@ -35,9 +35,9 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionYZ();
             crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
-            crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 1.0, 1.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0, 1.0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0, 1.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 1.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
             crossSection.EndEdit();
         }
 
@@ -89,9 +89,9 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionYZ();
             //simple V profile
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 10, 2);
-            crossSection.YZDataTable.AddCrossSectionYZRow(5, 0, 1);
-            crossSection.YZDataTable.AddCrossSectionYZRow(10, 10, 2);
+            crossSection.YZDataTable.AddCrossSectionYZRow(0, 10);
+            crossSection.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(10, 10);
 
             var profileY = new double[] { 0, 5, 10 };
             var profileZ = new double[] { 10, 0, 10 };
@@ -111,9 +111,9 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionYZ();
             //simple V profile
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 10, 2);
-            crossSection.YZDataTable.AddCrossSectionYZRow(5, 0, 1);
-            crossSection.YZDataTable.AddCrossSectionYZRow(10, 10, 2);
+            crossSection.YZDataTable.AddCrossSectionYZRow(0, 10);
+            crossSection.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(10, 10);
 
             var csClone = TypeUtils.DeepClone(crossSection);
 
@@ -135,9 +135,9 @@ namespace DelftTools.Hydro.Tests
             var crossSectionYZ = new CrossSectionDefinitionYZ();
             
             //simple V profile
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(0, 10, 2);
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(5, 0, 1);
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(10, 10, 2);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(0, 10);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(10, 10);
 
             crossSectionYZ.Thalweg = 5.0;
 
@@ -169,9 +169,9 @@ namespace DelftTools.Hydro.Tests
             var crossSectionYZ = new CrossSectionDefinitionYZ();
 
             //simple V profile
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(0, 10, 2);
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(5, 0, 1);
-            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(10, 10, 2);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(0, 10);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSectionYZ.YZDataTable.AddCrossSectionYZRow(10, 10);
 
             crossSectionYZ.Thalweg = 5.0;
 

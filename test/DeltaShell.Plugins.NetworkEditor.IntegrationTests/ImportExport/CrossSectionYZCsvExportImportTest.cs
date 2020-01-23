@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             var cs1 = new CrossSection(def1) { Name = "cs1" };
 
             def1.YZDataTable.Clear();
-            def1.YZDataTable.AddCrossSectionYZRow(10, 20, 30);
+            def1.YZDataTable.AddCrossSectionYZRow(10, 20);
 
             NetworkHelper.AddBranchFeatureToBranch(cs1,branch, 5);
 
@@ -187,7 +187,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             csvFileImporter.ImportItem(null, network);
 
             var retrievedDef1 = (CrossSectionDefinitionYZ)network.CrossSections.First(cs => cs.Name == "cs1").Definition;
-            Assert.AreEqual(30, retrievedDef1.YZDataTable[0].DeltaZStorage);
         }
 
         [Test]
@@ -207,7 +206,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             const double storageWidth0 = 22.22;
 
             def.YZDataTable[0].DeltaZStorage = storageWidth0;
-            def.YZDataTable.AddCrossSectionYZRow(999, 999, 999);
+            def.YZDataTable.AddCrossSectionYZRow(999, 999);
 
             const int originalThalweg = 66;
             def.Thalweg = originalThalweg;
@@ -250,8 +249,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             Assert.AreEqual(originalThalweg, retrievedCsDef.Thalweg);
             Assert.AreEqual(888, retrievedCsDef.YZDataTable[6].Yq);                      //yzdata updated from file
             Assert.AreEqual(888, retrievedCsDef.YZDataTable[6].Z);                       //..
-            Assert.AreEqual(888, retrievedCsDef.YZDataTable[6].DeltaZStorage);           //
-            Assert.AreEqual(storageWidth0, retrievedCsDef.YZDataTable[0].DeltaZStorage); //yz storage maintained
         }
 
         [Test]
@@ -281,7 +278,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             cs1.Chainage = 60; //to be undone
             cs2.Chainage = 80; //to be undone
             //modify definition
-            def1.YZDataTable.AddCrossSectionYZRow(9, 9, 9);
+            def1.YZDataTable.AddCrossSectionYZRow(9, 9);
             def2.ZWDataTable.AddCrossSectionZWRow(9, 9, 9);
             //end modify
             var newProfileYZ = cs1.Definition.Profile.ToList();

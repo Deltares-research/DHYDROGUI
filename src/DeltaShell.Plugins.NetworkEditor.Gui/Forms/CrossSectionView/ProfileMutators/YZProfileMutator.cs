@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
                 suggestedStorageWidth = crossSectionDefinition.YZDataTable[0].DeltaZStorage;
             }
 
-            var row = crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(y, z, suggestedStorageWidth);
+            var row = crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(y, z);
 
             if (crossSectionDefinition.YZDataTable.Count > 2)
             {

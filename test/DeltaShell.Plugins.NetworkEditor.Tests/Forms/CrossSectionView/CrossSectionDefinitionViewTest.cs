@@ -170,9 +170,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 var hydroNetwork = new HydroNetwork {CrossSectionSectionTypes = sectionTypes};
 
                 var crossSection = new CrossSectionDefinitionYZ();
-                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0);
                 var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSection, hydroNetwork);
 
                 var crossSectionView = new CrossSectionDefinitionView
@@ -211,9 +211,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 var hydroNetwork = new HydroNetwork { CrossSectionSectionTypes = sectionTypes };
 
                 var crossSection = new CrossSectionDefinitionYZ();
-                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0);
                 var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSection, hydroNetwork);
 
                 var crossSectionView = new CrossSectionDefinitionView
@@ -295,9 +295,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 var hydroNetwork = new HydroNetwork { CrossSectionSectionTypes = sectionTypes };
 
                 var crossSection = new CrossSectionDefinitionYZ();
-                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0);
                 var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSection, hydroNetwork);
 
                 var crossSectionView = new CrossSectionDefinitionView
@@ -338,9 +338,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 var hydroNetwork = new HydroNetwork { CrossSectionSectionTypes = sectionTypes };
 
                 var crossSection = new CrossSectionDefinitionYZ();
-                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(50, 15, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(100, 5, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(50, 15);
+                crossSection.YZDataTable.AddCrossSectionYZRow(100, 5);
                 var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSection, hydroNetwork);
 
                 var crossSectionView = new CrossSectionDefinitionView
@@ -417,9 +417,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
                 var hydroNetwork = new HydroNetwork {CrossSectionSectionTypes = sectionTypes};
 
                 var crossSection = new CrossSectionDefinitionYZ();
-                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(50, 0);
+                crossSection.YZDataTable.AddCrossSectionYZRow(100, 0);
                 var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSection, hydroNetwork);
 
                 var crossSectionView = new CrossSectionDefinitionView
@@ -564,13 +564,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void ShowWithYZCrossSection()
         {
             var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ();
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8, 0);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8);
 
             var crossSectionView = new CrossSectionDefinitionView
             {
@@ -674,13 +674,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             network.CrossSectionSectionTypes.Add(fp2Type);
 
             var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ();
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6, 1);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8, 0);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 8);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(1, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(2, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(3, 3);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(4, 4);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8);
 
             CrossSectionHelper.SetDefaultThalweg(crossSectionDefinitionYZ);
             
@@ -744,19 +744,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             network.CrossSectionSectionTypes.Add(mainType);
 
             var crossSection1 = new CrossSectionDefinitionYZ {Name = "maas1", Thalweg = 5};
-            crossSection1.YZDataTable.AddCrossSectionYZRow(0, 4, 0);
-            crossSection1.YZDataTable.AddCrossSectionYZRow(5, 0, 0);
-            crossSection1.YZDataTable.AddCrossSectionYZRow(10, 4, 0);
+            crossSection1.YZDataTable.AddCrossSectionYZRow(0, 4);
+            crossSection1.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSection1.YZDataTable.AddCrossSectionYZRow(10, 4);
 
             var crossSection2 = new CrossSectionDefinitionYZ { Name = "maas2", Thalweg = 0};
-            crossSection2.YZDataTable.AddCrossSectionYZRow(0, 5, 0);
-            crossSection2.YZDataTable.AddCrossSectionYZRow(5, 0, 0);
-            crossSection2.YZDataTable.AddCrossSectionYZRow(10, 5, 0);
+            crossSection2.YZDataTable.AddCrossSectionYZRow(0, 5);
+            crossSection2.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSection2.YZDataTable.AddCrossSectionYZRow(10, 5);
 
             var crossSection3 = new CrossSectionDefinitionYZ { Name = "maas3", Thalweg = 5 };
-            crossSection3.YZDataTable.AddCrossSectionYZRow(0, 6, 0);
-            crossSection3.YZDataTable.AddCrossSectionYZRow(5, 0, 0);
-            crossSection3.YZDataTable.AddCrossSectionYZRow(10, 6, 0);
+            crossSection3.YZDataTable.AddCrossSectionYZRow(0, 6);
+            crossSection3.YZDataTable.AddCrossSectionYZRow(5, 0);
+            crossSection3.YZDataTable.AddCrossSectionYZRow(10, 6);
 
             var crossSectionSection = new CrossSectionSection { MinY = 0, MaxY = 17, SectionType = mainType };
             

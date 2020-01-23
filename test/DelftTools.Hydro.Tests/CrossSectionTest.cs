@@ -134,10 +134,10 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSectionDef = new CrossSectionDefinitionYZ {ForceSectionsSpanFullWidth = true};
 
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 5, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, 1, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(25, 1, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(35, 5, 0);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 5);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, 1);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(25, 1);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(35, 5);
 
             var sectionType = new CrossSectionSectionType();
             var section1 = new CrossSectionSection {MinY = 0, MaxY = 10, SectionType = sectionType};
@@ -157,10 +157,10 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSectionDef = new CrossSectionDefinitionYZ { ForceSectionsSpanFullWidth = true };
 
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 5, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, 1, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(25, 1, 0);
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(30, 5, 0);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 5);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, 1);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(25, 1);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(30, 5);
 
             var sectionType = new CrossSectionSectionType();
             var section1 = new CrossSectionSection { MinY = 0, MaxY = 10, SectionType = sectionType };
@@ -169,7 +169,7 @@ namespace DelftTools.Hydro.Tests
             crossSectionDef.Sections.Add(section2);
 
             // action
-            crossSectionDef.YZDataTable.AddCrossSectionYZRow(35, 6, 0);
+            crossSectionDef.YZDataTable.AddCrossSectionYZRow(35, 6);
 
             Assert.AreEqual(35, section2.MaxY);
 
@@ -204,9 +204,9 @@ namespace DelftTools.Hydro.Tests
         {
             //v-shaped cs 100 wide
             var crossSectionDefinitionYZ = new CrossSectionDefinitionYZ("");
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 100, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(50, 0, 0);
-            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(100, 100, 0);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(0, 100);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(50, 0);
+            crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(100, 100);
             crossSectionDefinitionYZ.Thalweg = 50;
 
             //horizontal line

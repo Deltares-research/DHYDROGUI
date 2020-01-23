@@ -14,11 +14,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 
             var yList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
             var zList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
-            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.DeltaZStorage.Key);
 
             var yzCount = category.ReadProperty<int>(DefinitionPropertySettings.YZCount.Key);
 
-            if (yzCount == yList.Count && yList.Count != zList.Count && zList.Count != deltaZList.Count)
+            if (yzCount == yList.Count && yList.Count != zList.Count)
             {
                 var errorMessage = "yz count property is not equal to number of yvalues or zvalues or delta z storage";
                 throw new FileReadingException(errorMessage);
@@ -28,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             table.BeginLoadData();
             for (int i = 0; i < yList.Count; i++)
             {
-                table.AddCrossSectionYZRow(yList[i], zList[i], deltaZList[i]);
+                table.AddCrossSectionYZRow(yList[i], zList[i]);
             }
             table.EndLoadData();
             crossSectionDefinition.YZDataTable = table;

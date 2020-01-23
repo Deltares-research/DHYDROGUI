@@ -88,7 +88,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(10, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
             
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Yz, typeValue);
@@ -114,7 +114,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(10, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Yz, typeValue);
@@ -165,7 +165,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Xyz, typeValue);
@@ -194,7 +194,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Xyz, typeValue);
@@ -318,7 +318,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(14, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw, typeValue);
@@ -362,7 +362,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(14, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw, typeValue);
@@ -425,7 +425,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(6, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Rectangle, typeValue);
@@ -447,7 +447,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(6, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Rectangle, typeValue);
@@ -484,7 +484,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -514,7 +514,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -563,7 +563,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(5, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Circle, typeValue);
@@ -582,7 +582,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(5, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Circle, typeValue);
@@ -620,7 +620,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(11, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -650,7 +650,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -699,7 +699,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -732,7 +732,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -793,7 +793,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(11, content.Properties.Count);
 
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -823,7 +823,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -872,7 +872,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(16, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -917,7 +917,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(16, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -980,7 +980,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
             Assert.AreEqual(12, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection1", idValue);
+            Assert.AreEqual("CrossSection_1D_1", idValue);
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
@@ -1013,7 +1013,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
-            Assert.AreEqual("CrossSection2", idValue);
+            Assert.AreEqual("CrossSection_1D_2", idValue);
 
             typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);

@@ -98,9 +98,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         private ICrossSection AddCrossSection(out ChannelInteractor interactor)
         {
             var crossSection = new CrossSectionDefinitionYZ();
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(2,-2, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(4, 0, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(0, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(2,-2);
+            crossSection.YZDataTable.AddCrossSectionYZRow(4, 0);
 
             //CrossSectionHelper.CalculateYZProfileFromGeometry(crossSection.Profile, crossSection.Geometry);
             var crossSectionBranchFeature = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSection, 25.0);

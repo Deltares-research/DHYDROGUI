@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
             foreach (var coordinate in YZCoordinates)
             {    
-                crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(coordinate.X, coordinate.Y + shiftLevel, 0);
+                crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(coordinate.X, coordinate.Y + shiftLevel);
             }
 
             crossSectionDefinition.EndEdit();

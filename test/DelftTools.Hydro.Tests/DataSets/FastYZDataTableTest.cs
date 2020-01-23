@@ -21,7 +21,6 @@ namespace DelftTools.Hydro.Tests.DataSets
                                                                                        (t) =>
                                                                                        t.AddCrossSectionYZRow(
                                                                                            random.NextDouble(),
-                                                                                           random.NextDouble(),
                                                                                            random.NextDouble()));
         }
 
@@ -45,7 +44,7 @@ namespace DelftTools.Hydro.Tests.DataSets
             for (int i = 0; i < numTables; i++)
             {
                 for (int j = 0; j < numRows; j++)
-                    tables[i].AddCrossSectionYZRow(j, 0.0, 0.0);
+                    tables[i].AddCrossSectionYZRow(j, 0.0);
             }
 
             var memoryAfterAddingRows = GC.GetTotalMemory(true);
@@ -66,14 +65,14 @@ namespace DelftTools.Hydro.Tests.DataSets
             int moves = 0;
             table.Rows.ListChanged += (s, e) => { if (e.ListChangedType == ListChangedType.ItemMoved) moves++; };
 
-            table.AddCrossSectionYZRow(100, 0, 0);
+            table.AddCrossSectionYZRow(100, 0);
             Assert.AreEqual(0, moves);
 
-            table.AddCrossSectionYZRow(10, 0, 0);
-            table.AddCrossSectionYZRow(50, 0, 0);
-            table.AddCrossSectionYZRow(0, 0, 0);
-            table.AddCrossSectionYZRow(-10, 0, 0);
-            table.AddCrossSectionYZRow(120, 0, 0);
+            table.AddCrossSectionYZRow(10, 0);
+            table.AddCrossSectionYZRow(50, 0);
+            table.AddCrossSectionYZRow(0, 0);
+            table.AddCrossSectionYZRow(-10, 0);
+            table.AddCrossSectionYZRow(120, 0);
 
             Assert.AreEqual(4, moves);
             Assert.AreEqual(new[] {-10.0, 0, 10, 50, 100, 120}, table.Rows.Select(r => r[0]).ToArray());

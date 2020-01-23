@@ -14,11 +14,11 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         public class CrossSectionXYZRow : CrossSectionYZRow
         {
             public CrossSectionXYZRow()
-                : base(0.0, 0.0, 0.0)
+                : base(0.0, 0.0)
             {
             }
 
-            public CrossSectionXYZRow(double yq, double z, double deltaZStorage) : base(yq, z, deltaZStorage)
+            public CrossSectionXYZRow(double yq, double z, double deltaZStorage) : base(yq, z)
             {
             }
 
@@ -97,15 +97,14 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         public class CrossSectionYZRow : LightDataRow
         {
             public CrossSectionYZRow()
-                : this(0.0, 0.0, 0.0)
+                : this(0.0, 0.0)
             {
             }
 
-            public CrossSectionYZRow(double yq, double z, double deltaZStorage):base(3)
+            public CrossSectionYZRow(double yq, double z):base(3)
             {
                 Yq = yq;
                 Z = z;
-                DeltaZStorage = deltaZStorage;
             }
 
             [DisplayName("Y'")]
@@ -150,9 +149,9 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 get { return 3; }
             }
 
-            public CrossSectionYZRow AddCrossSectionYZRow(double yq, double z, double zStorage)
+            public CrossSectionYZRow AddCrossSectionYZRow(double yq, double z)
             {
-                var row = new CrossSectionYZRow(yq, z, zStorage);
+                var row = new CrossSectionYZRow(yq, z);
                 Rows.Add(row);
                 return row;
             }
@@ -167,7 +166,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 Clear();
                 foreach (var c in coordinates)
                 {
-                    AddCrossSectionYZRow(c.X, c.Y, 0);
+                    AddCrossSectionYZRow(c.X, c.Y);
                 }
             }
 
@@ -185,7 +184,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
             protected override void AddByValues(double[] itemArray)
             {
-                AddCrossSectionYZRow(itemArray[0], itemArray[1], itemArray[2]);
+                AddCrossSectionYZRow(itemArray[0], itemArray[1]);
             }
         }
 

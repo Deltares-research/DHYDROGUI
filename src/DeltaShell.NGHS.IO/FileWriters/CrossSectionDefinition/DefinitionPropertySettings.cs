@@ -12,15 +12,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public static readonly ConfigurationSetting LevelCount = new ConfigurationSetting(key: "levelsCount");
 
         public static readonly ConfigurationSetting XYZCount = new ConfigurationSetting(key: "xyzCount", description: "Number of XYZ-coordinates");
-        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition", format: "F5");
-        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition", format: "F5");
-        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition", format: "F5");
+        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition", format: "F3");
+        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition", format: "F3");
+        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition", format: "F3");
 
         public static readonly ConfigurationSetting SingleValuedZ = new ConfigurationSetting(key: "singleValuedZ", description: "", defaultValue:"1");
         public static readonly ConfigurationSetting YZCount = new ConfigurationSetting(key: "yzCount", description: "Number of YZ-coordinates");
         
         public static readonly ConfigurationSetting Thalweg = new ConfigurationSetting(key: "Thalweg", description: "(GUI ONLY)");
-        public static readonly ConfigurationSetting DeltaZStorage = new ConfigurationSetting(key: "deltaZStorage", description: "(GUI ONLY)");
 
         public static readonly ConfigurationSetting NumLevels = new ConfigurationSetting(key: "numLevels", description: "Number of levels in table");
         public static readonly ConfigurationSetting Levels = new ConfigurationSetting(key: "levels", description: "Levels / Levels (m AD)", format: "F5");
@@ -43,7 +42,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         public static readonly ConfigurationSetting Conveyance = new ConfigurationSetting(key: "conveyance", description: "No comments", defaultValue:"segmented");
         public static readonly ConfigurationSetting SectionCount = new ConfigurationSetting(key: "sectionCount", description: "Number of friction sections");
-        public static readonly ConfigurationSetting FrictionPositions = new ConfigurationSetting(key: "frictionPositions", description: "Location where the roughness sections start and end. Always one location more than sectionCount. The first value should equal 0 and the last value should equal the crosssection length. Keyword may be skipped if sectionCount = 1.", format: "F5");
+        public static readonly ConfigurationSetting FrictionPositions = new ConfigurationSetting(key: "frictionPositions", description: "Location where the roughness sections start and end. Always one location more than sectionCount. The first value should equal 0 and the last value should equal the crosssection length. Keyword may be skipped if sectionCount = 1.", format: "F3");
         public static readonly ConfigurationSetting FrictionIds = new ConfigurationSetting(key: "frictionIds", description: "Names of the friction sections.");
         public static readonly ConfigurationSetting FrictionId = new ConfigurationSetting(key: "frictionId", description: "Names of the friction section.");
 

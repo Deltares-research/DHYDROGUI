@@ -42,9 +42,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             var channel = new Channel {Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(20, 0)})};
 
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 5, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(2, 0, 1);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(4, 5, 0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 5);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(2, 0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(4, 5);
             crossSectionDefinition.Thalweg = 2;
 
             hydroNetwork.Branches.Add(channel);

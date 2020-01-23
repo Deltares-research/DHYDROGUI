@@ -16,12 +16,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
             var xCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.XCoors.Key);
             var yCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.YCoors.Key);
             var zCoorList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.ZCoors.Key);
-            
-            var deltaZList = category.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.DeltaZStorage.Key);
 
             var xyzCount = category.ReadProperty<int>(DefinitionPropertySettings.XYZCount.Key);
 
-            if (xyzCount != deltaZList.Count || xyzCount != xCoorList.Count || xyzCount != yCoorList.Count ||
+            if (xyzCount != xCoorList.Count || xyzCount != yCoorList.Count ||
                 xyzCount != zCoorList.Count)
             {
                 var errorMessage = "xyz count property is not equal to number of x, y or z coordinates or delta z storage"; 
@@ -36,12 +34,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 
             crossSectionDefinition.Geometry = new LineString(geometryCoors);
 
-            //then add the deltaZStorage
-            for (var i = 0; i < xyzCount; i++)
-            {
-                crossSectionDefinition.XYZDataTable[i].DeltaZStorage = deltaZList[i];
-            }
-            
             return crossSectionDefinition;
         }
     }

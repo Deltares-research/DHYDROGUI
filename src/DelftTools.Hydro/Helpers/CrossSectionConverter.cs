@@ -20,7 +20,7 @@ namespace DelftTools.Hydro.Helpers
             var result = new CrossSectionDefinitionYZ();
             foreach (var row in source.XYZDataTable)
             {
-                result.YZDataTable.AddCrossSectionYZRow(row.Yq, row.Z, row.DeltaZStorage);
+                result.YZDataTable.AddCrossSectionYZRow(row.Yq, row.Z);
             }
 
                           

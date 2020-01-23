@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         private static void SetDefaultYZTableAndUpdateThalWeg(CrossSectionDefinitionYZ crossSectionDefinition)
         {
             const double width = 18.0;
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((4 * width / 18), 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((6 * width / 18), -10.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((12 * width / 18), -10.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((14 * width / 18), 0.0, 0);
-            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(width, 0.0, 0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(0, 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((4 * width / 18), 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((6 * width / 18), -10.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((12 * width / 18), -10.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow((14 * width / 18), 0.0);
+            crossSectionDefinition.YZDataTable.AddCrossSectionYZRow(width, 0.0);
 
             crossSectionDefinition.Thalweg = crossSectionDefinition.Width / 2;
         }

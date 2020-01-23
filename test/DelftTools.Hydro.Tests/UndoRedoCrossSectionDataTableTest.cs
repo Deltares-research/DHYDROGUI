@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Tests
 
             using (var undoManager = new UndoRedoManager(def))
             {
-                def.YZDataTable.AddCrossSectionYZRow(5, 5, 5);
+                def.YZDataTable.AddCrossSectionYZRow(5, 5);
 
                 Assert.AreEqual(1, undoManager.UndoStack.Count(), "#undo");
                 Assert.AreEqual(1, def.YZDataTable.Rows.Count, "#rows");
@@ -30,7 +30,6 @@ namespace DelftTools.Hydro.Tests
                 undoManager.Redo();
 
                 Assert.AreEqual(1, def.YZDataTable.Rows.Count, "#rows after redo");
-                Assert.AreEqual(5, def.YZDataTable[0].DeltaZStorage, "value");
             }
         }
 
@@ -38,8 +37,8 @@ namespace DelftTools.Hydro.Tests
         public void RemoveRowYZ()
         {
             var def = new CrossSectionDefinitionYZ();
-            def.YZDataTable.AddCrossSectionYZRow(5, 5, 5);
-            def.YZDataTable.AddCrossSectionYZRow(6, 5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(6, 5);
 
             using (var undoManager = new UndoRedoManager(def))
             {
@@ -56,7 +55,6 @@ namespace DelftTools.Hydro.Tests
                 undoManager.Redo();
 
                 Assert.AreEqual(1, def.YZDataTable.Rows.Count, "#rows after redo");
-                Assert.AreEqual(5, def.YZDataTable[0].DeltaZStorage, "value");
             }
         }
 
@@ -64,8 +62,8 @@ namespace DelftTools.Hydro.Tests
         public void ModifyRowYZ()
         {
             var def = new CrossSectionDefinitionYZ();
-            def.YZDataTable.AddCrossSectionYZRow(5, 5, 5);
-            def.YZDataTable.AddCrossSectionYZRow(8, 5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(8, 5);
 
             using (var undoManager = new UndoRedoManager(def))
             {
@@ -91,8 +89,8 @@ namespace DelftTools.Hydro.Tests
         public void MultipleModifyRowYZ()
         {
             var def = new CrossSectionDefinitionYZ();
-            def.YZDataTable.AddCrossSectionYZRow(5, 5, 5);
-            def.YZDataTable.AddCrossSectionYZRow(8, 5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(8, 5);
 
             using (var undoManager = new UndoRedoManager(def))
             {
@@ -124,8 +122,8 @@ namespace DelftTools.Hydro.Tests
         public void CancelModifyRowYZ()
         {
             var def = new CrossSectionDefinitionYZ();
-            def.YZDataTable.AddCrossSectionYZRow(5, 5, 5);
-            def.YZDataTable.AddCrossSectionYZRow(8, 5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(5, 5);
+            def.YZDataTable.AddCrossSectionYZRow(8, 5);
 
             using (var undoManager = new UndoRedoManager(def))
             {

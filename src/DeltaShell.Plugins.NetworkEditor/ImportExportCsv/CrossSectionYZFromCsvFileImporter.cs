@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
             yzDataTable.Clear();
             foreach (var c in ((CrossSectionYZCsvData)crossSectionCsvData).YzCoordinates)
             {
-                yzDataTable.AddCrossSectionYZRow(c.YValue, c.ZValue, !double.IsNaN(c.Storage) ? c.Storage : 0);
+                yzDataTable.AddCrossSectionYZRow(c.YValue, c.ZValue);
             }
         }
     }

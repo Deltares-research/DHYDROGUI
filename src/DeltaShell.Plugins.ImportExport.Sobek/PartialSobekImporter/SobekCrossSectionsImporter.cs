@@ -524,7 +524,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             foreach (var coordinate in sobekCrossSectionDefinition.YZ)
             {
-                newYZDataTable.AddCrossSectionYZRow(coordinate.X, coordinate.Y, 0);
+                newYZDataTable.AddCrossSectionYZRow(coordinate.X, coordinate.Y);
             }
 
             newYZDataTable.EndLoadData();
