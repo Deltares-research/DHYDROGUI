@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -23,8 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Creates a new instance of the <see cref="BoundaryDescriptionViewModel"/>.
         /// </summary>
         /// <param name="observedBoundary">The observed boundary.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="observedBoundary"/> is <c>null</c>.
+        /// <param name="dataComponentFactory">
+        /// The <see cref="IViewDataComponentFactory"/> used to construct the data components.
+        /// </param>
+        /// <param name="announceDataComponentChanged">
+        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
+        /// </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any of the parameters is <c>null</c>.
         /// </exception>
         public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary, 
                                             IViewDataComponentFactory dataComponentFactory,
