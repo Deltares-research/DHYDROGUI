@@ -1,5 +1,4 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// The <see cref="ForcingViewType"/> corresponding with the provided
         /// <paramref name="dataComponent"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
         ForcingViewType GetForcingType(IBoundaryConditionDataComponent dataComponent);
@@ -35,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// The <see cref="SpatialDefinitionViewType"/> corresponding with the provided
         /// <paramref name="dataComponent"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
         SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent);
