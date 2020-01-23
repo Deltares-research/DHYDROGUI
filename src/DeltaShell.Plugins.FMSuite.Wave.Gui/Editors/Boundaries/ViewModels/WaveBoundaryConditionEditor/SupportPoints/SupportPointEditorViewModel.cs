@@ -216,9 +216,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private ObservableCollection<SupportPointViewModel> GetSortedViewModels()
         {
-            IOrderedEnumerable<SupportPoint> sortedSupportPoints = 
-                waveBoundary.GeometricDefinition.SupportPoints
-                                                                                      .OrderBy(sp => sp.Distance);
+            IOrderedEnumerable<SupportPoint> sortedSupportPoints =
+                waveBoundary.GeometricDefinition.SupportPoints.OrderBy(sp => sp.Distance);
             IEnumerable<SupportPointViewModel> sortedViewModels = sortedSupportPoints
                 .Select(sp => new SupportPointViewModel(sp));
 
@@ -306,7 +305,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private bool IsEndPoint(double distance)
         {
-            return Math.Abs(distance) < 1E-15 || Math.Abs(distance - MaxDistance) < 1E-15;
+            const double tolerance = 1E-15;
+            return Math.Abs(distance) < tolerance || Math.Abs(distance - MaxDistance) < tolerance;
         }
 
         private bool DistanceExists(double distance)
@@ -316,7 +316,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
         {
-            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < 1E-15);
+            const double tolerance = 1E-15;
+            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < tolerance);
         }
 
         private void Subscribe()
