@@ -224,6 +224,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
        
         private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, IDelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
         {
+            // TODO: we should move the parsing of argument and function values outside of this function.
+            // Doing this by index limits the writing as you expect certain order when reading.
+            // Map it by the expected name of the quantity and the table name. 
+
             var argumentValues = parseArgumentValues(category.Table[0]);
             if (argumentValues == null)
             {
@@ -241,8 +245,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
             
             var function = ((IFunction)featureData.Data);
             function.Clear();
+            var orgSortValue = function.Arguments[0].IsAutoSorted;
+            function.Arguments[0].IsAutoSorted = false;
             function.Arguments[0].SetValues(argumentValues);
             function.SetValues(functionValues);
+            function.Arguments[0].IsAutoSorted = orgSortValue;
             function.Arguments[0].ExtrapolationType = ExtrapolationType.Linear;
             var periodic = category.ReadProperty<string>(BoundaryRegion.Periodic.Key, true);
             if (!string.IsNullOrEmpty(periodic) && periodic == "true")

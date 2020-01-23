@@ -77,7 +77,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
             return new List<IDelftBcQuantityData>()
             {
-                new DelftBcQuantityData(dischargeQuantity, dischargeUnit, dischargeData), new DelftBcQuantityData(levelQuantity, levelUnit, levelData) 
+                new DelftBcQuantityData(levelQuantity, levelUnit, levelData), new DelftBcQuantityData(dischargeQuantity, dischargeUnit, dischargeData) 
             };
         }
  
