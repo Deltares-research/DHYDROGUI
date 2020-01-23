@@ -68,7 +68,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get
             {
                 yield return typeof(HydroModel);
-                yield return typeof(WaterFlowFMModel);
             }
         }
 

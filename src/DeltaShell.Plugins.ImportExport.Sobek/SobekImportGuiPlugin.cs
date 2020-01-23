@@ -41,6 +41,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 GetViewName = (v, o) => v.Title
             };
+            yield return new ViewInfo<SobekModelToWaterFlowFMImporter, ImportSobekWaterFlowFMWizardDialog>
+            {
+                GetViewName = (v, o) => v.Title
+            };
             yield return new ViewInfo<SobekNetworkImporter, ImportPartialSobekWizardDialog>
                 {
                     GetViewName = (v, o) => v.Title

@@ -1,43 +1,74 @@
-﻿using DelftTools.Shell.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     //GuiImportHandler treats ITargetItemFileImporter and IFileImporter differently. We need both
-    public class SobekModelToWaterFlowFMImporter : SobekModelToIntegratedModelImporter, IFileImporter
+    public class SobekModelToWaterFlowFMImporter : IPartialSobekImporter, IFileImporter
     {
+
+        private string pathSobek;
+        protected object targetItem;
+        protected bool targetItemHasBeenSet;
+        private IPartialSobekImporter importer;
+
         public virtual string Name
         {
-            get { return "SOBEK Model (Import into Existing Model)"; }
+            get { return "Sobek 2 Model (into FM model)"; }
         }
-        public string Description { get { return Name; } }
+
+        public SobekModelToWaterFlowFMImporter()
+        {
+            targetItemHasBeenSet = false;
+        }
+
+        public string TargetDataDirectory { get; set; }
+
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public virtual bool CanImportOnRootLevel
+        public virtual object ImportItem(string path, object target = null)
         {
-            get { return false; }
+            // Configure the TargetObject of the IPartialSobekImporter part of the importer
+            var targetObjectInternal = target ?? TargetObject;
+
+            if (ShouldCancel)
+            {
+                return null;
+            }
+
+            // Import by using the import logic of the IPartialSobekImporter part of the importer
+            importer.TargetObject = targetObjectInternal;
+            Import();
+
+            if (ShouldCancel)
+            {
+                return null;
+            }
+
+            var fmModel = targetObjectInternal as WaterFlowFMModel;
+            targetItem = null;
+            targetItemHasBeenSet = false;
+            return fmModel;
         }
 
-        public bool OpenViewAfterImport { get { return false; } }
-
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-    }
-    public class SobekModelToWaterFlowFmImporterToImporterToWaterFlowFmImporterOnRootImporter : SobekModelToWaterFlowFMImporter
-    {
-        public override string Name
+        public IEnumerable<Type> SupportedItemTypes
         {
-            get { return "SOBEK 2 Model to FM"; }
-        }
-        
-        public override bool CanImportOnRootLevel
-        {
-            get { return true; }
+            get { yield return typeof(WaterFlowFMModel); }
         }
 
-        public override object TargetItem
+        public string FileFilter
+        {
+            get { return "All supported files|network.tp;deftop.1|Sobek 2.1* network files|network.tp|SobekRE network files|deftop.1"; }
+        }
+
+        public virtual object TargetItem
         {
             get
             {
@@ -50,5 +81,76 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
+        public string PathSobek
+        {
+            get { return pathSobek; }
+            set
+            {
+                pathSobek = value;
+                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, TargetItem);
+            }
+        }
+
+        public string DisplayName
+        {
+            get { return "Sobek 2 importer for FM"; }
+        }
+
+        public object TargetObject
+        {
+            get { return TargetItem; }
+            set { TargetItem = value; }
+        }
+
+        public IPartialSobekImporter PartialSobekImporter
+        {
+            get { return importer; }
+            set { }
+        }
+
+        public void Import()
+        {
+            if (importer != null)
+            {
+                importer.Import();
+            }
+        }
+
+        public bool IsActive { get; set; }
+
+        public bool IsVisible { get; set; }
+
+        public bool ShouldCancel { get; set; }
+
+        public Action<IPartialSobekImporter> AfterImport { get; set; }
+
+        public Action<IPartialSobekImporter> BeforeImport { get; set; }
+
+        public string Category
+        {
+            get { return "1D / 2D"; }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return "Sobek 2 importer for FM";
+            } 
+        }
+
+        public Bitmap Image
+        {
+            get { return Properties.Resources.sobek; }
+        }
+
+        public virtual bool CanImportOnRootLevel
+        {
+            get { return false; }
+        }
+
+        public bool OpenViewAfterImport { get { return false; } }
+
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -22,6 +23,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         public SobekModelToIntegratedModelImporter()
         {
             targetItemHasBeenSet = false;
+        }
+
+        public string Name
+        {
+            get { return "Sobek 2 Model (into integrated model)"; }
         }
 
         public string TargetDataDirectory { get; set; }
@@ -71,7 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(WaterFlowFMModel); }
+            get { yield return typeof(HydroModel); }
         }
 
         public string FileFilter
@@ -83,12 +89,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get
             {
-                return targetItem ?? (targetItem = new HydroModel
-                    {
+                return targetItem ?? (targetItem = new HydroModel {
                         Activities =
                             {
-                                new RealTimeControlModel("Real-Time Control"),
-                                new WaterFlowFMModel("FlowFM")
+                                new WaterFlowFMModel("FlowFM"),
+                                new RainfallRunoffModel(){Name = "Rainfall Runoff Model"},
+                                new RealTimeControlModel("Real-Time Control")
                             }
                     });
             }

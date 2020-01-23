@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
@@ -52,7 +53,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        public object TargetObject { get; set; }
+        public object TargetObject
+        {
+            get => targetObject;
+            set
+            {
+                targetObject = value;
+                if (PartialSobekImporter != null && (targetObject == null || !targetObject.Equals(PartialSobekImporter.TargetObject)))
+                {
+                    PartialSobekImporter.TargetObject = targetObject;
+                }
+            }
+        }
 
         public IPartialSobekImporter PartialSobekImporter { get; set; }
 
@@ -126,6 +138,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         protected DeltaShell.Sobek.Readers.SobekType SobekType { get; set; }
 
         private IHydroNetwork hydroNetwork; // cache hydro network
+        private object targetObject;
 
         protected IHydroNetwork HydroNetwork
         {
@@ -226,6 +239,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (network != null)
                 {
                     return network;
+                }
+            }
+
+            if (TargetObject is WaterFlowFMModel)
+            {
+                var waterFlowFmModel = TargetObject as WaterFlowFMModel;
+                if (waterFlowFmModel != null)
+                {
+                    var network = waterFlowFmModel.Network;
+                    if (network != null)
+                    {
+                        return network;
+                    }
                 }
             }
 

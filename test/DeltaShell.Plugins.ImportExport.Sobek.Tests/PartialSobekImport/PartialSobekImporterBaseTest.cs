@@ -65,6 +65,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(1, activeSobekPartialImporter.PartialImportCount);
 
         }
+
+        [Test]
+        public void SetTargetSourceShouldBubbleDownTheChain()
+        {
+            var firstSobekPartialImporter = new PartialSobekImporterBaseTestClass();
+            var secondSobekPartialImporter = new PartialSobekImporterBaseTestClass { PartialSobekImporter = firstSobekPartialImporter };
+            var targetObject = "haha";
+
+            secondSobekPartialImporter.TargetObject = targetObject;
+
+            Assert.AreSame(targetObject, firstSobekPartialImporter.TargetObject);
+
+        }
     }
 
 

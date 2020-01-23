@@ -168,7 +168,6 @@
     <Compile Include="SobekLocationType.cs" />
     <Compile Include="SobekNetworkToNetworkImporter.cs" />
     <Compile Include="SobekHydroModelImporter.cs" />
-    <Compile Include="PartialSobekImporter\PartialSobekImporterBuilder.cs" />
     <Compile Include="PartialSobekImporter\SobekBoundaryConditionsImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekBranchesImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekComputationalGridImporter.cs" />
@@ -195,6 +194,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Wizard\ImportSobekHydroModelWizardDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizard\ImportSobekWaterFlowFMWizardDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Wizard\SelectSobekModelsWizardPage.cs">

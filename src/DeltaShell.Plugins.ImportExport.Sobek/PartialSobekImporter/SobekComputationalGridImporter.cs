@@ -95,7 +95,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             string gridPath = GetFilePath(SobekFileNames.SobekNetworkGridFileName);
             if (File.Exists(gridPath))
             {
-                IList<CalcGrid> calcGrids = new SobekGridPointsReader().Read(gridPath).ToList();
+                //channels.ContainsKey -> calculation points on pipes should not be imported
+                IList<CalcGrid> calcGrids = new SobekGridPointsReader().Read(gridPath).Where(cg => channels.ContainsKey(cg.BranchID)).ToList();
 
                 var locations = new List<NetworkLocation>();
 

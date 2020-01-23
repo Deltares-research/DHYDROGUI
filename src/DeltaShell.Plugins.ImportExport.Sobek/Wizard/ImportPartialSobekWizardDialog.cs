@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
     /// </summary>
     public class ImportPartialSobekWizardDialog: WizardDialog
     {
-        private SelectSobekPartsWizardPage selectHydroNetworkPartsWizardPage;
+        private SelectSobekPartsWizardPage selectImportPartsWizardPage;
         private SelectFileWizardPage selectFileWizardPage;
         private IPartialSobekImporter importer;
 
@@ -43,10 +43,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             string selectText = "Select SOBEK case or network file";
 
             selectFileWizardPage = new SobekModelSelectFileWizardPage();
-            selectHydroNetworkPartsWizardPage = new SelectSobekPartsWizardPage();
+            selectImportPartsWizardPage = new SelectSobekPartsWizardPage();
 
             AddPage(selectFileWizardPage, selectText, "");
-            AddPage(selectHydroNetworkPartsWizardPage, "Select SOBEK model parts to import", "Use the checkboxes to select");
+            AddPage(selectImportPartsWizardPage, "Select SOBEK model parts to import", "Use the checkboxes to select");
 
             if (importer is IFileImporter)
             {
@@ -63,9 +63,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             if (page == selectFileWizardPage)
             {
                 importer.PathSobek = selectFileWizardPage.FileName;
-                selectHydroNetworkPartsWizardPage.PartialSobekImporter = importer;
+                selectImportPartsWizardPage.PartialSobekImporter = importer;
+                base.OnPageCompleted(page);
             }
-            base.OnPageCompleted(page);
         }
     }
 }

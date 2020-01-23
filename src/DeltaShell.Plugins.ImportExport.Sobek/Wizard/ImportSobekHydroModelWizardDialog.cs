@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
         public ImportSobekHydroModelWizardDialog()
         {
-            Title = "SOBEK hydro model importer";
+            Title = "SOBEK Hydro model importer";
         }
 
         public override object Data
