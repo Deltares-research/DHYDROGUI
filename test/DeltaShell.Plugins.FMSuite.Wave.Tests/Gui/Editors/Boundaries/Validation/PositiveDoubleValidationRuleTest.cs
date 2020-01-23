@@ -48,6 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Validatio
         }
 
         [TestCase("NaN")]
+        [TestCase("∞")]
+        [TestCase("-∞")]
         [TestCase("One")]
         [TestCase("string")]
         [TestCase("null")]

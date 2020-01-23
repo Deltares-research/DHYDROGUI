@@ -294,6 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
             else
             {
+                // The view model needs to be replaced to trigger the refreshing of the map.
                 ReplaceViewModel(supportPointViewModel);
             }
         }
