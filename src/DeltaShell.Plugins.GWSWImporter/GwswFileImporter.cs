@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
@@ -17,7 +9,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -25,12 +16,18 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -399,14 +396,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
                 boundaryCondition.Data[fmModel.StartTime] = -1000.0;
                 boundaryCondition.Data[fmModel.StopTime] = -1000.0;
-
-                /*
-                fmModel.ModelDefinition.Boundaries.Add(outletCompartment.OutletCompartmentBoundaryFeature);
-
-                var boundaryConditionSet = fmModel.BoundaryConditionSets.FirstOrDefault(bcs => bcs.NodeOrBranchId.StartsWith(outletCompartment.NodeOrBranchId));
-                var boundaryCondition = CreateOutletCompartmentBoundaryCondition(fmModel, outletCompartment);
-                boundaryConditionSet?.BoundaryConditions.Add(boundaryCondition);*/
-                //fmModel
             }
         }
 

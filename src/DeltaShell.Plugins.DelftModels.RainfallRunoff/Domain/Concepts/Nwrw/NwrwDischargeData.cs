@@ -2,6 +2,7 @@
 using GeoAPI.Geometries;
 using log4net;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
@@ -69,33 +70,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             // Only two dry weather flow ids per catchment are supported.
             // See issue FM1D2D-535.
-            if (nwrwData.DryWeatherFlows.Count >= 2)
+            IList<DryWeatherFlow> nwrwDataDryWeatherFlows = nwrwData.DryWeatherFlows;
+            if (nwrwDataDryWeatherFlows.Count >= 2)
             {
                 Log.Warn($"Could not add {DryWeatherFlowId} to {Name}. A maximum of two dry weather flow ids per catchment are currently supported.");
                 return;
             }
 
-            var dryweatherFlow = new DryWeatherFlow()
+            var dryweatherFlow = new DryWeatherFlow(DryWeatherFlowId)
             {
-                DryWeatherFlowId = DryWeatherFlowId,
                 NumberOfUnits = NumberOfPeople
             };
 
-            if (nwrwData.DryWeatherFlows.Count == 1)
+            if (nwrwDataDryWeatherFlows.Count == 1 
+                && nwrwDataDryWeatherFlows[0].DryWeatherFlowId == NwrwData.DEFAULT_DWA_ID)
             {
-                if (nwrwData.DryWeatherFlows[0].DryWeatherFlowId == NwrwData.DEFAULT_DWA_ID)
-                {
-                    nwrwData.DryWeatherFlows[0] = dryweatherFlow;
-                }
-                else
-                {
-                    nwrwData.DryWeatherFlows.Add(dryweatherFlow);
-                }
-                
+                nwrwDataDryWeatherFlows[0] = dryweatherFlow;
             }
-            else if (nwrwData.DryWeatherFlows.Count == 0)
+            else 
             {
-                nwrwData.DryWeatherFlows.Add(dryweatherFlow);
+                nwrwDataDryWeatherFlows.Add(dryweatherFlow);
             }
             
         }

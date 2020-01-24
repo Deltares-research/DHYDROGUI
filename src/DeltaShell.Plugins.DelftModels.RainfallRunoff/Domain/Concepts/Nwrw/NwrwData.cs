@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public NwrwData(Catchment catchment) : base(catchment)
         {
             NodeOrBranchId = Name;
-            DryWeatherFlows.Add(new DryWeatherFlow{DryWeatherFlowId = DEFAULT_DWA_ID });
+            DryWeatherFlows.Add(new DryWeatherFlow(DEFAULT_DWA_ID));
         }
 
 
