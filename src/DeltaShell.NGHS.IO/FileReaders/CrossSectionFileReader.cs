@@ -146,14 +146,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     {
                         network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
                     }
-
-                    pipe.LevelSource = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
                 }
                 else
                 {
                     pipe.CrossSectionDefinition = crossSectionDefinition;
-                    pipe.LevelTarget = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
                 }
+                if (Math.Abs(chainage) < 0.001) // chainage = 0, so set source
+                    pipe.LevelSource = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+                else
+                    pipe.LevelTarget = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
                 
                 return null;
             }
