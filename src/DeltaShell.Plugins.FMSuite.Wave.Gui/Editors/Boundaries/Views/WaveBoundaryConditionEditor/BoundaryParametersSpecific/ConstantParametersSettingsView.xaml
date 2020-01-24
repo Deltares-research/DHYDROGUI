@@ -11,7 +11,7 @@
         <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter" />
     </UserControl.Resources>
 
-    <GroupBox Header="Uniform Constant Parameters"
+    <GroupBox Header="{Binding Path=GroupBoxTitle}"
               IsEnabled="{Binding Path=ActiveParametersViewModel, 
                                   Converter={StaticResource NotNullToBooleanConverter}}">
         <local:ConstantParametersView Margin="10" 
