@@ -27,5 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Get the currently displayed <see cref="ConstantParametersViewModel"/>.
         /// </summary>
         public override ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
+
+        public override string GroupBoxTitle { get; protected set; } = "Uniform Constant Parameters";
     }
 }

@@ -27,6 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel, Is.InstanceOf<ConstantParametersSettingsViewModel>());
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, 
                         "Expected ActiveParametersViewModel to be null upon construction.");
+            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Spatially Varying Constant Parameters"),
+                        "Expected a different GroupBoxTitle:");
         }
 
         [Test]

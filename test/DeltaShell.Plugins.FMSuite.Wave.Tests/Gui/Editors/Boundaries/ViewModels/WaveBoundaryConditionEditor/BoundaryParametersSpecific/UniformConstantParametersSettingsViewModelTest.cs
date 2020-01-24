@@ -19,7 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel, Is.InstanceOf<ConstantParametersSettingsViewModel>());
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, 
+                        "Expected the ActiveParametersViewModel to not be null:");
+            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Constant Parameters"), 
+                        "Expected the GroupBoxTitle to be different:");
         }
 
         [Test]

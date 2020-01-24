@@ -30,6 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
             this.supportPointToParametersMapping = supportPointToParametersMapping;
+
+            GroupBoxTitle = "Spatially Varying Constant Parameters";
         }
 
         public override ConstantParametersViewModel ActiveParametersViewModel
@@ -48,6 +50,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         private ConstantParametersViewModel activeParametersViewModel;
+
+        public override string GroupBoxTitle
+        {
+            get => groupBoxTitle;
+            protected set
+            {
+                if (value == GroupBoxTitle)
+                {
+                    return;
+                }
+
+                groupBoxTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string groupBoxTitle;
+
 
         /// <summary>
         /// Updates the currently selected <see cref="ConstantParameters"/>

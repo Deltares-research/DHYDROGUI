@@ -11,5 +11,10 @@
         /// Get the currently displayed <see cref="ConstantParametersViewModel"/>.
         /// </summary>
         public abstract ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the group box title.
+        /// </summary>
+        public abstract string GroupBoxTitle { get; protected set; }
     }
 }
