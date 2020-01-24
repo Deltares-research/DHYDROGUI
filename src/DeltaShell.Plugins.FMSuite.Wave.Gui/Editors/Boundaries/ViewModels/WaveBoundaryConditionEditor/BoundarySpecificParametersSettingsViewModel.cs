@@ -1,0 +1,78 @@
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
+{
+    /// <summary>
+    /// <see cref="BoundarySpecificParametersSettingsViewModel" /> defines the
+    /// view model for the boundary-specific parameters settings view.
+    /// </summary>
+    public sealed class BoundarySpecificParametersSettingsViewModel
+    {
+        private readonly IWaveBoundaryConditionDefinition conditionDefinition;
+        private readonly IViewDataComponentFactory dataComponentFactory;
+
+        /// <summary>
+        /// Creates a new <see cref="BoundarySpecificParametersSettingsViewModel"/>.
+        /// </summary>
+        /// <param name="conditionDefinition">The condition definition.</param>
+        /// <param name="dataComponentFactory">The data component factory.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        public BoundarySpecificParametersSettingsViewModel(IWaveBoundaryConditionDefinition conditionDefinition,
+                                                           IViewDataComponentFactory dataComponentFactory)
+        {
+            Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
+            Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+
+            this.conditionDefinition = conditionDefinition;
+            this.dataComponentFactory = dataComponentFactory;
+
+            RefreshDataComponentViewModel();
+        }
+
+        /// <summary>
+        /// Gets or sets the parameters settings view model.
+        /// </summary>
+        public IParametersSettingsViewModel ParametersSettingsViewModel
+        {
+            get => parametersSettingsViewModel;
+            set
+            {
+                if (ParametersSettingsViewModel == value)
+                {
+                    return;
+                }
+
+                parametersSettingsViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private IParametersSettingsViewModel parametersSettingsViewModel;
+
+        /// <summary>
+        /// Refreshes the data component view model.
+        /// </summary>
+        public void RefreshDataComponentViewModel()
+        {
+            ParametersSettingsViewModel =
+                dataComponentFactory.ConstructParametersSettingsViewModel(conditionDefinition.DataComponent);
+        }
+
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}
