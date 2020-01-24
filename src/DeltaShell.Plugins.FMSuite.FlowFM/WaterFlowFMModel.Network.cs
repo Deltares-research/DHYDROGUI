@@ -527,7 +527,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void AddRoughnessSections(CrossSectionSectionType crossSectionSectionType)
         {
-            var roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
+            var roughnessSection = RoughnessSections.FirstOrDefault(rs => string.Equals(rs.CrossSectionSectionType.Name, crossSectionSectionType?.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (roughnessSection != null) return;
+            roughnessSection = new RoughnessSection(crossSectionSectionType, Network);
             AddRoughnessSection(roughnessSection);
 
             if (UseReverseRoughness)

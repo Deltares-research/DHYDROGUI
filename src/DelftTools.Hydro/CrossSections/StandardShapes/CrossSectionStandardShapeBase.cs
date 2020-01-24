@@ -40,6 +40,12 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            if (sewerSectionType == null)
+            {
+                //sight.... this should be done somewhere on a higher level (where roughness sections can be synchronized with cross section sections)... but i am too tired to do this correctly because GWSW importer is a mess.
+                sewerSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.SewerSectionTypeName };
+                network.CrossSectionSectionTypes.Add(sewerSectionType);
+            }
             var crossSectionDefinitionToAdd = new CrossSectionDefinitionStandard(this)
             {
                 Name = Name,
