@@ -13,6 +13,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         private const string NWRW3BFILENAME = "pluvius.3b";
         private const string NWRWALGFILENAME = "pluvius.alg";
 
+        private const string DFEAULT_GENERAL_ID = "-1";
+        private const string DEFAULT_INFILTRATION_FROM_DEPRESSIONS = "1";
+        private const string DEFAULT_INFILTRATION_FROM_RUNOFF = "0";
+        private NwrwSurfaceType[] SurfaceTypesInCorrectOrder { get; } =
+        {
+            NwrwSurfaceType.ClosedPavedWithSlope,   // a1
+            NwrwSurfaceType.ClosedPavedFlat,        // a2
+            NwrwSurfaceType.ClosedPavedFlatStretch, // a3
+            NwrwSurfaceType.OpenPavedWithSlope,     // a4
+            NwrwSurfaceType.OpenPavedFlat,          // a5
+            NwrwSurfaceType.OpenPavedFlatStretched, // a6
+            NwrwSurfaceType.RoofWithSlope,          // a7
+            NwrwSurfaceType.RoofFlat,               // a8
+            NwrwSurfaceType.RoofFlatStretched,      // a9
+            NwrwSurfaceType.UnpavedWithSlope,       // a10
+            NwrwSurfaceType.UnpavedFlat,            // a11
+            NwrwSurfaceType.UnpavedFlatStretched    // a12
+        };
+
         public void WriteNwrwFiles(IHydroModel model, string path)
         {
             var rrModel = model as RainfallRunoffModel;
@@ -23,22 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             //WriteNwrwDwaFile();
             //WriteNwrwTableFile();
         }
-
-        private void WriteNwrwAlgFile(RainfallRunoffModel rrModel, string path)
-        {
-            if (rrModel == null || path == null) return;
-            var filePath = Path.Combine(Path.GetFullPath(path), NWRWALGFILENAME);
-            OpenOutputFile(filePath);
-            try
-            {
-                
-            }
-            finally
-            {
-                CloseOutputFile();
-            }
-        }
-
         private void WriteNwrw3bFile(RainfallRunoffModel rrModel, string path)
         {
             if (rrModel == null || path == null) return;
@@ -50,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             {
                 foreach (NwrwData nwrwData in rrModel.GetAllModelData().OfType<NwrwData>())
                 {
-                    StringBuilder line = CreateNwrwPropertiesLine(nwrwData);
+                    StringBuilder line = CreateNwrw3bLine(nwrwData);
                     WriteLine(line.ToString());
                 }
             }
@@ -60,32 +63,209 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private StringBuilder CreateNwrwPropertiesLine(NwrwData nwrwData)
+        private void WriteNwrwAlgFile(RainfallRunoffModel rrModel, string path)
+        {
+            if (rrModel == null || path == null) return;
+            var filePath = Path.Combine(Path.GetFullPath(path), NWRWALGFILENAME);
+            OpenOutputFile(filePath);
+            try
+            {
+                StringBuilder line = CreateNwrwAlgLine(rrModel.NwrwDefinitions);
+                WriteLine(line.ToString());
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+        
+
+        #region .alg
+        private StringBuilder CreateNwrwAlgLine(IList<NwrwDefinition> nwrwDefinitions)
         {
             StringBuilder line = new StringBuilder();
 
-            AppendOpeningTagToPropertiesLine(line); // 'NWRW'
-            AppendIdToPropertiesLine(line, nwrwData.NodeOrBranchId); // 'id'
-            AppendSurfaceLevelToPropertiesLine(line, nwrwData.LateralSurface); // 'sl'
-            AppendAreaToPropertiesLine(line, nwrwData.SurfaceLevelDict); // 'ar'
-            AppendDryWeatherFlowsToPropertiesLine(line, nwrwData.DryWeatherFlows); // 'np' 'dw' 'np2' 'dw2'
-            AppendMeteoStationIdToPropertiesLine(line, nwrwData.MeteoStationId); // 'ms'
-            AppendSpecialAreasToPropertiesLine(line, nwrwData.NumberOfSpecialAreas, nwrwData.SpecialAreas); // 'na'
-            AppendClosingTagToPropertiesLine(line); // 'nwrw'
+            AppendOpeningTagToAlgLine(line);
+            AppendIdToAlgLine(line);
+            AppendNameToAlgLine(line);
+            AppendRunoffDelayFactorToAlgLine(line, nwrwDefinitions);
+            AppendMaximumStorageToAlgLine(line, nwrwDefinitions);
+            AppendMaximumInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
+            AppendMinimumInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
+            AppendDecreaseInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
+            AppendIncreaseInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
+            AppendInfiltrationFromDepressionToAlgLine(line, nwrwDefinitions);
+            AppendInfiltrationFromRunoffToAlgLine(line, nwrwDefinitions);
+            AppendClosingTagToAlgLine(line);
 
             return line;
         }
 
-        
+        private void AppendOpeningTagToAlgLine(StringBuilder line)
+        {
+            // opening tag
+            line.Append("PLVG");
+            line.Append(" ");
+        }
 
-        private void AppendOpeningTagToPropertiesLine(StringBuilder line)
+        private void AppendIdToAlgLine(StringBuilder line)
+        {
+            // id
+            line.Append(NwrwKeywords.IdKey);
+            line.Append(" ");
+            line.Append("'");
+            line.Append(DFEAULT_GENERAL_ID);
+            line.Append("'");
+            line.Append(" ");
+        }
+
+        private void AppendNameToAlgLine(StringBuilder line)
+        {
+            // name
+            line.Append(NwrwKeywords.NameKey);
+            line.Append(" ");
+            line.Append("'");
+            line.Append(String.Empty); // empty
+            line.Append("'");
+            line.Append(" ");
+        }
+
+        private void AppendRunoffDelayFactorToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // runoff-delay factor for 3 types of slopes (with slope, flat, flat stretched)
+            line.Append(NwrwKeywords.RunoffDelayFactor);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.RunoffSlope);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedFlat))?.RunoffSlope);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedFlatStretch))?.RunoffSlope);
+            line.Append(" ");
+        }
+
+        private void AppendMaximumStorageToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // maximum storage for 12 types
+            line.Append(NwrwKeywords.MaximumStorage);
+            line.Append(" ");
+            foreach (NwrwSurfaceType nwrwSurfaceType in SurfaceTypesInCorrectOrder)
+            {
+                line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(nwrwSurfaceType))?.SurfaceStorage);
+                line.Append(" ");
+            }
+        }
+
+        private void AppendMaximumInfiltrationCapacityToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // maximum infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
+            line.Append(NwrwKeywords.MaximumInfiltrationCapacity);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityMax);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityMax);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityMax);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityMax);
+            line.Append(" ");
+        }
+
+        private void AppendMinimumInfiltrationCapacityToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // minimum infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
+            line.Append(NwrwKeywords.MinimumInfiltrationCapacity);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityMin);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityMin);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityMin);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityMin);
+            line.Append(" ");
+        }
+
+        private void AppendDecreaseInfiltrationCapacityToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // decrease in infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
+            line.Append(NwrwKeywords.DecreaseInInfiltrationCapacity);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityReduction);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityReduction);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityReduction);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityReduction);
+            line.Append(" ");
+        }
+
+        private void AppendIncreaseInfiltrationCapacityToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // increase in infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
+            line.Append(NwrwKeywords.IncreaseInInfiltrationCapacity);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityRecovery);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityRecovery);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityRecovery);
+            line.Append(" ");
+            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityRecovery);
+            line.Append(" ");
+        }
+
+        private void AppendInfiltrationFromDepressionToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // option for infiltration from depressions
+            line.Append(NwrwKeywords.InfiltrationFromDepressions);
+            line.Append(" ");
+            line.Append(DEFAULT_INFILTRATION_FROM_DEPRESSIONS);
+            line.Append(" ");
+        }
+
+        private void AppendInfiltrationFromRunoffToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        {
+            // option for infiltration from runoff
+            line.Append(NwrwKeywords.InfiltrationFromRunoff);
+            line.Append(" ");
+            line.Append(DEFAULT_INFILTRATION_FROM_RUNOFF);
+            line.Append(" ");
+        }
+
+        private void AppendClosingTagToAlgLine(StringBuilder line)
+        {
+            // closing tag
+            line.Append("plvg");
+        }
+
+        #endregion
+        
+        #region .3b
+        private StringBuilder CreateNwrw3bLine(NwrwData nwrwData)
+        {
+            StringBuilder line = new StringBuilder();
+
+            AppendOpeningTagTo3bLine(line); // 'NWRW'
+            AppendIdTo3bLine(line, nwrwData.NodeOrBranchId); // 'id'
+            AppendSurfaceLevelTo3bLine(line, nwrwData.LateralSurface); // 'sl'
+            AppendAreaTo3bLine(line, nwrwData.SurfaceLevelDict); // 'ar'
+            AppendDryWeatherFlowsTo3bLine(line, nwrwData.DryWeatherFlows); // 'np' 'dw' 'np2' 'dw2'
+            AppendMeteoStationIdTo3bLine(line, nwrwData.MeteoStationId); // 'ms'
+            AppendSpecialAreasTo3bLine(line, nwrwData.NumberOfSpecialAreas, nwrwData.SpecialAreas); // 'na'
+            AppendClosingTagTo3bLine(line); // 'nwrw'
+
+            return line;
+        }
+
+        private void AppendOpeningTagTo3bLine(StringBuilder line)
         {
             // 'NWRW' opening keyword
             line.Append(NwrwKeywords.NwrwOpeningKey);
             line.Append(" ");
         }
 
-        private void AppendIdToPropertiesLine(StringBuilder line, string id)
+        private void AppendIdTo3bLine(StringBuilder line, string id)
         {
             // 'id' + node identification
             line.Append(NwrwKeywords.IdKey);
@@ -96,7 +276,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             line.Append(" ");
         }
 
-        private void AppendSurfaceLevelToPropertiesLine(StringBuilder line, double surfaceLevel)
+        private void AppendSurfaceLevelTo3bLine(StringBuilder line, double surfaceLevel)
         {
             // 'sl' + surface level (in m) (optional input data)
             if (Math.Abs(surfaceLevel) > 0.001)
@@ -108,29 +288,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private void AppendAreaToPropertiesLine(StringBuilder line, IDictionary<NwrwSurfaceType, double> surfaceLevelDict)
+        private void AppendAreaTo3bLine(StringBuilder line, IDictionary<NwrwSurfaceType, double> surfaceLevelDict)
         {
             // 'ar' + area (12 types) as combination of 3 kind of slopes and 4 types of surfaces
             line.Append(NwrwKeywords.AreaKey);
             line.Append(" ");
 
-            NwrwSurfaceType[] surfaceTypesInCorrectOrder =
-            {
-                NwrwSurfaceType.ClosedPavedWithSlope,   // a1
-                NwrwSurfaceType.ClosedPavedFlat,        // a2
-                NwrwSurfaceType.ClosedPavedFlatStretch, // a3
-                NwrwSurfaceType.OpenPavedWithSlope,     // a4
-                NwrwSurfaceType.OpenPavedFlat,          // a5
-                NwrwSurfaceType.OpenPavedFlatStretched, // a6
-                NwrwSurfaceType.RoofWithSlope,          // a7
-                NwrwSurfaceType.RoofFlat,               // a8
-                NwrwSurfaceType.RoofFlatStretched,      // a9
-                NwrwSurfaceType.UnpavedWithSlope,       // a10
-                NwrwSurfaceType.UnpavedFlat,            // a11
-                NwrwSurfaceType.UnpavedFlatStretched    // a12
-            };
+            
 
-            foreach (NwrwSurfaceType surfaceType in surfaceTypesInCorrectOrder)
+            foreach (NwrwSurfaceType surfaceType in SurfaceTypesInCorrectOrder)
             {
                 if (surfaceLevelDict.ContainsKey(surfaceType))
                 {
@@ -145,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private void AppendDryWeatherFlowsToPropertiesLine(StringBuilder line,
+        private void AppendDryWeatherFlowsTo3bLine(StringBuilder line,
             IList<DryWeatherFlow> nwrwDataDryWeatherFlows)
         {
             var numberOfDryWeatherFlows = nwrwDataDryWeatherFlows.Count;
@@ -178,7 +344,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private void AppendMeteoStationIdToPropertiesLine(StringBuilder line, string meteostationId)
+        private void AppendMeteoStationIdTo3bLine(StringBuilder line, string meteostationId)
         {
             // 'ms' + identification of the meteostation
             line.Append(NwrwKeywords.MeteostationIdKey);
@@ -189,16 +355,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             line.Append(" ");
         }
 
-        private void AppendSpecialAreasToPropertiesLine(StringBuilder line, int numberOfSpecialAreas, IList<NwrwSpecialArea> specialAreas)
+        private void AppendSpecialAreasTo3bLine(StringBuilder line, int numberOfSpecialAreas, IList<NwrwSpecialArea> specialAreas)
         {
             if (numberOfSpecialAreas > 0)
             {
-                AppendNumberOfSpecialAreasToPropertiesLine(line, numberOfSpecialAreas);
-                AppendAllSpecialAreasToPropertiesLine(line, specialAreas);
+                AppendNumberOfSpecialAreasTo3bLine(line, numberOfSpecialAreas);
+                AppendAllSpecialAreasTo3bLine(line, specialAreas);
             }
         }
 
-        private void AppendNumberOfSpecialAreasToPropertiesLine(StringBuilder line, int numberOfSpecialAreas)
+        private void AppendNumberOfSpecialAreasTo3bLine(StringBuilder line, int numberOfSpecialAreas)
         {
             // 'na' + number of special areas with special inflow characteristics
             line.Append(NwrwKeywords.NumberOfSpecialAreasKey);
@@ -207,7 +373,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             line.Append(" ");
         }
 
-        private void AppendAllSpecialAreasToPropertiesLine(StringBuilder line, IList<NwrwSpecialArea> specialAreas)
+        private void AppendAllSpecialAreasTo3bLine(StringBuilder line, IList<NwrwSpecialArea> specialAreas)
         {
             // 'aa' + special area in m2 (for number of areas as specified after the 'na' keyword
             line.Append(NwrwKeywords.SpecialAreaKey);
@@ -219,9 +385,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private void AppendClosingTagToPropertiesLine(StringBuilder line)
+        private void AppendClosingTagTo3bLine(StringBuilder line)
         {
             line.Append("nwrw");
         }
+        #endregion
     }
 }

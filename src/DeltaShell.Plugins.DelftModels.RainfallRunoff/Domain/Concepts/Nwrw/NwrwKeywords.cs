@@ -16,5 +16,14 @@
         public const string SpecialAreaKey = "aa";
         public const string SpecialInflowReferenceKey = "nw";
         public const string AreaAdjustmentFactorKey = "aaf";
+        public const string RunoffDelayFactor = "ru";
+        public const string MaximumStorage = "ms";
+        public const string NameKey = "nm";
+        public const string MaximumInfiltrationCapacity = "ix";
+        public const string MinimumInfiltrationCapacity = "im";
+        public const string DecreaseInInfiltrationCapacity = "ic";
+        public const string IncreaseInInfiltrationCapacity = "dc";
+        public const string InfiltrationFromDepressions = "od";
+        public const string InfiltrationFromRunoff = "or";
     }
 }
