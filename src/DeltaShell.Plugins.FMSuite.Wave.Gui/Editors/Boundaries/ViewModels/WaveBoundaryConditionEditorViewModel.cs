@@ -33,8 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var modelDataComponentFactory =
                 new BoundaryConditionDataComponentFactory(new BoundaryParametersFactory());
-
             var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            BoundarySpecificParametersSettingsViewModel =
+                new BoundarySpecificParametersSettingsViewModel(observedBoundary.ConditionDefinition,
+                                                                dataComponentFactory);
 
             GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
                                                               geometryFactory);
@@ -66,8 +69,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
         public BoundaryWideParametersViewModel BoundaryWideParametersViewModel { get; }
 
         /// <summary>
-        /// Gets the <see cref="GeometryViewModel"/>
+        /// Gets the <see cref="BoundaryGeometryViewModel"/>
         /// </summary>
         public BoundaryGeometryViewModel GeometryViewModel { get; }
+
+        /// <summary>
+        /// Gets the boundary specific parameter settings view model.
+        /// </summary>
+        public BoundarySpecificParametersSettingsViewModel BoundarySpecificParametersSettingsViewModel { get; }
     }
 }

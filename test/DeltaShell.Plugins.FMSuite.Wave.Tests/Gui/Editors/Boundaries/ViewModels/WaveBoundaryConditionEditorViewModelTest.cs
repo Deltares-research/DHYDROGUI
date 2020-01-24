@@ -48,6 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         "Expected BoundaryWideParametersViewModel to be set.");
             Assert.That(viewModel.GeometryViewModel, Is.Not.Null,
                         "Expected GeometryViewModel to be set.");
+            Assert.That(viewModel.BoundarySpecificParametersSettingsViewModel, Is.Not.Null,
+                        "Expected BoundarySpecificParameters");
         }
 
         [Test]
@@ -62,6 +64,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("observedBoundary"));
+        }
+
+        [Test]
+        public void Constructor_GeometryFactoryNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
+
+            // Call
+            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
         }
     }
 }
