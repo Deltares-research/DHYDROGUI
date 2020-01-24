@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
@@ -26,6 +27,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_SupportPointNull_ThrowsArgumentNullException()
         {
             // Call
+            void Call() => new SupportPointViewModel(null, random.NextBoolean());
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void Constructor_SupportPointNullAndDefaultIsEditable_ThrowsArgumentNullException()
+        {
+            // Call
             void Call() => new SupportPointViewModel(null);
 
             // Assert
@@ -34,10 +46,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void Constructor_SetsCorrectValue()
+        public void Constructor_DefaultIsEditable_SetsCorrectValues()
         {
             // Assert
             Assert.That(viewModel.SupportPoint, Is.SameAs(supportPoint));
+            Assert.That(viewModel.IsEditable, Is.True);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Constructor_SetsCorrectValues(bool isEditable)
+        {
+            // Call
+            viewModel = new SupportPointViewModel(supportPoint, isEditable);
+
+            // Assert
+            Assert.That(viewModel.SupportPoint, Is.SameAs(supportPoint));
+            Assert.That(viewModel.IsEditable, Is.EqualTo(isEditable));
         }
 
         [TestCase(false, false, 0)]

@@ -19,13 +19,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Initializes a new instance of the <see cref="SupportPointViewModel" /> class.
         /// </summary>
         /// <param name="supportPoint"> The support point. </param>
+        /// <param name="isEditable"> Whether the view model should be editable.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="supportPoint" /> is <c> null </c>.
         /// </exception>
-        public SupportPointViewModel(SupportPoint supportPoint)
+        public SupportPointViewModel(SupportPoint supportPoint, bool isEditable = true) 
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
             SupportPoint = supportPoint;
+            IsEditable = isEditable;
         }
 
         /// <summary>
@@ -56,6 +58,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is editable.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is editable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEditable { get; }
 
         /// <summary>
         /// Gets or sets the distance.

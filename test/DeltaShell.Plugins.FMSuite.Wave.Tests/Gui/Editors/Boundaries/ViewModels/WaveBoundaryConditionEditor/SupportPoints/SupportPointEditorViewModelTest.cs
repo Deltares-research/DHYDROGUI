@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -32,7 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             geometricDefinition.Length.Returns(maxDistance);
-            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>());
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(maxDistance, geometricDefinition),
+            });
 
             waveBoundary = Substitute.For<IWaveBoundary>();
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
@@ -62,8 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Assert
             Assert.That(SubViewModels, Is.Not.Null);
-            Assert.That(SubViewModels, Is.Empty);
-            Assert.That(viewModel.SelectedViewModel, Is.Null);
+            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
 
             Assert.That(viewModel.AddSupportPointCommand, Is.Not.Null);
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
@@ -73,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_WithGeometricDefinitionWithSupportPoints_SetsCorrectValues()
         {
             // Setup
-            double[] distances =
+            IList<double> distances = new List<double>()
             {
                 random.NextDouble(),
                 random.NextDouble(),
@@ -88,7 +93,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(SubViewModels, Is.Not.Null);
-            Assert.That(SubViewModels, Has.Count.EqualTo(5));
+            Assert.That(SubViewModels, Has.Count.EqualTo(7));
+
+            distances.Add(0);
+            distances.Add(maxDistance);
 
             double[] orderedDistances = distances.OrderBy(d => d).ToArray();
             orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d)));
@@ -137,12 +145,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(1));
-            Assert.That(SupportPoints, Has.Count.EqualTo(1));
-            SupportPointViewModel subViewModel = SubViewModels[0];
+            Assert.That(SubViewModels, Has.Count.EqualTo(3));
+            Assert.That(SupportPoints, Has.Count.EqualTo(3));
+            SupportPointViewModel subViewModel = SubViewModels[1];
             Assert.That(subViewModel.Distance, Is.EqualTo(value).Within(1E-15));
-            Assert.That(SupportPoints[0], Is.SameAs(subViewModel.SupportPoint));
-            Assert.That(viewModel.SelectedViewModel, Is.SameAs(subViewModel));
+            Assert.That(SupportPoints[2], Is.SameAs(subViewModel.SupportPoint));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
         }
 
         [TestCase("-1.0")]
@@ -156,9 +164,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(invalidValue);
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(0));
-            Assert.That(SupportPoints, Has.Count.EqualTo(0));
-            Assert.That(viewModel.SelectedViewModel, Is.Null);
+            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(SupportPoints, Has.Count.EqualTo(2));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
         }
 
         [Test]
@@ -171,9 +179,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(random.NextDouble().ToString(CultureInfo.CurrentCulture));
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(0));
-            Assert.That(SupportPoints, Has.Count.EqualTo(0));
-            Assert.That(viewModel.SelectedViewModel, Is.Null);
+            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(SupportPoints, Has.Count.EqualTo(2));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
         }
 
         [Test]
@@ -186,9 +194,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(random.NextDouble().ToString(CultureInfo.CurrentCulture));
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(0));
-            Assert.That(SupportPoints, Has.Count.EqualTo(0));
-            Assert.That(viewModel.SelectedViewModel, Is.Null);
+            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(SupportPoints, Has.Count.EqualTo(2));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
         }
 
         [Test]
@@ -204,31 +212,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(1));
-            Assert.That(SupportPoints, Has.Count.EqualTo(1));
+            Assert.That(SubViewModels, Has.Count.EqualTo(3));
+            Assert.That(SupportPoints, Has.Count.EqualTo(3));
 
-            SupportPointViewModel subViewModel = SubViewModels[0];
+            SupportPointViewModel subViewModel = SubViewModels[1];
             Assert.That(subViewModel.Distance, Is.EqualTo(value).Within(1E-15));
             Assert.That(subViewModel, Is.SameAs(existingSubViewModel));
-            Assert.That(SupportPoints[0], Is.SameAs(existingSubViewModel.SupportPoint));
+            Assert.That(SupportPoints[2], Is.SameAs(existingSubViewModel.SupportPoint));
         }
 
-        [TestCase(0, 1, 2)]
-        [TestCase(0, 2, 1)]
-        [TestCase(1, 0, 2)]
-        [TestCase(1, 2, 0)]
-        [TestCase(2, 0, 1)]
-        [TestCase(2, 1, 0)]
+        [TestCase(1, 2, 3)]
+        [TestCase(1, 3, 2)]
+        [TestCase(2, 1, 3)]
+        [TestCase(2, 3, 1)]
+        [TestCase(3, 1, 2)]
+        [TestCase(3, 2, 1)]
         public void ExecuteAddSupportPointCommand_NewViewModelIsInsertedAtCorrectIndexAndSelectionDoesNotChange(double existingDistanceA,
                                                                                                                 double existingDistanceB,
                                                                                                                 double newDistance)
         {
             // Setup
             double smallestDistance = Math.Min(existingDistanceA, existingDistanceB);
-            GetExistingSupportPointViewModel(smallestDistance);
+            GetExistingSupportPointViewModel(smallestDistance, 1);
 
             double largestDistance = Math.Max(existingDistanceA, existingDistanceB);
-            SupportPointViewModel selectedViewModel = GetExistingSupportPointViewModel(largestDistance);
+            SupportPointViewModel selectedViewModel = GetExistingSupportPointViewModel(largestDistance, 2);
 
             viewModel.SelectedViewModel = selectedViewModel;
             viewModel.NewDistance = newDistance;
@@ -237,10 +245,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(newDistance.ToString(CultureInfo.CurrentCulture));
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(3));
-            Assert.That(SupportPoints, Has.Count.EqualTo(3));
+            Assert.That(SubViewModels, Has.Count.EqualTo(5));
+            Assert.That(SupportPoints, Has.Count.EqualTo(5));
 
-            double[] orderedDistances = {0, 1, 2};
+            double[] orderedDistances = {0, 1, 2, 3, maxDistance};
 
             SubViewModels.ForEach((vm, i) =>
             {
@@ -256,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void ExecuteAddSupportPointCommand_MultipleTimes_AllViewModelsAreSortedOnDistance()
         {
             // Setup
-            double[] distances =
+            IList<double> distances = new List<double>()
             {
                 random.NextDouble(),
                 random.NextDouble(),
@@ -273,8 +281,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             });
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(5));
-            Assert.That(SupportPoints, Has.Count.EqualTo(5));
+            Assert.That(SubViewModels, Has.Count.EqualTo(7));
+            Assert.That(SupportPoints, Has.Count.EqualTo(7));
+
+            distances.Add(0);
+            distances.Add(maxDistance);
 
             double[] orderedDistances = distances.OrderBy(d => d).ToArray();
 
@@ -284,8 +295,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 Assert.That(SupportPoints, Contains.Item(vm.SupportPoint));
             });
         }
-
-        #region Remove command
 
         [Test]
         public void ExecuteRemoveSupportPointCommand_RemovesViewModel()
@@ -302,26 +311,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void ExecuteRemoveSupportPointCommand_OnOnlyViewModel_SelectedViewModelIsCorrect()
-        {
-            // Setup
-            SupportPointViewModel subViewModel = GetExistingSupportPointViewModel();
-
-            // Call
-            viewModel.RemoveSupportPointCommand.Execute(subViewModel);
-
-            // Assert
-            Assert.That(viewModel.SelectedViewModel, Is.Null);
-            Assert.That(SubViewModels, Has.Count.EqualTo(0));
-            Assert.That(SupportPoints, Has.Count.EqualTo(0));
-        }
-
-        [Test]
         public void ExecuteRemoveSupportPointCommand_OtherViewModelSelected_SelectedViewModelIsCorrect()
         {
             // Setup
-            SupportPointViewModel selectedSubViewModel = GetExistingSupportPointViewModel();
             SupportPointViewModel subViewModel = GetExistingSupportPointViewModel();
+            SupportPointViewModel selectedSubViewModel = SubViewModels.Last();
 
             viewModel.SelectedViewModel = selectedSubViewModel;
 
@@ -330,17 +324,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.SelectedViewModel, Is.SameAs(selectedSubViewModel));
-            Assert.That(SubViewModels, Has.Count.EqualTo(1));
-            Assert.That(SupportPoints, Has.Count.EqualTo(1));
+            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(SupportPoints, Has.Count.EqualTo(2));
         }
 
         [Test]
         public void ExecuteRemoveSupportPointCommand_OnSelectedViewModel_FirstViewModelShouldBeSelected()
         {
             // Setup
-            SupportPointViewModel firstSubViewModel = GetExistingSupportPointViewModel();
-            GetExistingSupportPointViewModel();
-
             SupportPointViewModel subViewModel = GetExistingSupportPointViewModel();
             viewModel.SelectedViewModel = subViewModel;
 
@@ -348,29 +339,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.RemoveSupportPointCommand.Execute(subViewModel);
 
             // Assert
-            Assert.That(viewModel.SelectedViewModel, Is.SameAs(firstSubViewModel));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[0]));
             Assert.That(SubViewModels, Has.Count.EqualTo(2));
             Assert.That(SupportPoints, Has.Count.EqualTo(2));
         }
-
-        [TestCase(0)]
-        [TestCase(maxDistance)]
-        public void ExecuteRemoveSupportPointCommand_OnEndPointViewModel_ViewModelShouldNotBeDeleted(double distance)
-        {
-            // Setup
-            SupportPointViewModel subViewModel = GetExistingSupportPointViewModel(distance);
-
-            // Call
-            viewModel.RemoveSupportPointCommand.Execute(subViewModel);
-
-            // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(1));
-            Assert.That(SupportPoints, Has.Count.EqualTo(1));
-            Assert.That(SubViewModels[0], Is.SameAs(subViewModel));
-            Assert.That(SupportPoints[0], Is.SameAs(subViewModel.SupportPoint));
-        }
-
-        #endregion Remove command
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -388,9 +360,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             originalSubViewModel.Distance = nextValue;
 
             // Assert
-            Assert.That(SubViewModels.HasExactlyOneValue());
+            Assert.That(SubViewModels, Has.Count.EqualTo(3));
 
-            SupportPointViewModel subViewModel = SubViewModels[0];
+            SupportPointViewModel subViewModel = SubViewModels[1];
             Assert.That(subViewModel, Is.Not.SameAs(originalSubViewModel));
             Assert.That(subViewModel.Distance, Is.EqualTo(nextValue));
         }
@@ -401,24 +373,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             double existingDistance = random.NextDouble();
-            viewModel.NewDistance = existingDistance;
-            viewModel.AddSupportPointCommand.Execute(existingDistance.ToString(CultureInfo.CurrentCulture));
+            //viewModel.NewDistance = existingDistance;
+            //viewModel.AddSupportPointCommand.Execute(existingDistance.ToString(CultureInfo.CurrentCulture));
 
-            SupportPointViewModel existingSubViewModel = SubViewModels[0];
+            SupportPointViewModel existingSubViewModel = GetExistingSupportPointViewModel(existingDistance);
+
+            SupportPointViewModel[] existingSubViewModels = SubViewModels.ToArray();
 
             double originalValue = random.NextDouble();
             viewModel.NewDistance = originalValue;
             viewModel.AddSupportPointCommand.Execute(originalValue.ToString(CultureInfo.CurrentCulture));
 
-            SupportPointViewModel originalSubViewModel = SubViewModels.Single(m => m != existingSubViewModel);
+            SupportPointViewModel originalSubViewModel = SubViewModels.Single(m => !existingSubViewModels.Contains(m));
 
             // Call
             originalSubViewModel.Distance = existingDistance;
 
             // Assert
-            Assert.That(SubViewModels, Has.Count.EqualTo(2));
+            Assert.That(SubViewModels, Has.Count.EqualTo(4));
 
-            SupportPointViewModel subViewModel = SubViewModels.Single(m => m != existingSubViewModel);
+            SupportPointViewModel subViewModel = SubViewModels.Single(m => !existingSubViewModels.Contains(m));
             Assert.That(subViewModel, Is.SameAs(originalSubViewModel));
             Assert.That(subViewModel.Distance, Is.EqualTo(originalValue));
         }
@@ -428,12 +402,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             return GetExistingSupportPointViewModel(random.NextDouble());
         }
 
-        private SupportPointViewModel GetExistingSupportPointViewModel(double distance)
+        private SupportPointViewModel GetExistingSupportPointViewModel(double distance, int index = 1)
         {
             SupportPoint supportPoint = GetSupportPoint(distance);
             var subViewModel = new SupportPointViewModel(supportPoint);
 
-            viewModel.ViewModels.Add(subViewModel);
+            viewModel.ViewModels.Insert(index, subViewModel);
             geometricDefinition.SupportPoints.Add(supportPoint);
 
             return subViewModel;

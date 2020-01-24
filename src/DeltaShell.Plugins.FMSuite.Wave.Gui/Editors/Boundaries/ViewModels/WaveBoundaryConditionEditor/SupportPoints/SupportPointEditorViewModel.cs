@@ -22,12 +22,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="SupportPointEditorViewModel" /> defines the view model for the support point editor view.
     /// </summary>
+    /// <remarks>
+    /// The assumption is made that end points cannot
+    /// be edited or removed through the view
+    /// </remarks>
     public sealed class SupportPointEditorViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly IWaveBoundary waveBoundary;
-        private SupportPointViewModel selectedViewModel;
 
-        private double MaxDistance => waveBoundary.GeometricDefinition.Length;
+        private SupportPointViewModel selectedViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
@@ -36,6 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
+        /// <remarks>
+        /// The assumption is made that the specified <paramref name="waveBoundary"/>
+        /// contains at least two support points.
+        /// </remarks>
         public SupportPointEditorViewModel(IWaveBoundary waveBoundary)
         {
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
@@ -44,11 +51,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             RemoveSupportPointCommand = new RelayCommand(RemoveSupportPointAction);
             AddSupportPointCommand = new RelayCommand(AddSupportPointAction);
 
-            ViewModels = GetSortedViewModels();
+            ViewModels = new ObservableCollection<SupportPointViewModel>(GetSortedViewModels());
 
             Subscribe();
 
-            SelectedViewModel = ViewModels.FirstOrDefault();
+            SelectedViewModel = ViewModels.First();
 
             IsEnabled = ShouldBeEnabled();
         }
@@ -158,14 +165,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void AddViewModel(SupportPointViewModel viewModel)
         {
-            if (TryFindInsertIndex(viewModel.Distance, out int index))
-            {
-                ViewModels.Insert(index, viewModel);
-            }
-            else
-            {
-                ViewModels.Add(viewModel);
-            }
+            int insertIndex = FindInsertIndex(viewModel.Distance);
+            ViewModels.Insert(insertIndex, viewModel);
 
             waveBoundary.GeometricDefinition.SupportPoints.Add(viewModel.SupportPoint);
 
@@ -174,18 +175,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void RemoveSupportPointAction(object viewModel)
         {
-            var supportPointViewModel = (SupportPointViewModel)viewModel;
-
-            if (IsEndPoint(supportPointViewModel.Distance))
-            {
-                return;
-            }
+            var supportPointViewModel = (SupportPointViewModel) viewModel;
 
             RemoveViewModel(supportPointViewModel);
 
             if (SelectedViewModel == null || SelectedViewModel == supportPointViewModel)
             {
-                SelectedViewModel = ViewModels.FirstOrDefault();
+                SelectedViewModel = ViewModels[0];
             }
         }
 
@@ -214,14 +210,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private ObservableCollection<SupportPointViewModel> GetSortedViewModels()
+        private IEnumerable<SupportPointViewModel> GetSortedViewModels()
         {
-            IOrderedEnumerable<SupportPoint> sortedSupportPoints =
-                waveBoundary.GeometricDefinition.SupportPoints.OrderBy(sp => sp.Distance);
-            IEnumerable<SupportPointViewModel> sortedViewModels = sortedSupportPoints
-                .Select(sp => new SupportPointViewModel(sp));
+            SupportPoint[] sortedSupportPoints = waveBoundary.GeometricDefinition
+                                                             .SupportPoints
+                                                             .OrderBy(sp => sp.Distance)
+                                                             .ToArray();
 
-            return new ObservableCollection<SupportPointViewModel>(sortedViewModels);
+            int nSupportPoints = sortedSupportPoints.Length;
+            for (var i = 0; i < nSupportPoints; i++)
+            {
+                bool isFirstOrLast = i == 0 || i == nSupportPoints - 1;
+                yield return new SupportPointViewModel(sortedSupportPoints[i], !isFirstOrLast);
+            }
         }
 
         private SupportPointViewModel CreateSupportPointViewModel(double distance)
@@ -230,36 +231,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             return new SupportPointViewModel(newSupportPoint);
         }
 
-        private bool TryFindInsertIndex(double distance, out int index)
+        private int FindInsertIndex(double distance)
         {
-            index = -1;
-
-            if (!ViewModels.Any())
-            {
-                return false;
-            }
-
-            if (distance < ViewModels[0].Distance)
-            {
-                index = 0;
-                return true;
-            }
-
-            if (distance > ViewModels.Last().Distance)
-            {
-                return false;
-            }
-
             for (var i = 0; i + 1 < ViewModels.Count; i++)
             {
-                if (ViewModels[i].Distance < distance && distance < ViewModels[i + 1].Distance)
+                if (ViewModels[i].Distance < distance &&
+                    distance < ViewModels[i + 1].Distance)
                 {
-                    index = i + 1;
-                    return true;
+                    return i + 1;
                 }
             }
 
-            return false;
+            return -1;
         }
 
         private void OnSupportPointModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -281,8 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 supportPointViewModel
             });
 
-            if (IsEndPoint(originalDistance) ||
-                IsOutsideRange(newDistance) ||
+            if (IsOutsideRange(newDistance) ||
                 DistanceExists(viewModelsToCheck, newDistance))
             {
                 UnsubscribeViewModel(supportPointViewModel);
@@ -300,13 +282,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private bool IsOutsideRange(double distance)
         {
-            return distance < 0 || distance > MaxDistance;
-        }
-
-        private bool IsEndPoint(double distance)
-        {
-            const double tolerance = 1E-15;
-            return Math.Abs(distance) < tolerance || Math.Abs(distance - MaxDistance) < tolerance;
+            return distance < 0 ||
+                   distance > ViewModels.Last().Distance;
         }
 
         private bool DistanceExists(double distance)

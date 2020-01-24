@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
@@ -21,6 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var shape = new GaussShape();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(1, geometricDefinition)
+            });
+
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
                 new UniformDataComponent<ConstantParameters>(

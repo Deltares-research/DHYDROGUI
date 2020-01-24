@@ -1,5 +1,7 @@
 ﻿using System;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using NSubstitute;
@@ -14,7 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_SetsCorrectValues()
         {
             // Setup
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(1, geometricDefinition)
+            });
+
             var boundary = Substitute.For<IWaveBoundary>();
+            boundary.GeometricDefinition.Returns(geometricDefinition);
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
