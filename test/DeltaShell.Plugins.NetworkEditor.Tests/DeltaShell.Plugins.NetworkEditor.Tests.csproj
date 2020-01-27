@@ -262,6 +262,7 @@
     <Compile Include="Gui\Layers\Providers\GroupableFeaturesLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\LandBoundariesLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObservationCrossSectionsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObservationPointsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\PumpsLayerProviderTest.cs" />

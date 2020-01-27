@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
             yield return new ObservationCrossSectionsLayerProvider();
             yield return new PumpsLayerProvider();
             yield return new WeirsLayerProvider();
+            yield return new LandBoundariesLayerProvider();
         }
     }
 }
