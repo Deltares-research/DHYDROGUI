@@ -105,9 +105,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
             
             var catchmentsList = new List<Catchment>{catchment1};
-            var catchments = mocks.DynamicMock<IEventedList<Catchment>>();
+            var catchments = mocks.Stub<IEventedList<Catchment>>();
 
-            catchments.Expect(c => c.GetEnumerator()).Return(catchmentsList.GetEnumerator());
+            //catchments.Expect(c => c.GetEnumerator()).Return(catchmentsList.GetEnumerator()).Repeat.Any(); 
+            catchments.Stub(x => x.GetEnumerator())
+                // create new enumerator instance for each call
+                .WhenCalled(call => call.ReturnValue = catchmentsList.GetEnumerator())
+                .Return(null) // is ignored, but needed for Rhinos validation
+                .Repeat.Any();
+
             var basin = mocks.StrictMock<IDrainageBasin>();
             source.Expect(m => m.Basin).Return(basin).Repeat.Any();
             basin.Expect(b => b.Catchments).Return(catchments).Repeat.Any();
@@ -153,8 +159,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             Assert.That(modelCoupler.Name, Is.EqualTo(expectedCouperName));
             Assert.That(modelCoupler.CoupleInfos.Count(), Is.EqualTo(1));
             Assert.That(modelCoupler.CoupleInfos.First().Source, Is.EqualTo("catchments/Catchment1/water_discharge"));
-            Assert.That(modelCoupler.CoupleInfos.First().Target, Is.EqualTo("boundaries/Node001/water_level"));
-
+            Assert.That(modelCoupler.CoupleInfos.First().Target, Is.EqualTo("boundaries/Node001/water_discharge")); //seems new functionality, NO MORE WATERLEVELS!
+            if (catchmentType == CatchmentType.Unpaved)
+            {
+                links.Clear();
+                links.Add(new HydroLink(targetObj, catchment1));;
+            }
             modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(target, source, null, null);
             if (Equals(catchmentType, CatchmentType.Unpaved))
             {
@@ -163,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                                      ((IDimrModel) source).ShortName;
                 Assert.That(modelCoupler.Name, Is.EqualTo(expectedCouperName));
                 Assert.That(modelCoupler.CoupleInfos.Count(), Is.EqualTo(1));
-                Assert.That(modelCoupler.CoupleInfos.First().Source, Is.EqualTo("boundaries/Node001/water_discharge"));
+                Assert.That(modelCoupler.CoupleInfos.First().Source, Is.EqualTo("boundaries/Node001/water_level"));//seems new functionality, NO MORE WATER Discharges!
                 Assert.That(modelCoupler.CoupleInfos.First().Target, Is.EqualTo("catchments/Catchment1/water_level"));
             }
             else
