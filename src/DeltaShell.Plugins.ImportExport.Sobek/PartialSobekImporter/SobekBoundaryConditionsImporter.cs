@@ -2,12 +2,14 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
@@ -56,7 +58,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                flowBoundaryConditionData.Feature = nodes[nodeId];
+                var node = nodes[nodeId];
+                flowBoundaryConditionData.Feature = node;
                 flowBoundaryConditionData.UseSalt = useSalt;
                 flowBoundaryConditionData.UseTemperature = useTemperature;
 
@@ -84,8 +87,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         }
                     }
                 }
-
                 waterFlowFMModel.ReplaceBoundaryCondition(flowBoundaryConditionData);
+                UpdateManholeWithOutletData(node, flowBoundaryConditionData);
+            }
+        }
+
+        private void UpdateManholeWithOutletData(INode node, Model1DBoundaryNodeData flowBoundaryConditionData)
+        {
+            var manhole = node as Manhole;
+            if (manhole != null && flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
+            {
+                //var outletCandidate = manhole.GetOutletCandidate(); // is not working. incomming branches are not set, but should be the method
+                var outletCandidate = manhole.Compartments.LastOrDefault();
+                if (outletCandidate != null)
+                {
+                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                    outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
+                }
             }
         }
 
