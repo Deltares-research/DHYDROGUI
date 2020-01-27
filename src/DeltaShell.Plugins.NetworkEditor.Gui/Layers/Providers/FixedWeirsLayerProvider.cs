@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="FixedWeir"/> objects.
     /// </summary>
-    public class FixedWeirsLayerProvider : Feature2DLayerProvider<FixedWeir>
+    public class FixedWeirsLayerProvider : GroupableFeaturesLayerProvider<FixedWeir>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

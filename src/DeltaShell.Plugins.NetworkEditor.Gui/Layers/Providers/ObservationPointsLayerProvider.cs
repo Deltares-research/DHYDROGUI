@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of observation points.
     /// </summary>
-    public class ObservationPointsLayerProvider : Feature2DLayerProvider<GroupableFeature2DPoint>
+    public class ObservationPointsLayerProvider : GroupableFeaturesLayerProvider<GroupableFeature2DPoint>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

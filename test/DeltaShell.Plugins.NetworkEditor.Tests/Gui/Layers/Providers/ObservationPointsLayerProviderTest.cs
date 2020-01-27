@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class ObservationPointsLayerProviderTest : Feature2DLayerProviderTest<GroupableFeature2DPoint>
+    public class ObservationPointsLayerProviderTest : GroupableFeaturesLayerProviderTest<GroupableFeature2DPoint>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {

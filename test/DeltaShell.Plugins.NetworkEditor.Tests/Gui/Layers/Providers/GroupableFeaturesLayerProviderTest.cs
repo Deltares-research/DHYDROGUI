@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
-using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
@@ -16,7 +15,7 @@ using SharpMap.Styles;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public abstract class Feature2DLayerProviderTest<T> where T : Feature2D, new()
+    public abstract class GroupableFeaturesLayerProviderTest<T> where T : IGroupableFeature, new()
     {
         [Test]
         public void CanCreateLayerFor_SourceDataOfTypeEventedList_ParentDataOfTypeHydroArea_ReturnsTrue()

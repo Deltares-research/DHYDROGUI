@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="ThinDam2D"/> objects.
     /// </summary>
-    public class ThinDamsLayerProvider : Feature2DLayerProvider<ThinDam2D>
+    public class ThinDamsLayerProvider : GroupableFeaturesLayerProvider<ThinDam2D>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

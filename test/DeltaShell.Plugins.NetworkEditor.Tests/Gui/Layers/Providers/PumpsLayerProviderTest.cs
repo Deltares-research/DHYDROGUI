@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
@@ -13,36 +14,41 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class ObservationCrossSectionsLayerProviderTest : GroupableFeaturesLayerProviderTest<ObservationCrossSection2D>
+    public class PumpsLayerProviderTest : GroupableFeaturesLayerProviderTest<Pump2D>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {
+            var pump = vectorLayer.FeatureEditor.CreateNewFeature(vectorLayer) as Pump2D;
+            Assert.IsNotNull(pump);
+            Assert.That(pump.CanBeTimedependent, Is.True);
+
+            Assert.That(vectorLayer.DataSource.FeatureType, Is.EqualTo(typeof(Pump2D)));
+
             Assert.That(vectorLayer.CustomRenderers.Single(), Is.TypeOf<ArrowLineStringAdornerRenderer>());
         }
 
         protected override ILayerSubProvider GetLayerSubProvider()
         {
-            return new ObservationCrossSectionsLayerProvider();
+            return new PumpsLayerProvider();
         }
 
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.ObservationCrossSections.Add(new ObservationCrossSection2D());
-            hydroArea.ObservationCrossSections.Add(new ObservationCrossSection2D());
+            hydroArea.Pumps.Add(new Pump2D());
+            hydroArea.Pumps.Add(new Pump2D());
 
             return hydroArea;
-
         }
 
-        protected override IEventedList<ObservationCrossSection2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<Pump2D> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.ObservationCrossSections;
+            return hydroArea.Pumps;
         }
 
         protected override Color ExpectedVectorStyleColor()
         {
-            return Color.DeepPink;
+            return Color.Aquamarine;
         }
 
         protected override float ExpectedVectorStyleLineWidth()

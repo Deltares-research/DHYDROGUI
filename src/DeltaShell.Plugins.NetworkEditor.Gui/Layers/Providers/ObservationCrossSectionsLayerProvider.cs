@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="ObservationCrossSection2D"/> objects.
     /// </summary>
-    public class ObservationCrossSectionsLayerProvider : Feature2DLayerProvider<ObservationCrossSection2D>
+    public class ObservationCrossSectionsLayerProvider : GroupableFeaturesLayerProvider<ObservationCrossSection2D>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

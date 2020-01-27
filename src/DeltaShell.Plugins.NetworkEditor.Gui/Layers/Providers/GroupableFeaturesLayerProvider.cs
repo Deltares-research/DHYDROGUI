@@ -2,17 +2,16 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
-    /// of <see cref="Feature2D"/> objects.
+    /// of <see cref="IGroupableFeature"/> objects.
     /// </summary>
-    /// <typeparam name="T"> The type of <see cref="Feature2D"/>. </typeparam>
-    public abstract class Feature2DLayerProvider<T> : ILayerSubProvider where T : Feature2D
+    /// <typeparam name="T"> The type of <see cref="IGroupableFeature"/>. </typeparam>
+    public abstract class GroupableFeaturesLayerProvider<T> : ILayerSubProvider where T : IGroupableFeature
     {
         /// <inheritdoc/>
         public bool CanCreateLayerFor(object sourceData, object parentData)
