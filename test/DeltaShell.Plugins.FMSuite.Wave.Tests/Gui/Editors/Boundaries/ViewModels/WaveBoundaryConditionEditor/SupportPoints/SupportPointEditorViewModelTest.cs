@@ -354,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddSupportPointCommand.Execute(existingDistance.ToString(CultureInfo.CurrentCulture));
 
             double nextValue = random.NextDouble();
-            SupportPointViewModel originalSubViewModel = SubViewModels[0];
+            SupportPointViewModel originalSubViewModel = SubViewModels[1];
 
             // Call
             originalSubViewModel.Distance = nextValue;
