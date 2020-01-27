@@ -1,10 +1,9 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
-using SharpMap.Editors.Interactors;
-using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -15,15 +14,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     public class ThinDamsLayerProvider : GroupableFeaturesLayerProvider<ThinDam2D>
     {
         /// <inheritdoc/>
-        protected override ILayer CreateLayer(HydroArea hydroArea)
+        protected override string GetLayerName()
         {
-            return new VectorLayer(HydroArea.ThinDamsPluralName)
-            {
-                FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = HydroAreaLayerStyles.ThinDamStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.ThinDams, "ThinDam", "NetworkEditorModelName", hydroArea.CoordinateSystem),
-                NameIsReadOnly = true
-            };
+            return HydroArea.ThinDamsPluralName;
+        }
+
+        /// <inheritdoc/>
+        protected override VectorStyle GetVectorStyle()
+        {
+            return HydroAreaLayerStyles.ThinDamStyle;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetFeatureTypeName()
+        {
+            return "ThinDam";
+        }
+
+        /// <inheritdoc/>
+        protected override IEventedList<ThinDam2D> GetLayerFeatures(HydroArea hydroArea)
+        {
+            return hydroArea.ThinDams;
         }
     }
 }

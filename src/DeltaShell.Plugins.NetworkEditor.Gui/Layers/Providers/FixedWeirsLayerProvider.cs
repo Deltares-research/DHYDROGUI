@@ -1,10 +1,9 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
-using SharpMap.Editors.Interactors;
-using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -15,15 +14,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     public class FixedWeirsLayerProvider : GroupableFeaturesLayerProvider<FixedWeir>
     {
         /// <inheritdoc/>
-        protected override ILayer CreateLayer(HydroArea hydroArea)
+        protected override string GetLayerName()
         {
-            return new VectorLayer(HydroArea.FixedWeirsPluralName)
-            {
-                FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = HydroAreaLayerStyles.FixedWeirStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.FixedWeirs, "FixedWeir", "NetworkEditorModelName", hydroArea.CoordinateSystem),
-                NameIsReadOnly = true
-            };
+            return HydroArea.FixedWeirsPluralName;
+        }
+
+        /// <inheritdoc/>
+        protected override VectorStyle GetVectorStyle()
+        {
+            return HydroAreaLayerStyles.FixedWeirStyle;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetFeatureTypeName()
+        {
+            return "FixedWeir";
+        }
+
+        /// <inheritdoc/>
+        protected override IEventedList<FixedWeir> GetLayerFeatures(HydroArea hydroArea)
+        {
+            return hydroArea.FixedWeirs;
         }
     }
 }

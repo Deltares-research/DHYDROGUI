@@ -1,9 +1,8 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
-using SharpMap.Editors.Interactors;
-using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -14,15 +13,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     public class DryPointsLayerProvider : GroupableFeaturesLayerProvider<GroupablePointFeature>
     {
         /// <inheritdoc/>
-        protected override ILayer CreateLayer(HydroArea hydroArea)
+        protected override string GetLayerName()
         {
-            return new VectorLayer(HydroArea.DryPointsPluralName)
-            {
-                FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = HydroAreaLayerStyles.DryPointStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.DryPoints, "DryPoint", "NetworkEditorModelName", hydroArea.CoordinateSystem),
-                NameIsReadOnly = true
-            };
+            return HydroArea.DryPointsPluralName;
+        }
+
+        /// <inheritdoc/>
+        protected override VectorStyle GetVectorStyle()
+        {
+            return HydroAreaLayerStyles.DryPointStyle;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetFeatureTypeName()
+        {
+            return "DryPoint";
+        }
+
+        protected override IEventedList<GroupablePointFeature> GetLayerFeatures(HydroArea hydroArea)
+        {
+            return hydroArea.DryPoints;
         }
     }
 }

@@ -2,7 +2,11 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
+using SharpMap.Editors.Interactors;
+using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -38,6 +42,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// </summary>
         /// <param name="hydroArea"> The hydro area that owns the data. </param>
         /// <returns> A layer for showing the data. </returns>
-        protected abstract ILayer CreateLayer(HydroArea hydroArea);
+        protected virtual ILayer CreateLayer(HydroArea hydroArea)
+        {
+            return new VectorLayer(GetLayerName())
+            {
+                FeatureEditor = new Feature2DEditor(hydroArea),
+                Style = GetVectorStyle(),
+                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(GetLayerFeatures(hydroArea), GetFeatureTypeName(), "NetworkEditorModelName", hydroArea.CoordinateSystem),
+                NameIsReadOnly = true
+            };
+        }
+
+        /// <summary>
+        /// Gets the layer name.
+        /// </summary>
+        /// <returns> The layer name. </returns>
+        protected abstract string GetLayerName();
+
+        /// <summary>
+        /// Gets the <see cref="VectorStyle"/> for returned layers.
+        /// </summary>
+        /// <returns> The vector style. </returns>
+        protected abstract VectorStyle GetVectorStyle();
+
+        /// <summary>
+        /// Gets the base name for all features in this layer.
+        /// </summary>
+        /// <returns> The feature type name. </returns>
+        protected abstract string GetFeatureTypeName();
+
+        /// <summary>
+        /// Gets the <see cref="IGroupableFeature"/> objects that are shown in the provided layer.
+        /// </summary>
+        /// <param name="hydroArea"> The hydro area that owns the features. </param>
+        /// <returns> The requested features. </returns>
+        protected abstract IEventedList<T> GetLayerFeatures(HydroArea hydroArea);
     }
 }

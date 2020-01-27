@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             Assert.IsNotNull(vectorLayer);
             Assert.That(vectorLayer.FeatureEditor is Feature2DEditor);
 
-            AssertVectorStyle(vectorLayer.Style, ExpectedVectorStyleColor(), ExpectedVectorStyleLineWidth(), ExpectedVectorStyleGeometryType());
+            AssertVectorStyle(vectorLayer.Style);
 
             var hydroAreaFeature2DCollection = vectorLayer.DataSource as HydroAreaFeature2DCollection;
             Assert.IsNotNull(hydroAreaFeature2DCollection);
@@ -97,11 +97,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             AssertLayerProviderSpecificSettings(vectorLayer);
         }
 
-        private static void AssertVectorStyle(VectorStyle style, Color expectedLineColor, float expectedLineWidth, Type expectedGeometryType)
+        private void AssertVectorStyle(VectorStyle style)
         {
-            Assert.That(style.Line.Color, Is.EqualTo(expectedLineColor));
-            Assert.That(style.Line.Width, Is.EqualTo(expectedLineWidth));
-            Assert.That(style.GeometryType, Is.EqualTo(expectedGeometryType));
+            Assert.That(style.Line.Color, Is.EqualTo(ExpectedVectorStyleLineColor()));
+            Assert.That(style.Line.Width, Is.EqualTo(ExpectedVectorStyleLineWidth()));
+            Assert.That(style.GeometryType, Is.EqualTo(ExpectedVectorStyleGeometryType()));
         }
 
         protected virtual void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 
         protected abstract IEventedList<T> GetStructureCollection(HydroArea hydroArea);
 
-        protected abstract Color ExpectedVectorStyleColor();
+        protected abstract Color ExpectedVectorStyleLineColor();
 
         protected abstract float ExpectedVectorStyleLineWidth();
 

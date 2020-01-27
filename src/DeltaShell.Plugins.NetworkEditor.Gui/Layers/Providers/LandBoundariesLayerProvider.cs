@@ -1,9 +1,8 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
-using SharpMap.Editors.Interactors;
-using SharpMap.Layers;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -14,15 +13,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     public class LandBoundariesLayerProvider : GroupableFeaturesLayerProvider<LandBoundary2D>
     {
         /// <inheritdoc/>
-        protected override ILayer CreateLayer(HydroArea hydroArea)
+        protected override string GetLayerName()
         {
-            return new VectorLayer(HydroArea.LandBoundariesPluralName)
-            {
-                FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = HydroAreaLayerStyles.LandBoundaryStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.LandBoundaries, "LandBoundary", "NetworkEditorModelName", hydroArea.CoordinateSystem),
-                NameIsReadOnly = true
-            };
+            return HydroArea.LandBoundariesPluralName;
+        }
+
+        /// <inheritdoc/>
+        protected override VectorStyle GetVectorStyle()
+        {
+            return HydroAreaLayerStyles.LandBoundaryStyle;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetFeatureTypeName()
+        {
+            return "LandBoundary";
+        }
+
+        /// <inheritdoc/>
+        protected override IEventedList<LandBoundary2D> GetLayerFeatures(HydroArea hydroArea)
+        {
+            return hydroArea.LandBoundaries;
         }
     }
 }

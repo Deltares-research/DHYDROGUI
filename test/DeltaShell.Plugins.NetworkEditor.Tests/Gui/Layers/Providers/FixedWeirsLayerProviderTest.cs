@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             return hydroArea.FixedWeirs;
         }
 
-        protected override Color ExpectedVectorStyleColor()
+        protected override Color ExpectedVectorStyleLineColor()
         {
             return Color.Purple;
         }

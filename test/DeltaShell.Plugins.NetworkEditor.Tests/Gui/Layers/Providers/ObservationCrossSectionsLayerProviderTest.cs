@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             return hydroArea.ObservationCrossSections;
         }
 
-        protected override Color ExpectedVectorStyleColor()
+        protected override Color ExpectedVectorStyleLineColor()
         {
             return Color.DeepPink;
         }

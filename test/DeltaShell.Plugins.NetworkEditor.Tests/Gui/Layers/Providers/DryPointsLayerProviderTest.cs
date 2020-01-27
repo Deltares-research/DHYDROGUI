@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             return hydroArea.DryPoints;
         }
 
-        protected override Color ExpectedVectorStyleColor()
+        protected override Color ExpectedVectorStyleLineColor()
         {
             return Color.FromArgb(255, 138, 43, 226);
         }

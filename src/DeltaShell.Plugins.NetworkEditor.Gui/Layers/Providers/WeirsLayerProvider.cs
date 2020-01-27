@@ -1,12 +1,10 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
-using SharpMap.Api;
 using SharpMap.Api.Layers;
-using SharpMap.Editors.Interactors;
-using SharpMap.Layers;
 using SharpMap.Rendering;
+using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
@@ -19,17 +17,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
-            return new VectorLayer(HydroArea.WeirsPluralName)
-            {
-                FeatureEditor = new Feature2DEditor(hydroArea),
-                Style = HydroAreaLayerStyles.WeirStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.Weirs, "structure", "NetworkEditorModelName", hydroArea.CoordinateSystem),
-                NameIsReadOnly = true,
-                CustomRenderers = new IFeatureRenderer[]
-                {
-                    new ArrowLineStringAdornerRenderer()
-                }
-            };
+            ILayer layer = base.CreateLayer(hydroArea);
+            layer.CustomRenderers.Add(new ArrowLineStringAdornerRenderer());
+
+            return layer;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetLayerName()
+        {
+            return HydroArea.WeirsPluralName;
+        }
+
+        /// <inheritdoc/>
+        protected override VectorStyle GetVectorStyle()
+        {
+            return HydroAreaLayerStyles.WeirStyle;
+        }
+
+        /// <inheritdoc/>
+        protected override string GetFeatureTypeName()
+        {
+            return "structure";
+        }
+
+        /// <inheritdoc/>
+        protected override IEventedList<Weir2D> GetLayerFeatures(HydroArea hydroArea)
+        {
+            return hydroArea.Weirs;
         }
     }
 }

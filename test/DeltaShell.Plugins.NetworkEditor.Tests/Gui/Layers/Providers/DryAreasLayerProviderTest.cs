@@ -10,30 +10,30 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class LandBoundariesLayerProviderTest : GroupableFeaturesLayerProviderTest<LandBoundary2D>
+    public class DryAreasLayerProviderTest : GroupableFeaturesLayerProviderTest<GroupableFeature2DPolygon>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {
-            return new LandBoundariesLayerProvider();
+            return new DryAreasLayerProvider();
         }
 
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.LandBoundaries.Add(new LandBoundary2D());
-            hydroArea.LandBoundaries.Add(new LandBoundary2D());
+            hydroArea.DryAreas.Add(new GroupableFeature2DPolygon());
+            hydroArea.DryAreas.Add(new GroupableFeature2DPolygon());
 
             return hydroArea;
         }
 
-        protected override IEventedList<LandBoundary2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<GroupableFeature2DPolygon> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.LandBoundaries;
+            return hydroArea.DryAreas;
         }
 
         protected override Color ExpectedVectorStyleLineColor()
         {
-            return Color.Black;
+            return Color.FromArgb(255, 138, 43,226);
         }
 
         protected override float ExpectedVectorStyleLineWidth()
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 
         protected override Type ExpectedVectorStyleGeometryType()
         {
-            return typeof(ILineString);
+            return typeof(IPolygon);
         }
     }
 }

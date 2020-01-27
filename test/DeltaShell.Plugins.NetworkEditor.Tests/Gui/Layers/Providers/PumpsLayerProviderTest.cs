@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             return hydroArea.Pumps;
         }
 
-        protected override Color ExpectedVectorStyleColor()
+        protected override Color ExpectedVectorStyleLineColor()
         {
             return Color.Aquamarine;
         }
