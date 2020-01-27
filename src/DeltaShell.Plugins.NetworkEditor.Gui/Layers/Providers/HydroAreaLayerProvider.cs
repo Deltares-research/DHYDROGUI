@@ -7,17 +7,17 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
-    /// <see cref="HydroAreaLayerProvider"/> implements the
-    /// <see cref="ILayerSubProvider"/> for data of type <see cref="HydroArea"/>.
+    /// Provides logic for creating <see cref="ILayer"/> objects for <see cref="HydroArea"/> objects.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
     public class HydroAreaLayerProvider : ILayerSubProvider
     {
+        /// <inheritdoc/>
         public bool CanCreateLayerFor(object sourceData, object parentData)
         {
             return sourceData is HydroArea;
         }
 
+        /// <inheritdoc/>
         public ILayer CreateLayer(object sourceData, object parentData)
         {
             return sourceData is HydroArea hydroArea
@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
                        : null;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {
             if (!(data is HydroArea hydroArea))
