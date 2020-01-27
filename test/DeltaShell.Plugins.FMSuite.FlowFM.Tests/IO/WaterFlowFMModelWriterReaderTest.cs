@@ -7,6 +7,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor.Tests.Helpers;
@@ -172,6 +173,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(contentFile.Contains("pump1"));
             Assert.IsTrue(contentFile.Contains("pump2"));
             Assert.IsTrue(contentFile.Contains("pump3"));
+        }
+
+        [Test]
+        public void GivenFmModelWithOutlet_WriteAndRead_CheckOutletWaterSurfaceLevel()
+        {
+            var surfaceWaterLevel = 1234.5;
+
+            //setup testcase
+
+            var mduFilePath = Path.Combine(tempDirectory, "myFmModel.mdu");
+            var fmModel = new WaterFlowFMModel(mduFilePath);
+
+            var targetManhole = new Manhole("tm with outlet");
+            var outlet = new OutletCompartment("outlet") { SurfaceLevel = 0.0, Geometry = new Point(0,0), SurfaceWaterLevel = surfaceWaterLevel };
+            targetManhole.Compartments.Add(outlet);
+
+            var sourceManhole = new Manhole("sm");
+            var sourceCompartment = new Compartment("sc") { SurfaceLevel = 0.0, Geometry = new Point(100, 0) };
+            sourceManhole.Compartments.Add(sourceCompartment);
+            
+            var sewerConnection = new SewerConnection("pipe or buis")
+            {
+                SourceCompartment = sourceCompartment,
+                TargetCompartment = outlet,
+                LevelSource = 0.0,
+                LevelTarget = 0.0,
+                WaterType = SewerConnectionWaterType.None,
+                SourceCompartmentName = "sc",
+                TargetCompartmentName = "outlet"
+            };
+            sourceManhole.OutgoingBranches.Add(sewerConnection);
+            targetManhole.IncomingBranches.Add(sewerConnection);
+
+            fmModel.Network.Branches.Add(sewerConnection);
+            fmModel.Network.Nodes.Add(sourceManhole);
+            fmModel.Network.Nodes.Add(targetManhole);
+
+            var boundary = fmModel.BoundaryConditions1D.FirstOrDefault(b => b.Node.Name == targetManhole.Name); //data on manhole of compartment, yep ...
+            Assert.IsNotNull(boundary);
+            Assert.AreEqual(surfaceWaterLevel,boundary.WaterLevel);
+
+
+            //write
+            WaterFlowFMModelWriter.Write(mduFilePath, fmModel);
+            //read
+            var retrievedModel = WaterFlowFMModelReader.Read(mduFilePath);
+
+
+            //check model and values
+            Assert.IsNotNull(retrievedModel);
+            Assert.IsNotNull(retrievedModel.Network);
+            var retrievedTargetManhole = retrievedModel.Network.Nodes.FirstOrDefault(n => n.Name.Equals("tm with outlet")) as Manhole;
+            Assert.IsNotNull(retrievedTargetManhole);
+            outlet = retrievedTargetManhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+            Assert.IsNotNull(outlet);
+            Assert.AreEqual(surfaceWaterLevel, outlet.SurfaceWaterLevel);
+            var retrievedBcData = retrievedModel.BoundaryConditions1D.FirstOrDefault(bc => bc.Node.Name == retrievedTargetManhole.Name);
+            Assert.IsNotNull(retrievedBcData);
+            Assert.AreEqual(Model1DBoundaryNodeDataType.WaterLevelConstant,retrievedBcData.DataType);
+            Assert.AreEqual(surfaceWaterLevel, retrievedBcData.WaterLevel);
+
+
+
+
         }
     }
 }

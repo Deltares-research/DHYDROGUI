@@ -232,5 +232,85 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.IsTrue(newManhole.ContainsCompartmentWithName(compartmentName));
             Assert.AreEqual(compartmentToMove.ParentManhole, newManhole);
         }
+
+        [Test]
+        public void UpdateCompartmentToOutletCompartment()
+        {
+            var hydroNetwork = new HydroNetwork();
+            var targetManhole = new Manhole("tm");
+            var targetCompartment = new Compartment("tc") { SurfaceLevel = 0.0, Geometry = new Point(0, 0) };
+            targetManhole.Compartments.Add(targetCompartment);
+
+            var sourceManhole = new Manhole("sm");
+            var sourceCompartment = new Compartment("sc") { SurfaceLevel = 0.0, Geometry = new Point(100, 0) };
+            sourceManhole.Compartments.Add(sourceCompartment);
+
+            var sewerConnection = new SewerConnection("pipe or buis")
+            {
+                SourceCompartment = sourceCompartment,
+                TargetCompartment = targetCompartment,
+                LevelSource = 0.0,
+                LevelTarget = 0.0,
+                WaterType = SewerConnectionWaterType.None,
+                SourceCompartmentName = "sc",
+                TargetCompartmentName = "tc"
+            };
+            sourceManhole.OutgoingBranches.Add(sewerConnection);
+            targetManhole.IncomingBranches.Add(sewerConnection);
+
+            hydroNetwork.Nodes.Add(sourceManhole);
+            hydroNetwork.Nodes.Add(targetManhole);
+            hydroNetwork.Branches.Add(sewerConnection);
+
+            //call
+
+            var outlet = targetManhole.UpdateCompartmentToOutletCompartment(targetCompartment);
+
+            //check result
+
+            Assert.AreEqual(1, targetManhole.Compartments.Count);
+            Assert.AreSame(outlet, targetManhole.Compartments.FirstOrDefault());
+            Assert.AreEqual(1, hydroNetwork.OutletCompartments.Count());
+            Assert.AreSame(outlet, hydroNetwork.OutletCompartments.FirstOrDefault());
+
+            Assert.AreSame(outlet, sewerConnection.TargetCompartment);
+
+        }
+
+        [Test]
+        public void GetOutletCandidate()
+        {
+            var manhole = new Manhole("tm");
+            var compartment = new Compartment("tc") { SurfaceLevel = 0.0, Geometry = new Point(0, 0) };
+            manhole.Compartments.Add(compartment);
+
+            var incommingSewerConnection = new SewerConnection("incomming")
+            {
+                TargetCompartment = compartment,
+                LevelSource = 0.0,
+                LevelTarget = 0.0,
+                WaterType = SewerConnectionWaterType.None,
+                TargetCompartmentName = "tc"
+            };
+
+            var outgoingSewerConnection = new SewerConnection("incomming")
+            {
+                SourceCompartment = compartment,
+                LevelSource = 0.0,
+                LevelTarget = 0.0,
+                WaterType = SewerConnectionWaterType.None,
+                TargetCompartmentName = "sc"
+            };
+
+            Assert.IsNull(manhole.GetOutletCandidate());
+
+            manhole.IncomingBranches.Add(incommingSewerConnection); //condition outlet: at least one incomming connections
+
+            Assert.AreSame(compartment,manhole.GetOutletCandidate());
+
+            manhole.OutgoingBranches.Add(outgoingSewerConnection); //condition outlet: no outgoing connections
+
+            Assert.IsNull(manhole.GetOutletCandidate());
+        }
     }
 }

@@ -14,6 +14,7 @@ using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -1877,6 +1878,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(otherModel.ModelDefinition.FmMeteoFields.FirstOrDefault().Data.Components[0].Values[2], Is.EqualTo(clone.Data.Components[0].Values[2]));
                 
             });
+        }
+
+
+        [Test]
+        public void Synchronize_Outlet_and_Boundary_Data()
+        {
+            //setup testcase
+
+            var fmModel = new WaterFlowFMModel();
+            var manhole = new Manhole("tm");
+            var outlet = new OutletCompartment("outlet") { SurfaceLevel = 0.0, Geometry = new Point(0, 0) };
+            manhole.Compartments.Add(outlet);
+            
+            fmModel.Network.Nodes.Add(manhole);
+
+            var boundary = fmModel.BoundaryConditions1D.FirstOrDefault(b => b.Node.Name == manhole.Name); //data on manhole of compartment, yep ...
+            Assert.IsNotNull(boundary);
+
+            //set data in outlet 
+
+            outlet.SurfaceWaterLevel = 1234.567;
+
+            Assert.AreEqual(outlet.SurfaceWaterLevel,boundary.WaterLevel);
         }
     }
 }

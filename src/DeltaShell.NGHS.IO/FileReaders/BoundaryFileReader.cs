@@ -5,10 +5,13 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -169,6 +172,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         case BoundaryRegion.QuantityStrings.WaterLevel:
                             boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                             boundaryCondition.WaterLevel = ReadConstantValue(boundaryCategory.Table[0], boundaryCategory.Name);
+                            var manhole = boundaryCondition.Node as Manhole;
+                            if (manhole != null)
+                            {
+                                var outletCandidate = manhole.GetOutletCandidate();
+                                if (outletCandidate != null)
+                                {
+                                    manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                                } 
+                            }
                             break;
                     }
                     break;

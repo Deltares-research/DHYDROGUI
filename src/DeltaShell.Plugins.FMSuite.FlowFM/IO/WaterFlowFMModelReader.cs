@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -61,9 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             fmReaderData.NetworkDataModel = UGridToNetworkAdapter.ReadNetworkDataModelFromUGrid(netFilePath);
 
             // Read nodes file
-            var nodeFileProperty = fmReaderData.ModelDefinition.GetModelProperty(KnownProperties.NodeFile);
+            var nodeFileProperty = fmReaderData.ModelDefinition.GetModelProperty(KnownProperties.StorageNodeFile);
             var nodeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, nodeFileProperty.GetValueAsString());
             if (File.Exists(nodeFilePath)) fmReaderData.PropertiesPerCompartment = NodeFile.Read(nodeFilePath);
+            UpdateCompartmentsToOutletsBasedOnBoundaryData(network, boundaryConditions1D);
 
             // Read branches file (GUI properties only)
             var branchFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, UGridToNetworkAdapter.BranchGuiFileName);
@@ -73,6 +75,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             fmReaderData.NetworkDiscretisationDataModel = UGridToNetworkAdapter.LoadNetworkDiscretisationDataModel(netFilePath);
 
             return fmReaderData;
+        }
+
+        private static void UpdateCompartmentsToOutletsBasedOnBoundaryData(HydroNetwork network, EventedList<Model1DBoundaryNodeData> boundaryConditions1D)
+        {
+            foreach(var bc in boundaryConditions1D)
+            {
+                var manhole = bc.Node as Manhole;
+                if (manhole != null && bc.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
+                {
+
+                }
+
+            }
         }
     }
 }

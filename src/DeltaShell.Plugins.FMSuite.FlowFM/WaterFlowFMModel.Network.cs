@@ -97,6 +97,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     RefreshNetworkRelatedData();
                 }
             }
+
+            if (sender is OutletCompartment && e.PropertyName == "SurfaceWaterLevel")
+            {
+                var outlet = (OutletCompartment) sender;
+                var model1DBoundaryNodeData = BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outlet.ParentManhole);
+                SetBoundaryConditionDataForOutlet(model1DBoundaryNodeData);
+            }
+
             if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
                 !Network.IsEditing && NetworkDiscretization != null && NetworkDiscretization.Locations.Values.Any())
             {
@@ -707,7 +715,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, false, false));
+                    var bc = Helper1D.CreateDefaultBoundaryCondition(node, false, false);
+                    SetBoundaryConditionDataForOutlet(bc);
+                    AddBoundaryCondition(bc);
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
@@ -715,6 +725,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     break;
             }
         }
+
+        private void SetBoundaryConditionDataForOutlet(Model1DBoundaryNodeData bc)
+        {
+            var manhole = bc?.Node as Manhole;
+            if (manhole != null && manhole.Compartments.OfType<OutletCompartment>().Any())
+            {
+                var outlet = manhole.Compartments.OfType<OutletCompartment>().First();
+                bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+                bc.WaterLevel = outlet.SurfaceWaterLevel;
+            }
+        }
+
         private void RemoveBoundaryCondition(INode hydroNode)
         {
             var boundaryCondition = BoundaryConditions1D.FirstOrDefault(bc => bc.Feature == hydroNode);

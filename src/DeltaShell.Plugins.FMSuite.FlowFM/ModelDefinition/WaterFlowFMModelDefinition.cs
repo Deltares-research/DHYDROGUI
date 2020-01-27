@@ -6,10 +6,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
@@ -26,21 +23,16 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.CoordinateSystems;
 using DelftTools.Utils;
-using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -127,6 +119,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get { return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions); }
         }
 
+        public IEventedList<OutletCompartment> OutletCompartments { get; private set; }
+
         public IEventedList<Feature2D> Pipes { get; private set; }
         
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
@@ -205,6 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             FmMeteoFields = new EventedList<IFmMeteoField>();
             UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
+            OutletCompartments = new EventedList<OutletCompartment>();
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
@@ -931,7 +926,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                 key = guiSedimentGroupId;
                 messageKey = "sediment file";
-    }
+            }
 
             if (GuiPropertyGroups.ContainsKey(key)) return GuiPropertyGroups[key].Name;
 

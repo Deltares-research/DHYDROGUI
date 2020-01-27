@@ -93,6 +93,47 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public NetworkFeatureType NetworkFeatureType { get; } = NetworkFeatureType.Node;
 
+
+        /// <summary>
+        /// Get an internal compartment as candidate for an outlet
+        /// </summary>
+        /// <returns></returns>
+        public ICompartment GetOutletCandidate()
+        {
+            foreach (var c in Compartments)
+            {
+                if (IncomingBranches.OfType<ISewerConnection>().Any(sw => sw.TargetCompartment == c) && OutgoingBranches.OfType<ISewerConnection>().All(sw => sw.SourceCompartment != c))
+                {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Upgrade an internal component to outlet
+        /// </summary>
+        /// <param name="compartment"></param>
+        /// <returns></returns>
+        public OutletCompartment UpdateCompartmentToOutletCompartment(ICompartment compartment)
+        {
+            var outlet = new OutletCompartment(compartment.Name);
+            outlet.TakeConnectionsOverFrom(compartment);
+
+            Compartments.Add(outlet);
+            Compartments.Remove(compartment);
+            IncomingBranches
+                .OfType<ISewerConnection>()
+                .Where(sw => sw.TargetCompartment == compartment)
+                .ForEach(sw => sw.TargetCompartment = outlet);
+            OutgoingBranches //should not be the case: outlet with outgoing connection
+                .OfType<ISewerConnection>()
+                .Where(sw => sw.SourceCompartment == compartment)
+                .ForEach(sw => sw.SourceCompartment = outlet);
+
+            return outlet;
+        }
+
         private void CompartmentCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
             var compartment = e.Item as Compartment;

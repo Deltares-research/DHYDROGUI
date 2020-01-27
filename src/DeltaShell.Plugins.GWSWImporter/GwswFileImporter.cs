@@ -13,9 +13,7 @@ using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -389,31 +387,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 if (ShouldCancel)
                     return;
-                //var boundaryCondition = WaterFlowModel1DHelper.CreateDefaultBoundaryCondition(outletCompartment.ParentManhole, fmModel.UseSalinity, fmModel.UseTemperature);
                 var boundaryCondition = fmModel.BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outletCompartment.ParentManhole);
                 if (boundaryCondition == null) continue;
 
-                boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelTimeSeries;
-                boundaryCondition.Data[fmModel.StartTime] = -1000.0;
-                boundaryCondition.Data[fmModel.StopTime] = -1000.0;
+                boundaryCondition.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+                boundaryCondition.WaterLevel = outletCompartment.SurfaceWaterLevel;
             }
-        }
-
-        private static FlowBoundaryCondition CreateOutletCompartmentBoundaryCondition(WaterFlowFMModel fmModel, OutletCompartment outletCompartment)
-        {
-            if (outletCompartment.OutletCompartmentBoundaryFeature.Geometry == null)
-                outletCompartment.OutletCompartmentBoundaryFeature.Geometry = outletCompartment.Geometry;
-            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = outletCompartment.OutletCompartmentBoundaryFeature
-            };
-
-            boundaryCondition.AddPoint(0);
-            var dataAtZero = boundaryCondition.GetDataAtPoint(0);
-
-            dataAtZero[fmModel.StartTime] = -1000.0;
-            dataAtZero[fmModel.StopTime] = -1000.0;
-            return boundaryCondition;
         }
 
         private void InitializeImportManager()
