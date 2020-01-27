@@ -119,8 +119,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             get { return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions); }
         }
 
-        public IEventedList<OutletCompartment> OutletCompartments { get; private set; }
-
         public IEventedList<Feature2D> Pipes { get; private set; }
         
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
@@ -199,7 +197,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             FmMeteoFields = new EventedList<IFmMeteoField>();
             UnsupportedFileBasedExtForceFileItems = new EventedList<IUnsupportedFileBasedExtForceFileItem>();
             SourcesAndSinks = new EventedList<SourceAndSink>();
-            OutletCompartments = new EventedList<OutletCompartment>();
             Pipes = new EventedList<Feature2D>();
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
