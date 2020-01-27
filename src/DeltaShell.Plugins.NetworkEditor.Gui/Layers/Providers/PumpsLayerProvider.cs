@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// </summary>
     public class PumpsLayerProvider : GroupableFeaturesLayerProvider<Pump2D>
     {
+        /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
             return new VectorLayer(HydroArea.PumpsPluralName)

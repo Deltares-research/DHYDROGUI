@@ -259,6 +259,7 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
+    <Compile Include="Gui\Layers\Providers\DryPointsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\GroupableFeaturesLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />

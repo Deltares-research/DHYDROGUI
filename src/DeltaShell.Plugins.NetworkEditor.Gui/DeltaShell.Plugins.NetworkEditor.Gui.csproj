@@ -602,6 +602,7 @@
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
+    <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
     <Compile Include="Layers\Providers\GroupableFeaturesLayerProvider.cs" />
     <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
     <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
