@@ -109,6 +109,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         public IEnumerable<string> Paths { get { return new[] { Path }; } }
         public bool IsOpen { get { return false; } }
+        public bool CopyFromWorkingDirectory { get; } = false;
 
         public event NotifyCollectionChangingEventHandler CollectionChanging;
         public event NotifyCollectionChangedEventHandler CollectionChanged;

@@ -359,8 +359,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 ? 0.0
                 : DataTypeValueParser.FromString<double>(crestWidthString);
             SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
-                TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries),
-                TypeUtils.GetMemberName(() => weir.CrestLevel), weir.CrestLevelTimeSeries);
+                nameof(weir.UseCrestLevelTimeSeries),
+                nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
 
             return weir;
         }
@@ -532,24 +532,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 StructureRegion.GateCrestLevel.Key,
                 path, refDate,
                 gate,
-                TypeUtils.GetMemberName(() => gate.UseSillLevelTimeSeries),
-                TypeUtils.GetMemberName(() => gate.SillLevel),
+                nameof(gate.UseSillLevelTimeSeries),
+                nameof(gate.SillLevel),
                 gate.SillLevelTimeSeries);
 
             SetTimeSeriesProperty(structure2D,
                 StructureRegion.GateLowerEdgeLevel.Key,
                 path, refDate,
                 gate,
-                TypeUtils.GetMemberName(() => gate.UseLowerEdgeLevelTimeSeries),
-                TypeUtils.GetMemberName(() => gate.LowerEdgeLevel),
+                nameof(gate.UseLowerEdgeLevelTimeSeries),
+                nameof(gate.LowerEdgeLevel),
                 gate.LowerEdgeLevelTimeSeries);
 
             SetTimeSeriesProperty(structure2D,
                 StructureRegion.GateOpeningWidth.Key,
                 path, refDate,
                 gate,
-                TypeUtils.GetMemberName(() => gate.UseOpeningWidthTimeSeries),
-                TypeUtils.GetMemberName(() => gate.OpeningWidth),
+                nameof(gate.UseOpeningWidthTimeSeries),
+                nameof(gate.OpeningWidth),
                 gate.OpeningWidthTimeSeries);
 
             return gate;

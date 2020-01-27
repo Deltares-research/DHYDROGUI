@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         {
                             CulvertType = CulvertType.Siphon
                     }
-                }.DynamicReadOnlyValidationMethod(TypeUtils.GetMemberName(() => new Culvert { CulvertType = CulvertType.Siphon }.AllowNegativeFlow))); // When the culvert is a siphon the allownegativeflow property is readonly
+                }.DynamicReadOnlyValidationMethod(nameof(ICulvert.AllowNegativeFlow))); // When the culvert is a siphon the allownegativeflow property is readonly
         }
     }
 }

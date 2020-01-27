@@ -1487,7 +1487,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
         void InitialConditionsDataItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if ((Equals(sender, InitialConditions.Components[0])) &&
-                (e.PropertyName == TypeUtils.GetMemberName(() => InitialConditions.DefaultValue)))
+                (e.PropertyName == nameof(InitialConditions.DefaultValue)))
             {
                 if (InitialConditionsType == InitialConditionsType.WaterLevel)
                 {

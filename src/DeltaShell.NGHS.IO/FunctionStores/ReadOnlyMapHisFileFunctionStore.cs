@@ -66,6 +66,8 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             get { return false; }
         }
 
+        public bool CopyFromWorkingDirectory { get; } = false;
+
         #region Unsupported properties
 
         public bool SkipChildItemEventBubbling { get; set; }

@@ -165,22 +165,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberName(() => SeepageH0HydraulicResistance))
+            if (propertyName == nameof(SeepageH0HydraulicResistance))
             {
                 return SeepageSource != UnpavedEnums.SeepageSourceType.H0Series;
             }
 
-            if (propertyName == TypeUtils.GetMemberName(() => SeepageConstant))
+            if (propertyName == nameof(SeepageConstant))
             {
                 return SeepageSource != UnpavedEnums.SeepageSourceType.Constant;
             }
 
-            if (propertyName == TypeUtils.GetMemberName(() => InitialGroundWaterLevelConstant))
+            if (propertyName == nameof(InitialGroundWaterLevelConstant))
             {
                 return InitialGroundWaterLevelSource != UnpavedEnums.GroundWaterSourceType.Constant;
             }
 
-            if (propertyName == TypeUtils.GetMemberName(() => TotalAreaForGroundWaterCalculations))
+            if (propertyName == nameof(TotalAreaForGroundWaterCalculations))
             {
                 return !UseDifferentAreaForGroundWaterCalculations;
             }

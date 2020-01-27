@@ -70,6 +70,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             get { return Path != null; }
         }
+
+        public bool CopyFromWorkingDirectory { get; } = false;
     }
 
     

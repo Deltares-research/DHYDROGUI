@@ -263,6 +263,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public bool IsFileCritical { get { return false; } }
 
         public bool IsOpen { get { return false; } }
+        public bool CopyFromWorkingDirectory { get; } = false;
 
         #endregion
 

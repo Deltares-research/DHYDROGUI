@@ -68,12 +68,12 @@ namespace DelftTools.Hydro.Link1d2d
         private void Coverage_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // when the Coverage changes coordinate system, alter the transformation for rendering.
-            if (Equals(e.PropertyName, TypeUtils.GetMemberName<ICoverage>(x => x.CoordinateSystem)))
+            if (Equals(e.PropertyName, nameof(ICoverage.CoordinateSystem)))
             {
                 UpdateCoordinateTransformation();
             }
 
-            if (Equals(e.PropertyName, TypeUtils.GetMemberName<ICoverage>(x => x.IsEditing)) && !Coverage.IsEditing)
+            if (Equals(e.PropertyName, nameof(ICoverage.IsEditing)) && !Coverage.IsEditing)
             {
                 updateThemeRequired = true;
                 RenderRequired = true;

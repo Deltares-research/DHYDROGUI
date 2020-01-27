@@ -13,27 +13,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public sealed partial class FlowBoundaryConditionPropertiesControl : BoundaryConditionPropertiesControl
     {
         private readonly string conditionTypePropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.FlowQuantity);
+            nameof(FeatureData.FlowBoundaryCondition.FlowQuantity);
 
         private readonly string reflectionAlphaPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ReflectionAlpha);
+            nameof(FeatureData.FlowBoundaryCondition.ReflectionAlpha);
 
         private readonly string forcingTypePropertyName =
-            TypeUtils.GetMemberName<BoundaryCondition>(b => b.DataType);
+            nameof(FeatureData.FlowBoundaryCondition.DataType);
 
         private readonly string verticalProfilePropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.VerticalInterpolationType);
+            nameof(FeatureData.FlowBoundaryCondition.VerticalInterpolationType);
 
-        private readonly string offsetPropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Offset);
+        private readonly string offsetPropertyName = nameof(FeatureData.FlowBoundaryCondition.Offset);
 
-        private readonly string factorPropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Factor);
+        private readonly string factorPropertyName = nameof(FeatureData.FlowBoundaryCondition.Factor);
 
-        private readonly string tracerNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.TracerName);
+        private readonly string tracerNamePropertyName = nameof(FeatureData.FlowBoundaryCondition.TracerName);
 
-        private readonly string sedimentFractionNamePropertyName = TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.SedimentFractionName);
+        private readonly string sedimentFractionNamePropertyName = nameof(FeatureData.FlowBoundaryCondition.SedimentFractionName);
 
         private readonly string thatcherHarlemanPropertyName =
-            TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ThatcherHarlemanTimeLag);
+            nameof(FeatureData.FlowBoundaryCondition.ThatcherHarlemanTimeLag);
 
         private bool updatingView;
 

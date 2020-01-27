@@ -1183,5 +1183,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
 
         #endregion
+
+        public bool CopyFromWorkingDirectory { get; } = false;
     }
 }

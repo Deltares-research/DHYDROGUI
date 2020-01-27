@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 SharedDefinitionsChanged(this, EventArgs.Empty);
             }
-            FirePropertyChanged(TypeUtils.GetMemberName(() => CanSelectSharedDefinitions));
+            FirePropertyChanged(nameof(CanSelectSharedDefinitions));
         }
 
         void CrossSectionDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 SharedDefinitionsChanged(this, EventArgs.Empty);
             }
-            FirePropertyChanged(TypeUtils.GetMemberName(() => CanSelectSharedDefinitions));
+            FirePropertyChanged(nameof(CanSelectSharedDefinitions));
         }
 
         public bool UseSharedDefinition
@@ -64,8 +64,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     var selectedSharedDefinition = crossSection.HydroNetwork.SharedCrossSectionDefinitions[0];
                     crossSection.UseSharedDefinition(selectedSharedDefinition);
                 }
-                FirePropertyChanged(TypeUtils.GetMemberName(() => UseLocalDefinition));
-                FirePropertyChanged(TypeUtils.GetMemberName(() => UseSharedDefinition));
+                FirePropertyChanged(nameof(UseLocalDefinition));
+                FirePropertyChanged(nameof(UseSharedDefinition));
             }
         }
         
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         // subscribe here to CrossSection PropertyChanged events
         public void FireLevelShiftChanged()
         {
-            FirePropertyChanged(TypeUtils.GetMemberName(() => LevelShift));
+            FirePropertyChanged(nameof(LevelShift));
         }
 
         public bool CanShareDefinition
@@ -162,8 +162,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             crossSection.ShareDefinitionAndChangeToProxy();
             //TODO: this should bubble from CS change..
-            FirePropertyChanged(TypeUtils.GetMemberName(() => UseLocalDefinition));
-            FirePropertyChanged(TypeUtils.GetMemberName(() => UseSharedDefinition));
+            FirePropertyChanged(nameof(UseLocalDefinition));
+            FirePropertyChanged(nameof(UseSharedDefinition));
         }
 
         public event EventHandler SharedDefinitionsChanged;

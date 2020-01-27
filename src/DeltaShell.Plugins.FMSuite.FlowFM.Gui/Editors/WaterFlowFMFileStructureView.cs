@@ -82,12 +82,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //TODO: pick up imports, etc. for refreshes
-            if ((Equals(sender, Model) && e.PropertyName == TypeUtils.GetMemberName(() => Model.Name)) ||
+            if ((Equals(sender, Model) && e.PropertyName == nameof(Model.Name)) ||
                 (Model.Boundaries.Contains(sender) &&
-                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)) ||
+                 e.PropertyName == nameof(Feature2D.Name)) ||
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
                 (Model.Pipes.Contains(sender) &&
-                 e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Name)))
+                 e.PropertyName == nameof(Feature2D.Name)))
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
 
             {

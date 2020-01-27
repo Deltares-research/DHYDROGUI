@@ -108,10 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSalinity) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.HeatFluxModelType) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseMorSed) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSecondaryFlow)
+            if (e.PropertyName == nameof(Model.UseSalinity) ||
+                e.PropertyName == nameof(Model.HeatFluxModelType) ||
+                e.PropertyName == nameof(Model.UseMorSed) ||
+                e.PropertyName == nameof(Model.UseSecondaryFlow)
             )
             {
                 var visibilitySettings = CalculateComponentVisibilitySettings();

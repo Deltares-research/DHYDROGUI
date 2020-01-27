@@ -111,11 +111,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
             }
-            if(propertyName == TypeUtils.GetMemberName(() => MaxFlowNeg) || propertyName == TypeUtils.GetMemberName(() => UseMaxFlowNeg))
+            if(propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
             {
                 return !weir.AllowNegativeFlow;
             }
-            if (propertyName == TypeUtils.GetMemberName(() => MaxFlowPos) || propertyName == TypeUtils.GetMemberName(() => UseMaxFlowPos))
+            if (propertyName == nameof(MaxFlowPos) || propertyName == nameof(UseMaxFlowPos))
             {
                 return !weir.AllowPositiveFlow;
             }

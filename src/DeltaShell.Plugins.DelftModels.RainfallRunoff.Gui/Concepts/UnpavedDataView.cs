@@ -218,14 +218,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private void UnpavedDataViewPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => data.SeepageSource) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => data.InitialGroundWaterLevelSource))
+            if (e.PropertyName == nameof(data.SeepageSource) ||
+                e.PropertyName == nameof(data.InitialGroundWaterLevelSource))
             {
                 UpdateRadioButtons();
                 return;
             }
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => data.DrainageFormula))
+            if (e.PropertyName == nameof(data.DrainageFormula))
             {
                 dataChanging = true;
                 drainageComboBox.SelectedItem = drainageTypes[data.DrainageFormula.GetType()];

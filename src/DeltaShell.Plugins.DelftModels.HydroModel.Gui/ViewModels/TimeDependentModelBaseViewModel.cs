@@ -77,13 +77,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void OnTimeDependentModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TimeDependentModelBase && e.PropertyName == TypeUtils.GetMemberName<TimeDependentModelBase>(m => m.Name))
+            if (sender is TimeDependentModelBase && e.PropertyName == nameof(TimeDependentModelBase.Name))
             {
                 Name = timeDependentModel.Name;
             }
 
             var parameter = sender as Parameter;
-            if (parameter == null || e.PropertyName != TypeUtils.GetMemberName<Parameter>(p => p.Value)) return;
+            if (parameter == null || e.PropertyName != nameof(parameter.Name)) return;
 
             SyncTimesAfterAction();
         }

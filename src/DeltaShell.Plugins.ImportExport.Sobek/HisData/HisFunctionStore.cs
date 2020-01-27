@@ -326,6 +326,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
             get { return isOpen; }
         }
 
+        public bool CopyFromWorkingDirectory { get; } = false;
+
         public void SwitchTo(string newPath)
         {
             path = newPath;

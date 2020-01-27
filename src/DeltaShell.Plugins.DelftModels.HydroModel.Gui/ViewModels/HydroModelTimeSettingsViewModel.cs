@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private HydroModel hydroModel;
         private bool isUpdatingModel;
 
-        private readonly string parameterValueName = TypeUtils.GetMemberName<Parameter>(p => p.Value);
+        private readonly string parameterValueName = nameof(Parameter.Value);
 
         #region Properties
 

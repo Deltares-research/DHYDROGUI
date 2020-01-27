@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             if (!Equals(sender, data))
                 return;
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => data.TemperatureStationName))
+            if (e.PropertyName == nameof(data.TemperatureStationName))
             {
                 FillTemperatureStationControls();
             }

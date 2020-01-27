@@ -1216,7 +1216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = sender as WaterFlowFMProperty;
-            if (prop != null && e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            if (prop != null && e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                         StringComparison.InvariantCultureIgnoreCase))
@@ -2577,6 +2577,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return isOpen; }
         }
 
+        public bool CopyFromWorkingDirectory { get; } = false;
+
         void IFileBased.CreateNew(string path)
         {
             OnAddedToProject(GetMduPathFromDeltaShellPath(path));
@@ -3051,7 +3053,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var weir = sender as IWeir;
             if (weir != null)
             {
-                if (e.PropertyName == TypeUtils.GetMemberName<Weir>(w => w.WeirFormula))
+                if (e.PropertyName == nameof(weir.WeirFormula))
                 {
                     var isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
                     UpdateAreaDataItems(weir, isInputSender);
@@ -3060,7 +3062,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             var groupableFeature = sender as IGroupableFeature;
             if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
-                e.PropertyName != TypeUtils.GetMemberName<IGroupableFeature>(g => g.GroupName)) return;
+                e.PropertyName != nameof(groupableFeature.GroupName)) return;
 
             updatingGroupName = true;// prevent recursive calls
 

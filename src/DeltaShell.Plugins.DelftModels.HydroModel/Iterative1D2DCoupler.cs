@@ -447,7 +447,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         //TODO: implement this function in OnExecute (do not remove this function)
         private void HydroModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (linkCoverages == null || HydroModel == null || sender != HydroModel.Region || e.PropertyName != TypeUtils.GetMemberName<IHydroRegion>(r => r.CoordinateSystem)) return;
+            if (linkCoverages == null || HydroModel == null || sender != HydroModel.Region || e.PropertyName != nameof(IHydroRegion.CoordinateSystem)) return;
 
             foreach (var featureCoverage in linkCoverages)
             {

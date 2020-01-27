@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                 Directory.CreateDirectory(tempDirectory);
                 var waterFlowFmModel = new WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
 
-                TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, TypeUtils.GetMemberName(() => waterFlowFmModel.MduFilePath), "Test.mdu");
+                TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, nameof(waterFlowFmModel.MduFilePath), "Test.mdu");
 
 
                 var variables = new Dictionary<string, object>

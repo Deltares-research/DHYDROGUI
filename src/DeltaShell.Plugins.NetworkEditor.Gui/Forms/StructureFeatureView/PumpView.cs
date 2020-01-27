@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         void PumpPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => pump.ControlDirection))
+            if (e.PropertyName == nameof(pump.ControlDirection))
             {
                 SetSideCheckboxes(pump.ControlDirection);
             }

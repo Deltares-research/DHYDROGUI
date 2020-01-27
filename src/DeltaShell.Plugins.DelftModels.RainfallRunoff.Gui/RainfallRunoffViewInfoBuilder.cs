@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
             {
                 if (!Equals(s, model.Precipitation) ||
-                    e.PropertyName != TypeUtils.GetMemberName(() => model.Precipitation.DataDistributionType))
+                    e.PropertyName != nameof(model.Precipitation.DataDistributionType))
                     return;
 
                 var unitAwareView = weakRef.Target as IRRMeteoStationAwareView;
@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
             {
                 if (!Equals(s, model.Temperature) ||
-                    e.PropertyName != TypeUtils.GetMemberName(() => model.Temperature.DataDistributionType))
+                    e.PropertyName != nameof(model.Temperature.DataDistributionType))
                     return;
 
                 var unitAwareView = weakRef.Target as IRRTemperatureStationAwareView;

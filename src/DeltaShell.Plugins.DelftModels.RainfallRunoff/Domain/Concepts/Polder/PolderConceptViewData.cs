@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             set
             {
                 polderConcept.PavedArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
-                FirePropertyChanged(TypeUtils.GetMemberName(() => PavedPercentage));
+                FirePropertyChanged(nameof(PavedPercentage));
             }
         }
 
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             set
             {
                 polderConcept.UnpavedArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
-                FirePropertyChanged(TypeUtils.GetMemberName(() => UnpavedPercentage));
+                FirePropertyChanged(nameof(UnpavedPercentage));
             }
         }
 
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             set
             {
                 polderConcept.GreenhouseArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
-                FirePropertyChanged(TypeUtils.GetMemberName(() => GreenhousePercentage));
+                FirePropertyChanged(nameof(GreenhousePercentage));
             }
         }
 
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             set
             {
                 polderConcept.OpenWaterArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
-                FirePropertyChanged(TypeUtils.GetMemberName(() => OpenwaterPercentage));
+                FirePropertyChanged(nameof(OpenwaterPercentage));
             }
         }
 
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
             {
                 if (areaUnit == value) return;
                 areaUnit = value;
-                FirePropertyChanged(TypeUtils.GetMemberName(() => AreaUnit));
+                FirePropertyChanged(nameof(AreaUnit));
             }
         }
 

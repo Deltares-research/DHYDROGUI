@@ -89,8 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             if (!Equals(sender, catchmentModelData))
                 return;
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => catchmentModelData.AreaAdjustmentFactor) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => catchmentModelData.MeteoStationName))
+            if (e.PropertyName == nameof(catchmentModelData.AreaAdjustmentFactor) ||
+                e.PropertyName == nameof(catchmentModelData.MeteoStationName))
             {
                 FillControls();
             }

@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var weirFormulaChangeCount = 0;
             ((INotifyPropertyChanged)model).PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != TypeUtils.GetMemberName<Weir>(w => w.WeirFormula)) return;
+                if (e.PropertyName != nameof(IWeir.WeirFormula)) return;
                 weirFormulaChangeCount++;
             };
             // add weir to model
@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var model = new WaterFlowFMModel {ExplicitWorkingDirectory = @"C:\TestWorkDir"};
 
-            TypeUtils.SetPrivatePropertyValue(model, TypeUtils.GetMemberName(() => model.MduFilePath), "Test.mdu");
+            TypeUtils.SetPrivatePropertyValue(model, nameof(model.MduFilePath), "Test.mdu");
 
             Assert.That(model.HydFilePath, Is.EqualTo(@"C:\TestWorkDir\DFM_DELWAQ_Test\Test.hyd"));
         }

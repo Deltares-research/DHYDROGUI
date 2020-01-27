@@ -84,19 +84,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             // return if there is no editor.
             if (Editor == null) return;
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseMorSed) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.UseSalinity) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => Model.HeatFluxModelType))
+            if (e.PropertyName == nameof(Model.UseMorSed) ||
+                e.PropertyName == nameof(Model.UseSalinity) ||
+                e.PropertyName == nameof(Model.HeatFluxModelType))
             {
                 Editor.RefreshAvailableCategories();
             }
-            else if (e.PropertyName == TypeUtils.GetMemberName(() => Model.UseDepthLayers))
+            else if (e.PropertyName == nameof(Model.UseDepthLayers))
             {
                 Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
                 Editor.DepthLayerControlVisible = Model.UseDepthLayers;
                 Editor.UpdateGeometryPanel();
             }
-            else if (e.PropertyName == TypeUtils.GetMemberName(() => Model.DepthLayerDefinition))
+            else if (e.PropertyName == nameof(Model.DepthLayerDefinition))
             {
                 Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
                 Editor.UpdateGeometryPanel();

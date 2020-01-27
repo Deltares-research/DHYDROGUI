@@ -597,7 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         protected virtual void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => ((Feature2D) sender).Geometry))
+            if (e.PropertyName == nameof(Feature2D.Geometry))
             {
                 BeginEdit(new DefaultEditAction("Syncing data with geometry points"));
 

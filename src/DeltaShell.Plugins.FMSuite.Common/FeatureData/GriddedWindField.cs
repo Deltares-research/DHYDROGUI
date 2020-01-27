@@ -121,6 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             get { return Path != null; }
         }
 
+        public bool CopyFromWorkingDirectory { get; } = false;
+
         public void CreateNew(string path)
         {
             if (!File.Exists(path))

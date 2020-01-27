@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => Feature.Name))
+            if (e.PropertyName == nameof(Feature.Name))
             {
                 Name = Feature.Name + " data";
                 Function.Name = Name;

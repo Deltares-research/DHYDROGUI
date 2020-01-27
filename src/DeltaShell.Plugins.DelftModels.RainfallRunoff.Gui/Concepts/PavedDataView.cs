@@ -77,9 +77,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private void PavedDataViewPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => data.SewerType) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => data.SpillingDefinition) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => data.IsSewerPumpCapacityFixed))
+            if (e.PropertyName == nameof(data.SewerType) ||
+                e.PropertyName == nameof(data.SpillingDefinition) ||
+                e.PropertyName == nameof(data.IsSewerPumpCapacityFixed))
             {
                 UpdateRadioButtons();
             }

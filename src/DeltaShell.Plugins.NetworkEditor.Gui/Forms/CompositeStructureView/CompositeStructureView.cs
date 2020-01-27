@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             var network = Data.Network;
 
-            if ((Equals(sender, network)) && (e.PropertyName == TypeUtils.GetMemberName(()=>network.IsEditing)))
+            if ((Equals(sender, network)) && e.PropertyName == nameof(network.IsEditing))
             {
                 if (!network.IsEditing) // finished editing...
                 {

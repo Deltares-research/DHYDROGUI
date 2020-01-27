@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         void BasinPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var catchment = sender as Catchment;
-            if (catchment != null && e.PropertyName == TypeUtils.GetMemberName(() => catchment.CatchmentType))
+            if (catchment != null && e.PropertyName == nameof(catchment.CatchmentType))
             {
                 var currentData = Model.GetCatchmentModelData(catchment);
                 if (!modelDataFactory.IsModelDataCompatible(catchment, currentData))

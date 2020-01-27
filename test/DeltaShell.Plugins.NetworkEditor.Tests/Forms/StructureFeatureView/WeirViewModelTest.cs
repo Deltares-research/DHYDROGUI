@@ -101,8 +101,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             weir.UseCrestLevelTimeSeries = true;
 
             //Because the bubbling event tiggered the property change in the view model.
-            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.EnableCrestLevelTimeSeries));
-            //OnPropertyChanged(TypeUtils.GetMemberName<WeirViewModel>(vm => vm.IsCrestLevelConstantTime));
+            //OnPropertyChanged(nameof(vm => vm.EnableCrestLevelTimeSeries));
+            //OnPropertyChanged(nameof(vm => vm.IsCrestLevelConstantTime));
             Assert.IsTrue(count.Equals(2));
 
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);

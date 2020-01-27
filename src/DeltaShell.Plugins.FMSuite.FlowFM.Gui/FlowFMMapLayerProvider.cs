@@ -538,8 +538,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var theme = new CategorialTheme
             {
                 AttributeName =
-                    TypeUtils.GetMemberName<BoundaryConditionSet>(
-                        bc => bc.VariableDescription),
+                    nameof(
+                        BoundaryConditionSet.VariableDescription),
                 DefaultStyle = null,
                 NoDataValues = new List<string> {""}
             };

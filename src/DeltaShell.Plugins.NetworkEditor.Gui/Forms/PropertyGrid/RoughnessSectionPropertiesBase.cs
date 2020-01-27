@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidation(string propertyName)
         {
-            if (propertyName.Equals(TypeUtils.GetMemberName(() => DefaultRoughness)) || propertyName.Equals(TypeUtils.GetMemberName(() => DefaultRoughnessType)))
+            if (propertyName.Equals(nameof(DefaultRoughness)) || propertyName.Equals(nameof(DefaultRoughnessType)))
             {
                 return data.Reversed;
             }

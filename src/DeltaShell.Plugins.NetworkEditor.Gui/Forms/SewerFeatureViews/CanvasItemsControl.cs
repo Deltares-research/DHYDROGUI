@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
-            var leftBinding = new Binding { Path = new PropertyPath(TypeUtils.GetMemberName<IDrawingShape>(s => s.LeftOffsetPix)), Mode = BindingMode.TwoWay };
-            var topBinding = new Binding { Path = new PropertyPath(TypeUtils.GetMemberName<IDrawingShape>(s => s.TopOffsetPix)), Mode = BindingMode.TwoWay };
+            var leftBinding = new Binding { Path = new PropertyPath(nameof(IDrawingShape.LeftOffsetPix)), Mode = BindingMode.TwoWay };
+            var topBinding = new Binding { Path = new PropertyPath(nameof(IDrawingShape.TopOffsetPix)), Mode = BindingMode.TwoWay };
 
             var contentControl = element as FrameworkElement;
             contentControl?.SetBinding(Canvas.LeftProperty, leftBinding);

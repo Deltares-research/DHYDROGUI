@@ -612,7 +612,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         protected override void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(TypeUtils.GetMemberName<Feature2D>(f => f.Name)))
+            if (e.PropertyName.Equals(nameof(Feature2D.Name)))
             {
                 UpdateName();
             }

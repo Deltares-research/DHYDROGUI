@@ -642,13 +642,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
         private static readonly string CoordinateSystemMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.CoordinateSystem);
+            nameof(WaterFlowFMModel.CoordinateSystem);
 
         private static readonly string OutputHisFileStoreMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.OutputHisFileStore);
+            nameof(WaterFlowFMModel.OutputHisFileStore);
 
         private static readonly string HeatFluxModelTypeMemberName =
-            TypeUtils.GetMemberName<WaterFlowFMModel>(m => m.HeatFluxModelType);
+            nameof(WaterFlowFMModel.HeatFluxModelType);
 
         void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -300,15 +300,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(unpavedData, new[]
                 {
-                    TypeUtils.GetMemberName(() => unpavedData.InfiltrationCapacityUnit),
-                    TypeUtils.GetMemberName(() => unpavedData.InitialGroundWaterLevelSource),
-                    TypeUtils.GetMemberName(() => unpavedData.SeepageSource),
-                    TypeUtils.GetMemberName(() => unpavedData.LandStorageUnit),
-                    TypeUtils.GetMemberName(() => unpavedData.SoilType),
-                    TypeUtils.GetMemberName(() => unpavedData.DrainageFormula),
-                    TypeUtils.GetMemberName(() => unpavedData.InitialGroundWaterLevelSeries),
-                    TypeUtils.GetMemberName(() => unpavedData.SeepageSeries),
-                    TypeUtils.GetMemberName(() => unpavedData.SeepageH0Series),
+                    nameof(unpavedData.InfiltrationCapacityUnit),
+                    nameof(unpavedData.InitialGroundWaterLevelSource),
+                    nameof(unpavedData.SeepageSource),
+                    nameof(unpavedData.LandStorageUnit),
+                    nameof(unpavedData.SoilType),
+                    nameof(unpavedData.DrainageFormula),
+                    nameof(unpavedData.InitialGroundWaterLevelSeries),
+                    nameof(unpavedData.SeepageSeries),
+                    nameof(unpavedData.SeepageH0Series),
                 });
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(drainageFormula);
 
@@ -482,8 +482,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(greenhouseData, new[]
                     {
-                        TypeUtils.GetMemberName(()=>greenhouseData.TotalAreaUnit),
-                        TypeUtils.GetMemberName(()=>greenhouseData.RoofStorageUnit)
+                        nameof(greenhouseData.TotalAreaUnit),
+                        nameof(greenhouseData.RoofStorageUnit)
                     });
 
             greenhouseData.AreaPerGreenhouse[GreenhouseEnums.AreaPerGreenhouseType.from2500to3000] = expected;
@@ -537,14 +537,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(pavedData, new[]
                     {
-                        TypeUtils.GetMemberName(()=>pavedData.DryWeatherFlowOptions),
-                        TypeUtils.GetMemberName(()=>pavedData.DryWeatherFlowSewerPumpDischarge),
-                        TypeUtils.GetMemberName(()=>pavedData.MixedAndOrRainfallSewerPumpDischarge),
-                        TypeUtils.GetMemberName(()=>pavedData.SewerPumpCapacityUnit),
-                        TypeUtils.GetMemberName(()=>pavedData.SewerType),
-                        TypeUtils.GetMemberName(()=>pavedData.SpillingDefinition),
-                        TypeUtils.GetMemberName(()=>pavedData.StorageUnit),
-                        TypeUtils.GetMemberName(()=>pavedData.WaterUseUnit)
+                        nameof(pavedData.DryWeatherFlowOptions),
+                        nameof(pavedData.DryWeatherFlowSewerPumpDischarge),
+                        nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
+                        nameof(pavedData.SewerPumpCapacityUnit),
+                        nameof(pavedData.SewerType),
+                        nameof(pavedData.SpillingDefinition),
+                        nameof(pavedData.StorageUnit),
+                        nameof(pavedData.WaterUseUnit)
                     });
 
             var sewerPumpVariableCapacitySeries = new TimeSeries();

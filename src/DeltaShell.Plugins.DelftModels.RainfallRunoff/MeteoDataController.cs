@@ -31,11 +31,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             Model = model;
 
-            meteoDataTypePropertyName = TypeUtils.GetMemberName(() =>
-                rainfallRunoffModel.Precipitation.DataDistributionType);
+            meteoDataTypePropertyName = nameof(rainfallRunoffModel.Precipitation.DataDistributionType);
 
-            meteoEditingPropertyName = TypeUtils.GetMemberName(() =>
-                rainfallRunoffModel.Precipitation.IsEditing);
+            meteoEditingPropertyName = nameof(rainfallRunoffModel.Precipitation.IsEditing);
 
             synchronizer = customSynchronizer ?? new CatchmentModelDataSynchronizer<CatchmentModelData>(model);
             synchronizer.OnAreaAddedOrModified = OnAreaAddedOrModified;

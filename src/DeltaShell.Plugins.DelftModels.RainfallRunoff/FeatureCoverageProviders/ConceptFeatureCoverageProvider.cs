@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders
         
         protected virtual double GetValueForAttribute(T modelData, Expression<Func<double>> attribute)
         {
-            return (double)TypeUtils.GetPropertyValue(modelData, TypeUtils.GetMemberName(attribute));
+            return (double)TypeUtils.GetPropertyValue(modelData, nameof(attribute));
         }
     }
 }

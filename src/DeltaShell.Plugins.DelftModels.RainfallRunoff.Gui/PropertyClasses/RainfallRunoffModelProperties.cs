@@ -267,15 +267,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberName(() => CapsimInitOption) ||
-                propertyName == TypeUtils.GetMemberName(() => CapsimCropAreaOption))
+            if (propertyName == nameof(CapsimInitOption) ||
+                propertyName == nameof(CapsimCropAreaOption))
             {
                 return !data.CapSim;
             }
 
-            if (propertyName == TypeUtils.GetMemberName(() => SaveStateStartTime) ||
-                propertyName == TypeUtils.GetMemberName(() => SaveStateStopTime) ||
-                propertyName == TypeUtils.GetMemberName(() => SaveStateTimeStep))
+            if (propertyName == nameof(SaveStateStartTime) ||
+                propertyName == nameof(SaveStateStopTime) ||
+                propertyName == nameof(SaveStateTimeStep))
             {
                 return !data.UseSaveStateTimeRange;
             }

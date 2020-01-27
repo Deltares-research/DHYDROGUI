@@ -25,14 +25,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
 
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(pavedData, new string[]
             {
-                TypeUtils.GetMemberName(()=>pavedData.DryWeatherFlowOptions),
-                TypeUtils.GetMemberName(()=>pavedData.DryWeatherFlowSewerPumpDischarge),
-                TypeUtils.GetMemberName(()=>pavedData.MixedAndOrRainfallSewerPumpDischarge),
-                TypeUtils.GetMemberName(()=>pavedData.SewerPumpCapacityUnit),
-                TypeUtils.GetMemberName(()=>pavedData.SewerType),
-                TypeUtils.GetMemberName(()=>pavedData.SpillingDefinition),
-                TypeUtils.GetMemberName(()=>pavedData.StorageUnit),
-                TypeUtils.GetMemberName(()=>pavedData.WaterUseUnit)
+                nameof(pavedData.DryWeatherFlowOptions),
+                nameof(pavedData.DryWeatherFlowSewerPumpDischarge),
+                nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
+                nameof(pavedData.SewerPumpCapacityUnit),
+                nameof(pavedData.SewerType),
+                nameof(pavedData.SpillingDefinition),
+                nameof(pavedData.StorageUnit),
+                nameof(pavedData.WaterUseUnit)
             });
 
             var pavedDataView = new PavedDataView { Data = pavedData };

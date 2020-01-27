@@ -367,9 +367,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.StartTime)) ||
-                e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.StopTime)) || 
-                e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.ReferenceTime)))
+            if (e.PropertyName.Equals(nameof(model.StartTime)) ||
+                e.PropertyName.Equals(nameof(model.StopTime)) || 
+                e.PropertyName.Equals(nameof(model.ReferenceTime)))
             {
                 seriesFactory.ModelStartTime = model.StartTime;
                 seriesFactory.ModelStopTime = model.StopTime;
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 UpdateControl();
             }
 
-            if (e.PropertyName.Equals(TypeUtils.GetMemberName(() => model.DepthLayerDefinition)))
+            if (e.PropertyName.Equals(nameof(model.DepthLayerDefinition)))
             {
                 UpdateControl();
             }
@@ -387,11 +387,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             if (boundaryCondition.IsEditing) return;
 
-            if (e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.IsEditing) ||
-                e.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.DataType) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Offset) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.Factor) ||
-                e.PropertyName == TypeUtils.GetMemberName<FlowBoundaryCondition>(b => b.ThatcherHarlemanTimeLag))
+            if (e.PropertyName == nameof(boundaryCondition.IsEditing) ||
+                e.PropertyName == nameof(boundaryCondition.DataType) ||
+                e.PropertyName == nameof(FlowBoundaryCondition.Offset) ||
+                e.PropertyName == nameof(FlowBoundaryCondition.Factor) ||
+                e.PropertyName == nameof(FlowBoundaryCondition.ThatcherHarlemanTimeLag))
             {
                 RefreshBoundaryData();
                 UpdateControl();
