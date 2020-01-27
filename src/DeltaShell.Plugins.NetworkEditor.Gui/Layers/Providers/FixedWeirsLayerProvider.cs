@@ -1,7 +1,5 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using SharpMap.Api.Layers;
@@ -11,12 +9,12 @@ using SharpMap.Layers;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
-    /// <see cref="FixedWeirsLayerProvider"/> implements the
-    /// <see cref="ILayerSubProvider"/> for data of type <see cref="IEventedList{FixedWeir}"/>.
+    /// Provides logic for creating <see cref="ILayer"/> objects for collections
+    /// of <see cref="FixedWeir"/> objects.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
     public class FixedWeirsLayerProvider : Feature2DLayerProvider<FixedWeir>
     {
+        /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
             return new VectorLayer(HydroArea.FixedWeirsPluralName)

@@ -262,6 +262,7 @@
     <Compile Include="Gui\Layers\Providers\Feature2DLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationPointsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
