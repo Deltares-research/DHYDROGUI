@@ -266,6 +266,7 @@
     <Compile Include="Gui\Layers\Providers\ObservationPointsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\PumpsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WeirsLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
     <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />

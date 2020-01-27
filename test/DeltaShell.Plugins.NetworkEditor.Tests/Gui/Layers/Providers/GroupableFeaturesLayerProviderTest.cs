@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 
             var hydroAreaFeature2DCollection = vectorLayer.DataSource as HydroAreaFeature2DCollection;
             Assert.IsNotNull(hydroAreaFeature2DCollection);
+            Assert.That(hydroAreaFeature2DCollection.FeatureType, Is.EqualTo(typeof(T)));
             Assert.That(hydroAreaFeature2DCollection.Features, Is.EqualTo(GetStructureCollection(hydroArea)));
             Assert.That(hydroAreaFeature2DCollection.ModelName, Is.EqualTo("NetworkEditorModelName"));
             Assert.That(hydroAreaFeature2DCollection.CoordinateSystem, Is.SameAs(hydroArea.CoordinateSystem));

@@ -609,6 +609,7 @@
     <Compile Include="Layers\Providers\ObservationPointsLayerProvider.cs" />
     <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />

@@ -14,39 +14,35 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class PumpsLayerProviderTest : GroupableFeaturesLayerProviderTest<Pump2D>
+    public class WeirsLayerProviderTest : GroupableFeaturesLayerProviderTest<Weir2D>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {
-            var pump = vectorLayer.FeatureEditor.CreateNewFeature(vectorLayer) as Pump2D;
-            Assert.IsNotNull(pump);
-            Assert.That(pump.CanBeTimedependent, Is.True);
-
             Assert.That(vectorLayer.CustomRenderers.Single(), Is.TypeOf<ArrowLineStringAdornerRenderer>());
         }
 
         protected override ILayerSubProvider GetLayerSubProvider()
         {
-            return new PumpsLayerProvider();
+            return new WeirsLayerProvider();
         }
 
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.Pumps.Add(new Pump2D());
-            hydroArea.Pumps.Add(new Pump2D());
+            hydroArea.Weirs.Add(new Weir2D());
+            hydroArea.Weirs.Add(new Weir2D());
 
             return hydroArea;
         }
 
-        protected override IEventedList<Pump2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<Weir2D> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.Pumps;
+            return hydroArea.Weirs;
         }
 
         protected override Color ExpectedVectorStyleColor()
         {
-            return Color.Aquamarine;
+            return Color.LightSteelBlue;
         }
 
         protected override float ExpectedVectorStyleLineWidth()

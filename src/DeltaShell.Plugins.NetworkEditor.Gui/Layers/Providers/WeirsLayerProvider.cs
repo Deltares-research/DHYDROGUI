@@ -12,20 +12,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
-    /// of <see cref="Pump2D"/> objects.
+    /// of <see cref="Weir2D"/> objects.
     /// </summary>
-    public class PumpsLayerProvider : GroupableFeaturesLayerProvider<Pump2D>
+    public class WeirsLayerProvider : GroupableFeaturesLayerProvider<Weir2D>
     {
+        /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
-            return new VectorLayer(HydroArea.PumpsPluralName)
+            return new VectorLayer(HydroArea.WeirsPluralName)
             {
-                FeatureEditor = new Feature2DEditor(hydroArea)
-                {
-                    CreateNewFeature = layer => new Pump2D(true)
-                },
-                Style = HydroAreaLayerStyles.PumpStyle,
-                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.Pumps, "pump", "NetworkEditorModelName", hydroArea.CoordinateSystem),
+                FeatureEditor = new Feature2DEditor(hydroArea),
+                Style = HydroAreaLayerStyles.WeirStyle,
+                DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(hydroArea.Weirs, "structure", "NetworkEditorModelName", hydroArea.CoordinateSystem),
                 NameIsReadOnly = true,
                 CustomRenderers = new IFeatureRenderer[]
                 {
