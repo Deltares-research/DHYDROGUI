@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
             yield return new ThinDamsLayerProvider();
             yield return new FixedWeirsLayerProvider();
             yield return new ObservationPointsLayerProvider();
+            yield return new ObservationCrossSectionsLayerProvider();
         }
     }
 }

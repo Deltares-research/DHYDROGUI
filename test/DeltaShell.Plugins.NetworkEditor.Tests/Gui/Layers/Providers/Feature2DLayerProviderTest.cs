@@ -93,6 +93,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             Assert.That(hydroAreaFeature2DCollection.CoordinateSystem, Is.SameAs(hydroArea.CoordinateSystem));
 
             Assert.IsTrue(vectorLayer.NameIsReadOnly);
+
+            AssertLayerProviderSpecificSettings(vectorLayer);
         }
 
         private static void AssertVectorStyle(VectorStyle style, Color expectedLineColor, float expectedLineWidth, Type expectedGeometryType)
@@ -100,6 +102,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             Assert.That(style.Line.Color, Is.EqualTo(expectedLineColor));
             Assert.That(style.Line.Width, Is.EqualTo(expectedLineWidth));
             Assert.That(style.GeometryType, Is.EqualTo(expectedGeometryType));
+        }
+
+        protected virtual void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
+        {
+            // This method may be overridden in case there are specific settings to assert.
         }
 
         protected abstract ILayerSubProvider GetLayerSubProvider();
