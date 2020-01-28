@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         }
         public virtual bool IsFileCritical { get; set; }
         public virtual bool IsOpen { get; set; }
-        public bool CopyFromWorkingDirectory { get; } = false;
+        public virtual bool CopyFromWorkingDirectory { get; } = false;
 
         public virtual object Clone()
         {
