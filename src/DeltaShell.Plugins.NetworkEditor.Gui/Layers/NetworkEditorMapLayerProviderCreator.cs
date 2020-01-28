@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
     /// construct a configured <see cref="IMapLayerProvider"/> for the
     /// NetworkEditor plugin.
     /// </summary>
-    public class NetworkEditorMapLayerProviderCreator
+    internal sealed class NetworkEditorMapLayerProviderCreator
     {
         /// <summary>
         /// Constructs the <see cref="IMapLayerProvider"/> for the NetworkEditor plugin.

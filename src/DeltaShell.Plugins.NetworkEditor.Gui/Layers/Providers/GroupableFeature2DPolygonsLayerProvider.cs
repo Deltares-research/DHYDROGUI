@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="GroupableFeature2DPolygon"/>.
     /// </summary>
-    public abstract class GroupableFeature2DPolygonsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPolygon>
+    internal abstract class GroupableFeature2DPolygonsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPolygon>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of dry points.
     /// </summary>
-    public class DryPointsLayerProvider : FeaturesLayerProvider<GroupablePointFeature>
+    internal sealed class DryPointsLayerProvider : FeaturesLayerProvider<GroupablePointFeature>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

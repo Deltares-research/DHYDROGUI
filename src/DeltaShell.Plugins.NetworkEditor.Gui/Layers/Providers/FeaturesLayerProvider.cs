@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// of <see cref="IFeature"/> objects.
     /// </summary>
     /// <typeparam name="T"> The type of <see cref="IFeature"/>. </typeparam>
-    public abstract class FeaturesLayerProvider<T> : ILayerSubProvider where T : IFeature
+    internal abstract class FeaturesLayerProvider<T> : ILayerSubProvider where T : IFeature
     {
         /// <inheritdoc/>
         public bool CanCreateLayerFor(object sourceData, object parentData)

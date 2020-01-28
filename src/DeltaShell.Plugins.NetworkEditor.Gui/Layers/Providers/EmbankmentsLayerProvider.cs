@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of <see cref="Embankment"/> objects.
     /// </summary>
-    public class EmbankmentsLayerProvider : FeaturesLayerProvider<Embankment>
+    internal sealed class EmbankmentsLayerProvider : FeaturesLayerProvider<Embankment>
     {
         /// <inheritdoc/>
         protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of enclosures.
     /// </summary>
-    public class EnclosuresLayerProvider : GroupableFeature2DPolygonsLayerProvider
+    internal sealed class EnclosuresLayerProvider : GroupableFeature2DPolygonsLayerProvider
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

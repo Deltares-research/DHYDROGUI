@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for <see cref="HydroArea"/> objects.
     /// </summary>
-    public class HydroAreaLayerProvider : ILayerSubProvider
+    internal sealed class HydroAreaLayerProvider : ILayerSubProvider
     {
         /// <inheritdoc/>
         public bool CanCreateLayerFor(object sourceData, object parentData)

@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of <see cref="FixedWeir"/> objects.
     /// </summary>
-    public class FixedWeirsLayerProvider : FeaturesLayerProvider<FixedWeir>
+    internal sealed class FixedWeirsLayerProvider : FeaturesLayerProvider<FixedWeir>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

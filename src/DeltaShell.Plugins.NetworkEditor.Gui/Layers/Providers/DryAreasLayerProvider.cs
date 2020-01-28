@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of dry areas.
     /// </summary>
-    public class DryAreasLayerProvider : GroupableFeature2DPolygonsLayerProvider
+    internal sealed class DryAreasLayerProvider : GroupableFeature2DPolygonsLayerProvider
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

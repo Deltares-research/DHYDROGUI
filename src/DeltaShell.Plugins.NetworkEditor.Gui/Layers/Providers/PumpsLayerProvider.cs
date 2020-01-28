@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="Pump2D"/> objects.
     /// </summary>
-    public class PumpsLayerProvider : FeaturesLayerProvider<Pump2D>
+    internal sealed class PumpsLayerProvider : FeaturesLayerProvider<Pump2D>
     {
         /// <inheritdoc/>
         protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)

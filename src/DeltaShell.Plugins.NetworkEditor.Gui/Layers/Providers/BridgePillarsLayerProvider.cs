@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of <see cref="BridgePillar"/> objects.
     /// </summary>
-    public class BridgePillarsLayerProvider : FeaturesLayerProvider<BridgePillar>
+    internal sealed class BridgePillarsLayerProvider : FeaturesLayerProvider<BridgePillar>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()
