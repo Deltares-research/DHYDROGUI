@@ -41,6 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
             yield return new DryAreasLayerProvider();
             yield return new EmbankmentsLayerProvider();
             yield return new EnclosuresLayerProvider();
+            yield return new BridgePillarsLayerProvider();
         }
     }
 }
