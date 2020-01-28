@@ -604,6 +604,7 @@
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
     <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EmbankmentsLayerProvider.cs" />
     <Compile Include="Layers\Providers\FeaturesLayerProvider.cs" />
     <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
     <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />

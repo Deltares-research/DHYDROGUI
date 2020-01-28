@@ -4,7 +4,9 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
+using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
 using SharpMap.Styles;
@@ -47,11 +49,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         {
             return new VectorLayer(GetLayerName())
             {
-                FeatureEditor = new Feature2DEditor(hydroArea),
+                FeatureEditor = GetLayerFeatureEditor(hydroArea),
                 Style = GetVectorStyle(),
                 DataSource = new HydroAreaFeature2DCollection(hydroArea).Init(GetLayerFeatures(hydroArea), GetFeatureTypeName(), "NetworkEditorModelName", hydroArea.CoordinateSystem),
                 NameIsReadOnly = true
             };
+        }
+
+        protected virtual IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
+        {
+            return new Feature2DEditor(hydroArea);
         }
 
         /// <summary>

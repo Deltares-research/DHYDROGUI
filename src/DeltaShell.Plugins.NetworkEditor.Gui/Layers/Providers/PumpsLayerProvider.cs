@@ -2,7 +2,9 @@
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
+using SharpMap.Editors.Interactors;
 using SharpMap.Rendering;
 using SharpMap.Styles;
 
@@ -15,10 +17,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     public class PumpsLayerProvider : FeaturesLayerProvider<Pump2D>
     {
         /// <inheritdoc/>
+        protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
+        {
+            return new Feature2DEditor(hydroArea)
+            {
+                CreateNewFeature = l => new Pump2D(true)
+            };
+        }
+
+        /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {
             ILayer layer = base.CreateLayer(hydroArea);
-            layer.FeatureEditor.CreateNewFeature = l => new Pump2D(true);
             layer.CustomRenderers.Add(new ArrowLineStringAdornerRenderer());
 
             return layer;
