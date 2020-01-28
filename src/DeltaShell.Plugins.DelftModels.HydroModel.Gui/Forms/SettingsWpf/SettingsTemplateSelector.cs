@@ -23,16 +23,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 var category = item as WpfGuiCategory;
                 if(!category.HasCustomControl)
-                    return fe.FindResource("tabContentTemplate") as DataTemplate;
-                return fe.FindResource("tabCustomContentTemplate") as DataTemplate;
+                    return fe.FindResource("TabContentTemplate") as DataTemplate;
+                return fe.FindResource("TabCustomContentTemplate") as DataTemplate;
             }
             
             if (item is WpfGuiSubCategory)
             {
                 var subCategory = item as WpfGuiSubCategory;
                 if (!subCategory.HasCustomControl)
-                    return fe.FindResource("subCategoryTemplate") as DataTemplate;
-                return fe.FindResource("subCategoryCustomTemplate") as DataTemplate;
+                    return fe.FindResource("SubCategoryTemplate") as DataTemplate;
+                return fe.FindResource("SubCategoryCustomTemplate") as DataTemplate;
             }
 
             if (!(item is WpfGuiProperty)) return base.SelectTemplate(item, container);

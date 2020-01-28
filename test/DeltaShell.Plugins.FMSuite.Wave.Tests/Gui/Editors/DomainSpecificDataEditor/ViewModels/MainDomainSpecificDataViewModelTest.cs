@@ -111,6 +111,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         }
 
         [Test]
+        public void GivenAMainViewModel_WhenDeletingTheExteriorDomain_ThenTheViewModelListUpdates()
+        {
+            // Arrange
+            WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
+
+            // Act
+            rootWaveDomainData.SubDomains[0].SuperDomain = null;
+            
+            // Assert
+            ObservableCollection<DomainSpecificSettingsViewModel> viewModelsList = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
+            Assert.AreEqual(1, viewModelsList.Count);
+            Assert.AreEqual("subdomain", viewModelsList[0].DomainName);
+        }
+
+        [Test]
         public void GivenAMainViewModel_WhenAddingASubDomain_ThenTheSameViewModelIsStillSelected()
         {
             // Arrange
@@ -157,7 +172,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             // Assert
             Assert.AreEqual(mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList[0], mainDomainSpecificDataViewModel.SelectedViewModel);
         }
-        
+
+        [Test]
+        public void GivenAMainViewModel_WhenDeletingTheSelectedExteriorDomain_ThenTheRootViewModelShouldBeSelected()
+        {
+            // Arrange
+            WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
+
+            // Act
+            rootWaveDomainData.SubDomains[0].SuperDomain = null;
+
+            // Assert
+            Assert.AreEqual(mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList[0], mainDomainSpecificDataViewModel.SelectedViewModel);
+            Assert.AreEqual("subdomain", mainDomainSpecificDataViewModel.SelectedViewModel.DomainName);
+        }
+
         [Test]
         public void GivenAMainViewModelAfterAddingAnNewExteriorDomain_WhenAddingASubDomain_ThenTheViewModelStillUpdates()
         {
@@ -197,7 +226,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.AreEqual("test", viewModelsListAfter[2].DomainName);
             Assert.AreEqual("subdomain", viewModelsListAfter[3].DomainName);
         }
-        
+
+        [Test]
+        public void GivenAMainViewModelAfterDeletingTheExteriorDomain_WhenAddingASubDomain_ThenTheViewModelStillUpdates()
+        {
+            // Arrange
+            WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
+            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            newExteriorDomain1.SuperDomain = null;
+
+            // Act
+            AddSubDomainTo(newExteriorDomain1);
+
+            ObservableCollection<DomainSpecificSettingsViewModel> viewModelsListAfter = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
+            Assert.AreEqual(2, viewModelsListAfter.Count);
+            Assert.AreEqual("subdomain", viewModelsListAfter[0].DomainName);
+            Assert.AreEqual("subdomain", viewModelsListAfter[1].DomainName);
+        }
+
+        [Test]
+        public void GivenAMainViewModelAfterDeletingTheExteriorDomain_WhenAddingAnNewExteriorDomain_ThenTheViewModelStillUpdates()
+        {
+            // Arrange
+            WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
+            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            newExteriorDomain1.SuperDomain = null;
+
+            // Act
+            var newExteriorDomain2 = new WaveDomainData("exterior2")
+            {
+                SubDomains = { newExteriorDomain1 }
+            };
+            newExteriorDomain1.SuperDomain = newExteriorDomain2;
+
+            ObservableCollection<DomainSpecificSettingsViewModel> viewModelsListAfter = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
+            Assert.AreEqual(2, viewModelsListAfter.Count);
+            Assert.AreEqual("exterior2", viewModelsListAfter[0].DomainName);
+            Assert.AreEqual("subdomain", viewModelsListAfter[1].DomainName);
+        }
+
         private static WaveDomainData CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel)
         {
             var rootWaveDomainData = new WaveDomainData("test");

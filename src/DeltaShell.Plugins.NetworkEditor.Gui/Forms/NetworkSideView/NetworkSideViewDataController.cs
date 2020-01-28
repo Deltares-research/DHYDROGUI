@@ -12,7 +12,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
@@ -646,7 +645,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             renderedNetworkCoverages.Add(networkCoverage);
             ResetMinMaxZ(); //the left axis might have changed..
             FirePropertyChanged(this, new PropertyChangedEventArgs(
-                                          TypeUtils.GetMemberName(() => RenderedNetworkCoverages)));
+                                          nameof(RenderedNetworkCoverages)));
         }
 
         public void AddRenderedCoverage(IFeatureCoverage featureCoverage)
@@ -664,7 +663,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             renderedFeatureCoverages.Add(featureCoverage);
             ResetMinMaxZ(); //the left axis might have changed..
             FirePropertyChanged(this,
-                                new PropertyChangedEventArgs(TypeUtils.GetMemberName(() => RenderedFeatureCoverages)));
+                                new PropertyChangedEventArgs(nameof(RenderedFeatureCoverages)));
         }
 
         public void RemoveRenderedCoverage(INetworkCoverage networkCoverage)
@@ -689,7 +688,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             ResetMinMaxZ();
             FirePropertyChanged(this,
                                                new PropertyChangedEventArgs(
-                                                   TypeUtils.GetMemberName(() => RenderedNetworkCoverages)));
+                                                   nameof(RenderedNetworkCoverages)));
         }
 
         public void RemoveRenderedCoverage(IFeatureCoverage featureCoverage)
@@ -714,7 +713,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             ResetMinMaxZ();
             FirePropertyChanged(this,
                                                new PropertyChangedEventArgs(
-                                                   TypeUtils.GetMemberName(() => RenderedFeatureCoverages)));
+                                                   nameof(RenderedFeatureCoverages)));
         }
 
         #endregion

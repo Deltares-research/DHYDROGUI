@@ -622,4 +622,10 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_" xml:space="preserve">
     <value>Could not copy {0} to {1} due to: {2}</value>
   </data>
+  <data name="FMMapFileImporter_Name_Flexible_Mesh_Map_File" xml:space="preserve">
+    <value>Flexible Mesh Map File</value>
+  </data>
+  <data name="FMImporters_Category_D_Flow_FM_2D_3D" xml:space="preserve">
+    <value>D-Flow FM 2D/3D</value>
+  </data>
 </root>

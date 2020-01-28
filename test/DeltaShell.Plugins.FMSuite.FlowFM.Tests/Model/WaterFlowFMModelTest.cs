@@ -35,8 +35,8 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
@@ -1037,8 +1037,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Test]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
-            var model = MockRepository.GeneratePartialMock<WaterFlowFMModel>();
-            model.Expect(m => m.OutputMapFileStore).Return(new FMMapFileFunctionStore(model)).Repeat.Any();
+            var model = Substitute.ForPartsOf<WaterFlowFMModel>();
+            model.OutputMapFileStore.Returns(new FMMapFileFunctionStore());
             var timeSeries = model.GetVar(WaterFlowFMModel.CellsToFeaturesName) as ITimeSeries[];
             Assert.IsNotNull(timeSeries,
                              "Time series was not expected to be null");

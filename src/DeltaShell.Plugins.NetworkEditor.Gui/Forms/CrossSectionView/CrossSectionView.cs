@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 Text = CrossSection.Name;
             }
-            if (e.PropertyName == TypeUtils.GetMemberName(() => CrossSectionViewModel.LevelShift))
+            if (e.PropertyName == nameof(CrossSectionViewModel.LevelShift))
             {
                 CrossSectionViewModel.FireLevelShiftChanged();
             }

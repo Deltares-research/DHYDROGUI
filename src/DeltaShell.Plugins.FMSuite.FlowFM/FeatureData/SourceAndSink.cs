@@ -9,7 +9,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
@@ -96,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == TypeUtils.GetMemberName(() => Feature.Name))
+            if (e.PropertyName == nameof(Feature.Name))
             {
                 Name = Feature.Name + " data";
                 Function.Name = Name;

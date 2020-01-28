@@ -224,6 +224,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to D-Flow FM 2D/3D.
+        /// </summary>
+        public static string FMImporters_Category_D_Flow_FM_2D_3D {
+            get {
+                return ResourceManager.GetString("FMImporters_Category_D_Flow_FM_2D_3D", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Will not import three dimensional time dependent variable ({0}), because the map file version does not support it..
         /// </summary>
         public static string FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out {
@@ -297,6 +306,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 return ResourceManager.GetString("FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_" +
                         "file__1__an_error_was_encountered___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flexible Mesh Map File.
+        /// </summary>
+        public static string FMMapFileImporter_Name_Flexible_Mesh_Map_File {
+            get {
+                return ResourceManager.GetString("FMMapFileImporter_Name_Flexible_Mesh_Map_File", resourceCulture);
             }
         }
         

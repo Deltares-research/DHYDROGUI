@@ -8,7 +8,6 @@ using DelftTools.Functions.Binding;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Binding;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 
@@ -136,27 +135,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             if (inputFieldData != null)
             {
                 hydroComboBox.DataBindings.Add(new Binding("SelectedValue", inputFieldData,
-                                                           TypeUtils.GetMemberName(
-                                                               () => inputFieldData.HydroDataType)));
+                                                           nameof(inputFieldData.HydroDataType)));
                 windComboBox.DataBindings.Add(new Binding("SelectedValue", inputFieldData,
-                                                          TypeUtils.GetMemberName(() => inputFieldData.WindDataType)));
+                                                          nameof(inputFieldData.WindDataType)));
 
                 waterlevelBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                           TypeUtils.GetMemberName(
-                                                               () => inputFieldData.WaterLevelConstant)));
+                                                           nameof(inputFieldData.WaterLevelConstant)));
                 velocityXBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                          TypeUtils.GetMemberName(
-                                                              () => inputFieldData.VelocityXConstant)));
+                                                          nameof(inputFieldData.VelocityXConstant)));
                 velocityYBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                          TypeUtils.GetMemberName(
-                                                              () => inputFieldData.VelocityYConstant)));
+                                                          nameof(inputFieldData.VelocityYConstant)));
 
                 windSpeedBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                          TypeUtils.GetMemberName(
-                                                              () => inputFieldData.WindSpeedConstant)));
+                                                          nameof(inputFieldData.WindSpeedConstant)));
                 windDirectionBox.DataBindings.Add(new Binding("Text", inputFieldData,
-                                                              TypeUtils.GetMemberName(
-                                                                  () => inputFieldData.WindDirectionConstant)));
+                                                              nameof(inputFieldData.WindDirectionConstant)));
             }
         }
 

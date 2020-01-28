@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using BasicModelInterface;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -16,7 +17,6 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -51,14 +51,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private IList<IDisposable> disposableItems = new List<IDisposable>();
+        private string progressText;
+
+        /// <summary>
+        /// Showing the progress of a run.
+        /// </summary>
+        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
 
         /// <summary>
         /// Gets a value indicating whether this wave model is online coupled to a fm model.
         /// Always true for wave model inside an integrated model, since waves models can
         /// not run stand-alone in DIMR.
         /// </summary>
-        public bool IsCoupledToFlow => Owner is ICompositeActivity;
-        
+        public bool IsCoupledToFlow { get; set; }
+
         /// <summary>
         /// Use domain specific data
         /// </summary>
@@ -402,6 +408,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
+            runner = new DimrRunner(this);
             Boundaries = new EventedList<Feature2D>();
             Sp2Boundaries = new EventedList<Feature2D>();
             BuildModel(creationCode, false);
@@ -557,7 +564,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaveModelProperty) sender;
-            if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            if (e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.BedFriction,
                                                                     StringComparison.InvariantCultureIgnoreCase))
@@ -669,7 +676,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             var feature2D = sender as Feature2D;
 
             if (snappingGeometry || feature2D == null ||
-                e.PropertyName != TypeUtils.GetMemberName(() => feature2D.Geometry))
+                e.PropertyName != nameof(feature2D.Geometry))
             {
                 return;
             }
@@ -1030,8 +1037,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
 
-        private string SafeMdwFileName => Path.GetFileName(MdwFilePath).Replace(" ", "_");
-
         public override DateTime StartTime
         {
             get => startTime;
@@ -1074,77 +1079,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [DisplayName("Show model run console")]
         [Category("Run mode")]
         public bool ShowModelRunConsole { get; set; }
+        private double previousProgress = 0;
+        private readonly DimrRunner runner;
+        public override IBasicModelInterface BMIEngine => runner.Api;
 
         protected override void OnInitialize()
         {
-            if (RunsInIntegratedModel)
+            previousProgress = 0;
+
+            ReportProgressText("Initializing");
+            
+            DisconnectOutput();
+            
+            if (DimrExportDirectoryPath != null)
             {
-                return;
+                FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
             }
 
-            string[] pathFolders = Environment.GetEnvironmentVariable("path")?.Split(';');
-            //need to set because wave uses swan and esmf which use their own process and own environment path, set before!
-            if (pathFolders != null && !pathFolders.Contains(DimrApiDataSet.SharedDllPath))
-            {
-                DimrApiDataSet.SetSharedPath();
-            }
+            runner.OnInitialize();
 
-            waveApi = new RemoteWaveModelApi(ShowModelRunConsole)
-            {
-                ReferenceDateTime = ModelDefinition.ModelReferenceDateTime
-            };
-
-            if (ValidateBeforeRun)
-            {
-                ValidationReport report = Validate();
-                if (report.Severity() == ValidationSeverity.Error)
-                {
-                    IEnumerable<ValidationIssue> errorIssues =
-                        report.GetAllIssuesRecursive().Where(i => i.Severity == ValidationSeverity.Error);
-                    string errorMessage = string.Format("Validation errors: {0}",
-                                                        string.Join("\n", errorIssues.Select(
-                                                                        i => string.Format(
-                                                                            "\t{0}: {1}", i.Subject,
-                                                                            i.Message)).ToArray()));
-                    throw new InvalidOperationException(
-                        "Model validation failed; please review the validation report.\n\r" + errorMessage);
-                }
-            }
-
-            string filePath = Path.Combine(WorkingDirectory, SafeMdwFileName);
-
-            if (Directory.Exists(WorkingDirectory))
-            {
-                Directory.Delete(WorkingDirectory, true);
-            }
-
-            Directory.CreateDirectory(WorkingDirectory);
-
-            if (IsCoupledToFlow)
-            {
-                WaveModelProperty comFileProperty = ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile);
-                comFileProperty.Value = FileUtils.GetRelativePath(WorkingDirectory, modelDefinition.CommunicationsFilePath);
-            }
-
-            ModelSaveTo(filePath, false);
-
-            waveApi.SetValues("mode", IsCoupledToFlow
-                                          ? new[]
-                                          {
-                                              "online with DflowFM"
-                                          }
-                                          : new[]
-                                          {
-                                              "stand-alone"
-                                          });
-            if (!IsCoupledToFlow)
-            {
-                waveApi.Initialize(filePath);
-            }
-            else
-            {
-                lazyInitializationFlag = true;
-            }
+            ReportProgressText();
         }
 
         public virtual ValidationReport Validate()
@@ -1152,111 +1106,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return new WaveModelValidator().Validate(this);
         }
 
-        private bool lazyInitializationFlag;
-
         protected override void OnExecute()
         {
-            if (RunsInIntegratedModel)
-            {
-                return;
-            }
-
-            if (!IsCoupledToFlow)
-            {
-                // dt = total seconds of the last time moment to calculate minus the reference time should be sent as parameter. (in seconds) 
-                // will run wave on all timepoints
-                double timestep = 0;
-                if (ModelDefinition != null && ModelDefinition.ModelReferenceDateTime != default(DateTime))
-                {
-                    DateTime lastTimePointData;
-                    if (TimePointData != null && TimePointData.TimePoints != null)
-                    {
-                        lastTimePointData = TimePointData.TimePoints.LastOrDefault();
-                        if (lastTimePointData == default(DateTime))
-                        {
-                            lastTimePointData = ModelDefinition.ModelReferenceDateTime;
-                        }
-                    }
-                    else
-                    {
-                        lastTimePointData = ModelDefinition.ModelReferenceDateTime;
-                    }
-
-                    TimeSpan timeStepSpan = lastTimePointData - ModelDefinition.ModelReferenceDateTime;
-                    timestep = timeStepSpan.TotalSeconds >= 0 ? timeStepSpan.TotalSeconds : 0;
-                }
-
-                waveApi.Update(timestep);
-                CurrentTime = StopTime;
-            }
-            else
-            {
-                if (lazyInitializationFlag)
-                {
-                    waveApi.Initialize(Path.Combine(WorkingDirectory, SafeMdwFileName));
-                    lazyInitializationFlag = false;
-                }
-
-                // wave has its own timesteps, not necessarily equal to those in flow-fm
-                waveApi.Update(CurrentTime == StartTime ? 0 : TimeStep.TotalSeconds);
-                CurrentTime += TimeStep;
-            }
-
-            if (CurrentTime >= StopTime)
-            {
-                Status = ActivityStatus.Done;
-
-                string swanDiagFile = Path.Combine(WorkingDirectory,
-                                                   "swn-diag." + Path.GetFileNameWithoutExtension(SafeMdwFileName));
-                var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
-                swanLog.Content = "";
-                if (File.Exists(swanDiagFile))
-                {
-                    swanLog.Content = File.ReadAllText(swanDiagFile);
-                }
-                else
-                {
-                    string swanPrintFile = Path.Combine(WorkingDirectory, "PRINT");
-                    if (File.Exists(swanPrintFile))
-                    {
-                        swanLog.Content = string.Format("Errors running Swan, content of {0}:", swanPrintFile);
-                        swanLog.Content += Environment.NewLine;
-                        swanLog.Content += Environment.NewLine;
-                        swanLog.Content += new StreamReader(swanPrintFile).ReadToEnd();
-                    }
-                }
-
-                ReconnectWavmFile(WorkingDirectory);
-            }
+            runner.OnExecute();
         }
 
         protected override void OnFinish()
         {
-            if (RunsInIntegratedModel)
-            {
-                return;
-            }
-
-            if (waveApi != null)
-            {
-                waveApi.Finish();
-            }
+            runner.OnFinish();
         }
 
         protected override void OnCleanup()
         {
-            if (waveApi == null)
-            {
-                return; // we never got past validation..
-            }
-
-            waveApi.Dispose();
-            waveApi = null;
-            lazyInitializationFlag = false;
-
             base.OnCleanup();
+            runner.OnCleanup();
+
+            ReportProgressText();
         }
 
+        protected override void OnProgressChanged()
+        {
+            // Only update gui for every 1 percent progress (performance)
+            if (ProgressPercentage - previousProgress < 0.01)
+            {
+                return;
+            }
+
+            previousProgress = ProgressPercentage;
+            runner.OnProgressChanged();
+            base.OnProgressChanged();
+        }
+        
         public void Dispose()
         {
             if (waveApi != null)
@@ -1307,36 +1187,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         protected virtual void ReconnectWavmFile(string outputPath)
         {
+            ReportProgressText("Reading output (WAVM) file");
             List<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
             if (domains.Count > 1)
             {
                 for (var i = 0; i < domains.Count; ++i)
                 {
                     string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
-                    if (File.Exists(wavmFile))
-                    {
-                        BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
-
-                        WavmFunctionStores.ElementAt(i).Path = wavmFile;
-
-                        EndEdit();
-                    }
+                    ConnectWavmFile(wavmFile, i);
                 }
             }
             else
             {
                 string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
-                if (File.Exists(wavmFile))
-                {
-                    BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
-
-                    WavmFunctionStores.First().Path = wavmFile;
-
-                    EndEdit();
-                }
+                ConnectWavmFile(wavmFile, 0);
             }
+        }
 
-            OutputIsEmpty = false;
+        private void ConnectWavmFile(string wavmFile, int i)
+        {
+            if (File.Exists(wavmFile))
+            {
+                BeginEdit(new DefaultEditAction("Reconnect output (WAVM) file"));
+
+                WavmFunctionStores.ElementAt(i).Path = wavmFile;
+                OutputIsEmpty = false;
+
+                EndEdit();
+            }
+            else
+            {
+                Log.WarnFormat(
+                    Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
+                    wavmFile);
+            }
         }
 
         protected override void OnClearOutput()
@@ -1358,6 +1242,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 EndEdit();
             }
+        }
+
+        private void ReportProgressText(string text = null)
+        {
+            progressText = text;
+            base.OnProgressChanged();
         }
 
         private void LoadWaveDomain(WaveDomainData domain)
@@ -1460,6 +1350,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.StartTime = StartTime;
             base.StopTime = StopTime;
             base.TimeStep = TimeStep;
+        }
+
+        private void ReconnectSwanDiagFile(string outputPath)
+        {
+            ReportProgressText("Reading Swan dia file");
+            string swanDiagFile = Path.Combine(outputPath,
+                                               "swn-diag." + Name);
+            var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
+           
+            if (File.Exists(swanDiagFile))
+            {
+                try
+                {
+                    string log = File.ReadAllText(swanDiagFile);
+                    swanLog.Content = log;
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_,
+                                    swanDiagFile, ex.Message);
+                }
+            }
+            else
+            {
+                Log.WarnFormat(
+                    Resources.WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__,
+                    swanDiagFile);
+            }
         }
 
         private void OnAddedToProject(string mdwFilePath)
@@ -1645,7 +1563,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual string DirectoryName => "wave";
 
-        public virtual bool IsMasterTimeStep => false;
+        public virtual bool IsMasterTimeStep => !IsCoupledToFlow;
 
         public virtual string ShortName => "wave";
 
@@ -1686,14 +1604,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public virtual void DisconnectOutput()
         {
-            OnClearOutput();
+            if (!OutputIsEmpty)
+            {
+                OnClearOutput();
+            }
         }
 
         public virtual void ConnectOutput(string outputPath)
         {
             ReconnectWavmFile(outputPath);
+            ReconnectSwanDiagFile(outputPath);
         }
-
+        
         public new virtual ActivityStatus Status
         {
             get => base.Status;

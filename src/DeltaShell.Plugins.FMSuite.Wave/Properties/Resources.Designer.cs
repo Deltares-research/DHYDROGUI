@@ -328,6 +328,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find log file: {0}.
+        /// </summary>
+        public static string WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel_ReadSwanDiagFile_Could_not_find_log_file__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error reading log file: {0}, {1}.
+        /// </summary>
+        public static string WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_ {
+            get {
+                return ResourceManager.GetString("WaveModel_ReadSwanDiagFile_Error_reading_log_file__0__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find output (WAVM) file: {0}.
+        /// </summary>
+        public static string WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__ {
+            get {
+                return ResourceManager.GetString("WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With WaveSetup set to True parallel runs will fail, normal runs with lakes will produce unreliable values..
         /// </summary>
         public static string WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_ {

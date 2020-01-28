@@ -238,26 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                       
                                               };
             AddMapTool(importStructuresMapTool);
-
-            var copyBranchFeaturesMapTool = new CopyBranchFeaturesMapTool()
-                                                {
-                                                    Name = "Copy Branch Feature",
-
-                                                };
-            AddMapTool(copyBranchFeaturesMapTool);
-
-            var pasteBranchFeaturesMapTool = new PasteBranchFeaturesMapTool(HydroNetworkFilter)
-                                                 {
-                                                     Name = "Paste Branch Feature",
-                                                 };
-            AddMapTool(pasteBranchFeaturesMapTool);
-
-            var pasteIntoBranchFeaturesMapTool = new PasteIntoBranchFeaturesMapTool(HydroNetworkFilter)
-                                                     {
-                                                         Name = "Paste Into Branch Feature"
-                                                     };
-            AddMapTool(pasteIntoBranchFeaturesMapTool);
-
+            
             var importCrossSectionFromCsvMapTool = new ImportCrossSectionsFromCsvMapTool(HydroNetworkFilter)
                                                        {
                                                            Name = "Import cross sections from csv"
@@ -402,47 +383,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             // remember topologyrule state; to reset properly. 
             // When tool is active (eg drawing branch) keydown/up should not reset TopologyRulesEnabled
             TopologyRulesEnabled = TopologyRulesEnabledState;
-
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.C && MapControl.SelectedFeatures.Count() > 0)
-            {
-                if (MapControl.SelectedFeatures.First() is IChannel || MapControl.SelectedFeatures.First() is IBranchFeature)
-                {
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature)MapControl.SelectedFeatures.First());
-                }
-            }
-
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.V)
-            {
-                if (!MapControl.SelectedFeatures.Any())
-                {
-                    if (HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
-                    {
-                        PasteBranch();
-                    }
-                }
-                else
-                {
-                    if (MapControl.SelectedFeatures.First() is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                    {
-                        var pasteBranchFeaturesMapTool = mapTools.OfType<PasteBranchFeaturesMapTool>().FirstOrDefault();
-
-                        if (pasteBranchFeaturesMapTool != null)
-                        {
-                            pasteBranchFeaturesMapTool.Execute();
-                        }
-                    }
-
-                    if (MapControl.SelectedFeatures.First() is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                    {
-                        var pasteIntoBranchFeaturesMapTool = mapTools.OfType<PasteIntoBranchFeaturesMapTool>().FirstOrDefault();
-
-                        if (pasteIntoBranchFeaturesMapTool != null)
-                        {
-                            pasteIntoBranchFeaturesMapTool.Execute();
-                        }
-                    }
-                }
-            }
         }
 
         void MapControlMouseUp(object sender, MouseEventArgs e)
@@ -708,18 +648,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     };
             }
 
-            if (HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
-            {
-                yield return new MapToolContextMenuItem
-                {
-                    Priority = 2,
-                    MenuItem = new ToolStripMenuItem("Paste channel", null, (s, e) => PasteBranch())
-                        {
-                            ShortcutKeys = Keys.Control | Keys.V
-                        }
-                };
-            }
-
             if (MapControl.SelectedFeatures == null) yield break;
 
             var channels = MapControl.SelectedFeatures.OfType<IChannel>().ToList();
@@ -763,15 +691,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     {
                         Priority = 3,
                         MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
-                    };
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 2,
-                        MenuItem = new ToolStripMenuItem("Copy channel", null, (s, e) => CopyBranch(channels))
-                            {
-                                ShortcutKeys = Keys.Control | Keys.C
-                            }
                     };
             }
 
@@ -829,38 +748,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             HydroNetworkHelper.SplitChannelAtNode(branch, contextMenuWorldPosition);
             MapControl.SelectTool.RefreshSelection();
             MapControl.Refresh();
-        }
-
-        private void PasteBranch()
-        {
-            var layer = Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(HydroNetworkFilter);
-            if (layer == null)
-            {
-                return;
-            }
-
-            var network = (IHydroNetwork)layer.Region;
-            if(network == null)
-            {
-                return;
-            }
-
-            string errorMessage;
-            if (!HydroNetworkCopyAndPasteHelper.PasteChannelToNetwork(network, out errorMessage))
-            {
-                MessageBox.Show(errorMessage, "Confirm", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            MapControl.Refresh();
-        }
-
-        private static void CopyBranch(IEnumerable<IChannel> channels)
-        {
-            var channel = channels.FirstOrDefault();
-            if (channel == null) return;
-
-            HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(channel);
         }
 
         private static bool IsOriented(IBranchFeature branchFeature)
