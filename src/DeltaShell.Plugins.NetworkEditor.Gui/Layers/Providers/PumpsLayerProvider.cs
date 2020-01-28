@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override string GetLayerName()
         {
-            return HydroArea.PumpsPluralName;
+            return HydroAreaLayerNames.PumpsPluralName;
         }
 
         /// <inheritdoc/>

@@ -35,13 +35,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (nodeData == area.Enclosures)
             {
-                node.Text = HydroArea.EnclosureName;
+                node.Text = HydroAreaLayerNames.EnclosureName;
                 node.Image = enclosureImage;
             }
 
             if (nodeData == area.DryAreas)
             {
-                node.Text = HydroArea.DryAreasPluralName;
+                node.Text = HydroAreaLayerNames.DryAreasPluralName;
                 node.Image = dryAreaImage;
             }
         }

@@ -41,9 +41,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new Reverse2DLineTool
                 {
                     Name = Reverse2DLineToolName,
-                    LayerFilter = layer => (layer.Name == HydroArea.ObservationCrossSectionsPluralName ||
-                                            layer.Name == HydroArea.PumpsPluralName ||
-                                            layer.Name == HydroArea.WeirsPluralName ||
+                    LayerFilter = layer => (layer.Name == HydroAreaLayerNames.ObservationCrossSectionsPluralName ||
+                                            layer.Name == HydroAreaLayerNames.PumpsPluralName ||
+                                            layer.Name == HydroAreaLayerNames.WeirsPluralName ||
                                             layer.Name == FlowFMMapLayerProvider.SourcesAndSinksLayerName) &&
                                            layer.DataSource is Feature2DCollection
                 });

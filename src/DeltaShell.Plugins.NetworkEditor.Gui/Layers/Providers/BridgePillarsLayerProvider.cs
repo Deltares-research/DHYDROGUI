@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override string GetLayerName()
         {
-            return HydroArea.BridgePillarsPluralName;
+            return HydroAreaLayerNames.BridgePillarsPluralName;
         }
 
         /// <inheritdoc/>

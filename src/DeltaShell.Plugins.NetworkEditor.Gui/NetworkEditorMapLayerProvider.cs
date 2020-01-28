@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 if (Equals(features, area2DParent.ObservationPoints))
                 {
-                    return new VectorLayer(HydroArea.ObservationPointsPluralName)
+                    return new VectorLayer(HydroAreaLayerNames.ObservationPointsPluralName)
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
@@ -386,7 +386,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                 if (Equals(features, area2DParent.DryPoints))
                 {
-                    return new VectorLayer(HydroArea.DryPointsPluralName)
+                    return new VectorLayer(HydroAreaLayerNames.DryPointsPluralName)
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
@@ -411,7 +411,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         return newFeature;
                     };
 
-                    return new VectorLayer(HydroArea.DryAreasPluralName)
+                    return new VectorLayer(HydroAreaLayerNames.DryAreasPluralName)
                     {
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
@@ -424,7 +424,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var obsCrossSections2d = data as IEventedList<ObservationCrossSection2D>;
             if (obsCrossSections2d != null && area2DParent != null && Equals(obsCrossSections2d, area2DParent.ObservationCrossSections))
             {
-                return new VectorLayer(HydroArea.ObservationCrossSectionsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.ObservationCrossSectionsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
@@ -442,7 +442,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "pump", modelName,
                     area2DParent.CoordinateSystem);
                 areaFeature2DCollection.FeatureType = typeof(Pump2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.PumpsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.PumpsPluralName)
                 {
                     NameIsReadOnly = true,
                     Style = HydroAreaLayerStyles.PumpStyle,
@@ -461,7 +461,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "structure", modelName,
                                                                          area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.WeirsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.WeirsPluralName)
                 {
                     NameIsReadOnly = true,
                     Style = HydroAreaLayerStyles.WeirStyle,
@@ -474,7 +474,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var thinDams = data as IEventedList<ThinDam2D>;
             if (thinDams != null && area2DParent != null && Equals(thinDams, area2DParent.ThinDams))
             {
-                return new VectorLayer(HydroArea.ThinDamsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.ThinDamsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
@@ -488,7 +488,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var landBoundaries = data as IEventedList<LandBoundary2D>;
             if (landBoundaries != null && area2DParent != null && Equals(landBoundaries, area2DParent.LandBoundaries))
             {
-                return new VectorLayer(HydroArea.LandBoundariesPluralName)
+                return new VectorLayer(HydroAreaLayerNames.LandBoundariesPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
@@ -501,7 +501,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var embankments = data as IEventedList<Embankment>;
             if (embankments != null && area2DParent != null && Equals(embankments, area2DParent.Embankments))
             {
-                return new VectorLayer(HydroArea.EmbankmentsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.EmbankmentsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor =
@@ -530,7 +530,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return newFeature;
                 };
 
-                return new VectorLayer(HydroArea.EnclosureName)
+                return new VectorLayer(HydroAreaLayerNames.EnclosureName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
@@ -544,7 +544,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var fixedWeirs2D = data as IEventedList<FixedWeir>;
             if (fixedWeirs2D != null && area2DParent != null && Equals(fixedWeirs2D, area2DParent.FixedWeirs))
             {
-                return new VectorLayer(HydroArea.FixedWeirsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.FixedWeirsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var bridgePillars = data as IEventedList<BridgePillar>;
             if (bridgePillars != null && area2DParent != null && Equals(bridgePillars, area2DParent.BridgePillars))
             {
-                return new VectorLayer(HydroArea.BridgePillarsPluralName)
+                return new VectorLayer(HydroAreaLayerNames.BridgePillarsPluralName)
                 {
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             var mapView = new MapView {Map = map};
             var pointTool = new Feature2DPointTool("", "", null);
-            pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+            pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
             mapView.MapControl.Tools.Add(pointTool);
 
             Action<Form> formAction = f =>
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView {Map = map};
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView { Map = map };
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView { Map = map };
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>
