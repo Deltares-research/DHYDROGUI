@@ -42,7 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
             GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
                                                               geometryFactory);
 
-            var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel);
+            var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
+                                                                   BoundarySpecificParametersSettingsViewModel);
 
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
                                                                     dataComponentFactory, 
