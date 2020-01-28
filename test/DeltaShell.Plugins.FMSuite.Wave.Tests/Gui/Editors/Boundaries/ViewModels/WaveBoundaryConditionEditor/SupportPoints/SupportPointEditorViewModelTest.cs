@@ -221,6 +221,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SupportPoints[2], Is.SameAs(existingSubViewModel.SupportPoint));
         }
 
+        [Test]
+        public void ExecuteAddSupportPointCommand_IndexForDistanceCannotBeFound_ThrowsArgumentOutOfRangeException()
+        {
+            // Setup
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>
+            {
+                new SupportPoint(1, geometricDefinition),
+                new SupportPoint(2, geometricDefinition),
+            });
+            viewModel = new SupportPointEditorViewModel(waveBoundary);
+
+            double value = random.NextDouble();
+            viewModel.NewDistance = value;
+
+            // Call
+            void Call() => viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
+
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(Call);
+        }
+
         [TestCase(1, 2, 3)]
         [TestCase(1, 3, 2)]
         [TestCase(2, 1, 3)]
@@ -344,9 +365,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SupportPoints, Has.Count.EqualTo(2));
         }
 
-        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
         [Category(TestCategory.Integration)]
-        public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueIsValid_ThenViewModelIsReplaced()
+        public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueIsValid_ThenViewModelIsReplaced(int selectionIndex)
         {
             // Setup
             double existingDistance = random.NextDouble();
@@ -356,11 +379,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             double nextValue = random.NextDouble();
             SupportPointViewModel originalSubViewModel = SubViewModels[1];
 
+            viewModel.SelectedViewModel = SubViewModels[selectionIndex];
+
             // Call
             originalSubViewModel.Distance = nextValue;
 
             // Assert
             Assert.That(SubViewModels, Has.Count.EqualTo(3));
+            Assert.That(viewModel.SelectedViewModel, Is.SameAs(SubViewModels[selectionIndex]));
 
             SupportPointViewModel subViewModel = SubViewModels[1];
             Assert.That(subViewModel, Is.Not.SameAs(originalSubViewModel));
@@ -373,10 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             double existingDistance = random.NextDouble();
-            //viewModel.NewDistance = existingDistance;
-            //viewModel.AddSupportPointCommand.Execute(existingDistance.ToString(CultureInfo.CurrentCulture));
-
-            SupportPointViewModel existingSubViewModel = GetExistingSupportPointViewModel(existingDistance);
+            GetExistingSupportPointViewModel(existingDistance);
 
             SupportPointViewModel[] existingSubViewModels = SubViewModels.ToArray();
 

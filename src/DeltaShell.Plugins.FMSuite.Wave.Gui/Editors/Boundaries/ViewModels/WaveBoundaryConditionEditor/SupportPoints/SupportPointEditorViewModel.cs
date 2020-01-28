@@ -32,6 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private SupportPointViewModel selectedViewModel;
 
+        private const double comparisonTolerance = 1E-15;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
         /// </summary>
@@ -156,11 +158,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             SupportPointViewModel newViewModel = CreateSupportPointViewModel(NewDistance);
             AddViewModel(newViewModel);
-
-            if (ViewModels.HasExactlyOneValue())
-            {
-                SelectedViewModel = ViewModels[0];
-            }
         }
 
         private void AddViewModel(SupportPointViewModel viewModel)
@@ -293,8 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
         {
-            const double tolerance = 1E-15;
-            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < tolerance);
+            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < comparisonTolerance);
         }
 
         private void Subscribe()

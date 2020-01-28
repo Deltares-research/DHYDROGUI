@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public class SupportPointViewModel : INotifyPropertyChanged
     {
         private bool isEnabled;
+        private const double comparisonTolerance = 1E-15;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointViewModel" /> class.
@@ -78,8 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             get => SupportPoint.Distance;
             set
             {
-                const double tolerance = 1E-15;
-                if ((Math.Abs(SupportPoint.Distance - value) <= tolerance))
+                if (Math.Abs(SupportPoint.Distance - value) <= comparisonTolerance)
                 {
                     return;
                 }
