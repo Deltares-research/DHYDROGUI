@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -14,12 +15,16 @@ using log4net;
 using NetTopologySuite.Extensions.Features.Generic;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
     public class ControlGroup : EditableObjectUnique<long>, INameable, ICloneable, IControlGroup, IItemContainer
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroup));
+        private string name;
+
         public ControlGroup()
         {
             Name = "Control Group";
@@ -30,22 +35,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             Signals = new EventedList<SignalBase>();
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroup));
-        private string name;
-
         public string Name
         {
             get { return name; }
             set
             {
-                string pattern = "^[A-Za-z0-9 _-]*$";
-                if (Regex.IsMatch(value, pattern) && !string.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value))
                 {
                     name = value;
                 }
                 else
                 {
-                    Log.ErrorFormat($"Error changing the {nameof(Name)} property. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.");
+                    Log.Error(Resources.RealTimeControlGroupErrorLogEmptyValue);
                 }
                 
             }

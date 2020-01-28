@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 {
@@ -156,6 +158,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             output.Name = "Test output";
 
             Assert.AreEqual(5, count);
+        }
+
+        [Test]
+        public void EmptyPatternGivesExpectedOutput()
+        {
+            Action testAction = () =>
+            {
+                string value = "";
+                var controlGroup = new ControlGroup();
+                controlGroup.Name = value;
+            };
+
+            string logError =
+                "Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.";
+            TestHelper.AssertLogMessageIsGenerated(testAction, logError, 1);
+        }
+
+        [Test]
+        public void NonEmptyPatternGivesExpectedOutput()
+        {
+            Action testAction = () =>
+            {
+                var message = "This is a test to test the regex";
+                var controlGroup = new ControlGroup();
+                controlGroup.Name = message;
+            };
+
+            TestHelper.AssertLogMessagesCount(testAction, 0);
         }
     }
 }
