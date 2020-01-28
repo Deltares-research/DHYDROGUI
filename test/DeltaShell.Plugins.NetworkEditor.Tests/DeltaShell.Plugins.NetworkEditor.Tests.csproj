@@ -260,6 +260,8 @@
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryAreasLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\EnclosuresLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\GroupableFeature2DPolygonsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryPointsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\EmbankmentsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FeaturesLayerProviderTest.cs" />

@@ -6,7 +6,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
-using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
 using SharpMap.Styles;

@@ -605,8 +605,10 @@
     <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
     <Compile Include="Layers\Providers\EmbankmentsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EnclosuresLayerProvider.cs" />
     <Compile Include="Layers\Providers\FeaturesLayerProvider.cs" />
     <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\GroupableFeature2DPolygonsLayerProvider.cs" />
     <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
     <Compile Include="Layers\Providers\LandBoundariesLayerProvider.cs" />
     <Compile Include="Layers\Providers\ObservationCrossSectionsLayerProvider.cs" />
