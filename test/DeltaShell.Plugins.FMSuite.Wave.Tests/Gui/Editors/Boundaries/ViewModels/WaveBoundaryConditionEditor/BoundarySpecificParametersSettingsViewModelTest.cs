@@ -4,6 +4,7 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 using NSubstitute;
@@ -29,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundarySpecificParametersSettingsViewModel(conditionDefinition, factory);
 
             // Assert
+            Assert.That(viewModel, Is.InstanceOf<IRefreshDataComponentViewModel>());
             Assert.That(viewModel.ParametersSettingsViewModel, Is.SameAs(dataComponentViewModel));
             factory.Received(1).ConstructParametersSettingsViewModel(conditionDefinition.DataComponent);
         }

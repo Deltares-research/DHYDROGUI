@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="BoundarySpecificParametersSettingsViewModel" /> defines the
     /// view model for the boundary-specific parameters settings view.
     /// </summary>
-    public sealed class BoundarySpecificParametersSettingsViewModel
+    public sealed class BoundarySpecificParametersSettingsViewModel : IRefreshDataComponentViewModel
     {
         private readonly IWaveBoundaryConditionDefinition conditionDefinition;
         private readonly IViewDataComponentFactory dataComponentFactory;
@@ -56,9 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private IParametersSettingsViewModel parametersSettingsViewModel;
 
-        /// <summary>
-        /// Refreshes the data component view model.
-        /// </summary>
         public void RefreshDataComponentViewModel()
         {
             ParametersSettingsViewModel =

@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// The assumption is made that end points cannot
     /// be edited or removed through the view
     /// </remarks>
-    public sealed class SupportPointEditorViewModel : INotifyPropertyChanged, IDisposable
+    public sealed class SupportPointEditorViewModel : INotifyPropertyChanged, IDisposable, IRefreshIsEnabledOnDataComponentChanged
     {
         private readonly IWaveBoundary waveBoundary;
 
@@ -115,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             return waveBoundary.ConditionDefinition.DataComponent is SpatiallyVaryingDataComponent<ConstantParameters>;
         }
 
-        public void ReceiveDataComponentChanged()
+        public void RefreshIsEnabled()
         {
             IsEnabled = ShouldBeEnabled();
         }

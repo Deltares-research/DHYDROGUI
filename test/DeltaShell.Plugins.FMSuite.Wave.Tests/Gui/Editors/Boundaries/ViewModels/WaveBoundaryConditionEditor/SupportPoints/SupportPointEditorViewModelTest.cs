@@ -7,8 +7,12 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
 using NUnit.Framework;
@@ -72,7 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(viewModel.AddSupportPointCommand, Is.Not.Null);
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
-        }
+
+            Assert.That(viewModel, Is.InstanceOf<IRefreshIsEnabledOnDataComponentChanged>());
+            Assert.That(viewModel.IsEnabled, Is.False);
+;        }
 
         [Test]
         public void Constructor_WithGeometricDefinitionWithSupportPoints_SetsCorrectValues()
@@ -418,6 +425,64 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             SupportPointViewModel subViewModel = SubViewModels.Single(m => !existingSubViewModels.Contains(m));
             Assert.That(subViewModel, Is.SameAs(originalSubViewModel));
             Assert.That(subViewModel.Distance, Is.EqualTo(originalValue));
+        }
+
+        [Test]
+        public void IsEnabled_SetDifferentValue_TriggersINotifyPropertyChange()
+        {
+            // Setup
+            var notifyPropertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
+
+            bool expectedValue = !viewModel.IsEnabled;
+
+            // Call
+            viewModel.IsEnabled = expectedValue;
+
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.EqualTo(expectedValue));
+            Assert.That(notifyPropertyChangedObserver.NCalls, Is.EqualTo(1));
+            Assert.That(notifyPropertyChangedObserver.Senders.First(), Is.EqualTo(viewModel));
+            Assert.That(notifyPropertyChangedObserver.EventArgses.First().PropertyName, 
+                        Is.EqualTo(nameof(viewModel.IsEnabled)));
+        }
+
+        [Test]
+        public void IsEnabled_SetSameValue_DoesNotTriggerINotifyPropertyChange()
+        {
+            // Setup
+            var notifyPropertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
+
+            bool expectedValue = viewModel.IsEnabled;
+
+            // Call
+            viewModel.IsEnabled = expectedValue;
+
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.EqualTo(expectedValue));
+            Assert.That(notifyPropertyChangedObserver.NCalls, Is.EqualTo(0));
+        }
+
+        private static IEnumerable<TestCaseData> GetRefreshIsEnabledData()
+        {
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters>(), true);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0)), false);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetRefreshIsEnabledData))]
+        public void RefreshIsEnabled_SetsCorrectValue(IBoundaryConditionDataComponent dataComponent,
+                                                      bool expectedValue)
+        {
+            // Setup
+            waveBoundary.ConditionDefinition.DataComponent = dataComponent;
+
+            // Call
+            viewModel.RefreshIsEnabled();
+
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.EqualTo(expectedValue));
         }
 
         private SupportPointViewModel GetExistingSupportPointViewModel()

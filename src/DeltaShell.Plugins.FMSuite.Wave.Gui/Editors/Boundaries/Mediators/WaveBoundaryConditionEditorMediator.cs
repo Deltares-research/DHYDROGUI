@@ -1,6 +1,4 @@
 ﻿using DeltaShell.NGHS.Common;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
 {
@@ -14,31 +12,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
     /// <seealso cref="IAnnounceDataComponentChanged" />
     public class WaveBoundaryConditionEditorMediator : IAnnounceDataComponentChanged
     {
-        private readonly SupportPointEditorViewModel supportPointEditorViewModel;
-        private readonly BoundarySpecificParametersSettingsViewModel specificParametersSettingsViewModel;
+        private readonly IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel;
+        private readonly IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel;
 
         /// <summary>
         /// Creates a new <see cref="WaveBoundaryConditionEditorMediator"/>.
         /// </summary>
-        /// <param name="supportPointEditorViewModel">The support point editor view model.</param>
-        /// <param name="specificParametersSettingsViewModel">The specific parameters settings view model.</param>
+        /// <param name="dataComponentIsEnabledDependentViewModel">The support point editor view model.</param>
+        /// <param name="dataComponentViewModelDependentViewModel">The data component view model dependent view model.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public WaveBoundaryConditionEditorMediator(SupportPointEditorViewModel supportPointEditorViewModel,
-                                                   BoundarySpecificParametersSettingsViewModel specificParametersSettingsViewModel)
+        public WaveBoundaryConditionEditorMediator(IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel,
+                                                   IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel)
 
         {
-            Ensure.NotNull(supportPointEditorViewModel, nameof(supportPointEditorViewModel));
-            Ensure.NotNull(specificParametersSettingsViewModel, nameof(specificParametersSettingsViewModel));
+            Ensure.NotNull(dataComponentIsEnabledDependentViewModel, nameof(dataComponentIsEnabledDependentViewModel));
+            Ensure.NotNull(dataComponentViewModelDependentViewModel, nameof(dataComponentViewModelDependentViewModel));
 
-            this.supportPointEditorViewModel = supportPointEditorViewModel;
-            this.specificParametersSettingsViewModel = specificParametersSettingsViewModel;
+            this.dataComponentIsEnabledDependentViewModel = dataComponentIsEnabledDependentViewModel;
+            this.dataComponentViewModelDependentViewModel = dataComponentViewModelDependentViewModel;
         }
 
         public void AnnounceDataComponentChanged()
         {
-            supportPointEditorViewModel.ReceiveDataComponentChanged();
+            dataComponentViewModelDependentViewModel.RefreshDataComponentViewModel();
+            dataComponentIsEnabledDependentViewModel.RefreshIsEnabled();
         }
     }
 }
