@@ -14,7 +14,7 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class PumpsLayerProviderTest : GroupableFeaturesLayerProviderTest<Pump2D>
+    public class PumpsLayerProviderTest : FeaturesLayerProviderTest<Pump2D>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {

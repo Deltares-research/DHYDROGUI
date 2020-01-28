@@ -15,7 +15,7 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class DryAreasLayerProviderTest : GroupableFeaturesLayerProviderTest<GroupableFeature2DPolygon>
+    public class DryAreasLayerProviderTest : FeaturesLayerProviderTest<GroupableFeature2DPolygon>
     {
         [Test]
         public void CreateLayer_AddNewFeatureFromPolygonGeometry_AddsNewFeatureToLayerDataSourceAndConnectedHydroArea()

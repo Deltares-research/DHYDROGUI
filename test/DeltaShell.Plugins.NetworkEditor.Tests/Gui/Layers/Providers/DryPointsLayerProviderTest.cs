@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class DryPointsLayerProviderTest : GroupableFeaturesLayerProviderTest<GroupablePointFeature>
+    public class DryPointsLayerProviderTest : FeaturesLayerProviderTest<GroupablePointFeature>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {

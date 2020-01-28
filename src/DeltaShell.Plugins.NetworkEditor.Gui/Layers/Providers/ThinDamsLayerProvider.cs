@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of <see cref="ThinDam2D"/> objects.
     /// </summary>
-    public class ThinDamsLayerProvider : GroupableFeaturesLayerProvider<ThinDam2D>
+    public class ThinDamsLayerProvider : FeaturesLayerProvider<ThinDam2D>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

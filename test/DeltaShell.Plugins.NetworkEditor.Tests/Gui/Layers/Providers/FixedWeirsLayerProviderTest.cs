@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class FixedWeirsLayerProviderTest : GroupableFeaturesLayerProviderTest<FixedWeir>
+    public class FixedWeirsLayerProviderTest : FeaturesLayerProviderTest<FixedWeir>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {

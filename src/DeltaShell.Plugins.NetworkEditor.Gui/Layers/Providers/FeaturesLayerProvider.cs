@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
@@ -12,10 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
-    /// of <see cref="IGroupableFeature"/> objects.
+    /// of <see cref="IFeature"/> objects.
     /// </summary>
-    /// <typeparam name="T"> The type of <see cref="IGroupableFeature"/>. </typeparam>
-    public abstract class GroupableFeaturesLayerProvider<T> : ILayerSubProvider where T : IGroupableFeature
+    /// <typeparam name="T"> The type of <see cref="IFeature"/>. </typeparam>
+    public abstract class FeaturesLayerProvider<T> : ILayerSubProvider where T : IFeature
     {
         /// <inheritdoc/>
         public bool CanCreateLayerFor(object sourceData, object parentData)

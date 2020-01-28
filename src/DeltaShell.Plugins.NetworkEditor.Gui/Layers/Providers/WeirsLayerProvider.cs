@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="Weir2D"/> objects.
     /// </summary>
-    public class WeirsLayerProvider : GroupableFeaturesLayerProvider<Weir2D>
+    public class WeirsLayerProvider : FeaturesLayerProvider<Weir2D>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

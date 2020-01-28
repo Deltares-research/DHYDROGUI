@@ -13,7 +13,7 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class ObservationCrossSectionsLayerProviderTest : GroupableFeaturesLayerProviderTest<ObservationCrossSection2D>
+    public class ObservationCrossSectionsLayerProviderTest : FeaturesLayerProviderTest<ObservationCrossSection2D>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {

@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class ThinDamsLayerProviderTest : GroupableFeaturesLayerProviderTest<ThinDam2D>
+    public class ThinDamsLayerProviderTest : FeaturesLayerProviderTest<ThinDam2D>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {

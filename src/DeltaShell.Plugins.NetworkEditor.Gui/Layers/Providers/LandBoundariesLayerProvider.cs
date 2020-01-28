@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of <see cref="LandBoundary2D"/> objects.
     /// </summary>
-    public class LandBoundariesLayerProvider : GroupableFeaturesLayerProvider<LandBoundary2D>
+    public class LandBoundariesLayerProvider : FeaturesLayerProvider<LandBoundary2D>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

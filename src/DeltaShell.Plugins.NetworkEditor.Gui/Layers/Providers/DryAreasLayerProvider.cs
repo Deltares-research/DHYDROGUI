@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of dry areas.
     /// </summary>
-    public class DryAreasLayerProvider : GroupableFeaturesLayerProvider<GroupableFeature2DPolygon>
+    public class DryAreasLayerProvider : FeaturesLayerProvider<GroupableFeature2DPolygon>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)

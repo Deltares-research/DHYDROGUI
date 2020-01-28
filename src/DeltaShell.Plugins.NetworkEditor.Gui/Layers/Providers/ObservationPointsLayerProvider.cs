@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
     /// of observation points.
     /// </summary>
-    public class ObservationPointsLayerProvider : GroupableFeaturesLayerProvider<GroupableFeature2DPoint>
+    public class ObservationPointsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPoint>
     {
         /// <inheritdoc/>
         protected override string GetLayerName()

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class LandBoundariesLayerProviderTest : GroupableFeaturesLayerProviderTest<LandBoundary2D>
+    public class LandBoundariesLayerProviderTest : FeaturesLayerProviderTest<LandBoundary2D>
     {
         protected override ILayerSubProvider GetLayerSubProvider()
         {
