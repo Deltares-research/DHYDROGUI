@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
     public abstract class FeaturesLayerProviderTest<T> where T : IFeature, new()
     {
         [Test]
-        public void CanCreateLayerFor_SourceDataOfTypeEventedList_ParentDataOfTypeHydroArea_ReturnsTrue()
+        public virtual void CanCreateLayerFor_SourceDataOfTypeEventedList_ParentDataOfTypeHydroArea_ReturnsTrue()
         {
             // Arrange
             ILayerSubProvider provider = GetLayerSubProvider();

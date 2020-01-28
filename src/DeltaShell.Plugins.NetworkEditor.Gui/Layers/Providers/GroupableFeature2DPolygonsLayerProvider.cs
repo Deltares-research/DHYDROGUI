@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Api.Layers;
@@ -11,6 +12,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// </summary>
     internal abstract class GroupableFeature2DPolygonsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPolygon>
     {
+        /// <inheritdoc/>
+        public override bool CanCreateLayerFor(object sourceData, object parentData)
+        {
+            return sourceData is IEventedList<GroupableFeature2DPolygon> features && parentData is HydroArea hydroArea && Equals(features, GetLayerFeatures(hydroArea));
+        }
+
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
         {

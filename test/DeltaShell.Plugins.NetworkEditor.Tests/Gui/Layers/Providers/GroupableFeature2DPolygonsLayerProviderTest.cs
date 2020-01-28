@@ -14,6 +14,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
     public abstract class GroupableFeature2DPolygonsLayerProviderTest : FeaturesLayerProviderTest<GroupableFeature2DPolygon>
     {
         [Test]
+        public override void CanCreateLayerFor_SourceDataOfTypeEventedList_ParentDataOfTypeHydroArea_ReturnsTrue()
+        {
+            // Arrange
+            ILayerSubProvider provider = GetLayerSubProvider();
+            HydroArea hydroArea = CreateHydroArea();
+
+            // Act
+            bool canCreateLayer = provider.CanCreateLayerFor(GetStructureCollection(hydroArea), hydroArea);
+
+            // Assert
+            Assert.IsTrue(canCreateLayer);
+        }
+
+        [Test]
         public void CreateLayer_AddNewFeatureFromPolygonGeometry_AddsNewFeatureToLayerDataSourceAndConnectedHydroArea()
         {
             // Arrange

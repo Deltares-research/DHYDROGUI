@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal abstract class FeaturesLayerProvider<T> : ILayerSubProvider where T : IFeature
     {
         /// <inheritdoc/>
-        public bool CanCreateLayerFor(object sourceData, object parentData)
+        public virtual bool CanCreateLayerFor(object sourceData, object parentData)
         {
             return sourceData is IEventedList<T> && parentData is HydroArea;
         }

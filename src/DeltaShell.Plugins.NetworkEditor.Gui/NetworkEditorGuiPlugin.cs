@@ -32,6 +32,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -76,8 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             InitializeComponent();
             Instance = this;
-            //TODO: substitute the next line for 'MapLayerProvider = new NetworkEditorMapLayerProviderCreator().CreateMapLayerProvider();'
-            MapLayerProvider = new NetworkEditorMapLayerProvider();
+            MapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
         }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }

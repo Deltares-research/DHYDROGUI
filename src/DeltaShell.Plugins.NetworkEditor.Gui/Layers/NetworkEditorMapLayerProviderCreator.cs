@@ -11,13 +11,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
     /// construct a configured <see cref="IMapLayerProvider"/> for the
     /// NetworkEditor plugin.
     /// </summary>
-    internal sealed class NetworkEditorMapLayerProviderCreator
+    internal static class NetworkEditorMapLayerProviderCreator
     {
         /// <summary>
         /// Constructs the <see cref="IMapLayerProvider"/> for the NetworkEditor plugin.
         /// </summary>
         /// <returns> A configured <see cref="IMapLayerProvider"/> for the NetworkEditor plugin. </returns>
-        public IMapLayerProvider CreateMapLayerProvider()
+        public static IMapLayerProvider CreateMapLayerProvider()
         {
             var layerProvider = new MapLayerProvider();
             ILayerSubProvider[] subLayerProviders = GetSubLayerProviders().ToArray();
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
             return layerProvider;
         }
 
-        internal IEnumerable<ILayerSubProvider> GetSubLayerProviders()
+        internal static IEnumerable<ILayerSubProvider> GetSubLayerProviders()
         {
             yield return new HydroAreaLayerProvider();
             yield return new ThinDamsLayerProvider();
