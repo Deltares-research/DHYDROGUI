@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"LMW_LinkageNodes\Network.TP");
 
-            var model = new WaterFlowModel1D();
+            var model = new WaterFlowFMModel();
 
             var branchesComputationalGridAndLinkageNodeImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, model, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekComputationalGridImporter(), new SobekLinkageNodeImporter() });
 

@@ -152,6 +152,9 @@
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48233-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+    </Reference>
     <Reference Include="SharpTestsEx, Version=1.2.1.0, Culture=neutral, PublicKeyToken=8c60d8070630b1c1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpTestsEx.1.2.1\lib\SharpTestsEx.dll</HintPath>
       <Private>True</Private>
@@ -252,11 +255,6 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
       <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
-      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportComputationalGrid()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
-                                                                                 waterFlowModel1DModel,
+                                                                                 waterFlowFmModel,
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
@@ -29,8 +29,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.IsNotNull(waterFlowModel1DModel.NetworkDiscretization);
-            Assert.AreEqual(751, waterFlowModel1DModel.NetworkDiscretization.Locations.Values.Count);
+            Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
+            Assert.AreEqual(751, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
 
         }
 
@@ -39,10 +39,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportComputationalGridReWithOptionOnCrossSectionsOnly()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
-            var waterFlowModel1DModel = new WaterFlowModel1D("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
-                                                                                 waterFlowModel1DModel,
+                                                                                 waterFlowFmModel,
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
@@ -70,8 +70,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             // note: for this model, there are always cross sections positioned on the branch's start and end points
             foreach (var idAndNrCrossSections in nrOfCrossSectionsLookup)
             {
-                var branch = waterFlowModel1DModel.Network.Branches.First(b => b.Name == idAndNrCrossSections.Key);
-                var nrOfPoints = waterFlowModel1DModel.NetworkDiscretization.GetLocationsForBranch(branch).Count;
+                var branch = waterFlowFmModel.Network.Branches.First(b => b.Name == idAndNrCrossSections.Key);
+                var nrOfPoints = waterFlowFmModel.NetworkDiscretization.GetLocationsForBranch(branch).Count;
                 Assert.AreEqual(idAndNrCrossSections.Value, nrOfPoints,
                                 String.Format("Expected grid points for branch {0}", idAndNrCrossSections.Key));
             }

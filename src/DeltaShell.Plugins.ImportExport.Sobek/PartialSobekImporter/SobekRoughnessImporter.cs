@@ -9,7 +9,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;

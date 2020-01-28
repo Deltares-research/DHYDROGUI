@@ -2,7 +2,7 @@
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
@@ -19,11 +19,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var realTimeControlModel = new RealTimeControlModel();
             realTimeControlModel.ControlGroups.Clear();
 
-            var waterFlowModel1DModel = new WaterFlowModel1D();
+            var waterFlowFmModel = new WaterFlowFMModel();
 
             var hydroModel = new HydroModel();
             hydroModel.Activities.Add(realTimeControlModel);
-            hydroModel.Activities.Add(waterFlowModel1DModel);
+            hydroModel.Activities.Add(waterFlowFmModel);
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekStructuresImporter(), new SobekMeasurementStationsImporter(), new SobekControllersTriggersImporter() });
 

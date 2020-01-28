@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Sobek.Readers.Readers;
 using GeoAPI.Extensions.Coverages;
 using log4net;

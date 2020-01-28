@@ -10,7 +10,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Editing;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -46,10 +46,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             log.DebugFormat("Importing cross-sections ...");
 
-            var flow1d = TryGetModel<WaterFlowModel1D>();
-            if (flow1d != null)
+            var flowFmModel = TryGetModel<WaterFlowFMModel>();
+            if (flowFmModel != null)
             { 
-                flow1d.UnSubscribeFromNetwork(); // performance optimization, no need to listen to network events
+                flowFmModel.UnSubscribeFromNetwork(); // performance optimization, no need to listen to network events
             }
 
             AddCrossSections();
@@ -57,10 +57,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             log.DebugFormat("Importing friction section types ...");
             AddFrictionSectionTypes();
 
-            if (flow1d != null)
+            if (flowFmModel != null)
             {
-                flow1d.SubscribeToNetwork();
-                flow1d.UpdateRoughnessSections();
+                //flowFmModel.SubscribeToNetwork();
+                flowFmModel.UpdateRoughnessSections();
             }
         }
 

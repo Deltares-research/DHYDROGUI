@@ -1,5 +1,6 @@
 ﻿using System.IO;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using log4net;
@@ -8,6 +9,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
     public class SobekInitialConditionsImporter: PartialSobekImporterBase
     {
+        //Issue FM1D2D-578
+
         private static readonly ILog log = LogManager.GetLogger(typeof(SobekInitialConditionsImporter));
 
         private string displayName = "Initial Conditions";
@@ -20,7 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             log.DebugFormat("Importing initial conditions ...");
 
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+            var waterFlowFmModel = GetModel <WaterFlowFMModel> ();
 
             var initialPath = GetFilePath(SobekFileNames.SobekInitialConditionsFileName);
             if (!File.Exists(initialPath))
@@ -35,13 +38,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             //this is awkward...but putting it all in the constructor is as well
             builder.Build();
 
-            SobekWaterFlowModel1DReaderHelper.CopyCoverageValuesAndDefault(builder.InitialDepth, waterFlowModel1D.InitialConditions);
-            SobekWaterFlowModel1DReaderHelper.CopyCoverageValuesAndDefault(builder.InitialFlow, waterFlowModel1D.InitialFlow);
+            //SobekWaterFlowModel1DReaderHelper.CopyCoverageValuesAndDefault(builder.InitialDepth, waterFlowFmModel.InitialConditions);
+            //SobekWaterFlowModel1DReaderHelper.CopyCoverageValuesAndDefault(builder.InitialFlow, waterFlowFmModel.InitialFlow);
 
             // set global defaults 
             // if sobek 2.12 casesettings overrule initial.dat (DEFICN.2)
-            waterFlowModel1D.DefaultInitialWaterLevel = builder.GlobalInitialWaterLevel;
-            waterFlowModel1D.DefaultInitialDepth = builder.GlobalInitialDepth;
+            //waterFlowFmModel.DefaultInitialWaterLevel = builder.GlobalInitialWaterLevel;
+            //waterFlowFmModel.DefaultInitialDepth = builder.GlobalInitialDepth;
 
             if (SobekType == SobekType.Sobek212)
             {
@@ -52,7 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ReadInitialConditionsFromNetter(InitialConditionsBuilder builder)
         {
             var path =GetFilePath(SobekFileNames.SobekCaseSettingFileName);
-            var waterFlowModel1D = GetModel<WaterFlowModel1D>();
+            var waterFlowFmModel = GetModel<WaterFlowFMModel>();
 
             if (!File.Exists(path))
             {
@@ -67,18 +70,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             if (sobekCaseSettings.FromNetter)
             {
-                waterFlowModel1D.DefaultInitialWaterLevel = builder.GlobalInitialWaterLevel;
-                waterFlowModel1D.DefaultInitialDepth = builder.GlobalInitialDepth;
+                //waterFlowFmModel.DefaultInitialWaterLevel = builder.GlobalInitialWaterLevel;
+                //waterFlowFmModel.DefaultInitialDepth = builder.GlobalInitialDepth;
             }
             else
             {
-                waterFlowModel1D.DefaultInitialWaterLevel = sobekCaseSettings.InitialLevelValue;
-                waterFlowModel1D.DefaultInitialDepth = sobekCaseSettings.InitialDepthValue;
+                //waterFlowFmModel.DefaultInitialWaterLevel = sobekCaseSettings.InitialLevelValue;
+                //waterFlowFmModel.DefaultInitialDepth = sobekCaseSettings.InitialDepthValue;
                 
                 if (sobekCaseSettings.InitialLevel)
                 {
-                    if (waterFlowModel1D.InitialConditions.Locations.Values.Count != 0)
-                    {
+                    //if (waterFlowFmModel.InitialConditions.Locations.Values.Count != 0)
+                    //{
                         //It turns out our data should be presented as Level data, and previously read Depth data
                         //should not be used (at all?).
                         //The problem is that when setting the InitialConditionsType (see below), the previously set
@@ -88,16 +91,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         //depth = no locations in level'. Since that normally doesn't apply, that would mean a bunch of 
                         //custom code..
                         log.Error("Initial Conditions Import: Simplified conversion from Initial Depth to Initial Level was performed.");
-                    }
+                    //}
 
-                    waterFlowModel1D.InitialConditionsType = InitialConditionsType.WaterLevel;
-                    waterFlowModel1D.InitialConditions.Clear(); //clear any 'depth-based' level data
+                    //waterFlowFmModel.InitialConditionsType = RRInitialConditionsWrapper.InitialConditionsType.WaterLevel;
+                    //waterFlowFmModel.InitialConditions.Clear(); //clear any 'depth-based' level data
                     return;
                 }
 
                 if (sobekCaseSettings.InitialDepth)
                 {
-                    waterFlowModel1D.InitialConditionsType = InitialConditionsType.Depth;
+                    //waterFlowFmModel.InitialConditionsType = RRInitialConditionsWrapper.InitialConditionsType.Depth;
                     return;
                 }
 
@@ -105,8 +108,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     // completely dry system
                     sobekCaseSettings.InitialDepth = true;
-                    waterFlowModel1D.InitialConditionsType = InitialConditionsType.Depth;
-                    waterFlowModel1D.DefaultInitialDepth = 0.0;
+                    //waterFlowFmModel.InitialConditionsType = RRInitialConditionsWrapper.InitialConditionsType.Depth;
+                   // waterFlowFmModel.DefaultInitialDepth = 0.0;
                 }
             }
 

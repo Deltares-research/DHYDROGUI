@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
@@ -57,8 +57,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var modelImporter = new SobekModelToIntegratedModelImporter();
 
             // The expected result is that the original branch 1 is split in 5 branches
-            WaterFlowModel1D waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
-            IHydroNetwork network = waterFlowModel1D.Network;
+            var waterFlowFmModel = (WaterFlowFMModel)modelImporter.ImportItem(pathToSobekNetwork);
+            IHydroNetwork network = waterFlowFmModel.Network;
             Assert.AreEqual(10, network.Branches.Count);
             Assert.AreEqual(10, network.Nodes.Count);
 
@@ -109,8 +109,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
             var modelImporter = new SobekModelToIntegratedModelImporter();
             
-            var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
-            IHydroNetwork network = waterFlowModel1D.Network;
+            var waterFlowFmModel = (WaterFlowFMModel)modelImporter.ImportItem(pathToSobekNetwork);
+            IHydroNetwork network = waterFlowFmModel.Network;
             Assert.IsNotNull(network);
             int actualNumberOfCrossSections = network.CrossSections.Count();
             // of the 105 profiles only 27 are supported and processed
@@ -131,8 +131,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
             var modelImporter = new SobekModelToIntegratedModelImporter();
-            var waterFlowModel1D = (WaterFlowModel1D)modelImporter.ImportItem(pathToSobekNetwork);
-            IHydroNetwork network = waterFlowModel1D.Network;
+            var waterFlowFmModel = (WaterFlowFMModel)modelImporter.ImportItem(pathToSobekNetwork);
+            IHydroNetwork network = waterFlowFmModel.Network;
             Assert.IsNotNull(network);
             
             IEnumerable<Weir> weirs = network.Structures.OfType<Weir>();

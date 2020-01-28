@@ -1,9 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
@@ -49,14 +46,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportSobekRENetworkWithDiffuseLateralSource()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
-            var flowModel1D = new WaterFlowModel1D();
+            var waterFlowFmModel = new WaterFlowFMModel();
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, flowModel1D, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekLateralSourcesDataImporter() });
 
             importer.Import();
 
-            Assert.AreEqual(3,flowModel1D.Network.LateralSources.Count());
-            var diffuseLateral = flowModel1D.Network.LateralSources.Where(ls => ls.IsDiffuse).First();
+            Assert.AreEqual(3,waterFlowFmModel.Network.LateralSources.Count());
+            var diffuseLateral = waterFlowFmModel.Network.LateralSources.Where(ls => ls.IsDiffuse).First();
             Assert.AreEqual(1800.0, diffuseLateral.Length);
         }
 

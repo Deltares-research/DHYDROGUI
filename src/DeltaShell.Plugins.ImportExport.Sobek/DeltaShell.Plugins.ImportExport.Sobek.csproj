@@ -281,10 +281,6 @@
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
-      <Project>{3038ff2f-a3b0-462e-8c41-30dfe1247822}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
       <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
       <Name>DeltaShell.Plugins.FMSuite.Common</Name>

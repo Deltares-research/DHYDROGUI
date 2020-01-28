@@ -4,8 +4,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel;
-using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
@@ -92,7 +91,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             sobekModelImporter.Import();
 
-            var acts1D = hydroModel.Activities.GetActivitiesOfType<WaterFlowModel1D>().ToList();
+            var acts1D = hydroModel.Activities.GetActivitiesOfType<WaterFlowFMModel>().ToList();
             Assert.NotNull(acts1D);
             Assert.IsNotEmpty(acts1D);
             var actToRemove = acts1D.First();
