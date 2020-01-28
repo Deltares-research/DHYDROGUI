@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ClearOutput();
                 }
             }
-            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection)
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection && !isLoading)
             {
                 var sewerConnection = removedOrAddedItem as SewerConnection;
                 if (sewerConnection?.Length > 0)
