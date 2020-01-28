@@ -831,7 +831,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
             
             ((IView)hydroRegionTreeView).Data = null;
-            HydroNetworkCopyAndPasteHelper.ReleaseCopiedNetworkFeature();
         }
 
         public override void OnViewAdded(IView view)

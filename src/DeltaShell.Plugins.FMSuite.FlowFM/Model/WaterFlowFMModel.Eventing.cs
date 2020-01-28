@@ -11,7 +11,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -260,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var prop = (WaterFlowFMProperty) sender;
-            if (e.PropertyName == TypeUtils.GetMemberName(() => prop.Value))
+            if (e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
                                                                    StringComparison.InvariantCultureIgnoreCase))

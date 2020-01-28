@@ -18,7 +18,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -702,7 +701,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             string propertyName = e.PropertyName;
 
-            if (propertyName.Equals(TypeUtils.GetMemberName(() => waterFlowFmModel.OutputSnappedFeaturesPath)))
+            if (propertyName.Equals(nameof(waterFlowFmModel.OutputSnappedFeaturesPath)))
             {
                 UpdateOutputSnappedFeaturesPaths(waterFlowFmModel);
             }

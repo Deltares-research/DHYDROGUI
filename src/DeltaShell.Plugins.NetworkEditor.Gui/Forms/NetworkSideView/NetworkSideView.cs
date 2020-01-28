@@ -23,7 +23,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
@@ -1110,21 +1109,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             //TODO: get a list going with types and properties.. try to keep it refactor proof.
             if (sender is NetworkSideViewDataController)
             {
-                var data = (NetworkSideViewDataController)sender;
-
-                if (e.PropertyName.Equals(TypeUtils.GetMemberName(() => data.WaterLevelNetworkCoverage)))
+                if (e.PropertyName.Equals(nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage)))
                 {
                     UnsubscribeTimeNavigator();
                     CreateAndSubscribeTimeNavigator();
                 }
 
-                var interestingMembers = new[]
-                                      {
-                                          TypeUtils.GetMemberName(() => data.WaterLevelNetworkCoverage),
-                                          TypeUtils.GetMemberName(() => data.ProfileNetworkCoverages),
-                                          TypeUtils.GetMemberName(() => data.RenderedNetworkCoverages),
-                                          TypeUtils.GetMemberName(() => data.RenderedFeatureCoverages)
-                                      };
+                string[] interestingMembers = 
+                {
+                    nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage),
+                    nameof(NetworkSideViewDataController.ProfileNetworkCoverages),
+                    nameof(NetworkSideViewDataController.RenderedNetworkCoverages),
+                    nameof(NetworkSideViewDataController.RenderedFeatureCoverages)
+                };
 
                 if (interestingMembers.Contains(e.PropertyName))
                 {

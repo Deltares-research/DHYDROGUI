@@ -162,6 +162,11 @@ class HydroModelBuilder(object):
             w.Activities.Add(ActivityWrapper(dflowfm))
             model.Workflows.Add(w)
 
+        if wave:
+            w = ParallelActivity(Name="(Waves)")
+            w.Activities.Add(ActivityWrapper(wave))
+            model.Workflows.Add(w)
+
         model.CurrentWorkflow = None
         for workflow in model.Workflows : 
             if workflow.Name == lastModelWorkflowName : 
@@ -197,7 +202,8 @@ class HydroModelBuilder(object):
         if remove:           
             wave.ModelDefinition.CommunicationsFilePath = ""
         else:
-            fm.SetWaveForcing()            
+            fm.SetWaveForcing() 
+            wave.IsCoupledToFlow = True
             wave.ModelDefinition.CommunicationsFilePath = '../dflowfm/output/%s_com.nc'%(fm.Name)
 
     def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):

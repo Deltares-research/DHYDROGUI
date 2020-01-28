@@ -115,42 +115,6 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
-        /// Splits a branch at the given node and connect resulting 2 branches to the node.
-        /// All related branch features are moved to the corresponding branch based on their geometry.
-        /// </summary>
-        /// <param name="network"> </param>
-        /// <param name="branch"> </param>
-        /// <param name="node"> </param>
-        public static IChannel SplitChannelAtNode(INetwork network, IChannel branch, INode node)
-        {
-            var channelSplitAction = new BranchSplitAction();
-
-            bool isEditing = branch.Network.IsEditing;
-            if (!isEditing)
-            {
-                branch.Network.BeginEdit(channelSplitAction);
-            }
-
-            IBranch newBranch = NetworkHelper.SplitBranchAtNode(network, branch, node);
-
-            channelSplitAction.SplittedBranch = branch;
-            channelSplitAction.NewBranch = newBranch;
-
-            if (!isEditing)
-            {
-                branch.Network.EndEdit();
-            }
-
-            return (IChannel) newBranch;
-        }
-
-        public static IChannel SplitChannelAtNodeInternal(INetwork network, IChannel branch, INode node)
-        {
-            IBranch newBranch = NetworkHelper.SplitBranchAtNode(network, branch, node);
-            return (IChannel) newBranch;
-        }
-
-        /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
         /// </summary>
         /// <param name="networkCoverage"> </param>
@@ -643,11 +607,6 @@ namespace DelftTools.Hydro.Helpers
 
             channel.BranchFeatures.Remove(structure.ParentStructure);
             structure.ParentStructure.Branch = null;
-        }
-
-        public static void AddSnakeHydroNetwork(IHydroNetwork network, params Point[] points)
-        {
-            AddSnakeNetwork(false, points, network);
         }
 
         public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)

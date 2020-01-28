@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (OutputMapFileStore != null)
                 {
-                    OutputMapFileStore.CoordinateSystem = value;
+                    OutputMapFileStore.SetCoordinateSystem(value);
                 }
                 // coverages are handled via the feature collections.
 

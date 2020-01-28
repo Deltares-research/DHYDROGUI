@@ -10,7 +10,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
@@ -128,8 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
         private void OnBoundaryConditionPropertyChanged(object sender,
                                                         PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName ==
-                TypeUtils.GetMemberName(() => boundaryCondition.SpatialDefinitionType))
+            if (propertyChangedEventArgs.PropertyName == nameof(boundaryCondition.SpatialDefinitionType))
             {
                 if (boundaryCondition.IsHorizontallyUniform)
                 {
@@ -139,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 UpdateDataView();
             }
 
-            if (propertyChangedEventArgs.PropertyName == TypeUtils.GetMemberName(() => boundaryCondition.DataType))
+            if (propertyChangedEventArgs.PropertyName == nameof(boundaryCondition.DataType))
             {
                 FullRefresh();
             }

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:editors="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors"
-             xmlns:io="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.IO;assembly=DeltaShell.Plugins.FMSuite.FlowFM"
              mc:Ignorable="d" 
              Height="Auto" Width="Auto">
     <UserControl.Resources>
@@ -47,48 +46,41 @@
                 </Grid>
             </GroupBox>
             <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.Row="0" Grid.Column="0">
+                <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Header="Overall" Visibility="{Binding Path=FractionsVisible}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Header="Overall" Visibility="{Binding Path=FractionsVisible}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <ItemsControl Grid.Row="0" Margin="5" ItemsSource="{Binding Path=ObjectModelSedimentOverallProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}"/>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Grid.Column="0" Header="Type of fraction" Visibility="{Binding Path=FractionsVisible}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <ComboBox Grid.Row="0" Margin="5" ItemsSource="{Binding Path=SedimentTypes}" SelectedItem="{Binding Path=CurrentSedimentType}"/>
-                                <ItemsControl Grid.Row="1" Margin="5" ItemsSource="{Binding Path=CurrentSedimentGuiProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}" />
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Grid.Column="1" Header="Formula" Visibility="{Binding Path=FormulasVisible}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <ComboBox Grid.Row="0" Margin="5" ItemsSource="{Binding Path=FormulaTypes}" SelectedItem="{Binding Path=CurrentFormulaType}"/>
-                                <ItemsControl Grid.Row="1" Margin="5" ItemsSource="{Binding Path=CurrentFormulaGuiProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}" />
-                            </Grid>
-                        </GroupBox>
+                        <ItemsControl Grid.Row="0" Margin="5" ItemsSource="{Binding Path=ObjectModelSedimentOverallProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="0" Header="Type of fraction" Visibility="{Binding Path=FractionsVisible}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox Grid.Row="0" Margin="5" ItemsSource="{Binding Path=SedimentTypes}" SelectedItem="{Binding Path=CurrentSedimentType}"/>
+                        <ItemsControl Grid.Row="1" Margin="5" ItemsSource="{Binding Path=CurrentSedimentGuiProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Row="1" Grid.Column="1" Header="Formula" Visibility="{Binding Path=FormulasVisible}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox Grid.Row="0" Margin="5" ItemsSource="{Binding Path=FormulaTypes}" SelectedItem="{Binding Path=CurrentFormulaType}"/>
+                        <ItemsControl Grid.Row="1" Margin="5" ItemsSource="{Binding Path=CurrentFormulaGuiProperties}" ItemTemplateSelector="{StaticResource DataTemplateSelector}" />
                     </Grid>
                 </GroupBox>
             </Grid>

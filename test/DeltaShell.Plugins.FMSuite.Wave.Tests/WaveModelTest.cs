@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
@@ -420,23 +422,187 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
         }
-
-        [Test]
-        public void IsCoupledToFlow_ShouldAlwaysBeTrueForAWaveModelInsideAnIntegratedModel()
-        {
-            var waveModel = new WaveModel
-            {
-                Owner = Substitute.For<ICompositeActivity>()
-            };
-
-            Assert.IsTrue(waveModel.IsCoupledToFlow);
-        }
-
+        
         [Test]
         public void IsCoupledToFlow_ShouldAlwaysBeFalseForAStandAloneModel()
         {
             var waveModel = new WaveModel();
             Assert.IsFalse(waveModel.IsCoupledToFlow);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel())
+            {
+                // Arrange
+                string outputDirectory =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output1Domain");
+                string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
+
+
+                // Act
+                waveModel.ConnectOutput(outputDirectoryInTemp);
+
+                // Assert
+                Assert.IsFalse(waveModel.OutputIsEmpty);
+                Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves.nc"),
+                                waveModel.WavmFunctionStores.First().Path);
+
+                IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == "SwanLogDataItemTag");
+                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
+                                ((TextDocument)swanLogDataItem.Value).Content);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenOutputWAVMFileIsMissing_ShouldGiveLogWarningToUser()
+        {
+            // Arrange
+            using (var waveModel = new WaveModel())
+            {
+                string outputDirectory =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "NotExisting");
+
+                // Act and Assert
+                string expectedMssg =
+                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves.nc")}";
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => waveModel.ConnectOutput(outputDirectory),
+                                                               expectedMssg);
+                Assert.IsTrue(waveModel.OutputIsEmpty);
+            }
+        }
+
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel())
+            {
+                // Arrange
+                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
+
+                string outputDirectory =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains");
+                string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
+
+                // Act
+                waveModel.ConnectOutput(outputDirectoryInTemp);
+
+                // Assert
+                Assert.IsFalse(waveModel.OutputIsEmpty);
+                IEnumerable<WavmFileFunctionStore> functionStores = waveModel.WavmFunctionStores.ToList();
+                Assert.AreEqual(2, functionStores.Count());
+                Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Outer.nc"),
+                                functionStores.First().Path);
+                Assert.AreEqual(Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc"),
+                                functionStores.Last().Path);
+
+                IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == WaveModel.SwanLogDataItemTag);
+                Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
+                                ((TextDocument)swanLogDataItem.Value).Content);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenModelHasMultipleDomainsAndOutputWAVMFilesAreMissing_ShouldGiveLogWarningToUser()
+        {
+            // Arrange
+            using (var waveModel = new WaveModel())
+            {
+                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
+
+                string outputDirectory =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "NotExisting");
+
+                // Act
+                IEnumerable<string> messages = TestHelper
+                                               .GetAllRenderedMessages(() => waveModel.ConnectOutput(outputDirectory))
+                                               .ToList();
+
+                // Assert
+                string expectedMssg =
+                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Outer.nc")}";
+                string expectedMssg2 =
+                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectory, "wavm-Waves-Inner.nc")}";
+
+                Assert.IsTrue(messages.Contains(expectedMssg));
+                Assert.IsTrue(messages.Contains(expectedMssg2));
+                Assert.IsTrue(waveModel.OutputIsEmpty);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenModelHasMultipleDomainsAndOneOfTheOutputWAVMFilesIsMissing_ShouldGiveLogWarningToUserAndConnectTheExisting()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel())
+            {
+                // Arrange
+                waveModel.AddSubDomain(waveModel.OuterDomain, new WaveDomainData("Inner"));
+
+                string wavmOuterFilePath =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains", "wavm-Waves-Outer.nc");
+                string swanDiagFilePath =
+                    Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output2Domains", "swn-diag.Waves");
+
+                // Don't copy inner output file
+                string wavmOuterFilePathInTemp = tempDirectory.CopyTestDataFileToTempDirectory(wavmOuterFilePath);
+                tempDirectory.CopyTestDataFileToTempDirectory(swanDiagFilePath);
+                string outputDirectoryInTemp = Path.GetDirectoryName(wavmOuterFilePathInTemp);
+
+                // Act
+                List<string> messages = TestHelper
+                                        .GetAllRenderedMessages(
+                                            () => waveModel.ConnectOutput(outputDirectoryInTemp))
+                                        .ToList();
+
+                // Assert
+                string expectedMssg =
+                    $"Could not find output (WAVM) file: {Path.Combine(outputDirectoryInTemp, "wavm-Waves-Inner.nc")}";
+
+                Assert.AreEqual(1, messages.Count());
+                Assert.IsTrue(messages.Contains(expectedMssg));
+                Assert.IsFalse(waveModel.OutputIsEmpty);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel { Name = "wave" })
+            {
+                // Arrange
+                string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm");
+                string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
+
+                // Act and Assert
+                string expectedMssg =
+                    $"Could not find log file: {Path.Combine(outputDirectoryInTemp, "swn-diag.wave")}";
+                TestHelper.AssertLogMessageIsGenerated(() => waveModel.ConnectOutput(outputDirectoryInTemp), expectedMssg);
+                Assert.IsFalse(waveModel.OutputIsEmpty);
+            }
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void IsMasterTimeStep_ShouldReturnInverseOfIsCoupledToFlow(bool isCoupledToFlow)
+        {
+            using (var waveModel = new WaveModel())
+            {
+                waveModel.IsCoupledToFlow = isCoupledToFlow;
+                Assert.AreEqual(!isCoupledToFlow, waveModel.IsMasterTimeStep);
+            }
         }
     }
 }

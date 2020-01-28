@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         public string Name => "Flexible Mesh His File";
 
-        public string Category => "D-Flow FM 2D/3D";
+        public string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
         public string Description => string.Empty;
 

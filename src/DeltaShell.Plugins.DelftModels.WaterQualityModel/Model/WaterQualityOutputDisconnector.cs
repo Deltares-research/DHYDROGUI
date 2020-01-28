@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using GeoAPI.Extensions.Coverages;
@@ -31,7 +29,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
             DisconnectMapOutput(model, outputDataItems);
             DisconnectHistoryOutput(outputDataItems);
             DisconnectTextFiles(model, outputDataItems);
-            DeleteOutputFiles(model);
         }
 
         private static void DisconnectMapOutput(WaterQualityModel model, IReadOnlyCollection<IDataItem> outputDataItems)
@@ -61,24 +58,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         {
             outputDataItems.Where(di => di.ValueType == typeof(TextDocument))
                            .ForEach(di => model.DataItems.Remove(di));
-        }
-
-        private static void DeleteOutputFiles(IModel model)
-        {
-            string[] filesToDeleteFromExplicitWorkingDirectory =
-            {
-                "bloominp.d09",
-                "bloominp.frm",
-                "deltashell-timers.out",
-                "memory_map.out"
-            };
-
-            string explicitWorkingDirectory = model.ExplicitWorkingDirectory;
-            if (explicitWorkingDirectory != null)
-            {
-                filesToDeleteFromExplicitWorkingDirectory
-                    .ForEach(file => FileUtils.DeleteIfExists(Path.Combine(explicitWorkingDirectory, file)));
-            }
         }
     }
 }

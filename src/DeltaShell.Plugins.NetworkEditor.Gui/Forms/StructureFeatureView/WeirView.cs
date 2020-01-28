@@ -9,7 +9,6 @@ using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews;
@@ -81,16 +80,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetConstants()
         {
-            var gatedWeirFormula = new GatedWeirFormula();
-            var generalStructureWeirFormula = new GeneralStructureWeirFormula();
+            useMaxFlowNegPropertyName = nameof(GatedWeirFormula.UseMaxFlowNeg);
+            useMaxFlowPosPropertyName = nameof(GatedWeirFormula.UseMaxFlowPos);
+            gateOpeningPropertyName = nameof(GatedWeirFormula.GateOpening);
+            useLowerEdgeLevelTimeSeriesPropertyName = nameof(GatedWeirFormula.UseLowerEdgeLevelTimeSeries);
 
-            useMaxFlowNegPropertyName = TypeUtils.GetMemberName(() => gatedWeirFormula.UseMaxFlowNeg);
-            useMaxFlowPosPropertyName = TypeUtils.GetMemberName(() => gatedWeirFormula.UseMaxFlowPos);
-            gateOpeningPropertyName = TypeUtils.GetMemberName(() => gatedWeirFormula.GateOpening);
-            useLowerEdgeLevelTimeSeriesPropertyName = TypeUtils.GetMemberName(() => gatedWeirFormula.UseLowerEdgeLevelTimeSeries);
-
-            bedLevelStructureCenterPropertyName = TypeUtils.GetMemberName(() => generalStructureWeirFormula.BedLevelStructureCentre);
-            widthStructureCenterPropertyName = TypeUtils.GetMemberName(() => generalStructureWeirFormula.WidthStructureCentre);
+            bedLevelStructureCenterPropertyName = nameof(GeneralStructureWeirFormula.BedLevelStructureCentre);
+            widthStructureCenterPropertyName = nameof(GeneralStructureWeirFormula.WidthStructureCentre);
         }
 
         private void ConfigureTimeDependentControls()
@@ -180,17 +176,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return;
             }
 
-            if (TypeUtils.GetMemberName( ()=> weir.WeirFormula) == e.PropertyName)
+            if (e.PropertyName == nameof(weir.WeirFormula))
             {
                 RenderFormulaControls();
             }
-            if (weir.CanBeTimedependent)
+
+            if (weir.CanBeTimedependent && e.PropertyName == nameof(weir.UseCrestLevelTimeSeries))
             {
-                if (TypeUtils.GetMemberName(() => weir.UseCrestLevelTimeSeries) == e.PropertyName)
-                {
-                    CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
-                    ConfigureUseCrestLevelTimeSeries();
-                }
+                CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
+                ConfigureUseCrestLevelTimeSeries();
             }
 
             RenderControls();
