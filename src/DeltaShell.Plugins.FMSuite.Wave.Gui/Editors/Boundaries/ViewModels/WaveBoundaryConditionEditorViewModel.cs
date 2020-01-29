@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
@@ -31,16 +32,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             this.observedBoundary = observedBoundary;
 
+            var parametersFactory = new BoundaryParametersFactory();
+
             var modelDataComponentFactory =
-                new BoundaryConditionDataComponentFactory(new BoundaryParametersFactory());
+                new BoundaryConditionDataComponentFactory(parametersFactory);
             var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory);
 
             BoundarySpecificParametersSettingsViewModel =
                 new BoundarySpecificParametersSettingsViewModel(observedBoundary.ConditionDefinition,
                                                                 dataComponentFactory);
 
+
+            var dataComponentModel = new SupportPointDataComponentViewModel(observedBoundary.ConditionDefinition, 
+                                                                            parametersFactory);
+
             GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
-                                                              geometryFactory);
+                                                              geometryFactory, 
+                                                              dataComponentModel);
 
             var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
                                                                    BoundarySpecificParametersSettingsViewModel);

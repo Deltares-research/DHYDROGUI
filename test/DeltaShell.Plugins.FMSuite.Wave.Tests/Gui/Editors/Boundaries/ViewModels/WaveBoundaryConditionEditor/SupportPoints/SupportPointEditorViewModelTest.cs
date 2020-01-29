@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -29,6 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private IWaveBoundary waveBoundary;
         private IWaveBoundaryGeometricDefinition geometricDefinition;
 
+        private SupportPointDataComponentViewModel supportPointDataComponentViewModel;
+
         private IEventedList<SupportPoint> SupportPoints => geometricDefinition.SupportPoints;
         private ObservableCollection<SupportPointViewModel> SubViewModels => viewModel.ViewModels;
 
@@ -46,7 +49,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             waveBoundary = Substitute.For<IWaveBoundary>();
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
 
-            viewModel = new SupportPointEditorViewModel(waveBoundary);
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition,
+                                                       new BoundaryParametersFactory());
+
+            viewModel = new SupportPointEditorViewModel(geometricDefinition, 
+                                                        supportPointDataComponentViewModel);
         }
 
         [TearDown]
@@ -59,11 +71,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_GeometricDefinitionNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new SupportPointEditorViewModel(null);
+            void Call() => new SupportPointEditorViewModel(null, supportPointDataComponentViewModel);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("waveBoundary"));
+            Assert.That(exception.ParamName, Is.EqualTo("geometricDefinition"));
+        }
+
+        [Test]
+        public void Constructor_SupportPointDataComponentViewModel_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new SupportPointEditorViewModel(geometricDefinition, 
+                                                           null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPointDataComponentViewModel"));
         }
 
         [Test]
@@ -78,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
 
             Assert.That(viewModel, Is.InstanceOf<IRefreshIsEnabledOnDataComponentChanged>());
-            Assert.That(viewModel.IsEnabled, Is.False);
+            Assert.That(viewModel.IsEnabled, Is.True);
 ;        }
 
         [Test]
@@ -96,7 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             distances.ForEach(d => geometricDefinition.SupportPoints.Add(GetSupportPoint(d)));
 
             // Call
-            viewModel = new SupportPointEditorViewModel(waveBoundary);
+            viewModel = new SupportPointEditorViewModel(geometricDefinition,
+                                                        supportPointDataComponentViewModel);
 
             // Assert
             Assert.That(SubViewModels, Is.Not.Null);
@@ -237,7 +262,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new SupportPoint(1, geometricDefinition),
                 new SupportPoint(2, geometricDefinition),
             });
-            viewModel = new SupportPointEditorViewModel(waveBoundary);
+            viewModel = new SupportPointEditorViewModel(geometricDefinition,
+                                                        supportPointDataComponentViewModel);
 
             double value = random.NextDouble();
             viewModel.NewDistance = value;

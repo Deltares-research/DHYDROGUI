@@ -21,12 +21,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <paramref name="geometryFactory"/> is <c> null </c>.
         /// </exception>
         public BoundaryGeometryViewModel(IWaveBoundary waveBoundary,
-                                         IWaveBoundaryGeometryFactory geometryFactory)
+                                         IWaveBoundaryGeometryFactory geometryFactory,
+                                         SupportPointDataComponentViewModel supportPointDataComponentViewModel)
         {
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
+            Ensure.NotNull(supportPointDataComponentViewModel, 
+                           nameof(supportPointDataComponentViewModel));
 
-            SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary);
+            SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary.GeometricDefinition,
+                                                                          supportPointDataComponentViewModel);
             GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, geometryFactory);
         }
 

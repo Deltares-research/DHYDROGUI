@@ -1,8 +1,12 @@
 ﻿using System;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,6 +16,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     public class BoundaryGeometryViewModelTest
     {
+        private static SupportPointDataComponentViewModel GetDefaultDataComponentViewModel()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            return new SupportPointDataComponentViewModel(conditionDefinition,
+                                                          Substitute.For<IBoundaryParametersFactory>());
+        }
+
         [Test]
         public void Constructor_SetsCorrectValues()
         {
@@ -25,10 +39,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var boundary = Substitute.For<IWaveBoundary>();
             boundary.GeometricDefinition.Returns(geometricDefinition);
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
+
 
             // Call
-            var viewModel = new BoundaryGeometryViewModel(boundary, factory);
+            var viewModel = new BoundaryGeometryViewModel(boundary,
+                                                          geometryFactory,
+                                                          dataComponentViewModel);
 
             // Assert
             Assert.That(viewModel.SupportPointEditorViewModel, Is.Not.Null,
@@ -42,9 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
 
             // Call
-            void Call() => new BoundaryGeometryViewModel(null, factory);
+            void Call() => new BoundaryGeometryViewModel(null, factory, dataComponentViewModel);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -56,13 +75,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var waveBoundary = Substitute.For<IWaveBoundary>();
+            SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
 
             // Call
-            void Call() => new BoundaryGeometryViewModel(waveBoundary, null);
+            void Call() => new BoundaryGeometryViewModel(waveBoundary, null, dataComponentViewModel);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
+        }
+
+        [Test]
+        public void Constructor_SupportPointDataComponentViewModelNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+
+            // Call
+            void Call() => new BoundaryGeometryViewModel(waveBoundary, factory, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPointDataComponentViewModel"));
         }
     }
 }
