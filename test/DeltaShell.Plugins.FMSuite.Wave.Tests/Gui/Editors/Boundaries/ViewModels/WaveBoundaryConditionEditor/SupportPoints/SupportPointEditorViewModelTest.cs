@@ -46,12 +46,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new SupportPoint(maxDistance, geometricDefinition),
             });
 
-            waveBoundary = Substitute.For<IWaveBoundary>();
-            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
-
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            waveBoundary = Substitute.For<IWaveBoundary>();
+            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
+            waveBoundary.ConditionDefinition.Returns(conditionDefinition);
 
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
