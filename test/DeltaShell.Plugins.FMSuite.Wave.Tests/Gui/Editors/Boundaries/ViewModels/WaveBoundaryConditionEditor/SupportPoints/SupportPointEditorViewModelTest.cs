@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private SupportPointEditorViewModel viewModel;
         private IWaveBoundary waveBoundary;
         private IWaveBoundaryGeometricDefinition geometricDefinition;
+        private IWaveBoundaryConditionDefinition conditionDefinition;
 
         private SupportPointDataComponentViewModel supportPointDataComponentViewModel;
 
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new SupportPoint(maxDistance, geometricDefinition),
             });
 
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters>();
 
@@ -356,6 +357,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             SupportPointViewModel subViewModel = GetExistingSupportPointViewModel();
+            subViewModel.IsEnabled = true;
+            
+            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters>) conditionDefinition.DataComponent;
+
+            // Pre-condition
+            Assert.That(dataComponent.Data.ContainsKey(subViewModel.SupportPoint), Is.True,
+                        "DataComponent should contain data associated with the SupportPoint");
 
             // Call
             viewModel.RemoveSupportPointCommand.Execute(subViewModel);
@@ -363,6 +371,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(SubViewModels.Contains(subViewModel), Is.False);
             Assert.That(SupportPoints.Contains(subViewModel.SupportPoint), Is.False);
+
+            Assert.That(dataComponent.Data.ContainsKey(subViewModel.SupportPoint), Is.False,
+                        "DataComponent should not contain data associated with the removed SupportPoint");
         }
 
         [Test]

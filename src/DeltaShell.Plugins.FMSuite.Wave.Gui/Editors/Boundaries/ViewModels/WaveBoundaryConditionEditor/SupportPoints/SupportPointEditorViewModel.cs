@@ -185,6 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void RemoveViewModel(SupportPointViewModel viewModel)
         {
+            viewModel.IsEnabled = false;
             ViewModels.Remove(viewModel);
 
             geometricDefinition.SupportPoints.Remove(viewModel.SupportPoint);
