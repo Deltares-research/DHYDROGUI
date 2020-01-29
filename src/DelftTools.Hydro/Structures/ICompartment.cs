@@ -10,6 +10,11 @@ namespace DelftTools.Hydro.Structures
         /// The manhole that contains this compartment.
         /// </summary>
         IManhole ParentManhole { get; set; }
+        
+        /// <summary>
+        /// The Name of the manhole that contains this compartment.
+        /// </summary>
+        string ParentManholeName { get; }
 
         /// <summary>
         /// Geometry of the compartment

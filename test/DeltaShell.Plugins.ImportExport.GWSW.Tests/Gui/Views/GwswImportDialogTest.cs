@@ -15,9 +15,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
     {
         [Category(TestCategory.WindowsForms)]
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void ShowUserControl()
         {
             var dialog = new GwswImportDialog();
+            dialog.Data = new GwswFileImporter();
             dialog.Data = new GwswFileImporter();
             /*For some reason it crashes (sometimes) when closing it. For what I could read online it's due to the way we call the modal.
              It should be .Show, instead of .ShowModal*/

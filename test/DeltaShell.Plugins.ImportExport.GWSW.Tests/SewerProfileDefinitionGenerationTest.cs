@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
@@ -198,7 +199,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
         private static void CreateProfileAndCheckForLogMessage(GwswElement sewerProfileGwswElement, string expectedMessage)
         {
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ sewerProfileGwswElement }),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ sewerProfileGwswElement }).ToList(),
                 expectedMessage);
         }
 

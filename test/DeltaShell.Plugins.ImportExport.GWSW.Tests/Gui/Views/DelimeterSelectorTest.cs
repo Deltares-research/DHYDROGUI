@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Views
     {
         [Category(TestCategory.WindowsForms)]
         [Test]
+        [Apartment(System.Threading.ApartmentState.STA)]
         public void ShowDelimeterUserControl()
         {
             /*For some reason it crashes (sometimes) when closing it. For what I could read online it's due to the way we call the modal.

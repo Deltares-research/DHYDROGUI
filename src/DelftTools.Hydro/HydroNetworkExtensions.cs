@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -17,6 +18,25 @@ namespace DelftTools.Hydro
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroNetworkExtensions));
 
+        public static IManhole GetManhole(this IHydroNetwork hydroNetwork, ICompartment compartment)
+        {
+            return hydroNetwork.Manholes.FirstOrDefault(m => compartment.ParentManholeName != null // search for manhole via parent manhole name of this compartment
+                                                             && m.Name.Equals(compartment.ParentManholeName, StringComparison.InvariantCultureIgnoreCase)) ??
+                   hydroNetwork.Manholes.FirstOrDefault(m => m.Compartments.Contains(compartment)) ?? // search for manhole via this compartment
+                   hydroNetwork.Manholes.FirstOrDefault(m => m.Compartments.Any(c => compartment.Name != null // search for manhole via compartments in manholes using this compartment name
+                                                                                     && c.Name.Equals(compartment.Name, StringComparison.InvariantCultureIgnoreCase)));
+        }
+        public static void FindAndConnectManholesInNetwork(this IHydroNetwork hydroNetwork, ISewerConnection sewerConnection)
+        {
+            var connection = sewerConnection as SewerConnection;
+            if (connection == null) return;
+            var manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
+                m.Compartments.Any(c => c.Name.Equals(connection.SourceCompartmentName, StringComparison.InvariantCultureIgnoreCase)));
+            connection.Source = manholeContainingCompartment;
+            manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
+                m.Compartments.Any(c => c.Name.Equals(connection.TargetCompartmentName, StringComparison.InvariantCultureIgnoreCase)));
+            connection.Target = manholeContainingCompartment;
+        }
         public static void UpdateGeodeticDistancesOfChannels(this IHydroNetwork network)
         {
             if (network.CoordinateSystem == null)

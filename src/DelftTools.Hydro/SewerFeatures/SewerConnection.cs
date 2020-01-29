@@ -355,18 +355,20 @@ namespace DelftTools.Hydro.SewerFeatures
             //var hydroNetworkManholes = hydroNetwork.Manholes.ToDictionary(m=>m.Compartments.SelectMany(c =>c.Name));
 
             IManhole sourceManhole = null;
-            if (helper != null && !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
+            if (helper != null && !string.IsNullOrEmpty(SourceCompartmentName) && !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
                 sourceManhole = null;
 
             IManhole targetManhole= null;
-            if (helper != null && !helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
+            if (helper != null && !string.IsNullOrEmpty(TargetCompartmentName) && !helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
                 targetManhole = null;
-
-            //var sourceManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(SourceCompartmentName));
-            //var targetManhole = hydroNetworkManholes.FirstOrDefault(m => m.ContainsCompartmentWithName(TargetCompartmentName));
-
-            ConnectSourceCompartment(sourceManhole);
-            ConnectTargetCompartment(targetManhole);
+            
+            if (sourceManhole == null && targetManhole == null)
+                hydroNetwork.FindAndConnectManholesInNetwork(this);
+            else
+            {
+                ConnectSourceCompartment(sourceManhole);
+                ConnectTargetCompartment(targetManhole);
+            }
             if (Math.Abs(Length) < 10e-6 && SourceCompartment != null && TargetCompartment != null)
             {
                 Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);

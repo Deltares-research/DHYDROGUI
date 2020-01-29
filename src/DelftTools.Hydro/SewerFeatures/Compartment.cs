@@ -135,6 +135,9 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
             }
 
+            if (manhole == null)
+                manhole = network.GetManhole(this);
+
             if (manhole != null)
             {
                 var duplicateCompartment = manhole.Compartments.FirstOrDefault(c => c.Name == Name);
@@ -185,7 +188,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             manhole.Compartments.Remove(oldCompartment);
             manhole.Compartments.Add(this);
-            helper.ManholesByCompartmentName[name] = manhole;
+            if (helper != null) helper.ManholesByCompartmentName[name] = manhole;
         }
 
         protected void ReconnectSewerConnections(ICompartment oldCompartment, IHydroNetwork network)

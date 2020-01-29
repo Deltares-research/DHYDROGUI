@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nrOfGwswFeatures = gwswElements.Count;
             foreach (var element in gwswElements)
             {
-                if(gwswFileImporter.ShouldCancel) yield break;
+                if(gwswFileImporter != null && gwswFileImporter.ShouldCancel) yield break;
                 var indexOf = gwswElements.IndexOf(element);
                 var stepSize = nrOfGwswFeatures / 20;
                 if (stepSize != 0 && indexOf % stepSize == 0)
