@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
@@ -106,6 +108,143 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             viewModel.AssertPropertyChangedFired(Call, expectedPropChangedCount, nameof(viewModel.IsEnabled));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenADisabledSupportPointViewModel_WhenIsEnabledIsSetToTrue_ThenAParameterIsAddedToTheModel()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            parametersFactory.ConstructDefaultConstantParameters().Returns(parameters);
+
+            var supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            var supportPoint = 
+                new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
+
+            // Call
+            viewModel.IsEnabled = true;
+
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.True);
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), 
+                        "The data component should contain the newly added SupportPoint, but did not:");
+            Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
+            parametersFactory.Received(1).ConstructDefaultConstantParameters();
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnEnabledSupportPointViewModel_WhenIsEnabledIsSetToFalse_ThenTheCorrespondingParameterIsRemovedFromTheModel()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var supportPoint = 
+                new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            dataComponent.AddParameters(supportPoint, parameters);
+
+            var supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
+
+            // Call
+            viewModel.IsEnabled = false;
+            
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.False);
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
+                        "The data component should not contain the removed SupportPoint:");
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAnEnabledSupportPointViewModelWithAnUniformDataComponent_WhenIsEnabledIsSetToFalse_ThenIsEnabledIsFalseAndOnNotifyPropertyChangeIsCalled()
+        {
+            // Setup
+            // Setup initial statement
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var initialDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = initialDataComponent;
+
+            var supportPoint = 
+                new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            initialDataComponent.AddParameters(supportPoint, parameters);
+
+            var supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
+
+            // Change data component
+            var parametersNew = new ConstantParameters(0, 0, 0, 0);
+            conditionDefinition.DataComponent = 
+                new UniformDataComponent<ConstantParameters>(parametersNew);
+
+            Assert.That(viewModel.IsEnabled, Is.True, "Precondition violated:");
+
+            var notifyChangedObserver = 
+                new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += notifyChangedObserver.OnPropertyChanged;
+
+            // Call
+            viewModel.IsEnabled = false;
+            
+            // Assert
+            Assert.That(viewModel.IsEnabled, Is.False);
+            Assert.That(notifyChangedObserver.NCalls, Is.EqualTo(1));
+            Assert.That(notifyChangedObserver.Senders.First(), Is.EqualTo(viewModel));
+            Assert.That(notifyChangedObserver.EventArgses.First().PropertyName, 
+                        Is.EqualTo("IsEnabled"));
+        }
+
+        [Test]
+        public void GivenADisabledSupportPointViewModelWithAnUniformDataComponent_WhenIsEnabledIsSetToTrue_ThenAnInvalidOperationExceptionIsThrown()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var parametersNew = new ConstantParameters(0, 0, 0, 0);
+            conditionDefinition.DataComponent = 
+                new UniformDataComponent<ConstantParameters>(parametersNew);
+
+            var supportPoint = 
+                new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+            var supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
+
+            Assert.That(viewModel.IsEnabled, Is.False, "Precondition violated:");
+
+            // Call | Assert
+            void Call() => viewModel.IsEnabled = true;
+            Assert.Throws<InvalidOperationException>(Call);
         }
 
         [TestCase(0, 0)]

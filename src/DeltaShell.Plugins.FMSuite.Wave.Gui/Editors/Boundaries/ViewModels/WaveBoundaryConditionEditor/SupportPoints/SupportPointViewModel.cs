@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             SupportPoint = supportPoint;
             IsEditable = isEditable;
             this.dataComponentViewModel = dataComponentViewModel;
+
+            isEnabled = this.dataComponentViewModel.IsEnabledSupportPoint(SupportPoint);
         }
 
         /// <summary>
@@ -50,9 +52,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <value>
         /// <c> true </c> if this instance is enabled; otherwise, <c> false </c>.
         /// </value>
+        /// <remarks>
+        /// Enabling the support point will trigger the corresponding condition data
+        /// to be created, or removed.
+        /// </remarks>
         public bool IsEnabled
         {
-            get => dataComponentViewModel.IsEnabledSupportPoint(SupportPoint);
+            get => isEnabled;
             set
             {
                 if (IsEnabled == value)
@@ -60,15 +66,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                UpdateIsEnabled(value);
+                UpdateModelData(value);
+
+                isEnabled = value;
                 OnPropertyChanged();
             }
         }
 
-        private void UpdateIsEnabled(bool shouldBeEnabled)
+        private bool isEnabled;
+
+        private void UpdateModelData(bool shouldBeEnabled)
         {
             if (!dataComponentViewModel.IsEnabled())
             {
+                if (shouldBeEnabled)
+                {
+                    throw new InvalidOperationException("You cannot enable a SupportPoint when dealing with uniform data.");
+                }
+
                 return;
             }
             

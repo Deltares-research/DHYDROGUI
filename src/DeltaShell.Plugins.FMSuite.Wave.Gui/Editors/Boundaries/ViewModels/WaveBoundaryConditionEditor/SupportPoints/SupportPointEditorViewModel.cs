@@ -114,6 +114,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public void RefreshIsEnabled()
         {
             IsEnabled = supportPointDataComponentViewModel.IsEnabled();
+
+            if (!IsEnabled)
+            {
+                ViewModels.ForEach(x => x.IsEnabled = false);
+            }
         }
 
         /// <summary>
