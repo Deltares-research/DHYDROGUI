@@ -1,0 +1,155 @@
+﻿using System;
+using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
+{
+    /// <summary>
+    /// <see cref="SupportPointDataComponentViewModel"/> implements the methods
+    /// for the Support Point Editor to interact with the wave boundary condition.
+    /// It provides the abstraction, such that the geometry does not need to know
+    /// about the construction of the relevant parameters.
+    /// </summary>
+    public class SupportPointDataComponentViewModel
+    {
+        private readonly IBoundaryParametersFactory parametersFactory;
+
+        /// <summary>
+        /// Creates a new <see cref="SupportPointDataComponentViewModel"/>.
+        /// </summary>
+        /// <param name="conditionDefinition">The condition definition</param>
+        /// <param name="parametersFactory">The parameters factory.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="conditionDefinition"/> or
+        /// <paramref name="parametersFactory"/> is <c>null</c>.
+        /// </exception>
+        public SupportPointDataComponentViewModel(IWaveBoundaryConditionDefinition conditionDefinition,
+                                                  IBoundaryParametersFactory parametersFactory)
+        {
+            Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
+            Ensure.NotNull(parametersFactory, nameof(parametersFactory));
+
+            this.conditionDefinition = conditionDefinition;
+            this.parametersFactory = parametersFactory;
+        }
+
+        private readonly IWaveBoundaryConditionDefinition conditionDefinition;
+
+        /// <summary>
+        /// Gets the observed data component.
+        /// </summary>
+        public IBoundaryConditionDataComponent ObservedDataComponent => conditionDefinition.DataComponent;
+
+        /// <summary>
+        /// Determines whether this instance is enabled.
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsEnabled()
+        {
+            return ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters>;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <paramref name="supportPoint"/> is enabled.
+        /// </summary>
+        /// <param name="supportPoint">The support point.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified support point is enabled; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
+        /// </exception>
+        public bool IsEnabledSupportPoint(SupportPoint supportPoint)
+        {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
+
+            switch (ObservedDataComponent)
+            {
+                case SpatiallyVaryingDataComponent<ConstantParameters> constantParametersDataComponent:
+                    return constantParametersDataComponent.Data.ContainsKey(supportPoint);
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Adds a set of default parameters linked to the provided <paramref name="supportPoint"/>.
+        /// </summary>
+        /// <param name="supportPoint">The support point.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported.
+        /// </exception>
+        public void AddDefaultParameters(SupportPoint supportPoint)
+        {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
+
+            switch (ObservedDataComponent)
+            {
+                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                    constantDict.AddParameters(supportPoint, 
+                                               parametersFactory.ConstructDefaultConstantParameters());
+                    break;
+                default:
+                    throw new InvalidOperationException("Currently stored data component is not supported.");
+            }
+        }
+
+        /// <summary>
+        /// Removes the parameters associated with the <paramref name="supportPoint"/>.
+        /// </summary>
+        /// <param name="supportPoint">The support point.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported.
+        /// </exception>
+        public void RemoveParameters(SupportPoint supportPoint)
+        {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
+
+            switch (ObservedDataComponent)
+            {
+                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                    constantDict.RemoveSupportPoint(supportPoint);
+                    break;
+                default:
+                    throw new InvalidOperationException("Currently stored data component is not supported.");
+            }
+        }
+
+        /// <summary>
+        /// Replaces the old support point with the new support point.
+        /// </summary>
+        /// <param name="oldSupportPoint">The old support point.</param>
+        /// <param name="newSupportPoint">The new support point.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported or
+        /// <paramref name="oldSupportPoint"/> does not exists within the data component or
+        /// <paramref name="newSupportPoint"/> already exists within the data.
+        /// </exception>
+        public void ReplaceSupportPoint(SupportPoint oldSupportPoint,
+                                        SupportPoint newSupportPoint)
+        {
+            switch (ObservedDataComponent)
+            {
+                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                    constantDict.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+                    break;
+                default:
+                    throw new InvalidOperationException("Currently stored data component is not supported.");
+            }
+        }
+    }
+}

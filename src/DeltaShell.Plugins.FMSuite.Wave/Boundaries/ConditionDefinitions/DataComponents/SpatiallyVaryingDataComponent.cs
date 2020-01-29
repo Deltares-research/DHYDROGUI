@@ -83,10 +83,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             AddParameters(newSupportPoint, Data[oldSupportPoint]);
             RemoveSupportPoint(oldSupportPoint);
         }
-
-        /// <summary>
-        /// Clears the <see cref="Data"/> of this <see cref="SpatiallyVaryingDataComponent"/>.
-        /// </summary>
-        public void Clear() => data.Clear();
     }
 }

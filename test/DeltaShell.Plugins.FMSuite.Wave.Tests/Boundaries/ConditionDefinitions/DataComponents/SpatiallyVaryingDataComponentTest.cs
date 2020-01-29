@@ -207,31 +207,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             Assert.Throws<InvalidOperationException>(Call);
         }
-
-        [Test]
-        public void Clear_RemovesAllElements()
-        {
-            // Setup
-            var geometricDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            var dataComponent = new SpatiallyVaryingDataComponent<T>();
-
-            const int nElements = 6;
-            for (var i = 0; i < nElements; i++)
-            {
-                var supportPoint = new SupportPoint(20 * (i + 1), geometricDef);
-                var parameters = DataComponentTestUtils.ConstructParameters<T>();
-                
-                dataComponent.AddParameters(supportPoint, parameters);
-            }
-
-            Assert.That(dataComponent.Data.Keys.Count(), Is.EqualTo(nElements), 
-                        $"precondition failed, no {nElements} elements were added.");
-
-            // Call
-            dataComponent.Clear();
-
-            Assert.That(dataComponent.Data, Is.Not.Null);
-            Assert.That(dataComponent.Data, Is.Empty);
-        }
     }
 }

@@ -1,0 +1,391 @@
+﻿using System;
+using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
+using NSubstitute;
+using NUnit.Framework;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
+{
+    [TestFixture]
+    public class SupportPointDataComponentViewModelTest
+    {
+        [Test]
+        public void Constructor_ExpectedResults()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            // Call
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Assert
+            Assert.That(viewModel.ObservedDataComponent, Is.SameAs(conditionDefinition.DataComponent));
+        }
+
+        [Test]
+        public void Constructor_ConditionDefinitionNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            // Call | Assert
+            void Call() => new SupportPointDataComponentViewModel(null, parametersFactory);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            
+            Assert.That(exception.ParamName, Is.EqualTo("conditionDefinition"));
+        }
+
+        [Test]
+        public void Constructor_ParametersFactoryNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            
+            // Call | Assert
+            void Call() => new SupportPointDataComponentViewModel(conditionDefinition, null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            
+            Assert.That(exception.ParamName, Is.EqualTo("parametersFactory"));
+        }
+
+        private static IEnumerable<TestCaseData> GetIsEnabledData()
+        {
+            var waveBoundaryIsEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabled.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            yield return new TestCaseData(waveBoundaryIsEnabled, true);
+
+            var waveBoundaryIsNotEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabled.DataComponent =
+                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+            yield return new TestCaseData(waveBoundaryIsNotEnabled, false);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetIsEnabledData))]
+        public void IsEnabled_ExpectedResults(IWaveBoundaryConditionDefinition conditionDefinition, bool expectedResults)
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            
+            // Call
+            bool result = viewModel.IsEnabled();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResults));
+        }
+
+        private static SupportPoint GetDefaultSupportPoint()
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+
+            return new SupportPoint(0.0, geometricDefinition);
+        }
+
+        private static IEnumerable<TestCaseData> GetIsEnabledSupportPointData()
+        {
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            var waveBoundaryIsEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabled.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            yield return new TestCaseData(waveBoundaryIsEnabled, supportPoint, false);
+
+            var waveBoundaryIsNotEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabled.DataComponent =
+                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+            yield return new TestCaseData(waveBoundaryIsNotEnabled, supportPoint, false);
+
+            var waveBoundaryIsEnabledWithSupportPoint = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            dataComponent.AddParameters(supportPoint, new ConstantParameters(0, 0, 0, 0));
+            waveBoundaryIsEnabledWithSupportPoint.DataComponent = dataComponent;
+
+            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPoint, supportPoint, true);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetIsEnabledSupportPointData))]
+        public void IsEnabledSupportPoint_ExpectedResults(IWaveBoundaryConditionDefinition conditionDefinition, 
+                                                          SupportPoint supportPoint, 
+                                                          bool expectedResults)
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            
+            // Call
+            bool result = viewModel.IsEnabledSupportPoint(supportPoint);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResults));
+        }
+
+        [Test]
+        public void IsEnabledSupportPoint_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.IsEnabledSupportPoint(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void AddDefaultParameters_ExpectedResults()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            parametersFactory.ConstructDefaultConstantParameters().Returns(parameters);
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.AddDefaultParameters(supportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), 
+                        "The data component should contain the newly added SupportPoint, but did not:");
+            Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
+            parametersFactory.Received(1).ConstructDefaultConstantParameters();
+        }
+
+
+        [Test]
+        public void AddDefaultParameters_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.AddDefaultParameters(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void AddDefaultParameters_InvalidDataComponent_ThrowsInvalidOperationException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call | Assert
+            void Call() => viewModel.AddDefaultParameters(supportPoint);
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void RemoveParameters_ExpectedResults()
+        {
+            // Setup
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            dataComponent.AddParameters(supportPoint, parameters);
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call
+            viewModel.RemoveParameters(supportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
+                        "The data component should not contain the removed SupportPoint:");
+        }
+
+        [Test]
+        public void RemoveParameters_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.RemoveParameters(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void RemoveParameters_InvalidDataComponent_ThrowsInvalidOperationException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call | Assert
+            void Call() => viewModel.RemoveParameters(supportPoint);
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_ExpectedResults()
+        {
+            // Setup
+            SupportPoint oldSupportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new ConstantParameters(0, 0, 0, 0);
+            dataComponent.AddParameters(oldSupportPoint, parameters);
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            SupportPoint newSupportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False, 
+                        "The data component should not contain the old SupportPoint:");
+            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True, 
+                        "The data component should contain the new SupportPoint:");
+            Assert.That(dataComponent.Data[newSupportPoint], Is.SameAs(parameters));
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_OldSupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.ReplaceSupportPoint(null, GetDefaultSupportPoint());
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("oldSupportPoint"));
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_NewSupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(), null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            Assert.That(exception.ParamName, Is.EqualTo("newSupportPoint"));
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_NewSupportPointAlreadyExists_ThrowsInvalidArgumentException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            SupportPoint newSupportPoint = GetDefaultSupportPoint();
+            SupportPoint oldSupportPoint = GetDefaultSupportPoint();
+            dataComponent.AddParameters(oldSupportPoint, new ConstantParameters(0, 0, 0, 0));
+            dataComponent.AddParameters(newSupportPoint, new ConstantParameters(0, 0, 0, 0));
+
+            // Call | Assert
+            void Call() => viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_OldSupportPointDoesNotExist_ThrowsInvalidArgumentException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+
+            // Call | Assert
+            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(), 
+                                                         GetDefaultSupportPoint());
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_InvalidDataComponent_ThrowsInvalidOperationException()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call | Assert
+            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(), 
+                                                         GetDefaultSupportPoint());
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+        
+    }
+}
