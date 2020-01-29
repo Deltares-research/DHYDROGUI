@@ -2,6 +2,18 @@
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
+    public enum DwfDistributionType
+    {
+        [Description("DAG")]
+        Daily,
+
+        [Description("VAR")]
+        Variable,
+
+        [Description("CST")]
+        Constant,
+    }
+
     public enum DischargeType
     {
         [Description("None")]

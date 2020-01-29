@@ -3,22 +3,9 @@ using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
 using log4net;
 using System;
-using System.ComponentModel;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
-    public enum DwfDistributionType
-    {
-        [Description("DAG")]
-        Daily,
-
-        [Description("VAR")]
-        Variable,
-
-        [Description("CST")]
-        Constant,
-    }
-
     /// <summary>
     /// Object for storing dry weather flow definitions from verloop.csv.
     /// </summary>
@@ -63,6 +50,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
 
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
+        }
+
+        public static NwrwDryWeatherFlowDefinition CreateDefaultDWADefinition()
+        {
+            return new NwrwDryWeatherFlowDefinition
+            {
+                Name = "Default_DWA",
+                DryWeatherFlowId = "Default_DWA",
+                DistributionType = DwfDistributionType.Constant,
+                DailyVolume = 12
+            };
         }
     }
 }

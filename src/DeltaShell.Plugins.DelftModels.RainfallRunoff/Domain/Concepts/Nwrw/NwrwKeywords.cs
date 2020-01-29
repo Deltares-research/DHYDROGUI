@@ -2,7 +2,11 @@
 {
     public class NwrwKeywords
     {
+        // general
         public const string IdKey = "id";
+        public const string NameKey = "nm";
+
+        // .3b
         public const string NwrwOpeningKey = "NWRW";
         public const string NwrwClosingKey = "nwrw";
         public const string SurfaceLevelKey = "sl";
@@ -16,14 +20,24 @@
         public const string SpecialAreaKey = "aa";
         public const string SpecialInflowReferenceKey = "nw";
         public const string AreaAdjustmentFactorKey = "aaf";
+
+        // .alg
         public const string RunoffDelayFactor = "ru";
         public const string MaximumStorage = "ms";
-        public const string NameKey = "nm";
         public const string MaximumInfiltrationCapacity = "ix";
         public const string MinimumInfiltrationCapacity = "im";
         public const string DecreaseInInfiltrationCapacity = "ic";
         public const string IncreaseInInfiltrationCapacity = "dc";
         public const string InfiltrationFromDepressions = "od";
         public const string InfiltrationFromRunoff = "or";
+
+        // .dwa
+        public const string DwaOpeningKey = "DWA";
+        public const string DwaClosingKey = "dwa";
+        public const string DwaComputationOptionKey = "do";
+        public const string DwaWaterUsePerCapitaConstantValuePerHourKey = "wc";
+        public const string DwaWaterUsePerCapitaPerDayKey = "wd";
+        public const string DwaWaterUsePerCapitaPerHourKey = "wh";
+        public const string DwaTableIdKey = "dt";
     }
 }

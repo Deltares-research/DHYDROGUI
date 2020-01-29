@@ -5,17 +5,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DelftTools.Utils.Collections;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     public class NwrwFileWriter : NGHSFileBase
     {
-        private const string NWRW3BFILENAME = "pluvius.3b";
-        private const string NWRWALGFILENAME = "pluvius.alg";
+        private const string NWRW_3B_FILENAME = "pluvius.3b";
+        private const string NWRW_ALG_FILENAME = "pluvius.alg";
+        private const string NWRW_DWA_FILENAME = "pluvius.dwa";
 
         private const string DFEAULT_GENERAL_ID = "-1";
         private const string DEFAULT_INFILTRATION_FROM_DEPRESSIONS = "1";
         private const string DEFAULT_INFILTRATION_FROM_RUNOFF = "0";
+        private const double DEFAULT_DOUBLE = 0.0;
+
+        private const string NUMBER_OF_PEOPLE_TIMES_CONSTANT_DWA_PER_CAPITA_PER_HOUR = "1";
+        private const string NUMBER_OF_PEOPLE_TIMES_VARIABLE_DWA_PER_CAPITA_PER_HOUR = "2";
+        private const string ONE_TIMES_CONSTANT_DWA_PER_HOUR = "3";
+        private const string ONE_TIMES_VARIABLE_DWA_PER_HOUR = "4";
+        private const string USING_A_TABLE = "5";
+
+        private static ILog Log = LogManager.GetLogger(typeof(NwrwFileWriter));
+
         private NwrwSurfaceType[] SurfaceTypesInCorrectOrder { get; } =
         {
             NwrwSurfaceType.ClosedPavedWithSlope,   // a1
@@ -32,53 +45,206 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             NwrwSurfaceType.UnpavedFlatStretched    // a12
         };
 
+
         public void WriteNwrwFiles(IHydroModel model, string path)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null || path == null) return;
 
-            WriteNwrw3bFile(rrModel, path);
-            WriteNwrwAlgFile(rrModel, path);
-            //WriteNwrwDwaFile();
-            //WriteNwrwTableFile();
-        }
-        private void WriteNwrw3bFile(RainfallRunoffModel rrModel, string path)
-        {
-            if (rrModel == null || path == null) return;
+            var nwrwDatas = rrModel.GetAllModelData().OfType<NwrwData>();
+            var dryWeatherFlowDefinitions = rrModel.NwrwDryWeatherFlowDefinitions;
 
-            var filePath = Path.Combine(Path.GetFullPath(path), NWRW3BFILENAME);
+            WriteNwrw3bFile(nwrwDatas, path);
+            WriteNwrwAlgFile(rrModel, path);
+            WriteNwrwDwaFile(dryWeatherFlowDefinitions, path);
+            //WriteNwrwTableFile(); // todo
+        }
+
+        private void WriteNwrw3bFile(IEnumerable<NwrwData> nwrwDatas, string path)
+        {
+            if (nwrwDatas == null || path == null) return;
+
+            var filePath = Path.Combine(Path.GetFullPath(path), NWRW_3B_FILENAME);
+            var listOfErrors = new List<string>();
 
             OpenOutputFile(filePath);
             try
             {
-                foreach (NwrwData nwrwData in rrModel.GetAllModelData().OfType<NwrwData>())
+                foreach (NwrwData nwrwData in nwrwDatas)
                 {
-                    StringBuilder line = CreateNwrw3bLine(nwrwData);
-                    WriteLine(line.ToString());
+                    try
+                    {
+                        StringBuilder line = CreateNwrw3bLine(nwrwData);
+                        WriteLine(line.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        listOfErrors.Add(e.Message + Environment.NewLine);
+                    }
                 }
             }
             finally
             {
                 CloseOutputFile();
+                if (listOfErrors.Any())
+                    Log.ErrorFormat($"While writing to '{NWRW_3B_FILENAME}' we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
             }
         }
 
         private void WriteNwrwAlgFile(RainfallRunoffModel rrModel, string path)
         {
             if (rrModel == null || path == null) return;
-            var filePath = Path.Combine(Path.GetFullPath(path), NWRWALGFILENAME);
+            var filePath = Path.Combine(Path.GetFullPath(path), NWRW_ALG_FILENAME);
+            
             OpenOutputFile(filePath);
             try
             {
                 StringBuilder line = CreateNwrwAlgLine(rrModel.NwrwDefinitions);
                 WriteLine(line.ToString());
             }
+            catch (Exception e)
+            {
+                Log.ErrorFormat($"While writing to '{NWRW_ALG_FILENAME}' we encountered the following error: {Environment.NewLine} {e.Message}");
+            }
             finally
             {
                 CloseOutputFile();
             }
         }
-        
+
+        private void WriteNwrwDwaFile(IEnumerable<NwrwDryWeatherFlowDefinition> dryWeatherFlowDefinitions, string path)
+        {
+            if (dryWeatherFlowDefinitions == null || path == null) return;
+            
+            var filePath = Path.Combine(Path.GetFullPath(path), NWRW_DWA_FILENAME);
+            var listOfErrors = new List<string>();
+
+            OpenOutputFile(filePath);
+            try
+            {
+                foreach (NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition in dryWeatherFlowDefinitions)
+                {
+                    try
+                    {
+                        StringBuilder line = CreateNwrwDwaLine(dryWeatherFlowDefinition);
+                        WriteLine(line.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        listOfErrors.Add(e.Message + Environment.NewLine);
+                    }
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+                if (listOfErrors.Any())
+                    Log.ErrorFormat($"While writing to '{NWRW_DWA_FILENAME}' we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
+            }
+        }
+
+
+
+        #region .dwa
+        private StringBuilder CreateNwrwDwaLine(NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            StringBuilder line = new StringBuilder();
+
+            AppendOpeningTagToDwaLine(line); // 'DWA'
+            AppendIdToDwaLine(line, dryWeatherFlowDefinition); // 'id'
+            AppendNameToDwaLine(line, dryWeatherFlowDefinition); // 'nm'
+            
+            switch (dryWeatherFlowDefinition.DistributionType)
+            {
+                case DwfDistributionType.Constant:
+                    AppendConstantPropertiesToDwaLine(line, dryWeatherFlowDefinition);
+                    break;
+                case DwfDistributionType.Daily:
+                    AppendDailyPropertiesToDwaLine(line, dryWeatherFlowDefinition);
+                    break;
+                case DwfDistributionType.Variable:
+                    throw new ArgumentException($"'{nameof(DwfDistributionType.Variable)}' is not yet supported.");
+                default:
+                    throw new ArgumentException($"Invalid distribution type was provided.");
+            } // 'do' 'wc' 'wd' 'wh'
+            AppendClosingTagToDwaLine(line); // 'dwa'
+
+            return line;
+        }
+        private void AppendConstantPropertiesToDwaLine(StringBuilder line, NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            AppendDwfComputationOptionToDwaLine(line, NUMBER_OF_PEOPLE_TIMES_VARIABLE_DWA_PER_CAPITA_PER_HOUR); // 'do'
+            AppendWaterUsePerCapitaAsConstantToDwaLine(line, dryWeatherFlowDefinition.DailyVolume); // 'wc'
+            AppendWaterUsePerCapitaPerDayToDwaLine(line, DEFAULT_DOUBLE); // 'wd'
+            AppendWaterUsePerHour(line, dryWeatherFlowDefinition); // 'wh'
+        }
+        private void AppendDailyPropertiesToDwaLine(StringBuilder line, NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            AppendDwfComputationOptionToDwaLine(line, NUMBER_OF_PEOPLE_TIMES_CONSTANT_DWA_PER_CAPITA_PER_HOUR); // 'do'
+            AppendWaterUsePerCapitaAsConstantToDwaLine(line, DEFAULT_DOUBLE); // 'wc'
+            AppendWaterUsePerCapitaPerDayToDwaLine(line, dryWeatherFlowDefinition.DailyVolume); // 'wd'
+            AppendWaterUsePerHour(line, dryWeatherFlowDefinition);  // 'wh'
+        }
+        private void AppendOpeningTagToDwaLine(StringBuilder line)
+        {
+            line.Append(NwrwKeywords.DwaOpeningKey);
+            line.Append(" ");
+        }
+        private void AppendIdToDwaLine(StringBuilder line, NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            line.Append(NwrwKeywords.IdKey);
+            line.Append(" ");
+            line.Append("'");
+            line.Append(dryWeatherFlowDefinition.Name);
+            line.Append("'");
+            line.Append(" ");
+        }
+        private void AppendNameToDwaLine(StringBuilder line, NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            line.Append(NwrwKeywords.NameKey);
+            line.Append(" ");
+            line.Append("'");
+            line.Append(dryWeatherFlowDefinition.Name); // same as id
+            line.Append("'");
+            line.Append(" ");
+        }
+        private void AppendDwfComputationOptionToDwaLine(StringBuilder line, string option)
+        {
+            line.Append(NwrwKeywords.DwaComputationOptionKey); // do
+            line.Append(" ");
+            line.Append(option);
+            line.Append(" ");
+        }
+        private void AppendWaterUsePerCapitaAsConstantToDwaLine(StringBuilder line, double waterUseConstant)
+        {
+            line.Append(NwrwKeywords.DwaWaterUsePerCapitaConstantValuePerHourKey);
+            line.Append(" ");
+            line.Append(waterUseConstant.ToString());
+            line.Append(" ");
+            
+        }
+        private void AppendWaterUsePerCapitaPerDayToDwaLine(StringBuilder line, double waterUseDaily)
+        {
+            line.Append(NwrwKeywords.DwaWaterUsePerCapitaPerDayKey);
+            line.Append(" ");
+            line.Append(waterUseDaily.ToString());
+            line.Append(" ");
+        }
+        private void AppendWaterUsePerHour(StringBuilder line, NwrwDryWeatherFlowDefinition dryWeatherFlowDefinition)
+        {
+            line.Append(NwrwKeywords.DwaWaterUsePerCapitaPerHourKey);
+            line.Append(" ");
+            for (int i = 0; i < 23; i++)
+            {
+                line.Append(dryWeatherFlowDefinition.HourlyPercentageDailyVolume[i]);
+                line.Append(" ");
+            }
+        }
+        private void AppendClosingTagToDwaLine(StringBuilder line)
+        {
+            line.Append(NwrwKeywords.DwaClosingKey);
+        }
+        #endregion
 
         #region .alg
         private StringBuilder CreateNwrwAlgLine(IList<NwrwDefinition> nwrwDefinitions)
