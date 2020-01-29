@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <seealso cref="INotifyPropertyChanged" />
     public class SupportPointViewModel : INotifyPropertyChanged
     {
-        private bool isEnabled;
         private const double comparisonTolerance = 1E-15;
+        private readonly SupportPointDataComponentViewModel dataComponentViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointViewModel" /> class.
@@ -24,11 +24,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="supportPoint" /> is <c> null </c>.
         /// </exception>
-        public SupportPointViewModel(SupportPoint supportPoint, bool isEditable = true) 
+        public SupportPointViewModel(SupportPoint supportPoint, 
+                                     SupportPointDataComponentViewModel dataComponentViewModel,
+                                     bool isEditable = true) 
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
+            Ensure.NotNull(dataComponentViewModel, nameof(dataComponentViewModel));
+
             SupportPoint = supportPoint;
             IsEditable = isEditable;
+            this.dataComponentViewModel = dataComponentViewModel;
         }
 
         /// <summary>
@@ -47,18 +52,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </value>
         public bool IsEnabled
         {
-            get => isEnabled;
+            get => dataComponentViewModel.IsEnabledSupportPoint(SupportPoint);
             set
             {
-                if (isEnabled == value)
+                if (IsEnabled == value)
                 {
                     return;
                 }
 
-                isEnabled = value;
+                UpdateIsEnabled(value);
                 OnPropertyChanged();
             }
         }
+
+        private void UpdateIsEnabled(bool shouldBeEnabled)
+        {
+            if (!dataComponentViewModel.IsEnabled())
+            {
+                return;
+            }
+            
+            if (shouldBeEnabled)
+            {
+                EnableSupportPoint();
+            }
+            else
+            {
+                DisableSupportPoint();
+            }
+        }
+
+        private void EnableSupportPoint() =>
+            dataComponentViewModel.AddDefaultParameters(SupportPoint);
+
+        private void DisableSupportPoint() => 
+            dataComponentViewModel.RemoveParameters(SupportPoint);
 
         /// <summary>
         /// Gets a value indicating whether this instance is editable.

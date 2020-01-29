@@ -519,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private SupportPointViewModel GetExistingSupportPointViewModel(double distance, int index = 1)
         {
             SupportPoint supportPoint = GetSupportPoint(distance);
-            var subViewModel = new SupportPointViewModel(supportPoint);
+            var subViewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
 
             viewModel.ViewModels.Insert(index, subViewModel);
             geometricDefinition.SupportPoints.Add(supportPoint);
@@ -529,7 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
         private SupportPointViewModel GetSupportPointViewModel()
         {
-            return new SupportPointViewModel(GetSupportPoint(random.NextDouble()));
+            return new SupportPointViewModel(GetSupportPoint(random.NextDouble()), supportPointDataComponentViewModel);
         }
 
         private SupportPoint GetSupportPoint(double distance)

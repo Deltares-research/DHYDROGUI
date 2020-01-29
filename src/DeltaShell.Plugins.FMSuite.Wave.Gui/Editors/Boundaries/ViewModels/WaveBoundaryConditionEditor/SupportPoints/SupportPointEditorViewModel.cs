@@ -212,14 +212,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             for (var i = 0; i < nSupportPoints; i++)
             {
                 bool isFirstOrLast = i == 0 || i == nSupportPoints - 1;
-                yield return new SupportPointViewModel(sortedSupportPoints[i], !isFirstOrLast);
+                yield return new SupportPointViewModel(sortedSupportPoints[i], 
+                                                       supportPointDataComponentViewModel,
+                                                       !isFirstOrLast);
             }
         }
 
         private SupportPointViewModel CreateSupportPointViewModel(double distance)
         {
             var newSupportPoint = new SupportPoint(distance, geometricDefinition);
-            return new SupportPointViewModel(newSupportPoint);
+            return new SupportPointViewModel(newSupportPoint, supportPointDataComponentViewModel);
         }
 
         private int FindInsertIndex(double distance)

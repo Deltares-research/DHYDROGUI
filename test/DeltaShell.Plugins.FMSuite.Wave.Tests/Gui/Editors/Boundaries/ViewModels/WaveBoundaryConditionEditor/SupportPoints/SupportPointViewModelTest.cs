@@ -2,6 +2,9 @@
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
@@ -15,19 +18,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private readonly Random random = new Random();
         private SupportPointViewModel viewModel;
         private SupportPoint supportPoint;
+        private SupportPointDataComponentViewModel supportPointDataComponentViewModel;
 
         [SetUp]
         public void SetUp()
         {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters>();
+
+            supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition,
+                                                       new BoundaryParametersFactory());
+
             supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            viewModel = new SupportPointViewModel(supportPoint);
+            viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
+
+
         }
 
         [Test]
         public void Constructor_SupportPointNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new SupportPointViewModel(null, random.NextBoolean());
+            void Call() => new SupportPointViewModel(null, supportPointDataComponentViewModel, random.NextBoolean());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -38,11 +52,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_SupportPointNullAndDefaultIsEditable_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new SupportPointViewModel(null);
+            void Call() => new SupportPointViewModel(null, supportPointDataComponentViewModel);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
+
+        [Test]
+        public void Constructor_DataComponentViewModelNullAndDefaultIsEditable_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => new SupportPointViewModel(supportPoint, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("dataComponentViewModel"));
         }
 
         [Test]
@@ -58,7 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_SetsCorrectValues(bool isEditable)
         {
             // Call
-            viewModel = new SupportPointViewModel(supportPoint, isEditable);
+            viewModel = new SupportPointViewModel(supportPoint, 
+                                                  supportPointDataComponentViewModel, 
+                                                  isEditable);
 
             // Assert
             Assert.That(viewModel.SupportPoint, Is.SameAs(supportPoint));
