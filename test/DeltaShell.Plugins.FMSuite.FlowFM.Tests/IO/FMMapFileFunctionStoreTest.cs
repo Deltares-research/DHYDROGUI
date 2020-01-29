@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions_Sedimentation() // Issue #: DELFT3DFM-775
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\sedimentation_map.nc")
             };
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\bendprof_map.nc")
             };
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\FlowFM_map.nc")
             };*/
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\FlowFM_map.nc")
             };
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath(@"output_mapfiles\zm_dfm_map.nc")
             };
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var zmDfmMapFile = "zm_dfm_map.nc";
             var mapFilePath = TestHelper.GetTestFilePath(@"output_mapfiles\zm_dfm_map.nc");
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = mapFilePath
             };
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenSingleTimeSliceMapFileCheckWaterLevelFunction()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\bendprof_map.nc")
             };
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenSingleTimeSliceMapFileFilterTime()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\bendprof_map.nc")
             };
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileReadFlowElements()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\bendprof_map.nc")
             };
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var zmDfmMapFile = "zm_dfm_map.nc";
             var mapFilePath = TestHelper.GetTestFilePath("output_mapfiles\\zm_dfm_map.nc");
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = mapFilePath
             };
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var path = TestHelper.GetTestFilePath("flow1d2dMapFile\\dflow-fm_map.nc");
 
-            var store = new FMMapFileFunctionStore();
+            var store = new FMMapFileFunctionStore(null);
 
             // triggers reading the nc file
             store.Path = path;
@@ -256,7 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenUgridMapFileCheckFunctions()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\bendprof_map.nc")
             };
@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenMapFileAndSetCoordinateSystemShouldChangeCoordinateSystem()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\simplebox_hex7_map.nc")
             };
@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_GivenAThreeDimensionalVariable_CorrectAmountOfValuesIsGiven()
         {
-            var store = new FMMapFileFunctionStore()
+            var store = new FMMapFileFunctionStore(null)
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\my_map.nc")
             };
