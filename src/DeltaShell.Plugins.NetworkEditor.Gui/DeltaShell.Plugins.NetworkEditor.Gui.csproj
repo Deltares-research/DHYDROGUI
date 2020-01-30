@@ -216,7 +216,6 @@
       <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewModelDesignerDataContext.cs" />
-    <Compile Include="Helpers\FeatureCollectionViewInfoHelper.cs" />
     <Compile Include="Forms\AreaStructureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
