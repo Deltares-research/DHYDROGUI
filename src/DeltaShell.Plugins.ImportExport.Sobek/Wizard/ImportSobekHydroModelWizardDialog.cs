@@ -75,10 +75,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     settingsDat = settingsDat.Substring(0, indexRestart);
 
                     // Add RTC in case that a flow model is detected. In case no controls are detected afterwards, this will be deleted. 
-                    selectSobekModelsWizardPage.ImportFlow = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1");
+                    selectSobekModelsWizardPage.ImportFlow = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer = -1");
                     selectSobekModelsWizardPage.ImportRR = settingsDat.Contains("3b=-1");
                     
-                    selectSobekModelsWizardPage.ImportFlowEnabled = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1");
+                    selectSobekModelsWizardPage.ImportFlowEnabled = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer = -1");
                     selectSobekModelsWizardPage.ImportRREnabled = settingsDat.Contains("3b=-1");
                     }
                 else
