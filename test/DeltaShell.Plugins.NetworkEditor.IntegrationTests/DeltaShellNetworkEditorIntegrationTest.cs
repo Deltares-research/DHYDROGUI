@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -10,28 +9,22 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.PropertyBag.Dynamic;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
-using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.LayerPropertiesEditor;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using log4net;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Layers;
@@ -122,66 +115,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                     };
 
                 WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Performance)]
-        public void PerformanceOfTableCellsSelectionShouldBeFast()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                var app = gui.Application;
-
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Run();
-                
-                Action mainWindowShown = delegate
-                                        {
-                                            var project = app.Project;
-
-                                            // add data
-                                            var network = new HydroNetwork
-                                            {
-                                                Nodes = new EventedList<INode>
-                                                {
-                                                    new HydroNode {Name = "node1", Geometry = new Point(0, 0)},
-                                                    new HydroNode {Name = "node2", Geometry = new Point(1, 1)}
-                                                }
-                                            };
-
-                                            var points = new[] { new Coordinate(0, 0), new Coordinate(1, 1) };
-
-                                            Enumerable.Range(1, 100).ForEach(i => network.Branches.Add(
-                                                new Channel
-                                                {
-                                                    Name = "channel" + i,
-                                                    Source = network.Nodes[0],
-                                                    Target = network.Nodes[1],
-                                                    Geometry = new LineString(points)
-                                                }
-                                            ));
-
-                                            project.RootFolder.Add(network);
-
-                                            var networkDataItem = project.RootFolder.DataItems.First(di => di.Value is HydroNetwork);
-                                            gui.CommandHandler.OpenView(networkDataItem, typeof(ProjectItemMapView));
-
-                                            var networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                                            var channelLayer = networkEditor.MapView.GetLayerForData(network.Channels);
-                                            networkEditor.MapView.OpenLayerAttributeTable(channelLayer);
-
-                                            var channelTableView = (VectorLayerAttributeTableView)networkEditor.MapView.TabControl.ChildViews.First();
-
-                                            TestHelper.AssertIsFasterThan(1300, "time required to select 20 table view cells, synchronized with map and tree view",() => 
-                                                channelTableView.TableView.SelectCells(0, 0, 99, 1));
-                                        };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }
         }
         

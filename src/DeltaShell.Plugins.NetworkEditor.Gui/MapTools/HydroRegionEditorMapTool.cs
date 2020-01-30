@@ -224,32 +224,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 };
 
             AddMapTool(newLinkTool);
-
-            // TODO: merge the tools below into the hydro network editor map tool?! (context menus only)
-            var importBranchesMapTool = new ImportBranchesFromSelectionMapTool(FeatureTypeLayerFilter<Channel>)
-                                            {
-                                                Name = "import branches"
-                                            };
-            AddMapTool(importBranchesMapTool);
-
-            var importStructuresMapTool = new ImportBranchFeaturesFromSelectedFeaturesMapTool(HydroNetworkFilter)
-                                              {
-                                                  Name = "import structures",
-                      
-                                              };
-            AddMapTool(importStructuresMapTool);
             
             var importCrossSectionFromCsvMapTool = new ImportCrossSectionsFromCsvMapTool(HydroNetworkFilter)
                                                        {
                                                            Name = "Import cross sections from csv"
                                                        };
             AddMapTool(importCrossSectionFromCsvMapTool);
-
-            var exportCrossSectionToCsvMapTool = new ExportCrossSectionToCsvMapTool(HydroNetworkFilter)
-                                                     {
-                                                         Name = "Export cross sections to csv"
-                                                     };
-            AddMapTool(exportCrossSectionToCsvMapTool);
 
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));

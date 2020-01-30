@@ -21,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -122,41 +121,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
-
-        [Test]
-        public void CheckFmEnclosureLayerIsCreated()
-        {
-            var model = new WaterFlowFMModel();
-
-            using (var gui = new DeltaShellGui())
-            {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
-                var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
-                gui.Run();
-
-                var project = app.Project;
-                project.RootFolder.Add(model);
-
-                var enclosureFeature =
-                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
-                        FlowFMTestHelper.GetValidGeometryForEnclosureExample());
-
-                model.Area.Enclosures.Add(enclosureFeature);
-                var layer = new NetworkEditorMapLayerProvider().CreateLayer(model.Area.Enclosures, model.Area);
-
-                Assert.IsNotNull(layer); //asssert it got injected               
-                Assert.AreEqual(1, layer.CustomRenderers.Count);
-                Assert.AreEqual(typeof(EnclosureRenderer), layer.CustomRenderers[0].GetType());
             }
         }
 

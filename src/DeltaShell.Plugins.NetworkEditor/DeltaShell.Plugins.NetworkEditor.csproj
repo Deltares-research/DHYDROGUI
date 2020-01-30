@@ -184,12 +184,7 @@
     <Compile Include="MapLayers\Editors\Interactors\HydroObjectToHydroLinkRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\SubCatchmentRelationInteractor.cs" />
-    <Compile Include="MapLayers\Editors\RunoffBoundaryFeatureEditor.cs" />
-    <Compile Include="MapLayers\HydroLinkFeatureEditor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\Editors\WasteWaterTreatmentPlantFeatureEditor.cs" />
-    <Compile Include="MapLayers\CustomRenderers\CatchmentAnchorPointRenderer.cs" />
-    <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\BranchFeatureRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
@@ -213,10 +208,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRule.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\HydroNodeSnapRule.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\ChannelSnapRule.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\CrossSectionSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Snapping\StructureSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Interactors\BranchToCrossSectionRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\StructureFeatureToStructureRelationInteractor.cs" />

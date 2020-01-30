@@ -188,7 +188,6 @@
     <Compile Include="Commands\AddNewPumpCommand.cs" />
     <Compile Include="Commands\AddNewRetentionCommand.cs" />
     <Compile Include="Commands\AddNewWeirCommand.cs" />
-    <Compile Include="Commands\ImportBranchesCommand.cs" />
     <Compile Include="Commands\InsertNewNodeCommand.cs" />
     <Compile Include="Commands\NetworkEditorCommand.cs" />
     <Compile Include="Commands\NetworkEditorHelper.cs" />
@@ -617,18 +616,13 @@
     <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
     <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
-    <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
     <Compile Include="MapTools\IHydroNetworkEditorMapTool.cs" />
-    <Compile Include="MapTools\ImportBranchesFromSelectionMapTool.cs" />
-    <Compile Include="MapTools\ImportBranchFeaturesFromSelectedFeaturesMapTool.cs" />
     <Compile Include="MapTools\ImportCrossSectionsFromCsvMapTool.cs" />
     <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
-    <Compile Include="NetworkEditorMapLayerProvider.cs" />
-    <Compile Include="NetworkLayerStyleFactory.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroNetworkProjectTreeViewNodePresenter.cs" />

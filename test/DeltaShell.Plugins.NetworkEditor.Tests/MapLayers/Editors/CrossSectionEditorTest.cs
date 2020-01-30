@@ -382,46 +382,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(100, crossSection.Geometry.Coordinates[4].X);  // not modified by LinearFallOffPolicy
             Assert.AreEqual(40, crossSection.Geometry.Coordinates[4].Y);
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.WorkInProgress)] //TOOLS-7472
-        public void CrossSectionYZWithSinglePointGeometryShouldNotCrash()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                var app = gui.Application;
-
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Run();
-
-                Action onMainWindowShown =
-                    () =>
-                        {
-                            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-                            app.Project.RootFolder.Add(network);
-
-                            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(
-                                        network.Branches[0], CrossSectionDefinitionYZ.CreateDefault("csdef"), 15);
-
-                            gui.CommandHandler.OpenView(network);
-                            var networkEditor = gui.DocumentViews.ActiveView;
-
-                            gui.Selection = cs;
-
-                            while(cs.Definition.RawData.Rows.Count > 0)
-                            {
-                                cs.Definition.RawData.Rows.RemoveAt(0);
-                            }
-
-                            Application.DoEvents();
-                        };
-
-                WpfTestHelper.ShowModal((Control) gui.MainWindow, onMainWindowShown);
-            }
-        }
     }
 }

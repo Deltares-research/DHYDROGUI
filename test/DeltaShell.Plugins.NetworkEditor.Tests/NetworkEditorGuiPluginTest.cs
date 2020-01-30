@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -7,9 +6,6 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
@@ -19,19 +15,14 @@ using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks;
-using SharpMap;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
 
@@ -41,64 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [Category(TestCategory.Integration)]
     public class NetworkEditorGuiPluginTest
     {
-        private static readonly MockRepository Mocks = new MockRepository();
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void PluginGuiUpdatesCoverageViewViewContextsOnNetworkCoverageNetworkPropertyChanged()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                var app = gui.Application;
-
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-
-                
-                gui.Run();
-
-                // Create a network coverage and add it to the root folder
-                var networkCoverage = new NetworkCoverage { Network = new HydroNetwork { Name = "HydroNetwork 1" } };
-                app.Project.RootFolder.Add(networkCoverage);
-
-                // Create two view contexts and add them to the gui context manager
-                var coverageViewViewContext1 = new CoverageViewViewContext
-                    {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
-                    };
-                
-                var coverageViewViewContext2 = new CoverageViewViewContext
-                    {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
-                    };
-
-                ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext1);
-                ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext2);
-                
-                // Change the network of the coverage layer
-                networkCoverage.Network = new HydroNetwork { Name = "HydroNetwork 2" };
-
-                // Check if the network of both coverage view view contexts is correctly updated
-                var hydroNetworkMapLayer = coverageViewViewContext1.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
-                Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
-
-                hydroNetworkMapLayer = coverageViewViewContext2.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
-                Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
-            }
-        }
-
         [Test]
         [Category(TestCategory.Slow)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()

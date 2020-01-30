@@ -11,11 +11,9 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -43,81 +41,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     [Category(TestCategory.Slow)]
     public class HibernateHydroNetworkIntegrationTest : NHibernateHydroRegionTestBase
     {
-        [Test]
-        public void RemoveMapWithNetworkLayerFromProjectAndSave()
-        {
-            //issue 1144
-
-            string path =
-                TestHelper.GetCurrentMethodName() + ".dsproj";
-            ProjectRepository.Create(path);
-
-            //create a project with a map
-            var project = ProjectRepository.GetProject();
-            project.RootFolder.Add(new Map());
-            var mapDataItem = project.RootFolder.Items[0] as DataItem;
-            Map map = (Map)mapDataItem.Value;
-
-            //add a network to this map
-            HydroNetwork network = new HydroNetwork();
-            project.RootFolder.Add(network);
-            var networkMapLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
-            map.Layers.Add(networkMapLayer);
-
-            //save
-            ProjectRepository.SaveOrUpdate(project);
-
-            //remove the map
-            project.RootFolder.Items.Remove(mapDataItem);
-            ProjectRepository.SaveOrUpdate(project);
-        }
-/*
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void SaveGuiContextAndNetworkEditorViewContext()
-        {
-            var project = new Project();
-
-            var network = new HydroNetwork();
-            var networkDataItem = new DataItem(network);
-
-            project.RootFolder.Add(networkDataItem);
-
-            using (var networkEditor = new CentralMapView { Data = network })
-            {
-                var guiProjectContext = new GuiContextManager();
-                // set view context as a part of the gui context and store it in the project (delta shell should do it automatically)
-                guiProjectContext.AddViewContext(networkEditor.ViewContext);
-
-                project.RootFolder.Add(guiProjectContext);
-
-                var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-                ProjectRepository.Create(path);
-                ProjectRepository.SaveOrUpdate(project);
-
-                using (var retrievedProjectRepository = factory.CreateNew())
-                {
-                    retrievedProjectRepository.Open(path);
-
-                    var retrievedProject = ProjectRepository.GetProject();
-
-                    retrievedProject.RootFolder.Items.Count
-                        .Should("project contains network and gui context").Be.EqualTo(2);
-
-                    var retrievedNetworkDataItem = (IDataItem)retrievedProject.RootFolder.Items[0];
-
-                    var retrievedGuiContext = (GuiContextManager)retrievedProject.RootFolder.Items[1];
-
-                    retrievedGuiContext.Name
-                        .Should().Be.EqualTo("gui context");
-
-                    var retrievedHydroNetworkEditorContext = (HydroRegionEditorViewContext)retrievedGuiContext.GetViewContext(typeof(HydroRegionEditor), retrievedNetworkDataItem.Value);
-                    Assert.IsNotNull(retrievedHydroNetworkEditorContext);
-                }
-            }
-        }
-        */
         [Test]
         public void SaveLoadHydroNetworkWithSharedDefinitions()
         {

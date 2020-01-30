@@ -1,19 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMap.Converters.WellKnownText;
-using SharpMap.Editors.Interactors.Network;
-using SharpMap.UI.Forms;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
@@ -22,67 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
     [TestFixture]
     public class BranchNodeTopologyTest
     {
-        private HydroRegionMapLayer hydroNetworkLayer;
-        private MapControl mapControl;
-
-        private HydroRegionMapLayer InitializeNetworkEditor(IHydroNetwork network)
-        {
-            mapControl = new MapControl { Map = { Size = new Size(1000, 1000) } };
-            var nwLayer = (HydroRegionMapLayer) MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() });
-            mapControl.Map.Layers.Add(nwLayer);
-            HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapControl);
-            return nwLayer;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            if(mapControl != null && !mapControl.IsDisposed)
-            {
-                mapControl.Dispose();
-            }
-        }
-
-        [Test]
-        public void RemoveBranch()
-        {
-            var network = new HydroNetwork();
-            hydroNetworkLayer = InitializeNetworkEditor(network);
-            hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel)).DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 100)"));
-
-            Assert.AreEqual(1, network.Branches.Count);
-            Assert.AreEqual(2, network.Nodes.Count);
-
-            IBranch branch = network.Branches[0];
-
-            var branchEditor = new BranchInteractor(null, branch, null, null);
-            branchEditor.Network = network;
-            branchEditor.Delete();
-
-            Assert.AreEqual(0, network.Branches.Count);
-            Assert.AreEqual(0, network.Nodes.Count);
-        }
-
-        [Test]
-        public void MergeNode()
-        {
-            var network = new HydroNetwork();
-            hydroNetworkLayer = InitializeNetworkEditor(network);
-            var channelLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel));
-            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 100)"));
-            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 100, 100 200)"));
-
-            Assert.AreEqual(2, network.Branches.Count);
-            Assert.AreEqual(4, network.Nodes.Count);
-
-            var node = network.Nodes.Last();
-
-            HydroRegionEditorHelper.MoveNodeTo(node, 100, 100);
-            
-            Assert.AreEqual(2, network.Branches.Count);
-            Assert.AreEqual(3, network.Nodes.Count); //node disappeared
-        }
-
         private HydroNetwork[] CreateTestNetworks()
         {
             // Creates two simple test networks that look like this:

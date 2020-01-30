@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -533,9 +532,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 excludedTypes.Add(typeof (NetworkCoverageSegmentLayer));
             }
 
-            ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
-            ImportBranchesFromSelectionMapTool.AfterExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = false; 
-
             base.Activate();
         }
 
@@ -666,61 +662,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
-            project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
-        }
-
-        [EditAction]
-        private void RootFolderPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (Gui == null || Gui.DocumentViews == null)
-            {
-                return;
-            }
-
-            // TODO: this looks very dirty, can we find a better way to manage these dependencies?
-
-            // Update the network in the network layers of all relevant maps after changing a network coverage network
-            var networkCoverage = sender as INetworkCoverage;
-            if (networkCoverage != null && e.PropertyName == "Network")
-            {
-                // Try to find maps for open views
-                var openMaps = Gui.DocumentViews.AllViews
-                    .OfType<MapView>()
-                    .Select(mv => mv.Map)
-                    .Where(m => m.Layers.OfType<NetworkCoverageGroupLayer>()
-                                    .Any(l => l.NetworkCoverage == networkCoverage));
-
-                if (openMaps.Any())
-                {
-                    foreach (var openMap in openMaps)
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, openMap);
-                    }
-                }
-                else
-                {
-                    // Try to find maps in a view contexts
-                    foreach (var viewContext in Gui.ViewContextManager.ProjectViewContexts.OfType<CoverageViewViewContext>().Where(cvvc => cvvc.Coverage == networkCoverage))
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, viewContext.Map);
-                    }
-                }
-            }
-        }
-
-        private void RefreshNetworkMapLayers(INetworkCoverage networkCoverage, IMap map)
-        {
-            var hydroNetworkMapLayer = map.Layers.OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
-            if (hydroNetworkMapLayer != null)
-            {
-                map.Layers.Remove(hydroNetworkMapLayer);
-            }
-
-            if (networkCoverage.Network != null)
-            {
-                map.Layers.Add(MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network,null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList()));
-                map.ZoomToExtents();
-            }
         }
 
         /// <summary>
@@ -820,7 +761,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (project != null)
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
-                project.RootFolder.PropertyChanged -= RootFolderPropertyChanged;
                 foreach (var network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
                 {
                     RemoveNetworkViews(network);
