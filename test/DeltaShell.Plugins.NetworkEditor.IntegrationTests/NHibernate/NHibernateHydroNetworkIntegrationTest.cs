@@ -914,51 +914,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
-        [Ignore("Does not work since NetworkLocation is not a branchfeature in the mapping")]
-        public void WriteAndReadNetworkWithNetworkLocation()
-        {
-            var network = new global::DelftTools.Hydro.HydroNetwork();
-
-            INode fromNode = new HydroNode { Name = "From", Network = network, Geometry = new Point(1000, 1000) };
-            INode toNode = new HydroNode { Name = "To", Network = network, Geometry = new Point(1000, 1500) };
-            network.Nodes.Add(fromNode);
-            network.Nodes.Add(toNode);
-
-            var branch = CreateChannel(fromNode, toNode);
-            network.Branches.Add(branch);
-            var networkLocation = new NetworkLocation(branch, 10);
-
-            networkLocation.Geometry = new WKTReader().Read("LINESTRING(20 20,20 30,30 30,30 20,40 20)");
-
-            branch.BranchFeatures.Add(networkLocation);
-            var crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-                                                            {
-                                                                new Coordinate(1.0, 1.0, 0.0),
-                                                                new Coordinate(2.0, 1.0, 0.1),
-                                                                new Coordinate(3.0, 1.0, 0.1),
-                                                                new Coordinate(4.0, 1.0, 0.1)
-                                                            });
-            branch.BranchFeatures.Add(crossSection);
-
-            var project = new Project();
-            project.RootFolder.Add(new DataItem(network));
-
-            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
-
-            ProjectRepository.Create(path);
-            ProjectRepository.SaveOrUpdate(project);
-            ProjectRepository.Close();
-
-            var retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork)retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
-            var retrievedNetworkLocation = retrievedNetwork.BranchFeatures.First();
-
-            //TODO add assert for geometry etc
-            Assert.AreEqual(networkLocation.Chainage, retrievedNetworkLocation.Chainage);
-            Assert.AreEqual(networkLocation.Geometry, retrievedNetworkLocation.Geometry);
-        }
-
-        [Test]
         public void SaveNetworkAndCheckCollectionChangedForBranchFeatures()
         {
             //create a network

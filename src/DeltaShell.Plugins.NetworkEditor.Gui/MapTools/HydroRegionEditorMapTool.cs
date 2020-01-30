@@ -224,12 +224,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 };
 
             AddMapTool(newLinkTool);
-            
-            var importCrossSectionFromCsvMapTool = new ImportCrossSectionsFromCsvMapTool(HydroNetworkFilter)
-                                                       {
-                                                           Name = "Import cross sections from csv"
-                                                       };
-            AddMapTool(importCrossSectionFromCsvMapTool);
 
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
@@ -262,16 +256,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
 
             return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
-        }
-
-        private static bool HydroNetworkFilter(ILayer layer)
-        {
-            var hydroRegionLayer = layer as HydroRegionMapLayer;
-            if (hydroRegionLayer != null)
-            {
-                return hydroRegionLayer.Region is IHydroNetwork;
-            }
-            return false;
         }
 
         private IMapTool NetworkLocationTool { get; set; }
@@ -471,20 +455,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                         break;
                 }
             }
-            if (removedOrAddedItem is ILayer && HydroNetworkFilter((ILayer)removedOrAddedItem))
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException();
-
-                    case NotifyCollectionChangedAction.Add:
-                        break;
-
-                    case NotifyCollectionChangedAction.Remove:
-                        break;
-                }
-            }
         }
 
         private void SetCoverageLayerTheme(INetworkCoverageGroupLayer networkCoverageGroupLayer)
@@ -591,10 +561,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
-            // HydroNetworkEditorMapTool is alwas added to a map, even if there is no network.
-            if (!Map.GetAllVisibleLayers(true).Any(HydroNetworkFilter))
-                yield break;
-
             contextMenuWorldPosition = worldPosition;
 
             var firstDiscretizationLayer = MapControl.Map.GetAllLayers(true)

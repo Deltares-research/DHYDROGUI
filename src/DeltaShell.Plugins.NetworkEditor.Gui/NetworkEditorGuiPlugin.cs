@@ -617,8 +617,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new HydroRegionProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new HydroNetworkProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new DrainageBasinProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
         }
 
