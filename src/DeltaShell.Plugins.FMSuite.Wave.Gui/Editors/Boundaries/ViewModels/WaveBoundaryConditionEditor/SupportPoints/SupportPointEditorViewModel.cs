@@ -197,15 +197,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             bool isSelected = SelectedViewModel == oldViewModel;
 
+            var newSupportPoint = new SupportPoint(oldViewModel.Distance, geometricDefinition);
+            ReplaceConditionData(oldViewModel.SupportPoint, 
+                                 newSupportPoint);
+
             RemoveViewModel(oldViewModel);
 
-            SupportPointViewModel newViewModel = CreateSupportPointViewModel(oldViewModel.Distance);
-
+            var newViewModel = new SupportPointViewModel(newSupportPoint, supportPointDataComponentViewModel);
             AddViewModel(newViewModel);
 
             if (isSelected)
             {
                 SelectedViewModel = newViewModel;
+            }
+        }
+
+        private void ReplaceConditionData(SupportPoint oldSupportPoint, SupportPoint newSupportPoint)
+        {
+            if (supportPointDataComponentViewModel.IsEnabledSupportPoint(oldSupportPoint))
+            {
+                supportPointDataComponentViewModel.ReplaceSupportPoint(oldSupportPoint,
+                                                                       newSupportPoint);
             }
         }
 

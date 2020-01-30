@@ -439,6 +439,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
+        public void GivenASupportPointViewModelWithAssociatedConditionData_WhenDistanceIsChanged_NewValueIsValidThenConditionDataIsReplaced()
+        {
+            // Setup
+            double existingDistance = random.NextDouble();
+            viewModel.NewDistance = existingDistance;
+            viewModel.AddSupportPointCommand.Execute(existingDistance.ToString(CultureInfo.CurrentCulture));
+
+            double nextValue = random.NextDouble();
+            SupportPointViewModel originalSubViewModel = SubViewModels[1];
+            originalSubViewModel.IsEnabled = true;
+
+            // Pre-condition
+            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters>) conditionDefinition.DataComponent;
+
+            Assert.That(dataComponent.Data.ContainsKey(originalSubViewModel.SupportPoint), Is.True,
+                        "Precondition violated: no data associated with the expected support point.");
+            ConstantParameters originalParameters = dataComponent.Data[originalSubViewModel.SupportPoint];
+
+            // Call
+            originalSubViewModel.Distance = nextValue;
+
+            // Assert
+            SupportPointViewModel newSubViewModel = SubViewModels[1];
+            Assert.That(dataComponent.Data.ContainsKey(originalSubViewModel.SupportPoint), Is.False,
+                        "Expected the replaced support point to not be present in the DataComponent");
+            Assert.That(dataComponent.Data.ContainsKey(newSubViewModel.SupportPoint), Is.True,
+                        "Expected the new support point to be present in the DataComponent");
+            Assert.That(dataComponent.Data[newSubViewModel.SupportPoint], Is.SameAs(originalParameters));
+        }
+
+        [Test]
         [Category(TestCategory.Integration)]
         public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueAlreadyExists_ThenViewModelIsNotReplacedAndHasOriginalValue()
         {
