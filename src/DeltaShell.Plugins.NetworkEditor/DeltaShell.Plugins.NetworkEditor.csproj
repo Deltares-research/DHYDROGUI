@@ -167,8 +167,6 @@
     <Compile Include="Import\GroupablePointCloudImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionZWCsvImportExportSettings.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionCsvData.cs" />
     <Compile Include="MapLayers\HydroAreaLayer.cs" />
     <Compile Include="MapLayers\HydroAreaLayerStyles.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
@@ -185,8 +183,6 @@
     <Compile Include="MapLayers\Editors\Interactors\RunoffBoundaryFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\SubCatchmentRelationInteractor.cs" />
     <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\CustomRenderers\BranchFeatureRenderer.cs" />
-    <Compile Include="MapLayers\CustomRenderers\CrossSectionRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\StructureRenderer.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CatchmentFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
@@ -196,9 +192,6 @@
     <Compile Include="MapLayers\Editors\Interactors\StructureToCompositeStructureTopology.cs" />
     <Compile Include="MapLayers\Editors\Interactors\WasteWaterTreatmentPlantFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\HydroNetworkFeatureEditor.cs" />
-    <Compile Include="MapLayers\HydroNetworkRoutesLayerController.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionCsvExportSettings.cs" />
-    <Compile Include="ImportExportCsv\CrossSectionImportSettings.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -208,12 +201,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollection.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\StructureSnapRule.cs" />
     <Compile Include="MapLayers\Editors\Interactors\BranchToCrossSectionRelationInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\StructureFeatureToStructureRelationInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NetworkEditorApplicationPlugin.cs" />
-    <Compile Include="MapLayers\CustomRenderers\CompositeStructureRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">

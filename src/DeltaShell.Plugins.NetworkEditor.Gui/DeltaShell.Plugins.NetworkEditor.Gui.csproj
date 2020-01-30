@@ -789,11 +789,6 @@
       <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>

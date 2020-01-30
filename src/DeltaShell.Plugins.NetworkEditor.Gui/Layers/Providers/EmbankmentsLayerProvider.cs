@@ -1,8 +1,10 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using SharpMap.Api.Editors;
+using SharpMap.Api.Layers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,6 +15,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     /// </summary>
     internal sealed class EmbankmentsLayerProvider : FeaturesLayerProvider<Embankment>
     {
+        /// <inheritdoc/>
+        protected override ILayer CreateLayer(HydroArea hydroArea)
+        {
+            ILayer layer = base.CreateLayer(hydroArea);
+            layer.CustomRenderers.Add(new EmbankmentRenderer());
+
+            return layer;
+        }
+
         /// <inheritdoc/>
         protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
         {

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -24,6 +26,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 
             IFeature feature = featureEditor.CreateNewFeature(Substitute.For<ILayer>());
             Assert.That(feature, Is.TypeOf<Embankment>());
+
+            Assert.That(vectorLayer.CustomRenderers.Single(), Is.TypeOf<EmbankmentRenderer>());
         }
 
         protected override ILayerSubProvider GetLayerSubProvider()
