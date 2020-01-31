@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 Edges = edges
             };
 
-            grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), grid)).ToList();
+            grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), vertices)).ToList();
             return grid;
         }
 
