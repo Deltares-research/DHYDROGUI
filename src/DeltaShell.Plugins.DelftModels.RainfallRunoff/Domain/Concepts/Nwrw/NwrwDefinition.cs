@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public double RunoffDelay { get; set; } // AFV_AFS
         public double RunoffLength { get; set; } // AFV_LEN
         public double RunoffSlope { get; set; } // AFV_HEL
+        public double TerrainRoughness { get; set; } // AFV_RUW
         public string Remark { get; set; } // ALG_TOE
 
  

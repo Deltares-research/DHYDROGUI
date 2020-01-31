@@ -55,8 +55,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             if (model == null) return false;
             var bcWriter = new RainfallRunoffBoundaryDataFileWriter();
             bcWriter.WriteFile(Path.Combine(Path.GetFullPath(path), "BoundaryConditions.bc"), model);
-            var nwrwWriter = new NwrwFileWriter();
-            nwrwWriter.WriteNwrwFiles(model, path);
+            var nwrwWriter = new NwrwModelFileWriter(new NwrwComponentFileWriterBase[]
+            {
+                new Nwrw3BComponentFileWriter(model),
+                new NwrwAlgComponentFileWriter(model),
+                new NwrwDwfComponentFileWriter(model), 
+            });
+            nwrwWriter.WriteNwrwFiles(path);
             model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path); 
             return model.ModelController.WriteFiles();
         }

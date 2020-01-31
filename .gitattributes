@@ -1048,6 +1048,9 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvDataPropert
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/INwrwFeature.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/Nwrw3BComponentFileWriter.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwAlgComponentFileWriter.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwComponentFileWriterBase.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDefinition.cs -text
@@ -1055,10 +1058,11 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDefin
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDischargeData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSurfaceData.cs -text
@@ -3974,6 +3978,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/App.config -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/CatchmentCoverageMaintainerImplTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.csproj -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Hbv/HbvDataTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/Nwrw3BComponentFileWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Importer/PolderFromGisImporterTest.cs -text
