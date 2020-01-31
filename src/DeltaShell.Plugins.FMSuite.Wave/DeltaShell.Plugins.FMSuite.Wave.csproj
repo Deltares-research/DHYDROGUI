@@ -151,6 +151,9 @@
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShapeFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShape.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShape.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\DegreesDefinedSpreading.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\IBoundaryConditionSpreading.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreading.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinition.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinate.cs" />
