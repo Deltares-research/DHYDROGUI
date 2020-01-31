@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -41,7 +43,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             try
             {
                 waterFlowFMModel.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
-                waterFlowFMModel.NetworkDiscretization.Clear();
+                ClearComputationalPointsOfChannels(waterFlowFMModel.NetworkDiscretization, channels);
                 ImportCalculationGrids(waterFlowFMModel.NetworkDiscretization, channels);
                 ImportFixedGridPointData(waterFlowFMModel.NetworkDiscretization);
             }
@@ -198,6 +200,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             return networkLocations;
+        }
+
+        private void ClearComputationalPointsOfChannels(IDiscretization networkDiscretization, Dictionary<string, IChannel> channels)
+        {
+            var valueFilter = new VariableValueFilter<INetworkLocation>();
+            var locationsToBeRemoved = networkDiscretization.Locations.AllValues.Where(l => channels.ContainsKey(l.Branch.Name));
+            var allLocations = networkDiscretization.Locations.AllValues;
+            foreach (var l in locationsToBeRemoved)
+            {
+               allLocations.Remove(l);
+            }
         }
     }
 }

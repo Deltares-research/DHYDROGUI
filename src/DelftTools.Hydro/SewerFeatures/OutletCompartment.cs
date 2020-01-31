@@ -11,6 +11,7 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class OutletCompartment : Compartment
     {
+        public OutletCompartment() : this("outletCompartment") { }
 
         public OutletCompartment(string name) : base(name)
         {
