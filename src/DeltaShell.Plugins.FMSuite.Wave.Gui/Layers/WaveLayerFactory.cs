@@ -196,13 +196,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
         private static IEnumerable<ILayer> CreateBoundaryLayers(BoundaryMapFeaturesContainer featuresProviderContainer, IWaveModel model)
         {
-            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
-
-            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
-                                                 model);
-
             yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider,
                                                   model);
+            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
+            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
+                                                 model);
         }
 
         private static ILayer CreateSupportPointsLayer(BoundarySupportPointMapFeatureProvider featureProvider, IWaveModel model)
