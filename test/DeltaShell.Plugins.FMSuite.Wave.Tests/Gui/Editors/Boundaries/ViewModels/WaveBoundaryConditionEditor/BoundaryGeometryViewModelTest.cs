@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
@@ -21,9 +22,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters>();
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
 
             return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          Substitute.For<IBoundaryParametersFactory>());
+                                                          Substitute.For<IBoundaryParametersFactory>(),
+                                                          mediator);
         }
 
         [Test]

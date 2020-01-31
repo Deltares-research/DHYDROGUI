@@ -109,6 +109,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
+        public void UpdateActiveSupportPoint_ObservedParameters_SupportPointNull()
+        {
+            // Setup
+            var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            var dictionary = new Dictionary<SupportPoint, ConstantParameters>()
+            {
+                {supportPoint, new ConstantParameters(0.0, 0.0, 0.0, 0.0)}
+            };
+
+            var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel(dictionary);
+
+            viewModel.UpdateActiveSupportPoint(supportPoint);
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
+
+            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+
+            // Call
+            viewModel.UpdateActiveSupportPoint(null);
+
+            // Assert
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null);
+
+            Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
+            Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
+
+            PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
+            Assert.That(relevantEventArgs.PropertyName, 
+                        Is.EqualTo(nameof(SpatiallyVariantConstantParametersSettingsViewModel.ActiveParametersViewModel)));
+        }
+
+
+        [Test]
         public void UpdateActiveSupportPoint_ObservedParameters_ValueAlreadySet()
         {
             // Setup

@@ -55,9 +55,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
             waveBoundary.ConditionDefinition.Returns(conditionDefinition);
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory());
+                                                       new BoundaryParametersFactory(), 
+                                                       mediator);
 
             viewModel = new SupportPointEditorViewModel(geometricDefinition, 
                                                         supportPointDataComponentViewModel);
@@ -166,6 +168,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             viewModel.AssertPropertyChangedFired(Call, 0, nameof(viewModel.SelectedViewModel));
+        }
+
+        [Test]
+        public void GivenAnEnabledSupportPointEditorViewModel_WhenSelectedViewModelIsChanged_ThenTheSupportPointDataComponentViewModelIsUpdated()
+        {
+            // Setup
+            SupportPointViewModel newViewModel = GetExistingSupportPointViewModel();
+
+            // Pre-condition
+            Assert.That(supportPointDataComponentViewModel.SelectedSupportPoint, 
+                        Is.Not.SameAs(newViewModel.SupportPoint));
+
+            // Call
+            viewModel.SelectedViewModel = newViewModel;
+
+            // Assert
+            Assert.That(supportPointDataComponentViewModel.SelectedSupportPoint, 
+                        Is.SameAs(newViewModel.SupportPoint));
         }
 
         [Test]
@@ -552,6 +572,60 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.IsEnabled, Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void RefreshIsEnabled_ToDisabledState_DisablesSupportPoints()
+        {
+            // Setup
+            viewModel.ViewModels.ForEach(x => x.IsEnabled = true);
+
+            var dataComponent =
+                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+            waveBoundary.ConditionDefinition.DataComponent = dataComponent;
+
+            // Call
+            viewModel.RefreshIsEnabled();
+
+            // Assert
+            Assert.That(viewModel.ViewModels.Any(x => x.IsEnabled), Is.False,
+                        "Expected all support point view models to be disabled.");
+        }
+
+        [Test]
+        public void RefreshIsEnabled_ToEnabledState_SetsSelectedSupportPoint()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = 
+                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
+            waveBoundary.ConditionDefinition.Returns(conditionDefinition);
+
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition,
+                                                       new BoundaryParametersFactory(), 
+                                                       mediator);
+
+            var viewModel = new SupportPointEditorViewModel(geometricDefinition, 
+                                                            supportPointDataComponentViewModel);
+            viewModel.SelectedViewModel = GetExistingSupportPointViewModel();
+
+            // Precondition
+            Assert.That(supportPointDataComponentViewModel.SelectedSupportPoint, 
+                        Is.Not.SameAs(viewModel.SelectedViewModel.SupportPoint));
+
+            // Call
+            waveBoundary.ConditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters>();
+            viewModel.RefreshIsEnabled();
+
+            // Assert
+            Assert.That(supportPointDataComponentViewModel.SelectedSupportPoint, 
+                        Is.SameAs(viewModel.SelectedViewModel.SupportPoint));
         }
 
         private SupportPointViewModel GetExistingSupportPointViewModel()

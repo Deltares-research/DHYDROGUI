@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
@@ -12,7 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="BoundarySpecificParametersSettingsViewModel" /> defines the
     /// view model for the boundary-specific parameters settings view.
     /// </summary>
-    public sealed class BoundarySpecificParametersSettingsViewModel : IRefreshDataComponentViewModel
+    public sealed class BoundarySpecificParametersSettingsViewModel : IRefreshDataComponentViewModel, 
+                                                                      INotifyPropertyChanged
     {
         private readonly IWaveBoundaryConditionDefinition conditionDefinition;
         private readonly IViewDataComponentFactory dataComponentFactory;
@@ -61,6 +64,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             ParametersSettingsViewModel =
                 dataComponentFactory.ConstructParametersSettingsViewModel(conditionDefinition.DataComponent);
+        }
+
+        public void UpdateSelectedActiveParameters(SupportPoint supportPoint)
+        {
+            switch(ParametersSettingsViewModel)
+            {
+                case SpatiallyVariantConstantParametersSettingsViewModel spatiallyVariantConstantParametersSettingsViewModel:
+                    spatiallyVariantConstantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                        "Cannot set the selected view point when the data is not spatially variant.");
+            }
         }
 
         /// <summary>

@@ -13,8 +13,10 @@
 
     <GroupBox Header="{Binding Path=GroupBoxTitle}"
               IsEnabled="{Binding Path=ActiveParametersViewModel, 
-                                  Converter={StaticResource NotNullToBooleanConverter}}">
+                                  Converter={StaticResource NotNullToBooleanConverter},
+                                  Mode=OneWay}">
         <local:ConstantParametersView Margin="10" 
-                                      DataContext="{Binding Path=ActiveParametersViewModel}"/>
+                                      DataContext="{Binding Path=ActiveParametersViewModel, 
+                                                            Mode=OneWay}"/>
     </GroupBox>
 </UserControl>

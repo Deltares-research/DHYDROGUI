@@ -1,0 +1,21 @@
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
+{
+    /// <summary>
+    /// <see cref="IAnnounceSelectedSupportPointDataChanged"/> defines the
+    /// methods used to signal that the selected support point data has changed.
+    /// </summary>
+    public interface IAnnounceSelectedSupportPointDataChanged
+    {
+        /// <summary>
+        /// Announces the data associated with <paramref name="supportPoint"/>
+        /// has changed.
+        /// </summary>
+        /// <param name="supportPoint">The support of which the data has changed point.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
+        /// </exception>
+        void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint);
+    }
+}

@@ -8,6 +8,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using NSubstitute;
 using NUnit.Framework;
@@ -29,9 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters>();
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory());
+                                                       new BoundaryParametersFactory(), 
+                                                       mediator);
 
             supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
             viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
@@ -125,8 +128,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters(0, 0, 0, 0);
             parametersFactory.ConstructDefaultConstantParameters().Returns(parameters);
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var supportPointDataComponentViewModel = 
-                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             var supportPoint = 
                 new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
@@ -162,8 +166,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters(0, 0, 0, 0);
             dataComponent.AddParameters(supportPoint, parameters);
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var supportPointDataComponentViewModel = 
-                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
 
@@ -194,8 +199,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters(0, 0, 0, 0);
             initialDataComponent.AddParameters(supportPoint, parameters);
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var supportPointDataComponentViewModel = 
-                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
 
@@ -235,8 +241,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var supportPoint = 
                 new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
 
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var supportPointDataComponentViewModel = 
-                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory);
+                new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             viewModel = new SupportPointViewModel(supportPoint, supportPointDataComponentViewModel);
 

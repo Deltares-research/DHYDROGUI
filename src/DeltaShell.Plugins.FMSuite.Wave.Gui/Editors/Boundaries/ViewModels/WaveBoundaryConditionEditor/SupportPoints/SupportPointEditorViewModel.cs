@@ -60,9 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             Subscribe();
 
-            SelectedViewModel = ViewModels.First();
-
             IsEnabled = this.supportPointDataComponentViewModel.IsEnabled();
+            SelectedViewModel = ViewModels.First();
         }
 
         /// <summary>
@@ -90,10 +89,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 }
 
                 selectedViewModel = value;
+
+                if (IsEnabled)
+                {
+                    supportPointDataComponentViewModel.SelectedSupportPoint = SelectedViewModel?.SupportPoint;
+                }
+
                 OnPropertyChanged();
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="SupportPointEditorViewModel"/> is enabled.
+        /// </summary>
         public bool IsEnabled
         {
             get => isEnabled;
@@ -115,7 +123,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             IsEnabled = supportPointDataComponentViewModel.IsEnabled();
 
-            if (!IsEnabled)
+            if (IsEnabled)
+            {
+                supportPointDataComponentViewModel.SelectedSupportPoint = SelectedViewModel.SupportPoint;
+            }
+            else
             {
                 ViewModels.ForEach(x => x.IsEnabled = false);
             }

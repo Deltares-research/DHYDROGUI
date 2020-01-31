@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -13,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// </summary>
     /// <seealso cref="ConstantParametersSettingsViewModel" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public sealed class SpatiallyVariantConstantParametersSettingsViewModel : ConstantParametersSettingsViewModel, INotifyPropertyChanged
+    public sealed class SpatiallyVariantConstantParametersSettingsViewModel : ConstantParametersSettingsViewModel
     {
         private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters> supportPointToParametersMapping;
 
@@ -79,9 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
-            Ensure.NotNull(supportPoint, nameof(supportPoint));
-
-            ConstantParameters correspondingParameters =
+            ConstantParameters correspondingParameters = 
+                supportPoint != null && 
                 supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters value) 
                     ? value 
                     : null;
@@ -94,16 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ActiveParametersViewModel = correspondingParameters != null
                                             ? new ConstantParametersViewModel(correspondingParameters)
                                             : null;
-        }
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

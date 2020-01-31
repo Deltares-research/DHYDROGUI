@@ -1,11 +1,15 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
     /// <see cref="ConstantParametersSettingsViewModel"/> defines the interface of any view
     /// model that wishes to back the ConstantParametersView.
     /// </summary>
     /// <seealso cref="IParametersSettingsViewModel" />
-    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel
+    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel, 
+                                                                INotifyPropertyChanged
     {
         /// <summary>
         /// Get the currently displayed <see cref="ConstantParametersViewModel"/>.
@@ -16,5 +20,12 @@
         /// Gets or sets the group box title.
         /// </summary>
         public abstract string GroupBoxTitle { get; protected set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

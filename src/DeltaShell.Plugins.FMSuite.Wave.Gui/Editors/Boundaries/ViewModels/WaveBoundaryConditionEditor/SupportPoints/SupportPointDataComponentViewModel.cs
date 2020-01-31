@@ -4,6 +4,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {
@@ -16,32 +17,54 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public class SupportPointDataComponentViewModel
     {
         private readonly IBoundaryParametersFactory parametersFactory;
+        private readonly IWaveBoundaryConditionDefinition conditionDefinition;
+        private readonly IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged;
 
         /// <summary>
         /// Creates a new <see cref="SupportPointDataComponentViewModel"/>.
         /// </summary>
         /// <param name="conditionDefinition">The condition definition</param>
         /// <param name="parametersFactory">The parameters factory.</param>
+        /// <param name="announceSelectedSupportPointDataChanged"> </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="conditionDefinition"/> or
-        /// <paramref name="parametersFactory"/> is <c>null</c>.
+        /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public SupportPointDataComponentViewModel(IWaveBoundaryConditionDefinition conditionDefinition,
-                                                  IBoundaryParametersFactory parametersFactory)
+                                                  IBoundaryParametersFactory parametersFactory,
+                                                  IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged)
         {
             Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
             Ensure.NotNull(parametersFactory, nameof(parametersFactory));
+            Ensure.NotNull(announceSelectedSupportPointDataChanged, nameof(announceSelectedSupportPointDataChanged));
 
             this.conditionDefinition = conditionDefinition;
             this.parametersFactory = parametersFactory;
+            this.announceSelectedSupportPointDataChanged = announceSelectedSupportPointDataChanged;
         }
-
-        private readonly IWaveBoundaryConditionDefinition conditionDefinition;
 
         /// <summary>
         /// Gets the observed data component.
         /// </summary>
         public IBoundaryConditionDataComponent ObservedDataComponent => conditionDefinition.DataComponent;
+
+        /// <summary>
+        /// Gets or sets the selected support point.
+        /// </summary>
+        public SupportPoint SelectedSupportPoint
+        {
+            get => selectedSupportPoint;
+            set
+            {
+                selectedSupportPoint = value;
+                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
+            }
+        }
+
+        private SupportPoint selectedSupportPoint;
+
+        private void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint) =>
+            announceSelectedSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(supportPoint);
+
 
         /// <summary>
         /// Determines whether this instance is enabled.
@@ -100,6 +123,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }
+
+            if (supportPoint == SelectedSupportPoint)
+            {
+                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
+            }
         }
 
         /// <summary>
@@ -123,6 +151,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     break;
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
+            }
+
+            if (supportPoint == SelectedSupportPoint)
+            {
+                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
             }
         }
 
