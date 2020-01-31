@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
@@ -13,12 +14,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
 {
     /// <summary>
     /// <see cref="WaveBoundaryFactoryHelper"/> provides the set of methods used
-    /// by the <see cref="IWaveBoundaryFactory"/> to obtain the correct wave boundary
+    /// by the <see cref="IWaveBoundaryFactoryHelper"/> to obtain the correct wave boundary
     /// data from view data.
     /// </summary>
     /// <seealso cref="IWaveBoundaryFactoryHelper" />
     public class WaveBoundaryFactoryHelper : IWaveBoundaryFactoryHelper
-    {
+    { 
+        private readonly IBoundaryConditionDataComponentFactory componentFactory;
+
+        /// <summary>
+        /// Creates a new <see cref="WaveBoundaryFactoryHelper"/>.
+        /// </summary>
+        /// <param name="componentFactory">The component factory.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="componentFactory"/> is <c>null</c>.
+        /// </exception>
+        public WaveBoundaryFactoryHelper(IBoundaryConditionDataComponentFactory componentFactory)
+        {
+            Ensure.NotNull(componentFactory, nameof(componentFactory));
+            this.componentFactory = componentFactory;
+        }
+
         public IEnumerable<GridBoundaryCoordinate> GetSnappedEndPoints(IBoundarySnappingCalculator boundarySnappingCalculator, 
                                                                        IEnumerable<Coordinate> coordinates)
         {
@@ -80,18 +96,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
 
         public IWaveBoundaryConditionDefinition GetConditionDefinition()
         {
-            // TODO (MWT): see if this warrants a separate class
             var shape = new JonswapShape {PeakEnhancementFactor = 3.3};
             const BoundaryConditionPeriodType periodType = 
                 BoundaryConditionPeriodType.Peak;
             const BoundaryConditionDirectionalSpreadingType directionalSpreading =
                 BoundaryConditionDirectionalSpreadingType.Power;
-            var dataComponent = 
-                new UniformDataComponent<ConstantParameters>(
-                    new ConstantParameters(0.0,
-                                           1.0, 
-                                           0.0, 
-                                           4.0));
+
+            var dataComponent =
+                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>();
 
             return new WaveBoundaryConditionDefinition(shape, 
                                                        periodType, 

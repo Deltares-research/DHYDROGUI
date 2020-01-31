@@ -1,6 +1,8 @@
 ﻿using System;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -30,8 +32,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
         {
             Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
 
+            var parametersFactory = new BoundaryParametersFactory();
+            var dataComponentFactory = new BoundaryConditionDataComponentFactory(parametersFactory);
+
             var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
-                                                              new WaveBoundaryFactoryHelper(), 
+                                                              new WaveBoundaryFactoryHelper(dataComponentFactory), 
                                                               new UniqueBoundaryNameProvider(boundaryContainer));
             var geometryFactory = new WaveBoundaryGeometryFactory(boundaryContainer, boundaryContainer);
 
