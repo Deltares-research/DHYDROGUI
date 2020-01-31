@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class WaterFlowFMStressTest
     {
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.WorkInProgress)]
         [Ignore("Big model")]

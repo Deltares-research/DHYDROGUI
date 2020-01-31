@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
     [TestFixture]
     public class ModelFeatureCoordinateDataViewTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test, Category(TestCategory.Wpf)]
         public void ShowWithData()
         {
             var feature = new FixedWeir

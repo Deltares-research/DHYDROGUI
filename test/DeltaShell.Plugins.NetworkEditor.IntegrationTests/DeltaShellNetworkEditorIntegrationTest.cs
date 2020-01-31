@@ -21,7 +21,6 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.LayerPropertiesEditor;
 using GeoAPI.Extensions.Coverages;
-using log4net;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -37,8 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
     [TestFixture]
     public class DeltaShellNetworkEditorIntegrationTest
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DeltaShellNetworkEditorIntegrationTest));
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowGatedWeirInPropertyGrid()
@@ -63,7 +60,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
         [Test]
         [Ignore("Some strange bug, hangs")]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void CheckIfHydroNetworkEditorViewContextIsRestoredAfterViewIsClosed()
         {
             using (var gui = new DeltaShellGui())

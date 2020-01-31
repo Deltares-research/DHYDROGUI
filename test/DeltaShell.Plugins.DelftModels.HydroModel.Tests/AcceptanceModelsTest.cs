@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
     [Category(NghsTestCategory.AcceptanceTests)]
     [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.Wpf)]
     [TestFixture]
     public class AcceptanceModelsTest
     {

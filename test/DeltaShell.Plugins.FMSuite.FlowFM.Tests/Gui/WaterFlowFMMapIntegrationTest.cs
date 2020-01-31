@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void ShowCentralMapForFMModel()
         {
             var mduPath = GetBendProfPath();
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void OpenCloseCentralMapForFMModelCheckEventLeaks()
         {
             var mduPath = GetBendProfPath();
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)] // fails on build server
         public void OpenCloseCentralMapForFMModelCheckLayerDoesNotLinger()
         {
@@ -217,8 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)]
         public void ReloadCentralMapAfterModelWithOutputSaved()
         {
@@ -259,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)] // about 7 paths hold references the model after it is deleted
         public void ShowCentralMapForFMModelRemoveModelCheckMemoryLeaks()
         {
@@ -306,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ImportHarlingenShowVelocityOutput()
         {
@@ -346,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ImportHarlingenRunShowVelocityOutput()
         {

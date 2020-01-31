@@ -21,10 +21,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
     public class WaterFlowFMModelNodePresenterTest
     {
         [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowTreeViewForFMModel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -55,6 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewNotYetOpen()
         {
             using (var gui = new DeltaShellGui())
@@ -93,6 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void JumpToSubTabThroughProjectExplorerWithModelViewAlreadyOpenOpen()
         {
             using (var gui = new DeltaShellGui())
@@ -211,16 +213,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             Assert.AreEqual(before, after);
         }
-
-
-/*        private static WaterFlowFMModelView GetActiveFMModelView()
-        {
-            return (WaterFlowFMModelView)FlowFMGuiPlugin.ActiveMapView.TabControl.ActiveView;
-        }
-
-        private static TabPage GetSelectedTab(WaterFlowFMModelView modelView)
-        {
-            return modelView.Controls[0].Controls.OfType<TabControl>().First().SelectedTab;
-        }*/
     }
 }

@@ -29,11 +29,11 @@ using Control = System.Windows.Controls.Control;
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
-    [Category(TestCategory.Integration)]
+    [Category(TestCategory.Wpf)]
+    [Category(TestCategory.Slow)]
     public class NetworkEditorGuiPluginTest
     {
         [Test]
-        [Category(TestCategory.Slow)]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
             using (var gui = new DeltaShellGui())
@@ -77,7 +77,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
             using (var gui = new DeltaShellGui())
@@ -113,7 +112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
             using (var gui = new DeltaShellGui())

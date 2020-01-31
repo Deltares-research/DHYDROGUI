@@ -417,7 +417,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void NetworkTreeViewWithDeltaShell()
         {
             using (var gui = new DeltaShellGui())

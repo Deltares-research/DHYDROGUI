@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategory.Wpf)]
     public class HarmonicConditionsDialogTest
     {
         [Test]

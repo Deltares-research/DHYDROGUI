@@ -36,10 +36,10 @@ using Control = System.Windows.Controls.Control;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
     public class FlowFmMapLayerProviderTest
     {
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersForFmModel()
         {
             var mduPath =
@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersForIvoorkust()
         {
             var mduPath =
@@ -58,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersAdjustedModel()
         {
             var mduPath =
@@ -79,6 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void CheckLayerIsSetCorrectlyWhenOpeningFmItems()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
@@ -125,6 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CheckFmBridgePillarLayerIsCreated()
         {
             var model = new WaterFlowFMModel();
@@ -158,6 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCreateLayerIsCalled_ThenCorrectLayerIsCreated()
         {
             // Given
@@ -174,6 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCanCreateLayerForIsCalle_ThenTrueIsReturned()
         {
             // Given
@@ -187,7 +193,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsTrue(result);
         }
 
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFmMapLayerProviderAndAModelWithAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionStoreIsReturned()
         {
             // Given
@@ -213,7 +220,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.AreSame(classMapFileFunctionStoreLayer, outputClassMapFileStore);
         }
 
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
         {
             // Given
@@ -237,6 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CheckFmLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
             var model = new WaterFlowFMModel();
@@ -280,6 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerBoundaryConditions_ThenBoundaryConditionLayerIsNotEnabledInLegend()
         {
             //Given
@@ -299,6 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerSourceAndSinks_ThenSourceAndSinksLayerIsNotEnabledInLegend()
         {
             //Given
@@ -307,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var waterFlowFmModel = new WaterFlowFMModel();
             TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, "Pipes", sourceAndSinks);
 
-           //When
+            //When
             var layer = mapLayerProvider.CreateLayer(sourceAndSinks, waterFlowFmModel);
 
             //Then
