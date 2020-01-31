@@ -117,7 +117,7 @@ namespace DelftTools.Hydro.SewerFeatures
         /// <returns></returns>
         public OutletCompartment UpdateCompartmentToOutletCompartment(ICompartment compartment)
         {
-            var outlet = new OutletCompartment(compartment.Name);
+            var outlet = new OutletCompartment(compartment);
             outlet.TakeConnectionsOverFrom(compartment);
 
             Compartments.Add(outlet);

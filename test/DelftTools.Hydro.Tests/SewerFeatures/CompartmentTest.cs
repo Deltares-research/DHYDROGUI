@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.SewerFeatures
@@ -53,6 +54,48 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             // not through the compartment. However with this test we also ensure the set property.
             Assert.IsFalse(manhole.Compartments.Any());
             Assert.AreEqual(manhole, compartment.ParentManhole);
+        }
+
+        [Test]
+        public void UpgradeCompartmentToOutlet_PropertiesShouldBeSet()
+        {
+            var name = "haha";
+            var  parentManhole = new Manhole("hoho");
+            var parentManholeName = "hihi";
+            var surfaceLevel = 123.4;
+            var manholeLength = 567.8;
+            var manholeWidth = 910.11;
+            var floodableArea = 1213.14;
+            var bottomLevel = 1516.17;
+            var geometry = new Point(1.0,2.0);
+            var shape = CompartmentShape.Square;
+
+            var compartment = new Compartment()
+            {
+                Name = name,
+                ParentManhole = parentManhole,
+                ParentManholeName = parentManholeName,
+                SurfaceLevel = surfaceLevel,
+                ManholeLength = manholeLength,
+                ManholeWidth = manholeWidth,
+                FloodableArea = floodableArea,
+                BottomLevel = bottomLevel,
+                Geometry = geometry,
+                Shape = shape
+            };
+
+            var outlet = new OutletCompartment(compartment);
+
+            Assert.AreEqual(name,outlet.Name);
+            Assert.AreSame(parentManhole,outlet.ParentManhole);
+            Assert.AreEqual(parentManholeName,outlet.ParentManholeName);
+            Assert.AreEqual(surfaceLevel,outlet.SurfaceLevel);
+            Assert.AreEqual(manholeLength,outlet.ManholeLength);
+            Assert.AreEqual(manholeWidth, outlet.ManholeWidth);
+            Assert.AreEqual(floodableArea, outlet.FloodableArea);
+            Assert.AreEqual(bottomLevel, outlet.BottomLevel);
+            Assert.AreSame(geometry, outlet.Geometry);
+            Assert.AreEqual(shape, outlet.Shape);
         }
     }
 }
