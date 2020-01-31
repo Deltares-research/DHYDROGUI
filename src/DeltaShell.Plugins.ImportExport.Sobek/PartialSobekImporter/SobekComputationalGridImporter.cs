@@ -204,13 +204,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void ClearComputationalPointsOfChannels(IDiscretization networkDiscretization, Dictionary<string, IChannel> channels)
         {
-            var valueFilter = new VariableValueFilter<INetworkLocation>();
-            var locationsToBeRemoved = networkDiscretization.Locations.AllValues.Where(l => channels.ContainsKey(l.Branch.Name));
-            var allLocations = networkDiscretization.Locations.AllValues;
-            foreach (var l in locationsToBeRemoved)
-            {
-               allLocations.Remove(l);
-            }
+            networkDiscretization.Locations.AllValues.RemoveAllWhere(l => channels.ContainsKey(l.Branch.Name));
         }
     }
 }
