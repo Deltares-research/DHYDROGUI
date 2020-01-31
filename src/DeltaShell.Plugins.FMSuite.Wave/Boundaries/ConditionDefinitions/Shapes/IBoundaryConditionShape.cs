@@ -9,6 +9,5 @@
     /// As such, this interface is empty, and other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    // TODO: Extend description with where the right things should be updated.
     public interface IBoundaryConditionShape { }
 }
