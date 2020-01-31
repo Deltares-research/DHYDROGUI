@@ -27,9 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Assert
             Assert.That(parameters.Height, Is.EqualTo(0.0));
-            Assert.That(parameters.Period, Is.EqualTo(0.0));
+            Assert.That(parameters.Period, Is.EqualTo(1.0));
             Assert.That(parameters.Direction, Is.EqualTo(0.0));
-            Assert.That(parameters.Spreading, Is.EqualTo(0.0));
+            Assert.That(parameters.Spreading, Is.EqualTo(4.0));
         }
 
         [Test]

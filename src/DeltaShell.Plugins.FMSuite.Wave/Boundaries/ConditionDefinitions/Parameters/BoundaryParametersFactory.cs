@@ -7,7 +7,7 @@
     public sealed class BoundaryParametersFactory : IBoundaryParametersFactory
     {
         public ConstantParameters ConstructDefaultConstantParameters() =>
-            ConstructConstantParameters(0.0, 0.0, 0.0, 0.0);
+            ConstructConstantParameters(0.0, 1.0, 0.0, 4.0);
 
         public ConstantParameters ConstructConstantParameters(double height, double period, double direction, double spreading)
         {
