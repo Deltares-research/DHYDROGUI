@@ -385,6 +385,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEventedList<WaveObstacle> Obstacles { get; set; }
         public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
 
+        /// <summary>
+        /// Only used for bubbling events for updating project tree. Don't remove the setter.
+        /// It should be public.
+        /// </summary>
+        [Obsolete("Use BoundaryContainer.Boundaries")]
+        public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
+
         public WaveInputFieldData TimePointData { get; set; }
 
         public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
@@ -441,6 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             BoundaryContainer = new BoundaryContainer();
             boundaryContainerSyncService = new BoundaryContainerSyncService(this);
+            BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
         }
 
         private void InitializeCouplingTime()
