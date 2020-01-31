@@ -195,17 +195,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void UpdateActiveSupportPoint_SupportPointNull_ThrowsArgumentNullException()
+        public void UpdateActiveSupportPoint_SupportPointNull_Sets()
         {
             // Setup
             var dictionary = new Dictionary<SupportPoint, ConstantParameters>();
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel(dictionary);
 
-            // Call | Assert
-            void Call() => viewModel.UpdateActiveSupportPoint(null);
+            // Call
+            viewModel.UpdateActiveSupportPoint(null);
 
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+            // Assert
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null); 
         }
     }
 }
