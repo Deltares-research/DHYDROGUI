@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel"/> defines the view model for the
+    /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/> defines the view model for the
     /// ConstantParametersSettingsView given spatially varying data.
     /// </summary>
-    /// <seealso cref="ConstantParametersSettingsViewModel" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public sealed class SpatiallyVariantConstantParametersSettingsViewModel : ConstantParametersSettingsViewModel
+    /// <seealso cref="ConstantParameters{TSpreading}" />
+    public sealed class SpatiallyVariantConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel
+        where TSpreading : class, IBoundaryConditionSpreading, new()
     {
-        private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters> supportPointToParametersMapping;
+        private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping;
 
         /// <summary>
-        /// Creates a new <see cref="SpatiallyVariantConstantParametersSettingsViewModel"/>.
+        /// Creates a new <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
         /// <param name="supportPointToParametersMapping">
-        /// The mapping of support points to their corresponding <see cref="ConstantParameters"/>.
+        /// The mapping of support points to their corresponding <see cref="ConstantParameters{TSpreading}"/>.
         /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="supportPointToParametersMapping"/> is <c>null</c>.
         /// </exception>
-         public SpatiallyVariantConstantParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, ConstantParameters> supportPointToParametersMapping)
+         public SpatiallyVariantConstantParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping)
         {
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
             this.supportPointToParametersMapping = supportPointToParametersMapping;
@@ -78,19 +78,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
-            ConstantParameters correspondingParameters = 
+            ConstantParameters<TSpreading> correspondingParameters = 
                 supportPoint != null && 
-                supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters value) 
+                supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters<TSpreading> value) 
                     ? value 
                     : null;
 
-            if (correspondingParameters == ActiveParametersViewModel?.ObservedParameters)
+            if (correspondingParameters == (ActiveParametersViewModel as ConstantParametersViewModel<TSpreading>)?.ObservedParameters)
             {
                 return;
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new ConstantParametersViewModel(correspondingParameters)
+                                            ? new ConstantParametersViewModel<TSpreading>(correspondingParameters)
                                             : null;
         }
     }

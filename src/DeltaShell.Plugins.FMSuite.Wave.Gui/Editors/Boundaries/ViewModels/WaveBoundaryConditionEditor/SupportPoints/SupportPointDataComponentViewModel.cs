@@ -3,6 +3,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 
@@ -74,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </returns>
         public bool IsEnabled()
         {
-            return ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters>;
+            return ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> || 
+                   ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>;
         }
 
         /// <summary>
@@ -93,7 +95,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             switch (ObservedDataComponent)
             {
-                case SpatiallyVaryingDataComponent<ConstantParameters> constantParametersDataComponent:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> constantParametersDataComponent:
+                    return constantParametersDataComponent.Data.ContainsKey(supportPoint);
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantParametersDataComponent:
                     return constantParametersDataComponent.Data.ContainsKey(supportPoint);
                 default:
                     return false;
@@ -116,9 +120,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             switch (ObservedDataComponent)
             {
-                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> constantDict:
                     constantDict.AddParameters(supportPoint, 
-                                               parametersFactory.ConstructDefaultConstantParameters());
+                                               parametersFactory.ConstructDefaultConstantParameters<PowerDefinedSpreading>());
+                    break;
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantDict:
+                    constantDict.AddParameters(supportPoint, 
+                                               parametersFactory.ConstructDefaultConstantParameters<DegreesDefinedSpreading>());
                     break;
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
@@ -146,7 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             switch (ObservedDataComponent)
             {
-                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> constantDict:
+                    constantDict.RemoveSupportPoint(supportPoint);
+                    break;
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantDict:
                     constantDict.RemoveSupportPoint(supportPoint);
                     break;
                 default:
@@ -177,7 +188,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             switch (ObservedDataComponent)
             {
-                case SpatiallyVaryingDataComponent<ConstantParameters> constantDict:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> constantDict:
+                    constantDict.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+                    break;
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantDict:
                     constantDict.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
                     break;
                 default:

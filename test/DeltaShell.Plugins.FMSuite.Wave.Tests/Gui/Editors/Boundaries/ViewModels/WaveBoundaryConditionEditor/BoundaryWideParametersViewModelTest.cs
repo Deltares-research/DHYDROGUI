@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
@@ -10,6 +6,12 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoun
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 using NSubstitute;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
@@ -22,6 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private class ParametersTestConfig
         {
             public IWaveBoundaryConditionDefinition BoundaryCondition { get; private set; } = null;
+            public IViewDataComponentFactory DataComponentFactory { get; private set; } = null;
+            public IAnnounceDataComponentChanged AnnounceDataComponentChanged { get; private set; } = null;
+            public IViewShapeFactory ShapeFactory { get; private set; } = null;
+            public BoundaryWideParametersViewModel ViewModel { get; private set; } = null;
 
             public ParametersTestConfig WithBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition)
             {
@@ -30,13 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             }
 
             public ParametersTestConfig WithDefaultBoundaryCondition()
-            { 
-                var modelShape = Substitute.For<IBoundaryConditionShape>(); 
+            {
+                var modelShape = Substitute.For<IBoundaryConditionShape>();
                 BoundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-                
+
                 BoundaryCondition.Shape = modelShape;
                 BoundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
-                BoundaryCondition.DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees;
 
                 return this;
             }
@@ -47,7 +52,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 return this;
             }
 
-            public IViewShapeFactory ShapeFactory { get; private set; } = null;
+            public ParametersTestConfig WithDefaultDataComponentFactory()
+            {
+                DataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultAnnounceDataComponentChanged()
+            {
+                AnnounceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+                return this;
+            }
 
             public ParametersTestConfig WithShapeFactory(IViewShapeFactory shapeFactory)
             {
@@ -73,15 +88,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 return this;
             }
 
-            public BoundaryWideParametersViewModel ViewModel { get; private set; } = null;
-
             public ParametersTestConfig ConstructViewModel()
             {
                 Assert.That(BoundaryCondition, Is.Not.Null);
                 Assert.That(ShapeFactory, Is.Not.Null);
+                Assert.That(DataComponentFactory, Is.Not.Null);
+                Assert.That(AnnounceDataComponentChanged, Is.Not.Null);
 
-                ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition, ShapeFactory);
-                ViewModel.PropertyChanged += OnPropertyChanged; 
+                ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition, 
+                                                                ShapeFactory,
+                                                                DataComponentFactory, 
+                                                                AnnounceDataComponentChanged);
+                ViewModel.PropertyChanged += OnPropertyChanged;
 
                 return this;
             }
@@ -106,18 +124,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var modelShape = new GaussShape();
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            
+
             boundaryCondition.Shape = modelShape;
             boundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
-            boundaryCondition.DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees;
+            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            boundaryCondition.DataComponent = dataComponent;
 
             var viewShape = new GaussViewShape(modelShape);
 
             var shapeFactory = Substitute.For<IViewShapeFactory>();
             shapeFactory.ConstructFromShape(modelShape).Returns(viewShape);
 
+            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            dataComponentFactory.GetDirectionalSpreadingViewType(dataComponent)
+                                .Returns(DirectionalSpreadingViewType.Degrees);
+
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
             // Call
-            var viewModel = new BoundaryWideParametersViewModel(boundaryCondition, shapeFactory);
+            var viewModel = new BoundaryWideParametersViewModel(boundaryCondition, 
+                                                                shapeFactory, 
+                                                                dataComponentFactory, 
+                                                                announceDataComponentChanged);
 
             // Assert
             shapeFactory.Received(1).ConstructFromShape(modelShape);
@@ -130,12 +158,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
         private static void ConfigureBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition,
                                                        IBoundaryConditionShape shape,
-                                                       BoundaryConditionPeriodType periodType,
-                                                       BoundaryConditionDirectionalSpreadingType spreadingType)
+                                                       BoundaryConditionPeriodType periodType)
         {
             boundaryCondition.Shape = shape;
             boundaryCondition.PeriodType = periodType;
-            boundaryCondition.DirectionalSpreadingType = spreadingType;
         }
 
         [Test]
@@ -143,13 +169,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var shapeFactory = Substitute.For<IViewShapeFactory>();
+            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryWideParametersViewModel(null, shapeFactory);
+            void Call() => new BoundaryWideParametersViewModel(null, 
+                                                               shapeFactory, 
+                                                               dataComponentFactory, 
+                                                               announceDataComponentChanged);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("observedBoundaryCondition"), 
+            Assert.That(exception.ParamName, Is.EqualTo("observedBoundaryCondition"),
                         "Expected a different ParamName:");
         }
 
@@ -158,13 +189,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryWideParametersViewModel(boundaryCondition, null);
+            void Call() => new BoundaryWideParametersViewModel(boundaryCondition, 
+                                                               null,
+                                                               dataComponentFactory, 
+                                                               announceDataComponentChanged);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("shapeFactory"), 
+            Assert.That(exception.ParamName, Is.EqualTo("shapeFactory"),
                         "Expected a different ParamName:");
         }
 
@@ -174,9 +210,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
                                                                         .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
-            
+
             // Call
             IReadOnlyList<Type> shapeTypes = viewModel.ShapeTypeList;
 
@@ -203,6 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
                                                                         .WithDefaultShapeFactory()
                                                                         .WithShapeFactoryAction(f => f.ConstructFromType(expectedType).Returns(expectedShape))
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
@@ -235,10 +275,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var modelShape = new GaussShape();
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            
+
             boundaryCondition.Shape = modelShape;
             boundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
-            boundaryCondition.DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees;
 
             var viewShape = new GaussViewShape(modelShape);
 
@@ -248,6 +287,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Type expectedType = typeof(GaussViewShape);
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithShapeFactory(shapeFactory)
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
@@ -275,6 +316,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
@@ -285,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.PeriodType, Is.EqualTo(PeriodViewType.Peak));
             boundaryCondition.Received(1).PeriodType = BoundaryConditionPeriodType.Peak;
-            
+
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(1));
             Assert.That(testConfig.Senders[0], Is.SameAs(viewModel));
             Assert.That(testConfig.EventArgses[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.PeriodType)));
@@ -302,6 +345,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
@@ -312,7 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.PeriodType, Is.EqualTo(PeriodViewType.Mean));
             boundaryCondition.ReceivedWithAnyArgs(1).PeriodType = BoundaryConditionPeriodType.Mean; // Only set up call gets counted.
-            
+
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(0));
         }
 
@@ -323,24 +368,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var modelShape = new PiersonMoskowitzShape();
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             boundaryCondition.Shape = modelShape;
-            boundaryCondition.DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees;
 
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
+            var dataComponentDegrees = Substitute.For<IBoundaryConditionDataComponent>();
+            testConfig.DataComponentFactory
+                      .GetDirectionalSpreadingViewType(dataComponentDegrees)
+                      .Returns(DirectionalSpreadingViewType.Degrees);
 
+            boundaryCondition.DataComponent = dataComponentDegrees;
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
+
+            var dataComponentPower = Substitute.For<IBoundaryConditionDataComponent>();
+            testConfig.DataComponentFactory
+                      .GetDirectionalSpreadingViewType(dataComponentPower)
+                      .Returns(DirectionalSpreadingViewType.Power);
+            testConfig.DataComponentFactory
+                      .ConvertBoundaryConditionDataComponentSpreadingType(dataComponentDegrees,
+                                                                          DirectionalSpreadingViewType.Power)
+                      .Returns(dataComponentPower);
 
             // Call
             viewModel.DirectionalSpreadingType = DirectionalSpreadingViewType.Power;
 
             // Assert
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Power));
-            boundaryCondition.Received(1).DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Power;
-            
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(1));
             Assert.That(testConfig.Senders[0], Is.SameAs(viewModel));
             Assert.That(testConfig.EventArgses[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.DirectionalSpreadingType)));
+
+            testConfig.AnnounceDataComponentChanged.Received(1).AnnounceDataComponentChanged();
         }
 
         [Test]
@@ -350,12 +410,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var modelShape = new PiersonMoskowitzShape();
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             boundaryCondition.Shape = modelShape;
-            boundaryCondition.DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees;
 
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
+            var dataComponentDegrees = Substitute.For<IBoundaryConditionDataComponent>();
+            testConfig.DataComponentFactory
+                      .GetDirectionalSpreadingViewType(dataComponentDegrees)
+                      .Returns(DirectionalSpreadingViewType.Degrees);
 
+            boundaryCondition.DataComponent = dataComponentDegrees;
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
 
             // Call
@@ -363,8 +429,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Degrees));
-            boundaryCondition.ReceivedWithAnyArgs(1).DirectionalSpreadingType = BoundaryConditionDirectionalSpreadingType.Degrees; // Only set up call gets counted.
-            
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(0));
         }
     }

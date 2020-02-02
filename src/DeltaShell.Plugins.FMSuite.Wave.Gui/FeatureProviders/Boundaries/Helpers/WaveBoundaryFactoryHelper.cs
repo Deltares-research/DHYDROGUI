@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
@@ -99,15 +100,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
             var shape = new JonswapShape {PeakEnhancementFactor = 3.3};
             const BoundaryConditionPeriodType periodType = 
                 BoundaryConditionPeriodType.Peak;
-            const BoundaryConditionDirectionalSpreadingType directionalSpreading =
-                BoundaryConditionDirectionalSpreadingType.Power;
 
             var dataComponent =
-                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>();
+                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
 
             return new WaveBoundaryConditionDefinition(shape, 
                                                        periodType, 
-                                                       directionalSpreading,
                                                        dataComponent);
         }
     }

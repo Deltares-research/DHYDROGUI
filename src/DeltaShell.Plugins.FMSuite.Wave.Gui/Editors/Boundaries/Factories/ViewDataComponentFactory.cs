@@ -2,6 +2,7 @@
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 
@@ -42,10 +43,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             switch (dataComponent)
             {
-                case UniformDataComponent<ConstantParameters> _:
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
                     return SpatialDefinitionViewType.Uniform;
-                case SpatiallyVaryingDataComponent<ConstantParameters> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
                     return SpatialDefinitionViewType.SpatiallyVarying;
+                default:
+                    throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
+            }
+        }
+
+        public DirectionalSpreadingViewType GetDirectionalSpreadingViewType(IBoundaryConditionDataComponent dataComponent)
+        {
+            Ensure.NotNull(dataComponent, nameof(dataComponent));
+
+            switch (dataComponent)
+            {
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                    return DirectionalSpreadingViewType.Power;
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                    return DirectionalSpreadingViewType.Degrees;
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }
@@ -57,27 +77,66 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             switch (dataComponent)
             {
-                case UniformDataComponent<ConstantParameters> uniformDataComponent:
-                    return new UniformConstantParametersSettingsViewModel(uniformDataComponent.Data);
-                case SpatiallyVaryingDataComponent<ConstantParameters> spatiallyVaryingDataComponent:
-                    return new SpatiallyVariantConstantParametersSettingsViewModel(spatiallyVaryingDataComponent.Data);
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformDataComponent:
+                    return new UniformConstantParametersSettingsViewModel<PowerDefinedSpreading>(uniformDataComponent.Data);
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> uniformDataComponent:
+                    return new UniformConstantParametersSettingsViewModel<DegreesDefinedSpreading>(uniformDataComponent.Data);
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data);
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }
         }
 
         public IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
-                                                                                       SpatialDefinitionViewType spatialDefinition)
+                                                                                       SpatialDefinitionViewType spatialDefinition,
+                                                                                       DirectionalSpreadingViewType spreadingType)
         {
             switch (forcingType) {
-                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.Uniform:
-                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>();
-                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying:
-                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters>>();
+                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.Uniform && 
+                                                   spreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
+                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.Uniform && 
+                                                   spreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
+                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
+                                                   spreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
+                case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
+                                                   spreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
                 case ForcingViewType.TimeSeries:
                 case ForcingViewType.FileBased:
                 default:
                     throw new NotSupportedException($"The combination of {forcingType} and {spatialDefinition} is currently not supported.");
+            }
+        }
+
+        public IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(IBoundaryConditionDataComponent currentDataComponent, 
+                                                                                                  DirectionalSpreadingViewType newSpreadingType)
+        {
+            switch (currentDataComponent)
+            {
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dc;
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dc;
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(dc);
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(dc);
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dc;
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dc;
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
+                default:
+                    throw new NotSupportedException("The provided data component and spreading type is not supported.");
             }
         }
     }

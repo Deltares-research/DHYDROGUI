@@ -26,6 +26,6 @@
                                         Unit="-" />
         <commonElements:LabeledValueBox Label="Spreading:"
                                         ValueContent="{Binding Path=Spreading}"
-                                        Unit="-" />
+                                        Unit="{Binding Path=SpreadingUnit}" />
     </StackPanel>
 </UserControl>

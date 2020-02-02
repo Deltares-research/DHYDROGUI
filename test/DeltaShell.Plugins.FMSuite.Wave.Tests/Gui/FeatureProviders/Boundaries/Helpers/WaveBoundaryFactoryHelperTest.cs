@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Geometries;
@@ -341,11 +342,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void GetConditionDefinition_ExpectedReturnValue()
         {
             // Setup 
-            var constantParameters = new ConstantParameters(0, 0, 0, 0);
-            var dataComponent = new UniformDataComponent<ConstantParameters>(constantParameters);
+            var constantParameters = new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading());
+            var dataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(constantParameters);
 
             var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>()
+            dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>()
                                 .Returns(dataComponent);
 
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
@@ -361,10 +362,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(shape.PeakEnhancementFactor, Is.EqualTo(3.3));
 
             Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Peak));
-            Assert.That(conditionDefinition.DirectionalSpreadingType, Is.EqualTo(BoundaryConditionDirectionalSpreadingType.Power));
 
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(dataComponent));
-            dataComponentFactory.Received(1).ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>();
+            dataComponentFactory.Received(1).ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
         }
     }
 }

@@ -12,6 +12,10 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 {
+    /// <summary>
+    /// <see cref="WaveBoundaryConditionEditorViewModel"/> defines the view
+    /// model for the wave boundary condition editor view.
+    /// </summary>
     public class WaveBoundaryConditionEditorViewModel
     {
         private readonly IWaveBoundary observedBoundary;
@@ -62,7 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
             BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, 
-                                                                                  viewShapeFactory);
+                                                                                  viewShapeFactory, 
+                                                                                  dataComponentFactory, 
+                                                                                  mediator);
         }
 
         /// <summary>

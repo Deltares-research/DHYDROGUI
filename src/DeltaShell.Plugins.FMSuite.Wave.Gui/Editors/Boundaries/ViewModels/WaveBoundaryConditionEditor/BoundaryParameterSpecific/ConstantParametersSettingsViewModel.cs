@@ -4,15 +4,15 @@ using System.Runtime.CompilerServices;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="ConstantParametersSettingsViewModel"/> defines the interface of any view
+    /// <see cref="ConstantParametersSettingsViewModel{TSpreading}"/> defines the interface of any view
     /// model that wishes to back the ConstantParametersView.
     /// </summary>
     /// <seealso cref="IParametersSettingsViewModel" />
-    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel, 
+    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel,
                                                                 INotifyPropertyChanged
     {
         /// <summary>
-        /// Get the currently displayed <see cref="ConstantParametersViewModel"/>.
+        /// Get the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
         /// </summary>
         public abstract ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
 

@@ -34,29 +34,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         {
             return (BoundaryConditionPeriodType)periodViewType;
         }
-
-        /// <summary>
-        /// Converts the <see cref="BoundaryConditionDirectionalSpreadingType"/> to its corresponding <see cref="DirectionalSpreadingViewType"/>.
-        /// </summary>
-        /// <param name="spreadingType"> The enum to transform.</param>
-        /// <returns>
-        /// The corresponding <see cref="DirectionalSpreadingViewType"/>.
-        /// </returns>
-        public static DirectionalSpreadingViewType ConvertToDirectionalSpreadingViewType(this BoundaryConditionDirectionalSpreadingType spreadingType)
-        {
-            return (DirectionalSpreadingViewType)spreadingType;
-        }
-
-        /// <summary>
-        /// Converts the <see cref="DirectionalSpreadingViewType"/> to its corresponding <see cref="BoundaryConditionDirectionalSpreadingType"/>.
-        /// </summary>
-        /// <param name="spreadingViewType"> The enum to transform.</param>
-        /// <returns>
-        /// The corresponding <see cref="BoundaryConditionDirectionalSpreadingType"/>.
-        /// </returns>
-        public static BoundaryConditionDirectionalSpreadingType ConvertToBoundaryConditionDirectionalSpreadingType(this DirectionalSpreadingViewType spreadingViewType)
-        {
-            return (BoundaryConditionDirectionalSpreadingType)spreadingViewType;
-        }
     }
 }

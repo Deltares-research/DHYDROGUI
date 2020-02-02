@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
@@ -70,7 +71,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             switch(ParametersSettingsViewModel)
             {
-                case SpatiallyVariantConstantParametersSettingsViewModel spatiallyVariantConstantParametersSettingsViewModel:
+                case SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantConstantParametersSettingsViewModel:
+                    spatiallyVariantConstantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                    break;
+                case SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantConstantParametersSettingsViewModel:
                     spatiallyVariantConstantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
                     break;
                 default:

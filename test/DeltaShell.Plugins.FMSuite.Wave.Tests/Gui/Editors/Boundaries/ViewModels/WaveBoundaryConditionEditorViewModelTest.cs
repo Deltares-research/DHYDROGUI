@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
@@ -30,11 +31,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
-                new UniformDataComponent<ConstantParameters>(
-                    new ConstantParameters(0.0, 
-                                           0.0, 
-                                           0.0, 
-                                           0.0));
+                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                    new ConstantParameters<PowerDefinedSpreading>(0.0, 
+                                                                  0.0, 
+                                                                  0.0, 
+                                                                  new PowerDefinedSpreading()));
 
             conditionDefinition.Shape = shape;
 

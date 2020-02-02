@@ -31,32 +31,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
             Assert.That(result, Is.EqualTo(expectedOutput));
             
         }
-
-        [Test]
-        [TestCase(BoundaryConditionDirectionalSpreadingType.Degrees, DirectionalSpreadingViewType.Degrees)]
-        [TestCase(BoundaryConditionDirectionalSpreadingType.Power, DirectionalSpreadingViewType.Power)]
-        public void ConvertToDirectionalSpreadingViewType_ReturnsCorrectValues(BoundaryConditionDirectionalSpreadingType input, 
-                                                                               DirectionalSpreadingViewType expectedOutput)
-        {
-            // Call
-            DirectionalSpreadingViewType result = input.ConvertToDirectionalSpreadingViewType();
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedOutput));
-            
-        }
-
-        [Test]
-        [TestCase(DirectionalSpreadingViewType.Degrees, BoundaryConditionDirectionalSpreadingType.Degrees)]
-        [TestCase(DirectionalSpreadingViewType.Power, BoundaryConditionDirectionalSpreadingType.Power)]
-        public void ConvertToBoundaryConditionDirectionalSpreadingType_ReturnsCorrectValues(DirectionalSpreadingViewType input,
-                                                                                            BoundaryConditionDirectionalSpreadingType expectedOutput)
-        {
-            // Call
-            BoundaryConditionDirectionalSpreadingType result = input.ConvertToBoundaryConditionDirectionalSpreadingType();
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedOutput));
-        }
     }
 }

@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
-                new SpatiallyVaryingDataComponent<ConstantParameters>();
+                new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
 
             waveBoundary = Substitute.For<IWaveBoundary>();
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
@@ -379,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             SupportPointViewModel subViewModel = GetExistingSupportPointViewModel();
             subViewModel.IsEnabled = true;
             
-            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters>) conditionDefinition.DataComponent;
+            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>) conditionDefinition.DataComponent;
 
             // Pre-condition
             Assert.That(dataComponent.Data.ContainsKey(subViewModel.SupportPoint), Is.True,
@@ -471,11 +472,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             originalSubViewModel.IsEnabled = true;
 
             // Pre-condition
-            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters>) conditionDefinition.DataComponent;
+            var dataComponent = (SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>) conditionDefinition.DataComponent;
 
             Assert.That(dataComponent.Data.ContainsKey(originalSubViewModel.SupportPoint), Is.True,
                         "Precondition violated: no data associated with the expected support point.");
-            ConstantParameters originalParameters = dataComponent.Data[originalSubViewModel.SupportPoint];
+            ConstantParameters<PowerDefinedSpreading> originalParameters = dataComponent.Data[originalSubViewModel.SupportPoint];
 
             // Call
             originalSubViewModel.Distance = nextValue;
@@ -555,8 +556,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
         private static IEnumerable<TestCaseData> GetRefreshIsEnabledData()
         {
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters>(), true);
-            yield return new TestCaseData(new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0)), false);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), true);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())), false);
         }
 
         [Test]
@@ -581,7 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.ViewModels.ForEach(x => x.IsEnabled = true);
 
             var dataComponent =
-                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading()));
             waveBoundary.ConditionDefinition.DataComponent = dataComponent;
 
             // Call
@@ -598,7 +599,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
-                new UniformDataComponent<ConstantParameters>(new ConstantParameters(0, 0, 0, 0));
+                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0,  new PowerDefinedSpreading()));
 
             var waveBoundary = Substitute.For<IWaveBoundary>();
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
@@ -620,7 +621,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         Is.Not.SameAs(viewModel.SelectedViewModel.SupportPoint));
 
             // Call
-            waveBoundary.ConditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters>();
+            waveBoundary.ConditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
             viewModel.RefreshIsEnabled();
 
             // Assert

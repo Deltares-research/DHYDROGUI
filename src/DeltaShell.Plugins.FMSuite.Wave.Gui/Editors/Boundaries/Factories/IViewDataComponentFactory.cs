@@ -40,6 +40,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent);
 
         /// <summary>
+        /// Gets the <see cref="DirectionalSpreadingViewType"/> corresponding with
+        /// the provided <paramref name="dataComponent"/>.
+        /// </summary>
+        /// <param name="dataComponent">The data component.</param>
+        /// <returns>
+        /// The <see cref="DirectionalSpreadingViewType"/> corresponding with the provided
+        /// <paramref name="dataComponent"/>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
+        /// </exception>
+        DirectionalSpreadingViewType GetDirectionalSpreadingViewType(IBoundaryConditionDataComponent dataComponent);
+
+        /// <summary>
         /// Constructs the <see cref="IParametersSettingsViewModel"/> corresponding
         /// with the provided <paramref name="dataComponent"/>.
         /// </summary>
@@ -56,11 +70,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// </summary>
         /// <param name="forcingType">The <see cref="ForcingViewType"/>.</param>
         /// <param name="spatialDefinition">The <see cref="SpatialDefinitionViewType"/>.</param>
+        /// <param name="spreadingType">The <see cref="DirectionalSpreadingViewType"/>.</param>
         /// <returns>
         /// The <see cref="IBoundaryConditionDataComponent"/> corresponding
         /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
         /// </returns>
-        IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType, 
-                                                                                SpatialDefinitionViewType spatialDefinition);
+        IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
+                                                                                SpatialDefinitionViewType spatialDefinition,
+                                                                                DirectionalSpreadingViewType spreadingType);
+
+        /// <summary>
+        /// Converts the provided <paramref name="currentDataComponent"/> to a similar
+        /// <see cref="IBoundaryConditionDataComponent"/> with the specified
+        /// <paramref name="newSpreadingType"/>.
+        /// </summary>
+        /// <param name="currentDataComponent">The current data component.</param>
+        /// <param name="newSpreadingType">New type of the spreading.</param>
+        /// <returns>
+        /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="currentDataComponent"/>
+        /// but with the specified <paramref name="newSpreadingType"/>.
+        /// </returns>
+        IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(
+            IBoundaryConditionDataComponent currentDataComponent,
+            DirectionalSpreadingViewType newSpreadingType);
     }
 }

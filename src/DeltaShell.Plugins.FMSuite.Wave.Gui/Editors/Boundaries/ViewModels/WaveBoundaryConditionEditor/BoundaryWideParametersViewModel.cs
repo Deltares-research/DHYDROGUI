@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
@@ -17,6 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundaryConditionDefinition observedBoundaryCondition;
         private readonly IViewShapeFactory shapeFactory;
+        private readonly IViewDataComponentFactory dataComponentFactory;
+        private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryWideParametersViewModel"/>.
@@ -27,10 +31,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public BoundaryWideParametersViewModel(IWaveBoundaryConditionDefinition observedBoundaryCondition,
-                                               IViewShapeFactory shapeFactory)
+                                               IViewShapeFactory shapeFactory, 
+                                               IViewDataComponentFactory dataComponentFactory, 
+                                               IAnnounceDataComponentChanged announceDataComponentChanged)
         {
-            this.observedBoundaryCondition = observedBoundaryCondition ?? throw new ArgumentNullException(nameof(observedBoundaryCondition));
-            this.shapeFactory = shapeFactory ?? throw new ArgumentNullException(nameof(shapeFactory));
+            Ensure.NotNull(observedBoundaryCondition, nameof(observedBoundaryCondition));
+            Ensure.NotNull(shapeFactory, nameof(shapeFactory));
+            Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+            Ensure.NotNull(announceDataComponentChanged, nameof(announceDataComponentChanged));
+
+            this.observedBoundaryCondition = observedBoundaryCondition;
+            this.shapeFactory = shapeFactory;
+            this.dataComponentFactory = dataComponentFactory;
+            this.announceDataComponentChanged = announceDataComponentChanged;
 
             Shape = this.shapeFactory.ConstructFromShape(observedBoundaryCondition.Shape);
         }
@@ -107,21 +120,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public DirectionalSpreadingViewType DirectionalSpreadingType
         {
-            get => observedBoundaryCondition.DirectionalSpreadingType.ConvertToDirectionalSpreadingViewType();
+            get => dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundaryCondition.DataComponent);
             set
             {
-                BoundaryConditionDirectionalSpreadingType modelDirectionalSpreadingType =
-                    value.ConvertToBoundaryConditionDirectionalSpreadingType();
-
-                if (observedBoundaryCondition.DirectionalSpreadingType == modelDirectionalSpreadingType)
+                if (DirectionalSpreadingType == value)
                 {
                     return;
                 }
 
-                observedBoundaryCondition.DirectionalSpreadingType = modelDirectionalSpreadingType;
+                observedBoundaryCondition.DataComponent = 
+                    dataComponentFactory.ConvertBoundaryConditionDataComponentSpreadingType(observedBoundaryCondition.DataComponent, 
+                                                                                            value);
                 OnPropertyChanged();
+                AnnounceDataComponentChanged();
             }
         }
+
+        private void AnnounceDataComponentChanged() =>
+            announceDataComponentChanged.AnnounceDataComponentChanged();
 
         /// <summary>
         /// Occurs when a property value changes.

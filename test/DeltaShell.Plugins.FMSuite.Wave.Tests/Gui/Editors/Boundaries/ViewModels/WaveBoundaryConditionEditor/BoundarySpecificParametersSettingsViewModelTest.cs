@@ -5,6 +5,7 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
@@ -165,12 +166,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             geometricDefinition.Length.Returns(20.0);
             var supportPoint = new SupportPoint(10.0, geometricDefinition);
-            var parametersDictionary = new Dictionary<SupportPoint, ConstantParameters>()
+            var parametersDictionary = new Dictionary<SupportPoint, ConstantParameters<PowerDefinedSpreading>>()
             {
-                { supportPoint, new ConstantParameters(0, 0, 0, 0) }
+                { supportPoint, new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading()) }
             };
 
-            var initialDataComponentViewModel = new SpatiallyVariantConstantParametersSettingsViewModel(parametersDictionary);
+            var initialDataComponentViewModel = new SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>(parametersDictionary);
 
             var factory = Substitute.For<IViewDataComponentFactory>();
             factory.ConstructParametersSettingsViewModel(initialDataComponent)
@@ -185,7 +186,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.UpdateSelectedActiveParameters(supportPoint);
 
             // Assert
-            Assert.That(initialDataComponentViewModel.ActiveParametersViewModel.ObservedParameters, 
+            Assert.That(initialDataComponentViewModel.ActiveParametersViewModel, 
+                        Is.InstanceOf<ConstantParametersViewModel<PowerDefinedSpreading>>());
+            ConstantParameters<PowerDefinedSpreading> observedParameters =
+                ((ConstantParametersViewModel<PowerDefinedSpreading>) initialDataComponentViewModel
+                        .ActiveParametersViewModel).ObservedParameters;
+            Assert.That(observedParameters, 
                         Is.SameAs(parametersDictionary[supportPoint]));
         }
 

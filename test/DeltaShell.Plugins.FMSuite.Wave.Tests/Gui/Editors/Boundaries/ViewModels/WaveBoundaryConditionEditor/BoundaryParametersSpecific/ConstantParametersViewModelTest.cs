@@ -1,44 +1,64 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParametersSpecific
 {
-    [TestFixture]
-    public class ConstantParametersViewModelTest
+    [TestFixture(typeof(PowerDefinedSpreading))]
+    [TestFixture(typeof(DegreesDefinedSpreading))]
+    public class ConstantParametersViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly Random random = new Random();
 
-        private ConstantParameters GetRandomConstantParameters()
+        private ConstantParameters<TSpreading> GetRandomConstantParameters()
         {
-            return new ConstantParameters(random.NextDouble() * 100.0,
-                                          random.NextDouble() * 100.0,
-                                          random.NextDouble() * 100.0,
-                                          random.NextDouble() * 100.0);
+            return new ConstantParameters<TSpreading>(random.NextDouble() * 100.0,
+                                                      random.NextDouble() * 100.0,
+                                                      
+                                                      random.NextDouble() * 100.0,
+                                                      new TSpreading());
+        }
+
+        private static double GetSpreadingValue(ConstantParameters<TSpreading> param)
+        {
+            object spreading = param.Spreading;
+            if (spreading is PowerDefinedSpreading pds)
+            {
+                return pds.SpreadingPower;
+            }
+
+            if (spreading is DegreesDefinedSpreading dds)
+            {
+                return dds.DegreesSpreading;
+            }
+
+            Assert.Fail("Unsupported Spreading type.");
+            return double.NaN;
         }
 
         [Test]
         public void Constructor_ExpectedValues()
         {
             // Setup
-            ConstantParameters parameters = GetRandomConstantParameters();
+            ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
 
             // Call
-            var viewModel = new ConstantParametersViewModel(parameters);
+            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
 
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
             Assert.That(viewModel.Height,    Is.EqualTo(parameters.Height));
             Assert.That(viewModel.Period,    Is.EqualTo(parameters.Period));
             Assert.That(viewModel.Direction, Is.EqualTo(parameters.Direction));
-            Assert.That(viewModel.Spreading, Is.EqualTo(parameters.Spreading));
+            Assert.That(viewModel.Spreading, Is.EqualTo(GetSpreadingValue(parameters)));
         }
 
         [Test]
         public void Constructor_ParametersNull_ThrowsArgumentNullException()
         {
-            void Call() => new ConstantParametersViewModel(null);
+            void Call() => new ConstantParametersViewModel<TSpreading>(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("parameters"));
@@ -48,8 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetHeight_ExpectedValues()
         {
             // Setup
-            ConstantParameters parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel(parameters);
+            ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
+            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
             const double expectedHeight = 50.0;
 
             // Call
@@ -63,8 +83,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetPeriod_ExpectedValues()
         {
             // Setup
-            ConstantParameters parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel(parameters);
+            ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
+            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
             const double expectedPeriod = 50.0;
 
             // Call
@@ -78,8 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetDirection_ExpectedValues()
         {
             // Setup
-            ConstantParameters parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel(parameters);
+            ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
+            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
             const double expectedDirection = 50.0;
 
             // Call
@@ -93,8 +113,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void SetSpreading_ExpectedValues()
         {
             // Setup
-            ConstantParameters parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel(parameters);
+            ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
+            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
             const double expectedSpreading = 50.0;
 
             // Call
