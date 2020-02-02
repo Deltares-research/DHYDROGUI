@@ -140,7 +140,6 @@
     <Compile Include="Boundaries\ConditionDefinitions\DataComponents\UniformDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\BoundaryParametersFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionDirectionalSpreadingType.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodType.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\IWaveBoundaryConditionDefinition.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\IBoundaryConditionParameters.cs" />

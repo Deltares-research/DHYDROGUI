@@ -1,19 +1,23 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+﻿using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
     /// <summary>
-    /// <see cref="ConstantParameters"/> provides the parameters
+    /// <see cref="ConstantParameters{TSpreading}"/> provides the parameters
     /// associated with a <see cref="IWaveBoundaryConditionDefinition"/>
     /// in the case of uniform data, or the parameters associated with a
     /// <see cref="SupportPoint"/> in the case of a spatially variant
     /// <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
     /// <seealso cref="IBoundaryConditionParameters"/>
-    public class ConstantParameters : IBoundaryConditionParameters
+    public class ConstantParameters<TSpreading> : IBoundaryConditionParameters
+        where TSpreading : IBoundaryConditionSpreading, new()
+        
     {
         /// <summary>
-        /// Creates a new <see cref="ConstantParameters"/>.
+        /// Creates a new <see cref="ConstantParameters{TSpreading}"/>.
         /// </summary>
         /// <param name="height">The height.</param>
         /// <param name="period">The period.</param>
@@ -22,8 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         public ConstantParameters(double height,
                                   double period,
                                   double direction,
-                                  double spreading)
+                                  TSpreading spreading)
         {
+            Ensure.NotNull((IBoundaryConditionSpreading)spreading, nameof(spreading));
+
             Height = height;
             Period = period;
             Direction = direction;
@@ -48,6 +54,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// <summary>
         /// Gets or sets the spreading.
         /// </summary>
-        public double Spreading { get; set; }
+        public TSpreading Spreading
+        {
+            get => spreading;
+            set
+            {
+                Ensure.NotNull((IBoundaryConditionSpreading)value, nameof(value));
+                spreading = value;
+            }
+        }
+
+        private TSpreading spreading;
     }
 }

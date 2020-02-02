@@ -1,11 +1,13 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.DataComponents
 {
-    [TestFixture(typeof(ConstantParameters))]
+    [TestFixture(typeof(ConstantParameters<PowerDefinedSpreading>))]
+    [TestFixture(typeof(ConstantParameters<DegreesDefinedSpreading>))]
     public class UniformDataComponentTest<T> where T : class, IBoundaryConditionParameters
     {
         [Test]

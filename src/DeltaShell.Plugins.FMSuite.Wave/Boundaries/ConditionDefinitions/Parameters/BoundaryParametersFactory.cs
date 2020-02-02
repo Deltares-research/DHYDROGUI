@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
     /// <summary>
     /// <see cref="BoundaryParametersFactory"/> provides the interface with which to construct
@@ -6,12 +8,27 @@
     /// </summary>
     public sealed class BoundaryParametersFactory : IBoundaryParametersFactory
     {
-        public ConstantParameters ConstructDefaultConstantParameters() =>
-            ConstructConstantParameters(0.0, 1.0, 0.0, 4.0);
+        public ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>() 
+            where TSpreading : class, IBoundaryConditionSpreading, new() =>
+            ConstructConstantParameters(0.0, 1.0, 0.0, new TSpreading());
 
-        public ConstantParameters ConstructConstantParameters(double height, double period, double direction, double spreading)
+        public ConstantParameters<TSpreading> ConstructConstantParameters<TSpreading>(double height, 
+                                                                                      double period, 
+                                                                                      double direction,
+                                                                                      TSpreading spreading)
+            where TSpreading : class, IBoundaryConditionSpreading, new()
         {
-            return new ConstantParameters(height, period, direction, spreading);
+            return new ConstantParameters<TSpreading>(height, period, direction, spreading);
+        }
+
+        public ConstantParameters<TNewSpreading> ConvertConstantParameters<TOldSpreading, TNewSpreading>(ConstantParameters<TOldSpreading> parameters) 
+            where TOldSpreading : class, IBoundaryConditionSpreading, new() 
+            where TNewSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            return ConstructConstantParameters<TNewSpreading>(parameters.Height, 
+                                                              parameters.Period,
+                                                              parameters.Direction,
+                                                              new TNewSpreading());
         }
     }
 }

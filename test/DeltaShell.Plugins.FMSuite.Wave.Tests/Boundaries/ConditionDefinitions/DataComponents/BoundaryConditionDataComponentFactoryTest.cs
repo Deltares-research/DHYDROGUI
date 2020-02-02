@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Call
             var dataComponent = 
-                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters>>();
+                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
 
             // Assert
             Assert.That(dataComponent, Is.Not.Null);
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Call
             var dataComponent = 
-                componentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters>>();
+                componentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
 
             // Assert
             Assert.That(dataComponent, Is.Not.Null);

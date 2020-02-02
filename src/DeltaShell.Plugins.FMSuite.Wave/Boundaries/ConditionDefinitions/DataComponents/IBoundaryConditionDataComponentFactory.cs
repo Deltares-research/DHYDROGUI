@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
     /// <summary>
     /// <see cref="IBoundaryConditionDataComponentFactory"/> defines the
@@ -18,5 +20,22 @@
         /// Thrown when <typeparamref name="T"/> is not supported.
         /// </exception>
         T ConstructDefaultDataComponent<T>() where T : class, IBoundaryConditionDataComponent;
+
+        /// <summary>
+        /// Converts the specified <paramref name="oldDataComponent"/> with spreading
+        /// <typeparamref name="TOldSpreading"/> to a data component with a
+        /// <typeparamref name="TNewSpreading"/>.
+        /// </summary>
+        /// <typeparam name="TOldSpreading">The type of the old spreading.</typeparam>
+        /// <typeparam name="TNewSpreading">The type of the new spreading.</typeparam>
+        /// <param name="oldDataComponent">The old data component.</param>
+        /// <returns>
+        /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="oldDataComponent"/>
+        /// but with <typeparamref name="TNewSpreading"/>.
+        /// </returns>
+        IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(
+            IBoundaryConditionDataComponent oldDataComponent)
+            where TOldSpreading : class, IBoundaryConditionSpreading, new()
+            where TNewSpreading : class, IBoundaryConditionSpreading, new();
     }
 }

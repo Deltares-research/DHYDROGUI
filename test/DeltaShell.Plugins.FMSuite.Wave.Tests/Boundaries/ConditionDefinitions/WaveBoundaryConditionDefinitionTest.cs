@@ -20,13 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             // Call
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
-                                                                          directionalSpreadingType,
                                                                           dataComponent);
 
             // Assert
@@ -36,8 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
                         "Expected a different Shape:");
             Assert.That(conditionDefinition.PeriodType, Is.EqualTo(periodType), 
                         "Expected a different PeriodType:");
-            Assert.That(conditionDefinition.DirectionalSpreadingType, Is.EqualTo(directionalSpreadingType), 
-                        "Expected a different DirectionalSpreadingType:");
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(dataComponent), 
                         "Expected a different DataComponent:");
         }
@@ -47,13 +43,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
         {
             // Setup
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             // Call
             void Call() => new WaveBoundaryConditionDefinition(null,
                                                                periodType,
-                                                               directionalSpreadingType,
                                                                dataComponent);
 
             // Assert
@@ -68,12 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
 
             // Call
             void Call() => new WaveBoundaryConditionDefinition(shape,
                                                                periodType,
-                                                               directionalSpreadingType,
                                                                null);
 
             // Assert
@@ -88,32 +80,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             const BoundaryConditionPeriodType periodType = (BoundaryConditionPeriodType) 99;
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             // Call
             void Call() => new WaveBoundaryConditionDefinition(shape,
                                                                periodType,
-                                                               directionalSpreadingType,
-                                                               dataComponent);
-
-            // Assert
-            Assert.Throws<InvalidEnumArgumentException>(Call);
-        }
-
-        [Test]
-        public void Constructor_DirectionalSpreadingTypeUndefined_ThrowsInvalidEnumArgumentException()
-        {
-            // Setup
-            var shape = Substitute.For<IBoundaryConditionShape>();
-            var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            const BoundaryConditionDirectionalSpreadingType directionalSpreadingType = (BoundaryConditionDirectionalSpreadingType) 99;
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
-
-            // Call
-            void Call() => new WaveBoundaryConditionDefinition(shape,
-                                                               periodType,
-                                                               directionalSpreadingType,
                                                                dataComponent);
 
             // Assert
@@ -126,12 +97,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
-                                                                          directionalSpreadingType,
                                                                           dataComponent);
 
             // Call
@@ -149,37 +118,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
-                                                                          directionalSpreadingType,
                                                                           dataComponent);
 
             // Call
             void Call() => conditionDefinition.PeriodType = (BoundaryConditionPeriodType) 99;
-
-            // Assert
-            Assert.Throws<InvalidEnumArgumentException>(Call);
-        }
-
-        [Test]
-        public void DirectionalSpreadingType_UndefinedEnum_ThrowsInvalidEnumArgumentException()
-        {
-            // Setup
-            var shape = Substitute.For<IBoundaryConditionShape>();
-            var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
-
-            var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
-                                                                          periodType,
-                                                                          directionalSpreadingType,
-                                                                          dataComponent);
-
-            // Call
-            void Call() => conditionDefinition.DirectionalSpreadingType = (BoundaryConditionDirectionalSpreadingType) 99;
 
             // Assert
             Assert.Throws<InvalidEnumArgumentException>(Call);
@@ -191,12 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var directionalSpreadingType = random.NextEnumValue<BoundaryConditionDirectionalSpreadingType>();
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
-                                                                          directionalSpreadingType,
                                                                           dataComponent);
 
             // Call

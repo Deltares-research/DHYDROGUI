@@ -6,7 +6,7 @@
     ///
     /// Currently, the following are defined:
     ///
-    /// * <see cref="ConstantParameters"/>
+    /// * <see cref="ConstantParameters{TSpreading}"/>
     /// * <see cref="TimeDependentParameters"/>
     /// 
     /// </summary>
@@ -15,6 +15,5 @@
     /// As such, this interface is empty. Other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    // TODO: Extend description with where the right things should be updated.
     public interface IBoundaryConditionParameters { }
 }

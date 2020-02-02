@@ -34,17 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         BoundaryConditionPeriodType PeriodType { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the directional spreading.
-        /// </summary>
-        /// <value>
-        /// The type of the directional spreading.
-        /// </value>
-        /// <exception cref="InvalidEnumArgumentException">
-        /// Thrown when <paramref name="value"/> is not defined.
-        /// </exception>
-        BoundaryConditionDirectionalSpreadingType DirectionalSpreadingType { get; set; }
-
-        /// <summary>
         /// Gets or sets the data component.
         /// </summary>
         /// <value>

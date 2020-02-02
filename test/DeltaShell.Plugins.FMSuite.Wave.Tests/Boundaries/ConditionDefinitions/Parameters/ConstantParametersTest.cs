@@ -1,11 +1,14 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.Parameters
 {
     [TestFixture]
-    public class ConstantParametersTest
+    [TestFixture(typeof(DegreesDefinedSpreading))]
+    [TestFixture(typeof(PowerDefinedSpreading))]
+    public class ConstantParametersTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly Random random = new Random(37);
 
@@ -16,13 +19,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             double expectedHeight = random.NextDouble() * 1000.0;
             double expectedPeriod = random.NextDouble() * 1000.0;
             double expectedDirection = random.NextDouble() * 1000.0;
-            double expectedSpreading = random.NextDouble() * 1000.0;
+            var expectedSpreading = new TSpreading();
 
             // Call
-            var boundaryConditionParameters = new ConstantParameters(expectedHeight, 
-                                                                              expectedPeriod, 
-                                                                              expectedDirection, 
-                                                                              expectedSpreading);
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight, 
+                                                                                 expectedPeriod, 
+                                                                                 expectedDirection, 
+                                                                                 expectedSpreading);
 
             // Assert
             Assert.That(boundaryConditionParameters, Is.InstanceOf<IBoundaryConditionParameters>());
@@ -33,8 +36,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                         "Expected a different Period:");
             Assert.That(boundaryConditionParameters.Direction, Is.EqualTo(expectedDirection),
                         "Expected a different Direction:");
-            Assert.That(boundaryConditionParameters.Spreading, Is.EqualTo(expectedSpreading),
+            Assert.That(boundaryConditionParameters.Spreading, Is.SameAs(expectedSpreading),
                         "Expected a different Spreading:");
+        }
+
+        [Test]
+        public void Constructor_SpreadingNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            double height = random.NextDouble() * 1000.0;
+            double period = random.NextDouble() * 1000.0;
+            double direction = random.NextDouble() * 1000.0;
+            TSpreading spreading = null;
+
+            // Call | Assert
+            void Call() => new ConstantParameters<TSpreading>(height, 
+                                                              period, 
+                                                              direction, 
+                                                              spreading);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("spreading"));
+        }
+
+        [Test]
+        public void SpreadingSet_ValueNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            double expectedHeight = random.NextDouble() * 1000.0;
+            double expectedPeriod = random.NextDouble() * 1000.0;
+            double expectedDirection = random.NextDouble() * 1000.0;
+            var expectedSpreading = new TSpreading();
+
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight, 
+                                                                                 expectedPeriod, 
+                                                                                 expectedDirection, 
+                                                                                 expectedSpreading);
+
+            // Call | Assert
+            void Call() => boundaryConditionParameters.Spreading = null;
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("value"));
         }
     }
 }
