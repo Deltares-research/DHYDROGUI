@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
@@ -17,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The shape
         /// </value>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
         IBoundaryConditionShape Shape { get; set; }
@@ -28,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The type of the period.
         /// </value>
-        /// <exception cref="InvalidEnumArgumentException">
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
         /// Thrown when <paramref name="value"/> is not defined.
         /// </exception>
         BoundaryConditionPeriodType PeriodType { get; set; }
@@ -39,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// <value>
         /// The <see cref="IBoundaryConditionDataComponent"/>.
         /// </value>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
         IBoundaryConditionDataComponent DataComponent { get; set; }
