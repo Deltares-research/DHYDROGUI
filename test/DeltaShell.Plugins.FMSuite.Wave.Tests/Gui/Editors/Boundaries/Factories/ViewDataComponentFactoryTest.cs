@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
-        public void ConstructBoundaryConditionDataComponent_UniformConstant_ExpectedResults()
+        public void ConstructBoundaryConditionDataComponent_UniformConstantPower_ExpectedResults()
         {
             // Setup
             var srcDataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading()));
@@ -186,7 +186,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
-        public void ConstructBoundaryConditionDataComponent_SpatiallyVariantConstant_ExpectedResults()
+        public void ConstructBoundaryConditionDataComponent_UniformConstantDegrees_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading()));
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+                                                                SpatialDefinitionViewType.Uniform,
+                                                                DirectionalSpreadingViewType.Degrees);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
+        }
+
+        [Test]
+        public void ConstructBoundaryConditionDataComponent_SpatiallyVariantConstantDegrees_ExpectedResults()
         {
             // Setup
             var srcDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>();
@@ -210,6 +234,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
+        public void ConstructBoundaryConditionDataComponent_SpatiallyVariantConstantPower_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+                                                                SpatialDefinitionViewType.SpatiallyVarying,
+                                                                DirectionalSpreadingViewType.Power);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
+        }
+
+        [Test]
         [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Power)]
         [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Degrees)]
         [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Power)]
@@ -229,6 +277,177 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                                                            spatialDefinition, 
                                                                            spreadingType);
             Assert.Throws<NotSupportedException>(Call);
+        }
+
+        private static IEnumerable<TestCaseData> GetDirectionalSpreadingViewTypeData()
+        {
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading())),
+                                          DirectionalSpreadingViewType.Degrees);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), 
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), 
+                                          DirectionalSpreadingViewType.Degrees);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetDirectionalSpreadingViewTypeData))]
+        public void GetDirectionalSpreadingViewType_ExpectedResults(IBoundaryConditionDataComponent dataComponent, 
+                                                                    DirectionalSpreadingViewType expectedDirectionalSpreadingViewType)
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            DirectionalSpreadingViewType result = factory.GetDirectionalSpreadingViewType(dataComponent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedDirectionalSpreadingViewType));
+        }
+
+        [Test]
+        public void GetDirectionalSpreadingViewType_UnsupportedDataComponent_ThrowsNotSupportedException()
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call | Assert
+            void Call() => factory.GetDirectionalSpreadingViewType(new DummyDataComponent());
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void GetDirectionalSpreadingViewType_DataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call | Assert
+            void Call() => factory.GetDirectionalSpreadingViewType(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
+        }
+
+        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData()
+        {
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())), 
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading())), 
+                                          DirectionalSpreadingViewType.Degrees);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), 
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), 
+                                          DirectionalSpreadingViewType.Degrees);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData))]
+        public void ConvertBoundaryConditionDataComponentSpreadingType_NewSpreadingTypeEqualsDataComponentType_ReturnsDataComponent(IBoundaryConditionDataComponent dataComponent,
+                                                                                                                                    DirectionalSpreadingViewType spreadingType)
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                factory.ConvertBoundaryConditionDataComponentSpreadingType(dataComponent, spreadingType);
+
+            // Assert
+            Assert.That(result, Is.SameAs(dataComponent));
+        }
+
+        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeDifferentTypeData()
+        {
+            var uniformDataDegrees =
+                new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(
+                    new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading()));
+            var uniformDataPower =
+                    new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                        new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading()));
+
+            var spatVariantDegrees = new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>();
+            var spatVariantPower = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+
+            IBoundaryConditionDataComponent FuncDegreeToPowerUniform(IBoundaryConditionDataComponentFactory fact) => 
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(uniformDataPower);
+            yield return new TestCaseData(uniformDataPower,
+                                          uniformDataDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<IBoundaryConditionDataComponentFactory, IBoundaryConditionDataComponent>) FuncDegreeToPowerUniform);
+
+            IBoundaryConditionDataComponent FuncPowerToDegreeUniform(IBoundaryConditionDataComponentFactory fact) => 
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(uniformDataDegrees);
+            yield return new TestCaseData(uniformDataDegrees,
+                                          uniformDataPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<IBoundaryConditionDataComponentFactory, IBoundaryConditionDataComponent>) FuncPowerToDegreeUniform);
+
+            IBoundaryConditionDataComponent FuncDegreeToPowerSpat(IBoundaryConditionDataComponentFactory fact) => 
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(spatVariantPower);
+            yield return new TestCaseData(spatVariantPower,
+                                          spatVariantDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<IBoundaryConditionDataComponentFactory, IBoundaryConditionDataComponent>) FuncDegreeToPowerSpat);
+
+            IBoundaryConditionDataComponent FuncPowerToDegreeSpat(IBoundaryConditionDataComponentFactory fact) => 
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(spatVariantDegrees);
+            yield return new TestCaseData(spatVariantDegrees,
+                                          spatVariantPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<IBoundaryConditionDataComponentFactory, IBoundaryConditionDataComponent>) FuncPowerToDegreeSpat);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ConvertBoundaryConditionDataComponentSpreadingTypeDifferentTypeData))]
+        public void ConvertBoundaryConditionDataComponentSpreadingType_NewSpreadingTypeNotEqualsDataComponentType_ReturnsDataComponent(IBoundaryConditionDataComponent inputDataComponent,
+                                                                                                                                       IBoundaryConditionDataComponent outputDataComponent,
+                                                                                                                                       DirectionalSpreadingViewType spreadingType,
+                                                                                                                                       Func<IBoundaryConditionDataComponentFactory, IBoundaryConditionDataComponent> convertDataComponentSpreadingCall)
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            convertDataComponentSpreadingCall(modelDataComponentFactory).Returns(outputDataComponent);
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                factory.ConvertBoundaryConditionDataComponentSpreadingType(inputDataComponent, spreadingType);
+
+            // Assert
+            Assert.That(result, Is.SameAs(outputDataComponent));
+            convertDataComponentSpreadingCall(modelDataComponentFactory.Received(1));
+        }
+
+        [Test]
+        public void ConvertBoundaryConditionDataComponentSpreadingType_UnsupportedDataComponent_ThrowsNotSupportedException()
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call | Assert
+            void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(new DummyDataComponent(), 
+                                                                                      DirectionalSpreadingViewType.Degrees);
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void ConvertBoundaryConditionDataComponentSpreadingType_CurrentDataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call | Assert
+            void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(null, DirectionalSpreadingViewType.Degrees);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("currentDataComponent"));
         }
     }
 }

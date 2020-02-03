@@ -37,6 +37,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
+        /// <exception cref="System.NotSupportedException">
+        /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
+        /// </exception>
         SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent);
 
         /// <summary>
@@ -51,6 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
+        /// <exception cref="System.NotSupportedException">
+        /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
+        /// </exception>
         DirectionalSpreadingViewType GetDirectionalSpreadingViewType(IBoundaryConditionDataComponent dataComponent);
 
         /// <summary>
@@ -62,6 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// The <see cref="IParametersSettingsViewModel"/> corresponding
         /// with the provided <paramref name="dataComponent"/>.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="System.NotSupportedException">
+        /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
+        /// </exception>
         IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent);
 
         /// <summary>
@@ -90,6 +102,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="currentDataComponent"/>
         /// but with the specified <paramref name="newSpreadingType"/>.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="currentDataComponent"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="System.NotSupportedException">
+        /// Thrown when <paramref name="currentDataComponent"/> is of an unsupported type.
+        /// </exception>
         IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(
             IBoundaryConditionDataComponent currentDataComponent,
             DirectionalSpreadingViewType newSpreadingType);

@@ -117,6 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         public IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(IBoundaryConditionDataComponent currentDataComponent, 
                                                                                                   DirectionalSpreadingViewType newSpreadingType)
         {
+            Ensure.NotNull(currentDataComponent, nameof(currentDataComponent));
+
             switch (currentDataComponent)
             {
                 case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
