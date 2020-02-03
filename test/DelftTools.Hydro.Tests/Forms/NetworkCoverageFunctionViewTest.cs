@@ -11,6 +11,7 @@ using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Forms
 {
+    [TestFixture]
     public class NetworkCoverageFunctionViewTest
     {
         [Test]
