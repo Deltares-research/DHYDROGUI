@@ -1,4 +1,5 @@
 ﻿using System;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
@@ -124,13 +125,169 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             // Call
             viewModel.Name = expectedName;
 
-
             // Assert
             boundary.Received(1).Name = expectedName;
+            Assert.That(observer.NCalls, Is.EqualTo(1));
+            Assert.That(observer.Senders[0], Is.SameAs(viewModel));
+            Assert.That(observer.EventArgses[0].PropertyName, Is.EqualTo("Name"));
+        }
+
+        [Test]
+        public void GivenABoundaryDescriptionViewModelWithABoundary_WhenNameIsSetToSame_ThenNothingHappens()
+        {
+            // Setup
+            const string expectedName = "aBoundaryName";
+            
+            IWaveBoundary boundary = GetConfiguredWaveBoundary(expectedName);
+            IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
+                                                                     ForcingViewType.Constant,
+                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+            boundary.ClearReceivedCalls();
+
+            // Call
+            viewModel.Name = expectedName;
+
+            // Assert
+            boundary.DidNotReceiveWithAnyArgs().Name = expectedName;
+            Assert.That(observer.NCalls, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void SetForcingType_ValueChanged_ExpectedResults()
+        {
+            // Setup
+            IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
+            IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
+                                                                     ForcingViewType.Constant,
+                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+
+            const DirectionalSpreadingViewType spreadingType = DirectionalSpreadingViewType.Degrees;
+            factory.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
+                   .Returns(spreadingType);
+
+            var newDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
+                                                            SpatialDefinitionViewType.SpatiallyVarying,
+                                                            spreadingType)
+                   .Returns(newDataComponent);
+
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+
+            boundary.ConditionDefinition.ClearReceivedCalls();
+            // Call
+            viewModel.ForcingType = ForcingViewType.TimeSeries;
+
+            // Assert
+            Assert.That(observer.NCalls, Is.EqualTo(1));
+            Assert.That(observer.Senders[0], Is.SameAs(viewModel));
+            Assert.That(observer.EventArgses[0].PropertyName, Is.EqualTo("ForcingType"));
+
+            boundary.ConditionDefinition.Received(1).DataComponent = newDataComponent;
+            announceDataComponentChanged.Received(1).AnnounceDataComponentChanged();
+        }
+
+        [Test]
+        public void SetForcingType_ValueSame_NothingChanged()
+        {
+            // Setup
+            IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
+            IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
+                                                                     ForcingViewType.Constant,
+                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+            // Call
+            viewModel.ForcingType = ForcingViewType.Constant;
+
+            // Assert
+            Assert.That(observer.NCalls, Is.EqualTo(0));
+            announceDataComponentChanged.DidNotReceive().AnnounceDataComponentChanged();
+        }
+
+        [Test]
+        public void SetSpatialDefinitionType_ValueChanged_ExpectedResults()
+        {
+            // Setup
+            IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
+            IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
+                                                                     ForcingViewType.Constant,
+                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+
+            const DirectionalSpreadingViewType spreadingType = DirectionalSpreadingViewType.Degrees;
+            factory.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
+                   .Returns(spreadingType);
+
+            var newDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
+                                                            SpatialDefinitionViewType.Uniform,
+                                                            spreadingType)
+                   .Returns(newDataComponent);
+
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+
+            boundary.ConditionDefinition.ClearReceivedCalls();
+            // Call
+            viewModel.SpatialDefinition = SpatialDefinitionViewType.Uniform;
+
+            // Assert
+            Assert.That(observer.NCalls, Is.EqualTo(1));
+            Assert.That(observer.Senders[0], Is.SameAs(viewModel));
+            Assert.That(observer.EventArgses[0].PropertyName, Is.EqualTo("SpatialDefinition"));
+
+            boundary.ConditionDefinition.Received(1).DataComponent = newDataComponent;
+            announceDataComponentChanged.Received(1).AnnounceDataComponentChanged();
+        }
+
+        [Test]
+        public void SetSpatialDefinitionType_ValueSame_NothingChanged()
+        {
+            // Setup
+            IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
+            IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
+                                                                     ForcingViewType.Constant,
+                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            
+            var observer = new NotifyPropertyChangedTestObserver();
+            viewModel.PropertyChanged += observer.OnPropertyChanged;
+
+            // Call
+            viewModel.SpatialDefinition = SpatialDefinitionViewType.SpatiallyVarying;
+
+            // Assert
+            Assert.That(observer.NCalls, Is.EqualTo(0));
+            announceDataComponentChanged.DidNotReceive().AnnounceDataComponentChanged();
         }
     }
 }
