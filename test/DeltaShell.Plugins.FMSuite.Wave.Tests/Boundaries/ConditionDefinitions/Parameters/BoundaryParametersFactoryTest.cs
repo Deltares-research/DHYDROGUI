@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using NUnit.Framework;
 
@@ -61,6 +62,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(parameters.Period, Is.EqualTo(expectedPeriod));
             Assert.That(parameters.Direction, Is.EqualTo(expectedDirection));
             Assert.That(parameters.Spreading, Is.SameAs(expectedSpreading));
+        }
+
+        [Test]
+        public void ConvertConstantParameters_ParametersNull_ThrowsArgumentNullException()
+        {
+            var factory = new BoundaryParametersFactory();
+
+            void Call() => factory.ConvertConstantParameters<TSpreading, PowerDefinedSpreading>(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("parameters"));
+        }
+
+        [Test]
+        public void ConvertConstantParameters_PowerDefined_ExpectedResults()
+        {
+            // Setup
+            var initialParameters = new ConstantParameters<TSpreading>(5, 6, 7, new TSpreading());
+            var factory = new BoundaryParametersFactory();
+
+            // Call
+            ConstantParameters<PowerDefinedSpreading> result = factory.ConvertConstantParameters<TSpreading, PowerDefinedSpreading>(initialParameters);
+
+            // Assert
+            Assert.That(result.Direction, Is.EqualTo(initialParameters.Direction));
+            Assert.That(result.Period, Is.EqualTo(initialParameters.Period));
+            Assert.That(result.Height, Is.EqualTo(initialParameters.Height));
+        }
+
+        [Test]
+        public void ConvertConstantParameters_DegreesDefined_ExpectedResults()
+        {
+            // Setup
+            var initialParameters = new ConstantParameters<TSpreading>(15, 16, 17, new TSpreading());
+            var factory = new BoundaryParametersFactory();
+
+            // Call
+            ConstantParameters<DegreesDefinedSpreading> result = factory.ConvertConstantParameters<TSpreading, DegreesDefinedSpreading>(initialParameters);
+
+            // Assert
+            Assert.That(result.Direction, Is.EqualTo(initialParameters.Direction));
+            Assert.That(result.Period, Is.EqualTo(initialParameters.Period));
+            Assert.That(result.Height, Is.EqualTo(initialParameters.Height));
         }
     }
 }

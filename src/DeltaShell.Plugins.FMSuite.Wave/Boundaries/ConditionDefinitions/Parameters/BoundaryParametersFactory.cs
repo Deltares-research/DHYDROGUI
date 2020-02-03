@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+﻿using DeltaShell.NGHS.Common;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
@@ -25,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
         {
+            Ensure.NotNull(parameters, nameof(parameters));
             return ConstructConstantParameters<TNewSpreading>(parameters.Height, 
                                                               parameters.Period,
                                                               parameters.Direction,
