@@ -35,6 +35,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
