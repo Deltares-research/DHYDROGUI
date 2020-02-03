@@ -76,10 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                var directionalSpreadingType =
-                    dataComponentFactory.GetDirectionalSpreadingViewType(
-                        observedBoundary.ConditionDefinition.DataComponent);
-
                 observedBoundary.ConditionDefinition.DataComponent =
                     dataComponentFactory.ConstructBoundaryConditionDataComponent(value, 
                                                                                  SpatialDefinition,
