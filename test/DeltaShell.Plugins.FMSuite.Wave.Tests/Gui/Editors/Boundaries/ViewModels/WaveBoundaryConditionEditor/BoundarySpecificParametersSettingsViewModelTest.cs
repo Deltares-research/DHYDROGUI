@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void UpdateSelectedActiveParameters_SpatiallyVariantConstantParametersSettingsViewModel_UpdateActiveSupportPointCalled()
+        public void UpdateSelectedActiveParameters_SpatiallyVariantConstantParametersSettingsViewModelPower_UpdateActiveSupportPointCalled()
         {
             // Setup
             var initialDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
@@ -190,6 +190,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         Is.InstanceOf<ConstantParametersViewModel<PowerDefinedSpreading>>());
             ConstantParameters<PowerDefinedSpreading> observedParameters =
                 ((ConstantParametersViewModel<PowerDefinedSpreading>) initialDataComponentViewModel
+                        .ActiveParametersViewModel).ObservedParameters;
+            Assert.That(observedParameters, 
+                        Is.SameAs(parametersDictionary[supportPoint]));
+        }
+
+        [Test]
+        public void UpdateSelectedActiveParameters_SpatiallyVariantConstantParametersSettingsViewModelDegrees_UpdateActiveSupportPointCalled()
+        {
+            // Setup
+            var initialDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(20.0);
+            var supportPoint = new SupportPoint(10.0, geometricDefinition);
+            var parametersDictionary = new Dictionary<SupportPoint, ConstantParameters<DegreesDefinedSpreading>>()
+            {
+                { supportPoint, new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading()) }
+            };
+
+            var initialDataComponentViewModel = new SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>(parametersDictionary);
+
+            var factory = Substitute.For<IViewDataComponentFactory>();
+            factory.ConstructParametersSettingsViewModel(initialDataComponent)
+                   .Returns(initialDataComponentViewModel);
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = initialDataComponent;
+
+            var viewModel = new BoundarySpecificParametersSettingsViewModel(conditionDefinition, factory);
+
+            // Call
+            viewModel.UpdateSelectedActiveParameters(supportPoint);
+
+            // Assert
+            Assert.That(initialDataComponentViewModel.ActiveParametersViewModel, 
+                        Is.InstanceOf<ConstantParametersViewModel<DegreesDefinedSpreading>>());
+            ConstantParameters<DegreesDefinedSpreading> observedParameters =
+                ((ConstantParametersViewModel<DegreesDefinedSpreading>) initialDataComponentViewModel
                         .ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, 
                         Is.SameAs(parametersDictionary[supportPoint]));
