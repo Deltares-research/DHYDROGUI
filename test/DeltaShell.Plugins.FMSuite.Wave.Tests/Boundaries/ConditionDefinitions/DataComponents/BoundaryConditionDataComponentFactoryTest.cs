@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -29,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             void Call() => new BoundaryConditionDataComponentFactory(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("parameterFactory"));
+            Assert.That(exception.ParamName, Is.EqualTo("parametersFactory"));
         }
 
         [Test]
@@ -75,6 +78,121 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             
             // Call
             void Call() => componentFactory.ConstructDefaultDataComponent<DummyParameters>();
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_OldDataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+            
+            // Call
+            void Call() => componentFactory.ConstructDefaultDataComponent<DummyParameters>();
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_SameSpreadingType_ThrowsInvalidOperationException()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+            
+            // Call
+            var component = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+            void Call() => componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, PowerDefinedSpreading>(component);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_UniformDataComponentConvertedCorrectly()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+            
+            var parametersDegrees = new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading());
+            var component = new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(parametersDegrees);
+
+            var parametersPower = new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading());
+            parameterFactory.ConvertConstantParameters<DegreesDefinedSpreading, PowerDefinedSpreading>(parametersDegrees)
+                            .Returns(parametersPower);
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                componentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(component);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>());
+            var resultPower = (UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>) result;
+
+            Assert.That(resultPower.Data, Is.SameAs(parametersPower));
+            parameterFactory
+                .Received(1)
+                .ConvertConstantParameters<DegreesDefinedSpreading, PowerDefinedSpreading>(parametersDegrees);
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_SpatiallyVaryingDataComponentConvertedCorrectly()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+
+            var component = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+            
+            var supportPoints = new List<SupportPoint>();
+            var parametersDegrees = new Dictionary<SupportPoint, ConstantParameters<DegreesDefinedSpreading>>();
+
+            var geomDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geomDef.Length.Returns(100.0);
+            for (var i = 0; i < 5; i++)
+            {
+                var supportPoint = new SupportPoint(10.0 * i, geomDef);
+                supportPoints.Add(supportPoint);
+
+                var powerParam = new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading());
+                var degreesParam = new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading());
+                parametersDegrees[supportPoint] = degreesParam;
+
+                component.AddParameters(supportPoint, powerParam);
+                parameterFactory.ConvertConstantParameters<PowerDefinedSpreading, DegreesDefinedSpreading>(powerParam)
+                                .Returns(degreesParam);
+            }
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(component);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>());
+            var componentDegrees = (SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>)result;
+
+            Assert.That(componentDegrees.Data.Keys.Count(), Is.EqualTo(supportPoints.Count));
+            foreach (SupportPoint supportPoint in supportPoints)
+            {
+                Assert.That(componentDegrees.Data.ContainsKey(supportPoint));
+                Assert.That(componentDegrees.Data[supportPoint], Is.EqualTo(parametersDegrees[supportPoint]));
+            }
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_UnsupportedDataComponent_ThrowsNotSupportedException()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+            
+            // Call
+            void Call() => componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(new DummyParameters());
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);

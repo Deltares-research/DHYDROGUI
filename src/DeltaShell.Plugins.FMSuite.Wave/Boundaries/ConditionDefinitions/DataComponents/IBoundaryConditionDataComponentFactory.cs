@@ -33,6 +33,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="oldDataComponent"/>
         /// but with <typeparamref name="TNewSpreading"/>.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="oldDataComponent"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown when <typeparamref name="TOldSpreading"/> is equal to <typeparamref name="TNewSpreading"/>.
+        /// </exception>
+        /// <exception cref="System.NotSupportedException">
+        /// Thrown when either of the type parameters is not supported.
+        /// </exception>
         IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(
             IBoundaryConditionDataComponent oldDataComponent)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()

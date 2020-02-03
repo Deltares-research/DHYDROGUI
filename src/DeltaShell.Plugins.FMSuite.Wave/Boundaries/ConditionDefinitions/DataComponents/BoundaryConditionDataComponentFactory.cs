@@ -22,11 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         /// <summary>
         /// Creates a new <see cref="BoundaryConditionDataComponentFactory"/>.
         /// </summary>
-        /// <param name="parameterFactory">The <see cref="IBoundaryParametersFactory"/> with which parameters are constructed.</param>
-        public BoundaryConditionDataComponentFactory(IBoundaryParametersFactory parameterFactory)
+        /// <param name="parametersFactory">The <see cref="IBoundaryParametersFactory"/> with which parameters are constructed.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="parametersFactory"/> is <c>null</c>.
+        /// </exception>
+        public BoundaryConditionDataComponentFactory(IBoundaryParametersFactory parametersFactory)
         {
-            Ensure.NotNull(parameterFactory, nameof(parameterFactory));
-            this.parametersFactory = parameterFactory;
+            Ensure.NotNull(parametersFactory, nameof(parametersFactory));
+            this.parametersFactory = parametersFactory;
 
             InitialiseConstructionMethods();
         }
@@ -66,6 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
         {
+            Ensure.NotNull(oldDataComponent, nameof(oldDataComponent));
+
             if (typeof(TOldSpreading) == typeof(TNewSpreading))
             {
                 throw new InvalidOperationException("Cannot convert to the same type.");

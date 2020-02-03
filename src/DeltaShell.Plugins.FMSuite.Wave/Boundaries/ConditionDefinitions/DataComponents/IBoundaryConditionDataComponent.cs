@@ -6,8 +6,8 @@
     ///
     /// Currently, the following are defined:
     ///
-    /// * <see cref="UniformDataComponent"/>
-    /// * <see cref="SpatiallyVaryingDataComponent"/>
+    /// * <see cref="UniformDataComponent{T}"/>
+    /// * <see cref="SpatiallyVaryingDataComponent{T}"/>
     /// 
     /// </summary>
     /// <remarks>
