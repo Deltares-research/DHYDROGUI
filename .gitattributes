@@ -3979,6 +3979,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/CatchmentCoverageMainta
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.csproj -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Hbv/HbvDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/Nwrw3BComponentFileWriterTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwModelFileWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Importer/PolderFromGisImporterTest.cs -text
