@@ -64,8 +64,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 var gridsAreEqual = UnstructuredGridHelper.CompareGrids(grid, value, out verticesEqual, out cellsEqual, out linksEqual);
                 ((INotifyPropertyChanged)this).PropertyChanged -= OnGridChanged;
-
+                if (grid != null)
+                {
+                    grid.BeginEditing -= GridOnBeginEdit;
+                    grid.EndEditing -= GridOnEndEdit;
+                }
                 grid = value;
+
+                if (grid != null)
+                {
+                    grid.BeginEditing += GridOnBeginEdit;
+                    grid.EndEditing += GridOnEndEdit;
+                }
 
                 if (grid != null)
                 {
@@ -749,6 +759,208 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return GetGridSnapApi().GetLinkedCells();
         }
 
+        #endregion
+
+        #region Grid Editing Actions
+
+        private IDictionary<ICoverage, IDictionary<IPointCloud, bool>> gridEditingCacheOfCoverageWithItsOwnPointCloudValues = new Dictionary<ICoverage, IDictionary<IPointCloud, bool>>();
+
+        private void GridOnBeginEdit()
+        {
+            if (grid != null)
+            {
+                gridEditingCacheOfCoverageWithItsOwnPointCloudValues.Clear();
+
+                CreateCacheForCoverage(Bathymetry);
+                CreateCacheForCoverage(InitialWaterLevel);
+                CreateCacheForCoverage(Roughness);
+                CreateCacheForCoverage(Viscosity);
+                CreateCacheForCoverage(Diffusivity);
+                CreateCacheForCoverage(InitialTemperature);
+                InitialSalinity?.Coverages.OfType<UnstructuredGridCoverage>().ForEach(CreateCacheForCoverage);
+                InitialTracers?.ForEach(CreateCacheForCoverage);
+                InitialFractions?.ForEach(CreateCacheForCoverage);
+            }
+        }
+
+        private void GridOnEndEdit()
+        {
+            if (grid != null)
+            {
+                BeginEdit(new DefaultEditAction("Updating grid and interpolating values on coverages"));
+                
+                // add flowlinks to input grid for adding data on input FlowLink coverages (Roughness, Viscosity etc.)
+                grid.FlowLinks.Clear();
+                grid.FlowLinks.AddRange(GenerateFlowLinksForEdges(grid));
+
+                UpdateCoverageOnGridStateChange(Bathymetry, g => Bathymetry = g);
+                UpdateCoverageOnGridStateChange(InitialWaterLevel, g =>  InitialWaterLevel = g);
+                UpdateCoverageOnGridStateChange(Roughness, g => Roughness = g);
+                UpdateCoverageOnGridStateChange(Viscosity, g => Viscosity = g);
+                UpdateCoverageOnGridStateChange(Diffusivity, g => Diffusivity = g);
+                UpdateCoverageOnGridStateChange(InitialTemperature, g => InitialTemperature = g);
+
+                InitialSalinity?.Coverages
+                    .OfType<UnstructuredGridCoverage>()
+                    .ForEach(UpdateQuantityAfterGridStateChange);
+
+                InitialTracers?.ForEach(UpdateQuantityAfterGridStateChange);
+                InitialFractions?.ForEach(UpdateQuantityAfterGridStateChange);
+                
+                EndEdit();
+            }
+        }
+
+        private void CreateCacheForCoverage<T>(T coverage) where T : UnstructuredGridCoverage
+        {
+            if (coverage == null) return;
+
+            var dataItem = DataItems.FirstOrDefault(di => Equals(di.Value, coverage));
+            SpatialOperationSetValueConverter valueConverter = null;
+
+            if (dataItem != null)
+            {
+                valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            }
+
+            if (valueConverter != null && valueConverter.SpatialOperationSet.Operations.Any())
+            {
+                var originalCoverage = valueConverter.OriginalValue as UnstructuredGridCoverage;
+                if (originalCoverage != null &&
+                    !gridEditingCacheOfCoverageWithItsOwnPointCloudValues.ContainsKey(originalCoverage))
+                {
+                    gridEditingCacheOfCoverageWithItsOwnPointCloudValues[originalCoverage] = originalCoverage.GetPointClouds();
+                }
+            }
+            else
+            {
+                if (!gridEditingCacheOfCoverageWithItsOwnPointCloudValues.ContainsKey(coverage))
+                {
+                    gridEditingCacheOfCoverageWithItsOwnPointCloudValues[coverage] = coverage.GetPointClouds();
+                }
+            }
+        }
+
+        private void UpdateQuantityAfterGridStateChange<T>(T coverage) where T : UnstructuredGridCoverage
+        {
+            if (coverage == null) return;
+
+            var dataItem = DataItems.FirstOrDefault(di => Equals(di.Value, coverage));
+            SpatialOperationSetValueConverter valueConverter = null;
+
+            if (dataItem != null)
+            {
+                valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            }
+
+            if (valueConverter != null && valueConverter.SpatialOperationSet.Operations.Any())
+            {
+                dataItem.ValueConverter = null;
+                dataItem.Value = null;
+                try
+                {
+                    var originalCoverage = valueConverter.OriginalValue as UnstructuredGridCoverage;
+                    if (originalCoverage != null)
+                    {
+                        originalCoverage.BeginEdit(new DefaultEditAction("Updating coverage"));
+                        UpdateCoverageAfterGridStateChange(originalCoverage);
+                        originalCoverage.EndEdit();
+                    }
+                }
+                finally
+                {
+                    dataItem.ValueConverter = valueConverter;
+                }
+            }
+            else
+            {
+                if (dataItem != null)
+                {
+                    dataItem.Value = null;
+                }
+                try
+                {
+                    coverage.BeginEdit(new DefaultEditAction("Updating coverage"));
+                    UpdateCoverageAfterGridStateChange(coverage);
+                    coverage.EndEdit();
+                }
+                finally
+                {
+                    if (dataItem != null)
+                    {
+                        dataItem.Value = coverage;
+                    }
+                }
+            }
+
+            // re-apply spatial operations
+            var spatialOperationsValueConverter = dataItem?.ValueConverter as SpatialOperationSetValueConverter;
+            if (spatialOperationsValueConverter?.SpatialOperationSet == null ||
+                !spatialOperationsValueConverter.SpatialOperationSet.Operations.Any()) return;
+            spatialOperationsValueConverter.SpatialOperationSet.Operations.ForEach(o => o.Execute());
+            Log.InfoFormat($"Updated spatial operations of coverage {coverage.Name} with changed grid.");
+        }
+
+        private void UpdateCoverageOnGridStateChange<T>(T coverage, Action<T> setCoverage) where T : UnstructuredGridCoverage
+        {
+            if (coverage == null) return;
+            coverage.BeginEdit(new DefaultEditAction("Updating grid and interpolating values"));
+            var coverageRef = coverage;// prevents events
+            setCoverage?.Invoke(null);
+            try
+            {
+
+                UpdateQuantityAfterGridStateChange(coverageRef);
+            }
+            finally
+            {
+                setCoverage?.Invoke(coverage);
+                coverage.EndEdit();
+            }
+        }
+
+        private void UpdateCoverageAfterGridStateChange<T>(T coverage) where T : UnstructuredGridCoverage
+        {
+            if (disposing) return;
+
+            if (coverage.Grid == null)
+            {
+                coverage.BeginEdit(new DefaultEditAction("Clearing grid from coverage"));
+
+                ClearVariable(coverage.Components[0]);
+                ClearVariable(coverage.Arguments[0]);
+
+                coverage.Grid = null;
+                coverage.EndEdit();
+                return;
+            }
+
+            var vertexCoverage = coverage as UnstructuredGridVertexCoverage;
+            if (vertexCoverage != null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName)
+            {
+                // TODO: this method does not take bathymetry as an UnstructuredGridCellCoverage into account! (DELFT3DFM-1355)
+                if (!vertexCoverage.GetValues<double>().Any())
+                {
+                    vertexCoverage.LoadBathymetry(coverage.Grid, bathymetryNoDataValue);
+                }
+                return;
+            }
+
+            IDictionary<IPointCloud, bool> coveragePointClouds = null;
+
+            coverage.BeginEdit(new DefaultEditAction("new grid state, do coverage update"));
+
+            ClearVariable(coverage.Components[0]);
+            ClearVariable(coverage.Arguments[0]);
+
+
+            if (gridEditingCacheOfCoverageWithItsOwnPointCloudValues.TryGetValue(coverage, out coveragePointClouds))
+            {
+                coverage.SetPointCloudsOnCoverageGrid(coveragePointClouds);
+            }
+
+            coverage.EndEdit();
+        }
         #endregion
     }
 }
