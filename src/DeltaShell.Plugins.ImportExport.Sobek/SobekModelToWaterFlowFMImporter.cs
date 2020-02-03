@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -104,7 +105,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public IPartialSobekImporter PartialSobekImporter
         {
-            get { return importer; }
+            get
+            {
+                GatherProgressInformation();
+                return importer;
+            }
             set { }
         }
 
@@ -152,5 +157,56 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         public bool OpenViewAfterImport { get { return false; } }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        private IEnumerable<IPartialSobekImporter> GetImporters(IPartialSobekImporter partialImporter)
+        {
+            while (partialImporter != null)
+            {
+                yield return partialImporter;
+                partialImporter = partialImporter.PartialSobekImporter;
+            }
+        }
+
+        private void GatherProgressInformation()
+        {
+            var importers = GetImporters(importer).Reverse().ToList();
+            var totalSteps = importers.Count(i => i.IsActive);
+            var currentStep = 1;
+            for (var i = 0; i < importers.Count; i++)
+            {
+                var imp = importers[i];
+
+                imp.BeforeImport = currentImporter =>
+                {
+                    if (!imp.IsActive)
+                        return;
+
+                    if (ProgressChanged != null)
+                    {
+                        ProgressChanged(currentImporter.DisplayName, currentStep, totalSteps);
+                    }
+                };
+
+                imp.AfterImport = currentImporter =>
+                {
+                    if (!imp.IsActive)
+                        return;
+
+                    currentStep++;
+
+                    if (ProgressChanged == null) return;
+
+                    var nextStartIndex = importers.IndexOf(imp) + 1;
+                    var nextImporterIndex = nextStartIndex >= importers.Count
+                        ? -1
+                        : importers.FindIndex(nextStartIndex, im => im.IsActive);
+
+                    if (nextImporterIndex >= 0)
+                        ProgressChanged(importers[nextImporterIndex].DisplayName, currentStep, totalSteps);
+                    else
+                        ProgressChanged(DisplayName, totalSteps, totalSteps);
+                };
+            }
+        }
     }
 }
