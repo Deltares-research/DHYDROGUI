@@ -402,7 +402,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
             var expectedCategoryName = "Structure";
             var gateName = "myGate";
-            var timFileName = $"{gateName}_sill_level.tim";
+            var timFileName = $"{gateName}_crestLevel.tim";
 
             var fmModel = new WaterFlowFMModel
             {
