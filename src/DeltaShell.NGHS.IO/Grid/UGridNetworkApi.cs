@@ -523,15 +523,22 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int varId = 0;
+                // Testing if branch_type already exists in network topology
+                var ierr = wrapper.InqueryVariableId(ioncId, networkId, GridApiDataSet.UGridApiConstants.BranchType, ref varId);
 
-                return wrapper.DefineNetworkVariable(ioncId, networkId, varId, 
-                    GridApiDataSet.GridConstants.NF90_INT, 
-                    GridApiDataSet.LocationType.UG_LOC_EDGE, 
-                    GridApiDataSet.UGridApiConstants.BranchType,
-                    "", 
-                    "Water type in branch (network edge)", 
-                    "", 
-                    GridApiDataSet.GridConstants.DEFAULT_FILL_VALUE_INT);
+                if (varId == -1 && ierr == GridApiDataSet.GridConstants.NOERR) // does not exist
+                {
+                    return wrapper.DefineNetworkVariable(ioncId, networkId, varId,
+                        GridApiDataSet.GridConstants.NF90_INT,
+                        GridApiDataSet.LocationType.UG_LOC_EDGE,
+                        GridApiDataSet.UGridApiConstants.BranchType,
+                        "",
+                        "Water type in branch (network edge)",
+                        "",
+                        GridApiDataSet.GridConstants.DEFAULT_FILL_VALUE_INT);
+                }
+
+                return ierr;
             }
             catch
             {
