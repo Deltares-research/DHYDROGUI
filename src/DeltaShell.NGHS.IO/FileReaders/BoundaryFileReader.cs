@@ -178,7 +178,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                 var outletCandidate = manhole.GetOutletCandidate();
                                 if (outletCandidate != null)
                                 {
-                                    manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                                    outlet.SurfaceWaterLevel = boundaryCondition.WaterLevel;
                                 } 
                             }
                             break;
