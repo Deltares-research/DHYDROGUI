@@ -106,7 +106,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
                     uGridNetwork.WriteNetworkGeometry(networkDataModel.GeopointsX, networkDataModel.GeopointsY);
 
-                    uGridNetwork.DefineBranchTypeValuesNetworkId(networkId);
+                    //uGridNetwork.DefineBranchTypeValuesNetworkId(networkId);
                 }
 
                 WriteBranchTypeValues(netFilePath, networkDataModel.BranchTypes);
