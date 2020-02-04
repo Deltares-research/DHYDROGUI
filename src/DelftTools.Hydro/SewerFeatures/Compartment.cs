@@ -122,7 +122,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #region Network is visiting us
 
         public string ParentManholeName { get; set; }
-        [EditAction]
+        
         public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             AssignParentManholeNameIfMissing(network);

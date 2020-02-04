@@ -242,8 +242,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (listOfErrors.Any())
                 Log.ErrorFormat($"While adding GWSW features to Rainfall Runoff Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
-
-        [EditAction]
+        
         private void ImportGwswNetworkInFmModel(IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, IWaterFlowFMModel fmModel)
         {
             var network = fmModel?.Network;

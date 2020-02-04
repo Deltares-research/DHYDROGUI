@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -10,10 +11,37 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 {
+    class OrificeDefinitionReader : WeirDefinitionReader
+    {
+        public override IStructure1D ReadDefinition(IDelftIniCategory category,
+            IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
+        {
+            var allowedFlowDirValue = category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key, true);
+            var allowedFlowDir = allowedFlowDirValue != null
+                ? (FlowDirection)Enum.Parse(typeof(FlowDirection), allowedFlowDirValue, true)
+                : 0;
+
+            var orifice = new Orifice
+            {
+                Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
+                CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
+                FlowDirection = allowedFlowDir,
+                Branch = branch,
+                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true)
+            };
+
+            orifice.WeirFormula = ReadFormulaFromDefinition(category, orifice);
+
+            return orifice;
+        }
+
+    }
     class WeirDefinitionReader : IStructureDefinitionReader
     {
         /// <inheritdoc/>
-        public IStructure1D ReadDefinition(IDelftIniCategory category,
+        public virtual IStructure1D ReadDefinition(IDelftIniCategory category,
             IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
         {
             var allowedFlowDirValue = category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key, true);
@@ -37,7 +65,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             return weir;
         }
 
-        private static IWeirFormula ReadFormulaFromDefinition(IDelftIniCategory category, Weir weir)
+        protected IWeirFormula ReadFormulaFromDefinition(IDelftIniCategory category, Weir weir)
         {
             var type = (StructureType) Enum.Parse(typeof(StructureType),
                 category.ReadProperty<string>(StructureRegion.DefinitionType.Key), true);

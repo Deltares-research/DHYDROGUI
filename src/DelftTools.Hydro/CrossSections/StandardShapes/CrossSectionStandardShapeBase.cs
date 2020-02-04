@@ -36,7 +36,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         {
             return TypeUtils.MemberwiseClone(this);
         }
-        [EditAction]
         public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
             var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));

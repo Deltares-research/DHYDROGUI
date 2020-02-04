@@ -183,9 +183,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 case StructureType.UniversalWeir:
                 case StructureType.RiverWeir:
                 case StructureType.AdvancedWeir:
-                case StructureType.Orifice:
                 case StructureType.GeneralStructure:
                     return new WeirDefinitionReader();
+                case StructureType.Orifice:
+                    return new OrificeDefinitionReader();
                 case StructureType.CompositeBranchStructure:
                     return new CompositeBranchStructureDefinitionReader();
                 case StructureType.Unknown:

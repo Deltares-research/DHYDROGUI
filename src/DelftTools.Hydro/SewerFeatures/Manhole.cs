@@ -122,14 +122,18 @@ namespace DelftTools.Hydro.SewerFeatures
 
             Compartments.Add(outlet);
             Compartments.Remove(compartment);
-            IncomingBranches
+            var incomingBranches = IncomingBranches;
+            incomingBranches
                 .OfType<ISewerConnection>()
                 .Where(sw => sw.TargetCompartment == compartment)
                 .ForEach(sw => sw.TargetCompartment = outlet);
-            OutgoingBranches //should not be the case: outlet with outgoing connection
+            IncomingBranches = incomingBranches;
+            var outgoingBranches = OutgoingBranches;
+            outgoingBranches //should not be the case: outlet with outgoing connection
                 .OfType<ISewerConnection>()
                 .Where(sw => sw.SourceCompartment == compartment)
                 .ForEach(sw => sw.SourceCompartment = outlet);
+            OutgoingBranches = outgoingBranches;
 
             return outlet;
         }

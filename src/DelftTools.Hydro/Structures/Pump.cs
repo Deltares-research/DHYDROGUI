@@ -157,7 +157,7 @@ namespace DelftTools.Hydro.Structures
         {
             return StructureType.Pump;
         }
-        [EditAction]
+        
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(

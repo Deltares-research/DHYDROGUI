@@ -63,10 +63,9 @@ namespace DelftTools.Hydro.SewerFeatures
             set { SetSource(value); }
         }
 
-        [EditAction]
+        
         private void SetSource(INode value)
         {
-            if (source == value) return;
             BeforeSetSource();
             if (value is HydroNode)
                 source = value;
@@ -91,13 +90,11 @@ namespace DelftTools.Hydro.SewerFeatures
             AfterSetSource();
         }
 
-        [EditAction]
         private void BeforeSetSource()
         {
             source?.OutgoingBranches.Remove(this);
         }
 
-        [EditAction]
         private void AfterSetSource()
         {
             source?.OutgoingBranches.Add(this);
@@ -112,10 +109,9 @@ namespace DelftTools.Hydro.SewerFeatures
             set { SetTarget(value); }
         }
 
-        [EditAction]
+        
         private void SetTarget(INode value)
         {
-            if (target == value) return;
             BeforeTargetSet();
             if (value is HydroNode)
                 target = value;
@@ -140,13 +136,11 @@ namespace DelftTools.Hydro.SewerFeatures
             AfterTargetSet();
         }
 
-        [EditAction]
         private void BeforeTargetSet()
         {
             target?.IncomingBranches.Remove(this);
         }
 
-        [EditAction]
         private void AfterTargetSet()
         {
             target?.IncomingBranches.Add(this);
@@ -210,7 +204,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        [EditAction]
+        
         protected virtual void UpdateGeometryBasedOnSourceAndTargetCompartments()
         {
             if (Source == null || Target == null) return;
@@ -255,34 +249,36 @@ namespace DelftTools.Hydro.SewerFeatures
                 Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, Name);
             }
         }
-        [EditAction]
+        
         private void UpdateTarget(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
-            if (this.IsInternalConnection()) return;
-            if ((IManhole) Target != parent)
+            BeforeTargetSet();
+            if (!this.IsInternalConnection() && (IManhole) Target != parent)
             {
                 target = parent;
-                SetTarget(target);
             }
+            AfterTargetSet();
         }
-        [EditAction]
+
         private void UpdateSource(ICompartment compartment)
         {
             var parent = compartment?.ParentManhole;
-            if (this.IsInternalConnection()) return;
-            if ((IManhole) Source != parent)
+            BeforeSetSource();
+            if (!this.IsInternalConnection() && (IManhole) Source != parent)
             {
                 source = parent;
             }
+            AfterSetSource();
+
         }
 
-        [EditAction]
+
         private void UpdateSourceCompartmentId()
         {
             if(sourceCompartment != null) sourceCompartmentName = sourceCompartment.Name;
         }
-        [EditAction]
+        
         private void UpdateTargetCompartmentId()
         {
             if(targetCompartment != null) targetCompartmentName = targetCompartment.Name;
@@ -347,7 +343,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
 
         #region Network is visiting us
-        [EditAction]
+        
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
@@ -377,11 +373,11 @@ namespace DelftTools.Hydro.SewerFeatures
             AddCrossSectionDefinition(hydroNetwork);
             hydroNetwork.Branches.Add(this);
         }
-        [EditAction]
+        
         protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
         }
-        [EditAction]
+        
         private void ConnectSourceCompartment(IManhole manhole)
         {
             if(manhole == null) return;
@@ -391,7 +387,7 @@ namespace DelftTools.Hydro.SewerFeatures
             UpdateSourceCompartmentId();
             UpdateGeometryBasedOnSourceAndTargetCompartments();
         }
-        [EditAction]
+        
         private void ConnectTargetCompartment(IManhole manhole)
         {
             if (manhole == null) return;
