@@ -27,11 +27,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 StopDelivery = category.ReadProperty<double>(StructureRegion.StopLevelDeliverySide.Key)
             };
 
-            var headValues = category.ReadProperty<string>(StructureRegion.Head.Key, true).ToDoubleArray();
-            var reductionFactorValues =
-                category.ReadProperty<string>(StructureRegion.ReductionFactor.Key, true).ToDoubleArray();
+            var useReductionTable = category.ReadProperty<bool>(StructureRegion.UseReductionTable.Key, true);
+            if (useReductionTable)
+            {
+                var headValues = category.ReadProperty<string>(StructureRegion.Head.Key, true).ToDoubleArray();
+                var reductionFactorValues =
+                    category.ReadProperty<string>(StructureRegion.ReductionFactor.Key, true).ToDoubleArray();
 
-            pump.ReductionTable = pump.ReductionTable.CreateFunctionFromArrays(headValues, reductionFactorValues);
+                pump.ReductionTable = pump.ReductionTable.CreateFunctionFromArrays(headValues, reductionFactorValues);
+            }
+
             return pump;
         }
 

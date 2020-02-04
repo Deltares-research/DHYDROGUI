@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
 
@@ -22,7 +23,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
         internal static double[] ToDoubleArray(this string valuesString)
         {
-            return valuesString?.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(Convert.ToDouble)
+            return valuesString?.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(v => Convert.ToDouble(v, CultureInfo.InvariantCulture))
                 .ToArray();
         }
     }

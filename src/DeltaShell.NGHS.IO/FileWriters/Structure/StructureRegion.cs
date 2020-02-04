@@ -87,6 +87,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting StopLevelDeliverySide = new ConfigurationSetting(key: "stopLevelDeliverySide", description: "Stop level at delivery side (m AD)");
         public static readonly ConfigurationSetting ReductionFactorLevels = new ConfigurationSetting(key: "numReductionLevels", description: "Number of levels in reduction table");
         public static readonly ConfigurationSetting Head = new ConfigurationSetting(key: "head", description: "Head");
+        public static readonly ConfigurationSetting UseReductionTable = new ConfigurationSetting(key: "useReductionTable", description: "Use a Reduction Table");
         public static readonly ConfigurationSetting ReductionFactor = new ConfigurationSetting(key: "reductionFactor", description: "Reduction factor (-)");
         public static readonly ConfigurationSetting PolylineFile = new ConfigurationSetting(key: "polylinefile", description: "*.pli; Polyline geometry definition for 2D structure");
         #endregion
