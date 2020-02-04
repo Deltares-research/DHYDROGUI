@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
@@ -19,10 +12,19 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
 using GeoAPI.Geometries;
 using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core.Extensions;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 {
@@ -30,7 +32,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
     public class GwswFileImporterTest : GwswFileImporterTestHelper
     {
         #region Gwsw Attribute tests
-        
+
         [Test]
         public void GetEnumTypeFromGwswAttribute_ReturnsDefaultValueAndLogMessage_IfNotFound()
         {
@@ -38,7 +40,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}
             };
 
             SewerConnectionWaterType value = SewerConnectionWaterType.StormWater;
@@ -63,7 +65,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string)}
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}
             };
 
             var value = attributeTest.GetValueFromDescription<SewerConnectionWaterType>();
@@ -74,13 +76,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseWithoutLogMessageIfNoTypeIsPresent()
         {
-            var invalidAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
+            var invalidAttribute = new GwswAttribute {GwswAttributeType = new GwswAttributeType()};
             CheckThatGwswAttributeValidationLogMessageIsReturned(null, 0, null, string.Empty, invalidAttribute);
         }
 
         [TestCase("")]
         [TestCase(null)]
-        public void GivenGwswAttributeWithEmptyValueAsString_WhenValidatingAttribute_ThenLogMessageIsReturned(string valueAsString)
+        public void GivenGwswAttributeWithEmptyValueAsString_WhenValidatingAttribute_ThenLogMessageIsReturned(
+            string valueAsString)
         {
             const string fileName = "myFile.csv";
             const int lineNumber = 3;
@@ -100,21 +103,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 ValueAsString = valueAsString,
                 GwswAttributeType = attributeType
             };
-            
+
             CheckThatGwswAttributeValidationLogMessageIsReturned(fileName, lineNumber, localKey, key, invalidAttribute);
         }
 
         [Test]
         public void GwswAttributeIsValid_ReturnsTrueIfEverythingIsPresent()
         {
-            var emptyAttribute = new GwswAttribute { ValueAsString = "test", GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string)} };
+            var emptyAttribute = new GwswAttribute
+                {ValueAsString = "test", GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}};
             Assert.IsTrue(emptyAttribute.IsValidAttribute());
         }
 
         [Test]
         public void GwswAttributeIsValid_ReturnsFalseIfNoTypeIsPresent()
         {
-            var emptyAttribute = new GwswAttribute { GwswAttributeType = new GwswAttributeType() };
+            var emptyAttribute = new GwswAttribute {GwswAttributeType = new GwswAttributeType()};
             Assert.IsFalse(emptyAttribute.IsValidAttribute());
         }
 
@@ -147,7 +151,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(int) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(int)}
             };
             Assert.IsTrue(attr.IsNumerical());
         }
@@ -157,7 +161,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(double)}
             };
             Assert.IsTrue(attr.IsNumerical());
         }
@@ -168,7 +172,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}
             };
             Assert.IsFalse(attr.IsNumerical());
         }
@@ -179,7 +183,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(double) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(double)}
             };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsTrue(attr.IsTypeOf(typeof(double)));
@@ -191,7 +195,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             var attr = new GwswAttribute
             {
-                GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}
             };
             Assert.IsFalse(attr.IsTypeOf(typeof(int)));
             Assert.IsFalse(attr.IsTypeOf(typeof(double)));
@@ -210,7 +214,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     {
                         LineNumber = 2,
                         ValueAsString = elementName,
-                        GwswAttributeType = new GwswAttributeType { AttributeType = typeof(string) }
+                        GwswAttributeType = new GwswAttributeType {AttributeType = typeof(string)}
                     }
                 }
             };
@@ -243,7 +247,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 ElementName = elementName + ".csv",
             };
             Assert.AreEqual(elementName, attributeTest.ElementName);
-            
+
             /* If the name is originally given without extension, it should remain the same.*/
             attributeTest = new GwswAttributeType
             {
@@ -259,13 +263,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         {
             try
             {
-                var attributeTest = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                var attributeTest = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
+                    "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
                 Assert.IsNotNull(attributeTest);
                 Assert.AreEqual(expectedType, attributeTest.AttributeType);
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+                Assert.Fail(string.Format(
+                    "The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
             }
         }
 
@@ -282,7 +288,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 {
                     new GwswAttribute
                     {
-                        GwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile", 5, "columnName", "string", attributeOne,
+                        GwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile", 5,
+                            "columnName", "string", attributeOne,
                             "unkownDefinition", "mandatoryMaybe", string.Empty, "noRemarks"),
                         ValueAsString = valueAsString
                     },
@@ -304,11 +311,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             string typeAsString = "string";
             try
             {
-                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
+                    "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute
+                    {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString};
                 Assert.IsNotNull(attribute);
 
                 var testVariable = attribute.GetValidStringValue();
@@ -316,7 +325,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+                Assert.Fail(string.Format(
+                    "The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
             }
         }
 
@@ -330,11 +340,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var testVariable = 0.0;
             try
             {
-                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
+                    "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(double), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString };
+                var attribute = new GwswAttribute
+                    {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString};
                 Assert.IsNotNull(attribute);
 
                 Assert.IsTrue(attribute.TryGetValueAsDouble(out testVariable));
@@ -342,11 +354,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+                Assert.Fail(string.Format(
+                    "The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
             }
         }
 
-        
+
         [Test]
         public void GwswElementExtensionsSetValueIfPossibleForDoubleFailsWithStringValueAndLogsMessage()
         {
@@ -354,11 +367,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             string typeAsString = "string";
             try
             {
-                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
+                var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
+                    "attributeName", typeAsString, "testCode", "test definition", "mandatory", string.Empty, "remarks");
                 Assert.IsNotNull(gwswAttributeType);
                 Assert.AreEqual(typeof(string), gwswAttributeType.AttributeType);
 
-                var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString, LineNumber = 2 };
+                var attribute = new GwswAttribute
+                    {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString, LineNumber = 2};
                 Assert.IsNotNull(attribute);
 
                 var auxValue = 0.0;
@@ -367,22 +382,26 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                         (string) Resources
                             .GwswElementExtensions_LogErrorParseType_File__0___line__1___element__2___It_was_not_possible_to_parse_attribute__3__from_type__4__to_type__5__,
                         gwswAttributeType.FileName, attribute.LineNumber, gwswAttributeType.ElementName,
-                        gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType, typeof(double));
+                        gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType,
+                        typeof(double));
 
                 Assert.IsFalse(attribute.TryGetValueAsDouble(out auxValue));
-                TestHelper.AssertAtLeastOneLogMessagesContains( () => attribute.TryGetValueAsDouble(out auxValue), logError);
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => attribute.TryGetValueAsDouble(out auxValue),
+                    logError);
             }
             catch (Exception e)
             {
-                Assert.Fail(string.Format("The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
+                Assert.Fail(string.Format(
+                    "The following error was given while trying to create a new Gwsw Attribute {0}", e.Message));
             }
         }
 
         [Test]
         public void GivenGwswAttributeWithEmptyStringAsValue_WhenTryGetDoubleValue_ThenReturnFalseAndDefaultValue()
         {
-            var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0, "attributeName", "double", "testCode", "test definition", "mandatory", string.Empty, "remarks");
-            var attribute = new GwswAttribute { GwswAttributeType = gwswAttributeType, ValueAsString = string.Empty};
+            var gwswAttributeType = SewerFeatureFactoryTestHelper.GetGwswAttributeType("testFile.csv", 0,
+                "attributeName", "double", "testCode", "test definition", "mandatory", string.Empty, "remarks");
+            var attribute = new GwswAttribute {GwswAttributeType = gwswAttributeType, ValueAsString = string.Empty};
 
             double doubleValue;
             var gettingValueSucceeded = attribute.TryGetValueAsDouble(out doubleValue);
@@ -422,24 +441,35 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var gwswImporter = new GwswFileImporter();
             gwswImporter.CsvDelimeter = ',';
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\UnknownFeature.csv");
-            var message = string.Format((string) Resources.GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_, filePath);
+            var message =
+                string.Format(
+                    (string) Resources
+                        .GwswFileImporterBase_ImportItem_Occurrences_on_file__0__will_not_be_mapped_to_any_element_,
+                    filePath);
             var importedList = new List<GwswElement>();
             gwswImporter.CsvDelimeter = ';';
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
             Assert.IsFalse(importedList.Any());
         }
 
         [Test]
-        public void TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
+        public void
+            TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
         {
             var gwswImporter = new GwswFileImporter();
             gwswImporter.CsvDelimeter = ';';
 
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\WithUnknownAttribute\Verbinding.csv");
-            var message = string.Format((string) Resources.GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__, "UNKNOWN_ATTR", "UNI_IDE", filePath);
+            var message =
+                string.Format(
+                    (string) Resources
+                        .GwswFileImporterBase_ImportItem_column__0__expectedcolumn__1__of_file__2__was_not_mapped_correctly__,
+                    "UNKNOWN_ATTR", "UNI_IDE", filePath);
 
             var importedList = new List<GwswElement>();
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
             Assert.IsFalse(importedList.Any()); //import is cancelled
         }
 
@@ -458,27 +488,27 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
                     {
-                        new CsvRequiredField("UNI_IDE", typeof (string)),
+                        new CsvRequiredField("UNI_IDE", typeof(string)),
                         new CsvColumnInfo(0, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("DEB_TYP", typeof (string)),
+                        new CsvRequiredField("DEB_TYP", typeof(string)),
                         new CsvColumnInfo(1, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("VER_IDE", typeof (string)),
+                        new CsvRequiredField("VER_IDE", typeof(string)),
                         new CsvColumnInfo(2, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("AVV_ENH", typeof (string)),
+                        new CsvRequiredField("AVV_ENH", typeof(string)),
                         new CsvColumnInfo(3, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("AFV_OPP", typeof (string)),
+                        new CsvRequiredField("AFV_OPP", typeof(string)),
                         new CsvColumnInfo(4, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("ALG_TOE", typeof (string)),
+                        new CsvRequiredField("ALG_TOE", typeof(string)),
                         new CsvColumnInfo(5, CultureInfo.InvariantCulture)
                     },
                 }
@@ -503,43 +533,43 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
                     {
-                        new CsvRequiredField("Bestandsnaam", typeof (string)),
+                        new CsvRequiredField("Bestandsnaam", typeof(string)),
                         new CsvColumnInfo(0, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("ElementName", typeof (string)),
+                        new CsvRequiredField("ElementName", typeof(string)),
                         new CsvColumnInfo(1, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Kolomnaam", typeof (string)),
+                        new CsvRequiredField("Kolomnaam", typeof(string)),
                         new CsvColumnInfo(2, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Code", typeof (string)),
+                        new CsvRequiredField("Code", typeof(string)),
                         new CsvColumnInfo(3, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Code_International", typeof (string)),
+                        new CsvRequiredField("Code_International", typeof(string)),
                         new CsvColumnInfo(4, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Definitie", typeof (string)),
+                        new CsvRequiredField("Definitie", typeof(string)),
                         new CsvColumnInfo(5, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Type", typeof (string)),
+                        new CsvRequiredField("Type", typeof(string)),
                         new CsvColumnInfo(6, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Eenheid", typeof (string)),
+                        new CsvRequiredField("Eenheid", typeof(string)),
                         new CsvColumnInfo(7, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Verplicht", typeof (string)),
+                        new CsvRequiredField("Verplicht", typeof(string)),
                         new CsvColumnInfo(8, CultureInfo.InvariantCulture)
                     },
                     {
-                        new CsvRequiredField("Opmerking", typeof (string)),
+                        new CsvRequiredField("Opmerking", typeof(string)),
                         new CsvColumnInfo(9, CultureInfo.InvariantCulture)
                     },
                 }
@@ -558,13 +588,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             Assert.IsTrue(importer.GwswAttributesDefinition != null && importer.GwswAttributesDefinition.Any());
 
-            var mssg = string.Format((string) Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__, filePath);
+            var mssg = string.Format(
+                (string) Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Could_not_find_file__0__,
+                filePath);
             TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(filePath), mssg);
         }
 
         [TestCase("")]
         [TestCase(null)]
-        public void ImportFile_WithLoadedDefinition_GivingEmptyStringAsPath_LoadsDefinitionFeaturesList(string importFilePath)
+        public void ImportFile_WithLoadedDefinition_GivingEmptyStringAsPath_LoadsDefinitionFeaturesList(
+            string importFilePath)
         {
             var definitionPath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv");
             var importer = new GwswFileImporter();
@@ -612,7 +645,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         [TestCase(@"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv", 4000)]
         [TestCase(@"gwswFiles\GWSW_Leiden\GWSW.hydx_Definitie_DM.csv", 180000)]
-        public void GivenGwswDatabase_WhenImporting_ShouldBeFasterThan(string testFilePath, float maximumImportingTimeInMs)
+        public void GivenGwswDatabase_WhenImporting_ShouldBeFasterThan(string testFilePath,
+            float maximumImportingTimeInMs)
         {
             var model = new WaterFlowFMModel();
             var network = model.Network;
@@ -649,7 +683,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var testFilePath = @"gwswFiles\GWSW_DidactischStelsel\GWSW.hydx_Definitie_DM.csv";
             var model = new WaterFlowFMModel();
 
-            var gwswImporter = new GwswFileImporter { CsvDelimeter = ';' };
+            var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
             var filePath = GetFileAndCreateLocalCopy(testFilePath);
             try
             {
@@ -671,9 +705,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             Assert.That((object) network.Weirs.Count(), Is.EqualTo(8));
             Assert.That((object) network.Orifices.Count(), Is.EqualTo(2));
 
-            Assert.That((object) network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IPump), Is.EqualTo(8));
-            Assert.That((object) network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IWeir), Is.EqualTo(8));
-            Assert.That((object) network.SewerConnections.Count(sc => sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IOrifice), Is.EqualTo(2));
+            Assert.That(
+                (object) network.SewerConnections.Count(sc =>
+                    sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IPump), Is.EqualTo(8));
+            Assert.That(
+                (object) network.SewerConnections.Count(sc =>
+                    sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IWeir), Is.EqualTo(8));
+            Assert.That(
+                (object) network.SewerConnections.Count(sc =>
+                    sc.BranchFeatures.Count >= 2 && sc.BranchFeatures[1] is IOrifice), Is.EqualTo(2));
         }
 
         [Test]
@@ -687,7 +727,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var expectedNumberOfPumps = 8;
             var expectedNumberOfOrifices = 2;
             var expectedNumberOfCrossSections = 41;
-            
+
             Assert.That(network.Pipes.Count(), Is.EqualTo(expectedNumberOfPipes)
                 , "Not all pipes have been imported correctly.");
             Assert.That(network.Pumps.Count(), Is.EqualTo(expectedNumberOfPumps)
@@ -707,23 +747,30 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             //CheckManholes
             Assert.IsNotNull(network.Manholes);
-            var repeatedManholes = network.Manholes.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-            Assert.IsEmpty((IEnumerable) repeatedManholes, string.Format("Repeated manhole entries. {0}", String.Concat((IEnumerable<string>) repeatedManholes.Select(cmp => cmp.Name + " "))));
+            var repeatedManholes =
+                network.Manholes.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty((IEnumerable) repeatedManholes,
+                string.Format("Repeated manhole entries. {0}",
+                    String.Concat((IEnumerable<string>) repeatedManholes.Select(cmp => cmp.Name + " "))));
 
             var manholesWithoutPlaceholders = network.Manholes.Where(mh => mh.Compartments.Any()).ToList();
             Assert.AreEqual(numberOfManholesInGwsw, (int) manholesWithoutPlaceholders.Count);
 
             //Check compartments
             var compartments = manholesWithoutPlaceholders.SelectMany(mh => mh.Compartments).ToList();
-            var repeatedCompartments = compartments.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-            Assert.IsEmpty((IEnumerable) repeatedCompartments, string.Format("Repeated compartments entries. {0}", String.Concat((IEnumerable<string>) repeatedCompartments.Select(cmp => cmp.Name + " "))));
+            var repeatedCompartments =
+                compartments.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            Assert.IsEmpty((IEnumerable) repeatedCompartments,
+                string.Format("Repeated compartments entries. {0}",
+                    String.Concat((IEnumerable<string>) repeatedCompartments.Select(cmp => cmp.Name + " "))));
 
             var numberOfCompartmentsInGwsw = 90;
             Assert.AreEqual(numberOfCompartmentsInGwsw, (int) compartments.Count, "Not all compartments were found.");
 
             //CheckOutlets
             var numberOfOutlets = 4;
-            Assert.AreEqual(numberOfOutlets, (int) compartments.Count(cmp => cmp is OutletCompartment), "Not all outlets were found.");
+            Assert.AreEqual(numberOfOutlets, (int) compartments.Count(cmp => cmp is OutletCompartment),
+                "Not all outlets were found.");
         }
 
         [Test]
@@ -732,13 +779,16 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var gwswImporter = new GwswFileImporter();
             var attributesDefinition = gwswImporter.GwswAttributesDefinition;
             Assert.IsNotNull(attributesDefinition);
-            Assert.Greater(attributesDefinition.Count, 0, "Defeinition file from resource has not been loaded correctly");
+            Assert.Greater(attributesDefinition.Count, 0,
+                "Defeinition file from resource has not been loaded correctly");
         }
 
         [Test]
         public void CreateGwswDataTableFromDefinitionFileThenImportFilesAsDataTables()
         {
-            var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\GWSW.hydx_Definitie_DM.csv"); //should be the same as the resource file
+            var filePath =
+                GetFileAndCreateLocalCopy(
+                    @"gwswFiles\GWSW.hydx_Definitie_DM.csv"); //should be the same as the resource file
             // Import Csv Definition.
             var gwswImporter = new GwswFileImporter();
 
@@ -785,7 +835,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 importedTables.Add(importedElementTable);
             }
 
-            Assert.AreEqual(uniqueFileList.Count, importedTables.Count, string.Format("Not all files were imported correctly."));
+            Assert.AreEqual(uniqueFileList.Count, importedTables.Count,
+                string.Format("Not all files were imported correctly."));
         }
 
         #endregion
@@ -814,7 +865,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var numberOfLines = File.ReadAllLines(filePath).Length - 1; // we should not include the header
             Assert.AreEqual(numberOfLines, elementList.Count,
                 string.Format("There is a mismatch between expected number of elements and imported."));
-            var elementTypeFound = gwswImporter.GwswAttributesDefinition.FirstOrDefault(at => at.FileName.Equals(Path.GetFileName(testCasePath)));
+            var elementTypeFound =
+                gwswImporter.GwswAttributesDefinition.FirstOrDefault(at =>
+                    at.FileName.Equals(Path.GetFileName(testCasePath)));
             if (elementTypeFound == null)
             {
                 Assert.Fail("Test failed because no element name was found mapped to this file name.");
@@ -833,7 +886,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 }
             }
         }
-        
+
         [Test]
         public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
@@ -862,7 +915,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
             gwswImporter.ImportItem(filePath, model);
-            Assert.IsTrue(network.SewerConnections.Any(p => p.Source.Equals(sourceManhole) && p.Target.Equals(targetManhole)));
+            Assert.IsTrue(network.SewerConnections.Any(p =>
+                p.Source.Equals(sourceManhole) && p.Target.Equals(targetManhole)));
         }
 
         [Test]
@@ -888,7 +942,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             gwswImporter.ImportItem(connectionsPath, model);
 
-            Assert.AreEqual((int) structuresPh.Count, (int) network.Structures.Count(s => !(s is CompositeBranchStructure)));
+            Assert.AreEqual((int) structuresPh.Count,
+                (int) network.Structures.Count(s => !(s is CompositeBranchStructure)));
             foreach (var structure in structuresPh)
             {
                 var replacedStructure = network.Structures.FirstOrDefault(s => s.Name.Equals(structure.Name));
@@ -913,7 +968,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             //Check placeholders have been created.
             Assert.IsTrue(network.Manholes.Any());
 
-            var outletCompartments = network.Manholes.SelectMany(mh => mh.Compartments.Where(cmp => cmp is OutletCompartment)).ToList();
+            var outletCompartments = network.Manholes
+                .SelectMany(mh => mh.Compartments.Where(cmp => cmp is OutletCompartment)).ToList();
             Assert.IsTrue(outletCompartments.Any());
 
             // Now Load connections.
@@ -936,7 +992,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        public void WhenImportingSewerProfilesToNetworkAndThenImportingSewerConnectionsToNetwork_ThenSewerConnectionsHaveSewerProfiles()
+        public void
+            WhenImportingSewerProfilesToNetworkAndThenImportingSewerConnectionsToNetwork_ThenSewerConnectionsHaveSewerProfiles()
         {
             //Create network
             var model = new WaterFlowFMModel();
@@ -955,7 +1012,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             // Now Load connections.
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             gwswImporter.ImportItem(connectionsPath, model);
-            
+
 
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
@@ -966,12 +1023,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             pipes.ForEach(p =>
             {
                 var pipeCsDefinition = p.Profile;
-                var sharedCsDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(csd => csd.Name == pipeCsDefinition.Name);
+                var sharedCsDefinition =
+                    network.SharedCrossSectionDefinitions.FirstOrDefault(csd => csd.Name == pipeCsDefinition.Name);
                 Assert.NotNull(sharedCsDefinition);
                 Assert.That((object) pipeCsDefinition.Width, Is.EqualTo(sharedCsDefinition.Width));
 
                 var pipeShape = pipeCsDefinition.Shape;
-                var sharedCsShape = ((CrossSectionDefinitionStandard)sharedCsDefinition).Shape;
+                var sharedCsShape = ((CrossSectionDefinitionStandard) sharedCsDefinition).Shape;
                 Assert.That((object) pipeShape.Type, Is.EqualTo(sharedCsShape.Type));
 
                 var pipeWidthHeightShape = pipeShape as CrossSectionStandardShapeWidthHeightBase;
@@ -984,11 +1042,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        public void WhenImportingSewerConnectionsToNetworkAndThenImportingSewerProfilesToNetwork_ThenSewerConnectionsHaveTheCorrectSewerProfiles()
+        public void
+            WhenImportingSewerConnectionsToNetworkAndThenImportingSewerProfilesToNetwork_ThenSewerConnectionsHaveTheCorrectSewerProfiles()
         {
             const string csdName = "PRO2";
             const string csdNameForAddedProfile = "PRO6";
-            
+
             var model = new WaterFlowFMModel();
             var network = model.Network;
 
@@ -996,7 +1055,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var gwswImporter = new GwswFileImporter {CsvDelimeter = ';'};
             var connectionsFilePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             gwswImporter.ImportItem(connectionsFilePath, model);
-            
+
             // Check the sewer profiles in the network
             var sewerProfileShapeBefore = network.Pipes.FirstOrDefault(p => p.CrossSectionDefinitionName == csdName);
             Assert.IsNotNull(sewerProfileShapeBefore);
@@ -1010,7 +1069,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             // Check the sewer profiles in the network
-            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase)network.Pipes.Select(p => p.Profile).FirstOrDefault(d => d.Name == csdName)?.Shape;
+            var sewerProfileShapeAfter = (CrossSectionStandardShapeWidthHeightBase) network.Pipes.Select(p => p.Profile)
+                .FirstOrDefault(d => d.Name == csdName)?.Shape;
             Assert.IsNotNull(sewerProfileShapeAfter);
         }
 
@@ -1025,23 +1085,27 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             //Load structures.
             var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
             gwswImporter.ImportItem(structuresPath, model);
-            
+
             //Check placeholders have been created.
             Assert.IsTrue(network.Branches.Any());
 
-            var orificeStructures = network.SewerConnections.SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).ToList();
+            var orificeStructures = network.SewerConnections
+                .SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).ToList();
             Assert.IsTrue(orificeStructures.Any());
 
             // Now Load connections.
             var compartmentsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             gwswImporter.ImportItem(compartmentsPath, model);
-            
+
             foreach (var orifice in orificeStructures)
             {
-                var extendedOrifice = network.SewerConnections.SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>()).FirstOrDefault(o => o.Name.Equals(orifice.Name));
+                var extendedOrifice = network.SewerConnections
+                    .SelectMany(sc => sc.GetStructuresFromBranchFeatures<Orifice>())
+                    .FirstOrDefault(o => o.Name.Equals(orifice.Name));
                 Assert.IsNotNull(extendedOrifice);
 
-                Assert.AreEqual((object) orifice.CrestLevel, extendedOrifice.CrestLevel, "the attributes from the element do not match");
+                Assert.AreEqual((object) orifice.CrestLevel, extendedOrifice.CrestLevel,
+                    "the attributes from the element do not match");
             }
 
         }
@@ -1055,7 +1119,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             /*We know these two nodes are referred in the test data*/
             var replacedConnection = "lei1";
             var length = 1000;
-            var sewerConnection = new SewerConnection() { Name = replacedConnection, Length = length };
+            var sewerConnection = new SewerConnection() {Name = replacedConnection, Length = length};
             network.Branches.Add(sewerConnection);
 
             Assert.AreEqual((int) 1, (int) network.Branches.Count(n => n.Name.Equals(replacedConnection)));
@@ -1068,11 +1132,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             gwswImporter.ImportItem(filePath, model);
 
             Assert.AreEqual((int) 1, (int) network.SewerConnections.Count(n => n.Name.Equals(replacedConnection)));
-            Assert.AreNotEqual((double) length, (double) network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).Length);
+            Assert.AreNotEqual((double) length,
+                (double) network.SewerConnections.First(n => n.Name.Equals(replacedConnection)).Length);
         }
 
         [Test]
-        public void WhenImportingCompartmentsFromGwswFilesWithTargetHydroNetwork_ThenNetworkIsCorrectlyFilledWithManholes()
+        public void
+            WhenImportingCompartmentsFromGwswFilesWithTargetHydroNetwork_ThenNetworkIsCorrectlyFilledWithManholes()
         {
             var expectedManholeCount = 76;
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
@@ -1086,18 +1152,20 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        public void Given_EmptyFlowFmModel_When_ImportingGwswDirectoryForTheFirstTime_Then_GwswAttributesDefinitionIsFilled()
+        public void
+            Given_EmptyFlowFmModel_When_ImportingGwswDirectoryForTheFirstTime_Then_GwswAttributesDefinitionIsFilled()
         {
             var originalDirectoryPath = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
             var testDirectoryPath = FileUtils.CreateTempDirectory();
             FileUtils.CopyDirectory(originalDirectoryPath, testDirectoryPath);
-            
+
             //Within the Deltares folder the previous chosen File path is saved, by deleting this folder, the Gwsw import dialog starts without a Gwsw File path.
-            var deltaresDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Deltares");
+            var deltaresDirectory =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Deltares");
             FileUtils.DeleteIfExists(deltaresDirectory);
-            
+
             var gwswFileImporter = new GwswFileImporter();
-            var viewModel = new GwswImportDialogViewModel { Importer = gwswFileImporter };
+            var viewModel = new GwswImportDialogViewModel {Importer = gwswFileImporter};
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
@@ -1187,7 +1255,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        public void GivenRrModelOrFmmodel_WhenImportingUsingGwswFileImporter_ThenNullIsReturned()
+        public void GivenRrModelOrFmModel_WhenImportingUsingGwswFileImporter_ThenNullIsReturned()
         {
             var gwswImporter = new GwswFileImporter();
             var fmModel = new WaterFlowFMModel();
@@ -1199,7 +1267,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             model = gwswImporter.ImportItem(null, fmModel);
             Assert.IsNull(model);
         }
-
 
         [Test]
         public void GivenFmModel_WhenImportingNodesFromGwsw_ThenCorrectNumberOfManholesAreAddedToFmModelNetwork()
@@ -1222,6 +1289,433 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 gwswImporter.ImportItem(null, fmModel);
 
                 Assert.That(fmModel.Network.Nodes.Count, Is.EqualTo(76));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenFmModel_WhenImportingNodesFromGwsw_ThenCorrectNumberOfCompartmentsAreAddedToFmModelNetwork()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv")
+                    }
+                };
+
+                var fmModel = new WaterFlowFMModel();
+                gwswImporter.ImportItem(null, fmModel);
+
+                Assert.That(fmModel.Network.Manholes.SelectMany(m => m.Compartments).Count(), Is.EqualTo(90));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void
+            GivenFmModel_WhenImportingBranchesFromGwsw_ThenCorrectNumberOfSewerConnectionsAreAddedToFmModelNetwork()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv")
+                    }
+                };
+
+                var fmModel = new WaterFlowFMModel();
+                gwswImporter.ImportItem(null, fmModel);
+
+                Assert.That(fmModel.Network.SewerConnections.Count(), Is.EqualTo(97));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenFmModel_WhenImportingNodesFromGwsw_ThenCompartmentInNetworkHasCorrectValues()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv")
+                    }
+                };
+
+                var fmModel = new WaterFlowFMModel();
+                gwswImporter.ImportItem(null, fmModel);
+
+                ICompartment cmp76 = fmModel.Network.Manholes.SelectMany(m => m.Compartments)
+                    .FirstOrDefault(c => c.Name.Equals("cmp76", StringComparison.InvariantCultureIgnoreCase));
+                Assert.IsNotNull(cmp76);
+                Assert.IsNotNull(cmp76.Geometry);
+                Assert.That(cmp76.FloodableArea, Is.EqualTo(100));
+                Assert.That(cmp76.ManholeLength, Is.EqualTo(2));
+                Assert.That(cmp76.ManholeWidth, Is.EqualTo(2));
+                Assert.That(cmp76.Name, Is.EqualTo("cmp76"));
+                Assert.That(cmp76.ParentManholeName, Is.EqualTo("03001"));
+                IManhole parentManhole = fmModel.Network.GetManhole(cmp76);
+                Assert.That(cmp76.ParentManhole, Is.EqualTo(parentManhole));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenNoTarget_WhenImportingNwrwDefinitionsFromGwsw_ThenCorrectNumberOfDefinitionsAreAddedToRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Nwrw.csv")
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                Assert.That(rrModel.NwrwDefinitions.Count(), Is.EqualTo(12));
+                Assert.That(rrModel.NwrwDefinitions.Distinct().Count(), Is.EqualTo(12));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenTargetIsNull_WhenImportingCsv_ThenIntegratedModelIsReturned()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv")
+                    }
+                };
+
+                var returnedModel = gwswImporter.ImportItem(null, null);
+
+                Assert.That(returnedModel is HydroModel);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenTargetIsNull_WhenImportingNwrw_ThenNwrwDefinitionInRrNetworkHasCorrectValues()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Nwrw.csv")
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                NwrwDefinition nwrwDefinition = rrModel.NwrwDefinitions.FirstOrDefault(nd =>
+                    nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedFlatStretched));
+                Assert.IsNotNull(nwrwDefinition);
+                Assert.That(nwrwDefinition.Name, Is.EqualTo("OVH_VLU"));
+                Assert.That(nwrwDefinition.SurfaceType, Is.EqualTo(NwrwSurfaceType.OpenPavedFlatStretched));
+                Assert.That(nwrwDefinition.SurfaceStorage, Is.EqualTo(1.0));
+                Assert.That(nwrwDefinition.InfiltrationCapacityMax, Is.EqualTo(2.0));
+                Assert.That(nwrwDefinition.InfiltrationCapacityMin, Is.EqualTo(0.5));
+                Assert.That(nwrwDefinition.InfiltrationCapacityReduction, Is.EqualTo(3.0));
+                Assert.That(nwrwDefinition.InfiltrationCapacityRecovery, Is.EqualTo(0.1));
+                Assert.That(nwrwDefinition.RunoffDelay, Is.EqualTo(0.1));
+                Assert.That(nwrwDefinition.RunoffLength, Is.EqualTo(0.0));
+                Assert.That(nwrwDefinition.RunoffSlope, Is.EqualTo(0.0));
+                Assert.That(nwrwDefinition.TerrainRoughness, Is.EqualTo(0.0));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void
+            GivenTargetIsNull_WhenImportingDryWeatherFlowDefinitions_ThenCorrectNumberOfDefinitionsAreAddedToRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Verloop.csv")
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(5));
+                Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Distinct().Count(), Is.EqualTo(5));
+                Assert.False(rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd =>
+                    dwfd.DistributionType.Equals(DwfDistributionType.Variable))); // not supported
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenNoTarget_WhenImportingDryWeatherFlowDefintions_ThenDefinitionHasCorrectValuesInRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Verloop.csv")
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                NwrwDryWeatherFlowDefinition nwrwDryWeatherFlowDefinition = rrModel.NwrwDryWeatherFlowDefinitions
+                    .FirstOrDefault(dwfd => dwfd.Name.Equals("Inwoner", StringComparison.InvariantCultureIgnoreCase));
+                Assert.IsNotNull(nwrwDryWeatherFlowDefinition);
+
+                double[] expectedHourlyPercentages =
+                {
+                    1.5, 1.5, 1.5, 1.5, 1.5, 3.0, 4.0, 5.0, 6.0, 6.5, 7.5, 8.5, 7.5, 6.5, 6.0, 5.0, 5.0, 5.0, 4.0, 3.5,
+                    3.0, 2.5, 2.0, 2.0
+                };
+                Assert.That(nwrwDryWeatherFlowDefinition.Name, Is.EqualTo("Inwoner"));
+                Assert.That(nwrwDryWeatherFlowDefinition.DryWeatherFlowId, Is.EqualTo("Inwoner"));
+                Assert.That(nwrwDryWeatherFlowDefinition.DistributionType, Is.EqualTo(DwfDistributionType.Daily));
+                Assert.That(nwrwDryWeatherFlowDefinition.DayNumber, Is.EqualTo(0.0));
+                Assert.That(nwrwDryWeatherFlowDefinition.DailyVolumeVariable, Is.EqualTo(0.12));
+                Assert.That(nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume,
+                    Is.EqualTo(expectedHourlyPercentages));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenNoTarget_WhenImportingGwswData_ThenCorrectNumberOfNwrwCatchmentsAreAddedToRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv"),
+                        Path.Combine(testDir, "Verloop.csv"),
+                        Path.Combine(testDir, "Nwrw.csv"),
+                        Path.Combine(testDir, "Debiet.csv"),
+                        Path.Combine(testDir, "Oppervlak.csv"),
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Count(), Is.EqualTo(73));
+                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Distinct().Count(), Is.EqualTo(73));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+
+        }
+
+        [Test]
+        public void
+            GivenNoTarget_WhenImportingGwswData_ThenNwrwCatchmentWithSurfaceAndDwfDataHasCorrectValuesInRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv"),
+                        Path.Combine(testDir, "Verloop.csv"),
+                        Path.Combine(testDir, "Nwrw.csv"),
+                        Path.Combine(testDir, "Debiet.csv"),
+                        Path.Combine(testDir, "Oppervlak.csv"),
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                NwrwData lei17 = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
+                    md.Name.Equals("lei17", StringComparison.InvariantCultureIgnoreCase));
+                Assert.IsNotNull(lei17);
+                Assert.That(lei17.DryWeatherFlows.Count(), Is.EqualTo(1));
+                Assert.That(lei17.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
+                    Is.EqualTo("Bedrijf"));
+                Assert.That(lei17.LateralSurface, Is.EqualTo(0.0));
+                Assert.That(lei17.MeteoStationId, Is.EqualTo(String.Empty));
+                Assert.That(lei17.NodeOrBranchId, Is.EqualTo("lei17"));
+                Assert.That(lei17.NumberOfSpecialAreas, Is.EqualTo(0));
+                Assert.That(lei17.SpecialAreas.Count(), Is.EqualTo(0));
+                Assert.That(lei17.SurfaceLevelDict.Count(), Is.EqualTo(4));
+                Assert.That(lei17.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat], Is.EqualTo(500));
+                Assert.That(lei17.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlat], Is.EqualTo(250));
+                Assert.That(lei17.SurfaceLevelDict[NwrwSurfaceType.RoofWithSlope], Is.EqualTo(50));
+                Assert.That(lei17.SurfaceLevelDict[NwrwSurfaceType.RoofFlat], Is.EqualTo(150));
+                Assert.That(lei17.Name, Is.EqualTo("lei17"));
+                Assert.That(lei17.CalculationArea, Is.EqualTo(950.0).Within(0.00005));
+                Assert.IsNotNull(lei17.Catchment);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void
+            GivenNoTarget_WhenImportingGwswData_ThenNwrwCatchmentWithSurfaceAndDefaultDwfDataHasCorrectValuesInRrModel()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswImporter = new GwswFileImporter
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv"),
+                        Path.Combine(testDir, "Verloop.csv"),
+                        Path.Combine(testDir, "Nwrw.csv"),
+                        Path.Combine(testDir, "Debiet.csv"),
+                        Path.Combine(testDir, "Oppervlak.csv"),
+                    }
+                };
+
+                HydroModel returnedModel = gwswImporter.ImportItem(null, null) as HydroModel;
+
+                RainfallRunoffModel rrModel =
+                    returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.IsNotNull(rrModel);
+
+                NwrwData lei43 = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
+                    md.Name.Equals("lei43", StringComparison.InvariantCultureIgnoreCase));
+                Assert.IsNotNull(lei43);
+                Assert.That(lei43.DryWeatherFlows.Count(), Is.EqualTo(1));
+                Assert.That(lei43.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
+                    Is.EqualTo("Default_DWA"));
+                Assert.That(lei43.LateralSurface, Is.EqualTo(0.0));
+                Assert.That(lei43.MeteoStationId, Is.EqualTo(String.Empty));
+                Assert.That(lei43.NodeOrBranchId, Is.EqualTo("lei43"));
+                Assert.That(lei43.NumberOfSpecialAreas, Is.EqualTo(0));
+                Assert.That(lei43.SpecialAreas.Count(), Is.EqualTo(0));
+                Assert.That(lei43.SurfaceLevelDict.Count(), Is.EqualTo(3));
+                Assert.That(lei43.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat], Is.EqualTo(400));
+                Assert.That(lei43.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlatStretched], Is.EqualTo(800));
+                Assert.That(lei43.SurfaceLevelDict[NwrwSurfaceType.UnpavedWithSlope], Is.EqualTo(27));
+                Assert.That(lei43.Name, Is.EqualTo("lei43"));
+                Assert.That(lei43.CalculationArea, Is.EqualTo(1227.0).Within(0.00005));
+                Assert.IsNotNull(lei43.Catchment);
             }
             finally
             {
