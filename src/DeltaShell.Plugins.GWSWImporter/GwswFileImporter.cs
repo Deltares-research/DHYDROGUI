@@ -26,6 +26,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -151,8 +152,17 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     IBranch branch = network.Branches.FirstOrDefault(b => b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
                     if (branch == null)
                     {
-                        INode node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
-                        if (node != null) branch = node.IncomingBranches.FirstOrDefault();
+                        branch = network.Branches
+                            .OfType<IPipe>()
+                            .FirstOrDefault(p => p.TargetCompartmentName.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase) ||
+                                                 p.SourceCompartmentName.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
+                        //INode manhole = network.Nodes.OfType<IManhole>()
+                        //    .SelectMany(m => m.Compartments)
+                        //    .FirstOrDefault(c => c.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase))?
+                        //    .ParentManhole;
+
+                        //INode node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
+                        //if (manhole != null){ branch = manhole.IncomingBranches.FirstOrDefault();}
                     }
 
                     if (branch != null)
@@ -204,9 +214,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
 
-            var nodesDictFromBranches = network.Branches.Select(b => new {b.Name, b.Target.Geometry});
-            var nodesDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
-            var networkFeatureNameAndGeometries = nodesDict.Concat(nodesDictFromBranches).ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
+            var branchesGeometryDict = network.Branches.Select(b => new {b.Name, b.Target.Geometry});
+            var compartmentsGeometryDict = network.Nodes.OfType<IManhole>().SelectMany(m => m.Compartments).Select(c => new {c.Name, c.ParentManhole?.Geometry});
+            var nodesGeometryDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
+            var networkFeatureNameAndGeometries = nodesGeometryDict.Concat(branchesGeometryDict)
+                .Concat(compartmentsGeometryDict)
+                .ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
 
             var listOfErrors = new List<string>();
 

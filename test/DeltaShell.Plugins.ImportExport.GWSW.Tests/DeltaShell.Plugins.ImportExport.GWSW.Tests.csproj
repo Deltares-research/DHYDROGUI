@@ -105,6 +105,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48300-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap.Api, Version=1.5.0.48233, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48233-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -142,6 +147,11 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
+      <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
@@ -150,10 +160,12 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
       <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
       <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>

@@ -18,7 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public string DryWeatherFlowId { get; set; } // VER_IDE
         public DwfDistributionType DistributionType { get; set; } // VER_TYPE
         public int DayNumber { get; set; } // VER_DAG
-        public double DailyVolume { get; set; } // VER_VOL
+        public double DailyVolumeVariable { get; set; } // VER_VOL
+        public double DailyVolumeConstant { get; set; } // VER_VOL
         public double[] HourlyPercentageDailyVolume { get; set; } = new double[24]; // U00_DAG -- U23_DAG
         public string Remark { get; set; } // ALG_TOE
 
@@ -52,14 +53,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
         }
 
-        public static NwrwDryWeatherFlowDefinition CreateDefaultDWADefinition()
+        public static NwrwDryWeatherFlowDefinition CreateDefaultDwaDefinition()
         {
             return new NwrwDryWeatherFlowDefinition
             {
                 Name = "Default_DWA",
                 DryWeatherFlowId = "Default_DWA",
                 DistributionType = DwfDistributionType.Constant,
-                DailyVolume = 12
+                DailyVolumeConstant = 12,
+                DailyVolumeVariable = 120,
+                HourlyPercentageDailyVolume = new []{1.5, 1.5, 1.5, 1.5, 1.5, 3.0, 4.0, 5.0, 6.0, 6.5, 7.5, 8.5, 7.5, 6.5, 6.0, 5.0, 5.0, 5.0, 4.0, 3.5, 3.0, 2.5, 2.0, 2.0 }
             };
         }
     }

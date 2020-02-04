@@ -13,7 +13,8 @@
     <property name="DryWeatherFlowId"/>
     <property name="DistributionType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DwfDistributionType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
     <property name="DayNumber"/>
-    <property name="DailyVolume"/>
+    <property name="DailyVolumeConstant"/>
+    <property name="DailyVolumeVariable"/>
     <property name="HourlyPercentageDailyVolume"/>
     <property name="Remark"/>
 

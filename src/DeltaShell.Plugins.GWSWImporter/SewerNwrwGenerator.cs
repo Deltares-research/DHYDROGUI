@@ -125,7 +125,11 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                if (runoffSlope.TryGetValueAsDouble(out auxDouble))
                    nwrwDefinition.RunoffSlope = auxDouble;
 
-               nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
+               var terrainRoughness = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TerrainRoughness);
+               if (terrainRoughness.TryGetValueAsDouble(out auxDouble))
+                   nwrwDefinition.TerrainRoughness = auxDouble;
+
+                nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
                    .ValueAsString;
            }
            catch (Exception e)
@@ -164,7 +168,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
                var dailyVolume = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DailyVolume);
                if (dailyVolume.TryGetValueAsDouble(out auxDouble))
-                   nwrwDryWeatherFlowDefinition.DailyVolume = auxDouble;
+               {
+                   nwrwDryWeatherFlowDefinition.DailyVolumeVariable = auxDouble;
+                   nwrwDryWeatherFlowDefinition.DailyVolumeConstant = auxDouble;
+               }
+                   
+               
 
                var hourlyPercentage00 =
                    gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.HourlyPercentage00);

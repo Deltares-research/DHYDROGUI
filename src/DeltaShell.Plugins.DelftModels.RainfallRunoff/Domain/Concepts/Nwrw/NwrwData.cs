@@ -15,6 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     public partial class NwrwData : CatchmentModelData
     {
         public const string DEFAULT_DWA_ID = "Default_DWA";
+        
         //nhib
         public NwrwData(): base(null) { }
 
