@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 
@@ -9,9 +10,10 @@ namespace DelftTools.Hydro.SewerFeatures
 
         string CrossSectionDefinitionName { get; set; }
 
-        ICrossSectionDefinition CrossSectionDefinition { get; set; }
+        ICrossSection CrossSection { get; set; }
+        ICrossSectionDefinition CrossSectionDefinition { get; }
         CrossSectionDefinitionStandard Profile { get; }
-
+        Action<object, EventArgs> EditSharedDefinitionClicked { get; set; }
         SewerProfileMapping.SewerProfileMaterial Material { get; set; }
     }
 }

@@ -68,10 +68,10 @@ namespace DelftTools.Hydro.Tests
         {
             var pipe = new Pipe();
             var csDefinitionName = "myCrossSectionDefinition";
-            pipe.CrossSectionDefinition = new CrossSectionDefinitionStandard
+            pipe.CrossSection = new CrossSection(new CrossSectionDefinitionStandard
             {
                 Name = csDefinitionName
-            };
+            });
 
             Assert.That(pipe.CrossSectionDefinitionName, Is.EqualTo(csDefinitionName));
         }

@@ -139,18 +139,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     branchId));
             if (branch is IPipe pipe)
             {
-                if (isFirstOfSharedCrossSectionDefinitions)
-                {
-                    pipe.CrossSectionDefinition = crossSectionDefinition as CrossSectionDefinitionProxy ?? new CrossSectionDefinitionProxy(crossSectionDefinition);
-                    if (!network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
-                    {
-                        network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
-                    }
-                }
-                else
-                {
-                    pipe.CrossSectionDefinition = crossSectionDefinition;
-                }
+                pipe.CrossSection = new CrossSection(crossSectionDefinition);
                 if (Math.Abs(chainage) < 0.001) // chainage = 0, so set source
                     pipe.LevelSource = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
                 else

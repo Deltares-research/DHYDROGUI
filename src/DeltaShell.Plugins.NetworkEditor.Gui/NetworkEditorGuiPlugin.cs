@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     AfterCreate = (v, o) =>
                         {
                             v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-                            v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
+                            v.EditClickedAction = (s, e) => Gui.CommandHandler.OpenView((e as SelectedItemChangedEventArgs)?.Item);
                             v.GetConveyanceCalculators = null;
                         }
                 };
@@ -421,6 +421,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                     return sewerRoughnessSection != null;
+                },
+                GetViewData = pipe =>
+                {
+                    pipe.EditSharedDefinitionClicked = (s, e) => Gui.CommandHandler.OpenView((e as SelectedItemChangedEventArgs)?.Item);
+                    return pipe;
                 },
                 AfterCreate = (view, pipe) =>
                 {

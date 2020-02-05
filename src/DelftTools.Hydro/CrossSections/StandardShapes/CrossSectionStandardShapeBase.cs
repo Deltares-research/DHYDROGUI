@@ -54,10 +54,8 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
             pipesWithSameCrossSectionDefinitionId.ForEach(p =>
             {
-                p.CrossSectionDefinition = crossSectionDefinitionToAdd;
+                p.CrossSection = new CrossSection(crossSectionDefinitionToAdd);
                 p.Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(MaterialName);
-
-
             });
             
             network.SharedCrossSectionDefinitions.RemoveAllWhere(d =>string.Equals(d.Name, Name, StringComparison.InvariantCultureIgnoreCase));

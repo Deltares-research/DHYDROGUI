@@ -19,6 +19,7 @@ namespace DelftTools.Hydro.Structures
         {
             Name = DefaultProfileDefinitionName
         };
+        private static readonly ICrossSection DefaultSewerCrossSection = new CrossSection(DefaultSewerProfile);
 
         private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
         {
@@ -113,7 +114,7 @@ namespace DelftTools.Hydro.Structures
             pipe.LevelTarget = -2.0;
             pipe.WaterType = SewerConnectionWaterType.Combined;
             pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
-            pipe.CrossSectionDefinition = DefaultSewerProfile;
+            pipe.CrossSection = DefaultSewerCrossSection;
         }
 
         private static INode GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)

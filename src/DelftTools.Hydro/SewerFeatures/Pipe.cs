@@ -19,7 +19,8 @@ namespace DelftTools.Hydro.SewerFeatures
     public class Pipe : SewerConnection, IPipe
     {
         private static ILog Log = LogManager.GetLogger(typeof(Pipe));
-        private ICrossSectionDefinition crossSectionDefinition;
+        
+        private ICrossSection crossSection;
 
         public string PipeId { get; set; }
 
@@ -39,25 +40,46 @@ namespace DelftTools.Hydro.SewerFeatures
         [EditAction]
         private void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
         {
-            if (hydroNetwork == null) return;
-
-            var sewerCrossSectionSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            if (sewerCrossSectionSectionType == null && CrossSectionDefinition != null)
+            var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            if (sewerCrossSectionSectionType != null)
             {
-                CrossSectionDefinition.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
+                if (CrossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
+                    CrossSectionDefinition?.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
+            }
+        }
+
+        public ICrossSection CrossSection
+        {
+            get { return crossSection; }
+            set
+            {
+                crossSection = value;
+                if (crossSection?.Definition != null)
+                    CrossSectionDefinitionName = crossSection?.Definition?.Name;
+
+                if (crossSection != null)
+                {
+                    crossSection.Branch = this;
+                    crossSection.Chainage = Length / 2;
+                    if (HydroNetwork != null)
+                    {
+                        var sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?.FirstOrDefault(scsd => scsd.Name.Equals(crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
+                        if (sharedCrossSectionDefinition != null)
+                        {
+                            crossSection?.UseSharedDefinition(sharedCrossSectionDefinition);
+                        }
+                        else
+                        {
+                            crossSection?.ShareDefinitionAndChangeToProxy();
+                        }
+                    }
+                }
             }
         }
 
         public ICrossSectionDefinition CrossSectionDefinition
         {
-            get { return crossSectionDefinition; }
-            set
-            {
-                crossSectionDefinition = value;
-
-                if(crossSectionDefinition != null)
-                    CrossSectionDefinitionName = crossSectionDefinition.Name;
-            }
+            get { return CrossSection?.Definition; }
         }
 
         public CrossSectionDefinitionStandard Profile
@@ -72,6 +94,8 @@ namespace DelftTools.Hydro.SewerFeatures
                 return CrossSectionDefinition as CrossSectionDefinitionStandard;
             }
         }
+
+        public Action<object, EventArgs> EditSharedDefinitionClicked { get; set; }
 
         public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
 
@@ -108,12 +132,21 @@ namespace DelftTools.Hydro.SewerFeatures
         [EditAction]
         protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
-            if (CrossSectionDefinitionName == null) CrossSectionDefinition = (CrossSectionDefinitionStandard)CrossSectionDefinitionStandard.CreateDefault();
+            if (CrossSectionDefinitionName == null)
+            {
+                CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length/2);
+            }
             else
             {
-                CrossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
-                if (CrossSectionDefinition != null)
-                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)CrossSectionDefinition).Shape.MaterialName);
+                var crossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
+                if (crossSectionDefinition != null)
+                {
+                    CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+                    crossSection.UseSharedDefinition(crossSectionDefinition);
+                    CrossSectionDefinitionName = crossSection.Definition.Name;
+                    
+                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)crossSectionDefinition).Shape.MaterialName);
+                }
             }
         }
         [EditAction]

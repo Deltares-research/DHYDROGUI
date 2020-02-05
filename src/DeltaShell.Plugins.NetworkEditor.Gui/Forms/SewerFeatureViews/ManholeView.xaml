@@ -8,6 +8,7 @@
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
              xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
+             xmlns:crossSectionView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView"
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="1000" >
     <UserControl.DataContext>
@@ -169,7 +170,11 @@
                         <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}"/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
-                        <Rectangle Fill="Blue" Width="32" Height="32"/>
+                        <WindowsFormsHost Grid.Column="2" Background="White" local:WindowsFormsHostProfileView.Pipe="{Binding Content, ElementName=ContentControl}">
+                            <WindowsFormsHost.Child>
+                                <crossSectionView:ProfileChartView x:Name="ProfileChartView"/>
+                            </WindowsFormsHost.Child>
+                        </WindowsFormsHost>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>

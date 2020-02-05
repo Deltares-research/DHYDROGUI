@@ -109,9 +109,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 
             var connections = new List<ISewerConnection>
             {
-                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, LevelSource = 0, CrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1}) },
-                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, LevelTarget = 0, CrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.6 }) },
-                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, LevelSource = -1.5, CrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1}) },
+                new Pipe {Name = "leiding 1", SourceCompartment = compartment1, LevelSource = 0, CrossSection = new CrossSection(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1}) )},
+                new Pipe {Name = "leiding 2", TargetCompartment = compartment1, LevelTarget = 0, CrossSection = new CrossSection(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.6 }) )},
+                new Pipe {Name = "leiding 3", SourceCompartment = compartment2, LevelSource = -1.5, CrossSection = new CrossSection(new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle {Width = 1, Height = 1})) },
                 orificeConnection,
                 pumpConnection,
                 pumpConnection2,

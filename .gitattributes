@@ -2721,6 +2721,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/ShapeEditView.x
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/ShapeType.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/SimpleAdorner.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/WeirShape.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/WindowsFormsHostProfileView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SimpleProgress.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SimpleProgress.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SimpleProgress.resx -text

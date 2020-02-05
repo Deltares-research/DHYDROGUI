@@ -211,9 +211,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void SetPipeProperties(Pipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
+        private void SetPipeProperties(IPipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
         {
-            pipe.CrossSectionDefinition = definition;
+            pipe.CrossSection = new CrossSection(definition);
             pipe.LevelSource = sobekCrossSectionMapping.RefLevel2;
             pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
         }

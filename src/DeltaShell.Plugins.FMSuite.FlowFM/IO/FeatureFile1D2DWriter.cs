@@ -107,8 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
 
-                var pipeCrossSections = HydroNetworkHelper.GeneratePipeCrossSections(network);
-                var crossSections = network.CrossSections.Concat(pipeCrossSections);
+                var crossSections = network.CrossSections.Concat(network.Pipes.Select(p=>p.CrossSection));
                 LocationFileWriter.WriteFileCrossSectionLocations(crossSectionLocationFilePath, crossSections);
             }
             else

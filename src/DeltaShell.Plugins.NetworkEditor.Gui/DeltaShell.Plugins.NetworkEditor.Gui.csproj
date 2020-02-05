@@ -281,6 +281,7 @@
     <Compile Include="Forms\SewerFeatureViews\ShapeEditView.xaml.cs">
       <DependentUpon>ShapeEditView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SewerFeatureViews\WindowsFormsHostProfileView.cs" />
     <Compile Include="Helpers\CoordinateScalingHelper.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpf.xaml.cs">
       <DependentUpon>CulvertViewWpf.xaml</DependentUpon>

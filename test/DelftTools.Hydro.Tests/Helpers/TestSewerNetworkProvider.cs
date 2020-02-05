@@ -114,7 +114,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                 LevelSource = 0.0,
                 LevelTarget = 0.0,
                 WaterType = SewerConnectionWaterType.DryWater,
-                CrossSectionDefinition = crossSectionDefinition,
+                CrossSection =  new CrossSection(crossSectionDefinition),
                 CrossSectionDefinitionName = crossSectionDefinitionName
             };
 

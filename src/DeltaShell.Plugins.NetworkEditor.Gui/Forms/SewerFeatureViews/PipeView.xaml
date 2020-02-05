@@ -8,6 +8,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
              xmlns:sewer="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:crossSectionView="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1000">
     <UserControl.DataContext>
@@ -49,7 +50,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!-- General info -->
@@ -154,10 +155,26 @@
 
 
             <!-- Cross section -->
-            <Expander Grid.Column="1" Grid.Row="0" IsExpanded="True">
+            <Expander Grid.Column="1" Grid.Row="0"  Grid.RowSpan="3" IsExpanded="True">
                 <Expander.Header>
                     <TextBlock Text="Cross section" FontWeight="Bold"/>
                 </Expander.Header>
+                <!--<WindowsFormsHost Grid.Column="2" Background="White" local:WindowsFormsHostProfileView.Pipe="{Binding Pipe}">
+                    <WindowsFormsHost.Child>
+                        <crossSectionView:ProfileChartView x:Name="ProfileChartView"/>
+                    </WindowsFormsHost.Child>
+                </WindowsFormsHost>-->
+
+                <!--<WindowsFormsHost local:WindowsFormsHostCrossSectionDefinitionView.Pipe="{Binding Pipe}">
+                    <WindowsFormsHost.Child>
+                        <crossSectionView:CrossSectionDefinitionView x:Name="CrossSectionDefinitionView"/>
+                    </WindowsFormsHost.Child>
+                </WindowsFormsHost>-->
+                <WindowsFormsHost local:WindowsFormsHostCrossSectionView.Pipe="{Binding Pipe}">
+                    <WindowsFormsHost.Child>
+                        <crossSectionView:CrossSectionView x:Name="CrossSectionView"/>
+                    </WindowsFormsHost.Child>
+                </WindowsFormsHost>
             </Expander>
         </Grid>
     </ScrollViewer>
