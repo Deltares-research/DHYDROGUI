@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
-using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
-using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -20,7 +16,6 @@ using SharpMap.Editors.FallOff;
 using SharpMap.Layers;
 using SharpMap.Styles;
 using SharpMap.UI.Forms;
-using Control = System.Windows.Controls.Control;
 using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
