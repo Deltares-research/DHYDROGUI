@@ -57,6 +57,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48300-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Deltares.UGrid.1.0.65869\lib\net40\Deltares.UGrid.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48300-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
@@ -114,7 +117,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +280,7 @@
     <Compile Include="Grid\UGrid1D2DLinksApi.cs" />
     <Compile Include="Grid\UGridMesh2DApi.cs" />
     <Compile Include="Grid\UGridGlobalMetaData.cs" />
+    <Compile Include="Grid\DeltaresUGrid\UGridMeshAdapter.cs" />
     <Compile Include="Grid\UGridNetwork.cs" />
     <Compile Include="Grid\UGridNetworkDiscretisation.cs" />
     <Compile Include="Grid\UGridApi.cs" />
@@ -288,6 +295,7 @@
     <Compile Include="Grid\UGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\UGridMeshType.cs" />
     <Compile Include="Grid\UGridToNetworkAdapter.cs" />
+    <Compile Include="Grid\DeltaresUGrid\RemoteUGridApi.cs" />
     <Compile Include="Grid\UnmanagedMemoryRegister.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Grid\WorkAroundNetFile.cs" />
