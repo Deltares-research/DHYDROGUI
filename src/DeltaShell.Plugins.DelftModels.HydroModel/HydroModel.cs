@@ -618,7 +618,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
+                    if (dimrApi.Update(dimrApi.TimeStep.TotalSeconds) != 0)
+                    {
+                        throw new Exception("Couldn't update DIMR Api");
+                    }
                     CurrentTime = dimrApi.CurrentTime;
                     currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
                     OnProgressChanged();
@@ -716,7 +719,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 dimrApi.KernelDirs = kernelDirectories;
                 dimrApi.DimrRefDate = StartTime;
-                dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
+
+                if (dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml")) != 0)
+                {
+                    throw new Exception("Couldn't initialize DIMR Api");
+                }
+
                 CurrentTime = StartTime;
 
                 currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
