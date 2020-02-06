@@ -14,8 +14,7 @@ namespace DeltaShell.Dimr.Tests
 
             var dimrErrorCodeException = new DimrErrorCodeException(status, errorCode);
 
-            Assert.AreEqual(dimrErrorCodeException.Message,
-                            $"During {status.ToString().ToLower()} the model run something went wrong. Error code {errorCode} sent by the computational core.");
+            Assert.AreEqual($"During {status.ToString().ToLower()} the model run something went wrong. Error code {errorCode} sent by the computational core.", dimrErrorCodeException.Message);
         }
     }
 }
