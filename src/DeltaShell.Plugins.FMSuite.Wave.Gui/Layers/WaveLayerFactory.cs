@@ -212,7 +212,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 ReadOnly = true,
                 Selectable = false,
                 NameIsReadOnly = true,
-                FeatureEditor = new Feature2DEditor(model),
                 ShowInLegend = false,
                 Style = new VectorStyle
                 {
@@ -230,7 +229,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 ShowInTreeView = false,
                 DataSource = featureProvider,
                 NameIsReadOnly = true,
-                FeatureEditor = new Feature2DEditor(model),
                 ReadOnly = true,
                 ShowInLegend = false,
                 
