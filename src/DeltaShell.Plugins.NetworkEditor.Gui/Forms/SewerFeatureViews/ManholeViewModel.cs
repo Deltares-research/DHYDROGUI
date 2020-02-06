@@ -5,6 +5,7 @@ using System.Windows.Input;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using GeoAPI.Extensions.Feature;
@@ -132,8 +133,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             {
                 pointFeature.ParentPointFeature = manhole;
             }
-
             network.Branches.Add(connection);
+            NamingHelper.MakeNamesUnique(network.Structures);
             return connection.GetStructuresFromBranchFeatures().FirstOrDefault();
         }
 

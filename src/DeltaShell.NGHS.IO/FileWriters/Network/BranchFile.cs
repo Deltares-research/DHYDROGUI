@@ -50,8 +50,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 var iniCategory = new DelftIniCategory("Branch");
                 iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, branch.Name, string.Empty));
                 
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BranchType, GetBranchType(branch), 
-                    "2 = Pipe, 3 = SewerConnection"));
+                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BranchType, GetBranchType(branch),
+                    "Channel = 0, SewerConnection = 1, Pipe = 2"));
                 /*
                  var sewerConnection = branch as ISewerConnection;
                 var waterType = (int) (sewerConnection?.WaterType ?? SewerConnectionWaterType.None);
@@ -150,10 +150,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public class BranchProperties
         {
-            public string Name;
-            public BranchType BranchType;
-            public SewerConnectionWaterType WaterType;
-            public SewerProfileMapping.SewerProfileMaterial Material;
+            public string Name { get; set; }
+            public BranchType BranchType { get; set; }
+            public SewerConnectionWaterType WaterType { get; set; }
+            public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
         }
     }
 }

@@ -53,7 +53,6 @@ namespace DelftTools.Hydro.Structures
             var crossSectionDefinitionAlreadyPresentInNetwork = hydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name == DefaultProfileDefinitionName);
             if (!crossSectionDefinitionAlreadyPresentInNetwork)
             {
-                
                 hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerProfile);
             }
         }
@@ -162,7 +161,7 @@ namespace DelftTools.Hydro.Structures
             return newCompartment;
         }
 
-        public static ISewerConnection CreateConnectionWithStructure<T>(Manhole manhole)
+        public static ISewerConnection CreateConnectionWithStructure<T>(IManhole manhole)
         {
             if (!SewerConnectionStructureCreators.ContainsKey(typeof(T))) return null;
 
@@ -172,7 +171,7 @@ namespace DelftTools.Hydro.Structures
             return connectionWithStructure;
         }
 
-        public static ISewerConnection CreateNewInternalConnection(Manhole manhole)
+        public static ISewerConnection CreateNewInternalConnection(IManhole manhole)
         {
             var connection = new SewerConnection
             {

@@ -13,6 +13,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -297,20 +298,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ClearOutput();
                 }
             }
-            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection && !isLoading)
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection sewerConnection && !isLoading)
             {
-                var sewerConnection = removedOrAddedItem as SewerConnection;
-                if (sewerConnection?.Length > 0)
+                NamingHelper.MakeNamesUnique(Network.Branches);
+
+                switch (e.Action)
                 {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangedAction.Add:
-                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
-                                new NetworkLocation(sewerConnection, 0.0));
+                    case NotifyCollectionChangedAction.Add:
+                        AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                            new NetworkLocation(sewerConnection, 0.0));
+                        if (sewerConnection?.Length > 0)
+                        {
                             AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
                                 new NetworkLocation(sewerConnection, sewerConnection.Length));
-                            break;
-                    }
+                        }
+
+                        break;
                 }
             }
             else if (removedOrAddedItem is CrossSectionSectionType)

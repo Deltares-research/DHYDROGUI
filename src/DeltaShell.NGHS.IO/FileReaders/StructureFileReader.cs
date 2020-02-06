@@ -62,7 +62,22 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             foreach (var group in grouping)
             {
-                group.ForEach(s => HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, group.Key));
+                group.ForEach(s =>
+                {
+                    if (@group.Key is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection())
+                    {
+                        sewerConnection.AddStructureToBranch(s);
+                        foreach (var pointFeature in sewerConnection.BranchFeatures.OfType<IPointFeature>())
+                        {
+                            pointFeature.ParentPointFeature = sewerConnection.Source as IManhole;
+                        }
+                    }
+                    else
+                    {
+                        HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, @group.Key);
+                    }
+                    
+                });
             }
         }
 

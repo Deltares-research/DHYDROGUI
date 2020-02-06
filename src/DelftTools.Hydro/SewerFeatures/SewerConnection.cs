@@ -30,7 +30,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private string sourceCompartmentName;
         private string targetCompartmentName;
 
-        public SewerConnection() : this(string.Empty)
+        public SewerConnection() : this("SewerConnection")
         {
         }
 

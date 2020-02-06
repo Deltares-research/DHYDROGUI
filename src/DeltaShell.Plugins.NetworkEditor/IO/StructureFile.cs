@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                     yield return category;
             }
 
-            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count >= 1))
+            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1 || cs.Branch is SewerConnection))
             {
                 yield return new DefinitionGeneratorCompound().CreateStructureRegion(compositeStructure);
             }
