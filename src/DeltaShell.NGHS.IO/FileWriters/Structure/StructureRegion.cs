@@ -153,7 +153,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #region Orifice Elements
         public static readonly ConfigurationSetting OpenLevel = new ConfigurationSetting(key: "openlevel", description: "Gate height (m)");
         public static readonly ConfigurationSetting ContractionCoeff = new ConfigurationSetting(key: "contractioncoeff", description: "Contraction coefficient (-)");
-        public static readonly ConfigurationSetting LatContrCoeff = new ConfigurationSetting(key: "latcontrcoeff", description: "Lateral contraction coefficient (-)");
+        public static readonly ConfigurationSetting LatContrCoeff = new ConfigurationSetting(key: "corrCoeff", description: "Lateral contraction coefficient (-)");
         public static readonly ConfigurationSetting UseLimitFlowPos = new ConfigurationSetting(key: "uselimitflowpos", description: "0 = unlimited, 1 = limited");
         public static readonly ConfigurationSetting LimitFlowPos = new ConfigurationSetting(key: "limitflowpos", description: "Maximum positive flow (m3/s)");
         public static readonly ConfigurationSetting UseLimitFlowNeg = new ConfigurationSetting(key: "uselimitflowneg", description: "0 = unlimited, 1 = limited");
