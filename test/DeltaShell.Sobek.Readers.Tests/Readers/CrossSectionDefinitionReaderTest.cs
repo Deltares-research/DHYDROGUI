@@ -13,7 +13,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     [TestFixture]
     public class CrossSectionDefinitionReaderTest
     {
-        private const double Delta = 1e-8;
+        private const double Delta = 1e-5;
 
         [Test]
         public void ReadingCorruptDefinitionShouldNotThrow()
