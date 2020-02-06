@@ -236,8 +236,8 @@ namespace DelftTools.Hydro
 
                 CrossSections = BranchFeatures.OfType<ICrossSection>();
                 Pumps = BranchFeatures.OfType<IPump>();
-                Weirs = BranchFeatures.OfType<IWeir>();
                 Orifices = BranchFeatures.OfType<Orifice>();
+                Weirs = BranchFeatures.OfType<IWeir>().Except(Orifices);
                 Gates = BranchFeatures.OfType<IGate>();
                 Gullies = BranchFeatures.OfType<IGully>();
                 Culverts = BranchFeatures.OfType<ICulvert>();

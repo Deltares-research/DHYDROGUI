@@ -178,11 +178,11 @@ namespace DelftTools.Hydro.Structures
             {
                 Source = manhole,
                 Target = manhole,
-                Geometry = new LineString(new[]
+                /*Geometry = new LineString(new[]
                 {
                     manhole.Geometry.Coordinate,
                     manhole.Geometry.Coordinate
-                })
+                })*/
             };
 
             return connection;

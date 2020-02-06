@@ -209,8 +209,10 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (Source == null || Target == null) return;
 
-            var sourceCoordinate = Source.Geometry.Coordinate;
-            var targetCoordinate = Target.Geometry.Coordinate;
+            var sourceCoordinate = SourceCompartment.Geometry.Coordinate;
+            var targetCoordinate = TargetCompartment.Geometry.Coordinate;
+            if (sourceCoordinate.Equals(targetCoordinate))
+                targetCoordinate = new Coordinate(targetCoordinate.X+1,targetCoordinate.Y);
             Geometry = new LineString(new[] { sourceCoordinate, targetCoordinate });
         }
 
@@ -365,9 +367,19 @@ namespace DelftTools.Hydro.SewerFeatures
                 ConnectSourceCompartment(sourceManhole);
                 ConnectTargetCompartment(targetManhole);
             }
-            if (Math.Abs(Length) < 10e-6 && SourceCompartment != null && TargetCompartment != null)
+            if (Math.Abs(Length) < 10e-6 && SourceCompartment?.Geometry?.Coordinate != null && TargetCompartment?.Geometry?.Coordinate != null)
             {
-                Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+                if (SourceCompartment.Geometry.Coordinate.Equals(TargetCompartment.Geometry.Coordinate))
+                {
+                    Length = SourceCompartment.Geometry.Coordinate.Distance(
+                        new Coordinate(TargetCompartment.Geometry.Coordinate.X + 1,
+                            TargetCompartment.Geometry.Coordinate.Y));
+                }
+                else
+                {
+                    Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+                }
+                
             }
 
             AddCrossSectionDefinition(hydroNetwork);
