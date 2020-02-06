@@ -72,6 +72,8 @@ namespace DelftTools.Hydro.SewerFeatures
                         {
                             crossSection?.ShareDefinitionAndChangeToProxy();
                         }
+
+                        AddCrossSectionSectionToDefinition(HydroNetwork);
                     }
                 }
             }
