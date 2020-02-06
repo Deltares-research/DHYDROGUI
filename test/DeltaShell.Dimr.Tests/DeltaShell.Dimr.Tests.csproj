@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DimrApiTests.cs" />
+    <Compile Include="DimrErrorCodeExceptionTests.cs" />
     <Compile Include="DimrGuiPluginTests.cs" />
     <Compile Include="DimrGuiRibbonTests.cs" />
     <Compile Include="DimrSystemsTests.cs" />

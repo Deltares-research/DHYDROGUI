@@ -618,25 +618,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    if (dimrApi.Update(dimrApi.TimeStep.TotalSeconds) != 0)
+                    int result = dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
+                    if (result != 0)
                     {
-                        throw new Exception("Couldn't update DIMR Api");
+                        throw new DimrErrorCodeException(Status, result);
                     }
+
                     CurrentTime = dimrApi.CurrentTime;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
+                                   .ForEach(m => m.CurrentTime = CurrentTime);
                     OnProgressChanged();
                     if (dimrApi.StopTime.Subtract(dimrApi.CurrentTime).TotalSeconds <= 0)
                     {
                         Status = ActivityStatus.Done;
                     }
+
                     if (Status != ActivityStatus.Done)
                     {
-                        currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.WriteRestartFiles());
+                        currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
+                                       .ForEach(m => m.WriteRestartFiles());
                     }
-
                 }
                 catch (Exception e)
                 {
+                    Log.ErrorFormat(e.Message);
                     Console.WriteLine(e.Message);
                     Status = ActivityStatus.Failed;
                 }
@@ -679,57 +684,70 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (DoDimrRun())
             {
-                PrepareWorkDirectory();
-
-                var dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null).ToList();
-
-                dimrModels.ForEach(m =>
+                try
                 {
-                    m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
-                    m.RunsInIntegratedModel = true;
-                    m.DisconnectOutput();
+                    PrepareWorkDirectory();
 
-                    m.PrepareForIntegratedModelRun();
-                });
+                    var dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
+                                                    .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
+                                                    .ToList();
 
-                var kernelDirectories = GetKernelDirectories(dimrModels);
-                if (kernelDirectories == null) return;
+                    dimrModels.ForEach(m =>
+                    {
+                        m.ExplicitWorkingDirectory = Path.Combine(ExplicitWorkingDirectory, m.DirectoryName);
+                        m.RunsInIntegratedModel = true;
+                        m.DisconnectOutput();
 
-                var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
-                if (!dHydroConfigXmlExporter.Export(this, Path.Combine(ExplicitWorkingDirectory, "dimr.xml")))
-                {
-                    Status = ActivityStatus.Failed;
-                    return;
+                        m.PrepareForIntegratedModelRun();
+                    });
+
+                    var kernelDirectories = GetKernelDirectories(dimrModels);
+                    if (kernelDirectories == null) return;
+
+                    var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
+                    if (!dHydroConfigXmlExporter.Export(this, Path.Combine(ExplicitWorkingDirectory, "dimr.xml")))
+                    {
+                        Status = ActivityStatus.Failed;
+                        return;
+                    }
+
+                    // use message buffering when running in Main thread 
+                    // dimrExe (using process.WaitForExit) blocks main thread, so messages (that are marshaled to MainThread) that 
+                    // are send from async output handlers will cause deadlock
+                    var runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
+                                              HydroModelApplicationPlugin.MainThreadId;
+                    dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+
+                    if (dimrApi == null)
+                    {
+                        throw new ArgumentNullException("Could not load the Dimr api.");
+                    }
+
+                    //run dimr
+
+                    dimrApi.KernelDirs = kernelDirectories;
+                    dimrApi.DimrRefDate = StartTime;
+
+                    int result = dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
+                    if (result != 0)
+                    {
+                        throw new DimrErrorCodeException(Status, result);
+                    }
+
+                    CurrentTime = StartTime;
+
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
+                                   .ForEach(m => m.CurrentTime = CurrentTime);
+                    OnProgressChanged();
+                    currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>()
+                                   .ForEach(m => m.PrepareRestart());
                 }
-
-                // use message buffering when running in Main thread 
-                // dimrExe (using process.WaitForExit) blocks main thread, so messages (that are marshaled to MainThread) that 
-                // are send from async output handlers will cause deadlock
-                var runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
-                                          HydroModelApplicationPlugin.MainThreadId;
-                dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
-
-                if (dimrApi == null)
+                catch (DimrErrorCodeException e)
                 {
-                    throw new ArgumentNullException("Could not load the Dimr api.");
+                    Console.WriteLine(e.Message);
+                    Log.ErrorFormat(e.Message);
+                    throw;
                 }
-
-                //run dimr
-
-                dimrApi.KernelDirs = kernelDirectories;
-                dimrApi.DimrRefDate = StartTime;
-
-                if (dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml")) != 0)
-                {
-                    throw new Exception("Couldn't initialize DIMR Api");
-                }
-
-                CurrentTime = StartTime;
-
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
-                OnProgressChanged();
-                currentWorkflow.Activities.GetActivitiesOfType<IDimrStateAwareModel>().ForEach(m => m.PrepareRestart());
             }
             else
             {
