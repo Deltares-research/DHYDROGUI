@@ -61,12 +61,12 @@ namespace DeltaShell.Dimr.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to During {0} the model run something went wrong. Error code {1} sent by the computational core..
+        ///   Looks up a localized string similar to During {0} the model something went wrong. Error code {1} has been detected. Please inspect your diagnostic files..
         /// </summary>
-        internal static string DimrErrorCodeException_During__0__the_model_run_something_went_wrong_Error_Code__1__sent_by_the_computational_core {
+        internal static string DimrErrorCodeException_During__0__the_model_something_went_wrong_Error_Code__1__has_been_detected_Please_inspect_your_diagnostic_files {
             get {
-                return ResourceManager.GetString("DimrErrorCodeException_During__0__the_model_run_something_went_wrong_Error_Code__" +
-                        "1__sent_by_the_computational_core", resourceCulture);
+                return ResourceManager.GetString("DimrErrorCodeException_During__0__the_model_something_went_wrong_Error_Code__1__h" +
+                        "as_been_detected_Please_inspect_your_diagnostic_files", resourceCulture);
             }
         }
     }

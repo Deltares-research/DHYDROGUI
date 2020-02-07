@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DimrErrorCodeException_During__0__the_model_run_something_went_wrong_Error_Code__1__sent_by_the_computational_core" xml:space="preserve">
-    <value>During {0} the model run something went wrong. Error code {1} sent by the computational core.</value>
+  <data name="DimrErrorCodeException_During__0__the_model_something_went_wrong_Error_Code__1__has_been_detected_Please_inspect_your_diagnostic_files" xml:space="preserve">
+    <value>During {0} the model something went wrong. Error code {1} has been detected. Please inspect your diagnostic files.</value>
   </data>
 </root>
