@@ -5,6 +5,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public double X
         {
             get { return data.Geometry.Coordinate.X; }
-            set { data.Geometry.Coordinate.X = value; }
+            set { HydroRegionEditorHelper.MoveNodeTo(data, value, Y); }
         }
 
         [Category("General")]
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public double Y
         {
             get { return data.Geometry.Coordinate.Y; }
-            set { data.Geometry.Coordinate.Y = value; }
+            set { HydroRegionEditorHelper.MoveNodeTo(data, X, value); }
         }
 
         private int manholeOneIndex = 0;

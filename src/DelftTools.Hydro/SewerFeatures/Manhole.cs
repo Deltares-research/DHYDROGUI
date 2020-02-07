@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Hydro.Structures;
@@ -6,6 +7,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -17,6 +19,9 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private IEventedList<ICompartment> compartments;
 
+        public Manhole():this("Manhole")
+        {
+        }
         public Manhole(string manholeId) : base(manholeId)
         {
             Compartments = new EventedList<ICompartment>();
@@ -206,6 +211,22 @@ namespace DelftTools.Hydro.SewerFeatures
         private void CopyGeometryToCompartments()
         {
             compartments?.ForEach(c => c.Geometry = Geometry);
+        }
+
+        public override object Clone()
+        {
+            var manhole = (Manhole)Activator.CreateInstance(GetType());
+
+            manhole.Name = Name;
+            manhole.Geometry = Geometry == null ? null : ((IGeometry)Geometry.Clone());
+            manhole.Attributes = (IFeatureAttributeCollection)(Attributes != null ? Attributes.Clone() : null);
+
+            foreach (var nodeFeature in NodeFeatures)
+            {
+                manhole.NodeFeatures.Add((INodeFeature)nodeFeature.Clone());
+            }
+
+            return manhole;
         }
 
         #region IHydroNetworkFeature
