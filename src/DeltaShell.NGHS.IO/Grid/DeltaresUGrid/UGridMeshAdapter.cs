@@ -280,7 +280,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             network.Branches.AddRange(branches);
         }
 
-        public static DisposableNetworkGeometry CreateDisposableNetworkGeometry(this HydroNetwork network)
+        public static DisposableNetworkGeometry CreateDisposableNetworkGeometry(this IHydroNetwork network)
         {
             var mesh = new DisposableNetworkGeometry
             {
@@ -667,7 +667,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 linksGeometry.LinkLongName[i] = link1D2D.LongName;
                 linksGeometry.LinkType[i] = (int) link1D2D.TypeOfLink;
                 linksGeometry.Mesh1DFrom[i] = link1D2D.DiscretisationPointIndex;
-                linksGeometry.Mesh2DTo[i] = link1D2D.Link1D2DIndex;
+                linksGeometry.Mesh2DTo[i] = link1D2D.FaceIndex;
             }
 
             return linksGeometry;

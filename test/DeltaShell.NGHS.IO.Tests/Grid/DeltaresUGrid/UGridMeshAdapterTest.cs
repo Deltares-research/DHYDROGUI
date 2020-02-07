@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
@@ -8,6 +9,7 @@ using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -224,84 +226,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             //             0     50    100            200       300 
             //                                          x -->
 
-            //Arrange
-            var node1 = new HydroNode("node1") {LongName = "node1 long", Geometry = new Point(0, 100)};
-            var node2 = new HydroNode("node2") {LongName = "node2 long", Geometry = new Point(100, 100)};
-            var node3 = new HydroNode("node3") {LongName = "node3 long", Geometry = new Point(50, 50)};
-            var node4 = new HydroNode("node4") {LongName = "node4 long", Geometry = new Point(100, 0)};
-            
-            var compartment1 = new Compartment("compartment1");
-            var compartment2 = new Compartment("compartment2");
-            var compartment3 = new Compartment("compartment3");
-            var compartment4 = new Compartment("compartment4");
-
-            var manhole1 = new Manhole("manhole1")
-            {
-                Geometry = new Point(200, 100),  
-                Compartments = new EventedList<ICompartment> { compartment1 }
-            };
-
-            var manhole2 = new Manhole("manhole2") 
-            {
-                Geometry = new Point(200, 50), 
-                Compartments = new EventedList<ICompartment> { compartment2, compartment3 }
-            };
-
-            var manhole3 = new Manhole("manhole3")
-            {
-                Geometry = new Point(300, 50),
-                Compartments = new EventedList<ICompartment> { compartment4 }
-            };
-
-            var nodes = new INode[]
-            {
-                node1, node2, node3, node4,
-                manhole1, manhole2,manhole3
-            };
-
-            var network = new HydroNetwork
-            {
-                Nodes = new EventedList<INode>(nodes),
-                Branches = new EventedList<IBranch>
-                {
-                    new Branch(node1,node3)
-                    {
-                        Name = "branch1", 
-                        Description = "branch1 long",
-                        OrderNumber = 1,
-                        Geometry = new LineString(new[] {node1.Geometry.Coordinate, node3.Geometry.Coordinate})
-                    },
-                    new Branch(node2,node3)
-                    {
-                        Name = "branch2",
-                        Description = "branch2 long",
-                        OrderNumber = 2,
-                        Geometry = new LineString(new[] {node2.Geometry.Coordinate, node3.Geometry.Coordinate})
-                    },
-                    new Branch(node3,node4)
-                    {
-                        Name = "branch3",
-                        Description = "branch3 long",
-                        OrderNumber = 3,
-                        Geometry = new LineString(new[] {node3.Geometry.Coordinate, node4.Geometry.Coordinate})
-                    },
-
-                    new Pipe
-                    {
-                        Name = "pipe1",
-                        SourceCompartment = compartment1,
-                        TargetCompartment = compartment2,
-                        Geometry = new LineString(new[] {manhole1.Geometry.Coordinate, manhole2.Geometry.Coordinate})
-                    },
-                    new Pipe
-                    {
-                        Name = "pipe2",
-                        SourceCompartment = compartment3,
-                        TargetCompartment = compartment4,
-                        Geometry = new LineString(new[] { manhole2.Geometry.Coordinate, manhole3.Geometry.Coordinate})
-                    }
-                }
-            };
+            var network = CreateTestNetwork();
+            var manhole2 = network.Manholes.First(m => m.Name == "manhole2");
+            var node1 = network.HydroNodes.First();
+            var compartment2 = manhole2.Compartments[0];
 
             // Act
             var networkGeometry = network.CreateDisposableNetworkGeometry();
@@ -342,6 +270,291 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(2, networkGeometry.BranchGeometryNodesCount[innerConnection1Index]);
             Assert.AreEqual(1, networkGeometry.NodesFrom[innerConnection1Index]);
             Assert.AreEqual(2, networkGeometry.NodesTo[innerConnection1Index]);
+        }
+
+        [Test]
+        public void GivenUGridMeshAdapter_DoingCreateDiscretization_ShouldGiveValidDiscretization()
+        {
+            //          Rural network             Urban network
+            // ^                                   
+            // |  100       o node1      o  node2       o manhole1
+            // y             \          /               |                           (manhole2 has 2 compartments)
+            //         branch1 \      / branch2         | pipe1
+            //                   \  /                   |
+            //     50             o node3              o--------o pipe2
+            //                     \              manhole2    manhole3
+            //                       \ branch3
+            //                         \
+            //    0                     o node4
+            //                   
+            //             0     50    100            200       300 
+            //                                          x -->
+
+            //Arrange
+
+            var network = CreateTestNetwork();
+
+            var points = network.Branches.SelectMany((b, i) =>
+            {
+                return Enumerable.Range(0, 10).Select(j => new
+                {
+                    branch = b,
+                    branchId = i,
+                    chainage = j * (b.Length / 10.0),
+                    name = $"{b.Name}_node{j}",
+                    longname = $"{b.Name}_node{j}_long",
+                });
+            }).ToArray();
+
+            var disposable1DMeshGeometry = new Disposable1DMeshGeometry
+            {
+                Name = "Discretization",
+                BranchIDs = points.Select(p => p.branchId).ToArray(),
+                BranchOffsets = points.Select(p => p.chainage).ToArray(),
+                NodeIds = points.Select(p => p.name).ToArray(),
+                NodeLongNames = points.Select(p => p.longname).ToArray(),
+                NodesX = Enumerable.Range(0, 10 * network.Branches.Count).Select(i => (double) i).ToArray(),
+                NodesY = Enumerable.Range(0, 10 * network.Branches.Count).Select(i => (double) i).ToArray()
+            };
+
+            // Act
+
+            var discretization = disposable1DMeshGeometry.CreateDiscretization(network);
+
+            // Assert
+
+            Assert.AreEqual(50, discretization.Locations.Values.Count);
+            Assert.AreEqual(network, discretization.Network);
+            
+            var networkLocation2 = discretization.Locations.Values.Skip(1).First();
+            Assert.AreEqual(network.Branches[0], networkLocation2.Branch);
+            Assert.AreEqual(7, networkLocation2.Chainage, 0.1);
+            Assert.AreEqual($"{network.Branches[0].Name}_node1", networkLocation2.Name);
+            Assert.AreEqual($"{network.Branches[0].Name}_node1_long", networkLocation2.LongName);
+            Assert.AreEqual(1, networkLocation2.Geometry.Coordinate.X, 0.1);
+            Assert.AreEqual(1, networkLocation2.Geometry.Coordinate.Y, 0.1);
+        }
+
+        [Test]
+        public void GivenUGridMeshAdapter_DoingCreateDisposable1DMeshGeometry_ShouldCreateAValidDisposable1DMeshGeometry()
+        {
+            //          Rural network             Urban network
+            // ^                                   
+            // |  100       o node1      o  node2       o manhole1
+            // y             \          /               |                           (manhole2 has 2 compartments)
+            //         branch1 \      / branch2         | pipe1
+            //                   \  /                   |
+            //     50             o node3              o--------o pipe2
+            //                     \              manhole2    manhole3
+            //                       \ branch3
+            //                         \
+            //    0                     o node4
+            //                   
+            //             0     50    100            200       300 
+            //                                          x -->
+
+            //Arrange
+            var network = CreateTestNetwork();
+            var points = network.Branches.SelectMany((b, i) =>
+            {
+                return Enumerable.Range(0, 10).Select(j => new
+                {
+                    branch = b,
+                    branchId = i,
+                    chainage = j * (b.Length / 10.0),
+                    name = $"{b.Name}_node{j}",
+                    longname = $"{b.Name}_node{j}_long",
+                });
+            }).ToArray();
+
+            var networkLocations = points.Select(p => new NetworkLocation(p.branch, p.chainage)
+            {
+                Name = p.name,
+                LongName = p.longname,
+                Network = network,
+            });
+
+            var discretization = new Discretization
+                {
+                    Name = "TestDiscretization",
+                    Network = network
+                };
+
+            discretization.Locations.SetValues(networkLocations);
+
+            // Act
+            var mesh1d = discretization.CreateDisposable1DMeshGeometry();
+
+            // Assert
+            Assert.AreEqual(50, mesh1d.NodeIds.Length);
+
+            var branch1node3Index = mesh1d.NodeIds.ToList().IndexOf("branch1_node3");
+            Assert.AreEqual("branch1_node3_long", mesh1d.NodeLongNames[branch1node3Index]);
+            Assert.AreEqual(0, mesh1d.BranchIDs[branch1node3Index]);
+            Assert.AreEqual(21.2, mesh1d.BranchOffsets[branch1node3Index], 0.1);
+
+            var pipe1Node2Index = mesh1d.NodeIds.ToList().IndexOf("pipe1_node2");
+            Assert.AreEqual("pipe1_node2_long", mesh1d.NodeLongNames[pipe1Node2Index]);
+            Assert.AreEqual(3, mesh1d.BranchIDs[pipe1Node2Index]);
+            Assert.AreEqual(0, mesh1d.BranchOffsets[pipe1Node2Index]);
+        }
+
+        [Test]
+        public void GivenUGridMeshAdapterTest_DoingCreateLinks_ShouldCreateValidLinks()
+        {
+           //Arrange
+           var oneToOne = (int) LinkType.EmbeddedOneToOne;
+
+           var linkGeometry = new DisposableLinksGeometry
+            {
+                LinkId = new string[] {"link1", "link2", "link3" },
+                LinkLongName = new string[] { "link1_long", "link2_long", "link3_long" },
+                Mesh1DFrom = new int[] { 0, 1, 2},
+                Mesh2DTo = new int[] { 2, 1, 0 },
+                LinkType = new int[] { oneToOne, oneToOne, oneToOne }
+            };
+
+            // Act
+            var links = linkGeometry.CreateLinks();
+
+            // Assert
+            Assert.AreEqual(3, links.Count);
+            Assert.AreEqual("link1", links[0].Name);
+            Assert.AreEqual("link1_long", links[0].LongName);
+            Assert.AreEqual(2, links[0].FaceIndex);
+            Assert.AreEqual(0, links[0].DiscretisationPointIndex);
+            Assert.AreEqual(LinkType.EmbeddedOneToOne, links[0].TypeOfLink);
+        }
+
+        [Test]
+        public void GivenUGridMeshAdapterTest_DoingCreateDisposableLinksGeometry_ShouldCreateValidDisposableLinksGeometry()
+        {
+            //Arrange
+            var links = Enumerable.Range(0, 5)
+                .Select(i => new Link1D2D(i, 5 - i, $"link{i}")
+                {
+                    LongName = $"link{i}_long",
+                    TypeOfLink = LinkType.EmbeddedOneToOne
+                })
+                .Cast<ILink1D2D>()
+                .ToList();
+
+            // Act
+            var disposableLinksGeometry = links.CreateDisposableLinksGeometry();
+
+            // Assert
+            Assert.AreEqual(5, disposableLinksGeometry.LinkId.Length);
+            Assert.AreEqual("link2", disposableLinksGeometry.LinkId[2]);
+            Assert.AreEqual("link2_long", disposableLinksGeometry.LinkLongName[2]);
+            Assert.AreEqual(2, disposableLinksGeometry.Mesh1DFrom[2]);
+            Assert.AreEqual(3, disposableLinksGeometry.Mesh2DTo[2]);
+            Assert.AreEqual((int)LinkType.EmbeddedOneToOne, disposableLinksGeometry.LinkType[2]);
+        }
+
+        private static IHydroNetwork CreateTestNetwork()
+        {
+            //          Rural network             Urban network
+            // ^                                   
+            // |  100       o node1      o  node2       o manhole1
+            // y             \          /               |                           (manhole2 has 2 compartments)
+            //         branch1 \      / branch2         | pipe1
+            //                   \  /                   |
+            //     50             o node3              o--------o pipe2
+            //                     \              manhole2    manhole3
+            //                       \ branch3
+            //                         \
+            //    0                     o node4
+            //                   
+            //             0     50    100            200       300 
+            //                                          x -->
+
+            //Arrange
+
+            var network = new HydroNetwork();
+
+            var node1 = new HydroNode("node1") { Network = network, LongName = "node1 long", Geometry = new Point(0, 100) };
+            var node2 = new HydroNode("node2") { Network = network, LongName = "node2 long", Geometry = new Point(100, 100) };
+            var node3 = new HydroNode("node3") { Network = network, LongName = "node3 long", Geometry = new Point(50, 50) };
+            var node4 = new HydroNode("node4") { Network = network, LongName = "node4 long", Geometry = new Point(100, 0) };
+
+            var compartment1 = new Compartment("compartment1");
+            var compartment2 = new Compartment("compartment2");
+            var compartment3 = new Compartment("compartment3");
+            var compartment4 = new Compartment("compartment4");
+
+            var manhole1 = new Manhole("manhole1")
+            {
+                Geometry = new Point(200, 100),
+                Network = network,
+                Compartments = new EventedList<ICompartment> { compartment1 }
+            };
+
+            var manhole2 = new Manhole("manhole2")
+            {
+                Geometry = new Point(200, 50),
+                Network = network,
+                Compartments = new EventedList<ICompartment> { compartment2, compartment3 }
+            };
+
+            var manhole3 = new Manhole("manhole3")
+            {
+                Geometry = new Point(300, 50),
+                Network = network,
+                Compartments = new EventedList<ICompartment> { compartment4 }
+            };
+
+            network.Nodes = new EventedList<INode>(new INode[]
+            {
+                node1, node2, node3, node4,
+                manhole1, manhole2,manhole3
+            });
+
+            network.Branches = new EventedList<IBranch>
+            {
+                new Branch(node1,node3)
+                {
+                    Name = "branch1",
+                    Description = "branch1 long",
+                    OrderNumber = 1,
+                    Network = network,
+                    Geometry = new LineString(new[] {node1.Geometry.Coordinate, node3.Geometry.Coordinate})
+                },
+                new Branch(node2,node3)
+                {
+                    Name = "branch2",
+                    Description = "branch2 long",
+                    OrderNumber = 2,
+                    Network = network,
+                    Geometry = new LineString(new[] {node2.Geometry.Coordinate, node3.Geometry.Coordinate})
+                },
+                new Branch(node3,node4)
+                {
+                    Name = "branch3",
+                    Description = "branch3 long",
+                    OrderNumber = 3,
+                    Network = network,
+                    Geometry = new LineString(new[] {node3.Geometry.Coordinate, node4.Geometry.Coordinate})
+                },
+
+                new Pipe
+                {
+                    Name = "pipe1",
+                    SourceCompartment = compartment1,
+                    TargetCompartment = compartment2,
+                    Network = network,
+                    Geometry = new LineString(new[] {manhole1.Geometry.Coordinate, manhole2.Geometry.Coordinate})
+                },
+                new Pipe
+                {
+                    Name = "pipe2",
+                    SourceCompartment = compartment3,
+                    TargetCompartment = compartment4,
+                    Network = network,
+                    Geometry = new LineString(new[] { manhole2.Geometry.Coordinate, manhole3.Geometry.Coordinate})
+                }
+            };
+
+            return network;
         }
     }
 }
