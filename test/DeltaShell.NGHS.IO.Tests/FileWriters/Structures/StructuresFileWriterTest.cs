@@ -30,8 +30,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var pumpName = "myPump";
-            var pliFileName = pumpName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timFileName = pumpName + ".tim";
             var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
@@ -49,7 +47,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsFalse(File.Exists(timFilePath),
                     $"Time series file has been written to location {timFilePath}, while the pump does not have a time series for the capacity");
             }
@@ -67,9 +64,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var pumpName = "myPump";
-            var pliFileName = pumpName + ".pli";
+           
             var timFileName = $"{pumpName}_{StructureRegion.Capacity.Key}.tim";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
+            
             var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
 
             var pump2D = new Pump2D(pumpName)
@@ -96,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
 
                 Assert.That(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.That(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
+                
                 Assert.That(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
             }
             finally
@@ -117,8 +114,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var weirName = "myWeir";
-            var pliFileName = weirName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timFileName = weirName + "_crest_level.tim";
             var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
@@ -138,7 +133,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsFalse(File.Exists(timFilePath),
                     $"Time series file has been written to location {timFilePath}, while the weir does not have a time series for the capacity");
             }
@@ -156,8 +150,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var weirName = "myWeir";
-            var pliFileName = weirName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timFileName = weirName + "_crest_level.tim";
             var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
@@ -181,7 +173,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsTrue(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
             }
             finally
@@ -202,8 +193,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var generalStructureName = "myGeneralStructure";
-            var pliFileName = generalStructureName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var generalStructure2D = new Weir2D(generalStructureName)
             {
@@ -221,7 +210,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
             }
             finally
             {
@@ -241,10 +229,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
             
             var gateName = "myGate";
-            var pliFileName = gateName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
-            var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateSillLevel}.tim";
+            var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateCrestLevel}.tim";
             var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
 
             var fmModel = new WaterFlowFMModel
@@ -262,7 +248,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
             }
             finally
@@ -279,8 +264,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var gateName = "myGate";
-            var pliFileName = gateName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
             var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
@@ -300,7 +283,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
             }
             finally
@@ -317,8 +299,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var gateName = "myGate";
-            var pliFileName = gateName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateOpeningWidth}.tim";
             var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
@@ -338,7 +318,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
             }
             finally
@@ -359,8 +338,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
 
             var leveeBreachName = "myBreach";
-            var pliFileName = leveeBreachName + ".pli";
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, pliFileName);
 
             var timeSeriesFileName = $"{leveeBreachName}.tim";
             var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
@@ -393,7 +370,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
                 Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(pliFilePath), $"Polyline file has not been written to location {pliFilePath}");
                 Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
             }
             finally

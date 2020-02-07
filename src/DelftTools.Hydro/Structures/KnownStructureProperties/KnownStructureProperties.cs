@@ -28,10 +28,11 @@
         #endregion
 
         #region Gate
-        public const string GateSillLevel = "sill_level";
-        public const string GateOpeningWidth = "opening_width";
-        public const string GateLowerEdgeLevel = "lower_edge_level";
-        public const string GateDoorHeight = "door_height";
+        public const string GateSillLevel = "stillLevel";
+        public const string GateCrestLevel = "crestLevel";
+        public const string GateOpeningWidth = "gateOpeningWidth";
+        public const string GateLowerEdgeLevel = "gateLowerEdgeLevel";
+        public const string GateDoorHeight = "doorHeight";
         public const string GateHorizontalOpeningDirection = "horizontal_opening_direction";
         public const string GateSillWidth = "sill_width";
         #endregion Gate
