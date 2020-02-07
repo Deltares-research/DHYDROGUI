@@ -105,10 +105,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 }
             }
         }
+
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed) return;
+            if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed ||
+                e.NewStatus == ActivityStatus.Failed && e.OldStatus == ActivityStatus.Executing) return;
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
         }

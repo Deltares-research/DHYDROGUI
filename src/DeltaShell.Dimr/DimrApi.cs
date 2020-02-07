@@ -259,7 +259,13 @@ namespace DeltaShell.Dimr
         }
         public int Update(double step)
         {
-            DimrApiWrapper.update(step);
+            var result = DimrApiWrapper.update(step);
+
+            if (result != 0)
+            {
+                return result;
+            }
+            
             DimrApiWrapper.get_current_time(ref tCurrent);
             currentTime = DimrRefDate.AddSeconds(tCurrent-relativeStartTime);
             return 0;
