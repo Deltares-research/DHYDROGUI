@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             if (FeatureType == typeof(Weir))
             {
-                return GetEnumerableList(Network.Weirs.OfType<Weir>(), (INotifyCollectionChange)Network);
+                return GetEnumerableList(Network.Weirs.OfType<Weir>().Except(Network.Weirs.OfType<Orifice>()), (INotifyCollectionChange)Network);
             }
             if (FeatureType == typeof (Gate))
             {
