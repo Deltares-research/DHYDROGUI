@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenNoDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenStillOneDiscretisationPointsHaveBeenAddedToTheModelNetwork()
         {
             var fmModel = new WaterFlowFMModel();
             var network = fmModel.Network;
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(Enumerable.Count<ISewerConnection>(network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
-            Assert.That((object) discretizationLocations.Count, Is.EqualTo(0));
+            Assert.That((object) discretizationLocations.Count, Is.EqualTo(01));
         }
 
         [Test]
@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var pipeInNetwork = Enumerable.FirstOrDefault<IPipe>(network.Pipes);
             var sharedDefinitionInNetwork = Enumerable.FirstOrDefault<ICrossSectionDefinition>(network.SharedCrossSectionDefinitions);
             Assert.IsNotNull(pipeInNetwork);
-            Assert.That(pipeInNetwork.CrossSectionDefinition, Is.EqualTo(sharedDefinitionInNetwork));
+            Assert.That(((CrossSectionDefinitionProxy) pipeInNetwork.CrossSectionDefinition).InnerDefinition, Is.EqualTo(sharedDefinitionInNetwork));
             Assert.That(pipeInNetwork.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Concrete));
         }
 
@@ -597,7 +597,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
-            Assert.That((object) discretizationLocations.Count, Is.EqualTo(0));
+            Assert.That((object) discretizationLocations.Count, Is.EqualTo(1));
 
             connectionOrifice.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
@@ -983,7 +983,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
-            Assert.That((object) discretizationLocations.Count, Is.EqualTo(0));
+            Assert.That((object) discretizationLocations.Count, Is.EqualTo(1));
 
             connectionPump.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
@@ -1187,7 +1187,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
-            Assert.That((object) discretizationLocations.Count, Is.EqualTo(0));
+            Assert.That((object) discretizationLocations.Count, Is.EqualTo(1));
 
             connectionWeir.AddToHydroNetwork(fmModel.Network, null);
             Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));

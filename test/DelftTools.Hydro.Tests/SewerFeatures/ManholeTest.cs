@@ -284,33 +284,43 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var compartment = new Compartment("tc") { SurfaceLevel = 0.0, Geometry = new Point(0, 0) };
             manhole.Compartments.Add(compartment);
 
-            var incommingSewerConnection = new SewerConnection("incomming")
+            var incomingSewerConnection = new SewerConnection("incoming")
             {
-                TargetCompartment = compartment,
+                TargetCompartment = compartment,//set incoming going sewerconnection
                 LevelSource = 0.0,
                 LevelTarget = 0.0,
                 WaterType = SewerConnectionWaterType.None,
                 TargetCompartmentName = "tc"
             };
 
-            var outgoingSewerConnection = new SewerConnection("incomming")
+            var outgoingSewerConnection = new SewerConnection("outgoing")
             {
-                SourceCompartment = compartment,
+                SourceCompartment = compartment, //set outgoing sewerconnection
                 LevelSource = 0.0,
                 LevelTarget = 0.0,
                 WaterType = SewerConnectionWaterType.None,
-                TargetCompartmentName = "sc"
+                SourceCompartmentName = "sc"
             };
 
             Assert.IsNull(manhole.GetOutletCandidate());
 
-            manhole.IncomingBranches.Add(incommingSewerConnection); //condition outlet: at least one incomming connections
+            manhole.OutgoingBranches.Remove(outgoingSewerConnection); //condition outlet: at least one incoming connections, no outgoing connections
 
             Assert.AreSame(compartment,manhole.GetOutletCandidate());
 
             manhole.OutgoingBranches.Add(outgoingSewerConnection); //condition outlet: no outgoing connections
 
             Assert.IsNull(manhole.GetOutletCandidate());
+
+            manhole.IncomingBranches.Remove(incomingSewerConnection); //condition outlet: at least one incoming connections, now none
+
+            Assert.IsNull(manhole.GetOutletCandidate());
+            manhole.IncomingBranches.Add(incomingSewerConnection); //condition outlet: at least one incoming connections, now none
+            manhole.IncomingBranches.Add(incomingSewerConnection); //condition outlet: at least one incoming connections, now two
+            manhole.OutgoingBranches.Remove(outgoingSewerConnection); //condition outlet: at least one incoming connections, no outgoing connections
+
+            Assert.AreSame(compartment,manhole.GetOutletCandidate());
+
         }
     }
 }

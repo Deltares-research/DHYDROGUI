@@ -14,11 +14,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             const string path = "just path";
 
             var mocks = new MockRepository();
-            var writerOne = mocks.StrictMock<NwrwComponentFileWriterBase>();
-            writerOne.Expect(writer => writer.Write(path));
+            var writerOne = mocks.StrictMock<INwrwComponentFileWriterBase>();
+            writerOne.Expect(writer => writer.Write(path)).Return(true);
 
-            var writerTwo = mocks.StrictMock<NwrwComponentFileWriterBase>();
-            writerTwo.Expect(writer => writer.Write(path));
+            var writerTwo = mocks.StrictMock<INwrwComponentFileWriterBase>();
+            writerTwo.Expect(writer => writer.Write(path)).Return(true);
             mocks.ReplayAll();
 
             var modelWriter = new NwrwModelFileWriter(new []

@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //write
             WaterFlowFMModelWriter.Write(mduFilePath, fmModel);
             //read
-            var retrievedModel = WaterFlowFMModelReader.Read(mduFilePath);
+            var retrievedModel = new WaterFlowFMModel(mduFilePath);
 
 
             //check model and values

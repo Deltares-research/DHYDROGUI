@@ -1049,6 +1049,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvData.hbm.xm
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/HbvDataProperties.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/DryWeatherFlow.hbm.xml -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/INwrwComponentFileWriterBase.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/INwrwFeature.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/Nwrw3BComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwAlgComponentFileWriter.cs -text

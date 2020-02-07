@@ -153,7 +153,7 @@ namespace DelftTools.Hydro.CrossSections
             {
                 throw new InvalidOperationException("Not expected");
             }
-            Definition = new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
+            Definition = e.Item as CrossSectionDefinitionProxy ?? new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
         }
 
         public override IGeometry Geometry

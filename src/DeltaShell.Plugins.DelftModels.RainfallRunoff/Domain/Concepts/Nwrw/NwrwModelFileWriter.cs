@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     public class NwrwModelFileWriter
     {
-        private readonly IEnumerable<NwrwComponentFileWriterBase> fileWriters;
+        private readonly IEnumerable<INwrwComponentFileWriterBase> fileWriters;
 
-        public NwrwModelFileWriter(IEnumerable<NwrwComponentFileWriterBase> fileWriters)
+        public NwrwModelFileWriter(IEnumerable<INwrwComponentFileWriterBase> fileWriters)
         {
             this.fileWriters = fileWriters ?? throw new ArgumentNullException(nameof(fileWriters));
         }

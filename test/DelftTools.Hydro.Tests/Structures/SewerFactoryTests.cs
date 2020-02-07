@@ -29,7 +29,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(csRoundShape.Type, Is.EqualTo(CrossSectionStandardShapeType.Circle));
 
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
-            Assert.AreSame(retrievedPipe.CrossSectionDefinition, network.SharedCrossSectionDefinitions.First());
+            Assert.AreSame(((CrossSectionDefinitionProxy)retrievedPipe.CrossSectionDefinition).InnerDefinition, network.SharedCrossSectionDefinitions.First());
         }
 
         [Test]

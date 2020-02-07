@@ -5,7 +5,7 @@ using DeltaShell.NGHS.IO;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
-    public abstract class NwrwComponentFileWriterBase : NGHSFileBase
+    public abstract class NwrwComponentFileWriterBase : NGHSFileBase, INwrwComponentFileWriterBase
     {
         private readonly string fileName;
 
