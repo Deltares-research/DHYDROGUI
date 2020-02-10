@@ -80,6 +80,7 @@ geometry,Kmx,general,,Max nr of vertical layers,Integer,0,0,,TRUE,,,,,,Maximum n
 geometry,Layertype,general,,Layer type:Sigma|Z|Mixed,1|2|3,1,1,3,TRUE,,,,,,"Vertical layer type (1: all sigma, 2: all z, 3: use VertplizFile)",
 geometry,Numtopsig,general,,Nr of sigma layers in Z top layer,Integer,0,,,TRUE,,,,,,Number of sigma layers in top of z-layer model,
 geometry,SigmaGrowthFactor,,,Layer thickness growth factor,Double,1,,,FALSE,,kmx>0,,,,Layer thickness growth factor from bed up,
+geometry,AllowBndAtBifurcation,general,Boundary 1d,Allow 1d boundary at endnode when connecting branch leads to bifurcation,0|1,0,0,1,FALSE,,,,,,"Allow 1d boundary node when connecting branch leads to bifurcation",
 numerics,CFLMax,timeframe,Time Frame,Max Courant nr,Double,0.7,0,,FALSE,,,,,,Maximum Courant number,
 numerics,AdvecType,numerics,Numerical Parameters,Advection type:None|Wenneker|Wenneker/q(uio-u)|Perot q(uio-u)|Perot q(ui-u)|Perot/q(ui-u)-without itself|Perot q(uio-u) fast,0|1|2|3|4|5|33,33,0,33,FALSE,,,,,,"Advection type (0: none, 1: Wenneker, 2: Wenneker q(uio-u), 3: Perot q(uio-u), 4: Perot q(ui-u), 5: Perot q(ui-u) without itself",
 numerics,TimeStepType,,,Time step type:Transport|Transport+vel.update|full impl. step reduce|Step Jacobi|explicit,0|1|2|3|4,2,0,4,FALSE,,,,,,"Time step handling (0: only transport, 1: transport + velocity update, 2: full implicit step-reduce, 3: step-Jacobi, 4: explicit)",
