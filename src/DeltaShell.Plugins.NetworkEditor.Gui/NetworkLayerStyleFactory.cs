@@ -92,6 +92,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return CreatePointStyle(Properties.Resources.Observation);
             }
 
+            if (networkObjects is IEnumerable<IPump>)
+            {
+                return CreatePointStyle(Properties.Resources.pump);
+            }
+
             if (networkObjects is IEnumerable<IWeir>)
             {
                 var weirBitmap = networkObjects is IEnumerable<Orifice> ? Properties.Resources.Gate : Properties.Resources.WeirSmall;
@@ -195,8 +200,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                DefaultStyle = onSingleBranchesStyle,
                                ThemeItems = new EventedList<IThemeItem>
                                                 {
-                                                    new CategorialThemeItem("True", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
-                                                    new CategorialThemeItem("False", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
+                                                    new CategorialThemeItem("Boundary node", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
+                                                    new CategorialThemeItem("Connection node", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
                                                 }
                            };
             }
@@ -207,22 +212,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.SteelBlue, 3)
+                    Line = new Pen(Color.FromArgb(255,0,0,128), 3)
                                {
                                    CustomEndCap = new AdjustableArrowCap(5, 5, true)
-                                                      {
-                                                          BaseCap = LineCap.Triangle
-                                                      }
-                               },
-                    EnableOutline = false
-                };
-
-                var customBranchStyle = new VectorStyle
-                {
-                    GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.PowderBlue, 5)
-                               {
-                                   CustomEndCap = new AdjustableArrowCap(4, 4, true)
                                                       {
                                                           BaseCap = LineCap.Triangle
                                                       }
@@ -233,12 +225,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new CategorialTheme
                            {
                                AttributeName = "IsLengthCustom",
-                               DefaultStyle = branchStyle,
-                               ThemeItems = new EventedList<IThemeItem>
-                                                {
-                                                    new CategorialThemeItem("True", customBranchStyle, null, true),
-                                                    new CategorialThemeItem("False", branchStyle, null, false)
-                                                }
+                               DefaultStyle = branchStyle
                            };
             }
 
@@ -321,24 +308,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     }
                 };
             }
-
-            if (networkObjects is IEnumerable<IPump>)
-            {
-                var pumpPositiveStyle = CreatePointStyle(Properties.Resources.PumpSmallPositive);
-                var pumpNegativeStyle = CreatePointStyle(Properties.Resources.PumpSmallNegative);
-
-                return new CategorialTheme
-                           {
-                               AttributeName = "DirectionIsPositive", 
-                               DefaultStyle = pumpNegativeStyle,
-                               ThemeItems = new EventedList<IThemeItem>
-                                                {
-                                                    new CategorialThemeItem("True", pumpPositiveStyle, pumpPositiveStyle.Symbol, true),
-                                                    new CategorialThemeItem("False", pumpNegativeStyle, pumpNegativeStyle.Symbol, false)
-                                                }
-                           };
-            }
-
 
             return null;
         }
