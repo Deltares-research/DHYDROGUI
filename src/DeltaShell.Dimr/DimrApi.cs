@@ -208,11 +208,11 @@ namespace DeltaShell.Dimr
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                var result = DimrApiWrapper.initialize(xmlFile);
-                if (result != 0)
+                var returnCode = DimrApiWrapper.initialize(xmlFile);
+                if (returnCode != 0)
                 {
-                    //throw new Exception("dimr returned error code " + result);
-                    return result;
+                    //throw new Exception("dimr returned error code " + returnCode);
+                    return returnCode;
                 }
                 DimrApiWrapper.get_start_time(ref tStart);
                 DimrApiWrapper.get_end_time(ref tEnd);
@@ -259,11 +259,11 @@ namespace DeltaShell.Dimr
         }
         public int Update(double step)
         {
-            var result = DimrApiWrapper.update(step);
+            int returnCode = DimrApiWrapper.update(step);
 
-            if (result != 0)
+            if (returnCode != 0)
             {
-                return result;
+                return returnCode;
             }
             
             DimrApiWrapper.get_current_time(ref tCurrent);
