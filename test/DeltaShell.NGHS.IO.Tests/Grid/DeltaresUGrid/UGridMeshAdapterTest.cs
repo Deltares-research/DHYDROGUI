@@ -340,10 +340,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
         {
             //          Rural network             Urban network
             // ^                                   
-            // |  100       o node1      o  node2       o manhole1
-            // y             \          /               |                           (manhole2 has 2 compartments)
-            //         branch1 \      / branch2         | pipe1
-            //                   \  /                   |
+            // |  100       o node1      o  node2      o manhole1
+            // y             \          /              |                           (manhole2 has 2 compartments)
+            //         branch1 \      / branch2        | pipe1
+            //                   \  /                  |
             //     50             o node3              o--------o pipe2
             //                     \              manhole2    manhole3
             //                       \ branch3
@@ -388,15 +388,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             // Assert
             Assert.AreEqual(50, mesh1d.NodeIds.Length);
 
-            var branch1node3Index = mesh1d.NodeIds.ToList().IndexOf("branch1_node3");
-            Assert.AreEqual("branch1_node3_long", mesh1d.NodeLongNames[branch1node3Index]);
-            Assert.AreEqual(0, mesh1d.BranchIDs[branch1node3Index]);
-            Assert.AreEqual(21.2, mesh1d.BranchOffsets[branch1node3Index], 0.1);
+            var branch1Node3Index = mesh1d.NodeIds.ToList().IndexOf("branch1_node3");
+            Assert.AreEqual("branch1_node3_long", mesh1d.NodeLongNames[branch1Node3Index]);
+            Assert.AreEqual(0, mesh1d.BranchIDs[branch1Node3Index]);
+            Assert.AreEqual(21.2, mesh1d.BranchOffsets[branch1Node3Index], 0.1);
 
             var pipe1Node2Index = mesh1d.NodeIds.ToList().IndexOf("pipe1_node2");
             Assert.AreEqual("pipe1_node2_long", mesh1d.NodeLongNames[pipe1Node2Index]);
             Assert.AreEqual(3, mesh1d.BranchIDs[pipe1Node2Index]);
-            Assert.AreEqual(0, mesh1d.BranchOffsets[pipe1Node2Index]);
+            Assert.AreEqual(10, mesh1d.BranchOffsets[pipe1Node2Index]);
         }
 
         [Test]
