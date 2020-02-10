@@ -208,7 +208,7 @@ namespace DeltaShell.Dimr
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                var returnCode = DimrApiWrapper.initialize(xmlFile);
+                int returnCode = DimrApiWrapper.initialize(xmlFile);
                 if (returnCode != 0)
                 {
                     //throw new Exception("dimr returned error code " + returnCode);
