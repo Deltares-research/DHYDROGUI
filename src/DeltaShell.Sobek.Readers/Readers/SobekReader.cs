@@ -153,6 +153,23 @@ namespace DeltaShell.Sobek.Readers.Readers
             return false;
         }
 
+        protected bool TryGetArrayOfNumbersStrings(string label, string text, int length, out string[] stringArray)
+        {
+            stringArray = new string[length];
+            var pattern = string.Format("\\s+{0}\\s+(?<{0}>\\s*['A-Za-z0-9\\s\\(\\)-\\\\/\\.\\+\\<\\>,\\|_&;:\\[\\]]*\\s*\\s+)", label);
+            var matches = RegularExpression.GetMatches(pattern, text);
+            if (matches.Count == 1)
+            {
+                var stringValues = matches[0].Groups[label].Value.Split();
+                for (int i = 0; i < length; ++i)
+                {
+                    stringArray[i] = stringValues[i].Replace("'","");
+                }
+                return true;
+            }
+            return false;
+        }
+
         protected virtual void ReportParseError(string label, string record)
         {
             // override for error report

@@ -2323,6 +2323,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRBoundaryCo
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRDrainageBasinImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRGreenhouseImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRMeteoDataImporter.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRNwrwImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRPavedImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRSacramentoImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRSettingsImporter.cs -text
@@ -3140,6 +3141,8 @@ src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRIniSettings.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRIniSettingsReader.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRLinkReader.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRNodeReader.cs -text
+src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRNwrwReader.cs -text
+src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRNwrwSettingsReader.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRROpenWaterReader.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRPavedReader.cs -text
 src/DeltaShell.Sobek.Readers/Readers/SobekRrReaders/SobekRRRationalMethodReader.cs -text
@@ -3225,6 +3228,8 @@ src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRHbvSoil.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRInfiltration.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRLink.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRNode.cs -text
+src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRNwrw.cs -text
+src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRNwrwSettings.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRROpenWater.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRPaved.cs -text
 src/DeltaShell.Sobek.Readers/SobekDataObjects/SobekRRSacramento.cs -text
@@ -34976,6 +34981,7 @@ test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRInfiltrationRe
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRIniSettingsReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRLinkReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRNodeReaderTest.cs -text
+test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRNwrwReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRROpenWaterFromRationalMethodReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRROpenWaterReaderTest.cs -text
 test/DeltaShell.Sobek.Readers.Tests/Readers/SobekRrReaders/SobekRRPavedReaderTest.cs -text

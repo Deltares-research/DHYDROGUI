@@ -51,6 +51,12 @@
         public string SobekRRLinkFileName { get { return SobekType == SobekType.Sobek212 ? "3B_LINK.TP" : ""; } }
         public string SobekRRPavedFileName { get { return SobekType == SobekType.Sobek212 ? "PAVED.3B" : ""; } }
         public string SobekRRUnpavedFileName { get { return SobekType == SobekType.Sobek212 ? "UNPAVED.3B" : ""; } }
+
+        public string SobekRRNwrwFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.3B" : ""; } }
+        public string SobekRRNwrwSettingsFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.ALG" : ""; } }
+        public string SobekRRNwrwDwaFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.DWA" : ""; } }
+        public string SobekRRNwrwTableFileName { get { return SobekType == SobekType.Sobek212 ? "PLUVIUS.TBL" : ""; } }
+
         public string SobekRRGreenhouseFileName { get { return SobekType == SobekType.Sobek212 ? "GREENHSE.3B" : ""; } }
         public string SobekRRWasteWaterTreatmentPlantFileName { get { return SobekType == SobekType.Sobek212 ? "WWTP.3B" : ""; } }
         public string SobekRROpenWaterFileName { get { return SobekType == SobekType.Sobek212 ? "OPENWATE.3B" : ""; } }

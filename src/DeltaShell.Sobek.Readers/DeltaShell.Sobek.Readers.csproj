@@ -81,6 +81,8 @@
     <Compile Include="Readers\SobekNetworkNetterReader.cs" />
     <Compile Include="Readers\SobekNetworkStructureReader.cs" />
     <Compile Include="Readers\SobekOrificeReader.cs" />
+    <Compile Include="Readers\SobekRrReaders\SobekRRNwrwReader.cs" />
+    <Compile Include="Readers\SobekRrReaders\SobekRRNwrwSettingsReader.cs" />
     <Compile Include="Readers\SobekRrReaders\SobekRRPavedReader.cs" />
     <Compile Include="Readers\SobekPumpReader.cs" />
     <Compile Include="Readers\SobekReDefRun1Reader.cs" />
@@ -169,6 +171,8 @@
     <Compile Include="SobekDataObjects\SobekMeasurementLocation.cs" />
     <Compile Include="SobekDataObjects\SobekNode.cs" />
     <Compile Include="SobekDataObjects\SobekOrifice.cs" />
+    <Compile Include="SobekDataObjects\SobekRRNwrw.cs" />
+    <Compile Include="SobekDataObjects\SobekRRNwrwSettings.cs" />
     <Compile Include="SobekDataObjects\SobekRRPaved.cs" />
     <Compile Include="SobekDataObjects\SobekPidControllerProperties.cs" />
     <Compile Include="SobekDataObjects\SobekPump.cs" />

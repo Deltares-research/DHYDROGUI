@@ -131,6 +131,7 @@
     <Compile Include="Readers\SobekNetworkNetterReaderTest.cs" />
     <Compile Include="Readers\SobekNetworkStructureReaderTest.cs" />
     <Compile Include="Readers\SobekOrificeReaderTest.cs" />
+    <Compile Include="Readers\SobekRrReaders\SobekRRNwrwReaderTest.cs" />
     <Compile Include="Readers\SobekRrReaders\SobekRRPavedReaderTest.cs" />
     <Compile Include="Readers\SobekProfileDatFileReaderTest.cs" />
     <Compile Include="Readers\SobekPumpReaderTest.cs" />
