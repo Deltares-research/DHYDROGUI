@@ -125,8 +125,8 @@ namespace DelftTools.Hydro.SewerFeatures
             var outlet = new OutletCompartment(compartment);
             outlet.TakeConnectionsOverFrom(compartment);
 
-            Compartments.Add(outlet);
             Compartments.Remove(compartment);
+            Compartments.Add(outlet);
             var incomingBranches = IncomingBranches;
             incomingBranches
                 .OfType<ISewerConnection>()

@@ -75,7 +75,19 @@ namespace DelftTools.Hydro.SewerFeatures
                 source = value;
                 if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
                 {
-                    sourceCompartment = manhole.Compartments.FirstOrDefault();
+                    if (manhole.ContainsCompartmentWithName(SourceCompartmentName))
+                    {
+                        sourceCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(SourceCompartmentName, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    else if (sourceCompartment != null && manhole.ContainsCompartmentWithName(sourceCompartment.Name))
+                    {
+                        sourceCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(sourceCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    else
+                    {
+                        sourceCompartment = manhole.Compartments.FirstOrDefault();
+                    }
+                    
                     UpdateSource(sourceCompartment);
                     UpdateSourceCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();
@@ -122,7 +134,19 @@ namespace DelftTools.Hydro.SewerFeatures
                 target = value;
                 if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
                 {
-                    targetCompartment = manhole.Compartments.FirstOrDefault();
+                    if (manhole.ContainsCompartmentWithName(TargetCompartmentName))
+                    {
+                        targetCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(TargetCompartmentName, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    else if(targetCompartment != null && manhole.ContainsCompartmentWithName(targetCompartment.Name))
+                    {
+                        targetCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(targetCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    else
+                    {
+                        targetCompartment = manhole.Compartments.LastOrDefault();
+                    }
+
                     UpdateTarget(targetCompartment);
                     UpdateTargetCompartmentId();
                     UpdateGeometryBasedOnSourceAndTargetCompartments();

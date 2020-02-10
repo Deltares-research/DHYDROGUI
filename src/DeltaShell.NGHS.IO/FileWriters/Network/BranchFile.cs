@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
@@ -60,6 +60,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 */
                 var sewerConnection = branch as ISewerConnection;
                 if (sewerConnection == null) continue;
+                iniCategory.AddProperty(new DelftIniProperty("sourceCompartmentName", sewerConnection.SourceCompartment?.Name, ""));
+                iniCategory.AddProperty(new DelftIniProperty("targetCompartmentName", sewerConnection.TargetCompartment?.Name, ""));
+
                 var pipe = branch as Pipe;
                 if (pipe == null)
                 {
@@ -88,7 +91,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                     Name = category.GetPropertyValue(KnownPropertyNames.Name),
                     BranchType = category.GetEnumValueByKey<BranchType>(KnownPropertyNames.BranchType),
                     /* WaterType = category.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
-                    Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(KnownPropertyNames.Material)
+                    Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(KnownPropertyNames.Material),
+                    SourceCompartmentName = category.ReadProperty<string>("sourceCompartmentName", true),
+                    TargetCompartmentName = category.ReadProperty<string>("targetCompartmentName", true)
                 };
                 propertiesPerBranch.Add(branchProperties);
             }
@@ -154,6 +159,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             public BranchType BranchType { get; set; }
             public SewerConnectionWaterType WaterType { get; set; }
             public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
+
+            public string SourceCompartmentName { get; set; }
+            public string TargetCompartmentName { get; set; }
         }
     }
 }

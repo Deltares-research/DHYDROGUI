@@ -196,8 +196,9 @@ namespace DeltaShell.NGHS.IO.Grid
                         SurfaceLevel = compartmentProperties.StreetLevel,
                         FloodableArea = compartmentProperties.StreetStorageArea,
                         ManholeLength = manholeWidth,
-                        ManholeWidth = manholeWidth
-                    };
+                        ManholeWidth = manholeWidth,
+                        Geometry = new Point(nodesX[i], nodesY[i])
+                };
 
                     if (manHoleLookup.TryGetValue(compartmentProperties.ManholeId, out var existingManhole))
                     {
@@ -319,7 +320,10 @@ namespace DeltaShell.NGHS.IO.Grid
             switch (branchProperties?.BranchType)
             {
                 case BranchFile.BranchType.SewerConnection:
-                    return new SewerConnection() { WaterType = branchProperties.WaterType };
+                    return new SewerConnection()
+                    {
+                        WaterType = branchProperties.WaterType, SourceCompartmentName = branchProperties.SourceCompartmentName, TargetCompartmentName = branchProperties.TargetCompartmentName
+                    };
                 case BranchFile.BranchType.Pipe:
                     return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material};
                 case null:
