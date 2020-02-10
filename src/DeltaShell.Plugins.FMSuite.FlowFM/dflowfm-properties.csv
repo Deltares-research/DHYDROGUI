@@ -98,7 +98,7 @@ numerics,Fixedweirtopwidth,numerics,Fixed weir parameters,Fixed weir top width,D
 numerics,Fixedweirtopfrictcoef,numerics,Fixed weir parameters,Fixed weir top friction,Double,-999,,,FALSE,,,,,,Uniform friction coefficient of the groyne part of fixed weirs,
 numerics,Fixedweirtalud,numerics,Fixed weir parameters,Fixed weir talud,Double,4,,,FALSE,,,,,,Uniform talud slope of fixed weirs,
 numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,FALSE,,,,,,"Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specifiend polyline)",
-numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,0,0,,FALSE,,,,,,Fourier smoothing time (s) on water level boundaries,
+numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time (s) on water level boundaries,
 numerics,Slopedrop2D,advanced,Advanced,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)",
 numerics,Slopedrop1D,general,Urban,Apply drop losses,0|1,0,0,1,FALSE,,,,,,"Apply drop losses, (==0: no drop losses)",
 numerics,Chkadvd,advanced,Advanced,Advection checks depth,Double,0.1,0,,FALSE,,,,,,"Check advection terms if depth < chkadvdp, => less setbacks",
