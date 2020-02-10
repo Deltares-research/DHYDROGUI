@@ -98,14 +98,16 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 return null;
             var elementTypesList = ImportGwswElementsFromGwswFiles().ToList();
 
-            var hydroModel = target is Project || target == null ? new HydroModelBuilder().BuildModel(ModelGroup.RHUModels) : target as HydroModel;
+            var hydroModel = target is Project || target == null ? null : target as HydroModel;
+            //var hydroModel = target is Project || target == null ? new HydroModelBuilder().BuildModel(ModelGroup.RHUModels) : target as HydroModel;
             
             
-            var fmModel = hydroModel?.GetAllActivitiesRecursive<IWaterFlowFMModel>()?.FirstOrDefault() ?? target as IWaterFlowFMModel;
+            var fmModel = hydroModel?.GetAllActivitiesRecursive<IWaterFlowFMModel>()?.FirstOrDefault() ?? target as IWaterFlowFMModel ?? new WaterFlowFMModel();
             if (fmModel != null)
             {
                 ImportGwswNetworkInFmModel(elementTypesList, fmModel);
             }
+/*
 
             var rrModel = hydroModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault() ?? target as RainfallRunoffModel;
             if (rrModel != null && fmModel?.Network != null)
@@ -138,6 +140,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 }
             }
             return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
+*/
+            return fmModel;
 
         }
 
