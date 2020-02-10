@@ -851,7 +851,10 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 attr =>
                     fileColumnMapping.Add(
                         new CsvRequiredField(attr.Key, attr.AttributeType),
-                        new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
+                        attr.AttributeType == typeof(DateTime)? new CsvColumnInfo(fileAttributes.IndexOf(attr), new DateTimeFormatInfo()
+                        {
+                            FullDateTimePattern = "yyyyMMdd"
+                        }) : new CsvColumnInfo(fileAttributes.IndexOf(attr), CultureInfo.InvariantCulture)));
 
             var mapping = new CsvMappingData
             {

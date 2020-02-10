@@ -214,6 +214,7 @@ namespace DelftTools.Hydro.SewerFeatures
             if (sourceCoordinate.Equals(targetCoordinate))
                 targetCoordinate = new Coordinate(targetCoordinate.X+1,targetCoordinate.Y);
             Geometry = new LineString(new[] { sourceCoordinate, targetCoordinate });
+            SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
         }
 
         public override bool IsLengthCustom
@@ -367,7 +368,16 @@ namespace DelftTools.Hydro.SewerFeatures
                 ConnectSourceCompartment(sourceManhole);
                 ConnectTargetCompartment(targetManhole);
             }
-            if (Math.Abs(Length) < 10e-6 && SourceCompartment?.Geometry?.Coordinate != null && TargetCompartment?.Geometry?.Coordinate != null)
+            SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
+
+            AddCrossSectionDefinition(hydroNetwork);
+            hydroNetwork.Branches.Add(this);
+        }
+
+        private void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
+        {
+            if (Math.Abs(Length) < 10e-6 && SourceCompartment?.Geometry?.Coordinate != null &&
+                TargetCompartment?.Geometry?.Coordinate != null)
             {
                 if (SourceCompartment.Geometry.Coordinate.Equals(TargetCompartment.Geometry.Coordinate))
                 {
@@ -379,13 +389,9 @@ namespace DelftTools.Hydro.SewerFeatures
                 {
                     Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
                 }
-                
             }
-
-            AddCrossSectionDefinition(hydroNetwork);
-            hydroNetwork.Branches.Add(this);
         }
-        
+
         protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
         }
