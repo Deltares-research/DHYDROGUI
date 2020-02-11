@@ -9604,6 +9604,16 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Didacti
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_DidactischStelsel/Profiel_duplicate_column_Id.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_DidactischStelsel/Verbinding.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_DidactischStelsel/Verloop.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Debiet.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/ItObject.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Knooppunt.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Kunstwerk.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Meta.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Nwrw.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Oppervlak.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Profiel.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Verbinding.csv -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Juinen_New/Verloop.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Leiden/BOP.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Leiden/Debiet.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/GWSW_Leiden/GWSW.hydx_Definitie_DM.csv -text
