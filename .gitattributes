@@ -2251,6 +2251,7 @@ src/DeltaShell.Plugins.GWSWImporter/Properties/Settings.Designer.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/Settings.settings -text
 src/DeltaShell.Plugins.GWSWImporter/RectangleCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Resources/GWSWDefinition.csv -text
+src/DeltaShell.Plugins.GWSWImporter/Resources/GWSWDefinition1_5.csv -text
 src/DeltaShell.Plugins.GWSWImporter/Resources/StructureFeatureSmall.png -text
 src/DeltaShell.Plugins.GWSWImporter/SewerCompartmentGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/SewerConnectionGenerator.cs -text

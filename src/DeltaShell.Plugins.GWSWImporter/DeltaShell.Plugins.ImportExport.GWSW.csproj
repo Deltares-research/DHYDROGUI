@@ -241,6 +241,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\GWSWDefinition1_5.csv" />
     <None Include="Resources\StructureFeatureSmall.png" />
   </ItemGroup>
   <ItemGroup>

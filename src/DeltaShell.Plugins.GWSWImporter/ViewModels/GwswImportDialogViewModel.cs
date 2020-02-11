@@ -281,7 +281,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
 
         private void ConfigureImporter()
         {
-            if (Importer?.GwswAttributesDefinition == null || !Importer.GwswAttributesDefinition.Any()) return;
             var pathList = new List<string>();
 
             //Get the items to import
