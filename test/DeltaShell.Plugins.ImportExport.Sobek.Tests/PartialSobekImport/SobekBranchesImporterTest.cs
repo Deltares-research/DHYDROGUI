@@ -165,8 +165,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(870, network.Nodes.Count);
             Assert.AreEqual(914, network.Branches.Count);
             Assert.AreEqual(864, network.Manholes.Count());
-            Assert.AreEqual(873, network.SewerConnections.Count());
-            Assert.AreEqual(853, network.Pipes.Count());
+            Assert.AreEqual(912, network.SewerConnections.Count());
+            Assert.AreEqual(892, network.Pipes.Count());
         }
     }
 }

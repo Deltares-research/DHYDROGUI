@@ -101,7 +101,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                     var values = line.Split(new[] { ',' });
                     if (values.Length >= 20)
                     {
-                        var key = values[0].Replace("\"", "");
+                        var key = values[2].Replace("\"", "");
                         int value;
                         var valueString = values[3];
                         if (!string.IsNullOrEmpty(valueString))

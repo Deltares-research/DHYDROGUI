@@ -151,13 +151,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var fromManhole = fromNode as Manhole;
             var toManhole = toNode as Manhole;
 
-            var netterBranchName = sobekBranch.StartNodeID + "-" + sobekBranch.EndNodeID;
-            var bFoundNetterBranchName = branchTypes.ContainsKey(netterBranchName);
-            if (!bFoundNetterBranchName) netterBranchName = sobekBranch.StartNodeID + "_" + sobekBranch.EndNodeID; // if nodeName contains "-", "_" is used
-
-            if (bFoundNetterBranchName || branchTypes.ContainsKey(netterBranchName))
+            if (branchTypes.ContainsKey(sobekBranch.TextID))
             {
-                var branchType = branchTypes[netterBranchName];
+                var branchType = branchTypes[sobekBranch.TextID];
                 if (SobekNetworkNetterReader.IsPreasurePipe(branchType)) //is a preasure pipe / sewer connection 
                 {
                     var sewerConnection = new SewerConnection(sobekBranch.TextID)
