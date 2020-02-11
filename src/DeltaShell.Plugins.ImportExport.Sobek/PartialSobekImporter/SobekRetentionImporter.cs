@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             ImportSobek212Retentions(sobekRetsobekRetentions, nodes, retentions, null);
         }
 
-        private void ImportSobek212Retentions(IEnumerable<Retention> sobekRetsobekRetentions, Dictionary<string, INode> nodes, Dictionary<string, IRetention> retentions, IDictionary<string, string> readNodeTypes)
+        private void ImportSobek212Retentions(IEnumerable<Retention> sobekRetsobekRetentions, Dictionary<string, INode> nodes, Dictionary<string, IRetention> retentions, IDictionary<string, int> readNodeTypes)
         {
             foreach (var retention in sobekRetsobekRetentions)
             {
@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (readNodeTypes != null)
                     {
                         //verification if node is declared in netter file as lateral source
-                        if (!readNodeTypes.ContainsKey(retention.Name) || (readNodeTypes[retention.Name] != "SBK_LATERALFLOW" && readNodeTypes[retention.Name] != "SBK_CHANNEL_STORCONN&LAT" && !readNodeTypes[retention.Name].StartsWith("SBK_CONN&LAT")))
+                        if (!readNodeTypes.ContainsKey(retention.Name) || SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name]))
                         {
                             continue;
                         }

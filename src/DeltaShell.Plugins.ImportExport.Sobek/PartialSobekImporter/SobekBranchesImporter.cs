@@ -26,18 +26,34 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         protected override void PartialImport()
         {
+            var networkNetterPath = GetFilePath(SobekFileNames.SobekNetworkNetterFileName);
             var nodesPath = GetFilePath(SobekFileNames.SobekNodeFileName);
             var networkPath = GetFilePath(SobekFileNames.SobekNetworkFileName);
             var networkBranchGeometryPath = GetFilePath(SobekFileNames.SobekNetworkBrancheGeometryFileName);
 
+            IDictionary<string,int> nodeTypes = new Dictionary<string, int>();
+            IDictionary<string, int> branchTypes = new Dictionary<string, int>();
+
+            if (File.Exists(networkNetterPath))
+            {
+                nodeTypes = SobekNetworkNetterReader.ReadNodeTypes(networkNetterPath);
+                branchTypes = SobekNetworkNetterReader.ReadBranchTypes(networkNetterPath);
+            }
+            else
+            {
+                Log.WarnFormat("Couldn't find file {0} for detailed branches and nodes information.", networkNetterPath);
+            }
+
+            var nodeDataReader = new SobekRetentionsReader() { Sobek2Import = true };
+            var nodeData = nodeDataReader.Read(nodesPath).Cast<Retention>()
+                .ToDictionaryWithErrorDetails(nodesPath, c => c.Name);
+
             var createdNodes = new SobekNetworkNodeFileReader().Read(networkPath)
                 .Concat(new SobekNetworkLinkageNodeFileReader().Read(networkPath).Cast<SobekNode>())
-                .ToDictionaryWithErrorDetails(networkPath, n => n.ID, n => CreateHydroNode(n, HydroNetwork));
-
-            UpdateNodesToManholes(nodesPath, networkPath, createdNodes);
+                .ToDictionaryWithErrorDetails(networkPath, n => n.ID, n => CreateHydroNodeOrManhole(n, nodeTypes, nodeData, HydroNetwork));
 
             var createdBranches = new SobekNetworkBranchFileReader().Read(networkPath)
-                                .ToDictionaryWithErrorDetails(networkPath, b => b.TextID, b => CreateBranchOrPipe(b, createdNodes, HydroNetwork));
+                                .ToDictionaryWithErrorDetails(networkPath, b => b.TextID, b => CreateBranchOrPipe(b, createdNodes, branchTypes, HydroNetwork));
 
             ReadAndUpdateBranchGeometry(networkBranchGeometryPath, createdBranches, SobekType);
 
@@ -49,25 +65,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
 
             ReadAndUpdateBranchOrderNumber(nodesPath, HydroNetwork, branchesLookUp);
-        }
-
-        private void UpdateNodesToManholes(string nodesPath, string networkPath, Dictionary<string, INode> createdNodes)
-        {
-            var manholeReader = new SobekRetentionsReader(){Sobek2Import =  true};
-            var manholes = manholeReader.Read(nodesPath)
-                .Cast<Retention>()
-                .ToDictionaryWithErrorDetails(networkPath, c => c.Name,
-                    c => CreateManholeWithOneCompartment(c, HydroNetwork));
-            foreach (var manholeKeyValuePair in manholes)
-            {
-                if (createdNodes.ContainsKey(manholeKeyValuePair.Key))
-                {
-                    var manhole = manholeKeyValuePair.Value;
-                    var node = createdNodes[manholeKeyValuePair.Key];
-                    manhole.Geometry = node.Geometry;
-                    createdNodes[manholeKeyValuePair.Key] = manhole;
-                }
-            }
         }
 
         private static void AddToNetwork(IDictionary<string, IBranch> createdChannels, IDictionary<string, IBranch> branchesLookUp, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
@@ -145,27 +142,72 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
     
-        private static IBranch CreateBranchOrPipe(SobekBranch sobekBranch, IDictionary<string, INode> createdNodes, INetwork hydroNetwork)
+        private static IBranch CreateBranchOrPipe(SobekBranch sobekBranch, Dictionary<string, INode> createdNodes,
+            IDictionary<string, int> branchTypes, INetwork hydroNetwork)
         {
             var fromNode = createdNodes[sobekBranch.StartNodeID];
             var toNode = createdNodes[sobekBranch.EndNodeID];
 
             var fromManhole = fromNode as Manhole;
             var toManhole = toNode as Manhole;
-            if (fromManhole != null & toManhole != null) //is a pipe
+
+            var netterBranchName = sobekBranch.StartNodeID + "-" + sobekBranch.EndNodeID;
+            var bFoundNetterBranchName = branchTypes.ContainsKey(netterBranchName);
+            if (!bFoundNetterBranchName) netterBranchName = sobekBranch.StartNodeID + "_" + sobekBranch.EndNodeID; // if nodeName contains "-", "_" is used
+
+            if (bFoundNetterBranchName || branchTypes.ContainsKey(netterBranchName))
             {
-                return new Pipe
+                var branchType = branchTypes[netterBranchName];
+                if (SobekNetworkNetterReader.IsPreasurePipe(branchType)) //is a preasure pipe / sewer connection 
                 {
-                    Name = sobekBranch.TextID,
-                    LongName = sobekBranch.Name,
-                    Network = hydroNetwork,
-                    IsLengthCustom = true,
-                    Length = sobekBranch.Length,
-                    Geometry = new LineString(new[] { fromManhole.Geometry.Coordinate, toManhole.Geometry.Coordinate }),
-                    Material = SewerProfileMapping.SewerProfileMaterial.Unknown,
-                    SourceCompartment = fromManhole.Compartments.FirstOrDefault(),
-                    TargetCompartment = toManhole.Compartments.FirstOrDefault(),
-                };
+                    var sewerConnection = new SewerConnection(sobekBranch.TextID)
+                    {
+                        LongName = sobekBranch.Name,
+                        Network = hydroNetwork,
+                        IsLengthCustom = true,
+                        Length = sobekBranch.Length,
+                        Geometry = new LineString(
+                            new[] {fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate}),
+                        Source = fromNode,
+                        Target = toNode,
+                        SourceCompartment = fromManhole?.Compartments?.FirstOrDefault(),
+                        TargetCompartment = toManhole?.Compartments?.FirstOrDefault()
+                    };
+                    return sewerConnection;
+                }
+
+                if (SobekNetworkNetterReader.IsPipe(branchType)) //is a pipe 
+                {
+                    var pipe = new Pipe
+                    {
+                        Name = sobekBranch.TextID,
+                        LongName = sobekBranch.Name,
+                        Network = hydroNetwork,
+                        IsLengthCustom = true,
+                        Length = sobekBranch.Length,
+                        Geometry = new LineString(new[] {fromNode.Geometry.Coordinate, toNode.Geometry.Coordinate}),
+                        Material = SewerProfileMapping.SewerProfileMaterial.Unknown,
+                        Source = fromNode,
+                        Target = toNode,
+                        SourceCompartment = fromManhole?.Compartments?.FirstOrDefault(),
+                        TargetCompartment = toManhole?.Compartments?.FirstOrDefault()
+                    };
+
+                    if (SobekNetworkNetterReader.IsDryWeatherPipe(branchType))
+                    {
+                        pipe.WaterType = SewerConnectionWaterType.DryWater;
+                    }
+                    else if (SobekNetworkNetterReader.IsStormWeatherPipe(branchType))
+                    {
+                        pipe.WaterType = SewerConnectionWaterType.StormWater;
+                    }
+                    else
+                    {
+                        pipe.WaterType = SewerConnectionWaterType.Combined;
+                    }
+
+                    return pipe;
+                }
             }
 
             return new Channel(fromNode, toNode, sobekBranch.Length)
@@ -177,34 +219,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             };
         }
 
-        private static IManhole CreateManholeWithOneCompartment(Retention retention,
-            IHydroNetwork hydroNetwork)
+        private static INode CreateHydroNodeOrManhole(SobekNode sobekNode, IDictionary<string, int> nodeTypes,
+            Dictionary<string, Retention> nodeData,
+            INetwork hydroNetwork)
         {
-            var dimension = 0.0;
-            if (retention.StorageArea > 0.0) dimension = Math.Pow(retention.StorageArea, 0.5);
 
-            var compartment = new Compartment
+            //manholes??
+            if (nodeTypes.ContainsKey(sobekNode.ID))
             {
-                Name = retention.Name,
-                ManholeLength = dimension,
-                ManholeWidth = dimension,
-                Shape = CompartmentShape.Square,
-                BottomLevel = retention.BedLevel,
-                FloodableArea = retention.StreetStorageArea,
-                SurfaceLevel = retention.StreetLevel,
-                //retention.StreetStorage,
-                //retention.WellStorage,
+                if (SobekNetworkNetterReader.IsManhole(nodeTypes[sobekNode.ID]))
+                {
+                    var manhole = CreateManholeWithOneCompartment(sobekNode);
 
-            };
-            var manhole = new Manhole(retention.Name);
-            manhole.Compartments.Add(compartment);
-            compartment.ParentManhole = manhole;
+                    if (nodeData.ContainsKey(sobekNode.ID))
+                    {
+                        UpdateManholeWithNodeData(manhole, nodeData[sobekNode.ID]);
+                    }
 
-            return manhole;
-        }
+                    return manhole;
+                }
+            }
 
-        private static INode CreateHydroNode(SobekNode sobekNode, INetwork hydroNetwork)
-        {
             return new HydroNode
             {
                 Name = sobekNode.ID,
@@ -213,7 +248,41 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 Network = hydroNetwork
             };
         }
-        
+
+        private static IManhole CreateManholeWithOneCompartment(SobekNode sobekNode)
+        {
+            var compartment = new Compartment
+            {
+                Name = sobekNode.ID,
+                Geometry = new Point(sobekNode.X, sobekNode.Y)
+            };
+            var manhole = new Manhole(sobekNode.ID);
+            manhole.Geometry = new Point(sobekNode.X, sobekNode.Y);
+            manhole.Compartments.Add(compartment);
+            compartment.ParentManhole = manhole;
+
+            return manhole;
+        }
+        private static void UpdateManholeWithNodeData(IManhole manhole, Retention retention)
+        {
+            var dimension = 0.0;
+            if (retention.StorageArea > 0.0) dimension = Math.Pow(retention.StorageArea, 0.5);
+
+            var compartment = manhole.Compartments.FirstOrDefault(c => c.Name == manhole.Name);
+            if (compartment != null)
+            {
+                compartment.Name = retention.Name;
+                compartment.ManholeLength = dimension;
+                compartment.ManholeWidth = dimension;
+                compartment.Shape = CompartmentShape.Square;
+                compartment.BottomLevel = retention.BedLevel;
+                compartment.FloodableArea = retention.StreetStorageArea;
+                compartment.SurfaceLevel = retention.StreetLevel;
+                //retention.StreetStorage,
+                //retention.WellStorage,
+            }
+        }
+
         /// <summary>
         /// Updates ordernumber branches based on nodes.dat Sobek 212.4 - 213 files
         /// </summary>
