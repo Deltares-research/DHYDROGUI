@@ -12,12 +12,12 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DelftTools.Shell.Gui.Wpf.ProjectTemplateView;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -108,6 +108,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            yield return new ViewInfo<ProjectTemplate, StandardProjectTemplateSettingsView>
+            {
+                AdditionalDataCheck = t => t.Id == "FMModel",
+                AfterCreate = (v, o) =>
+                {
+                    v.GetBrushForProjectTemplate = template =>
+                    {
+                        return GraphicsProvider.CreateDrawingGroupFor(template);
+                    };
+                }
+            };
+
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
 {
@@ -15,29 +16,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
 
         public bool CanProvideDrawingGroupFor(object item)
         {
-            var modelInfo = item as ModelInfo;
-            if (modelInfo == null) return false;
-            /*var possibleModel = modelInfo.CreateModel(null);
-            if (possibleModel == null) return false;
-            return possibleModel is IWaterFlowFMModel;*/
-            return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
+            if (item is ModelInfo modelInfo)
+            {
+                return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
+            }
+
+            if (item is ProjectTemplate projectTemplate)
+            {
+                return projectTemplate.Id == "FMModel";
+            }
+
+            if (item is WaterFlowFMFileImporter)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public DrawingGroup CreateDrawingGroupFor(object item)
         {
-            var modelInfo = item as ModelInfo;
-            if (modelInfo == null) return null;
-            if (modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName)
-            { 
-                return (DrawingGroup)resources["FMModelDrawingGroup"];
+            if ((item is ModelInfo modelInfo && modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName) ||
+                (item is ProjectTemplate projectTemplate && projectTemplate.Id == "FMModel") ||
+                item is WaterFlowFMFileImporter)
+            {
+                return (DrawingGroup) resources["FMModelDrawingGroup"];
             }
-            /*var possibleModel = modelInfo.CreateModel(null);
-            if (possibleModel == null) return null;
-            if(possibleModel is IWaterFlowFMModel)
-            { 
-                return (DrawingGroup)resources["FMModelDrawingGroup"];
-            }*/
-            
+
+
             return null;
         }
     }

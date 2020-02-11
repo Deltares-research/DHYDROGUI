@@ -90,6 +90,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
         }
 
+        public override IEnumerable<ProjectTemplate> ProjectTemplates()
+        {
+            yield return new ProjectTemplate
+            {
+                Id = "FMModel",
+                Category = "FM",
+                Name = "FM model",
+                Description = "Creates a new standalone flexible mesh model",
+                ExecuteTemplate = (p, settings) =>
+                {
+                    p.RootFolder.Items.Add(new WaterFlowFMModel());
+                }
+            };
+        }
+
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new WaterFlowFMFileImporter();
