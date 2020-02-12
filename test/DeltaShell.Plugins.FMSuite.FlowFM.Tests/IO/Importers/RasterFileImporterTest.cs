@@ -179,7 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var testFilePath = TestHelper.GetTestFilePath(@"RasterImport\ahn_breach.asc");
             var bedLevels = RasterFile.ReadPointValues(testFilePath).ToList();
             Assert.IsNotNull(bedLevels);
-            Assert.IsTrue(bedLevels.Count == 252*173);
+
+            Assert.AreEqual(252 * 173 - 2720, bedLevels.Count, "Should be 252 * 173 without 2720 no-data values");
         }
 
         [Test]
