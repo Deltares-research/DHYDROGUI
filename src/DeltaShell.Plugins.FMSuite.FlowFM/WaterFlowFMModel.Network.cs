@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void SubscribeToNetwork()
+        public void SubscribeToNetwork()
         {
             ((INotifyCollectionChanged) Network).CollectionChanged += NetworkCollectionChanged;
             ((INotifyPropertyChanged) Network).PropertyChanged += NetworkPropertyChanged;

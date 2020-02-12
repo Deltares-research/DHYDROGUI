@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -189,6 +190,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             set { }
         }
 
+        [InvokeRequired]
         public void Import()
         {
             PartialSobekImporter.Import();
@@ -341,12 +343,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             if (!useFm)
             {
                 var fm = hydroModel.Activities.First(m => m is WaterFlowFMModel);
+                hydroModel.Region.SubRegions.Remove(((WaterFlowFMModel)fm).Network);
+                hydroModel.Region.SubRegions.Remove(((WaterFlowFMModel)fm).Area);
                 hydroModel.Activities.Remove(fm);
             }
 
             if (!useRR)
             {
                 var rr = hydroModel.Activities.First(m => m is RainfallRunoffModel);
+                hydroModel.Region.SubRegions.Remove(((RainfallRunoffModel) rr).Basin);
                 hydroModel.Activities.Remove(rr);
             }
 

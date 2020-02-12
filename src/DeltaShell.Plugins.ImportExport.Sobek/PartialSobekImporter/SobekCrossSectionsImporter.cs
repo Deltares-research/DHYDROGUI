@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (flowFmModel != null)
             {
-                //flowFmModel.SubscribeToNetwork();
+                flowFmModel.SubscribeToNetwork();
                 flowFmModel.UpdateRoughnessSections();
             }
         }

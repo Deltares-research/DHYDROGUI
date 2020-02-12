@@ -2,6 +2,8 @@
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.Wizard;
 using Mono.Addins;
 
@@ -39,16 +41,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             yield return new ViewInfo<SobekHydroModelImporter, ImportSobekHydroModelWizardDialog>
             {
-                GetViewName = (v, o) => v.Title
+                GetViewName = (v, o) => v.Title,
+                AfterCreate = (dialog, importer) => importer.TargetObject = Gui.Selection as HydroModel
             };
             yield return new ViewInfo<SobekModelToWaterFlowFMImporter, ImportSobekWaterFlowFMWizardDialog>
             {
-                GetViewName = (v, o) => v.Title
+                GetViewName = (v, o) => v.Title,
+                AfterCreate = (dialog, importer) => importer.TargetObject = Gui.Selection as WaterFlowFMModel
             };
             yield return new ViewInfo<SobekNetworkImporter, ImportPartialSobekWizardDialog>
-                {
-                    GetViewName = (v, o) => v.Title
-                };
+            {
+                GetViewName = (v, o) => v.Title,
+                AfterCreate = (dialog, importer) => importer.TargetObject = Gui.Selection as HydroNetwork
+            };
         }
     }
 }

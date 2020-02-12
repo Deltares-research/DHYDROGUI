@@ -1,8 +1,14 @@
 using System;
 using System.IO;
+using System.Linq;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.WizardPages;
-using DeltaShell.Plugins.ImportExport.Sobek.Wizard;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Shell.Core.Extensions;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RealTimeControl;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {
@@ -100,6 +106,40 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             }
             base.OnPageCompleted(page);
         }
+        protected override void OnDialogFinished()
+        {
+            ConfigureIntegratedModel(importer);
+            base.OnDialogFinished();
+        }
 
+        private void ConfigureIntegratedModel(SobekHydroModelImporter sobekHydroModelImporter)
+        {
+            if (sobekHydroModelImporter.TargetObject is HydroModel hydroModel)
+            {
+                if (!hydroModel.GetAllActivitiesRecursive<IModelWithNetwork>().Any() && sobekHydroModelImporter.useFm)
+                {
+                    //seems like an integrated model without fm
+                    var fmModel = new WaterFlowFMModel();
+                    fmModel.MoveModelIntoIntegratedModel(hydroModel.GetFolderContainer(), hydroModel);
+                }
+
+                if (!hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>().Any() && sobekHydroModelImporter.useRR)
+                {
+                    //seems like an integrated model without rr
+                    var rrModel = new RainfallRunoffModel();
+                    rrModel.MoveModelIntoIntegratedModel(hydroModel.GetFolderContainer(), hydroModel);
+                }
+
+                if (!hydroModel.GetAllActivitiesRecursive<RealTimeControlModel>().Any() && sobekHydroModelImporter.useRTC)
+                {
+                    //seems like an integrated model without rtc
+                    var rtcModel = new RealTimeControlModel();
+                    hydroModel.Activities.Add(rtcModel);
+                    //rtcModel.UpgradeModelIntoIntegratedModel(hydroModel.GetTargetFolder());
+                }
+                hydroModel.RefreshDefaultModelWorkflows();
+            }
+
+        }
     }
 }
