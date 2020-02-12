@@ -12,9 +12,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         public static readonly ConfigurationSetting LevelCount = new ConfigurationSetting(key: "levelsCount");
 
         public static readonly ConfigurationSetting XYZCount = new ConfigurationSetting(key: "xyzCount", description: "Number of XYZ-coordinates");
-        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition", format: "F3");
-        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition", format: "F3");
-        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition", format: "F3");
+        public static readonly ConfigurationSetting XCoors = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the definition", format: "F5");
+        public static readonly ConfigurationSetting YCoors = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the definition", format: "F5");
+        public static readonly ConfigurationSetting ZCoors = new ConfigurationSetting(key: "zCoordinates", description: "z-coordinates of the definition", format: "F5");
 
         public static readonly ConfigurationSetting SingleValuedZ = new ConfigurationSetting(key: "singleValuedZ", description: "", defaultValue:"1");
         public static readonly ConfigurationSetting YZCount = new ConfigurationSetting(key: "yzCount", description: "Number of YZ-coordinates");

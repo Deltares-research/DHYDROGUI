@@ -45,12 +45,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
             }
 
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading cross section definitions an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
-            }
-            
             foreach (var crossSectionDefinition in crossSectionDefinitions)
             {
                 try

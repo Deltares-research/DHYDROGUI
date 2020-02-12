@@ -1,4 +1,6 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using System.Data;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
@@ -25,9 +27,18 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 
             var table = new FastYZDataTable();
             table.BeginLoadData();
+            
             for (int i = 0; i < yList.Count; i++)
             {
-                table.AddCrossSectionYZRow(yList[i], zList[i]);
+                try
+                {
+                    table.AddCrossSectionYZRow(yList[i], zList[i]);
+                }
+                catch (ConstraintException e)
+                {
+                    throw new FileReadingException($"Can not set YZ-table of cross section definition {crossSectionDefinition.Name}", e);
+                }
+               
             }
             table.EndLoadData();
             crossSectionDefinition.YZDataTable = table;
