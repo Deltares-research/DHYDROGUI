@@ -16,7 +16,7 @@ namespace DeltaShell.Dimr
         public static extern int initialize(string configFile);
 
         [DllImport(DimrApiDataSet.DIMR_DLL_NAME, EntryPoint = "update", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void update(double step);
+        public static extern int update(double step);
 
         [DllImport(DimrApiDataSet.DIMR_DLL_NAME, EntryPoint = "finalize", CallingConvention = CallingConvention.Cdecl)]
         public static extern void finalize();

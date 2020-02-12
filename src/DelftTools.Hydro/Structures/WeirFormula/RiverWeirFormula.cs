@@ -22,6 +22,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         /// <summary>
         /// Creates a RiverWeirFormula with default values as found in Sobek.
+        /// </summary>
         /// <returns> </returns>
         public static RiverWeirFormula CreateDefault()
         {

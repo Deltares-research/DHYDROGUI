@@ -20,8 +20,8 @@ namespace DeltaShell.Dimr
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
-            api.SetLoggingLevel("feedbackLevel", DimrApiDataSet.FeedbackLevel);
-            api.SetLoggingLevel("debugLevel", DimrApiDataSet.LogFileLevel);
+            api.SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, DimrApiDataSet.FeedbackLevel);
+            api.SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, DimrApiDataSet.LogFileLevel);
         }
 
         #region Implementation of IDisposable
@@ -78,28 +78,23 @@ namespace DeltaShell.Dimr
 
         public void set_feedback_logger()
         {
-            if (api != null) api.set_feedback_logger();
+            api?.set_feedback_logger();
         }
 
         
         public int Initialize(string xmlFile)
         {
-            if (api != null)
-            {
-                return api.Initialize(xmlFile);
-            }
-            return 0;
+            return api?.Initialize(xmlFile) ?? 1;
         }
 
         public int Update(double step)
         {
-            if (api != null) api.Update(step);
-            return 0;
+            return api?.Update(step) ?? 1;
         }
 
         public int Finish()
         {
-            if (api != null) api.Finish();
+            api?.Finish();
             return 0;
         }
 

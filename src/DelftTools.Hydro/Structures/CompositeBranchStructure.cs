@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 
@@ -19,20 +18,7 @@ namespace DelftTools.Hydro.Structures
     [Entity]
     public class CompositeBranchStructure : BranchStructure, ICompositeBranchStructure
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeBranchStructure));
-
         private IEventedList<IStructure1D> structures;
-        private ICompositeBranchStructure parentStructure;
-
-        /// <summary>
-        /// implements new ParentStructure to hide FeatureAttribute which is confusing for user for composite structure
-        /// </summary>
-        [Aggregation]
-        public new virtual ICompositeBranchStructure ParentStructure
-        {
-            get => base.ParentStructure;
-            set => base.ParentStructure = value;
-        }
 
         [NoNotifyPropertyChange]
         public override double Chainage
@@ -112,21 +98,11 @@ namespace DelftTools.Hydro.Structures
             base.Name = name;
         }
 
-        ICompositeBranchStructure IStructure1D.ParentStructure
-        {
-            get => parentStructure;
-            set => parentStructure = value;
-        }
-
         /// <summary>
-        /// Do not clone members in EventedList
-        /// <IStructure>
-        /// Structures because:
+        /// Do not clone members in <see cref="Structures"/> because:
         /// - they will be cloned by the channel
-        /// Do not add cloned structures to EventedList
-        /// <IStructure>
-        /// Structures because\
-        /// - there is no garantee they are already cloned
+        /// Do not add cloned structures to <see cref="Structures"/> because\
+        /// - there is no guarantee they are already cloned
         /// Only solution now is relink in Channel Clone
         /// </summary>
         /// <returns> </returns>
@@ -145,10 +121,10 @@ namespace DelftTools.Hydro.Structures
 
             // Check for emptyness
             // Check for overlapping weirs
-            IOrderedEnumerable<IStructure1D> weirs =
-                structure.Structures.Where(s => s is IWeir).OrderBy(w => ((IWeir) w).OffsetY);
-            //IWeir previousWeir = null;
-            foreach (IWeir weir in weirs)
+            IOrderedEnumerable<IStructure1D> weirs = structure.Structures
+                                                              .Where(s => s is IWeir)
+                                                              .OrderBy(w => ((IWeir) w).OffsetY);
+            foreach (IStructure1D weir in weirs)
             {
                 ValidationResult result = weir.Validate();
                 if (!result.IsValid)
@@ -157,13 +133,6 @@ namespace DelftTools.Hydro.Structures
                                        string.Format("{0}:{1}", weir.Name, result.ValidationException.Message),
                                        result.ValidationException));
                 }
-
-                //if ((previousWeir != null) && (weir.OffsetY < previousWeir.CrestWidth + previousWeir.OffsetY))
-                //{
-                //    var exception = new ValidationException(string.Format("Two overlapping weirs in structure {0} at indices {1} and {2}.", structure.Name, index - 1, index));
-                //    exceptions.Add(exception);
-                //}
-                //previousWeir = weir;
             }
 
             IEnumerable<IGate> gates = structure.Structures.OfType<IGate>();
