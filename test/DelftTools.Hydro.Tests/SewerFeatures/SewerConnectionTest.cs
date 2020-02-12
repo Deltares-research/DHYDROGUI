@@ -486,12 +486,12 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
         }
 
         [Test]
-        public void GivenSewerConnection_WhenAddingManholeAsTargetAndNoTargetCompartmentIsDefined_ThenTheFirstCompartmentIsTheTargetCompartment()
+        public void GivenSewerConnection_WhenAddingManholeAsTargetAndNoTargetCompartmentIsDefined_ThenTheSecondCompartmentIsTheTargetCompartment()
         {
             var targetGeometry = new Point(0, 10);
 
-            var targetCompartment1 = new Compartment { Geometry = targetGeometry };
-            var targetCompartment2 = new Compartment { Geometry = targetGeometry };
+            var targetCompartment1 = new Compartment { Name = "compartment1", Geometry = targetGeometry };
+            var targetCompartment2 = new Compartment { Name = "compartment2", Geometry = targetGeometry };
             var targetManhole = new Manhole("TargetManhole")
             {
                 Compartments = new EventedList<ICompartment> { targetCompartment1, targetCompartment2 }
@@ -499,7 +499,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
             var sewerConnection = new SewerConnection {TargetCompartment = null};
             sewerConnection.Target = targetManhole;
-            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(targetCompartment1));
+            Assert.That(sewerConnection.TargetCompartment.Name, Is.EqualTo(targetCompartment2.Name));
         }
 
         [Test]
@@ -519,8 +519,10 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
                 Compartments = new EventedList<ICompartment> { newTargetCompartment1, newTargetCompartment2 }
             };
 
+            sewerConnection.Source = newTargetManhole;
             sewerConnection.Target = newTargetManhole;
-            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(newTargetCompartment1));
+            Assert.That(sewerConnection.SourceCompartment, Is.EqualTo(newTargetCompartment1));
+            Assert.That(sewerConnection.TargetCompartment, Is.EqualTo(newTargetCompartment2));
         }
 
         [Test]
