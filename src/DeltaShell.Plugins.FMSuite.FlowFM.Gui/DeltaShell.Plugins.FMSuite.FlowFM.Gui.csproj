@@ -136,6 +136,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48530-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48530-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
@@ -178,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundaryDataMapSymbols.cs" />
+    <Compile Include="CreateFmModelSettingViewViewModel.cs" />
     <Compile Include="Editors\BoundaryConditionExtensions.cs" />
     <Compile Include="Editors\Buttons\EditCoverageLayersButton.cs" />
     <Compile Include="Editors\Buttons\EditDepthLayersButton.cs" />
@@ -266,6 +270,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\BoundaryConditionDialogLauncher.FileType.cs" />
+    <Compile Include="Forms\CreateFmModelSettingView.xaml.cs">
+      <DependentUpon>CreateFmModelSettingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FMModelInspectionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -615,6 +622,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\TracerDefinitionsEditorWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\CreateFmModelSettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

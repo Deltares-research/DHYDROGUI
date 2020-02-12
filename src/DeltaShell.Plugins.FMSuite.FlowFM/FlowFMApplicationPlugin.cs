@@ -100,7 +100,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Description = "Creates a new standalone flexible mesh model",
                 ExecuteTemplate = (p, settings) =>
                 {
-                    p.RootFolder.Items.Add(new WaterFlowFMModel());
+                    var model = new WaterFlowFMModel();
+                    if (settings is FmModelSettings modelSettings)
+                    {
+                        model.Name = modelSettings.ModelName;
+                        model.CoordinateSystem = modelSettings.CoordinateSystem;
+                    }
+
+                    p.RootFolder.Items.Add(model);
                 }
             };
         }

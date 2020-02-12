@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Resources;
+using System.Threading.Tasks;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -41,10 +42,12 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
+using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using FeatureCollectionViewInfoHelper = DeltaShell.Plugins.FMSuite.Common.Gui.FeatureCollectionViewInfoHelper;
@@ -89,7 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get { return graphicsProvider; }
         }
 
-
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
@@ -108,16 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<ProjectTemplate, StandardProjectTemplateSettingsView>
+            yield return new ViewInfo<ProjectTemplate, CreateFmModelSettingView>
             {
-                AdditionalDataCheck = t => t.Id == "FMModel",
-                AfterCreate = (v, o) =>
-                {
-                    v.GetBrushForProjectTemplate = template =>
-                    {
-                        return GraphicsProvider.CreateDrawingGroupFor(template);
-                    };
-                }
+                AdditionalDataCheck = t => t.Id == "FMModel"
             };
 
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>

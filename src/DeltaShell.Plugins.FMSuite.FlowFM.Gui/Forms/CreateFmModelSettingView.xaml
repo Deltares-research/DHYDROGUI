@@ -1,0 +1,169 @@
+﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.CreateFmModelSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
+             xmlns:coordinateSystems="clr-namespace:GeoAPI.Extensions.CoordinateSystems;assembly=GeoAPI.Extensions"
+             mc:Ignorable="d" 
+             Background="White"
+             Foreground="Black">
+    <UserControl.DataContext>
+        <gui:CreateFmModelSettingViewViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml"/>
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition MinHeight="200"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="150"/>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="0"
+                Grid.RowSpan="2" 
+                Grid.Column="0"
+                Margin="20"
+                BorderThickness="0"
+                BorderBrush="Gray">
+            <Rectangle 
+                Stretch="Uniform" 
+                Margin="5" 
+                MinWidth="100"
+                MinHeight="100"
+                Fill="{StaticResource ResourceKey=FMModelBrush}"/>
+        </Border>
+
+        <Button Grid.Row="0" 
+                Grid.Column="2"
+                Width="20" 
+                Height="20"
+                Background="Transparent"
+                BorderThickness="0"
+                Margin="3"
+                Content="X"
+                VerticalAlignment="Top"
+                Command="{Binding CancelTemplateCommand}"/>
+
+        <TextBlock Grid.Row="0" 
+                   Grid.Column="1" 
+                   FontSize="20" 
+                   Margin="5,20,0,0"
+                   Text="{Binding ProjectTemplate.Name}" 
+                   Foreground="{StaticResource DeltaresBlueBrush}"/>
+
+        <StackPanel Grid.Row="1" 
+                    Grid.Column="1" 
+                    Grid.ColumnSpan="2" 
+                    Margin="5,5,20,5"
+                    >
+            <TextBlock 
+                       Text="{Binding ProjectTemplate.Description}"
+                       HorizontalAlignment="Left"
+                       TextWrapping="WrapWithOverflow"/>
+
+            <Grid Margin="0,15,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />   
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                           Grid.Column="0" 
+                           Text="Model name"
+                           VerticalAlignment="Center"
+                           Margin="0,2,0,2"/>
+
+                <TextBox Grid.Row="0" 
+                         Grid.Column="1" 
+                         Focusable ="True"
+                         Margin="0,2,5,2"
+                         Text="{Binding FmModelSettings.ModelName}"/>
+
+                <TextBlock Grid.Row="1" 
+                           Grid.Column="0" 
+                           VerticalAlignment="Center"
+                           Text="Coordinate system"
+                           Margin="0,2,5,2"/>
+
+                <ComboBox x:Name="CoordinateSystemComboBox"
+                          Grid.Row="1" 
+                          Grid.Column="1" 
+                          Margin="0,2,5,2"
+                          IsEditable="True"
+                          IsTextSearchEnabled="False"
+                          StaysOpenOnEdit="True"
+                          Text="{Binding FilterText, Delay=150}"
+                          ItemsSource="{Binding CoordinateSystems}"
+                          SelectedItem="{Binding FmModelSettings.CoordinateSystem}"
+                          GotKeyboardFocus="UIElement_OnGotKeyboardFocus">
+                    <ComboBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ComboBox.ItemsPanel>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="coordinateSystems:ICoordinateSystem">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Margin="3">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsGeographic}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=WebBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsGeographic}" Value="False">
+                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=ProjectedMapBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+                                <TextBlock Text="{Binding AuthorityCode}" Margin="3"/>
+                                <TextBlock Text="{Binding Name}" Margin="3"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+
+            <Button HorizontalAlignment="Left"
+                    Margin="0,25,5,5" 
+                    BorderBrush="LightGray"
+                    Width="80"
+                    Height="80"
+                    IsDefault="True"
+                    Background="White"
+                    Command="{Binding ApplyTemplateCommand}">
+                <Button.Content>
+                    <StackPanel>
+                        <Rectangle Width="32" 
+                                   Height="32" 
+                                   Margin="-5,0,0,0"
+                                   Fill="{StaticResource NewFileBrush}">
+                        </Rectangle>
+                        <TextBlock Text="Create" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

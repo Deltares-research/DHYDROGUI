@@ -1791,6 +1791,7 @@ src/DeltaShell.Plugins.FMSuite.Common/Uml/BoundaryConditions.cd -text
 src/DeltaShell.Plugins.FMSuite.Common/WindDefinitionType.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/packages.config -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/BoundaryDataMapSymbols.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/CreateFmModelSettingViewViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Editors/BoundaryConditionExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Editors/BoundaryConditionListView.Designer.cs -text
@@ -1873,6 +1874,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryConditionWpsDialog.resx 
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FMModelInspectionWindow.Designer.cs -text
@@ -2035,6 +2038,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SourceAndSink.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SupportedVerticalProfileTypes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FmModelSettings.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFileFlowBoundaryDataBuilder.cs -text
