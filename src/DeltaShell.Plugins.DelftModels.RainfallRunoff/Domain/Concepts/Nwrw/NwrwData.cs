@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// <seealso cref="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData" />
     /// <seealso cref="INwrwFeature" />
     [Entity(FireOnCollectionChange = false)]
-    public partial class NwrwData : CatchmentModelData
+    public class NwrwData : CatchmentModelData
     {
         public const string DEFAULT_DWA_ID = "Default_DWA";
         
@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public NwrwData(Catchment catchment) : base(catchment)
         {
             NodeOrBranchId = Name;
+            DryWeatherFlows.Add(new DryWeatherFlow(DEFAULT_DWA_ID));
             DryWeatherFlows.Add(new DryWeatherFlow(DEFAULT_DWA_ID));
         }
 
