@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DimGray, lineWidth)
+                    Line = new Pen(Color.SlateGray, lineWidth)
                 };
 
                  var stormWaterConnectionStyle = new VectorStyle
@@ -247,13 +247,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var dryWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.IndianRed, lineWidth)
+                    Line = new Pen(Color.OrangeRed, lineWidth)
                 };
 
                 var combinedWaterConnectionStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.DarkSlateGray, lineWidth),
+                    Line = new Pen(Color.Black, lineWidth),
                 };
 
                 return new CategorialTheme
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         new CategorialThemeItem("Default", branchStyle, null, SewerConnectionWaterType.None),
                         new CategorialThemeItem("Storm water", stormWaterConnectionStyle, null, SewerConnectionWaterType.StormWater),
-                        new CategorialThemeItem("Dry water", dryWaterConnectionStyle, null, SewerConnectionWaterType.DryWater),
+                        new CategorialThemeItem("Foul water", dryWaterConnectionStyle, null, SewerConnectionWaterType.DryWater),
                         new CategorialThemeItem("Combined", combinedWaterConnectionStyle, null, SewerConnectionWaterType.Combined),
                     }
                 };

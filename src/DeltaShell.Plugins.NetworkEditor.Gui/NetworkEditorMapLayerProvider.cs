@@ -1043,7 +1043,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (type.Implements(typeof(IPipe)))
             {
-                return new List<IFeatureRenderer>{new ArrowLineStringAdornerRenderer{ Orientation = Orientation.Forward , Opacity = 1}};
+                return new List<IFeatureRenderer>{new ArrowLineStringAdornerRenderer{ Orientation = Orientation.Forward , Opacity = 1, Size = 3}};
             }
 
             return new List<IFeatureRenderer>();
