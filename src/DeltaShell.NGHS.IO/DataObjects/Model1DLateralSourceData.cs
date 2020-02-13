@@ -398,6 +398,8 @@ namespace DeltaShell.NGHS.IO.DataObjects
                     return Feature + " - Q: " + Flow + " m³/s";
                 case Model1DLateralDataType.FlowWaterLevelTable:
                     return Feature + " - Q(h)";
+                case Model1DLateralDataType.FlowRealTime:
+                    return Feature.ToString();
             }
             return "";
         }

@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     {
                         // add lateral to branch
                         LateralSource lateralSource = new LateralSource
-                            {Branch = branch, Chainage = branch.Length, Name = nwrwData.Name};
+                            {Branch = branch, Chainage = branch.Length, Name = nwrwData.Name, LongName = nwrwData.Name};
                         lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
                         branch.BranchFeatures.Add(lateralSource);
 
@@ -219,8 +219,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         Model1DLateralSourceData model1DLateralSourceData =
                             lateralSourcesData.FirstOrDefault(lsd =>
                                 lsd.Feature ==
-                                lateralSource); //new Model1DLateralSourceData {Feature = (LateralSource) lateralSource};
-                        model1DLateralSourceData.Name = lateralSource.Name;
+                                lateralSource);
                         model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                         model1DLateralSourceData.Flow = 0d;
                     }
