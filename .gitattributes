@@ -1876,6 +1876,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.cs -tex
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CrossSectionViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FMModelInspectionWindow.Designer.cs -text
@@ -1896,6 +1897,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GenerateEmbankmentsDialog.resx -
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialogViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveBoundaryPointDialog.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/WindSelectionDialog.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/WindSelectionDialog.cs -text

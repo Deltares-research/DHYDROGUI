@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -187,6 +188,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.Gui = Gui;
                     v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
                 }
+            };
+
+            yield return new ViewInfo<IEnumerable<ICrossSection>, RefreshMainSectionWidthsDialog>
+            {
+                Description = "Refresh Main Section Width View (Cross sections in Flow1D)"
             };
 
             // Boundary conditions

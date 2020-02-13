@@ -273,6 +273,7 @@
     <Compile Include="Forms\CreateFmModelSettingView.xaml.cs">
       <DependentUpon>CreateFmModelSettingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\CrossSectionViewModel.cs" />
     <Compile Include="Forms\FMModelInspectionWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -341,6 +342,10 @@
     <Compile Include="Forms\FmMeteoSelectionDialog.Designer.cs">
       <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
+	      <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>
+	</Compile>
+    <Compile Include="Forms\RefreshMainSectionWidthsDialogViewModel.cs" />
     <Compile Include="GraphicsProviders\FMGuiGraphicsProvider.cs" />
     <Compile Include="MapTools\Add1D2DLinkMapTool.cs" />
     <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
@@ -641,9 +646,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Forms\RefreshMainSectionWidthsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
   </PropertyGroup>
