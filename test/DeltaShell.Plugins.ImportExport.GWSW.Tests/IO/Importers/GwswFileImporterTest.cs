@@ -1668,9 +1668,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 NwrwData lei17 = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
                     md.Name.Equals("lei17", StringComparison.InvariantCultureIgnoreCase));
                 Assert.IsNotNull(lei17);
-                Assert.That(lei17.DryWeatherFlows.Count(), Is.EqualTo(1));
-                Assert.That(lei17.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
-                    Is.EqualTo("Bedrijf"));
+                Assert.That(lei17.DryWeatherFlows.Count(), Is.EqualTo(2));
+                Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId.Equals("Bedrijf", StringComparison.InvariantCultureIgnoreCase)));
+                Assert.IsNotNull(lei17.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId.Equals("Default_DWA", StringComparison.InvariantCultureIgnoreCase)));
                 Assert.That(lei17.LateralSurface, Is.EqualTo(0.0));
                 Assert.That(lei17.MeteoStationId, Is.EqualTo(String.Empty));
                 Assert.That(lei17.NodeOrBranchId, Is.EqualTo("lei17"));
@@ -1723,7 +1723,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 NwrwData lei43 = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
                     md.Name.Equals("lei43", StringComparison.InvariantCultureIgnoreCase));
                 Assert.IsNotNull(lei43);
-                Assert.That(lei43.DryWeatherFlows.Count(), Is.EqualTo(1));
+                Assert.That(lei43.DryWeatherFlows.Count(), Is.EqualTo(2));
                 Assert.That(lei43.DryWeatherFlows.Select(dwf => dwf.DryWeatherFlowId).FirstOrDefault(),
                     Is.EqualTo("Default_DWA"));
                 Assert.That(lei43.LateralSurface, Is.EqualTo(0.0));

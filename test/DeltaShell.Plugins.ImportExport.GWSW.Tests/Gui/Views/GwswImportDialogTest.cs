@@ -201,6 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         public void GivenNullImporter_OnConfigureImporter_DoesNotCrash()
         {
             var viewModel = new GwswImportDialogViewModel();
+            viewModel.Importer = new GwswFileImporter();
             try
             {
                 viewModel.OnConfigureImporter.Execute(null);
