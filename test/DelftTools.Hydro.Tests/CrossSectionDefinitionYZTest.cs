@@ -97,7 +97,7 @@ namespace DelftTools.Hydro.Tests
             var profileZ = new double[] { 10, 0, 10 };
 
             var flowProfileY = new double[] { 0, 5, 10 };
-            var flowProfileZ = new double[] { 12, 1, 12 };
+            var flowProfileZ = new double[] { 10, 0, 10 };
 
             Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
             Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
