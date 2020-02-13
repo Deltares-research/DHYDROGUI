@@ -20,11 +20,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                                    {new Coordinate(-3, 0, 0), new Coordinate(0, 4, -5), new Coordinate(3, 0, 0)});
 
             crossSection.XYZDataTable[1].DeltaZStorage = 1;
-            /*crossSection.SetWithHfswData(new[]
-                                             {
-                                                 new HeightFlowStorageWidth(0, 10, 10),
-                                                 new HeightFlowStorageWidth(10, 20, 16)
-                                             });*/
+            
 
             var yzCrossSection = CrossSectionConverter.ConvertToYz(crossSection);
 
@@ -33,9 +29,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             var deltaZStorage = new[] {0, 1, 0};
 
             Assert.AreEqual(yQ,yzCrossSection.YZDataTable.Select(r=>r.Yq).ToArray());
-
             Assert.AreEqual(z, yzCrossSection.YZDataTable.Select(r => r.Z).ToArray());
-            Assert.AreEqual(deltaZStorage, yzCrossSection.YZDataTable.Select(r => r.DeltaZStorage).ToArray());
         }
     }
 }
