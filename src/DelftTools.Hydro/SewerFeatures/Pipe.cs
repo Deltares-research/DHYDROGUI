@@ -116,7 +116,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 {
                     if (value.Count > 0)
                     {
-                        Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+                        Log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
                     }
                     else
                     {
@@ -158,7 +158,7 @@ namespace DelftTools.Hydro.SewerFeatures
             if (!(NotifyCollectionChangedEventArgs.Item is LateralSource) && !(NotifyCollectionChangedEventArgs.Item is HydroLink))
             {
                 NotifyCollectionChangedEventArgs.Cancel = true;
-                Log.ErrorFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+                Log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
             }
         }
 

@@ -26,8 +26,13 @@ namespace DeltaShell.Sobek.Readers.Readers
             var lineIndex = 1; //first row is general info
             foreach (var line in lines)
             {
-                if (line == "*" || line == "" || line == "[Reach description]")
+                if (line == "*" || line == "")
                     continue;
+
+                if (line.Contains("[Reach description]"))
+                {
+                    break; //end of information block with node data
+                }
                 
                 var values = line.Split(new[] { ',' });
                 var valueIndex = 14; //first 14 values are of a branch
@@ -89,35 +94,92 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         private static IDictionary<string, int> ParseBranchTypes(IEnumerable<string> lines)
         {
-            var branches = new Dictionary<string, int>();
-            var lineIndex = 0; 
+            var branchTypesOnIndexes = new Dictionary<int, int>();
+            var branchTypes = new Dictionary<string, int>();
+            var lineIndex = 0;
+            var branchDescriptionIndex = 0;
+
+            var bSetBranchNamesForTypes = false;
             foreach (var line in lines)
             {
-                if (line == "*" || line == "\"*\"" || line == "" || line == "[Reach description]")
+                if (line == "*" || line == "\"*\"" || line == "")
                     continue;
 
-                if (lineIndex > 0) //first row is general info
+                if (line.Contains("[Reach description]"))
                 {
-                    var values = line.Split(new[] { ',' });
-                    if (values.Length >= 20)
+                    bSetBranchNamesForTypes = true;
+                    continue; //end of information block with node data
+                }
+
+                if (line.Contains("[Model connection node]") || 
+                    line.Contains("[Model connection branch]") ||
+                    line.Contains("[Nodes with calculationpoint]") ||
+                    line.Contains("[Reach options]") ||
+                    line.Contains("[NTW properties]"))
+                {
+                    break; //end of information block with branch type data
+                }
+
+                if (bSetBranchNamesForTypes)
+                {
+                    branchDescriptionIndex = AddBranchNameAndTypeNumber(line, branchDescriptionIndex, branchTypesOnIndexes, branchTypes);
+                }
+                else
+                {
+                    if (lineIndex > 0) //first row is general info
                     {
-                        var key = values[2].Replace("\"", "");
-                        int value;
-                        var valueString = values[3];
-                        if (!string.IsNullOrEmpty(valueString))
-                        {
-                            valueString = valueString.Replace("\"", "");
-                        }
-                        if (int.TryParse(valueString, out value))
-                        {
-                            branches[key] = value;
-                        }
+                        AddBranchIndexNumberAndTypeNumber(line, branchTypesOnIndexes);
                     }
                 }
 
                 lineIndex++;
             }
-            return branches;
+            return branchTypes;
+        }
+
+        private static int AddBranchNameAndTypeNumber(string line, int previousIndexNumber, Dictionary<int, int> lookUpTypesOnIndexes, Dictionary<string, int> branchTypes)
+        {
+            var values = line.Split(new[] {','});
+            var indexNumber = previousIndexNumber + 1;
+            if (values.Length >= 12)
+            {
+                var valueString = values[0];
+                if (!string.IsNullOrEmpty(valueString) && lookUpTypesOnIndexes.ContainsKey(indexNumber))
+                {
+                    valueString = valueString.Replace("\"", "");
+                    branchTypes[valueString] = lookUpTypesOnIndexes[indexNumber];
+                    return indexNumber;
+                }
+            }
+
+            return previousIndexNumber;
+        }
+
+        private static void AddBranchIndexNumberAndTypeNumber(string line, Dictionary<int, int> branchTypesOnIndexes)
+        {
+            var values = line.Split(new[] {','});
+            if (values.Length >= 20)
+            {
+                int key;
+                int value;
+
+                var keyString = values[2];
+                if (!string.IsNullOrEmpty(keyString))
+                {
+                    keyString = keyString.Replace("\"", "");
+                }
+
+                var valueString = values[3];
+                if (!string.IsNullOrEmpty(valueString))
+                {
+                    valueString = valueString.Replace("\"", "");
+                }
+
+                if (int.TryParse(keyString, out key) && int.TryParse(valueString, out value))
+                {
+                    branchTypesOnIndexes[key] = value;
+                }
+            }
         }
     }
 }
