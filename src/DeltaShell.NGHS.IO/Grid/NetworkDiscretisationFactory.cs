@@ -325,7 +325,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         WaterType = branchProperties.WaterType, SourceCompartmentName = branchProperties.SourceCompartmentName, TargetCompartmentName = branchProperties.TargetCompartmentName
                     };
                 case BranchFile.BranchType.Pipe:
-                    return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material};
+                    return new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material, SourceCompartmentName = branchProperties.SourceCompartmentName, TargetCompartmentName = branchProperties.TargetCompartmentName };
                 case null:
                 default:
                     return new Channel();
