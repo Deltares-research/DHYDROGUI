@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Handlers;
-using Microsoft.Scripting.Runtime;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="config"/> is <c>null</c>.
         /// </exception>
-        public DelftIniBackwardsCompatibilityHelper([NotNull]IDelftIniBackwardsCompatibilityConfig config)
+        public DelftIniBackwardsCompatibilityHelper(IDelftIniBackwardsCompatibilityConfig config)
         {
             Ensure.NotNull(config, nameof(config));
             this.config = config;
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <param name="propertyName"/> is null.
         /// </exception>
-        public string GetUpdatedPropertyName([NotNull]string propertyName, ILogHandler logHandler = null)
+        public string GetUpdatedPropertyName(string propertyName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
             return GetUpdatedName(propertyName, config.LegacyPropertyMapping, logHandler);
@@ -57,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <param name="categoryName"/> is null.
         /// </exception>
-        public string GetUpdatedCategoryName([NotNull]string categoryName, ILogHandler logHandler = null)
+        public string GetUpdatedCategoryName(string categoryName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(categoryName, nameof(categoryName));
             return GetUpdatedName(categoryName, config.LegacyCategoryMapping, logHandler);
@@ -92,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="propertyName"/> is <c>null</c>.
         /// </exception>
-        public bool IsObsoletePropertyName([NotNull]string propertyName)
+        public bool IsObsoletePropertyName(string propertyName)
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
             return config.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
