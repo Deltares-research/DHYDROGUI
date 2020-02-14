@@ -803,7 +803,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         public bool OpenViewAfterImport
         {
-            get { return false; }
+            get { return true; }
         }
 
         public bool CanImportOn(object targetObject)

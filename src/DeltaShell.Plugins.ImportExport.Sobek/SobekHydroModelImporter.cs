@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string TargetDataDirectory { get; set; }
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport { get { return true; } }
 
         public bool ShouldCancel
         {

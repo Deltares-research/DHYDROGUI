@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return false; }
         }
 
-        public bool OpenViewAfterImport { get { return false; } }
+        public bool OpenViewAfterImport { get { return true; } }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
