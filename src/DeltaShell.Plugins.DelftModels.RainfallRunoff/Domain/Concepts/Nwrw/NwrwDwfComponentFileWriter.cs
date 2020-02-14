@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             line.Append(NwrwKeywords.DwaWaterUsePerCapitaPerHourKey);
             line.Append(" ");
-            for (int i = 0; i < 23; i++)
+            for (int i = 0; i <= 23; i++)
             {
                 line.Append(hourlyPercentageDailyVolume[i]);
                 line.Append(" ");
