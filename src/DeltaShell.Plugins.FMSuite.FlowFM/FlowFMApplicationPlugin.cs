@@ -83,9 +83,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Name = FlowFlexibleMeshModelModelInfoName,
                     Category = "1D / 2D / 3D Standalone Models",
                     Image = Properties.Resources.unstrucModel,
-                    AdditionalOwnerCheck = owner => 
-                            !(owner is ICompositeActivity) // Allow "standalone" flow models
-                            ||  (!((ICompositeActivity)owner).Activities.OfType<WaterFlowFMModel>().Any() && owner is IHydroModel), // Don't allow multiple flow models in one composite activity
+                    AdditionalOwnerCheck = owner => !(Application.Project != null &&
+                                                      Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().Any()), // Don't allow multiple flow models
                     CreateModel = owner => new WaterFlowFMModel()
                 };
         }

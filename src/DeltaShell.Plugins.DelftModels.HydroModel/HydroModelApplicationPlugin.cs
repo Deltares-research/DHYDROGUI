@@ -134,21 +134,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
                 {
                     {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
-                    {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
-                    {ModelGroup.SobekModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_Integrated_Model},
                     {ModelGroup.RHUModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)"},
-                    {ModelGroup.OverLandFlow1D2D, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model}
                 };
 
-            foreach (ModelGroup modelGroup in Enum.GetValues(typeof(ModelGroup)))
+            foreach (ModelGroup modelGroup in modelGroupNameLookUp.Keys)
             {
-                if (!HydroModel.CanBuildModel(modelGroup) || modelGroup == ModelGroup.All) continue;
+                if (!HydroModel.CanBuildModel(modelGroup)) continue;
 
                 yield return new ModelInfo
                 {
                     Name = modelGroupNameLookUp[modelGroup],
                     Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
-                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
+                    AdditionalOwnerCheck = owner => (Application.Project != null && !Application.GetAllModelsInProject().Any()) &&
+                        !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner => HydroModel.BuildModel(modelGroup)
                 };
             }

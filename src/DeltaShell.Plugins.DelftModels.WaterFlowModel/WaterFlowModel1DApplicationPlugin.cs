@@ -73,20 +73,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel
             }
         }
 
-
-        public override IEnumerable<ModelInfo> GetModelInfos()
-        {
-            yield return new ModelInfo
-                {
-                    Name = "Flow 1D Model",
-                    Category = "1D / 2D / 3D Standalone Models",
-                    AdditionalOwnerCheck = owner => 
-                            !(owner is ICompositeActivity) // Allow "standalone" flow models
-                            || (!((ICompositeActivity) owner).Activities.OfType<WaterFlowModel1D>().Any() && owner is IHydroModel), // Don't allow multiple flow models in one composite activity
-                    CreateModel = owner => new WaterFlowModel1D("Flow1D")
-                };
-        }
-
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new FlowDataCsvImporter();
