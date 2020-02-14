@@ -1,32 +1,31 @@
-﻿using System;
+﻿using System.Windows;
 using System.Windows.Threading;
 using NUnit.Framework;
-using SharpMap;
-using SharpMap.Extensions.CoordinateSystems;
-
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    /// <summary>
-    /// Assembly Fixture to ensure shutdown of backgrounds threads used by
-    /// Windows Form tests.
-    /// </summary>
     [SetUpFixture]
     public class TestClassSetup
     {
         [SetUp]
-        public void Setup()
+        public void RetrieveApplicationOnceInOrderToCorrectlyInstantiateResourceDictionaries()
         {
-            if (!UriParser.IsKnownScheme("pack"))
-                new System.Windows.Application();
-            if (Map.CoordinateSystemFactory == null)
-                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            // Ensure calls to ...
+            //
+            //   new Uri("pack://application:,,,/<path>");
+            //
+            // ... don't result in exceptions like ...
+            //
+            //   Invalid URI: Invalid port specified
+            //
+            // ... due to the fact that the application is not fully initialized yet.
+            var application = Application.Current;
         }
 
         [TearDown]
-        public void TearDownWPFGuiAndWorkerThread()
+        public void TearDownWpfGuiAndWorkerThread()
         {
-            // Ensure shut down of background thread to ensure no COM erros are thrown.
+            // Ensure shut down of background thread to ensure no COM errors are thrown.
             // This should be done after all test fixtures have run.
             Dispatcher.CurrentDispatcher.InvokeShutdown();
         }
