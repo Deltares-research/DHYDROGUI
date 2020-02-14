@@ -69,29 +69,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         private void AddDryWeatherFlowToNwrwCatchment(NwrwData nwrwData)
         {
             // Only two dry weather flow ids per catchment are supported.
-            // See issue FM1D2D-535.
+            // First DWF definition must start with "inwoner", second must start with "bedrijf".
+            // See issues FM1D2D-535 and FM1D2D-630.
+            
             IList<DryWeatherFlow> nwrwDataDryWeatherFlows = nwrwData.DryWeatherFlows;
-            if (nwrwDataDryWeatherFlows.Count >= 2)
-            {
-                Log.Warn($"Could not add {DryWeatherFlowId} to {Name}. A maximum of two dry weather flow ids per catchment are currently supported.");
-                return;
-            }
 
             var dryweatherFlow = new DryWeatherFlow(DryWeatherFlowId)
             {
                 NumberOfUnits = NumberOfPeople
             };
 
-            if (nwrwDataDryWeatherFlows.Count == 1 
-                && nwrwDataDryWeatherFlows[0].DryWeatherFlowId == NwrwData.DEFAULT_DWA_ID)
+            if (DryWeatherFlowId.StartsWith("Inwoner", StringComparison.InvariantCultureIgnoreCase))
             {
                 nwrwDataDryWeatherFlows[0] = dryweatherFlow;
             }
-            else 
+            else if (DryWeatherFlowId.StartsWith("Bedrijf", StringComparison.InvariantCultureIgnoreCase))
             {
-                nwrwDataDryWeatherFlows.Add(dryweatherFlow);
+                nwrwDataDryWeatherFlows[1] = dryweatherFlow;
             }
-            
         }
     }
 }
