@@ -1897,6 +1897,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GenerateEmbankmentsDialog.resx -
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GridWizard.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialogViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RemoveBoundaryPointDialog.cs -text
