@@ -325,7 +325,6 @@
     <Compile Include="IO\FileConstantsTest.cs" />
     <Compile Include="IO\Files\CacheFileTest.cs" />
     <Compile Include="IO\Files\Helpers\FileCopyExceptionTest.cs" />
-    <Compile Include="IO\Files\Helpers\IDelftIniBackwardsCompatibilityConfigTestFixture.cs" />
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigTest.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigTest.cs" />
     <Compile Include="IO\Files\Helpers\OverwriteCopyHandlerTest.cs" />

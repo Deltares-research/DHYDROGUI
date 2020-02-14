@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
+using DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using NUnit.Framework;
 

@@ -2,7 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
+namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 {
     [TestFixture]
     public abstract class IDelftIniBackwardsCompatibilityConfigTestFixture
