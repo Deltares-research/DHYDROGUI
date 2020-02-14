@@ -268,6 +268,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nodesGeometryDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
             var networkFeatureNameAndGeometries = nodesGeometryDict.Concat(branchesGeometryDict)
                 .Concat(compartmentsGeometryDict)
+                .Distinct()
                 .ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
 
             var listOfErrors = new List<string>();
