@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
             }
 
             string mappedName = mapping[propertyNameLower];
-            logHandler?.ReportWarningFormat("Backwards Compatibility: '{0}' has been updated to '{1}'",
+            logHandler?.ReportWarningFormat(Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
                                             propertyName,
                                             mappedName);
 

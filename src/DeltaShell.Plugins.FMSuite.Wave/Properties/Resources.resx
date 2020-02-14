@@ -244,4 +244,7 @@
   <data name="WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__" xml:space="preserve">
     <value>Could not find output (WAVM) file: {0}</value>
   </data>
+  <data name="MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file" xml:space="preserve">
+    <value>reading the mdw file</value>
+  </data>
 </root>

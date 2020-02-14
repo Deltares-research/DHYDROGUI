@@ -19,6 +19,7 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -653,7 +654,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
                                                                      IEnumerable<DelftIniCategory> mdwCategories)
         {
-            var logHandler = new LogHandler("reading the mdw file", Log);
+            var logHandler = new LogHandler(Resources.MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file, Log);
             var backwardsCompatibilityHelper = 
                 new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfig());
 
@@ -672,7 +673,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     if (backwardsCompatibilityHelper.IsObsoletePropertyName(mdwProperty.Name))
                     {
-                        logHandler?.ReportWarningFormat("Parameter {0} is not supported by our computational core and will be removed from your input file.", mdwProperty.Name);
+                        logHandler?.ReportWarningFormat(Common.Properties.Resources.Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file, mdwProperty.Name);
                         continue;
                     }
 
