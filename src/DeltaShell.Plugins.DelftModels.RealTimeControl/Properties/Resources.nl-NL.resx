@@ -177,7 +177,4 @@
   <data name="RealTimeControlModelProperties_Category_RunParameters" xml:space="preserve">
     <value>#Uitvoeren van parameters</value>
   </data>
-  <data name="RealTimeControlGroupErrorLogEmptyValue" xml:space="preserve">
-    <value>Fout bij het veranderen van de naam. De naam mag niet leeg zijn. De naam mag bestaan uit alfanumerieke, spaties, underscores en koppeltekens.</value>
-  </data>
 </root>

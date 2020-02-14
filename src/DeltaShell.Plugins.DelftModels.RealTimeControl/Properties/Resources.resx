@@ -409,7 +409,4 @@
   <data name="ControlGroupValidator_Output_item_0_has_multiple_active_condition_paths_1" xml:space="preserve">
     <value>Output item {0} has multiple Active Condition Paths: {1}.</value>
   </data>
-  <data name="RealTimeControlGroupErrorLogEmptyValue" xml:space="preserve">
-    <value>Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.</value>
-  </data>
 </root>

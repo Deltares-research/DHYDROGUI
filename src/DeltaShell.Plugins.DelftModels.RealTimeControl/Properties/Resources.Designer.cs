@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -425,15 +425,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
             get {
                 return ResourceManager.GetString("RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0_" +
                         "__must_have_an_input__Please_check_file____1___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes..
-        /// </summary>
-        public static string RealTimeControlGroupErrorLogEmptyValue {
-            get {
-                return ResourceManager.GetString("RealTimeControlGroupErrorLogEmptyValue", resourceCulture);
             }
         }
         

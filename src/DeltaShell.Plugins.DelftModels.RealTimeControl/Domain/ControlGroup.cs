@@ -1,56 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
-using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Feature;
-using log4net;
 using NetTopologySuite.Extensions.Features.Generic;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
     public class ControlGroup : EditableObjectUnique<long>, INameable, ICloneable, IControlGroup, IItemContainer
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroup));
-        private string name;
-
         public ControlGroup()
         {
-            Name = "Control Group";
+            Name = String.Empty;
             Conditions = new EventedList<ConditionBase>();
             Rules = new EventedList<RuleBase>();
             Inputs = new EventedList<Input>();
             Outputs = new EventedList<Output>();
             Signals = new EventedList<SignalBase>();
         }
-
-        public string Name
-        {
-            get { return name; }
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    name = value;
-                }
-                else
-                {
-                    Log.Error(Resources.RealTimeControlGroupErrorLogEmptyValue);
-                }
-                
-            }
-        }
+        
+        public string Name { get; set; }
         
         public IEventedList<RuleBase> Rules { get; set; }
         public IEventedList<ConditionBase> Conditions { get; set; }
