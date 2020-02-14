@@ -7,13 +7,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
     public class NwrwDataRow : RainfallRunoffDataRow<NwrwData>
     {
-        [Description("Name")]
+        [Description("Area Id")]
         public string Name
         {
             get { return data.Name; }
         }
 
-        [Description("Closed paved area, with a slope (m²)")]
+        [Description("Closed Sloped area (m²)")]
         public double ClosedPavedWithSlope
         {
             get
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedWithSlope] = value; }
         }
 
-        [Description("Closed paved area, flat (m²)")]
+        [Description("Closed Flat area (m²)")]
         public double ClosedPavedFlat
         {
             get
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat] = value; }
         }
 
-        [Description("Closed paved area, flat stretched (m²)")]
+        [Description("Closed Stretch area (m²)")]
         public double ClosedPavedFlatStretched
         {
             get
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlatStretch] = value; }
         }
 
-        [Description("Open paved area, with a slope (m²)")]
+        [Description("Open Sloped area (m²)")]
         public double OpenPavedWithSlope
         {
             get
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
 
-        [Description("Open paved area, flat (m²)")]
+        [Description("Open Flat area (m²)")]
         public double OpenPavedFlat
         {
             get
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlat] = value; }
         }
 
-        [Description("Open paved area, flat stretched (m²)")]
+        [Description("Open Stretch area (m²)")]
         public double OpenPavedFlatStretched
         {
             get
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlatStretched] = value; }
         }
 
-        [Description("Roof area, with a slope (m²)")]
+        [Description("Roof Sloped area (m²)")]
         public double RoofWithSlope
         {
             get
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.RoofWithSlope] = value; }
         }
 
-        [Description("Roof area, flat (m²)")]
+        [Description("Roof Flat area (m²)")]
         public double RoofFlat
         {
             get
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.RoofFlat] = value; }
         }
 
-        [Description("Roof area, flat stretched (m²)")]
+        [Description("Roof Stretch area (m²)")]
         public double RoofFlatStretched
         {
             get
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.RoofFlatStretched] = value; }
         }
 
-        [Description("Unpaved area, with a slope (m²)")]
+        [Description("Unpaved Sloped area (m²)")]
         public double UnpavedWithSlope
         {
             get
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedWithSlope] = value; }
         }
 
-        [Description("Unpaved area, flat (m²)")]
+        [Description("Unpaved Flat area (m²)")]
         public double UnpavedFlat
         {
             get
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlat] = value; }
         }
 
-        [Description("Unpaved area, flat stretched (m²)")]
+        [Description("Unpaved Stretch area (m²)")]
         public double UnpavedFlatStretched
         {
             get
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlatStretched] = value; }
         }
 
-        [Description("Number of units (dwf1)")]
+        [Description("Number of units (inhabitant)")]
         public int NumberOfUnitsFirstDwf
         {
             get
@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.DryWeatherFlows[0].NumberOfUnits = value; }
         }
 
-        [Description("DWF definition (dwf1)")]
+        [Description("DWF definition (inhabitant)")]
         public string FirstDryWeatherFlowId
         {
             get
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.DryWeatherFlows[0].DryWeatherFlowId = value; }
         }
 
-        [Description("Number of units (dwf2)")]
+        [Description("Number of units (company)")]
         public int NumberOfUnitsLastDwf
         {
             get
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set { data.DryWeatherFlows[1].NumberOfUnits = value; }
         }
 
-        [Description("DWF definition (dwf2)")]
+        [Description("DWF definition (company)")]
         public string LastFirstDryWeatherFlowId
         {
             get
@@ -212,8 +212,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             get { return data.MeteoStationId; }
             set { data.MeteoStationId = value; }
         }
-
-
-
     }
 }
