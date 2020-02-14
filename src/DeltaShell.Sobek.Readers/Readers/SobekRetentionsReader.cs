@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
@@ -24,6 +25,7 @@ namespace DeltaShell.Sobek.Readers.Readers
         // Where:
         //id = node id
         //ty = type water on street
+        //0 = connection node, is not a retention!!!!
         //1 = reservoir
         //2 = closed
         //3 = loss
@@ -83,6 +85,10 @@ namespace DeltaShell.Sobek.Readers.Readers
             }
 
             bool valid = Sobek2Import;
+
+
+            var isConnectionNode = IsConnectionNode(words);
+            if (isConnectionNode) return null;
 
             Retention retention = new Retention();
 
@@ -226,6 +232,24 @@ namespace DeltaShell.Sobek.Readers.Readers
             }
 
             return valid ? retention : null;
+        }
+
+        private bool IsConnectionNode(string[] words)
+        {
+            for (int i = 0; i < words.Length - 1; i++)
+            {
+                string key = words[i].ToUpper();
+                string value = words[i + 1].Trim('\'');
+                if (key.Equals("TY"))
+                {
+                    int type = 0;
+                    if (int.TryParse(value, out type))
+                    {
+                        return (type == 0);
+                    }
+                }
+            }
+            return false;
         }
 
         private double ParseAndGetValue(string stringValue)

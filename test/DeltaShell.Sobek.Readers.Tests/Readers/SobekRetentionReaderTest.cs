@@ -78,5 +78,15 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             var retention = sobekRetentionsReader.GetRetention(source);
             Assert.AreEqual("Aap noot mies", retention.Name);
         }
+
+        [Test]
+        public void Sobek212_TypeConnectionNode_ShouldNotGiveARetention()
+        {
+            const string source = @"NODE id 'ND-4' ty 0 ni 1 r1 'rch-1' r2 'rch-2' node";
+
+            SobekRetentionsReader sobekRetentionsReader = new SobekRetentionsReader { Sobek2Import = true };
+            var retention = sobekRetentionsReader.GetRetention(source);
+            Assert.IsNull(retention);
+        }
     }
 }
