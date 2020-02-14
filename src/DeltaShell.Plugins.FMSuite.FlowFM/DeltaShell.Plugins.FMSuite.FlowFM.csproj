@@ -170,9 +170,8 @@
     <Compile Include="IO\Files\Helpers\CopyHandlers\FileCopyException.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\ICopyHandler.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\OverwriteCopyHandler.cs" />
-    <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityHelper.cs" />
-    <Compile Include="IO\Files\MduFileBackwardsCompatibilityHelper.cs" />
-    <Compile Include="IO\Files\MduFileLegacyPropertyDeterminator.cs" />
+    <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfig.cs" />
+    <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfig.cs" />
     <Compile Include="IO\Files\MduFileReader.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcmFileExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\FMGridPartitionExporter.cs" />
