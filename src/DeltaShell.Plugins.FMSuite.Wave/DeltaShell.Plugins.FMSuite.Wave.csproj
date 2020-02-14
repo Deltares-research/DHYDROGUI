@@ -127,6 +127,7 @@
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
+    <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfig.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporter.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporter.cs" />
@@ -227,6 +228,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

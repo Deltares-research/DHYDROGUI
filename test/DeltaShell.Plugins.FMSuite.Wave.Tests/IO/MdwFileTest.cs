@@ -21,6 +21,8 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks.Constraints;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -841,6 +843,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                 string exportedComFilePath = comFileLine.Split('=')[1].Trim();
                 Assert.That(exportedComFilePath, Is.EqualTo(comFilePath.Replace('\\','/')));
+            }
+        }
+
+        [Test]
+        public void Load_LegacyPropertiesAreReplaced()
+        {
+            // Setup
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string legacyFile = temporaryDirectory.CopyTestDataFileToTempDirectory("MdwFile\\TScaleLegacy.mdw");
+
+                var mdwFile = new MdwFile();
+
+                // Call
+                WaveModelDefinition result = mdwFile.Load(legacyFile);
+
+                // Assert
+                WaveModelProperty timeFrameProperty =
+                    result.Properties.FirstOrDefault(x => x.PropertyDefinition.FilePropertyName == "TimeInterval");
+
+                Assert.That(timeFrameProperty, Is.Not.Null, "Expected the TimeFrame property to be found.");
+                Assert.That(timeFrameProperty.PropertyDefinition.Category, Is.EqualTo("General"));
+
+                var value = (double) timeFrameProperty.Value;
+                Assert.That(value, Is.EqualTo(255.0));
+
+                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"), 
+                            Is.False,
+                            "Expected no property with the file name TScale");
             }
         }
     }

@@ -239,6 +239,7 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModelTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
+    <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
@@ -334,6 +335,10 @@
       <Project>{4a0f7700-aa64-463f-a602-8c15e3886ec5}</Project>
       <Name>DeltaShell.NGHS.TestUtils</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
+      <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>
+      <Name>DeltaShell.Plugins.FMSuite.Common.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

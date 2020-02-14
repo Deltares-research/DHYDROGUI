@@ -11,10 +11,13 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using log4net;
@@ -650,8 +653,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
                                                                      IEnumerable<DelftIniCategory> mdwCategories)
         {
+            var logHandler = new LogHandler("reading the mdw file", Log);
+            var backwardsCompatibilityHelper = 
+                new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfig());
+
             foreach (DelftIniCategory category in mdwCategories)
             {
+                category.Name = backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name, logHandler) ?? category.Name;
+
                 ModelPropertySchema<WaveModelPropertyDefinition> modelSchema = modelDefinition.ModelSchema;
                 if (!modelSchema.ModelDefinitionCategory.ContainsKey(category.Name))
                 {
@@ -661,7 +670,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 ModelPropertyGroup definedCategory = modelSchema.ModelDefinitionCategory[category.Name];
                 foreach (DelftIniProperty mdwProperty in category.Properties)
                 {
-                    string propName = mdwProperty.Name;
+                    if (backwardsCompatibilityHelper.IsObsoletePropertyName(mdwProperty.Name))
+                    {
+                        logHandler?.ReportWarningFormat("Parameter {0} is not supported by our computational core and will be removed from your input file.", mdwProperty.Name);
+                        continue;
+                    }
+
+                    string propName = backwardsCompatibilityHelper.GetUpdatedPropertyName(mdwProperty.Name, logHandler) ?? mdwProperty.Name;
                     string propertyValue = mdwProperty.Value;
 
                     WaveModelPropertyDefinition definition =
@@ -673,10 +688,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                 DataType = typeof(string),
                                 FileCategoryName = category.Name,
                                 FilePropertyName = mdwProperty.Name,
-                                Category = definedCategory.Name,
-                                DefaultValueAsString =
-                                    string
-                                        .Empty, // default value as string should always be an empty string and not null.
+                                Category = definedCategory.Name, 
+                                // default value as string should always be an empty string and not null.
+                                DefaultValueAsString = string.Empty, 
                             };
 
                     modelDefinition.SetModelProperty(category.Name, propName,

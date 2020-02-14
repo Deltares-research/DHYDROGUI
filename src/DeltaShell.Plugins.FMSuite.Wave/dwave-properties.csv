@@ -24,7 +24,7 @@ General,DirConvention,General,General Settings,Directional convention:nautical|c
 General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
 General,TimeStep,General,Simulation mode,Time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation,
-General,TScale,General,Simulation mode,Time interval,Double,60,,,,SimMode=1,,,,,Unit of time, min
+General,TimeInterval,General,Simulation mode,Time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min
 General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
 General,FlowBedLevel,General,Data from D-Flow FM,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
 General,FlowWaterLevel,General,Data from D-Flow FM,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
