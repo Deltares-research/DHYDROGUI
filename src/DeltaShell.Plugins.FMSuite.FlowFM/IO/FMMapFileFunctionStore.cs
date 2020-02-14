@@ -777,10 +777,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (flowLinks1D2D == null)
             {
                 var link1D2Ds = UGrid1D2DLinksAdapter.Load1D2DLinks(Path).ToList();
-                IDiscretization disc = new Discretization();
-                IHydroNetwork network = new HydroNetwork();
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, disc, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(Path),UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path));
-                Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, this.discretization.Locations, grid.Cells);
+                discretization = new Discretization();
+                network = new HydroNetwork();
+                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(Path),UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path));
+
+                Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, discretization.Locations, grid.Cells);
                 links1D2D = new EventedList<ILink1D2D>(link1D2Ds);
                 //Links1D2DHelper.SetIndexes1D2DLinks(links1D2D, discretization, grid);
                 flowLinks1D2D = link1D2Ds.ConvertMultiThreaded(l1d2d =>
