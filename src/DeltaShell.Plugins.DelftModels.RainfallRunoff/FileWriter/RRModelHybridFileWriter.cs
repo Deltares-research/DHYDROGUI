@@ -91,8 +91,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             File.WriteAllText("3B_LINK.TP", String.Join("\r\n", links.ToArray()));
 
             //empty files:
-            File.WriteAllText("3BRUNOFF.TP", "");
             File.WriteAllText("3b_rout.3b", "");
+            File.WriteAllText("pluvius.tbl", "");
             return true;
         }
 

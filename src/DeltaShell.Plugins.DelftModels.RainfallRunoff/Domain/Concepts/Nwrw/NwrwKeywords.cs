@@ -39,5 +39,15 @@
         public const string DwaWaterUsePerCapitaPerDayKey = "wd";
         public const string DwaWaterUsePerCapitaPerHourKey = "wh";
         public const string DwaTableIdKey = "dt";
+
+        // .tp
+        public const string TpOpeningKey = "NODE";
+        public const string TpBranchIdKey = "ri";
+        public const string TpModelNodeType = "mt";
+        public const string TpNetterNodeType = "nt";
+        public const string TpObjectId = "ObID";
+        public const string TpPositionX = "px";
+        public const string TpPositionY = "py";
+        public const string TpClosingKey = "node";
     }
 }

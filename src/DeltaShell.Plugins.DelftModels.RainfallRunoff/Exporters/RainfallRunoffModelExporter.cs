@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 new Nwrw3BComponentFileWriter(model),
                 new NwrwAlgComponentFileWriter(model),
                 new NwrwDwfComponentFileWriter(model), 
+                new NwrwTpComponentFileWriter(model), 
             });
             nwrwWriter.WriteNwrwFiles(path);
             model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path); 
