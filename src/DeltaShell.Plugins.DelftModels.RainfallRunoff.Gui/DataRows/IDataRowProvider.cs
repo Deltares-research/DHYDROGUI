@@ -12,5 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
 
         void ClearFilter();
         bool HasFilter();
+
+        RainfallRunoffModel Model { get; }
     }
 }

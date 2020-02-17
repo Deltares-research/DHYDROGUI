@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using DelftTools.Controls;
+using DelftTools.Controls.Swf.Editors;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
 
@@ -211,6 +216,36 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get { return data.MeteoStationId; }
             set { data.MeteoStationId = value; }
+        }
+
+        public override void SetColumnEditorForDataWithModel(RainfallRunoffModel model,
+            IEnumerable<ITableViewColumn> tableViewColumns)
+        {
+            // First definition must start with "Inwoner".
+            // Second definition must start with "Bedrijf".
+            // See issue FM1D2D-535.
+            var dwfidcolumn = tableViewColumns.FirstOrDefault(c =>
+                c.Caption.Equals(TypeUtils.GetMemberDescription(() => new NwrwDataRow().FirstDryWeatherFlowId)));
+            if (dwfidcolumn != null)
+            {
+                dwfidcolumn.Editor = new ComboBoxTypeEditor
+                    {Items = model?.NwrwDryWeatherFlowDefinitions
+                        .Where(dwfd => dwfd.DryWeatherFlowId.StartsWith("Inwoner", StringComparison.InvariantCultureIgnoreCase)
+                        || dwfd.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID))
+                        .Select(dwfd => dwfd.DryWeatherFlowId)
+                };
+            }
+            dwfidcolumn = tableViewColumns.FirstOrDefault(c =>
+                c.Caption.Equals(TypeUtils.GetMemberDescription(() => new NwrwDataRow().LastFirstDryWeatherFlowId)));
+            if (dwfidcolumn != null)
+            {
+                dwfidcolumn.Editor = new ComboBoxTypeEditor
+                    { Items = model?.NwrwDryWeatherFlowDefinitions
+                        .Where(dwfd => dwfd.DryWeatherFlowId.StartsWith("Bedrijf", StringComparison.InvariantCultureIgnoreCase)
+                        || dwfd.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID))
+                        .Select(dwfd => dwfd.DryWeatherFlowId)
+                    };
+            }
         }
     }
 }
