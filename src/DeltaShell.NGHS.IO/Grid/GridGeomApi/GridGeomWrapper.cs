@@ -103,16 +103,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
         public static extern int ggeo_get_links_dll([In, Out] ref IntPtr arrayfrom, [In, Out] ref IntPtr arrayto, [In] ref int nlinks, [In, Out] ref int linktype, ref int startindex);
 
         /// <summary>
-        /// Map 2d cell indexes 
-        /// </summary>
-        /// <param name="meshgeom">2d mesh</param>
-        /// <param name="meshgeomdim">2d mesh dimensions</param>
-        /// <param name="mapping">Mapping 2d mesh indexes to 2d mesh indexes in gridgeom</param>
-        /// <returns></returns>
-        [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_map_2d_cells", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_map_2d_cells_dll([In] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, [In, Out] ref IntPtr mapping);
-
-        /// <summary>
         /// Clears the memory to allow new links being generated.
         /// </summary>
         /// <returns></returns>
@@ -209,12 +199,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
         {
             var startindex = 0;
             int ierr = ggeo_get_links_dll(ref arrayfrom, ref arrayto, ref nlinks, ref linkType, ref startindex);
-            return ierr;
-        }
-
-        public int Get2DCellMapping(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim, ref IntPtr c_mapping)
-        {
-            int ierr = ggeo_map_2d_cells_dll(ref c_meshgeom, ref c_meshgeomdim, ref c_mapping);
             return ierr;
         }
     }

@@ -456,22 +456,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 Marshal.Copy(c_arrayfrom, rcArrayFrom, 0, linksCount);
                 Marshal.Copy(c_arrayto, rcArrayTo, 0, linksCount);
 
-                //12. retrive 2d cells mappings
-                IntPtr c_mapping = IntPtr.Zero;
-                c_mapping = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * mesh2d.numberOfFaces);
-                ierr = geomWrapper.Get2DCellMapping(ref meshtwod, ref meshtwoddim, ref c_mapping);
-                int[] mapping = new int[mesh2d.numberOfFaces];
-                Marshal.Copy(c_mapping, mapping, 0, mesh2d.numberOfFaces);
-
-                //13. apply 2d cells mappings
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
-                {
-                    for (int i = 0; i < rcArrayTo.Length; ++i)
-                    {
-                        rcArrayFrom[i] = mapping[rcArrayFrom[i]];
-                    }
-                }
-
                 var linkInformation = new LinkInformation
                 {
                     fromIndices = rcArrayFrom,
