@@ -31,7 +31,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public static void LoadNetworkAndDiscretisation(string netFilePath, IDiscretization discretization, IHydroNetwork network, IList<NodeFile.CompartmentProperties> nodeData, IList<BranchFile.BranchProperties> branchData)
         {
             var discretisationDataModel = LoadNetworkDiscretisationDataModel(netFilePath);
-            if (discretisationDataModel == null)
+            if (discretisationDataModel == null || discretization == null)
             {
                 // no discretisation is found. Return null and try to get the network in another call
                 discretization?.Clear();

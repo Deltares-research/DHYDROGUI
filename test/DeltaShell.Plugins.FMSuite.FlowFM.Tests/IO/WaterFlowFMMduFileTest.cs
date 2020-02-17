@@ -696,24 +696,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesAreCopiedAndRead()
         {
             // Preparations
-            var baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var mduProjectFilePath = @"\FilesOutsideMduFolderProject.dsproj_data\FlowFM\FlowFM.mdu";
-            var filePath = baseFolderPath + mduProjectFilePath;
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
+            var relativeMduFilePath = @"FilesOutsideMduFolderProject.dsproj_data\FlowFM\FlowFM.mdu";
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
 
-            var featureFileDirectory = Path.GetDirectoryName(Path.GetDirectoryName(mduFilePath));
-            var mduFileFolder = Path.GetDirectoryName(mduFilePath);
-            CheckIfFilesWereCopied(featureFileDirectory, mduFileFolder, false);
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, relativeMduFilePath);
 
-            var modelName = Path.GetFileNameWithoutExtension(filePath);
+            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder, false);
+
+            var modelName = Path.GetFileNameWithoutExtension(mduPath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
@@ -727,29 +728,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
-            CheckIfFilesWereCopied(featureFileDirectory, mduFileFolder, true);
+            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder, true);
         }
 
         [Test]
-        [TestCase(@"\FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
-        [TestCase(@"\FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
+        [TestCase(@"FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
+        [TestCase(@"FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
         public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreRead(string mduProjectFilePath)
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = baseFolderPath + mduProjectFilePath;
-            var featureFileDirectory = Path.Combine(Path.GetDirectoryName(filePath), @"FeatureFiles");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
-            
-            var modelName = Path.GetFileNameWithoutExtension(filePath);
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
+
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var mduPath = Path.Combine(originalFolderPath, mduProjectFilePath);
+            var featureFileDirectory = Path.Combine(testDir, baseFolderPath, @"FeatureFiles");
+
+            var modelName = Path.GetFileNameWithoutExtension(mduPath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(2));
@@ -763,7 +765,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
-            CheckIfFilesWereCopied(featureFileDirectory, Path.GetDirectoryName(mduFilePath), false);
+            CheckIfFilesWereCopied(featureFileDirectory, Path.GetDirectoryName(mduPath), false);
         }
 
         [Test]
@@ -771,18 +773,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"LeadingSlashesMdu\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var filePath = @"LeadingSlashesMdu\FlowFM.mdu";
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
+
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var mduPath = Path.Combine(originalFolderPath, filePath);
 
             var modelName = Path.GetFileNameWithoutExtension(filePath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             // Check if all features were read
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(1));
@@ -793,42 +797,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"MissingFileMdu\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var filePath = @"MissingFileMdu\FlowFM.mdu";
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
 
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var mduPath = Path.Combine(originalFolderPath, filePath);
+            
             var modelName = Path.GetFileNameWithoutExtension(filePath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties), "' does not exist, but is defined in MDU file at '");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+            {
+                mduFile.Read(mduPath, modelDefinition, area, network, null, null, null,
+                        allFixedWeirsAndCorrespondingProperties);
+            }, "' does not exist, but is defined in MDU file at '");
 
             // Check if all features were read
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(0));
         }
 
         [Test]
-        [TestCase(@"\MissingFeatureFilesProject.dsproj_data\FlowFM.mdu")]
-        [TestCase(@"\DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu")]
+        [TestCase(@"MissingFeatureFilesProject.dsproj_data\FlowFM.mdu")]
+        [TestCase(@"DuplicateFilesProject.dsproj_data\FlowFM\FlowFM.mdu")]
         public void GivenMduFileWithReferencesToNonExistentFilesOrFileNamesThatAlreadyExistInTheMduFolder_WhenReadingMdu_ThenTheseFeaturesAreNotRead(string mduProjectFilePath)
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            string filePath = baseFolderPath + mduProjectFilePath;
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
 
-            var modelName = Path.GetFileNameWithoutExtension(filePath);
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, mduProjectFilePath);
+
+            var modelName = Path.GetFileNameWithoutExtension(mduProjectFilePath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var mduFile = new MduFile();
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             // Check if all features were read
             Assert.That(area.DryPoints.Count, Is.EqualTo(0));
@@ -1109,19 +1122,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"ChangeFeatureGroupNameMduTest\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
 
-            var modelName = Path.GetFileNameWithoutExtension(filePath);
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var relativePath = @"ChangeFeatureGroupNameMduTest\FlowFM.mdu";
+
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, relativePath);
+
+            var modelName = Path.GetFileNameWithoutExtension(mduPath);
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, modelName);
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, modelName);
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
 
-            mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
             // Check initial settings
             var thinDams = area.ThinDams;
@@ -1131,13 +1147,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Change group name and write to mdu file
             area.ThinDams.ForEach(td => td.GroupName = newGroupName);
-            mduFile.Write(mduFilePath, modelDefinition, area, null, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            mduFile.Write(mduPath, modelDefinition, area, null, null, null, null, allFixedWeirsAndCorrespondingProperties);
 
-            var readAllText = File.ReadAllText(mduFilePath);
+            var readAllText = File.ReadAllText(mduPath);
             var expectedThinDamFileText = GetExpectedFileTextWithEmptyValue("ThinDamFile");
             Assert.IsTrue(readAllText.Contains(expectedThinDamFileText), "Expected {0} \n Generated: {1}", expectedThinDamFileText, readAllText);
 
-            DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(mduDir, initialGroupName))));
+            DeleteAllFilesAndFoldersInSubDirectory(new DirectoryInfo(Path.GetDirectoryName(Path.Combine(testWorkingFolder, initialGroupName))));
         }
 
         [Test]
@@ -1343,19 +1359,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"StructuresFileWithoutReferences\FlowFM\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
-            
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
+
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var relativePath = @"StructuresFileWithoutReferences\FlowFM\FlowFM.mdu";
+
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, relativePath);
+
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, Path.GetFileNameWithoutExtension(filePath));
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath));
             var mduFile = new MduFile();
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
             
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties), "' is referenced in structures file '");
-            Assert.IsFalse(File.Exists(Path.Combine(mduDir, "FlowFM_structures.ini")));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => mduFile.Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties), "' is referenced in structures file '");
+            Assert.IsFalse(File.Exists(Path.Combine(testWorkingFolder, "FlowFM_structures.ini")));
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString(), Is.EqualTo(""));
         }
 
@@ -1364,12 +1383,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"MduFileInFolderWith - SpacesInName\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
 
-            new MduFile().Read(mduFilePath,
-                new WaterFlowFMModelDefinition(mduFilePath, Path.GetFileNameWithoutExtension(filePath)),
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var relativePath = @"MduFileInFolderWith - SpacesInName\FlowFM.mdu";
+            
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, relativePath);
+
+            new MduFile().Read(mduPath,
+                new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath)),
                 new HydroArea(), new HydroNetwork(), null, null, null, new List<ModelFeatureCoordinateData<FixedWeir>>());
         }
 
@@ -1379,17 +1402,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Preparations
             const string baseFolderPath = @"HydroAreaCollection\MduFileProjects";
-            var filePath = Path.Combine(baseFolderPath, @"MduFileWithSourceSinkFile\FlowFM.mdu");
-            var mduFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(baseFolderPath));
+            var testDir = TestHelper.GetTestDataDirectoryPathForAssembly(GetType().Assembly);
+
+            var originalFolderPath = Path.Combine(testDir, baseFolderPath);
+            var relativePath = @"MduFileWithSourceSinkFile\FlowFM.mdu";
+            
+            var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
+            var mduPath = Path.Combine(testWorkingFolder, relativePath);
 
             var area = new HydroArea();
             var network = new HydroNetwork();
-            var modelDefinition = new WaterFlowFMModelDefinition(mduFilePath, Path.GetFileNameWithoutExtension(filePath));
+            var modelDefinition = new WaterFlowFMModelDefinition(mduPath, Path.GetFileNameWithoutExtension(mduPath));
             var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>();
 
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(0));
-            new MduFile().Read(mduFilePath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
+            new MduFile().Read(mduPath, modelDefinition, area, network, null, null, null, allFixedWeirsAndCorrespondingProperties);
             Assert.That(modelDefinition.SourcesAndSinks.Count, Is.EqualTo(1));
         }
 
@@ -1563,9 +1590,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var toFolderFileNames = new DirectoryInfo(toFolder).GetFiles().Select(f => f.Name);
             var fromFolderFileNames = new DirectoryInfo(fromFolder).GetFiles().Select(f => f.Name);
-            foreach (var fileName in fromFolderFileNames)
+
+            var missing = fromFolderFileNames.Except(toFolderFileNames).ToArray();
+            if (missing.Any())
             {
-                Assert.That(toFolderFileNames.Contains(fileName), Is.EqualTo(checkIfTrue));
+                Assert.Fail($"Missing files {string.Join(",", missing)}");
             }
         }
 
