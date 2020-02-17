@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var flowFmModel = TryGetModel<WaterFlowFMModel>();
             if (flowFmModel != null)
             { 
-                flowFmModel.UnSubscribeFromNetwork(); // performance optimization, no need to listen to network events
+                flowFmModel.UnSubscribeFromNetwork(flowFmModel.Network); // performance optimization, no need to listen to network events
             }
 
             AddCrossSections();
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (flowFmModel != null)
             {
-                flowFmModel.SubscribeToNetwork();
+                flowFmModel.SubscribeToNetwork(flowFmModel.Network);
                 flowFmModel.UpdateRoughnessSections();
             }
         }

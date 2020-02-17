@@ -43,17 +43,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [NoNotifyPropertyChange]
         public virtual IHydroNetwork Network
         {
-            get { return (IHydroNetwork) GetDataItemValueByTag(WaterFlowFMModelDataSet.NetworkTag); }
+            get {
+                if (networkDataItem == null)
+                    networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+                return (IHydroNetwork) GetDataItemValueByTag(WaterFlowFMModelDataSet.NetworkTag); }
             set
             {
-                if (value == Network)
-                {
-                    return;
-                }
+                var networkItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
 
-                UnSubscribeFromNetwork();
-                GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).Value = value;
-                SubscribeToNetwork();
+                if (networkItem.Value != null)
+                {
+                    UnSubscribeFromNetwork(networkItem.Value as IHydroNetwork);
+                }
+                networkItem.Value = value;
+                SubscribeToNetwork(value);
                 
                 // refresh data
                 //moet dit ? RefreshNetworkRelatedData();
@@ -61,29 +64,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public void SubscribeToNetwork()
+        public void SubscribeToNetwork(IHydroNetwork network)
         {
-            ((INotifyCollectionChanged) Network).CollectionChanged += NetworkCollectionChanged;
-            ((INotifyPropertyChanged) Network).PropertyChanged += NetworkPropertyChanged;
-            ((INotifyPropertyChanged) Network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
+            ((INotifyCollectionChanged) network).CollectionChanged += NetworkCollectionChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
 
-            var hydroNetworkParent = Network.Parent;
-            fmRegion?.SubRegions?.Add(Network);
-            Network.Parent = hydroNetworkParent;
-            if (NetworkDiscretization != null) NetworkDiscretization.Network = Network;
-            RoughnessSections?.ForEach(rs => rs.Network = Network);
+            var hydroNetworkParent = network.Parent;
+            fmRegion?.SubRegions?.Add(network);
+            network.Parent = hydroNetworkParent;
+            if (NetworkDiscretization != null) NetworkDiscretization.Network = network;
+            RoughnessSections?.ForEach(rs => rs.Network = network);
         }
 
-        public virtual void UnSubscribeFromNetwork()
+        public virtual void UnSubscribeFromNetwork(IHydroNetwork network)
         {
 
-            ((INotifyCollectionChanged) Network).CollectionChanged -= NetworkCollectionChanged;
-            ((INotifyPropertyChanged) Network).PropertyChanged -= NetworkPropertyChanged;
-            ((INotifyPropertyChanged) Network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
+            ((INotifyCollectionChanged) network).CollectionChanged -= NetworkCollectionChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
+            ((INotifyPropertyChanged) network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
 
-            var hydroNetworkParent = Network.Parent;
-            fmRegion?.SubRegions?.Remove(Network);
-            Network.Parent = hydroNetworkParent;
+            var hydroNetworkParent = network.Parent;
+            fmRegion?.SubRegions?.Remove(network);
+            network.Parent = hydroNetworkParent;
             if (NetworkDiscretization != null) NetworkDiscretization.Network = null;
         }
 
@@ -99,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            if (sender is OutletCompartment && e.PropertyName == "SurfaceWaterLevel")
+            if (sender is OutletCompartment && e.PropertyName == nameof(OutletCompartment.SurfaceWaterLevel))
             {
                 var outlet = (OutletCompartment) sender;
                 var model1DBoundaryNodeData = BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outlet.ParentManhole);
@@ -326,7 +329,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddSewerRoughnessIfNecessary();
             }
 
-            
+            if(removedOrAddedItem is IFeature feature)
+            {
+                var role = Network.AllHydroObjects.Contains(feature);
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        //AddNetworkItem(feature, role);
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        //RemoveNetworkFeature(feature);
+                        break;
+                    case NotifyCollectionChangedAction.Reset:
+                        foreach (var networkItem in networkDataItems)
+                        {
+                            //RemoveNetworkFeature(networkItem.Key);
+                        }
+                        networkDataItems.Clear();
+                        break;
+                    case NotifyCollectionChangedAction.Replace:
+                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
+                        //RemoveNetworkFeature(oldFeature);
+                        //AddNetworkItem(feature, role);
+                        break;
+                    default:
+                        throw new NotImplementedException(
+                            String.Format("Action {0} on feature collection not supported", e.Action));
+                }
+            }
             // check if removed item is used in the child data items
             if (removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -355,6 +385,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
+        }
+        private void RemoveNetworkFeature(IFeature feature)
+        {
+            List<IDataItem> dataItemsToBeRemoved;
+            if (networkDataItems.TryGetValue(feature, out dataItemsToBeRemoved))
+            {
+                foreach (var dataItem in dataItemsToBeRemoved)
+                {
+                    UnSubscribeFromDataItem(dataItem, true);
+                    OnDataItemRemoved(dataItem);
+                }
+            }
+            networkDataItems.Remove(feature);
+        }
+
+        private void AddNetworkItem(IFeature feature, bool isInputSender)
+        {
+            var listToAdd = GetDataItemListForFeature(feature, isInputSender);
+            networkDataItems.Add(feature, listToAdd);
         }
 
         /// <summary>

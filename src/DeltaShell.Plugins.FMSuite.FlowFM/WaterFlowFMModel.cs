@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var network = new HydroNetwork { Name = WaterFlowFMModelDataSet.NetworkTag };
             AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
             networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            SubscribeToNetwork();
+            SubscribeToNetwork(network);
             NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
             
             // q's supplied by externals
@@ -507,6 +507,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
+            networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            if (networkDataItem != null)
+            {
+                SubscribeToNetwork(networkDataItem.Value as IHydroNetwork);
+            }
         }
 
         protected override void OnBeforeDataItemsSet()
@@ -518,6 +523,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
                 ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+            }
+            networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
+            if (networkDataItem != null)
+            {
+                UnSubscribeFromNetwork(networkDataItem.Value as IHydroNetwork);
             }
         }
 
@@ -534,9 +544,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
             if (Equals(e.Target, networkDataItem) && !e.Relinking)
             {
-                var hydroNetwork = (IHydroNetwork) networkDataItem.Value;
-                SubscribeToNetwork();
-                Network = hydroNetwork;
+                SubscribeToNetwork(networkDataItem.Value as IHydroNetwork);
             }
 
             base.OnDataItemLinked(sender, e);
@@ -555,10 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
             if (Equals(e.Target, networkDataItem))
             {
-                var hydroNetwork = (IHydroNetwork)networkDataItem.Value;
-
-                UnSubscribeFromNetwork();
-                Network = hydroNetwork;
+                UnSubscribeFromNetwork(networkDataItem.Value as IHydroNetwork);
             }
 
             base.OnDataItemUnlinking(sender, e);
@@ -1209,7 +1214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var boundaryCondition1DDataItems = BoundaryConditions1D.Select(bc => bc.SeriesDataItem);
                 var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
 
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(networkDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
             }
         }
 
@@ -1609,6 +1614,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
+            items = null;
+            networkDataItems.TryGetValue(location, out items);
+
+            if (items != null)
+            {
+                foreach (var di in items)
+                {
+                    yield return di;
+                }
+            }
+
             if (location.Geometry is Point)
             {
                 var networkDataItem = GetDataItemByValue(Network);
@@ -1813,6 +1829,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (Area != null)
                 {
                     Area.CoordinateSystem = value;
+                }
+
+                if (Network != null)
+                {
+                    Network.CoordinateSystem = value;
                 }
 
                 if (Grid != null)
@@ -2818,7 +2839,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     else
                     {
-                        Output1DFileStore = new FM1DFileFunctionStore();
+                        Output1DFileStore = new FM1DFileFunctionStore(Network);
                         // don't change this to a property setter, because the timing is of great importance.
                         // elsewise, there will be no subscription to the read and Path triggers the Read().
                         Output1DFileStore.Path = mapFilePath;
