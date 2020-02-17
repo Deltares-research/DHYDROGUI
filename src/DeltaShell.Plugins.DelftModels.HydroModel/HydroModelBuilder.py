@@ -251,7 +251,7 @@ class HydroModelBuilder(object):
         for activity in model.Activities:
             self.auto_add_required_model_links(model, activity, False)                
             
-    def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=False):
+    def auto_add_required_model_links(self, model, child, updateRegions=True, relinking=True):
         # query first region
         network = self.get_first_by_type(model.Region.AllRegions, HydroNetwork)
         basin = self.get_first_by_type(model.Region.SubRegions, DrainageBasin)
@@ -276,7 +276,7 @@ class HydroModelBuilder(object):
                 basin = DrainageBasin(Name="Basin")
                 model.Region.SubRegions.Add(basin)
 
-            if fm and fm == child and not area:
+            if fm and fm == child and not area and not network:
                 area = HydroArea(Name="Area")
                 model.Region.SubRegions.Add(area)
                 network = HydroNetwork(Name="Network")
