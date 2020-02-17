@@ -62,7 +62,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
                 IniCategory.AddProperty(StructureRegion.ReductionFactorLevels.Key, head.Count, StructureRegion.ReductionFactorLevels.Description);
                 IniCategory.AddProperty(StructureRegion.Head.Key, head, StructureRegion.Head.Description, StructureRegion.Head.Format);
                 IniCategory.AddProperty(StructureRegion.ReductionFactor.Key, reductionFactor, StructureRegion.ReductionFactor.Description, StructureRegion.ReductionFactor.Format);
-                IniCategory.AddProperty(StructureRegion.UseReductionTable.Key, "true", StructureRegion.UseReductionTable.Description);
             }
             else
             {
