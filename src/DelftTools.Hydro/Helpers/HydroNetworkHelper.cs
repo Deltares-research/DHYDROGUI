@@ -75,8 +75,8 @@ namespace DelftTools.Hydro.Helpers
             };
 
             network.BeginEdit(new DefaultEditAction("Add new route to network"));
-            route.Network = network;
             network.Routes.Add(route);
+            route.Network = network;
             network.EndEdit();
 
             return route;

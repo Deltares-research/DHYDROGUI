@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     return;
 
                 //special case:
-                if (coverage.Name.ToLower().Equals("water level") && coverage.IsTimeDependent) 
+                if (coverage.Name.ToLower().Equals("water level (mesh1d_s1)") && coverage.IsTimeDependent) 
                 {
                     WaterLevelNetworkCoverage = FilterWithTime((INetworkCoverage)coverage, null);
                 }
