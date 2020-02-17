@@ -23,16 +23,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string TimeDimensionName = "time";
         protected string dateTimeFormat = "yyyy-MM-dd hh:mm:ss"; // default
         private IHydroNetwork outputNetwork = new HydroNetwork();
+        private IHydroNetwork inputNetwork;
         private IDiscretization outputDiscretization = new Discretization();
 
         private const string StandardNameAttribute = "standard_name";
         private const string LongNameAttribute = "long_name";
         private const string UnitAttribute = "units";
 
-        public FM1DFileFunctionStore()
+        public FM1DFileFunctionStore(IHydroNetwork network)
         {
             OutputFileReader = new FmMapFile1DOutputFileReader();
             sobekStartIndex = 0;
+            inputNetwork = network;
         }
         public override void Delete()
         {
@@ -41,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public override object Clone()
         {
-            var clonedStore = new FM1DFileFunctionStore() { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader() };
+            var clonedStore = new FM1DFileFunctionStore((IHydroNetwork)inputNetwork.Clone()) { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader() };
 
             foreach (var existingNetworkCoverage in Functions.OfType<INetworkCoverage>())
             {
@@ -278,7 +280,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             var coverageName = coverageLongName + suffix;
-            return new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = outputNetwork};
+            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork };
+            networkCoverage.Components[0].NoDataValue = double.NaN;
+            networkCoverage.Locations.FixedSize = 0;
+            networkCoverage.IsEditable = false;
+            return networkCoverage;
         }
 
         private IEnumerable<NetCdfVariableInfo> GetVariableInfos()
