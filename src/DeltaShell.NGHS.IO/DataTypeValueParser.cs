@@ -283,11 +283,11 @@ namespace DeltaShell.NGHS.IO
         /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
         /// </summary>
         /// <param name="valueAsString">Value to be parsed.</param>
-        /// <returns>Parsed date-time, or <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null.</returns>
+        /// <returns>Parsed date-time, or <see cref="DateTime.Today"/> when <paramref name="valueAsString"/> empty or null.</returns>
         /// <exception cref="FormatException">When <paramref name="valueAsString"/> does not represent a supported date-time format.</exception>
         public static DateTime ParseFMDateTime(string valueAsString)
         {
-            if (String.IsNullOrEmpty(valueAsString)) return DateTime.Now;
+            if (String.IsNullOrEmpty(valueAsString)) return DateTime.Today;
 
             DateTime value;
             if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out value))
