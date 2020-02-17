@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         public void ShowUserControl()
         {
             var dialog = new GwswImportDialog();
-            dialog.Data = new GwswFileImporter();
-            dialog.Data = new GwswFileImporter();
+            dialog.Data = new GwswFileImporter(new DefinitionsProvider());
+            dialog.Data = new GwswFileImporter(new DefinitionsProvider());
             /*For some reason it crashes (sometimes) when closing it. For what I could read online it's due to the way we call the modal.
              It should be .Show, instead of .ShowModal*/
             WpfTestHelper.ShowModal(dialog);
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         [Test]
         public void GivenGwswImporterAndGwswFeatureFilesList_OnImportSelectedFeatures_UpdatesListInImporter_WithSelectedItems()
         {
-            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter() };
+            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter(new DefinitionsProvider()) };
             Assert.IsNotNull(viewModel);
             var item1 = new GwswFeatureViewItem { FullPath = "test1", Selected = true };
             var item2 = new GwswFeatureViewItem { FullPath = "test2", Selected = true };
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
  [Test]
         public void GivenOverwriteGwswFeatureFiles_IsTrue_PreviousDefinitionAndFiles_AreReplaced()
         {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
+            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter(new DefinitionsProvider()) };
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         [Test]
         public void GivenCorrectDefinitionFile_OnLoadDefinitionFile_Loads_GwswFeatureFiles_WithSelected_ToTrue()
         {
-            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter() };
+            var viewModel = new GwswImportDialogViewModel { Importer = new GwswFileImporter(new DefinitionsProvider()) };
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         [TestCase(@"gwswFiles\Kunstwerk.csv", "Kunstwerk.csv", "Structure", "Structure")]
         public void GivenValidFeatureFile_GwswFeatureFiles_AddsNewRepeatedItem_WithExpectedProperties(string path, string expectedFileName, string expectedElementName, string expectedFeatureType)
         {
-            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter()};
+            var viewModel = new GwswImportDialogViewModel{ Importer = new GwswFileImporter(new DefinitionsProvider())};
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         public void GivenNullImporter_OnConfigureImporter_DoesNotCrash()
         {
             var viewModel = new GwswImportDialogViewModel();
-            viewModel.Importer = new GwswFileImporter();
+            viewModel.Importer = new GwswFileImporter(new DefinitionsProvider());
             try
             {
                 viewModel.OnConfigureImporter.Execute(null);
@@ -214,25 +214,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         }
 
         [Test]
-        public void GivenImporter_WithoutGwswAttributesDefinition_OnConfigureImporter_DoesNotModify_Importer_FilesToImport()
-        {
-            var importer = new GwswFileImporter();
-            importer.GwswAttributesDefinition.Clear();
-            var testfile = "TestFile";
-            importer.FilesToImport.Add(testfile);
-            Assert.IsTrue(Enumerable.Any<string>(importer.FilesToImport));
-
-            var viewModel = new GwswImportDialogViewModel{ Importer = importer};
-
-            viewModel.OnConfigureImporter.Execute(null);
-            Assert.IsTrue(Enumerable.Any<string>(importer.FilesToImport, f => f == testfile));
-
-        }
-
-        [Test]
         public void GivenImporter_WithGwswAttributesDefinition_OnConfigureImporter_SetsEmptyList_To_Importer_FilesToImport_IfNoGwswFeatureFilesExist()
         {
-            var importer = new GwswFileImporter();
+            var importer = new GwswFileImporter(new DefinitionsProvider());
             importer.GwswAttributesDefinition.Add(new GwswAttributeType());
 
             var testfile = "TestFile";
@@ -250,7 +234,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
         [TestCase(true)]
         public void GivenImporter_WithGwswAttributesDefinition_OnConfigureImporter_SetsSelectedFiles_Or_EmptyList_To_Importer_FilesToImport(bool selectedFiles)
         {
-            var importer = new GwswFileImporter();
+            var importer = new GwswFileImporter(new DefinitionsProvider());
             importer.GwswAttributesDefinition.Add(new GwswAttributeType());
 
             var testfile = "TestFile";

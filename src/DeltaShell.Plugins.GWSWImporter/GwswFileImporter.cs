@@ -5,7 +5,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
@@ -14,6 +13,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -25,7 +25,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -35,6 +34,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
     /// <seealso cref="DelftTools.Shell.Core.IFileImporter" />
     public class GwswFileImporter : IFileImporter
     {
+        private readonly IDefinitionsProvider definitionsProvider;
         private static ILog Log = LogManager.GetLogger(typeof(GwswFileImporter));
 
         private CsvSettings csvSettings;
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             public void ReportProgress(string message)
             {
                 currentImportStep++;
-                new GwswFileImporter().SetProgress(message, currentImportStep, totalAmountOfImportSteps);
+                new GwswFileImporter(new DefinitionsProvider()).SetProgress(message, currentImportStep, totalAmountOfImportSteps);
             }
 
             public void JumpImportStepsForNextFile()
@@ -63,8 +63,10 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
         }
 
-        public GwswFileImporter()
+        public GwswFileImporter(IDefinitionsProvider definitionsProvider)
         {
+            this.definitionsProvider = definitionsProvider ?? throw new ArgumentNullException(nameof(definitionsProvider));
+
             FilesToImport = new List<string>();
             GwswAttributesDefinition = new EventedList<GwswAttributeType>();
             GwswDefaultFeatures = new Dictionary<string, List<string>>();
@@ -146,38 +148,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
 
             return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
-        }
-
-        /// <summary>
-        /// Gets the correct definition file.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        /// <returns></returns>
-        private string GetCorrectDefinitionFile(string filePath)
-        {
-            // In the new GWSW format (1.5) Verbinding.csv has a column named
-            // 'AAN_PRO'. We use this file and column to determine the version
-            // of GWSW files. See issue FM1D2D-502.
-            string gwswDefinitionFileName;
-
-            String path = filePath + @"\Verbinding.csv";
-
-            string header = String.Empty;
-            try
-            {
-                using (StreamReader reader = new StreamReader(path))
-                {
-                    header = reader.ReadLine() ?? "";
-                }
-            }
-            catch (Exception)
-            {
-                Log.WarnFormat("Can't determine the Gwsw file format. Please select a folder with a valid Verbinding.csv file.");
-            }
-            
-            gwswDefinitionFileName = header.Contains("AAN_PRO") ? "GWSWDefinition1_5.csv" : "GWSWDefinition.csv";
-
-            return gwswDefinitionFileName;
         }
 
         private void AddRRtoFMNwrwLinks(RainfallRunoffModel rrModel, IHydroNetwork network,
@@ -493,10 +463,9 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// <param name="directoryPath">The directory path.</param>
         public void LoadFeatureFiles(string directoryPath)
         {
-            if (String.IsNullOrWhiteSpace(directoryPath)) return;
+            if (string.IsNullOrWhiteSpace(directoryPath)) return;
 
-            LoadGwswAttributeDefinitions(directoryPath);
-
+            GwswAttributesDefinition = definitionsProvider.GetDefinitions(directoryPath);
             try
             {
                 GwswDefaultFeatures = CreateFileNameToViewDataDictionary(directoryPath);
@@ -508,13 +477,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
 
             FilesToImport = new EventedList<string>(GwswDefaultFeatures?.Select(f => f.Value[2]));
-        }
-
-        private void LoadGwswAttributeDefinitions(string directoryPath)
-        {
-            var correctDefinitionFilePath = GetCorrectDefinitionFile(directoryPath);
-            LoadDefinitionFile(correctDefinitionFilePath);
-
         }
 
         /// <summary>
@@ -690,71 +652,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         ///     [2] <string>Full path</string>
         /// </summary>
         public IDictionary<string, List<string>> GwswDefaultFeatures { get; private set; }
-
-        private CsvMappingData CsvMappingData
-        {
-            get
-            {
-                var mappingData = new CsvMappingData
-                {
-                    Settings = new CsvSettings
-                    {
-                        Delimiter = CsvDelimeter,
-                        FirstRowIsHeader = true,
-                        SkipEmptyLines = true
-                    },
-                    FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
-                    {
-                        {
-                            new CsvRequiredField("Bestandsnaam", typeof(string)),
-                            new CsvColumnInfo(0, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("ElementName", typeof(string)),
-                            new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Kolomnaam", typeof(string)),
-                            new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Code", typeof(string)),
-                            new CsvColumnInfo(3, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Code_International", typeof(string)),
-                            new CsvColumnInfo(4, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Definitie", typeof(string)),
-                            new CsvColumnInfo(5, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Type", typeof(string)),
-                            new CsvColumnInfo(6, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Eenheid", typeof(string)),
-                            new CsvColumnInfo(7, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Verplicht", typeof(string)),
-                            new CsvColumnInfo(8, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Standaardwaarde", typeof(string)),
-                            new CsvColumnInfo(9, CultureInfo.InvariantCulture)
-                        },
-                        {
-                            new CsvRequiredField("Opmerking", typeof(string)),
-                            new CsvColumnInfo(10, CultureInfo.InvariantCulture)
-                        },
-                    }
-                };
-                return mappingData;
-            }
-        }
-
+        
         #region IFileImporter
 
         public string Name
@@ -817,126 +715,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         {
             ProgressChanged?.Invoke(currentStepName, currentStep, totalSteps);
         }
-
-        /// <summary>
-        /// It loads a definition file into the dictionary GwswAttributeDefinition
-        /// It also sets the initial FilesToImport
-        /// </summary>
-        /// <param name="gwswFileDefinitionPath">The GWSW file definition path.</param>
-        /// <returns>DataTable describing contents of the CSV file</returns>
-        public void LoadDefinitionFile(string gwswFileDefinitionPath)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = @"DeltaShell.Plugins.ImportExport.GWSW.Resources." + gwswFileDefinitionPath;
-            var csvPreviousDelimeter = CsvDelimeter;
-            CsvDelimeter = ',';
-            DataTable importedTable;
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
-                        resourceName);
-                    CsvDelimeter = csvPreviousDelimeter;
-                    return;
-                }
-
-                var mappingData = CsvMappingData;
-                using (var streamReader = new StreamReader(stream))
-                {
-                    importedTable = ImportFileAsDataTable(streamReader, mappingData);
-                    if (importedTable == null || importedTable.Rows.Count == 0)
-                    {
-                        Log.ErrorFormat(Resources.GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_,
-                            resourceName);
-                        CsvDelimeter = csvPreviousDelimeter;
-                        return;
-                    }
-                }
-            }
-
-            //Load the related tables referred in the definition file.
-            var attributeList = new EventedList<GwswAttributeType>();
-
-            // Create new attributes for each occurrence.
-            // Retrieve the files that need to be read.
-            foreach (DataRow row in importedTable.Rows)
-            {
-                var attributeFile = row.ItemArray[0].ToString();
-                var attributeElement = row.ItemArray[1].ToString();
-                var attributeName = row.ItemArray[2].ToString();
-                var attributeCode = row.ItemArray[3].ToString();
-                var attributeCodeInt = row.ItemArray[4].ToString();
-                var attributeDefinition = row.ItemArray[5].ToString();
-                var attributeType = row.ItemArray[6].ToString();
-                var attributeDefaultValue = row.ItemArray[9].ToString();
-
-                var attribute = new GwswAttributeType
-                {
-                    Name = attributeName,
-                    ElementName = attributeElement,
-                    Definition = attributeDefinition,
-                    FileName = attributeFile,
-                    Key = attributeCodeInt,
-                    LocalKey = attributeCode,
-                    AttributeType = GwswAttributeType.TryGetParsedValueType(attributeName, attributeType,
-                        attributeDefinition, attributeFile, importedTable.Rows.IndexOf(row)),
-                    DefaultValue = attributeDefaultValue
-                };
-
-                attributeList.Add(attribute);
-            }
-
-            //If some attributes have a different element from which they should, then we will show an error informing of such a difference.
-            attributeList.GroupBy(el => el.FileName).ForEach(gr =>
-            {
-                var mismatchedElementNames = gr.Select(el => el.ElementName).Distinct().ToList();
-                if (mismatchedElementNames.Count > 1)
-                {
-                    Log.ErrorFormat(
-                        Resources
-                            .GwswFileImporterBase_ImportDefinitionFile_There_is_a_mismatch_for_File_Name__0___currently_mapped_to_different_element_names__1__,
-                        gr.Key, string.Concat(mismatchedElementNames));
-                }
-            });
-
-            GwswAttributesDefinition = attributeList;
-            Log.InfoFormat(Resources.GwswFileImporterBase_ImportFilesFromDefinitionFile_Attributes_mapped__0_,
-                GwswAttributesDefinition.Count);
-            CsvDelimeter = csvPreviousDelimeter;
-        }
-
-        /// <summary>
-        /// Transforms a CSV data file, into tables that we can handle internally
-        /// </summary>
-        /// <param name="streamReader">Stream of the CSV file to import.</param>
-        /// <param name="mappingData">Delimeters and properties for handling the CSV file.</param>
-        /// <returns>DataTable with the content of the CSV file of <param name="streamReader"/>.</returns>
-        private DataTable ImportFileAsDataTable(StreamReader streamReader, CsvMappingData mappingData)
-        {
-            if (mappingData == null)
-            {
-                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_No_mapping_was_found_to_import_File__0__,
-                    streamReader);
-                return null;
-            }
-
-            var csvImporter = new CsvImporter {AllowEmptyCells = true};
-            var importedCsv = new DataTable();
-            try
-            {
-                importedCsv = csvImporter.Extract(csvImporter.SplitToTable(streamReader, mappingData.Settings),
-                    mappingData.FieldToColumnMapping, mappingData.Filters);
-            }
-            catch (Exception e)
-            {
-                Log.ErrorFormat(Resources.GwswFileImporterBase_ImportItem_Could_not_import_file__0___Reason___1_,
-                    streamReader, e.Message);
-            }
-
-            return importedCsv;
-        }
-
+        
         private IDictionary<string, List<string>> CreateFileNameToViewDataDictionary(string directoryPath)
         {
             //Get the items to import

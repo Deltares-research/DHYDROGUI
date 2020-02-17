@@ -2238,6 +2238,8 @@ src/DeltaShell.Plugins.GWSWImporter/ArchCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CircleCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CunetteCrossSectionShapeGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefaultCrossSectionDefinitionGenerator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/DefinitionsProvider.cs -text
+src/DeltaShell.Plugins.GWSWImporter/DefinitionsVersionProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DeltaShell.Plugins.ImportExport.GWSW.csproj -text
 src/DeltaShell.Plugins.GWSWImporter/EggCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GWSWImporterApplicationPlugin.cs -text
@@ -2247,6 +2249,7 @@ src/DeltaShell.Plugins.GWSWImporter/GwswAttributeType.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswElement.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswElementExtensions.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswFileImporter.cs -text
+src/DeltaShell.Plugins.GWSWImporter/IDefinitionsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ISewerFeatureGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/InvertedEggCrossSectionShapeGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ManholeMapping.cs -text
@@ -9575,6 +9578,7 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/App.config -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/DeltaShell.Plugins.ImportExport.GWSW.Tests.csproj -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/DelimeterSelectorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/GwswImportDialogTest.cs -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/DefinitionsProviderTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTestHelper.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/ISewerFeatureTest.cs -text

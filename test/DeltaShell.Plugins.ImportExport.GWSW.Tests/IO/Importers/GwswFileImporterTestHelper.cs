@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
         protected static DataTable GwswFileImportAsDataTableWorksCorrectly(string filePath, CsvMappingData mappingData, bool continousTesting = false)
         {
-            var importer = new GwswFileImporter();
+            var importer = new GwswFileImporter(new DefinitionsProvider());
             Assert.IsNotNull(importer);
 
             var importedTable = importer.ImportFileAsDataTable(filePath, mappingData);

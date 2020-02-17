@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new GwswFileImporter();
+            yield return new GwswFileImporter(new DefinitionsProvider());
         }
     }
 }

@@ -134,6 +134,8 @@
     <Compile Include="CircleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="CunetteCrossSectionShapeGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="DefinitionsProvider.cs" />
+    <Compile Include="DefinitionsVersionProvider.cs" />
     <Compile Include="EggCrossSectionDefinitionGenerator.cs" />
     <Compile Include="GwswAttribute.cs" />
     <Compile Include="GwswAttributeType.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="GwswFileImporter.cs" />
     <Compile Include="GWSWImporterApplicationPlugin.cs" />
     <Compile Include="GWSWImporterGuiPlugin.cs" />
+    <Compile Include="IDefinitionsProvider.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
     <Compile Include="SewerFeatures\GwswConnectionPump.cs" />
