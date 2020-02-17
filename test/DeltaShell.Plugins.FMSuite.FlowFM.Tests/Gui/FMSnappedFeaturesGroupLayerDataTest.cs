@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class FMSnappedFeaturesGroupLayerDataTest
     {
         [Test]
+        [Category(TestCategory.Integration)]
         public void GetAllAvailableSnappedFeaturesLayers()
         {
             var expectedNumberOfLayers = 17;
@@ -376,6 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SnappedBoundaryFeatureIsGenerated()
         {
             var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");

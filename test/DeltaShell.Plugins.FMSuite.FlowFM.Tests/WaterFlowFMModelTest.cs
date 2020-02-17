@@ -43,6 +43,7 @@ using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
+using Category = NUnit.Framework.CategoryAttribute;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -1762,6 +1763,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAnFMModel_WhenCloningThisModel_ThenTheNewFixedWeirPropertiesShouldBeLinkedToTheNewFixedWeirs()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFMFixedWeirs\FlowFM.mdu"); //model with two fixed weirs and every fixed weir has two coordinates.
