@@ -100,10 +100,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("6", yzCountValue);
 
             var yCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
-            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yCoordsValue);
+            Assert.AreEqual("0.00000 22.22222 33.33333 66.66667 77.77778 100.00000", yCoordsValue);
 
             var zCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
-            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zCoordsValue);
+            Assert.AreEqual("0.00000 0.00000 -10.00000 -10.00000 0.00000 0.00000", zCoordsValue);
 
             var sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
             Assert.AreEqual("3", sectionCountValue);
@@ -126,10 +126,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("6", yzCountValue);
 
             yCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
-            Assert.AreEqual("0.000 22.222 33.333 66.667 77.778 100.000", yCoordsValue);
+            Assert.AreEqual("0.00000 22.22222 33.33333 66.66667 77.77778 100.00000", yCoordsValue);
 
             zCoordsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
-            Assert.AreEqual("0.000 0.000 -10.000 -10.000 0.000 0.000", zCoordsValue);
+            Assert.AreEqual("0.00000 0.00000 -10.00000 -10.00000 0.00000 0.00000", zCoordsValue);
 
             sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
             Assert.AreEqual("3", sectionCountValue);
@@ -177,13 +177,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("6", xyzCountValue);
 
             var xCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.XCoors.Key);
-            Assert.AreEqual("585.000 610.000 635.000 660.000 685.000 710.000", xCoorsValue);
+            Assert.AreEqual("585.00000 610.00000 635.00000 660.00000 685.00000 710.00000", xCoorsValue);
 
             var yCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
-            Assert.AreEqual("950.000 910.000 870.000 830.000 790.000 750.000", yCoorsValue);
+            Assert.AreEqual("950.00000 910.00000 870.00000 830.00000 790.00000 750.00000", yCoorsValue);
 
             var zCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
-            Assert.AreEqual("10.000 6.500 2.500 2.500 6.500 10.000", zCoorsValue);
+            Assert.AreEqual("10.00000 6.50000 2.50000 2.50000 6.50000 10.00000", zCoorsValue);
 
             var sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
             Assert.AreEqual("3", sectionCountValue);
@@ -206,13 +206,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual("6", xyzCountValue);
 
             xCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.XCoors.Key);
-            Assert.AreEqual("485.000 510.000 535.000 560.000 585.000 610.000", xCoorsValue);
+            Assert.AreEqual("485.00000 510.00000 535.00000 560.00000 585.00000 610.00000", xCoorsValue);
 
             yCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.YCoors.Key);
-            Assert.AreEqual("1050.000 1010.000 970.000 930.000 890.000 850.000", yCoorsValue);
+            Assert.AreEqual("1050.00000 1010.00000 970.00000 930.00000 890.00000 850.00000", yCoorsValue);
 
             zCoorsValue = content.GetPropertyValue(DefinitionPropertySettings.ZCoors.Key);
-            Assert.AreEqual("10.500 7.000 3.000 3.000 7.000 10.500", zCoorsValue);
+            Assert.AreEqual("10.50000 7.00000 3.00000 3.00000 7.00000 10.50000", zCoorsValue);
 
             sectionCountValue = content.GetPropertyValue(DefinitionPropertySettings.SectionCount.Key);
             Assert.AreEqual("3", sectionCountValue);

@@ -8,24 +8,24 @@
     Thalweg               = 50.000              
     singleValuedZ         = 1                   
     yzCount               = 6                   
-    yCoordinates          = 0.000 22.222 33.333 66.667 77.778 100.000
-    zCoordinates          = 0.000 0.000 -10.000 -10.000 0.000 0.000
+    yCoordinates          = 0.00000 22.22222 33.33333 66.66667 77.77778 100.00000
+    zCoordinates          = 0.00000 0.00000 -10.00000 -10.00000 0.00000 0.00000
     sectionCount          = 3                   
     frictionIds           = Main;FloodPlain1;FloodPlain2
-    frictionPositions     = 0.000 25.000 75.000 100.000
+    frictionPositions     = 0.00000 25.00000 75.00000 100.00000
 
 [Definition]
     Id                    = CrossSection_1D_2   
     Type                  = xyz                 
     Thalweg               = 0.000               
     xyzCount              = 6                   
-    xCoordinates          = 585.000 610.000 635.000 660.000 685.000 710.000
-    yCoordinates          = 950.000 910.000 870.000 830.000 790.000 750.000
-    zCoordinates          = 10.000 6.500 2.500 2.500 6.500 10.000
+    xCoordinates          = 585.00000 610.00000 635.00000 660.00000 685.00000 710.00000
+    yCoordinates          = 950.00000 910.00000 870.00000 830.00000 790.00000 750.00000
+    zCoordinates          = 10.00000 6.50000 2.50000 2.50000 6.50000 10.00000
     conveyance            = segmented           
     sectionCount          = 3                   
     frictionIds           = Main;FloodPlain1;FloodPlain2
-    frictionPositions     = 0.000 25.000 75.000 100.000
+    frictionPositions     = 0.00000 25.00000 75.00000 100.00000
 
 [Definition]
     Id                    = CrossSection_1D_3   
