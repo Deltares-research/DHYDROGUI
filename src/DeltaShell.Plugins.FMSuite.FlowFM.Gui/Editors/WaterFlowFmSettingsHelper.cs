@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
             {
-                var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
+                var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => false, o => false)
                 {
                     Category = "General",
                     SubCategory = "Layers",
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
             if (icCategory != null)
             {
-                var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => true, o => true)
+                var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => false, o => false)
                 {
                     Category = "Initial Conditions",
                     SubCategory = "Salinity",
