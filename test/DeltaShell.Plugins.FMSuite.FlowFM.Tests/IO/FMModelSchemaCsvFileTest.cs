@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var tunitEnum = tunitProperty.DataType;
             var values = GetEnumValues(tunitEnum);
 
-            Assert.AreEqual("H", values[0].GetDisplayName());
+            Assert.AreEqual("D", values[0].GetDisplayName());
             Assert.AreEqual("S", tunitProperty.DefaultValueAsString);
         }
 
@@ -40,8 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var hourValue = values[0];
 
-            Assert.AreEqual("H", DataTypeValueParser.ToString(hourValue, tunitEnum));
-            Assert.AreEqual(hourValue, DataTypeValueParser.FromString("H", tunitEnum));
+            Assert.AreEqual("D", DataTypeValueParser.ToString(hourValue, tunitEnum));
+            Assert.AreEqual(hourValue, DataTypeValueParser.FromString("D", tunitEnum));
 
         }
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("K=analytic-1D conv", values[3].GetDescription());
             Assert.AreEqual(((int)Conveyance2DType.Kisanalytic1Dconv).ToString(), values[3].GetDisplayName());
             Assert.AreEqual("K=analytic-2D conv", values[4].GetDescription());
-            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic2Dconv).ToString(), values[4].GetDescription());
+            Assert.AreEqual(((int)Conveyance2DType.Kisanalytic2Dconv).ToString(), values[4].GetDisplayName());
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var values = GetEnumValues(convEnum);
 
             Assert.AreEqual("1", values[0].GetDisplayName());
-            Assert.AreEqual("sobekGS_OMP", values[0].GetDisplayName());
+            Assert.AreEqual("sobekGS_OMP", values[0].GetDescription());
             Assert.AreEqual("4", convProperty.DefaultValueAsString);
         }
 
