@@ -69,34 +69,40 @@ namespace DelftTools.Hydro.SewerFeatures
             BeforeSetSource();
             if (value is HydroNode)
                 source = value;
-            var manhole = value as Manhole;
-            if (manhole?.Compartments != null && manhole.Compartments.Any())
-            {
-                source = value;
-                if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
-                {
-                    if (manhole.ContainsCompartmentWithName(SourceCompartmentName))
-                    {
-                        sourceCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(SourceCompartmentName, StringComparison.InvariantCultureIgnoreCase));
-                    }
-                    else if (sourceCompartment != null && manhole.ContainsCompartmentWithName(sourceCompartment.Name))
-                    {
-                        sourceCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(sourceCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
-                    }
-                    else
-                    {
-                        sourceCompartment = manhole.Compartments.FirstOrDefault();
-                    }
-                    
-                    UpdateSource(sourceCompartment);
-                    UpdateSourceCompartmentId();
-                    UpdateGeometryBasedOnSourceAndTargetCompartments();
-                }
-
-            }
             else
             {
-                source = null;
+                var manhole = value as Manhole;
+                if (manhole?.Compartments != null && manhole.Compartments.Any())
+                {
+                    source = value;
+                    if (sourceCompartment == null || !manhole.ContainsCompartmentWithName(sourceCompartment.Name))
+                    {
+                        if (manhole.ContainsCompartmentWithName(SourceCompartmentName))
+                        {
+                            sourceCompartment = manhole.Compartments.FirstOrDefault(c =>
+                                c.Name.Equals(SourceCompartmentName, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                        else if (sourceCompartment != null &&
+                                 manhole.ContainsCompartmentWithName(sourceCompartment.Name))
+                        {
+                            sourceCompartment = manhole.Compartments.FirstOrDefault(c =>
+                                c.Name.Equals(sourceCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                        else
+                        {
+                            sourceCompartment = manhole.Compartments.FirstOrDefault();
+                        }
+
+                        UpdateSource(sourceCompartment);
+                        UpdateSourceCompartmentId();
+                        UpdateGeometryBasedOnSourceAndTargetCompartments();
+                    }
+
+                }
+                else
+                {
+                    source = null;
+                }
             }
 
             AfterSetSource();
@@ -127,34 +133,39 @@ namespace DelftTools.Hydro.SewerFeatures
             BeforeTargetSet();
             if (value is HydroNode)
                 target = value;
-
-            var manhole = value as IManhole;
-            if (manhole?.Compartments != null && manhole.Compartments.Any())
-            {
-                target = value;
-                if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
-                {
-                    if (manhole.ContainsCompartmentWithName(TargetCompartmentName))
-                    {
-                        targetCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(TargetCompartmentName, StringComparison.InvariantCultureIgnoreCase));
-                    }
-                    else if(targetCompartment != null && manhole.ContainsCompartmentWithName(targetCompartment.Name))
-                    {
-                        targetCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(targetCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
-                    }
-                    else
-                    {
-                        targetCompartment = manhole.Compartments.LastOrDefault();
-                    }
-
-                    UpdateTarget(targetCompartment);
-                    UpdateTargetCompartmentId();
-                    UpdateGeometryBasedOnSourceAndTargetCompartments();
-                }
-            }
             else
             {
-                target = null;
+                var manhole = value as IManhole;
+                if (manhole?.Compartments != null && manhole.Compartments.Any())
+                {
+                    target = value;
+                    if (targetCompartment == null || !manhole.ContainsCompartmentWithName(targetCompartment.Name))
+                    {
+                        if (manhole.ContainsCompartmentWithName(TargetCompartmentName))
+                        {
+                            targetCompartment = manhole.Compartments.FirstOrDefault(c =>
+                                c.Name.Equals(TargetCompartmentName, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                        else if (targetCompartment != null &&
+                                 manhole.ContainsCompartmentWithName(targetCompartment.Name))
+                        {
+                            targetCompartment = manhole.Compartments.FirstOrDefault(c =>
+                                c.Name.Equals(targetCompartment.Name, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                        else
+                        {
+                            targetCompartment = manhole.Compartments.LastOrDefault();
+                        }
+
+                        UpdateTarget(targetCompartment);
+                        UpdateTargetCompartmentId();
+                        UpdateGeometryBasedOnSourceAndTargetCompartments();
+                    }
+                }
+                else
+                {
+                    target = null;
+                }
             }
 
             AfterTargetSet();
@@ -233,8 +244,10 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (Source == null || Target == null) return;
 
-            var sourceCoordinate = SourceCompartment.Geometry.Coordinate;
-            var targetCoordinate = TargetCompartment.Geometry.Coordinate;
+            var sourceCoordinate = SourceCompartment?.Geometry?.Coordinate ?? Source?.Geometry?.Coordinate;
+            var targetCoordinate = TargetCompartment?.Geometry?.Coordinate ?? Target?.Geometry?.Coordinate;
+
+            if (sourceCoordinate == null || targetCoordinate == null) return;
             if (sourceCoordinate.Equals(targetCoordinate))
                 targetCoordinate = new Coordinate(targetCoordinate.X+1,targetCoordinate.Y);
             Geometry = new LineString(new[] { sourceCoordinate, targetCoordinate });
