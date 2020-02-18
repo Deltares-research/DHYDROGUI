@@ -58,6 +58,7 @@
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repeat.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IO\FileBasedFolder.hbm.xml" />
