@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var outlet = (OutletCompartment) sender;
                 var model1DBoundaryNodeData = BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outlet.ParentManhole);
-                SetBoundaryConditionDataForOutlet(model1DBoundaryNodeData);
+                model1DBoundaryNodeData.SetBoundaryConditionDataForOutlet();
             }
 
             if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
@@ -145,6 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 NetworkDiscretization.Network = Network;
                 NetworkDiscretization.Clear();
+                // geen locaties hier toevoegen?
                 if (string.IsNullOrEmpty(NetworkDiscretization.Name))
                     NetworkDiscretization.Name = WaterFlowFMModel.DiscretizationObjectName;
             }
@@ -167,16 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
         }
-        private void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(NetworkLocation toLocation)
-        {
-            var locations = new HashSet<Coordinate>(NetworkDiscretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
-            var locationGeometry = toLocation.Geometry;
-            if (locationGeometry == null) Log.Warn($"No geometry set for {toLocation.Name}");
-            if (!locations.Contains(locationGeometry?.Coordinate))
-            {
-                NetworkDiscretization.Locations.AddValues(new[] { toLocation });
-            }
-        }
+        
         public IDiscretization NetworkDiscretization {
             get { return networkDiscretization;}
             set
@@ -308,11 +300,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                        NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
                             new NetworkLocation(sewerConnection, 0.0));
                         if (sewerConnection?.Length > 0)
                         {
-                            AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                            NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
                                 new NetworkLocation(sewerConnection, sewerConnection.Length));
                         }
 
@@ -472,17 +464,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (boundaryConditions1D != null)
                 {
-                    BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
-                    ((INotifyPropertyChanged)(BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
+                    UnSubscribeBoundaryConditions1D();
                 }
                 boundaryConditions1D = value;
 
                 if (boundaryConditions1D != null)
                 {
-                    BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
-                    ((INotifyPropertyChanged)(BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
+                    SubscribeBoundaryConditions1D();
                 }
             }
+        }
+
+        public void SubscribeBoundaryConditions1D()
+        {
+            BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
+            ((INotifyPropertyChanged) (BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
+        }
+
+        public void UnSubscribeBoundaryConditions1D()
+        {
+            BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
+            ((INotifyPropertyChanged) (BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
         }
 
         /// <summary>
@@ -512,14 +514,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (lateralSourcesData != null)
                 {
-                    lateralSourcesData.CollectionChanged -= LateralSourceDatasOnCollectionChanged;
+                    UnSubscribeLateralSourcesData();
                 }
                 lateralSourcesData = value;
                 if (lateralSourcesData != null)
                 {
-                    lateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
+                    SubscribeLateralSourcesData();
                 }
             }
+        }
+
+        public void SubscribeLateralSourcesData()
+        {
+            lateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
+        }
+
+        public void UnSubscribeLateralSourcesData()
+        {
+            lateralSourcesData.CollectionChanged -= LateralSourceDatasOnCollectionChanged;
         }
 
         /// <summary>
@@ -768,7 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 case NotifyCollectionChangedAction.Add:
                     var bc = Helper1D.CreateDefaultBoundaryCondition(node, false, false);
-                    SetBoundaryConditionDataForOutlet(bc);
+                    bc.SetBoundaryConditionDataForOutlet();
                     AddBoundaryCondition(bc);
                     break;
 
@@ -778,16 +790,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void SetBoundaryConditionDataForOutlet(Model1DBoundaryNodeData bc)
-        {
-            var manhole = bc?.Node as Manhole;
-            if (manhole != null && manhole.Compartments.OfType<OutletCompartment>().Any())
-            {
-                var outlet = manhole.Compartments.OfType<OutletCompartment>().First();
-                bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-                bc.WaterLevel = outlet.SurfaceWaterLevel;
-            }
-        }
+        
 
         private void RemoveBoundaryCondition(INode hydroNode)
         {

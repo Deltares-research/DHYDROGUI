@@ -269,6 +269,7 @@ src/DelftTools.Hydro/CrossSections/StandardShapes/ICrossSectionStandardShape.cs 
 src/DelftTools.Hydro/CrossSections/SummerDike.cs -text
 src/DelftTools.Hydro/CulvertFrictionType.cs -text
 src/DelftTools.Hydro/DelftTools.Hydro.csproj -text
+src/DelftTools.Hydro/DiscretizationExtensions.cs -text
 src/DelftTools.Hydro/DrainageBasin.cs -text
 src/DelftTools.Hydro/DrainageBasin.hbm.xml -text
 src/DelftTools.Hydro/Embankment.cs -text
@@ -553,6 +554,7 @@ src/DeltaShell.NGHS.IO/DataObjects/Model1D/Model1DParametersCategories.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/QuantityType.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1DBoundaryNodeData.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1DBoundaryNodeData.hbm.xml -text
+src/DeltaShell.NGHS.IO/DataObjects/Model1DBoundaryNodeDataExtensions.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1DBoundaryNodeDataType.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1DLateralDataType.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1DLateralSourceData.cs -text

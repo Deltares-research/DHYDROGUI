@@ -135,7 +135,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
             }
 
-            if (manhole == null)
+            if (helper == null && manhole == null)
                 manhole = network.GetManhole(this);
 
             if (manhole != null)

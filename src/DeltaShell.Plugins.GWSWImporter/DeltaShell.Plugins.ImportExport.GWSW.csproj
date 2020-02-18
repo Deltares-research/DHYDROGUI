@@ -59,6 +59,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48530-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Units">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48530-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Utils">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.48530-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>

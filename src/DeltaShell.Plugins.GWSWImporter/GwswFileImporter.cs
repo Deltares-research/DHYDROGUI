@@ -25,6 +25,13 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -103,8 +110,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 : target as HydroModel;
 
 
-            var fmModel = hydroModel?.GetAllActivitiesRecursive<IWaterFlowFMModel>()?.FirstOrDefault() ??
-                          target as IWaterFlowFMModel;
+            var fmModel = hydroModel?.GetAllActivitiesRecursive<WaterFlowFMModel>()?.FirstOrDefault() ??
+                          target as WaterFlowFMModel;
             if (fmModel != null)
             {
                 ImportGwswNetworkInFmModel(elementTypesList, fmModel);
@@ -154,75 +161,95 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             IList<string> listOfErrors = new List<string>();
-
-            foreach (var nwrwData in rrModel.GetAllModelData().OfType<NwrwData>())
+            var bubbelingEventSetting = EventSettings.BubblingEnabled;
+            try
             {
-                try
+                ReportProgress("Adding links from Rainfall Runoff Model to FM model.");
+                EventSettings.BubblingEnabled = false;
+                foreach (var nwrwData in rrModel.GetAllModelData().OfType<NwrwData>())
                 {
-                    IBranch branch = network.Branches.FirstOrDefault(b =>
-                        b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
-                    if (branch == null)
+                    try
                     {
-                        branch = network.Branches
-                            .OfType<IPipe>()
-                            .FirstOrDefault(p =>
-                                p.TargetCompartmentName.Equals(nwrwData.Name,
-                                    StringComparison.InvariantCultureIgnoreCase) ||
-                                p.SourceCompartmentName.Equals(nwrwData.Name,
-                                    StringComparison.InvariantCultureIgnoreCase));
+                        IBranch branch = network.Branches.FirstOrDefault(b =>
+                            b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
+                        if (branch == null)
+                        {
+                            branch = network.Branches
+                                .OfType<IPipe>()
+                                .FirstOrDefault(p =>
+                                    p.TargetCompartmentName.Equals(nwrwData.Name,
+                                        StringComparison.InvariantCultureIgnoreCase) ||
+                                    p.SourceCompartmentName.Equals(nwrwData.Name,
+                                        StringComparison.InvariantCultureIgnoreCase));
+                        }
+
+                        if (branch != null)
+                        {
+                            // add lateral to branch
+                            LateralSource lateralSource = new LateralSource
+                            { Branch = branch, Chainage = branch.Length, Name = nwrwData.Name, LongName = nwrwData.Name };
+                            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+                            branch.BranchFeatures.Add(lateralSource);
+
+                            // create hydrolink
+                            var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
+                            hydroLink.Geometry = new LineString(new[]
+                                {nwrwData.Catchment.InteriorPoint.Coordinate, lateralSource.Geometry.Coordinate});
+
+                            // at FM-side, create lateral data of type REALTIME
+                            Model1DLateralSourceData model1DLateralSourceData =
+                                lateralSourcesData.FirstOrDefault(lsd =>
+                                    lsd.Feature ==
+                                    lateralSource);
+                            model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
+                            model1DLateralSourceData.Flow = 0d;
+                        }
                     }
-
-                    if (branch != null)
+                    catch (Exception e)
                     {
-                        // add lateral to branch
-                        LateralSource lateralSource = new LateralSource
-                            {Branch = branch, Chainage = branch.Length, Name = nwrwData.Name, LongName = nwrwData.Name};
-                        lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
-                        branch.BranchFeatures.Add(lateralSource);
-
-                        // create hydrolink
-                        var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
-                        hydroLink.Geometry = new LineString(new[]
-                            {nwrwData.Catchment.InteriorPoint.Coordinate, lateralSource.Geometry.Coordinate});
-
-                        // at FM-side, create lateral data of type REALTIME
-                        Model1DLateralSourceData model1DLateralSourceData =
-                            lateralSourcesData.FirstOrDefault(lsd =>
-                                lsd.Feature ==
-                                lateralSource);
-                        model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-                        model1DLateralSourceData.Flow = 0d;
+                        listOfErrors.Add(
+                            $"Could not create hydrolink between the Rainfall Runoff Model and Flow FM Model: {e.Message}");
                     }
                 }
-                catch (Exception e)
+
+                if (listOfErrors.Any())
                 {
-                    listOfErrors.Add(
-                        $"Could not create hydrolink between the Rainfall Runoff Model and Flow FM Model: {e.Message}");
+                    Log.ErrorFormat(
+                        $"While adding hydrolinks between Rainfall Runoff Model and Flow FM Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
                 }
             }
-
-            if (listOfErrors.Any())
+            finally
             {
-                Log.ErrorFormat(
-                    $"While adding hydrolinks between Rainfall Runoff Model and Flow FM Model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
+                EventSettings.BubblingEnabled = bubbelingEventSetting;
             }
+            
         }
 
         private void ImportGwswNetworkInRrModel(
             IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel,
             IHydroNetwork network)
         {
-            var errorsDuringImport = new List<string>();
-            var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList, errorsDuringImport).ToArray();
-            if (errorsDuringImport.Any())
+            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
+            try
             {
-                Log.Error(
-                    $"One or more errors occured during the import process: {string.Join(Environment.NewLine, errorsDuringImport)}");
-            }
+                var errorsDuringImport = new List<string>();
+                var importedFeatureElements = ImportGwswDatabaseForRr(elementTypesList, errorsDuringImport).ToArray();
+                if (errorsDuringImport.Any())
+                {
+                    Log.Error(
+                        $"One or more errors occured during the import process: {string.Join(Environment.NewLine, errorsDuringImport)}");
+                }
 
-            if (rrModel == null || network == null || ShouldCancel) return;
-            ReportProgress("Adding features to Rainfall Runoff Model.");
-            AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network);
+                if (rrModel == null || network == null || ShouldCancel) return;
+                ReportProgress("Adding features to Rainfall Runoff Model.");
+                EventSettings.BubblingEnabled = false;
+                AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network);
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = bubblingEnabledSetting;
+            }
+            
         }
 
         private void AddNwrwFeaturesToRainfallRunoffModel(IEnumerable<INwrwFeature> importedFeatureElements,
@@ -279,26 +306,204 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         }
 
         private void ImportGwswNetworkInFmModel(
-            IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, IWaterFlowFMModel fmModel)
+            IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, WaterFlowFMModel fmModel)
         {
             var network = fmModel?.Network;
             network?.BeginEdit(new DefaultEditAction("Importing GWSW database."));
-
+            fmModel?.UnSubscribeFromNetwork(network);
+            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
             try
             {
-                var importedFeatureElements =
-                    SewerFeatureFactory.CreateSewerEntities(elementTypesList, SetProgress, this).ToList();
+                var importedFeatureElements = SewerFeatureFactory.CreateSewerEntities(elementTypesList, SetProgress, this).ToList();
+                EventSettings.BubblingEnabled = false;
                 if (network != null && !ShouldCancel)
                 {
                     ReportProgress("Adding features to network.");
                     AddSewerFeaturesToNetwork(importedFeatureElements, network);
+
+                    ReportProgress("Adding discretisation points of sewerconnection to networkdiscretisation.");
+                    AddDiscretisationPointsOfSewerConnections(network, fmModel?.NetworkDiscretization);
+
+                    EventSettings.BubblingEnabled = true;
+                    SetProgress("Adding roughness sections of sewer connections to roughness 1d list.",4,10);
+                    EventSettings.BubblingEnabled = false;
+
+                    fmModel.UpdateRoughnessSections();
+
+                    ReportProgress("Adding model1d lateral source of sewer connections to lateral source (data) list.");
+                    AddModel1DLateralSourceToFmModel(network, fmModel);
+
+                    ReportProgress("Adding model1d boundary nodes of manholes to boundary data list.");
+                    AddModel1DBoundaryNodesToFmModel(network, fmModel);
+
+                    ReportProgress("Add Boundaries Of Network Outlet Compartments To ModelDefinition.");
                     AddBoundariesOfNetworkOutletCompartmentsToModelDefinition(fmModel);
                 }
             }
             finally
             {
+                EventSettings.BubblingEnabled = bubblingEnabledSetting;
+                fmModel?.SubscribeToNetwork(network);
                 network?.EndEdit();
             }
+        }
+        
+        private void AddModel1DLateralSourceToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
+        {
+            var lateralSources = network.Channels.SelectMany(c => c.BranchSources).ToList();
+            var nrOfImportedFeatureElements = lateralSources.Count;
+            var stepSize = nrOfImportedFeatureElements / 20;
+            var listOfErrors = new List<string>();
+            try
+            {
+                fmModel.UnSubscribeLateralSourcesData();
+                
+                lateralSources
+                    .ForEach(
+                        lateralSource =>
+                        {
+                            try
+                            {
+                                if (ShouldCancel)
+                                    return;
+                                var indexOf = lateralSources.IndexOf(lateralSource);
+
+                                if (stepSize != 0 && indexOf % stepSize == 0)
+                                {
+                                    EventSettings.BubblingEnabled = true;
+                                    SetProgress(
+                                        $"Adding channel lateral sources to model ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})",
+                                        indexOf, nrOfImportedFeatureElements);
+                                    EventSettings.BubblingEnabled = false;
+                                }
+
+                                var model1DLateralSourceData = new Model1DLateralSourceData {Feature = lateralSource, UseSalt = false, UseTemperature = false};
+                                fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                                fmModel.LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
+                            }
+                            catch (Exception exception)
+                            {
+                                listOfErrors.Add(exception.Message + Environment.NewLine);
+                            }
+                        });
+                if (listOfErrors.Any())
+                    Log.ErrorFormat(
+                        $"While adding model1d lateral sources to fm model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
+            }
+            finally
+            {
+                fmModel.SubscribeLateralSourcesData();
+            }
+        }
+        private void AddModel1DBoundaryNodesToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
+        {
+            var networkManholes = network.Manholes.ToList();
+            var nrOfImportedFeatureElements = networkManholes.Count;
+            var stepSize = nrOfImportedFeatureElements / 20;
+            var listOfErrors = new List<string>();
+            try
+            {
+                fmModel.UnSubscribeBoundaryConditions1D();
+                
+                networkManholes.ForEach(manhole =>
+                {
+                    try
+                    {
+                        if (ShouldCancel)
+                            return;
+                        var indexOf = networkManholes.IndexOf(manhole);
+
+                        if (stepSize != 0 && indexOf % stepSize == 0)
+                        {
+                            EventSettings.BubblingEnabled = true;
+                            SetProgress(
+                                $"Adding model1d boundary nodes to model ({((double) ((double) indexOf / (double) nrOfImportedFeatureElements)):P0})",
+                                indexOf, nrOfImportedFeatureElements);
+                            EventSettings.BubblingEnabled = false;
+                        }
+
+                        var bc = Helper1D.CreateDefaultBoundaryCondition(manhole, false, false);
+                        bc.SetBoundaryConditionDataForOutlet();
+                        fmModel.BoundaryConditions1D.Add(bc);
+                        fmModel.BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(bc) {Hidden = bc?.DataType == Model1DBoundaryNodeDataType.None});
+                    }
+                    catch (Exception exception)
+                    {
+                        listOfErrors.Add(exception.Message + Environment.NewLine);
+                    }
+                });
+                
+                if (listOfErrors.Any())
+                    Log.ErrorFormat(
+                        $"While adding model1d boundary data nodes to fm model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
+            }
+            finally
+            {
+                fmModel.SubscribeBoundaryConditions1D();
+            }
+        }
+
+        private void AddDiscretisationPointsOfSewerConnections(IHydroNetwork network, IDiscretization networkDiscretization)
+        {
+            NamingHelper.MakeNamesUnique(network.Branches);
+            var networkSewerConnections = network.SewerConnections.ToList();
+            var nrOfImportedFeatureElements = networkSewerConnections.Count;
+            var stepSize = nrOfImportedFeatureElements / 20;
+            var listOfErrors = new List<string>();
+            var currentLocations = new HashSet<Coordinate>(networkDiscretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
+            var newLocations = new List<NetworkLocation>();
+            networkSewerConnections.ForEach(sewerConnection =>
+            {
+                try
+                {
+                    if (ShouldCancel)
+                        return;
+                    var indexOf = networkSewerConnections.IndexOf(sewerConnection);
+
+                    if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        EventSettings.BubblingEnabled = true;
+                        SetProgress(
+                            $"Adding network discretizations points of sewer connection to model ({((double) ((double) indexOf / (double) nrOfImportedFeatureElements)):P0})",
+                            indexOf, nrOfImportedFeatureElements);
+                        EventSettings.BubblingEnabled = false;
+                    }
+
+                    var sourceLocation = new NetworkLocation(sewerConnection, 0.0);
+                    var locationGeometry = sourceLocation.Geometry;
+                    if (locationGeometry != null)
+                    {
+                        if (!currentLocations.Contains(locationGeometry.Coordinate))
+                        {
+                            newLocations.Add(sourceLocation);
+                            currentLocations.Add(locationGeometry.Coordinate);
+                        }
+                    }
+
+
+                    if (sewerConnection?.Length > 0)
+                    {
+                        var targetLocation = new NetworkLocation(sewerConnection, sewerConnection.Length);
+                        locationGeometry = targetLocation.Geometry;
+                        if (locationGeometry != null)
+                        {
+                            if (!currentLocations.Contains(locationGeometry.Coordinate))
+                            {
+                                newLocations.Add(targetLocation);
+                                currentLocations.Add(locationGeometry.Coordinate);
+                            }
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    listOfErrors.Add(exception.Message + Environment.NewLine);
+                }
+            });
+            networkDiscretization.Locations.AddValues(newLocations);
+            if (listOfErrors.Any())
+                Log.ErrorFormat(
+                    $"While adding discretisation points to network discretisation we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
         }
 
         private GwswImportManager ImportManager { get; }
@@ -414,11 +619,14 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     var indexOf = featureElements.IndexOf(e);
 
                     if (stepSize != 0 && indexOf % stepSize == 0)
+                    {
+                        EventSettings.BubblingEnabled = true;
                         SetProgress(
                             $"Adding feature to network ({((double) ((double) indexOf / (double) nrOfImportedFeatureElements)):P0})",
                             indexOf, nrOfImportedFeatureElements);
-
-
+                        EventSettings.BubblingEnabled = false;
+                    }
+                    
                     e.AddToHydroNetwork(network, helper);
                 }
                 catch (Exception exception)

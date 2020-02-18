@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
+    <Compile Include="DataObjects\Model1DBoundaryNodeDataExtensions.cs" />
     <Compile Include="DataObjects\Model1D\AggregationOptions.cs" />
     <Compile Include="DataObjects\Model1D\ElementSet.cs" />
     <Compile Include="DataObjects\Model1D\EngineParameter.cs" />

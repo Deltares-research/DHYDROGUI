@@ -390,9 +390,7 @@ namespace DelftTools.Hydro.SewerFeatures
         
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
-
-            //var hydroNetworkManholes = hydroNetwork.Manholes.ToDictionary(m=>m.Compartments.SelectMany(c =>c.Name));
+            //if(helper.SewerConnectionsByName.ContainsKey(Name)) return;
 
             IManhole sourceManhole = null;
             if (helper != null && !string.IsNullOrEmpty(SourceCompartmentName) && !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
@@ -413,6 +411,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
             AddCrossSectionDefinition(hydroNetwork);
             hydroNetwork.Branches.Add(this);
+            //if (helper != null) helper.SewerConnectionsByName[Name] = this;
         }
 
         private void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()

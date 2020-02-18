@@ -198,6 +198,7 @@
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeSteelCunette.cs" />
     <Compile Include="CrossSections\StandardShapes\CrossSectionStandardShapeTrapezium.cs" />
     <Compile Include="CulvertFrictionType.cs" />
+    <Compile Include="DiscretizationExtensions.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
