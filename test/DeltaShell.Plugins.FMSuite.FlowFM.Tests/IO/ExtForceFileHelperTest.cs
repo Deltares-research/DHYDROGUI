@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             var fmModel = new WaterFlowFMModel();
+            fmModel.ReferenceTime = new DateTime(2001, 1, 1, 0, 0, 0, 0);
             fmModel.SourcesAndSinks.Add(sourceAndSink);
 
             var modelDefinition = fmModel.ModelDefinition;

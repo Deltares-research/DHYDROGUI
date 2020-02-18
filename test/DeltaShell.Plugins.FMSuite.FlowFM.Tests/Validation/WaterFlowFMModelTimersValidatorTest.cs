@@ -174,6 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 // arrange
                 model.StopTime = new DateTime(2017, 8, 7);
                 model.StartTime = new DateTime(2017, 8, 8);
+                model.ReferenceTime = new DateTime(2001, 1, 1);
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // act
@@ -195,6 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 // arrange
                 model.ReferenceTime = new DateTime(2027, 8, 7);
                 model.StartTime = new DateTime(2017, 8, 7);
+                model.StopTime = new DateTime(2016, 8, 7);
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // act
