@@ -107,7 +107,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // remove temporary layer
             Map.Layers.Remove(SelectPolygonLayer);
             cachedPolygonLayer = null;
-            Map.ZoomToExtents();
         }
 
         private void ExecuteGenerateLinks()
