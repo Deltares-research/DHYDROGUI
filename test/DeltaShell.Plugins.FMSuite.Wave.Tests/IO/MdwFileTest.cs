@@ -821,6 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_WithCommunicationFilePathWithBackSlashFileSeparators_ThenFilePathIsExportedWithForwardSlashFileSeparators()
         {
             // Arrange
@@ -847,6 +848,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void Load_LegacyPropertiesAreReplaced()
         {
             // Setup
