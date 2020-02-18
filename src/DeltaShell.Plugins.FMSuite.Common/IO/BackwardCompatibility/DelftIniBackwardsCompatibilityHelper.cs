@@ -28,6 +28,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         }
 
         /// <summary>
+        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
+        /// </summary>
+        /// <param name="propertyName">The property name to check.</param>
+        /// <returns>
+        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="propertyName"/> is <c>null</c>.
+        /// </exception>
+        /// <remarks>
+        /// Note that property names are case-insensitive and will be matched as such.
+        /// </remarks>
+        public bool IsObsoletePropertyName(string propertyName)
+        {
+            Ensure.NotNull(propertyName, nameof(propertyName));
+            return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
+        }
+
+        /// <summary>
         /// Get the mapping of <paramref name="propertyName"/> if one exists, else null.
         /// </summary>
         /// <param name="propertyName"> Name of the property to be updated. </param>
@@ -39,6 +58,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <param name="propertyName"/> is null.
         /// </exception>
+        /// <remarks>
+        /// Note that property names are case-insensitive and will be matched as such.
+        /// </remarks>
         public string GetUpdatedPropertyName(string propertyName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
@@ -57,6 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// <exception cref="ArgumentNullException">
         /// Thrown when <param name="categoryName"/> is null.
         /// </exception>
+        /// <remarks>
+        /// Note that categories names are case-insensitive and will be matched as such.
+        /// </remarks>
         public string GetUpdatedCategoryName(string categoryName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(categoryName, nameof(categoryName));
@@ -80,22 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
                                             mappedName);
 
             return mappedName;
-        }
-
-        /// <summary>
-        /// Determines whether the provided <paramref name="propertyName"/> is currently considered obsolete.
-        /// </summary>
-        /// <param name="propertyName">The property name to check.</param>
-        /// <returns>
-        /// <c>true</c> if the specified property name is obsolete; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="propertyName"/> is <c>null</c>.
-        /// </exception>
-        public bool IsObsoletePropertyName(string propertyName)
-        {
-            Ensure.NotNull(propertyName, nameof(propertyName));
-            return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
         }
     }
 }
