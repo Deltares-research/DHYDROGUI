@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 {
     [TestFixture]
-    public class MorphologyFileBackwardsCompatibilityConfigTest : IDelftIniBackwardsCompatibilityConfigTestFixture
+    public class MorphologyFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IDelftIniBackwardsCompatibilityConfig GetConfig() =>
-            new MorphologyFileBackwardsCompatibilityConfig();
+        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+            new MorphologyFileBackwardsCompatibilityConfigurationValues();
 
         protected override IEnumerable<string> ObsoleteProperties => new HashSet<string>
         {

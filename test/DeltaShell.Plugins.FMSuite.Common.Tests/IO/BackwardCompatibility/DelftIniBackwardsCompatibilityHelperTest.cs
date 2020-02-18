@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
     [TestFixture]
     public class DelftIniBackwardsCompatibilityHelperTest
     {
-        private sealed class TestConfig : IDelftIniBackwardsCompatibilityConfig
+        private sealed class TestConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
         {
             public ISet<string> ObsoleteProperties { get; set; }
             public IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; set; }
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
             const string propertyName = "legacyProperty";
 
-            var config = new TestConfig()
+            var config = new TestConfigurationValues()
             {
                 LegacyPropertyMapping = new Dictionary<string, string>()
             };
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         private static IEnumerable<TestCaseData> GetUpdatedPropertyNameData()
         {
             const string expectedProperty = "expected_property";
-            var testConfig = new TestConfig
+            var testConfig = new TestConfigurationValues
             {
                 LegacyPropertyMapping = new Dictionary<string, string>
                 {
@@ -69,13 +69,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
         [Test]
         [TestCaseSource(nameof(GetUpdatedPropertyNameData))]
-        public void GetUpdatedPropertyName_InConfigMapping_ReturnsMappedValueAndLogsMessage(IDelftIniBackwardsCompatibilityConfig config,
+        public void GetUpdatedPropertyName_InConfigMapping_ReturnsMappedValueAndLogsMessage(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
                                                                                             string legacyPropertyName,
                                                                                             string expectedPropertyName)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
             string result = backwardsCompatibilityHelper.GetUpdatedPropertyName(legacyPropertyName, logHandler);
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         public void GetUpdatedPropertyName_PropertyNameNull_ThrowsArgumentNullException()
         {
             // Setup
-            var config = new TestConfig()
+            var config = new TestConfigurationValues()
             {
                 LegacyPropertyMapping = new Dictionary<string, string>()
             };
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
             const string categoryName = "legacyProperty";
 
-            var config = new TestConfig()
+            var config = new TestConfigurationValues()
             {
                 LegacyCategoryMapping = new Dictionary<string, string>()
             };
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         private static IEnumerable<TestCaseData> GetUpdatedCategoryNameData()
         {
             const string expectedCategory = "expected_category";
-            var testConfig = new TestConfig
+            var testConfig = new TestConfigurationValues
             {
                 LegacyCategoryMapping = new Dictionary<string, string>
                 {
@@ -148,13 +148,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
         [Test]
         [TestCaseSource(nameof(GetUpdatedCategoryNameData))]
-        public void GetUpdatedCategoryName_InConfigMapping_ReturnsMappedValue(IDelftIniBackwardsCompatibilityConfig config,
+        public void GetUpdatedCategoryName_InConfigMapping_ReturnsMappedValue(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
                                                                               string legacyCategoryName,
                                                                               string expectedCategoryName)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
             string result = backwardsCompatibilityHelper.GetUpdatedCategoryName(legacyCategoryName, logHandler);
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         public void GetUpdatedCategoryName_CategoryNameNull_ThrowsArgumentNullException()
         {
             // Setup
-            var config = new TestConfig()
+            var config = new TestConfigurationValues()
             {
                 LegacyCategoryMapping = new Dictionary<string, string>()
             };
@@ -187,11 +187,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         {
             const string propertyName = "propertyName";
 
-            var emptyConfig = new TestConfig {ObsoleteProperties = new HashSet<string>()};
+            var emptyConfig = new TestConfigurationValues {ObsoleteProperties = new HashSet<string>()};
             yield return new TestCaseData(emptyConfig,
                                           propertyName,
                                           false);
-            var configWithoutPropertyName = new TestConfig
+            var configWithoutPropertyName = new TestConfigurationValues
             {
                 ObsoleteProperties = new HashSet<string>()
                 {
@@ -204,12 +204,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
                                           false);
 
             var configWithOnlyPropertyName = 
-                new TestConfig { ObsoleteProperties = new HashSet<string> {propertyName.ToLowerInvariant()}};
+                new TestConfigurationValues { ObsoleteProperties = new HashSet<string> {propertyName.ToLowerInvariant()}};
             yield return new TestCaseData(configWithOnlyPropertyName,
                                           propertyName,
                                           true);
 
-            var configWithPropertyName = new TestConfig
+            var configWithPropertyName = new TestConfigurationValues
             {
                 ObsoleteProperties = new HashSet<string>
                     {
@@ -232,12 +232,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
 
         [Test]
         [TestCaseSource(nameof(GetIsObsoletePropertyNameData))]
-        public void IsObsoletePropertyName_ExpectedResults(IDelftIniBackwardsCompatibilityConfig config,
+        public void IsObsoletePropertyName_ExpectedResults(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues,
                                                            string propertyName,
                                                            bool expectedResult)
         {
             // Setup
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(configurationValues);
 
             // Call
             bool result = backwardsCompatibilityHelper.IsObsoletePropertyName(propertyName);
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
         public void IsObsoletePropertyName_PropertyNameNull_ThrowsArgumentNullException()
         {
             // Setup`
-            var config = new TestConfig() {ObsoleteProperties = new HashSet<string>()};
+            var config = new TestConfigurationValues() {ObsoleteProperties = new HashSet<string>()};
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(config);
 
             // Call

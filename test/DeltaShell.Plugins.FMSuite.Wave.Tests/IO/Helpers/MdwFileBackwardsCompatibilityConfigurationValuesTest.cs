@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
 {
     [TestFixture]
-    public class MdwFileBackwardsCompatibilityConfigTest : IDelftIniBackwardsCompatibilityConfigTestFixture
+    public class MdwFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IDelftIniBackwardsCompatibilityConfig GetConfig() =>
-            new MdwFileBackwardsCompatibilityConfig();
+        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+            new MdwFileBackwardsCompatibilityConfigurationValues();
 
         protected override IEnumerable<string> ObsoleteProperties { get; } = 
             new HashSet<string>();

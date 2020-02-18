@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfig());
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
             categories.ForEach(category => 
             {
                 category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfig());
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
 
             categories.ForEach(category =>
             {

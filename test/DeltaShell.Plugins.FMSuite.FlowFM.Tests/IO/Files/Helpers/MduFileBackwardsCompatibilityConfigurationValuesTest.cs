@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 {
     [TestFixture]
-    public class MduFileBackwardsCompatibilityConfigTest : IDelftIniBackwardsCompatibilityConfigTestFixture
+    public class MduFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IDelftIniBackwardsCompatibilityConfig GetConfig() => 
-            new MduFileBackwardsCompatibilityConfig();
+        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() => 
+            new MduFileBackwardsCompatibilityConfigurationValues();
 
         protected override IEnumerable<string> ObsoleteProperties => new HashSet<string> {"hdam"};
         protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping =>

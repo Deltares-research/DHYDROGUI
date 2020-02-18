@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             var logHandler = new LogHandler(Resources.MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file, Log);
             var backwardsCompatibilityHelper = 
-                new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfig());
+                new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
             foreach (DelftIniCategory category in mdwCategories)
             {

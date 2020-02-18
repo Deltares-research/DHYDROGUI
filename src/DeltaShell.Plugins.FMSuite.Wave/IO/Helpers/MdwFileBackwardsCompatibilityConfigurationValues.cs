@@ -4,11 +4,11 @@ using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers
 {
     /// <summary>
-    /// <see cref="MdwFileBackwardsCompatibilityConfig"/> defines the obsolete and legacy categories
+    /// <see cref="MdwFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
     /// and properties for the <see cref="MdwFile"/>
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfig" />
-    public sealed class MdwFileBackwardsCompatibilityConfig : IDelftIniBackwardsCompatibilityConfig
+    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues" />
+    public sealed class MdwFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>();
 

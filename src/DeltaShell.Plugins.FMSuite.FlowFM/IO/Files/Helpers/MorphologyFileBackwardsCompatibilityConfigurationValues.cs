@@ -4,11 +4,11 @@ using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
     /// <summary>
-    /// <see cref="MorphologyFileBackwardsCompatibilityConfig"/> defines the obsolete and legacy categories
+    /// <see cref="MorphologyFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
     /// and properties for the <see cref="MorphologyFile"/>
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfig" />
-    public sealed class MorphologyFileBackwardsCompatibilityConfig : IDelftIniBackwardsCompatibilityConfig
+    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues" />
+    public sealed class MorphologyFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>()
         {

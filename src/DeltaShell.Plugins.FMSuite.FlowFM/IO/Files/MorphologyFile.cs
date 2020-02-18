@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                    DelftIniCategory delftIniCategory,
                                                    ILogHandler logHandler)
         {
-            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MorphologyFileBackwardsCompatibilityConfig());
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MorphologyFileBackwardsCompatibilityConfigurationValues());
             string categoryName = delftIniCategory.Name;
 
             foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)

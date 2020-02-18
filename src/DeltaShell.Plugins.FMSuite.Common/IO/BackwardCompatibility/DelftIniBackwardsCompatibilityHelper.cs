@@ -8,23 +8,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
 {
     /// <summary>
     /// <see cref="DelftIniBackwardsCompatibilityHelper"/> provides the methods to update
-    /// properties and categories based upon a provided <see cref="IDelftIniBackwardsCompatibilityConfig"/>.
+    /// properties and categories based upon a provided <see cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>.
     /// </summary>
     public class DelftIniBackwardsCompatibilityHelper
     {
-        private readonly IDelftIniBackwardsCompatibilityConfig config;
+        private readonly IDelftIniBackwardsCompatibilityConfigurationValues configurationValues;
 
         /// <summary>
         /// Creates a new <see cref="DelftIniBackwardsCompatibilityHelper"/>.
         /// </summary>
-        /// <param name="config">The configuration.</param>
+        /// <param name="configurationValues">The configuration.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="config"/> is <c>null</c>.
+        /// Thrown when <paramref name="configurationValues"/> is <c>null</c>.
         /// </exception>
-        public DelftIniBackwardsCompatibilityHelper(IDelftIniBackwardsCompatibilityConfig config)
+        public DelftIniBackwardsCompatibilityHelper(IDelftIniBackwardsCompatibilityConfigurationValues configurationValues)
         {
-            Ensure.NotNull(config, nameof(config));
-            this.config = config;
+            Ensure.NotNull(configurationValues, nameof(configurationValues));
+            this.configurationValues = configurationValues;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         public string GetUpdatedPropertyName(string propertyName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
-            return GetUpdatedName(propertyName, config.LegacyPropertyMapping, logHandler);
+            return GetUpdatedName(propertyName, configurationValues.LegacyPropertyMapping, logHandler);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         public string GetUpdatedCategoryName(string categoryName, ILogHandler logHandler = null)
         {
             Ensure.NotNull(categoryName, nameof(categoryName));
-            return GetUpdatedName(categoryName, config.LegacyCategoryMapping, logHandler);
+            return GetUpdatedName(categoryName, configurationValues.LegacyCategoryMapping, logHandler);
         }
 
         private static string GetUpdatedName(string propertyName, 
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         public bool IsObsoletePropertyName(string propertyName)
         {
             Ensure.NotNull(propertyName, nameof(propertyName));
-            return config.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
+            return configurationValues.ObsoleteProperties.Contains(propertyName.ToLowerInvariant());
         }
     }
 }

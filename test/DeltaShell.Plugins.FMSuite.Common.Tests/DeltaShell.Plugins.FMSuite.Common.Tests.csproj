@@ -158,7 +158,7 @@
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
     <Compile Include="IO\ApwxwyFileReaderTest.cs" />
     <Compile Include="IO\BackwardCompatibility\DelftIniBackwardsCompatibilityHelperTest.cs" />
-    <Compile Include="IO\BackwardCompatibility\IDelftIniBackwardsCompatibilityConfigTestFixture.cs" />
+    <Compile Include="IO\BackwardCompatibility\IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture.cs" />
     <Compile Include="IO\DiaFileReaderTest.cs" />
     <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
