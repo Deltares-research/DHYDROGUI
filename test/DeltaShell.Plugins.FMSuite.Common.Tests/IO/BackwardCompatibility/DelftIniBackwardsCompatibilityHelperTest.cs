@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             void Call() => new DelftIniBackwardsCompatibilityHelper(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("config"));
+            Assert.That(exception.ParamName, Is.EqualTo("configurationValues"));
         }
 
         [Test]
