@@ -35,27 +35,22 @@
 	<xsl:output method="xml" indent="yes" />
 
 	<!-- Create searches for the directories to remove. -->
-	<xsl:key name="rr-folder-search" match="wix:Directory[@Name = 'drr']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="f1d-folder-search" match="wix:Directory[@Name = 'dflow1d']" use="descendant::wix:Component/@Id" />
 	<xsl:key name="f1d2d-folder-search" match="wix:Directory[@Name = 'dflow1d2d']" use="descendant::wix:Component/@Id" />
 
 	<!-- Remove directories. -->
-	<xsl:template match="wix:Directory[@Name='drr']" />
 	<xsl:template match="wix:Directory[@Name='dflow1d']" />
 	<xsl:template match="wix:Directory[@Name='dflow1d2d']" />
 
 	<!-- Remove Components referencing those directories & files. -->
-	<xsl:template match="wix:Component[key('rr-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('f1d-folder-search', @Directory)]" />
 	<xsl:template match="wix:Component[key('f1d2d-folder-search', @Directory)]" />
 
 	<!-- Remove DirectoryRefs (and their parent Fragments) referencing those directories. -->
-	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('rr-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('f1d-folder-search', @Id)]]" />
 	<xsl:template match="wix:Fragment[wix:DirectoryRef[key('f1d2d-folder-search', @Id)]]" />
 
 	<!--Remove ComponentRefs referencing those directories & files.-->
-	<xsl:template match="wix:ComponentRef[key('rr-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('f1d-folder-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('f1d2d-folder-search', @Id)]" />
 </xsl:stylesheet>
