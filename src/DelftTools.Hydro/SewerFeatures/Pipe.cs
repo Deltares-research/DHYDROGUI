@@ -9,6 +9,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
@@ -27,6 +28,26 @@ namespace DelftTools.Hydro.SewerFeatures
         public Pipe()
         {
             PropertyChanged += OnPipePropertyChanged;
+        }
+
+        [DisplayName("Type")]
+        [FeatureAttribute(Order = 30)]
+        public virtual CrossSectionStandardShapeType CrossSectionStandardShapeType
+        {
+            get { return Profile.ShapeType; }
+        }
+
+        [FeatureAttribute(Order = 31)]
+        public virtual double Width
+        {
+            get { return CrossSection.Definition.Width; }
+        }
+
+        [DisplayName("Definition")]
+        [FeatureAttribute(Order = 32, ExportName = "DefName")]
+        public virtual string DefinitionName
+        {
+            get { return CrossSection.Definition.Name; }
         }
 
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -169,5 +190,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 Log.Error($"This pipe {Name} has a geometry with distance of 0 but a 'custom length' (read from GWSW) of {Length}, the source {SourceCompartment?.Name} has a coordinate on {SourceCompartment?.Geometry?.Coordinate}; the target {TargetCompartment?.Name} has a coordinate on {TargetCompartment?.Geometry?.Coordinate} ");
 
         }
+
+        
     }
 }

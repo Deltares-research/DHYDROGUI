@@ -39,7 +39,12 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
+        [DisplayName("Level source")]
+        [FeatureAttribute(ExportName = "Level source", Order = 15)]
         public double LevelSource { get; set; }
+
+        [DisplayName("Level target")]
+        [FeatureAttribute(ExportName = "Level target", Order = 16)]
         public double LevelTarget { get; set; }
 
         [DisplayName("Sewer type")]
@@ -239,7 +244,6 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        
         protected virtual void UpdateGeometryBasedOnSourceAndTargetCompartments()
         {
             if (Source == null || Target == null) return;
