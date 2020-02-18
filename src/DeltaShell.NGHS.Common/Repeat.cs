@@ -14,6 +14,12 @@ namespace DeltaShell.NGHS.Common.Utils
         /// </summary>
         /// <param name="n">The number of times the action should be repeated.</param>
         /// <param name="action">The action.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="action"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="n"/> is smaller than 0.
+        /// </exception>
         public static void Action(int n, Action action)
         {
             Ensure.NotNull(action, nameof(action));
