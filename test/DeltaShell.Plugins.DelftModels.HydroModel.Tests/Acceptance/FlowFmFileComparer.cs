@@ -50,6 +50,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             Assert.AreEqual(expectedFlowFmFiles.Length, actualFlowFmFiles.Length, "Mismatch in the number of FlowFM files");
             CollectionAssert.AreEqual(expectedFlowFmFiles.Select(Path.GetFileName), actualFlowFmFiles.Select(Path.GetFileName), "Mismatch in the name of FlowFM files");
 
+            var identical = true;
+            var overallErrorMessage = $"{Environment.NewLine}==================================================================================={Environment.NewLine}";
+
             for (var i = 0; i < actualFlowFmFiles.Length; i++)
             {
                 var linesToIgnore = new string[] { };
@@ -79,15 +82,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                     }
                 }
 
-                CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore);
+                var errorMessage = string.Empty;
+
+                identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out errorMessage) && identical;
+
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    overallErrorMessage += $"{errorMessage}" +
+                                           $"==================================================================================={Environment.NewLine}";
+                }
+            }
+
+            if (!identical)
+            {
+                Assert.Fail(overallErrorMessage);
             }
         }
 
-        private static void CompareFiles(
+        private static bool CompareFiles(
             string filePathExpected,
             string filePathActual,
-            string[] linesToIgnore)
+            string[] linesToIgnore,
+            out string errorMessage)
         {
+            errorMessage = string.Empty;
+
             ParseFile(filePathExpected, linesToIgnore, out var relevantLinesInExpectedText, out var ignoredLinesInExpectedText);
             ParseFile(filePathActual, linesToIgnore, out var relevantLinesInActualText, out var ignoredLinesInActualText);
 
@@ -98,11 +117,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
                 if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
                 {
-                    var errorMessage = CreateErrorMessage(expectedLine, actualLine, ignoredLinesInExpectedText, ignoredLinesInActualText);
+                    errorMessage = $"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':" +
+                                   $"{Environment.NewLine}" +
+                                   $"{CreateErrorMessage(expectedLine, actualLine, ignoredLinesInExpectedText, ignoredLinesInActualText)}";
 
-                    Assert.Fail($"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':{Environment.NewLine}{errorMessage}");
+                    return false;
                 }
             }
+
+            return true;
         }
 
         private static void ParseFile(
