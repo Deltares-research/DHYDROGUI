@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls;
@@ -52,9 +53,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public void EnsureVisible(object item) { }
 
-        private void UIElement_OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void CreateFmModelSettingViewOnLoaded(object sender, RoutedEventArgs e)
         {
-            CoordinateSystemComboBox.IsDropDownOpen = true;
+            CoordinateSystemListView.ScrollIntoView(CoordinateSystemListView.SelectedItem);
+        }
+
+        private void CoordinateSystemListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ViewModel.FmModelSettings.CoordinateSystem == null) return;
+            CoordinateSystemButton.IsChecked = false;
         }
     }
 }

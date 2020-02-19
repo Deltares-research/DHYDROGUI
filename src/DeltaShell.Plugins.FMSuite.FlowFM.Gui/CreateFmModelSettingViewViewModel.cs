@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }, o => CancelProjectTemplate != null);
 
             coordinateSystemsView = (CollectionView)CollectionViewSource.GetDefaultView(Map.CoordinateSystemFactory.SupportedCoordinateSystems);
-            coordinateSystemsView.Refresh();
+            coordinateSystemsView.Filter = null;
 
             FmModelSettings.CoordinateSystem = Map.CoordinateSystemFactory.SupportedCoordinateSystems.FirstOrDefault(c => c.AuthorityCode == 28992);
         }

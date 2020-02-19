@@ -7,6 +7,7 @@
              xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
              xmlns:coordinateSystems="clr-namespace:GeoAPI.Extensions.CoordinateSystems;assembly=GeoAPI.Extensions"
              mc:Ignorable="d" 
+             Loaded="CreateFmModelSettingViewOnLoaded"
              Background="White"
              Foreground="Black">
     <UserControl.DataContext>
@@ -95,53 +96,88 @@
                          Grid.Column="1" 
                          Focusable ="True"
                          Margin="0,2,5,2"
+                         VerticalAlignment="Center"
                          Text="{Binding FmModelSettings.ModelName}"/>
 
                 <TextBlock Grid.Row="1" 
-                           Grid.Column="0" 
-                           VerticalAlignment="Center"
-                           Text="Coordinate system"
-                           Margin="0,2,5,2"/>
+                         Grid.Column="0" 
+                         VerticalAlignment="Center"
+                         Text="Coordinate system"
+                         Margin="0,2,5,2"/>
 
-                <ComboBox x:Name="CoordinateSystemComboBox"
-                          Grid.Row="1" 
-                          Grid.Column="1" 
-                          Margin="0,2,5,2"
-                          IsEditable="True"
-                          IsTextSearchEnabled="False"
-                          StaysOpenOnEdit="True"
-                          Text="{Binding FilterText, Delay=150}"
-                          ItemsSource="{Binding CoordinateSystems}"
-                          SelectedItem="{Binding FmModelSettings.CoordinateSystem}"
-                          GotKeyboardFocus="UIElement_OnGotKeyboardFocus">
-                    <ComboBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel />
-                        </ItemsPanelTemplate>
-                    </ComboBox.ItemsPanel>
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="coordinateSystems:ICoordinateSystem">
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Margin="3">
-                                    <Rectangle.Style>
-                                        <Style TargetType="Rectangle">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsGeographic}" Value="True">
-                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=WebBrush}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsGeographic}" Value="False">
-                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=ProjectedMapBrush}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Rectangle.Style>
-                                </Rectangle>
-                                <TextBlock Text="{Binding AuthorityCode}" Margin="3"/>
-                                <TextBlock Text="{Binding Name}" Margin="3"/>
+                <Grid Grid.Row="1" 
+                      Grid.Column="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border BorderThickness="0.5" BorderBrush="Gray">
+                        <TextBlock Margin="2" 
+                                   VerticalAlignment="Center" 
+                                   Text="{Binding FmModelSettings.CoordinateSystem.Name}"/>
+                    </Border>
+                    <ToggleButton Grid.Column="1" 
+                            Margin="2"
+                            x:Name="CoordinateSystemButton" 
+                            Content=" ... " />
+
+                    <Popup AllowsTransparency="False" 
+                           StaysOpen="False"
+                           IsOpen="{Binding IsChecked,ElementName=CoordinateSystemButton}"
+                           PlacementTarget="{Binding ElementName=CoordinateSystemButton}"
+                           Placement="Right">
+                        <Popup.Child>
+                            <Border BorderBrush="Black" BorderThickness="0.5">
+                                <StackPanel Background="White">
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Filter" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" 
+                                             Margin="4"
+                                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+
+                                <ListView x:Name="CoordinateSystemListView"
+                                          Height="200"
+                                          Width="500"
+                                          ItemsSource="{Binding CoordinateSystems}" 
+                                          SelectionChanged="CoordinateSystemListView_OnSelectionChanged"
+                                          SelectedItem="{Binding FmModelSettings.CoordinateSystem}">
+
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate DataType="coordinateSystems:ICoordinateSystem">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Rectangle Width="16" Height="16" Margin="3">
+                                                    <Rectangle.Style>
+                                                        <Style TargetType="Rectangle">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsGeographic}" Value="True">
+                                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=WebBrush}"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsGeographic}" Value="False">
+                                                                    <Setter Property="Fill" Value="{StaticResource ResourceKey=ProjectedMapBrush}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Rectangle.Style>
+                                                </Rectangle>
+                                                <TextBlock Text="{Binding AuthorityCode}" Margin="3"/>
+                                                <TextBlock Text="{Binding Name}" Margin="3"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                            </Border>
+                        </Popup.Child>
+                    </Popup>
+                </Grid>
+                
             </Grid>
 
             <Button HorizontalAlignment="Left"
