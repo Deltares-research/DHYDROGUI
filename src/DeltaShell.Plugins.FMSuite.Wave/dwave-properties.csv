@@ -79,9 +79,9 @@ Numerics,PercWet,Numerical Parameters,Numerical Parameters,Convergence percentag
 Numerics,MaxIter,Numerical Parameters,Numerical Parameters,Max. nr. of iterations,Integer,SimMode:50|15 ,,,,,,,,,Maximum number of iterations for convergence,
 Output,MapWriteInterval,Output,Map,Map file interval,Double,60.0,,,,,,,,,Interval for writing data to map file(s) in minutes, min
 Output,WriteTable,Output,Tables,Write tables,true|false,false,,,,,,,,,Write tables for output locations,
-Output,WriteSpec1D,Output,Tables,1D spectra,true|false,,,,,WriteTable,,,,,Write 1D spectra for output locations,
-Output,WriteSpec2D,Output,Tables,2D spectra,true|false,,,,,WriteTable,,,,,Write 2D spectra for output locations,
-Output,LocationFile,Output,Tables,Location file,FileName,,,,,WriteTable,,,,,File name of output locations,
+Output,WriteSpec1D,Output,Tables,Write 1D spectra,true|false,false,,,,,,,,,Write 1D spectra for output locations,
+Output,WriteSpec2D,Output,Tables,Write 2D spectra,true|false,false,,,,,,,,,Write 2D spectra for output locations,
+Output,LocationFile,Output,Tables,Location file,FileName,,,,,,,,,,File name of output locations,
 Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
 Output,COMFile,Output,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
 Output,WriteCOM,Output,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
