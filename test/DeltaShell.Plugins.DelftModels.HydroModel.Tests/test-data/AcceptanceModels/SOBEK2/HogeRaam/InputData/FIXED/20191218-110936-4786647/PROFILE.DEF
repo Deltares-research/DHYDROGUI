@@ -1,0 +1,71 @@
+CRDS id 'B10501' nm 'B10501_rectangle_width 5.3m height 1.38m' ty 0 wm 5.3 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 5.3 5.3 <
+1.38 5.3 5.3 <
+1.3801 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10502' nm 'B10502_rectangle_width 4.2m height 1.22m' ty 0 wm 4.2 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 4.2 4.2 <
+1.22 4.2 4.2 <
+1.2201 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10503' nm 'B10503_rectangle_width 2.9m height 1.12m' ty 0 wm 2.9 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 2.9 2.9 <
+1.12 2.9 2.9 <
+1.1201 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10505' nm 'B10505_rectangle_width 1.3m height 0.47m' ty 0 wm 1.3 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 1.3 1.3 <
+0.47 1.3 1.3 <
+0.4701 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10506' nm 'B10506_rectangle_width 4.34m height 1.5m' ty 0 wm 4.34 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 4.34 4.34 <
+1.5 4.34 4.34 <
+1.5001 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10507' nm 'B10507_rectangle_width 5.6m height 1.36m' ty 0 wm 5.6 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 5.6 5.6 <
+1.36 5.6 5.6 <
+1.3601 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10508' nm 'B10508_rectangle_width 3.4m height 0.68m' ty 0 wm 3.4 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 3.4 3.4 <
+0.68 3.4 3.4 <
+0.6801 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10509' nm 'B10509_rectangle_width 10.4m height 1.51m' ty 0 wm 10.4 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 10.4 10.4 <
+1.51 10.4 10.4 <
+1.5101 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10510' nm 'B10510_rectangle_width 8.15m height 1.48m' ty 0 wm 8.15 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 8.15 8.15 <
+1.48 8.15 8.15 <
+1.4801 0.0001 0.0001 <
+tble
+crds
+CRDS id 'B10511' nm 'B10511_rectangle_width 2.3m height 0.71m' ty 0 wm 2.3 w1 0 w2 0 gu 0 gl 0 lt lw
+TBLE
+0 2.3 2.3 <
+0.71 2.3 2.3 <
+0.7101 0.0001 0.0001 <
+tble
+crds
+CRDS id '17' nm '1050064' ty 6 bl 0 bo .4  gl 0 gu 0 crds

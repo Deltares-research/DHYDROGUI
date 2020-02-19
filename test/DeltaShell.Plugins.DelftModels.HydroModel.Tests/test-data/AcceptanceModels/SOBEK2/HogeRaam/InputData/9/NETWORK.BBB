@@ -1,0 +1,11 @@
+BBB2.2
+*
+* Configuratie file
+* Filename voor:
+* 1. Knoop data
+* 2. Tak data
+* 3. Lateraal data
+*
+'\SB2_16\Raam.lit\work\3b_nod.tp'
+'\SB2_16\Raam.lit\work\3b_link.tp'
+'\SB2_16\Raam.lit\work\3bRunoff.tp'

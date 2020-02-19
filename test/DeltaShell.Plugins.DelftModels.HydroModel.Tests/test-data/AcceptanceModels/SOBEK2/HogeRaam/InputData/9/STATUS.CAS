@@ -1,0 +1,43 @@
+[General]
+
+NetworkNew=0
+QualityResultsPresent=0
+ImportFrom=FromScratch
+ImportDate=12/9/2017 4:08:51 PM
+Case Name=Hoge Raam 2 Binnen Polygoon constant laterals
+SuftableHasRun=-1
+QuantityResultsPresent=0
+UserId=verho_g
+UserName=
+ComputerName=L02372
+[Previous OutputFiles]
+..\work\calcpnt.his=-1
+..\work\reachseg.his=-1
+..\work\qlat.his=-1
+..\work\struc.his=-1
+..\work\pump.his=-1
+..\work\measstat.his=-1
+..\work\flowanal.his=-1
+..\work\calcdim.his=-1
+..\work\reachdim.his=-1
+..\work\strucdim.his=-1
+..\work\controll.his=-1
+..\work\qwb.his=-1
+..\work\simulate.rep=-1
+..\work\parsen.msg=-1
+..\work\sobek.log=-1
+..\work\indicat.flw=-1
+..\work\fls_h.inc=0
+..\work\???d????.ASC=-1
+..\work\???NEGDP.ASC=-1
+..\work\???TSU.ASC=-1
+..\work\???TSV.ASC=-1
+..\work\parsen2D.msg=0
+..\work\3bareas.his=0
+..\work\nwrwarea.his=0
+..\work\rrbalans.his=0
+..\work\sobek_3b.log=0
+..\work\3B_GENER.OUT=0
+..\work\flows.txt=0
+..\work\watonstr.txt=0
+..\work\nodes.txt=0

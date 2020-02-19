@@ -1,0 +1,357 @@
+STFR id 'B10501' ci 'B10501' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10502' ci 'B10502' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10503' ci 'B10503' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10505' ci 'B10505' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10506' ci 'B10506' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10507' ci 'B10507' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10508' ci 'B10508' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10509' ci 'B10509' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10510' ci 'B10510' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'B10511' ci 'B10511' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050004' ci 'D1050004' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050005' ci 'D1050005' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050006' ci 'D1050006' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050007' ci 'D1050007' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050008' ci 'D1050008' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050009' ci 'D1050009' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050010' ci 'D1050010' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050011' ci 'D1050011' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050012' ci 'D1050012' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050013' ci 'D1050013' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050014' ci 'D1050014' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050015' ci 'D1050015' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050017' ci 'D1050017' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050022' ci 'D1050022' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050023' ci 'D1050023' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050024' ci 'D1050024' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050025' ci 'D1050025' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050050' ci 'D1050050' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050051' ci 'D1050051' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050062' ci 'D1050062' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050063' ci 'D1050063' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050065' ci 'D1050065' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050066' ci 'D1050066' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050069' ci 'D1050069' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050070' ci 'D1050070' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050079' ci 'D1050079' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050080' ci 'D1050080' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050081' ci 'D1050081' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050083' ci 'D1050083' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050084' ci 'D1050084' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050087' ci 'D1050087' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050088' ci 'D1050088' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050090' ci 'D1050090' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050091' ci 'D1050091' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050092' ci 'D1050092' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050093' ci 'D1050093' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050094' ci 'D1050094' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050095' ci 'D1050095' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050096' ci 'D1050096' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050097' ci 'D1050097' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050098' ci 'D1050098' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050099' ci 'D1050099' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050100' ci 'D1050100' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050101' ci 'D1050101' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050102' ci 'D1050102' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050103' ci 'D1050103' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050104' ci 'D1050104' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050105' ci 'D1050105' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050106' ci 'D1050106' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050107' ci 'D1050107' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050108' ci 'D1050108' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050109' ci 'D1050109' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050110' ci 'D1050110' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050111' ci 'D1050111' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050112' ci 'D1050112' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050113' ci 'D1050113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050114' ci 'D1050114' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050115' ci 'D1050115' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050117' ci 'D1050117' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050118' ci 'D1050118' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050119' ci 'D1050119' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050120' ci 'D1050120' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050121' ci 'D1050121' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050122' ci 'D1050122' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050123' ci 'D1050123' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050124' ci 'D1050124' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050125' ci 'D1050125' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050126' ci 'D1050126' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050127' ci 'D1050127' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050128' ci 'D1050128' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050129' ci 'D1050129' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050130' ci 'D1050130' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050131' ci 'D1050131' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050132' ci 'D1050132' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050133' ci 'D1050133' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050134' ci 'D1050134' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050135' ci 'D1050135' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050136' ci 'D1050136' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050137' ci 'D1050137' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050138' ci 'D1050138' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050139' ci 'D1050139' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050141' ci 'D1050141' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050142' ci 'D1050142' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050143' ci 'D1050143' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050144' ci 'D1050144' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050145' ci 'D1050145' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050146' ci 'D1050146' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050147' ci 'D1050147' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050149' ci 'D1050149' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050150' ci 'D1050150' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050151' ci 'D1050151' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050152' ci 'D1050152' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050155' ci 'D1050155' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050157' ci 'D1050157' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050158' ci 'D1050158' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050160' ci 'D1050160' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050161' ci 'D1050161' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050162' ci 'D1050162' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050163' ci 'D1050163' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050164' ci 'D1050164' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050165' ci 'D1050165' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050166' ci 'D1050166' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050168' ci 'D1050168' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050169' ci 'D1050169' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050171' ci 'D1050171' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050172' ci 'D1050172' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050173' ci 'D1050173' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050174' ci 'D1050174' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050175' ci 'D1050175' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050176' ci 'D1050176' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050179' ci 'D1050179' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050180' ci 'D1050180' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050181' ci 'D1050181' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050182' ci 'D1050182' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050184' ci 'D1050184' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050185' ci 'D1050185' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050186' ci 'D1050186' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050187' ci 'D1050187' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050188' ci 'D1050188' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050189' ci 'D1050189' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050190' ci 'D1050190' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050191' ci 'D1050191' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050192' ci 'D1050192' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050193' ci 'D1050193' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050194' ci 'D1050194' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050195' ci 'D1050195' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050196' ci 'D1050196' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050197' ci 'D1050197' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050198' ci 'D1050198' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050200' ci 'D1050200' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050201' ci 'D1050201' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050202' ci 'D1050202' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050203' ci 'D1050203' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050204' ci 'D1050204' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050206' ci 'D1050206' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050207' ci 'D1050207' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050208' ci 'D1050208' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050209' ci 'D1050209' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050210' ci 'D1050210' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050211' ci 'D1050211' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050212' ci 'D1050212' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050213' ci 'D1050213' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050214' ci 'D1050214' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050215' ci 'D1050215' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050216' ci 'D1050216' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050217' ci 'D1050217' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050218' ci 'D1050218' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050219' ci 'D1050219' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050220' ci 'D1050220' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050221' ci 'D1050221' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050222' ci 'D1050222' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050223' ci 'D1050223' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050224' ci 'D1050224' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050225' ci 'D1050225' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050226' ci 'D1050226' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050227' ci 'D1050227' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050228' ci 'D1050228' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050229' ci 'D1050229' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050230' ci 'D1050230' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050231' ci 'D1050231' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050232' ci 'D1050232' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050233' ci 'D1050233' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050234' ci 'D1050234' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050235' ci 'D1050235' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050236' ci 'D1050236' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050237' ci 'D1050237' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050238' ci 'D1050238' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050240' ci 'D1050240' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050241' ci 'D1050241' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050242' ci 'D1050242' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050243' ci 'D1050243' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050244' ci 'D1050244' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050245' ci 'D1050245' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050246' ci 'D1050246' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050247' ci 'D1050247' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050248' ci 'D1050248' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050249' ci 'D1050249' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050250' ci 'D1050250' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050251' ci 'D1050251' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050252' ci 'D1050252' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050253' ci 'D1050253' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050254' ci 'D1050254' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050255' ci 'D1050255' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050259' ci 'D1050259' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 75 0 sr cp 0 75 stfr
+STFR id 'D1050260' ci 'D1050260' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050261' ci 'D1050261' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050262' ci 'D1050262' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050263' ci 'D1050263' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050264' ci 'D1050264' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050265' ci 'D1050265' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050266' ci 'D1050266' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050321' ci 'D1050321' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050322' ci 'D1050322' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050323' ci 'D1050323' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050329' ci 'D1050329' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050330' ci 'D1050330' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050331' ci 'D1050331' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050332' ci 'D1050332' mf 3 mt cp 0 90 0 mr cp 0 90 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050333' ci 'D1050333' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050334' ci 'D1050334' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050335' ci 'D1050335' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050336' ci 'D1050336' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050337' ci 'D1050337' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050338' ci 'D1050338' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050339' ci 'D1050339' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050340' ci 'D1050340' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050341' ci 'D1050341' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050342' ci 'D1050342' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050343' ci 'D1050343' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050351' ci 'D1050351' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050352' ci 'D1050352' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050353' ci 'D1050353' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050354' ci 'D1050354' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050355' ci 'D1050355' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050356' ci 'D1050356' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050357' ci 'D1050357' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050358' ci 'D1050358' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050359' ci 'D1050359' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050360' ci 'D1050360' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050361' ci 'D1050361' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050362' ci 'D1050362' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050364' ci 'D1050364' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050365' ci 'D1050365' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050366' ci 'D1050366' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050367' ci 'D1050367' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050368' ci 'D1050368' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050369' ci 'D1050369' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050370' ci 'D1050370' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050371' ci 'D1050371' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050373' ci 'D1050373' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050374' ci 'D1050374' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050375' ci 'D1050375' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050379' ci 'D1050379' mf 3 mt cp 0 30 0 mr cp 0 30 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050381' ci 'D1050381' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050382' ci 'D1050382' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050383' ci 'D1050383' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050384' ci 'D1050384' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050385' ci 'D1050385' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050386' ci 'D1050386' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050387' ci 'D1050387' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050388' ci 'D1050388' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050389' ci 'D1050389' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050390' ci 'D1050390' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050391' ci 'D1050391' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050392' ci 'D1050392' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050393' ci 'D1050393' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050394' ci 'D1050394' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050395' ci 'D1050395' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050396' ci 'D1050396' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050397' ci 'D1050397' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050400' ci 'D1050400' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050401' ci 'D1050401' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050402' ci 'D1050402' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050403' ci 'D1050403' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050404' ci 'D1050404' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050406' ci 'D1050406' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050413' ci 'D1050413' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050414' ci 'D1050414' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050415' ci 'D1050415' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050416' ci 'D1050416' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050417' ci 'D1050417' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050418' ci 'D1050418' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050419' ci 'D1050419' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050420' ci 'D1050420' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050421' ci 'D1050421' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050422' ci 'D1050422' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050423' ci 'D1050423' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050425' ci 'D1050425' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050426' ci 'D1050426' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050427' ci 'D1050427' mf 3 mt cp 0 100 0 mr cp 0 100 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050428' ci 'D1050428' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050429' ci 'D1050429' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050430' ci 'D1050430' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050431' ci 'D1050431' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050432' ci 'D1050432' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050433' ci 'D1050433' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050435' ci 'D1050435' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050436' ci 'D1050436' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1050437' ci 'D1050437' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id 'D1160113' ci 'D1160113' mf 3 mt cp 0 75 0 mr cp 0 75 0 s1 6 s2 6 sf 3 st cp 0 50 0 sr cp 0 50 0 stfr
+STFR id '11693' ci '11693' mf 3 mt cp 0 33 0 mr cp 0 33 0 s1 6 s2 6 sf 3 st cp 0 33 0 sr cp 0 33 stfr
+BDFR id '1052460' ci '1052460' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052630' ci '1052630' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1051110' ci '1051110' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052420' ci '1052420' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1055010' ci '1055010' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1053610' ci '1053610' mf 3 mt cp 0 8 0 mr cp 0 8 0 s1 6 s2 6 bdfr
+BDFR id '1052110' ci '1052110' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055950' ci '1055950' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1051620' ci '1051620' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055850' ci '1055850' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1056140' ci '1056140' mf 3 mt cp 0 8 0 mr cp 0 8 0 s1 6 s2 6 bdfr
+BDFR id '1050610' ci '1050610' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1054220' ci '1054220' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1051610' ci '1051610' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1050200' ci '1050200' mf 3 mt cp 0 11 0 mr cp 0 11 0 s1 6 s2 6 bdfr
+BDFR id '1055710' ci '1055710' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1055520' ci '1055520' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1053530' ci '1053530' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1054260' ci '1054260' mf 3 mt cp 0 7 0 mr cp 0 7 0 s1 6 s2 6 bdfr
+BDFR id '1055720' ci '1055720' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055310' ci '1055310' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1051660' ci '1051660' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1052180' ci '1052180' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052810' ci '1052810' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055330' ci '1055330' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055530' ci '1055530' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052730' ci '1052730' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1053110' ci '1053110' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055510' ci '1055510' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1055230' ci '1055230' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1050510' ci '1050510' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052935' ci '1052935' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1053510' ci '1053510' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1054010' ci '1054010' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1054210' ci '1054210' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1053630' ci '1053630' mf 3 mt cp 0 8 0 mr cp 0 8 0 s1 6 s2 6 bdfr
+BDFR id '1051310' ci '1051310' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055140' ci '1055140' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1053640' ci '1053640' mf 3 mt cp 0 8 0 mr cp 0 8 0 s1 6 s2 6 bdfr
+BDFR id '1050615' ci '1050615' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1051380' ci '1051380' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1056119' ci '1056119' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1050220' ci '1050220' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1055410' ci '1055410' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1052970' ci '1052970' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1056115' ci '1056115' mf 3 mt cp 0 8 0 mr cp 0 8 0 s1 6 s2 6 bdfr
+BDFR id '1052765' ci '1052765' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1053150' ci '1053150' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1050620' ci '1050620' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1051510' ci '1051510' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055910' ci '1055910' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1053210' ci '1053210' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1055210' ci '1055210' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1050110' ci '1050110' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1053237' ci '1053237' mf 3 mt cp 0 14 0 mr cp 0 14 0 s1 6 s2 6 bdfr
+BDFR id '1052930' ci '1052930' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1056020' ci '1056020' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052010' ci '1052010' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1053220' ci '1053220' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1055810' ci '1055810' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1052610' ci '1052610' mf 3 mt cp 0 12 0 mr cp 0 12 0 s1 6 s2 6 bdfr
+BDFR id '1055110' ci '1055110' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id '1052950' ci '1052950' mf 3 mt cp 0 15 0 mr cp 0 15 0 s1 6 s2 6 bdfr
+BDFR id 'PB1_23' ci '23' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 bdfr
+BDFR id 'PB1_24' ci '24' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 bdfr
+BDFR id 'PB1_25' ci '25' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 bdfr

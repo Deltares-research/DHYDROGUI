@@ -1,0 +1,27 @@
+NODE id 'CONN1175' ty 0 ni 1 r1 '1057710' r2 '1057720' node
+NODE id 'CONN1176' ty 0 ni 1 r1 '1057320' r2 '1057730' node
+NODE  id 'CONN12398' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN1975' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN2697' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE id 'CONN3681' ty 0 ni 1 r1 '1056140' r2 '1056160' node
+NODE  id 'CONN4639' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE id 'CONN879' ty 0 ni 1 r1 '1057110' r2 '1057120' node
+NODE id 'CONN908' ty 0 ni 1 r1 '1057120' r2 '1057320' node
+NODE  id 'CONN12398' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN1975' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN2697' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN4639' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN908' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN12398' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN1975' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN2697' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN4639' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN908' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN12398' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN1975' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN2697' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN4639' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE  id 'CONN908' ty 1 ws 0 wl 0 ss 0 ml 1 node
+NODE id 'MLANKER11U' ty 0 ni 0 r1 '497' r2 '1057510' node
+NODE id 'MLANKER11U' ty 1 ws 16 ss 100 wl -1 ml 0 node
+NODE id 'MLANKER11U' ty 1 ws 16 ss 100 wl -1 ml 0 node
