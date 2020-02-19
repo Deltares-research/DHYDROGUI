@@ -4,7 +4,9 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -219,6 +221,39 @@ namespace DelftTools.Hydro.Helpers
                 }
             }
 
+            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
+            var locationsToRemove = new List<INetworkLocation>();
+            foreach (var node in discretization.Network.Nodes)
+            {
+                if (node.IsOnSingleBranch)
+                {
+                    continue;
+                }
+
+                var branches = node.IncomingBranches.Select(b => new {branch = b, incoming = true})
+                       .Concat(node.OutgoingBranches.Select(b => new {branch = b, incoming = false}));
+
+                var nodeLocations = branches.Select(b =>
+                {
+                    var locations = discretization.GetLocationsForBranch(b.branch);
+                    if (locations.Count == 0)
+                    {
+                        return null;
+                    }
+
+                    var index = b.incoming ? locations.Count - 1 : 0;
+                    return locations[index];
+                }).Where(l => l != null); 
+
+                locationsToRemove.AddRange(nodeLocations.Skip(1));
+            }
+
+            var locationsToSet = discretization.Locations.Values.ToList();
+            locationsToRemove.ForEach(l => locationsToSet.Remove(l));
+
+            discretization.Locations.Clear();
+            discretization.Locations.SetValues(locationsToSet);
+            
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
 
             discretization.Locations.SkipUniqueValuesCheck = false;
