@@ -10,7 +10,7 @@ namespace DeltaShell.NGHS.Common.Utils
     public static class Repeat
     {
         /// <summary>
-        /// Repeats a specified action a number of times
+        /// Repeats a specified <paramref name="action"/> a number of times
         /// </summary>
         /// <param name="n">The number of times the action should be repeated.</param>
         /// <param name="action">The action.</param>
