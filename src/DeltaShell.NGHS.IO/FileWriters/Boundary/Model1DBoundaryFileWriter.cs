@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -90,7 +91,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             string periodic = GetTimeSeriesIsPeriodicProperty(boundaryNodeData.Data);
 
             IDefinitionGeneratorBoundary definitionGenerator = new DefinitionGeneratorBoundary(bcBoundaryHeader);
-            var boundaryDefinition = definitionGenerator.CreateRegion(boundaryNodeData.Node.Name, functionType, interpolationType, periodic);
+            string name = string.Empty;
+            if (boundaryNodeData.Node is Manhole manhole)
+            {
+                name = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault()?.Name;
+            }
+            else
+            {
+                name = boundaryNodeData.Node.Name;
+            }
+
+            var boundaryDefinition = definitionGenerator.CreateRegion(name, functionType, interpolationType, periodic);
 
             switch (boundaryNodeData.DataType)
             {

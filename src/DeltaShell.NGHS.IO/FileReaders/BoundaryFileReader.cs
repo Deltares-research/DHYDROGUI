@@ -45,7 +45,17 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == name);
                     if (waterFlowModel1DBoundaryNodeData == null)
                         continue; //throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
-
+                    if (waterFlowModel1DBoundaryNodeData.Node is Manhole manhole)
+                    {
+                        var outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+                        if (outlet == null)
+                        {
+                            var compartment = manhole.Compartments.FirstOrDefault();
+                            if (compartment != null) manhole.UpdateCompartmentToOutletCompartment(compartment);
+                        }
+                        outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+                        if (outlet != null) waterFlowModel1DBoundaryNodeData.Attributes["Compartment"] = outlet;
+                    }
                     ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundaryCategory);
                 }
                 catch (FileReadingException fileReadingException)

@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
         public static double OpenBoundaryTolerance = 0.5; // made public static while this value still needs to be tweaked *run away run away*
 
-        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath, string nodeid, string forcingFilePath, TimeSpan thatcherHarlemanTimeLag, bool isEmbankment = false, LateralSourceForcingDefinition lateralSourceForcingDefinition = null)
+        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath, string nodeid, string forcingFilePath, TimeSpan thatcherHarlemanTimeLag, bool isOnOutletCompartment = false, bool isEmbankment = false, LateralSourceForcingDefinition lateralSourceForcingDefinition = null)
         {
             var block = new DelftIniCategory(BoundaryBlockKey);
             if (quantity != null)
@@ -82,6 +82,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (isEmbankment)
             {
                 block.AddProperty(OpenBoundaryToleranceKey, OpenBoundaryTolerance);
+            }
+
+            if (isOnOutletCompartment)
+            {
+                block.AddProperty("isOnOutletCompartment", "true");
             }
 
             if (lateralSourceForcingDefinition != null)
@@ -377,6 +382,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             WriteLine(AreaKey + "=" + area);
                         }
+
+                        var isOnOutletCompartment = bndExtForceFileItem.GetPropertyValue("isOnOutletCompartment");
+                        if (isOnOutletCompartment != null)
+                        {
+                            WriteLine("isOnOutletCompartment=" + isOnOutletCompartment);
+                        }
                     }
 
                     string id = bndExtForceFileItem.GetPropertyValue(IdKey);
@@ -464,9 +475,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     quantityName = delftBcQuantityData?.Quantity?.Value;
                 }
                 var nodeId = generateModel1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
-                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc =>bc.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
+                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc =>bc.Feature.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
+                if (m1dbnd != null && m1dbnd.Attributes.ContainsKey("Compartment") && m1dbnd.Attributes["Compartment"] is OutletCompartment outletCompartment)
+                {
+                    nodeId = outletCompartment.Name;
+                }
                 var thatcherHarlemanTimeLag =  m1dbnd != null && m1dbnd.UseSalt ? new TimeSpan(0,0, (int)m1dbnd.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
-                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag);
+                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd != null && m1dbnd.Attributes.ContainsKey("Compartment"));
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
             bcFile.Write(model1DNodeBoundaryDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
@@ -902,7 +917,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
                 if (nodeId == null) continue;
-                var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                var isOnOutletCompartment = delftIniCategory.ReadProperty<bool>("isOnOutletCompartment", true);
+
+                INode node = null;
+                ICompartment compartment = null;
+                
+                if (isOnOutletCompartment)
+                {
+                    /*node = network.OutletCompartments
+                        .FirstOrDefault(o => o.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase))
+                        ?.ParentManhole;*/
+
+                    node = network.Manholes.FirstOrDefault(m => m.Compartments.Any(c => c.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase)));
+                }
+                else
+                {
+                    node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                }
+
                 if (node == null) continue;
                 var id = delftIniCategory.GetPropertyValue(IdKey);
                 if (id != null) continue; // make sure we are nog reading a lateral
