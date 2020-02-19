@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             ":source = \"D-Flow Flexible Mesh Plugin"
         };
 
+        private static readonly string VerticalLine = $"==================================================================================={Environment.NewLine}";
+
         static FlowFmFileComparer()
         {
             NcDumpExecutablePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestUtils", "NetCDF", "ncdump.exe");
@@ -47,19 +49,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <param name="tempDirectory">A temporary working directory to use during the comparison.</param>
         public static void Compare(string[] expectedFlowFmFiles, string[] actualFlowFmFiles, string tempDirectory)
         {
-            Assert.AreEqual(expectedFlowFmFiles.Length, actualFlowFmFiles.Length, "Mismatch in the number of FlowFM files");
-            CollectionAssert.AreEqual(expectedFlowFmFiles.Select(Path.GetFileName), actualFlowFmFiles.Select(Path.GetFileName), "Mismatch in the name of FlowFM files");
-
             var identical = true;
-            var overallErrorMessage = $"{Environment.NewLine}==================================================================================={Environment.NewLine}";
+            var actualFlowFmFileNames = actualFlowFmFiles.Select(Path.GetFileName);
+            var expectedFlowFmFileNames = expectedFlowFmFiles.Select(Path.GetFileName);
+            var allFileNames = actualFlowFmFileNames.Union(expectedFlowFmFileNames).ToArray();
+            var overallErrorMessage = $"{Environment.NewLine}{VerticalLine}";
 
-            for (var i = 0; i < actualFlowFmFiles.Length; i++)
+            foreach (var fileName in allFileNames)
             {
                 var linesToIgnore = new string[] { };
-                var expectedFlowFmFile = expectedFlowFmFiles[i];
-                var actualFlowFmFile = actualFlowFmFiles[i];
+                
+                var expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                if (expectedFlowFmFile == null)
+                {
+                    identical = false;
 
-                switch (Path.GetExtension(expectedFlowFmFiles[i]))
+                    overallErrorMessage += $"The actual FlowFM file collection contains a file with name '{fileName}'; this file is not part of the expected collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
+
+                    continue;
+                }
+
+                var actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                if (actualFlowFmFile == null)
+                {
+                    identical = false;
+
+                    overallErrorMessage += $"The expected FlowFM file collection contains a file with name '{fileName}'; this file is not part of the actual collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
+
+                    continue;
+                }
+
+                switch (Path.GetExtension(expectedFlowFmFile))
                 {
                     case ".mdu":
                     {
@@ -71,25 +91,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                     {
                         linesToIgnore = NetCdfLinesToIgnore;
 
-                        var fileName = Path.GetFileName(expectedFlowFmFiles[i]);
                         expectedFlowFmFile = Path.Combine(tempDirectory, "ncdump", "expected", fileName);
                         actualFlowFmFile = Path.Combine(tempDirectory, "ncdump", "actual", fileName);
 
-                        DumpNetCdfToTextFile(expectedFlowFmFiles[i], expectedFlowFmFile);
-                        DumpNetCdfToTextFile(actualFlowFmFiles[i], actualFlowFmFile);
+                        DumpNetCdfToTextFile(expectedFlowFmFile, expectedFlowFmFile);
+                        DumpNetCdfToTextFile(actualFlowFmFile, actualFlowFmFile);
 
                         break;
                     }
                 }
 
-                var errorMessage = string.Empty;
-
-                identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out errorMessage) && identical;
+                identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    overallErrorMessage += $"{errorMessage}" +
-                                           $"==================================================================================={Environment.NewLine}";
+                    overallErrorMessage += $"{errorMessage}{VerticalLine}";
                 }
             }
 
