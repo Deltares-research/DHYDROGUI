@@ -188,6 +188,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             // add lateral to branch
                             LateralSource lateralSource = new LateralSource
                             { Branch = branch, Chainage = branch.Length, Name = nwrwData.Name, LongName = nwrwData.Name };
+                            if (branch is IPipe pipe)
+                            {
+                                //lateralSource.Attributes["ConnectedToCompartment"] = true;
+                                lateralSource.Attributes["Compartment"] = pipe.SourceCompartmentName.Equals(nwrwData.Name) ? pipe.SourceCompartment : pipe.TargetCompartment;
+                            }
+
                             lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
                             branch.BranchFeatures.Add(lateralSource);
 
@@ -259,13 +265,18 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
 
-            var branchesGeometryDict = network.Branches.Select(b => new {b.Name, b.Target.Geometry});
+            //            var branchesGeometryDict = network.Branches.Select(b => new {b.Name, b.Target.Geometry});
+            //            var compartmentsGeometryDict = network.Nodes.OfType<IManhole>().SelectMany(m => m.Compartments)
+            //                .Select(c => new {c.Name, c.ParentManhole?.Geometry});
+            //            var nodesGeometryDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
+            //            var networkFeatureNameAndGeometries = nodesGeometryDict.Concat(branchesGeometryDict)
+            //                .Concat(compartmentsGeometryDict)
+            //                .Distinct()
+            //                .ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
+            var branchesGeometryDict = network.Branches.Select(b => new { b.Name, b.Target.Geometry });
             var compartmentsGeometryDict = network.Nodes.OfType<IManhole>().SelectMany(m => m.Compartments)
-                .Select(c => new {c.Name, c.ParentManhole?.Geometry});
-            var nodesGeometryDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
-            var networkFeatureNameAndGeometries = nodesGeometryDict.Concat(branchesGeometryDict)
-                .Concat(compartmentsGeometryDict)
-                .Distinct()
+                .Select(c => new { c.Name, c.Geometry });
+            var networkFeatureNameAndGeometries = branchesGeometryDict.Concat(compartmentsGeometryDict)
                 .ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
 
             var listOfErrors = new List<string>();

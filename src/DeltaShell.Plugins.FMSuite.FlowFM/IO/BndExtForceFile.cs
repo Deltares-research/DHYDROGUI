@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -226,6 +228,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
+                    if (lateralData.DataType == Model1DLateralDataType.FlowRealTime)
+                    {
+                        if (lateral.Attributes["Compartment"] is ICompartment lateralCompartment)
+                        {
+                            lateralDef.NodeId = lateralCompartment.Name;
+                        }
+                    }
+
                     lateralDef.DischargeForcingFile = filename;
                     yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
                 }
@@ -919,16 +929,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var name = delftIniCategory.GetPropertyValue(NameKey);
                 IBranch branch = null;
                 var chainage = 0.0d;
-                var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
-                if (nodeId != null)
+                var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
+                ICompartment compartment = null;
+                if (forcingFile == "realtime")
                 {
-                    var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
-                    branch = network.Branches.FirstOrDefault(b => b.Source == node);
+                    //node id is a compartment id, we need to find the bijbehorende Manhole
+                    var compartmentId = delftIniCategory.GetPropertyValue(NodeIdKey);
+                    branch = network.Branches
+                        .OfType<IPipe>()
+                        .FirstOrDefault(p =>
+                            p.TargetCompartmentName.Equals(compartmentId,
+                                StringComparison.InvariantCultureIgnoreCase) ||
+                            p.SourceCompartmentName.Equals(compartmentId,
+                                StringComparison.InvariantCultureIgnoreCase));
+                    if (branch is IPipe pipe)
+                        compartment = pipe.SourceCompartmentName.Equals(compartmentId)
+                            ? pipe.SourceCompartment
+                            : pipe.TargetCompartment;
 
-                    if (branch == null)
+                }
+                else
+                {
+                    var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
+                    if (nodeId != null)
                     {
-                        branch = network.Branches.FirstOrDefault(b => b.Target == node);
-                        chainage = branch?.Length ?? 0;
+                        var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
+                        branch = network.Branches.FirstOrDefault(b => b.Source == node);
+
+                        if (branch == null)
+                        {
+                            branch = network.Branches.FirstOrDefault(b => b.Target == node);
+                            chainage = branch?.Length ?? 0;
+                        }
                     }
                 }
 
@@ -941,6 +973,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (branch == null) continue;
 
                 var lateralSource = new LateralSource() { Branch = branch, Chainage = chainage, Name = id, LongName = name };
+                if (compartment != null)
+                    lateralSource.Attributes["Compartment"] = compartment;
                 var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
                 var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
                 lateralSource.Geometry = new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
@@ -949,7 +983,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
                 if (model1DLateralSourceData == null) 
                     model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = false, UseTemperature = false};
-                var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
                 if (forcingFile == "realtime")
                     model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                 if(lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
@@ -1073,5 +1106,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public string Name { get; set; }
         public string LongName { get; set; }
         public string DischargeForcingFile { get; set; }
+        public bool IsConnectedToCompartment{ get; set; }
     }
 }
