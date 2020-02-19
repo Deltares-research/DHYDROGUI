@@ -467,7 +467,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                 if (c_arrayto != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(c_arrayto);
-                
+
+                ierr = geomWrapper.DeallocateMemory();
+                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                {
+                    LastErrorCode = ierr;
+                    return null;
+                }
+
                 return linkInformation;
             }
             catch (Exception e)
