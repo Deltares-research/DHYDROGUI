@@ -1,0 +1,24 @@
+[General]
+Title=DS_ref
+AppType=1
+Version=1.0.0
+CATTemplateFile=Fixed\Cat.tpl
+ThematicMapOption=2
+CATIniFile=D:\SB2_16\Programs\Cat\cat.ini
+WQStandardsOption=0
+SaveTemplateonExit=True
+UserName=SOBEK
+
+[Functions]
+defaultini=D:\SB2_16\Programs\Cat\functions.ini
+
+[Netter]
+NtpFile=D:\SB2_16\Programs\cat\netter.ntp
+
+[CMTApps]
+NumberApps=1
+App1=\SB2_16\DS_ref.lit, DS_ref
+
+[StandAloneApps]
+NumberApps=0
+

@@ -1,0 +1,21 @@
+STFR id 'br_7' ci 'br_7' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_11' ci 'br_11' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_8' ci 'br_8' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_9' ci 'br_9' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_12' ci 'br_12' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+BDFR id 'R_1' ci 'R_1' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'R_3' ci 'R_3' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'R_2' ci 'R_2' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'R_4' ci 'R_4' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'R_5' ci 'R_5' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '1' ci '1' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '7' ci '7' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '2' ci '2' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '5' ci '5' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'rr_1' ci 'rr_1' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'rr_2' ci 'rr_2' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '3' ci '3' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '6' ci '6' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id 'R_8' ci 'R_8' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '4' ci '4' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr
+BDFR id '8' ci '8' mf 1 mt cp 0 0.03 0 mr cp 0 0.03 0 s1 6 s2 6 bdfr

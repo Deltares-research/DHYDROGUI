@@ -1,0 +1,50 @@
+STFR id '9' ci '9' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id '15' ci '15' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id '16' ci '16' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id '17' ci '17' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_14' ci 'br_14' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_17' ci 'br_17' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_24' ci 'br_24' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_10' ci 'br_10' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_13' ci 'br_13' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_15' ci 'br_15' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_16' ci 'br_16' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_20' ci 'br_20' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_21' ci 'br_21' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_22' ci 'br_22' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_23' ci 'br_23' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+STFR id 'br_25' ci 'br_25' mf 0 mt cp 0 45 0 mr cp 0 45 0 s1 6 s2 6 sf 0 st cp 0 45 0 sr cp 0 45 stfr
+CRFR id '3' nm 'Friction' cs '3'
+lt ys
+TBLE
+0 5 <
+5 30 <
+30 42 <
+tble
+ft ys
+TBLE
+1 0.08 <
+1 0.035 <
+1 0.08 <
+tble
+fr ys
+TBLE
+1 0.08 <
+1 0.035 <
+1 0.08 <
+tble crfr
+BDFR id 'R_7' ci 'R_7' mf 0 mt cp 0  0 mr cp 0  0 s1 6 s2 6 bdfr
+BDFR id 'R_1' ci 'R_1' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'R_3' ci 'R_3' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'R_2' ci 'R_2' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'R_5' ci 'R_5' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'R_4' ci 'R_4' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id '6' ci '6' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'R_8' ci 'R_8' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id '2' ci '2' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id '1' ci '1' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id '5' ci '5' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'rr_1' ci 'rr_1' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+BDFR id 'rr_2' ci 'rr_2' mf 1 mt cp 0 0.045 0 mr cp 0 0.045 0 s1 6 s2 6 bdfr
+D2FR id 'DAR_DTM' ci 'DAR_DTM' mf 1 mt cp 0 0.04 0 mw cp 0 0 0 d2fr
+D2FR id '2Dbnd_3' ci '2Dbnd_3' mf 1 mt cp 2 '..\FIXED\DAR_MN_V7_20M.ASC'  mw cp 0 0 0 d2fr

@@ -1,0 +1,236 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[forcing]
+    name                  = 0Out_M              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    -2 
+
+[forcing]
+    name                  = 0Out_K              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0OutD               
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0Out_E              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0Out_F              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0Out_PS_B           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0Out_PS_C           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0Out_H              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0Out_I              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0Out_J              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0Out_G              
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.67 
+
+[forcing]
+    name                  = 0bc_LJZ01           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_LJZ02           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_LJZ03           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_QCZ01           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_QCZ02           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_QCZ03           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_JX01            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.67 
+
+[forcing]
+    name                  = 0bc_JX02            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.67 
+
+[forcing]
+    name                  = 0bc_JX03            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.67 
+
+[forcing]
+    name                  = 0bc_HM01            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0bc_HM02            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0bc_HM03            
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    2.69 
+
+[forcing]
+    name                  = 0bc_ZJB01           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_ZJB02           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_ZJB03           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_LJD01           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_LJD02           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+
+[forcing]
+    name                  = 0bc_LJD03           
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    3.58 
+

@@ -1,0 +1,34 @@
+[General]
+    fileVersion           = 2.00                
+    fileType              = extForce            
+
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole01
+forcingfile=FlowFM_boundaryconditions1d.bc
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole02
+forcingfile=FlowFM_boundaryconditions1d.bc
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole03
+forcingfile=FlowFM_boundaryconditions1d.bc
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole04
+forcingfile=FlowFM_boundaryconditions1d.bc
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole05
+forcingfile=FlowFM_boundaryconditions1d.bc
+
+[Boundary]
+quantity=waterlevelbnd
+nodeId=Manhole06
+forcingfile=FlowFM_boundaryconditions1d.bc

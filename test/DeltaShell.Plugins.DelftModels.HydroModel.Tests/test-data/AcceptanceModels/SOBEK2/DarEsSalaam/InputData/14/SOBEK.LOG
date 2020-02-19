@@ -1,0 +1,13 @@
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+** WARNING: Fixed Bed Bridge, id = br_8, name = Msimbazi railroad bridge: Bridge bottom level raised to bedl.+groundl. in reach seg., incremented value is:      0.00
+** WARNING: Fixed Bed Bridge, id = br_7, name = Matumbi Culvert: Bridge bottom level raised to bedl.+groundl. in reach seg., incremented value is:      2.07
+** WARNING: Fixed Bed Bridge, id = br_19: Bridge bottom level raised to bedl.+groundl. in reach seg., incremented value is:      0.10
+** INFO   : setback dt=      15.000000
+** INFO   : cpu computation =       9.125000
+
+****************************************
+Info Messages :     3
+Warnings      :     3
+****************************************
+
+** Normal End of Sobeksim

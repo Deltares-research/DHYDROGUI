@@ -1,0 +1,52 @@
+[General]
+    fileVersion           = 1.01                
+    fileType              = boundConds          
+
+[forcing]
+    name                  = Wgroeske_5          
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    0 
+
+[forcing]
+    name                  = WCN_Oost_2          
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    0 
+
+[forcing]
+    name                  = WR2                 
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    0 
+
+[forcing]
+    name                  = W86                 
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    0 
+
+[forcing]
+    name                  = 18_M                
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    -999 
+
+[forcing]
+    name                  = 5_M                 
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = waterlevelbnd       
+    unit                  = m                   
+    -999 
+

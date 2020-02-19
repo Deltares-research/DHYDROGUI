@@ -245,6 +245,10 @@
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
+    <Compile Include="Acceptance\FlowFmFileComparer.cs" />
+    <Compile Include="Acceptance\AcceptanceModelTestHelper.cs" />
+    <Compile Include="Acceptance\SobekTwoDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\GwswDataPersistenceAcceptanceTests.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -319,6 +323,11 @@
       <Project>{96cd03f1-2715-4827-95e1-3277a2deadae}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
+      <Project>{F456B556-D969-4768-9E3F-F151A387071B}</Project>
+      <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.ImportExport.Sobek\DeltaShell.Plugins.ImportExport.Sobek.csproj">
       <Project>{08A3EA33-B6D2-4ACF-8C00-5D920141E809}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
@@ -344,6 +353,11 @@
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
+      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.ImportExport.Sobek.Tests\DeltaShell.Plugins.ImportExport.Sobek.Tests.csproj">
       <Project>{e476da30-9e23-4529-8c1e-903c2380f7c8}</Project>
       <Name>DeltaShell.Plugins.ImportExport.Sobek.Tests</Name>
@@ -352,10 +366,72 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="TestUtils\NetCDF\nc-config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestUtils\NetCDF\concrt140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf5.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf5_cpp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf5_hl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf5_hl_cpp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\hdf5_tools.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\jpeg.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\libcurl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\mfhdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\msvcp140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\nccopy.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\ncdump.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\ncgen.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\ncgen3.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\netcdf.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\xdr.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestUtils\NetCDF\zlib1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

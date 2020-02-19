@@ -1,0 +1,229 @@
+CRDS id '1' nm 'cs_1_2_1800' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+12 2.8 <
+16 2.2 <
+55 0.9 <
+57 2.8 <
+tble
+crds
+CRDS id '2' nm 'cs_3_1_3800' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+240 2 <
+260 1.7 <
+270 1.65 <
+277 2 <
+tble
+crds
+CRDS id '3' nm 'cs_1_1_1700' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 0.1 <
+4 -0.2 <
+9.5 -2.9 <
+15 -2.93 <
+19 -2.5 <
+25 -1.7 <
+29 -0.7 <
+31 -0.24 <
+40 -0.18 <
+42 0 <
+tble
+crds
+CRDS id '4' nm 'cs_1_1_2700' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 3 <
+4 -3.1 <
+196 -3.1 <
+200 3 <
+tble
+crds
+CRDS id '10' nm 'cs_13' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 1.975 <
+6.247075 1.796 <
+12.49415 1.761 <
+18.74122 2.024 <
+tble
+crds
+CRDS id '12' nm 'r_Default (12)' ty 0 wm 10 rw 10 rh 5 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 10 10 <
+5 10 10 <
+5.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '13' nm 'r_bridge medium' ty 0 wm 10 rw 10 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 10 10 <
+2 10 10 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '14' nm 'r_large bridge' ty 0 wm 20 rw 20 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 20 20 <
+2 20 20 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '16' nm 'Br_2' ty 0 wm 47 w1 0 w2 0 sw 0 gl 0 gu 0 lt lw
+TBLE
+0 35.5 35.5 <
+4 47 47 <
+4.001 0 0 <
+tble
+crds
+CRDS id '17' nm 'br_3' ty 0 wm 15.39 rw 15.39 rh 4 w1 0 w2 0 gl 2 gu 0 lt lw
+TBLE
+0 15.39 15.39 <
+4 15.39 15.39 <
+4.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '18' nm 'br_3' ty 0 wm 15.39 rw 15.39 rh 4 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 15.39 15.39 <
+4 15.39 15.39 <
+4.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '19' nm 'r_bridge_3' ty 0 wm 15.39 rw 15.39 rh 1.17 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 15.39 15.39 <
+1.17 15.39 15.39 <
+1.1701 0.0001 0.0001 <
+tble
+crds
+CRDS id '20' nm 'r_bridge_4' ty 0 wm 22.5 rw 22.5 rh 1.94 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 22.5 22.5 <
+1.94 22.5 22.5 <
+1.9401 0.0001 0.0001 <
+tble
+crds
+CRDS id '23' nm 'r_bridge_14' ty 0 wm 10 rw 10 rh 2.5 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 10 10 <
+2.5 10 10 <
+2.5001 0.0001 0.0001 <
+tble
+crds
+CRDS id '24' nm 'r_bridge_17' ty 0 wm 3.63 rw 3.63 rh 3.25 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 3.63 3.63 <
+3.25 3.63 3.63 <
+3.2501 0.0001 0.0001 <
+tble
+crds
+CRDS id '25' nm 'r_bridge_24' ty 0 wm 11.15 rw 11.15 rh 3 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 11.15 11.15 <
+3 11.15 11.15 <
+3.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '26' nm 'r_bridge_1' ty 0 wm 61.9 rw 61.9 rh 3.18 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 61.9 61.9 <
+3.18 61.9 61.9 <
+3.1801 0.0001 0.0001 <
+tble
+crds
+CRDS id '27' nm 'r_bridge_2' ty 0 wm 41.25 rw 41.25 rh 4 w1 0 w2 0 gl 2 gu 1 lt lw
+TBLE
+0 41.25 41.25 <
+4 41.25 41.25 <
+4.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '32' nm 'r_bridge_10' ty 0 wm 34 rw 34 rh 4.15 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 34 34 <
+4.15 34 34 <
+4.1501 0.0001 0.0001 <
+tble
+crds
+CRDS id '34' nm 'r_bridge_13' ty 0 wm 8 rw 8 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 8 8 <
+2 8 8 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '35' nm 'r_bridge_15' ty 0 wm 12 rw 12 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 12 12 <
+2 12 12 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '36' nm 'r_bridge_16' ty 0 wm 18 rw 18 rh 2.49 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 18 18 <
+2.49 18 18 <
+2.4901 0.0001 0.0001 <
+tble
+crds
+CRDS id '39' nm 'r_bridge_20' ty 0 wm 12 rw 12 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 12 12 <
+2 12 12 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '40' nm 'r_bridge_21' ty 0 wm 7 rw 7 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 7 7 <
+2 7 7 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '41' nm 'r_bridge_22' ty 0 wm 20 rw 20 rh 4.42 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 20 20 <
+4.42 20 20 <
+4.4201 0.0001 0.0001 <
+tble
+crds
+CRDS id '42' nm 'r_bridge_28' ty 0 wm 28 rw 28 rh 3.31 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 28 28 <
+3.31 28 28 <
+3.3101 0.0001 0.0001 <
+tble
+crds
+CRDS id '43' nm 'r_bridge_25' ty 0 wm 22 rw 22 rh 2.97 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 22 22 <
+2.97 22 22 <
+2.9701 0.0001 0.0001 <
+tble
+crds
+CRDS id '44' nm 'r_bridge_2_sed' ty 0 wm 14 rw 14 rh 4 w1 0 w2 0 gl 2 gu 1 lt lw
+TBLE
+0 14 14 <
+4 14 14 <
+4.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '46' nm 'r_bridge_2_sed2' ty 0 wm 12 rw 12 rh 2 w1 0 w2 0 gl 2 gu 0 lt lw
+TBLE
+0 12 12 <
+2 12 12 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '47' nm 'r_bridge_2_sed3' ty 0 wm 12 rw 12 rh 1.83 w1 0 w2 0 gl 2 gu 0 lt lw
+TBLE
+0 12 12 <
+1.83 12 12 <
+1.8301 0.0001 0.0001 <
+tble
+crds
+CRDS id '48' nm 'cs_1_1_2300_selander' ty 10 lu 0 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 4 <
+0.1 -3.03 <
+80 -3.03 <
+80.1 4 <
+tble
+crds

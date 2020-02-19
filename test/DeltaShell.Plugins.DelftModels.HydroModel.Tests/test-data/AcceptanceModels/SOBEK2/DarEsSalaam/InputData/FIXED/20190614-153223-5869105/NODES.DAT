@@ -1,0 +1,8 @@
+NODE id '1' ty 0 ni 1 r1 'R_3' r2 'R_1' node
+NODE id '30' ty 0 ni 1 r1 'R_1' r2 'R_8' node
+NODE id '3' ty 0 ni 1 r1 '7' r2 '1' node
+NODE id '4' ty 0 ni 1 r1 'rr_1' r2 '2' node
+NODE id 'R_7_16' ty 0 ni 1 r1 '6' r2 '3' node
+NODE id 'R_7_23' ty 0 ni 1 r1 '5' r2 '4' node
+NODE id 'R_7_11' ty 0 ni 1 r1 '1' r2 '6' node
+NODE id 'R_8_7' ty 0 ni 1 r1 'R_8' r2 '7' node

@@ -1,0 +1,134 @@
+Sobek Parser V2.07.001.46474
+
+Warning    : Start date in meteo-file differs from Sobek start date
+Object-id  : Bui                                     
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : 32                                      
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_2                                   
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_97                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_69                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_5_56                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_2_9                                   
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_2_25                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : 3_1                                     
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_23                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_30                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_37                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_50                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_58                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_66                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_100                                 
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_3_106                                 
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_7_11                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_1_22                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_5_2                                   
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_5_20                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_5_70                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_9                                   
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_49                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_64                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_83                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_86                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : R_4_87                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : rr_2_4                                  
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : C1001                                   
+Object-name: PT12
+
+Warning    : Y co-ordinate on grid-line, adjusted
+Object-id  : C1006                                   
+Object-name: PT12
+
+Warning    : X co-ordinate on grid-line, adjusted
+Object-id  : C2004                                   
+Object-name: PT12
+
+Informative Messages:        0
+Warnings            :       32
+Errors!             :        0
+
+End of program

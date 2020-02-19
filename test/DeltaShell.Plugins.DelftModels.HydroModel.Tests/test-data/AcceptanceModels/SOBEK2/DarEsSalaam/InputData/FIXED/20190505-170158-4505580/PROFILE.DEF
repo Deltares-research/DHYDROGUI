@@ -1,0 +1,130 @@
+CRDS id '5' nm 'cs_5' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+10.90221 1.918 <
+16.35332 1.869 <
+21.80442 1.826 <
+27.25553 1.824 <
+32.70663 1.897 <
+tble
+crds
+CRDS id '6' nm 'cs_6' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+16.00182 2.045 <
+21.33576 1.939 <
+26.6697 1.942 <
+32.00364 1.919 <
+37.33759 1.97 <
+42.67152 2.047 <
+tble
+crds
+CRDS id '7' nm 'cs_10' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 2.142 <
+5.858817 1.565 <
+11.71763 1.406 <
+17.57645 1.614 <
+23.43527 1.769 <
+tble
+crds
+CRDS id '8' nm 'cs_11' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+11.10145 1.771 <
+16.65218 1.742 <
+22.2029 1.711 <
+27.75363 1.709 <
+33.30436 1.703 <
+38.85508 1.712 <
+44.4058 1.777 <
+tble
+crds
+CRDS id '9' nm 'cs_12' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+6.449007 2.105 <
+12.89801 1.523 <
+19.34702 1.276 <
+25.79603 2.127 <
+tble
+crds
+CRDS id '15' nm 'Br_1' ty 0 wm 76.6 w1 0 w2 0 sw 0 gl 0 gu 0 lt lw
+TBLE
+0 20 20 <
+0.99 20 20 <
+1 47.2 47.2 <
+5.18 76.6 76.6 <
+5.181 0 0 <
+tble
+crds
+CRDS id '21' nm 'r_bridge_7' ty 0 wm 21.3 rw 21.3 rh 4.8 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 21.3 21.3 <
+4.8 21.3 21.3 <
+4.8001 0.0001 0.0001 <
+tble
+crds
+CRDS id '22' nm 'r_bridge_11' ty 0 wm 10 rw 10 rh .85 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 10 10 <
+.85 10 10 <
+.8501 0.0001 0.0001 <
+tble
+crds
+CRDS id '30' nm 'r_bridge_8' ty 0 wm 30 rw 30 rh 4.28 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 30 30 <
+4.28 30 30 <
+4.2801 0.0001 0.0001 <
+tble
+crds
+CRDS id '31' nm 'r_bridge_9' ty 0 wm 34 rw 34 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 34 34 <
+2 34 34 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '33' nm 'r_bridge_12' ty 0 wm 8 rw 8 rh 2 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 8 8 <
+2 8 8 <
+2.0001 0.0001 0.0001 <
+tble
+crds
+CRDS id '45' nm 'cs_1_4_12600' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+6.854697 13.919 <
+13.70939 11.099 <
+20.56409 10.617 <
+27.41879 10.234 <
+34.27348 10.529 <
+41.12818 14.9 <
+tble
+crds
+CRDS id '49' nm 'r_bridge_2_sed4' ty 0 wm 12 rw 12 rh 1.1 w1 0 w2 0 gl 2 gu 0 lt lw
+TBLE
+0 12 12 <
+1.1 12 12 <
+1.1001 0.0001 0.0001 <
+tble
+crds
+CRDS id '50' nm 'r_bridge_3v2' ty 0 wm 22.5 rw 22.5 rh .07 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 22.5 22.5 <
+.07 22.5 22.5 <
+.0701 0.0001 0.0001 <
+tble
+crds
+CRDS id '51' nm 'r_bridge_4' ty 0 wm 15.39 rw 15.39 rh .69 w1 0 w2 0 gl 0 gu 0 lt lw
+TBLE
+0 15.39 15.39 <
+.69 15.39 15.39 <
+.6901 0.0001 0.0001 <
+tble
+crds
+CRDS id '56' nm 'Janwgani_Boxculvert_East2' ty 10 st 0 lt sw 0 0 gl 0 gu 0 lt yz
+TBLE
+0 4.5 <
+1 4.4 <
+9 4.4 <
+10 4.5 <
+tble
+crds

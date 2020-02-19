@@ -1,0 +1,16 @@
+STDS id '9' nm '' ty 12 tb 4 si '14' pw 3 vf 1.5 li 0.25 lo 0.25 dl 25 rl 0.5 rt 0 stds
+STDS id '15' nm '' ty 12 tb 4 si '13' pw 3 vf 1.5 li 0.25 lo 0.25 dl 20 rl 2 rt 0 stds
+STDS id '16' nm '' ty 12 tb 4 si '14' pw 3 vf 1.5 li 0.25 lo 0.25 dl 25 rl 0.5 rt 3 stds
+STDS id '17' nm '' ty 12 tb 4 si '14' pw 3 vf 1.5 li 0.25 lo 0.25 dl 25 rl 0.5 rt 3 stds
+STDS id 'br_14' nm '' ty 12 tb 4 si '23' pw 3 vf 1.5 li 0.25 lo 0.25 dl 7 rl 13.24 rt 0 stds
+STDS id 'br_17' nm '' ty 12 tb 4 si '24' pw 3 vf 1.5 li 0.25 lo 0.25 dl 15 rl 33.12 rt 0 stds
+STDS id 'br_24' nm '' ty 12 tb 4 si '25' pw 3 vf 1.5 li 0.25 lo 0.25 dl 9 rl 11.22 rt 0 stds
+STDS id 'br_10' nm '' ty 12 tb 4 si '32' pw 3 vf 1.5 li 0.25 lo 0.25 dl 10 rl 42.15 rt 0 stds
+STDS id 'br_13' nm '' ty 12 tb 4 si '34' pw 3 vf 1.5 li 0.25 lo 0.25 dl 7 rl 12.23 rt 0 stds
+STDS id 'br_15' nm '' ty 12 tb 4 si '35' pw 3 vf 1.5 li 0.25 lo 0.25 dl 7 rl 20.48 rt 0 stds
+STDS id 'br_16' nm '' ty 12 tb 4 si '36' pw 3 vf 1.5 li 0.25 lo 0.25 dl 12 rl 23.81 rt 0 stds
+STDS id 'br_20' nm '' ty 12 tb 4 si '39' pw 3 vf 1.5 li 0.25 lo 0.25 dl 10 rl 11.8 rt 0 stds
+STDS id 'br_21' nm '' ty 12 tb 4 si '40' pw 3 vf 1.5 li 0.25 lo 0.25 dl 4 rl 14.15 rt 0 stds
+STDS id 'br_22' nm '' ty 12 tb 4 si '41' pw 3 vf 1.5 li 0.25 lo 0.25 dl 9 rl 23.88 rt 0 stds
+STDS id 'br_23' nm '' ty 12 tb 4 si '42' pw 3 vf 1.5 li 0.25 lo 0.25 dl 13 rl 33.87 rt 0 stds
+STDS id 'br_25' nm '' ty 12 tb 4 si '43' pw 3 vf 1.5 li 0.25 lo 0.25 dl 30 rl 17.95 rt 0 stds

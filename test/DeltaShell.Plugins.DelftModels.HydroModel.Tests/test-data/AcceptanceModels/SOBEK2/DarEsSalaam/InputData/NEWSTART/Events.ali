@@ -1,0 +1,7 @@
+event.*   \SB2_16\fixed\default.bui
+evapor.*  \SB2_16\fixed\3b\evapor.gem
+wind.*    \SB2_16\fixed\default.wdc
+delwaq.*  \SB2_16\fixed\default.qsc
+wq_wind.* \SB2_16\fixed\default.qwc
+temp.*    \SB2_16\fixed\default.tmp
+rnff.*    \SB2_16\fixed\default.rnf

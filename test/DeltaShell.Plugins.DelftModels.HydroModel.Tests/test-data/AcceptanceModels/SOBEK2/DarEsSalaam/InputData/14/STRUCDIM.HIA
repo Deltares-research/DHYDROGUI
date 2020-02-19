@@ -1,0 +1,30 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.6403, Aug 03 2016, 15:15:02
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=10
+NumberOfLocations=13
+T0=2019.03.02 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+2=Gate lower edge level (m AD)
+10=Discharge Coefficient (-)
+ 
+[Long Locations]
+ 
+[Location Descriptions]
+1=Msimbazi Kawawa road bridge
+2=Msimbazi Kigogo road bridge
+3=Msimbaz Kiembe Mbuzi Rd bridge
+4=Msimbazi railroad bridge
+5=Matumbi Culvert
+7=Mkwajuni culvert
+10=Jangwani East 2 culvert
+11=Jangwani East 1 culvert
+12=Selander bridge
+13=Jangwani West bridge
+ 
