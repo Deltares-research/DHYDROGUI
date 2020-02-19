@@ -1,0 +1,5 @@
+NTC1.00
+..\FIXED\SOBEK.MAP
+@network.ntw
+netter.dlf
+FILE "@calcpnt.his" LAYER "" TYPE node HISLOC 2 VAR 5 DLFACTION 'stat_maximum' = Freeboard, maximum

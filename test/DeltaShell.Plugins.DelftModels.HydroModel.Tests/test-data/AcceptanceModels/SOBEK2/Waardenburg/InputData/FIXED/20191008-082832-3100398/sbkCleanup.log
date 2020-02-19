@@ -1,0 +1,159 @@
+Project: D:\SOBEK215\wrd_opp.lit
+Case   : Oppervlaktewater_Def
+
+Clean Up Started at: 08-10-2019 08:28:32
+
+Start Compound Structures at: 08-10-2019 08:28:32
+Compound Structures......
+Reading Data......
+No Data Found, Nothing to Clean Up
+Members......
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Compound Structures at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Structures at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Structures at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Structure Definitions at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Structure Definitions at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start 2D-Breaking Dams at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+Reading Data......
+No Data Found, Nothing to Clean Up
+End 2D-Breaking Dams at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Controllers at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Controllers at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Triggers at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Triggers at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Culvert Valves at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Culvert Valves at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Structure Friction at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Structure Friction at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Boundary Data at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Boundary Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Lateral Data at: 08-10-2019 08:28:32
+Laterals on Nodes......
+Reading Data......
+Cleaning Up Records
+Laterals on Branches......
+Reading Data......
+Cleaning Up Records
+Diffuse Laterals......
+Reading Data......
+No Data Found, Nothing to Clean Up
+Pipes with Infiltration......
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Lateral Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Reference Table Data at: 08-10-2019 08:28:32
+Collecting References to Tables......
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Reference Table Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Cross-Sections at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Cross-Sections at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Cross-Section Definitions at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Cross-Section Definitions at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Cross-Section Friction at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Cross-Section Friction at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Bed Friction at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Bed Friction at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Node Data at: 08-10-2019 08:28:32
+Reading Data......
+Cleaning Up Records
+End Node Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Extra Resistance Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Extra Resistance Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Initial 1D-Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Initial 1D-Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start Initial 2D-Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End Initial 2D-Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start 2D-Friction Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End 2D-Friction Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start 2D-Boundary Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End 2D-Boundary Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Start 2D-Line Boundary Data at: 08-10-2019 08:28:32
+Reading Data......
+No Data Found, Nothing to Clean Up
+End 2D-Line Boundary Data at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+
+Clean Up Ended at: 08-10-2019 08:28:32
+Duration: 00:00:00 (hh:mm:ss)
+

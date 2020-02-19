@@ -1,0 +1,2910 @@
+STFR id 'P03_DKR_73222093' ci 'P03_DKR_73222093' mf 1 mt cp 0 0.0133 0 mr cp 0 0.0133 0 s1 6 s2 6 sf 1 st cp 0 0.0133 0 sr cp 0 0.0133 stfr
+STFR id 'P03_DKR_73222093' ci 'P03_DKR_73222093' mf 1 mt cp 0 0.0133 0 mr cp 0 0.0133 0 s1 6 s2 6 sf 1 st cp 0 0.0133 0 sr cp 0 0.0133 stfr
+STFR id 'P03_DKR_73222093' ci 'P03_DKR_73222093' mf 1 mt cp 0 0.0133 0 mr cp 0 0.0133 0 s1 6 s2 6 sf 1 st cp 0 0.0133 0 sr cp 0 0.0133 stfr
+STFR id 'P03_DKR_73222093' ci 'P03_DKR_73222093' mf 1 mt cp 0 0.0133 0 mr cp 0 0.0133 0 s1 6 s2 6 sf 1 st cp 0 0.0133 0 sr cp 0 0.0133 stfr
+CRFR id 'DWP_3A0202-060' nm 'Friction' cs 'P03_DWP_3A0202-060'
+lt ys
+TBLE
+0 54.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0095-550-4_a' nm 'Friction' cs 'P03_DWP_3A0095-550-4_a'
+lt ys
+TBLE
+0 63.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0262-020' nm 'Friction' cs 'P03_DWP_3A0262-020'
+lt ys
+TBLE
+0 60.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0195-050' nm 'Friction' cs 'P03_DWP_3A0195-050'
+lt ys
+TBLE
+0 54.28 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-230_b' nm 'Friction' cs 'P03_DWP_3A0300-230_b'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-230_a' nm 'Friction' cs 'P03_DWP_3A0300-230_a'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0292-100_c' nm 'Friction' cs 'P03_DWP_3A0292-100_c'
+lt ys
+TBLE
+0 57.69 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_20105025' nm 'Friction' cs 'P03_DWP_20105025'
+lt ys
+TBLE
+0 53.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-040_a' nm 'Friction' cs 'P03_DWP_3A0300-040_a'
+lt ys
+TBLE
+0 54.27 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0310-160_a' nm 'Friction' cs 'P03_DWP_3A0310-160_a'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0306-010_c' nm 'Friction' cs 'P03_DWP_3A0306-010_c'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0327-050' nm 'Friction' cs 'P03_DWP_3A0327-050'
+lt ys
+TBLE
+0 57.21 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0327-030' nm 'Friction' cs 'P03_DWP_3A0327-030'
+lt ys
+TBLE
+0 55.78 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-010' nm 'Friction' cs 'P03_DWP_3A0317-010'
+lt ys
+TBLE
+0 57.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-050' nm 'Friction' cs 'P03_DWP_3A0317-050'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-070' nm 'Friction' cs 'P03_DWP_3A0317-070'
+lt ys
+TBLE
+0 56.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-210' nm 'Friction' cs 'P03_DWP_3A0242-210'
+lt ys
+TBLE
+0 57.01 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-208' nm 'Friction' cs 'P03_DWP_3A0242-208'
+lt ys
+TBLE
+0 58.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-070' nm 'Friction' cs 'P03_DWP_3A0242-070'
+lt ys
+TBLE
+0 57.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-100' nm 'Friction' cs 'P03_DWP_3A0173-100'
+lt ys
+TBLE
+0 55.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-095' nm 'Friction' cs 'P03_DWP_3A0173-095'
+lt ys
+TBLE
+0 58.48 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0217-010' nm 'Friction' cs 'P03_DWP_3A0217-010'
+lt ys
+TBLE
+0 55.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_BC3' nm 'Friction' cs 'P03_DWP_BC3'
+lt ys
+TBLE
+4 56.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0153-030-24' nm 'Friction' cs 'P03_DWP_3A0153-030-24'
+lt ys
+TBLE
+0 54 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-020-58_a' nm 'Friction' cs 'P03_DWP_3A0151-020-58_a'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-020-58_b' nm 'Friction' cs 'P03_DWP_3A0151-020-58_b'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-030-55' nm 'Friction' cs 'P03_DWP_3A0151-030-55'
+lt ys
+TBLE
+0 55.12 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0172-010-5' nm 'Friction' cs 'P03_DWP_3A0172-010-5'
+lt ys
+TBLE
+0 65.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0095-520-499' nm 'Friction' cs 'P03_DWP_3A0095-520-499'
+lt ys
+TBLE
+0 62.45 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0184-030' nm 'Friction' cs 'P03_DWP_3A0184-030'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0277-340' nm 'Friction' cs 'P03_DWP_3A0277-340'
+lt ys
+TBLE
+0 59.23 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-070' nm 'Friction' cs 'P03_DWP_3A0204-070'
+lt ys
+TBLE
+0 60.4 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0073-001-897' nm 'Friction' cs 'P03_DWP_3A0073-001-897'
+lt ys
+TBLE
+0 58.38 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0163-005-35_b' nm 'Friction' cs 'P03_DWP_3A0163-005-35_b'
+lt ys
+TBLE
+0 62.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-150' nm 'Friction' cs 'P03_DWP_3A0204-150'
+lt ys
+TBLE
+0 56.83 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-130' nm 'Friction' cs 'P03_DWP_3A0204-130'
+lt ys
+TBLE
+0 57.64 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0315-090_a' nm 'Friction' cs 'P03_DWP_3A0315-090_a'
+lt ys
+TBLE
+0 58.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_dwpBS1_d' nm 'Friction' cs 'P03_DWP_dwpBS1_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_dwpBS2_d' nm 'Friction' cs 'P03_DWP_dwpBS2_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-550' nm 'Friction' cs 'P03_DWP_3A0173-550'
+lt ys
+TBLE
+0 72.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0091-040-737_a' nm 'Friction' cs 'P03_DWP_2A0091-040-737_a'
+lt ys
+TBLE
+0 55.53 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0187-020_1' nm 'Friction' cs 'P03_DWP_3A0187-020_1'
+lt ys
+TBLE
+0 58.76 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0303-010' nm 'Friction' cs 'P03_DWP_3A0303-010'
+lt ys
+TBLE
+0 53.95 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0303-020' nm 'Friction' cs 'P03_DWP_3A0303-020'
+lt ys
+TBLE
+0 57.67 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0071-030-868' nm 'Friction' cs 'P03_DWP_2A0071-030-868'
+lt ys
+TBLE
+0 55.15 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0023-050-589_a' nm 'Friction' cs 'P03_DWP_2A0023-050-589_a'
+lt ys
+TBLE
+0 56.37 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0304-130_a' nm 'Friction' cs 'P03_DWP_3A0304-130_a'
+lt ys
+TBLE
+0 58.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0195-340_a' nm 'Friction' cs 'P03_DWP_3A0195-340_a'
+lt ys
+TBLE
+0 57.34 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_BC11_b' nm 'Friction' cs 'P03_DWP_BC11_b'
+lt ys
+TBLE
+2 54.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0045-010-1088' nm 'Friction' cs 'P03_DWP_2A0045-010-1088'
+lt ys
+TBLE
+0 74.6 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0016120_a' nm 'Friction' cs 'P03_DWP_2A0016120_a'
+lt ys
+TBLE
+0 62.81 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'TW_DWP_2A0150-070-26' nm 'Friction' cs 'P03_TW_DWP_2A0150-070-26'
+lt ys
+TBLE
+25 38.73 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0202-060' nm 'Friction' cs 'P03_DWP_3A0202-060'
+lt ys
+TBLE
+0 54.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0095-550-4_a' nm 'Friction' cs 'P03_DWP_3A0095-550-4_a'
+lt ys
+TBLE
+0 63.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0262-020' nm 'Friction' cs 'P03_DWP_3A0262-020'
+lt ys
+TBLE
+0 60.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0195-050' nm 'Friction' cs 'P03_DWP_3A0195-050'
+lt ys
+TBLE
+0 54.28 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-230_b' nm 'Friction' cs 'P03_DWP_3A0300-230_b'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-230_a' nm 'Friction' cs 'P03_DWP_3A0300-230_a'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0292-100_c' nm 'Friction' cs 'P03_DWP_3A0292-100_c'
+lt ys
+TBLE
+0 57.69 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_20105025' nm 'Friction' cs 'P03_DWP_20105025'
+lt ys
+TBLE
+0 53.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0300-040_a' nm 'Friction' cs 'P03_DWP_3A0300-040_a'
+lt ys
+TBLE
+0 54.27 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0310-160_a' nm 'Friction' cs 'P03_DWP_3A0310-160_a'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0306-010_c' nm 'Friction' cs 'P03_DWP_3A0306-010_c'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0327-050' nm 'Friction' cs 'P03_DWP_3A0327-050'
+lt ys
+TBLE
+0 57.21 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0327-030' nm 'Friction' cs 'P03_DWP_3A0327-030'
+lt ys
+TBLE
+0 55.78 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-010' nm 'Friction' cs 'P03_DWP_3A0317-010'
+lt ys
+TBLE
+0 57.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-050' nm 'Friction' cs 'P03_DWP_3A0317-050'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0317-070' nm 'Friction' cs 'P03_DWP_3A0317-070'
+lt ys
+TBLE
+0 56.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-210' nm 'Friction' cs 'P03_DWP_3A0242-210'
+lt ys
+TBLE
+0 57.01 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-208' nm 'Friction' cs 'P03_DWP_3A0242-208'
+lt ys
+TBLE
+0 58.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0242-070' nm 'Friction' cs 'P03_DWP_3A0242-070'
+lt ys
+TBLE
+0 57.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-100' nm 'Friction' cs 'P03_DWP_3A0173-100'
+lt ys
+TBLE
+0 55.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-095' nm 'Friction' cs 'P03_DWP_3A0173-095'
+lt ys
+TBLE
+0 58.48 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0217-010' nm 'Friction' cs 'P03_DWP_3A0217-010'
+lt ys
+TBLE
+0 55.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_BC3' nm 'Friction' cs 'P03_DWP_BC3'
+lt ys
+TBLE
+4 56.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0153-030-24' nm 'Friction' cs 'P03_DWP_3A0153-030-24'
+lt ys
+TBLE
+0 54 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-020-58_a' nm 'Friction' cs 'P03_DWP_3A0151-020-58_a'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-020-58_b' nm 'Friction' cs 'P03_DWP_3A0151-020-58_b'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0151-030-55' nm 'Friction' cs 'P03_DWP_3A0151-030-55'
+lt ys
+TBLE
+0 55.12 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0172-010-5' nm 'Friction' cs 'P03_DWP_3A0172-010-5'
+lt ys
+TBLE
+0 65.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0095-520-499' nm 'Friction' cs 'P03_DWP_3A0095-520-499'
+lt ys
+TBLE
+0 62.45 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0184-030' nm 'Friction' cs 'P03_DWP_3A0184-030'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0277-340' nm 'Friction' cs 'P03_DWP_3A0277-340'
+lt ys
+TBLE
+0 59.23 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-070' nm 'Friction' cs 'P03_DWP_3A0204-070'
+lt ys
+TBLE
+0 60.4 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0073-001-897' nm 'Friction' cs 'P03_DWP_3A0073-001-897'
+lt ys
+TBLE
+0 58.38 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0163-005-35_b' nm 'Friction' cs 'P03_DWP_3A0163-005-35_b'
+lt ys
+TBLE
+0 62.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-150' nm 'Friction' cs 'P03_DWP_3A0204-150'
+lt ys
+TBLE
+0 56.83 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0204-130' nm 'Friction' cs 'P03_DWP_3A0204-130'
+lt ys
+TBLE
+0 57.64 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0315-090_a' nm 'Friction' cs 'P03_DWP_3A0315-090_a'
+lt ys
+TBLE
+0 58.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_dwpBS1_d' nm 'Friction' cs 'P03_DWP_dwpBS1_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_dwpBS2_d' nm 'Friction' cs 'P03_DWP_dwpBS2_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0173-550' nm 'Friction' cs 'P03_DWP_3A0173-550'
+lt ys
+TBLE
+0 72.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0091-040-737_a' nm 'Friction' cs 'P03_DWP_2A0091-040-737_a'
+lt ys
+TBLE
+0 55.53 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0187-020_1' nm 'Friction' cs 'P03_DWP_3A0187-020_1'
+lt ys
+TBLE
+0 58.76 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0303-010' nm 'Friction' cs 'P03_DWP_3A0303-010'
+lt ys
+TBLE
+0 53.95 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0303-020' nm 'Friction' cs 'P03_DWP_3A0303-020'
+lt ys
+TBLE
+0 57.67 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0071-030-868' nm 'Friction' cs 'P03_DWP_2A0071-030-868'
+lt ys
+TBLE
+0 55.15 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0023-050-589_a' nm 'Friction' cs 'P03_DWP_2A0023-050-589_a'
+lt ys
+TBLE
+0 56.37 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0304-130_a' nm 'Friction' cs 'P03_DWP_3A0304-130_a'
+lt ys
+TBLE
+0 58.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_3A0195-340_a' nm 'Friction' cs 'P03_DWP_3A0195-340_a'
+lt ys
+TBLE
+0 57.34 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_BC11_b' nm 'Friction' cs 'P03_DWP_BC11_b'
+lt ys
+TBLE
+2 54.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0045-010-1088' nm 'Friction' cs 'P03_DWP_2A0045-010-1088'
+lt ys
+TBLE
+0 74.6 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'DWP_2A0016120_a' nm 'Friction' cs 'P03_DWP_2A0016120_a'
+lt ys
+TBLE
+0 62.81 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'TW_DWP_2A0150-070-26' nm 'Friction' cs 'P03_TW_DWP_2A0150-070-26'
+lt ys
+TBLE
+25 38.73 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0202-060' nm 'P03_Friction' cs 'P03_DWP_3A0202-060'
+lt ys
+TBLE
+0 54.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0095-550-4_a' nm 'P03_Friction' cs 'P03_DWP_3A0095-550-4_a'
+lt ys
+TBLE
+0 63.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0262-020' nm 'P03_Friction' cs 'P03_DWP_3A0262-020'
+lt ys
+TBLE
+0 60.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0195-050' nm 'P03_Friction' cs 'P03_DWP_3A0195-050'
+lt ys
+TBLE
+0 54.28 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-230_b' nm 'P03_Friction' cs 'P03_DWP_3A0300-230_b'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-230_a' nm 'P03_Friction' cs 'P03_DWP_3A0300-230_a'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0292-100_c' nm 'P03_Friction' cs 'P03_DWP_3A0292-100_c'
+lt ys
+TBLE
+0 57.69 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_20105025' nm 'P03_Friction' cs 'P03_DWP_20105025'
+lt ys
+TBLE
+0 53.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-040_a' nm 'P03_Friction' cs 'P03_DWP_3A0300-040_a'
+lt ys
+TBLE
+0 54.27 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0310-160_a' nm 'P03_Friction' cs 'P03_DWP_3A0310-160_a'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0306-010_c' nm 'P03_Friction' cs 'P03_DWP_3A0306-010_c'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0327-050' nm 'P03_Friction' cs 'P03_DWP_3A0327-050'
+lt ys
+TBLE
+0 57.21 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0327-030' nm 'P03_Friction' cs 'P03_DWP_3A0327-030'
+lt ys
+TBLE
+0 55.78 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-010' nm 'P03_Friction' cs 'P03_DWP_3A0317-010'
+lt ys
+TBLE
+0 57.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-050' nm 'P03_Friction' cs 'P03_DWP_3A0317-050'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-070' nm 'P03_Friction' cs 'P03_DWP_3A0317-070'
+lt ys
+TBLE
+0 56.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-210' nm 'P03_Friction' cs 'P03_DWP_3A0242-210'
+lt ys
+TBLE
+0 57.01 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-208' nm 'P03_Friction' cs 'P03_DWP_3A0242-208'
+lt ys
+TBLE
+0 58.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-070' nm 'P03_Friction' cs 'P03_DWP_3A0242-070'
+lt ys
+TBLE
+0 57.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-100' nm 'P03_Friction' cs 'P03_DWP_3A0173-100'
+lt ys
+TBLE
+0 55.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-095' nm 'P03_Friction' cs 'P03_DWP_3A0173-095'
+lt ys
+TBLE
+0 58.48 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0217-010' nm 'P03_Friction' cs 'P03_DWP_3A0217-010'
+lt ys
+TBLE
+0 55.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_BC3' nm 'P03_Friction' cs 'P03_DWP_BC3'
+lt ys
+TBLE
+4 56.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0153-030-24' nm 'P03_Friction' cs 'P03_DWP_3A0153-030-24'
+lt ys
+TBLE
+0 54 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-020-58_a' nm 'P03_Friction' cs 'P03_DWP_3A0151-020-58_a'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-020-58_b' nm 'P03_Friction' cs 'P03_DWP_3A0151-020-58_b'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-030-55' nm 'P03_Friction' cs 'P03_DWP_3A0151-030-55'
+lt ys
+TBLE
+0 55.12 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0172-010-5' nm 'P03_Friction' cs 'P03_DWP_3A0172-010-5'
+lt ys
+TBLE
+0 65.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0095-520-499' nm 'P03_Friction' cs 'P03_DWP_3A0095-520-499'
+lt ys
+TBLE
+0 62.45 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0184-030' nm 'P03_Friction' cs 'P03_DWP_3A0184-030'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0277-340' nm 'P03_Friction' cs 'P03_DWP_3A0277-340'
+lt ys
+TBLE
+0 59.23 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-070' nm 'P03_Friction' cs 'P03_DWP_3A0204-070'
+lt ys
+TBLE
+0 60.4 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0073-001-897' nm 'P03_Friction' cs 'P03_DWP_3A0073-001-897'
+lt ys
+TBLE
+0 58.38 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0163-005-35_b' nm 'P03_Friction' cs 'P03_DWP_3A0163-005-35_b'
+lt ys
+TBLE
+0 62.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-150' nm 'P03_Friction' cs 'P03_DWP_3A0204-150'
+lt ys
+TBLE
+0 56.83 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-130' nm 'P03_Friction' cs 'P03_DWP_3A0204-130'
+lt ys
+TBLE
+0 57.64 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0315-090_a' nm 'P03_Friction' cs 'P03_DWP_3A0315-090_a'
+lt ys
+TBLE
+0 58.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_dwpBS1_d' nm 'P03_Friction' cs 'P03_DWP_dwpBS1_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_dwpBS2_d' nm 'P03_Friction' cs 'P03_DWP_dwpBS2_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-550' nm 'P03_Friction' cs 'P03_DWP_3A0173-550'
+lt ys
+TBLE
+0 72.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0091-040-737_a' nm 'P03_Friction' cs 'P03_DWP_2A0091-040-737_a'
+lt ys
+TBLE
+0 55.53 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0187-020_1' nm 'P03_Friction' cs 'P03_DWP_3A0187-020_1'
+lt ys
+TBLE
+0 58.76 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0303-010' nm 'P03_Friction' cs 'P03_DWP_3A0303-010'
+lt ys
+TBLE
+0 53.95 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0303-020' nm 'P03_Friction' cs 'P03_DWP_3A0303-020'
+lt ys
+TBLE
+0 57.67 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0071-030-868' nm 'P03_Friction' cs 'P03_DWP_2A0071-030-868'
+lt ys
+TBLE
+0 55.15 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0023-050-589_a' nm 'P03_Friction' cs 'P03_DWP_2A0023-050-589_a'
+lt ys
+TBLE
+0 56.37 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0304-130_a' nm 'P03_Friction' cs 'P03_DWP_3A0304-130_a'
+lt ys
+TBLE
+0 58.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0195-340_a' nm 'P03_Friction' cs 'P03_DWP_3A0195-340_a'
+lt ys
+TBLE
+0 57.34 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_BC11_b' nm 'P03_Friction' cs 'P03_DWP_BC11_b'
+lt ys
+TBLE
+2 54.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0045-010-1088' nm 'P03_Friction' cs 'P03_DWP_2A0045-010-1088'
+lt ys
+TBLE
+0 74.6 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0016120_a' nm 'P03_Friction' cs 'P03_DWP_2A0016120_a'
+lt ys
+TBLE
+0 62.81 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_TW_DWP_2A0150-070-26' nm 'P03_Friction' cs 'P03_TW_DWP_2A0150-070-26'
+lt ys
+TBLE
+25 38.73 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0202-060' nm 'P03_Friction' cs 'P03_DWP_3A0202-060'
+lt ys
+TBLE
+0 54.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0095-550-4_a' nm 'P03_Friction' cs 'P03_DWP_3A0095-550-4_a'
+lt ys
+TBLE
+0 63.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0262-020' nm 'P03_Friction' cs 'P03_DWP_3A0262-020'
+lt ys
+TBLE
+0 60.42 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0195-050' nm 'P03_Friction' cs 'P03_DWP_3A0195-050'
+lt ys
+TBLE
+0 54.28 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-230_b' nm 'P03_Friction' cs 'P03_DWP_3A0300-230_b'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-230_a' nm 'P03_Friction' cs 'P03_DWP_3A0300-230_a'
+lt ys
+TBLE
+0 57.75 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0292-100_c' nm 'P03_Friction' cs 'P03_DWP_3A0292-100_c'
+lt ys
+TBLE
+0 57.69 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_20105025' nm 'P03_Friction' cs 'P03_DWP_20105025'
+lt ys
+TBLE
+0 53.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0300-040_a' nm 'P03_Friction' cs 'P03_DWP_3A0300-040_a'
+lt ys
+TBLE
+0 54.27 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0310-160_a' nm 'P03_Friction' cs 'P03_DWP_3A0310-160_a'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0306-010_c' nm 'P03_Friction' cs 'P03_DWP_3A0306-010_c'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0327-050' nm 'P03_Friction' cs 'P03_DWP_3A0327-050'
+lt ys
+TBLE
+0 57.21 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0327-030' nm 'P03_Friction' cs 'P03_DWP_3A0327-030'
+lt ys
+TBLE
+0 55.78 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-010' nm 'P03_Friction' cs 'P03_DWP_3A0317-010'
+lt ys
+TBLE
+0 57.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-050' nm 'P03_Friction' cs 'P03_DWP_3A0317-050'
+lt ys
+TBLE
+0 56.65 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0317-070' nm 'P03_Friction' cs 'P03_DWP_3A0317-070'
+lt ys
+TBLE
+0 56.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-210' nm 'P03_Friction' cs 'P03_DWP_3A0242-210'
+lt ys
+TBLE
+0 57.01 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-208' nm 'P03_Friction' cs 'P03_DWP_3A0242-208'
+lt ys
+TBLE
+0 58.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0242-070' nm 'P03_Friction' cs 'P03_DWP_3A0242-070'
+lt ys
+TBLE
+0 57.59 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-100' nm 'P03_Friction' cs 'P03_DWP_3A0173-100'
+lt ys
+TBLE
+0 55.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-095' nm 'P03_Friction' cs 'P03_DWP_3A0173-095'
+lt ys
+TBLE
+0 58.48 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0217-010' nm 'P03_Friction' cs 'P03_DWP_3A0217-010'
+lt ys
+TBLE
+0 55.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_BC3' nm 'P03_Friction' cs 'P03_DWP_BC3'
+lt ys
+TBLE
+4 56.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0153-030-24' nm 'P03_Friction' cs 'P03_DWP_3A0153-030-24'
+lt ys
+TBLE
+0 54 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-020-58_a' nm 'P03_Friction' cs 'P03_DWP_3A0151-020-58_a'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-020-58_b' nm 'P03_Friction' cs 'P03_DWP_3A0151-020-58_b'
+lt ys
+TBLE
+0 55.66 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0151-030-55' nm 'P03_Friction' cs 'P03_DWP_3A0151-030-55'
+lt ys
+TBLE
+0 55.12 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0172-010-5' nm 'P03_Friction' cs 'P03_DWP_3A0172-010-5'
+lt ys
+TBLE
+0 65.98 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0095-520-499' nm 'P03_Friction' cs 'P03_DWP_3A0095-520-499'
+lt ys
+TBLE
+0 62.45 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0184-030' nm 'P03_Friction' cs 'P03_DWP_3A0184-030'
+lt ys
+TBLE
+0 62.07 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0277-340' nm 'P03_Friction' cs 'P03_DWP_3A0277-340'
+lt ys
+TBLE
+0 59.23 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-070' nm 'P03_Friction' cs 'P03_DWP_3A0204-070'
+lt ys
+TBLE
+0 60.4 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0073-001-897' nm 'P03_Friction' cs 'P03_DWP_3A0073-001-897'
+lt ys
+TBLE
+0 58.38 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0163-005-35_b' nm 'P03_Friction' cs 'P03_DWP_3A0163-005-35_b'
+lt ys
+TBLE
+0 62.46 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-150' nm 'P03_Friction' cs 'P03_DWP_3A0204-150'
+lt ys
+TBLE
+0 56.83 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0204-130' nm 'P03_Friction' cs 'P03_DWP_3A0204-130'
+lt ys
+TBLE
+0 57.64 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0315-090_a' nm 'P03_Friction' cs 'P03_DWP_3A0315-090_a'
+lt ys
+TBLE
+0 58.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_dwpBS1_d' nm 'P03_Friction' cs 'P03_DWP_dwpBS1_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_dwpBS2_d' nm 'P03_Friction' cs 'P03_DWP_dwpBS2_d'
+lt ys
+TBLE
+0 73.09 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0173-550' nm 'P03_Friction' cs 'P03_DWP_3A0173-550'
+lt ys
+TBLE
+0 72.05 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0091-040-737_a' nm 'P03_Friction' cs 'P03_DWP_2A0091-040-737_a'
+lt ys
+TBLE
+0 55.53 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0187-020_1' nm 'P03_Friction' cs 'P03_DWP_3A0187-020_1'
+lt ys
+TBLE
+0 58.76 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0303-010' nm 'P03_Friction' cs 'P03_DWP_3A0303-010'
+lt ys
+TBLE
+0 53.95 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0303-020' nm 'P03_Friction' cs 'P03_DWP_3A0303-020'
+lt ys
+TBLE
+0 57.67 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0071-030-868' nm 'P03_Friction' cs 'P03_DWP_2A0071-030-868'
+lt ys
+TBLE
+0 55.15 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0023-050-589_a' nm 'P03_Friction' cs 'P03_DWP_2A0023-050-589_a'
+lt ys
+TBLE
+0 56.37 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0304-130_a' nm 'P03_Friction' cs 'P03_DWP_3A0304-130_a'
+lt ys
+TBLE
+0 58.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_3A0195-340_a' nm 'P03_Friction' cs 'P03_DWP_3A0195-340_a'
+lt ys
+TBLE
+0 57.34 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_BC11_b' nm 'P03_Friction' cs 'P03_DWP_BC11_b'
+lt ys
+TBLE
+2 54.9 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0045-010-1088' nm 'P03_Friction' cs 'P03_DWP_2A0045-010-1088'
+lt ys
+TBLE
+0 74.6 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_DWP_2A0016120_a' nm 'P03_Friction' cs 'P03_DWP_2A0016120_a'
+lt ys
+TBLE
+0 62.81 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+CRFR id 'P03_TW_DWP_2A0150-070-26' nm 'P03_Friction' cs 'P03_TW_DWP_2A0150-070-26'
+lt ys
+TBLE
+25 38.73 <
+tble
+ft ys
+TBLE
+7 30 <
+tble
+fr ys
+TBLE
+7 30 <
+tble crfr
+BDFR id '1419' ci 'URB_1419' mf 4 mt cp 0  .003 0 mr cp 0  .003 0 s1 6 s2 6               bdfr
+BDFR id '1466' ci 'URB_1466' mf 4 mt cp 0  .003 0 mr cp 0  .003 0 s1 6 s2 6               bdfr
+BDFR id 'P03_WTG_206649' ci 'P03_WTG_206649' mf 1 mt cp 0 0.0333 0 mr cp 0 0.0333 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004518' ci 'P03_WTG_004518' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_257' ci 'P03_257' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004573' ci 'P03_WTG_004573' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004706' ci 'P03_WTG_004706' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007341' ci 'P03_WTG_007341' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004630' ci 'P03_WTG_004630' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004693' ci 'P03_WTG_004693' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_258' ci 'P03_258' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005292' ci 'P03_WTG_005292' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004546' ci 'P03_WTG_004546' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004555' ci 'P03_WTG_004555' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004619' ci 'P03_WTG_004619' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004625' ci 'P03_WTG_004625' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005281' ci 'P03_WTG_005281' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007206' ci 'P03_WTG_007206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_264' ci 'P03_264' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007231' ci 'P03_WTG_007231' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007243' ci 'P03_WTG_007243' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007338' ci 'P03_WTG_007338' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004517' ci 'P03_WTG_004517' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004520' ci 'P03_WTG_004520' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004534' ci 'P03_WTG_004534' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004594' ci 'P03_WTG_004594' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_028040' ci 'P03_WTG_028040' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_032322' ci 'P03_WTG_032322' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004508' ci 'P03_WTG_004508' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_473' ci 'P03_473' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004603' ci 'P03_WTG_004603' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_238' ci 'P03_238' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004716' ci 'P03_WTG_004716' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004519' ci 'P03_WTG_004519' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005293' ci 'P03_WTG_005293' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_208107' ci 'P03_WTG_208107' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004544' ci 'P03_WTG_004544' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_265' ci 'P03_265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005265' ci 'P03_WTG_005265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005279' ci 'P03_WTG_005279' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_259' ci 'P03_259' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_029206' ci 'P03_WTG_029206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_111405' ci 'P03_WTG_111405' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004541' ci 'P03_WTG_004541' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_032323' ci 'P03_WTG_032323' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_261' ci 'P03_261' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_270' ci 'P03_270' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004559' ci 'P03_WTG_004559' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_256' ci 'P03_256' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004626' ci 'P03_WTG_004626' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_2' ci 'P03_bw_TLW084_2' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_3' ci 'P03_bw_TLW084_3' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_4' ci 'P03_bw_TLW084_4' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_6' ci 'P03_bw_TLW084_6' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_7' ci 'P03_bw_TLW084_7' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_8' ci 'P03_bw_TLW084_8' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_9' ci 'P03_bw_TLW084_9' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_5' ci 'P03_bw_TLW084_5' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_1' ci 'P03_bw_TLW084_1' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_206649' ci 'P03_WTG_206649' mf 1 mt cp 0 0.0333 0 mr cp 0 0.0333 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004518' ci 'P03_WTG_004518' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_257' ci 'P03_257' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004573' ci 'P03_WTG_004573' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004706' ci 'P03_WTG_004706' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007341' ci 'P03_WTG_007341' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004630' ci 'P03_WTG_004630' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004693' ci 'P03_WTG_004693' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_258' ci 'P03_258' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005292' ci 'P03_WTG_005292' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004546' ci 'P03_WTG_004546' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004555' ci 'P03_WTG_004555' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004619' ci 'P03_WTG_004619' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004625' ci 'P03_WTG_004625' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005281' ci 'P03_WTG_005281' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007206' ci 'P03_WTG_007206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_264' ci 'P03_264' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007231' ci 'P03_WTG_007231' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007243' ci 'P03_WTG_007243' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_007338' ci 'P03_WTG_007338' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004517' ci 'P03_WTG_004517' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004520' ci 'P03_WTG_004520' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004534' ci 'P03_WTG_004534' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004594' ci 'P03_WTG_004594' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_028040' ci 'P03_WTG_028040' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_032322' ci 'P03_WTG_032322' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004508' ci 'P03_WTG_004508' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_473' ci 'P03_473' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004603' ci 'P03_WTG_004603' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_238' ci 'P03_238' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004716' ci 'P03_WTG_004716' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004519' ci 'P03_WTG_004519' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005293' ci 'P03_WTG_005293' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_208107' ci 'P03_WTG_208107' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004544' ci 'P03_WTG_004544' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_265' ci 'P03_265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005265' ci 'P03_WTG_005265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_005279' ci 'P03_WTG_005279' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_259' ci 'P03_259' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_029206' ci 'P03_WTG_029206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_111405' ci 'P03_WTG_111405' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004541' ci 'P03_WTG_004541' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_032323' ci 'P03_WTG_032323' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_261' ci 'P03_261' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_270' ci 'P03_270' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004559' ci 'P03_WTG_004559' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_256' ci 'P03_256' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_WTG_004626' ci 'P03_WTG_004626' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_2' ci 'P03_bw_TLW084_2' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_3' ci 'P03_bw_TLW084_3' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_4' ci 'P03_bw_TLW084_4' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_6' ci 'P03_bw_TLW084_6' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_7' ci 'P03_bw_TLW084_7' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_8' ci 'P03_bw_TLW084_8' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_9' ci 'P03_bw_TLW084_9' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_5' ci 'P03_bw_TLW084_5' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'P03_bw_TLW084_1' ci 'P03_bw_TLW084_1' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '473' ci '473' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '4' ci '4' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '257' ci '257' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004573' ci 'WTG_004573' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004706' ci 'WTG_004706' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '258' ci '258' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_007341' ci 'WTG_007341' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004630' ci 'WTG_004630' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004693' ci 'WTG_004693' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '265' ci '265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004555' ci 'WTG_004555' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004619' ci 'WTG_004619' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004625' ci 'WTG_004625' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_005281' ci 'WTG_005281' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_007206' ci 'WTG_007206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '264' ci '264' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_007231' ci 'WTG_007231' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_007243' ci 'WTG_007243' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_007338' ci 'WTG_007338' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004517' ci 'WTG_004517' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004519' ci 'WTG_004519' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004520' ci 'WTG_004520' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_206649' ci 'WTG_206649' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004534' ci 'WTG_004534' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004594' ci 'WTG_004594' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_028040' ci 'WTG_028040' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_032322' ci 'WTG_032322' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004603' ci 'WTG_004603' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '238' ci '238' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004716' ci 'WTG_004716' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '13' ci '13' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_005293' ci 'WTG_005293' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_208107' ci 'WTG_208107' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '31' ci '31' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004544' ci 'WTG_004544' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '21' ci '21' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_005265' ci 'WTG_005265' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_005279' ci 'WTG_005279' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '259' ci '259' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_029206' ci 'WTG_029206' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_111405' ci 'WTG_111405' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004541' ci 'WTG_004541' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_032323' ci 'WTG_032323' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '261' ci '261' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004559' ci 'WTG_004559' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '256' ci '256' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004626' ci 'WTG_004626' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_2' ci 'bw_TLW084_2' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_3' ci 'bw_TLW084_3' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_4' ci 'bw_TLW084_4' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_7' ci 'bw_TLW084_7' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_8' ci 'bw_TLW084_8' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_9' ci 'bw_TLW084_9' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_5' ci 'bw_TLW084_5' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_1' ci 'bw_TLW084_1' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'bw_TLW084_6' ci 'bw_TLW084_6' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '270' ci '270' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004546' ci 'WTG_004546' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '26' ci '26' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '14' ci '14' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004508' ci 'WTG_004508' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '8' ci '8' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '9' ci '9' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_005292' ci 'WTG_005292' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id 'WTG_004518' ci 'WTG_004518' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '30' ci '30' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '3' ci '3' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '12' ci '12' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '1' ci '1' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '2' ci '2' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '6' ci '6' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '7' ci '7' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '10' ci '10' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '15' ci '15' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '16' ci '16' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '17' ci '17' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '18' ci '18' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '19' ci '19' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '20' ci '20' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '22' ci '22' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '23' ci '23' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '24' ci '24' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '25' ci '25' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '29' ci '29' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '28' ci '28' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr
+BDFR id '27' ci '27' mf 1 mt cp 0 0.033 0 mr cp 0 0.033 0 s1 6 s2 6 bdfr

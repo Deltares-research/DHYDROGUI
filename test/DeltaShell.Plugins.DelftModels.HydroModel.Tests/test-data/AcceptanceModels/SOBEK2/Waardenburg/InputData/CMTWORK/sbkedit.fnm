@@ -1,0 +1,139 @@
+[Sobek Ascii Layer definition]
+version=2.0
+type=Pluvius
+format=DHV
+
+[General]
+language=0
+lngsbkcheck=D:\SB2_16\Programs\flow\sbkcheck.lng
+logsbkcheck=sbkcheck.log
+viewlog=0
+rtnsbkcheck=sbkcheck.rtn
+hlpsbkedit0=D:\SB2_16\Programs\help\SOBEK_User_Manual.pdf
+hlpsbkedit1=
+hlp3bedit0=D:\SB2_16\Programs\help\SOBEK_User_Manual.pdf
+hlp3bedit1=D:\SB2_16\Programs\help\SOBEK_User_Manual.pdf
+ViewExe=D:\SB2_16\Programs\viewtext.exe
+Settingsfile=\SB2_16\WRD_OPP.LIT\WORK\SETTINGS.DAT
+Settingsini=D:\SB2_16\Programs\settings.ini
+NetworkStatusFile=\SB2_16\WRD_OPP.LIT\17\STATUS.CAS
+NetterRtnFile=netter.rtn
+
+[Initial Conditions layer]
+NrOfFiles=1
+dat=\SB2_16\WRD_OPP.LIT\17\INITIAL.DAT
+
+[Topography layer]
+NrOfFiles=3
+ntw=\SB2_16\WRD_OPP.LIT\17\NETWORK.NTW
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.TP
+cpt=\SB2_16\WRD_OPP.LIT\17\NETWORK.CP
+obi=\SB2_16\WRD_OPP.LIT\17\NETWORK.OBI
+dat=\SB2_16\WRD_OPP.LIT\17\NODES.DAT
+
+[Grid layer]
+NrOfFiles=1
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.GR
+
+[Cross Section layer]
+NrOfFiles=3
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.CR
+def=\SB2_16\WRD_OPP.LIT\17\PROFILE.DEF
+dat=\SB2_16\WRD_OPP.LIT\17\PROFILE.DAT
+
+[Condition layer]
+NrOfFiles=4
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.CN
+dat=\SB2_16\WRD_OPP.LIT\17\BOUNDARY.DAT
+lat=\SB2_16\WRD_OPP.LIT\17\LATERAL.DAT
+tbl=\SB2_16\WRD_OPP.LIT\17\BOUNDLAT.DAT
+
+[Structure layer]
+NrOfFiles=7
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.ST
+def=\SB2_16\WRD_OPP.LIT\17\STRUCT.DEF
+cnt=\SB2_16\WRD_OPP.LIT\17\CONTROL.DEF
+trg=\SB2_16\WRD_OPP.LIT\17\TRIGGER.DEF
+cmp=\SB2_16\WRD_OPP.LIT\17\STRUCT.CMP
+dat=\SB2_16\WRD_OPP.LIT\17\STRUCT.DAT
+vlv=\SB2_16\WRD_OPP.LIT\17\VALVE.TAB
+
+[Friction layer]
+NrOfFiles=1
+dat=\SB2_16\WRD_OPP.LIT\17\FRICTION.DAT
+exr=\SB2_16\WRD_OPP.LIT\17\FRICTION.DAT
+wnd=\SB2_16\WRD_OPP.LIT\17\WND_LOC.DAT
+
+[Meteo layer]
+NrOfFiles=1
+rai=\SB2_16\FIXED\STNBUI08.BUI
+
+[Dispersion layer]
+NrOfFiles=0
+
+[Transport layer]
+NrOfFiles=0
+
+[Substance layer]
+NrOfFiles=0
+
+[Measurements]
+NrOfFiles=0
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.ME
+
+[Defaults]
+NrOfFiles=1
+dat=..\fixed\sbkedit.def
+ReplaceDefaults=-1
+DeleteUnusedProfile=0
+
+[Switches]
+AllLatStructModified=-1
+UseRiverProfile=0
+TableAddNrRows=3
+TableAddRows=-1
+
+[Report]
+Generate=2
+Name=
+Options=6
+
+[Quality Layer]
+NrofFiles=1
+net=
+dat=\SB2_16\WRD_OPP.LIT\17\BOUNDWQ.DAT
+glb=\SB2_16\WRD_OPP.LIT\17\BOUNDWQ.GLB
+sub=\SB2_16\WRD_OPP.LIT\17\SUBSTANC.DWQ
+bnd=\SB2_16\WRD_OPP.LIT\17\BOUNDWQ.TYP
+mnt=\SB2_16\WRD_OPP.LIT\17\MONSTAT.WQ
+cof=D:\SB2_16\Programs\Delwaq\fixed\coefedit.dat
+const=\SB2_16\WRD_OPP.LIT\17\CONSTANT.DWQ
+prc=\SB2_16\WRD_OPP.LIT\17\COEFX.DAT
+def=\SB2_16\WRD_OPP.LIT\17\SUBSTANC.DEF
+gdisp=\SB2_16\WRD_OPP.LIT\17\DELWAQ3.INP
+dwldat=\SB2_16\WRD_OPP.LIT\17\LOADSWQ.DAT
+dwltyp=\SB2_16\WRD_OPP.LIT\17\LOADSWQ.TYP
+
+[2D Quality Layer]
+NrofFiles=1
+net=
+dat=\SB2_16\WRD_OPP.LIT\17\2DBNDWQ.DAT
+glb=\SB2_16\WRD_OPP.LIT\17\2DBNDWQ.GLB
+sub=\SB2_16\WRD_OPP.LIT\17\SUBSTANC.DWQ
+state=\SB2_16\WRD_OPP.LIT\17\SUBSTATE.SUB
+bnd=\SB2_16\WRD_OPP.LIT\17\2DBNDWQ.TYP
+mnt=\SB2_16\WRD_OPP.LIT\17\2DMONST.WQ
+cof=D:\SB2_16\Programs\Delwaq\fixed\coefedit.dat
+const=\SB2_16\WRD_OPP.LIT\17\2DCONST.DWQ
+prc=\SB2_16\WRD_OPP.LIT\17\2DCOEFX.DAT
+def=\SB2_16\WRD_OPP.LIT\17\SUBSTANC.DEF
+gdisp=\SB2_16\WRD_OPP.LIT\17\2DDLWQ3.INP
+ldisp=\SB2_16\WRD_OPP.LIT\17\2DDISPX.DAT
+init=\SB2_16\WRD_OPP.LIT\17\2DINIT.DAT
+par=\SB2_16\WRD_OPP.LIT\17\2DPARAM.DAT
+
+[FLS layer]
+NrofFiles=1
+net=\SB2_16\WRD_OPP.LIT\17\NETWORK.D12
+dat=\SB2_16\WRD_OPP.LIT\17\NETWORK.D12
+

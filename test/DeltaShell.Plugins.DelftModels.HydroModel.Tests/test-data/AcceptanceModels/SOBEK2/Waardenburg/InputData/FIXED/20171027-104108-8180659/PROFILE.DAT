@@ -1,0 +1,6 @@
+CRSN id 'l_URB_15-H711A_15-H711' di 'Round 500 mm'  rl  1.33 ll  1.4               crsn
+CRSN id 'l_URB_15-R0OVc2_15-R0OVU' di 'Round 700 mm'  rl  .54 ll  .54               crsn
+CRSN id 'URB_13-680O' di 'Round 300 mm' rl  1.45 ll  1.45             crsn
+CRSN id 'DWP_3A0206-020' di 'P03_TW_DWP_3A0206-020' rl 0 rs 3.22   crsn
+CRSN id 'DWP_3A0217-010' di 'P03_TW_DWP_3A0217-010' rl 0 rs 2.82   crsn
+CRSN id '33' di 'P03_TW_DWP_3A0217-010' rl 0 rs 3.32   crsn

@@ -1,0 +1,12 @@
+STDS id '16-650Bc1-16-650Bc2' nm '16-650Bc1-16-650Bc2' ty 7 cl  1.6 cw  .25 gh  1.85 mu  .6 sc .7853982 rt  1               stds
+STDS id '16-D045c1-16-D045c2' nm '' ty 6 cl 1.97 cw 1 ce 0.8 sc 1 rt 0          stds
+STDS id '16-R016c1-16-R016c2' nm '' ty 6 cl 2.02 cw 1 ce 0.8 sc 1 rt 0          stds
+STDS id 'l_1' nm '' ty 9 dn 1 pu 3 rt cr 0 1 0 ct lt 1
+TBLE
+1.536111E-02 0.07 -0.43 0 0 <
+tble     stds
+STDS id 'P02_l_12-501O_12-501OU' nm '' ty 6 cl 1.83 cw 1 ce 0.8 sc 1 rt 0             stds
+STDS id 'l_3' nm '' ty 9 dn 1 pu 3 rt cr 0 1 0 ct lt 1
+TBLE
+8.138889E-03 0.55 0.05 0 0 <
+tble          stds

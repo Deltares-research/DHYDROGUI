@@ -1,0 +1,13 @@
+DLF1.0
+[Flow Module: Levels and Flows]
+FILE "\SB2_16\WRD_OPP.LIT\17\CALCPNT.HIS"      LAYER " " TYPE node VAR 1 HISLOC 2                 = Results at Nodes
+FILE "\SB2_16\WRD_OPP.LIT\17\REACHSEG.HIS"     LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Reach Segments
+FILE "\SB2_16\WRD_OPP.LIT\17\RSEGSUB.HIS"      LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Results at Sub Sections
+FILE "\SB2_16\WRD_OPP.LIT\17\QLAT.HIS"         LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Lateral Flows
+FILE "\SB2_16\WRD_OPP.LIT\17\STRUC.HIS"        LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Results at Structures and Extra Resistances
+FILE "\SB2_16\WRD_OPP.LIT\17\MEASSTAT.HIS"     LAYER " " TYPE network VAR 1 HISLOC 2              = Results at Measurement Stations
+FILE "\SB2_16\WRD_OPP.LIT\17\FLOWANAL.HIS"    LAYER " " TYPE reachgridvirtual VAR 6 HISLOC 2     = Simulation Info at the Reach Segments
+[Flow Module: Dimensions]
+FILE "\SB2_16\WRD_OPP.LIT\17\CALCDIM.HIS"      LAYER " " TYPE node VAR 1 HISLOC 2                 = Nodes
+FILE "\SB2_16\WRD_OPP.LIT\17\REACHDIM.HIS"     LAYER " " TYPE reachgridvirtual VAR 1 HISLOC 2     = Reach Segments
+FILE "\SB2_16\WRD_OPP.LIT\17\STRUCDIM.HIS"     LAYER " " TYPE network VAR 1 HISLOC 2 LINKSEP "l_" = Structures

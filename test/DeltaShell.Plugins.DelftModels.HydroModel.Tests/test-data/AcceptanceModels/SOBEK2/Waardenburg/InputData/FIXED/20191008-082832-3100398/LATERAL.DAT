@@ -1,0 +1,46 @@
+FLNO id 'TLW084_4'  18 lt 18 dc lt 0 0 0 flno
+FLNO id 'TLW084_5'  56 lt 56 dc lt 0 0 0 flno
+FLNO id 'TLW084_8'  101 lt 101 dc lt 0 0 0 flno
+FLNO id 'TLW084_3'  157 lt 157 dc lt 0 0 0 flno
+FLNO id 'TLW084_9'  195 lt 195 dc lt 0 0 0 flno
+FLNO id 'TLW084_1'  196 lt 196 dc lt 0 0 0 flno
+FLNO id 'TLW084_7'  271 lt 271 dc lt 0 0 0 flno
+FLNO id 'TLW084_2'  277 lt 277 dc lt 0 0 0 flno
+FLNO id 'TLW084_6'  299 lt 299 dc lt 0 0 0 flno
+FLBR id 'neerslag_TLW084_1' sc 0 lt 352 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 20700 flbr
+FLBR id 'neerslag_TLW084_2' sc 0 lt 353 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 14700 flbr
+FLBR id 'neerslag_TLW084_3' sc 0 lt 354 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 19100 flbr
+FLBR id 'neerslag_TLW084_4' sc 0 lt 355 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 19500 flbr
+FLBR id 'neerslag_TLW084_5' sc 0 lt 356 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 25400 flbr
+FLBR id 'neerslag_TLW084_6' sc 0 lt 357 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 15600 flbr
+FLBR id 'neerslag_TLW084_7' sc 0 lt 358 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 24700 flbr
+FLBR id 'neerslag_TLW084_8' sc 0 lt 359 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 14700 flbr
+FLBR id 'neerslag_TLW084_9' sc 0 lt 360 dc lt 7 ir 0 ms 'De Bilt' ii 0 ar 8100 flbr
+FLBR id 'VDM_TLW084_6' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_3' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_5' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_2' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_4' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_8' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_9' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_1' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'VDM_TLW084_7' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_1_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_2_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_3_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_4_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_5_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_6_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_7_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_8_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'kwel_TLW084_9_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_1_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_2_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_3_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_4_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_5_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_6_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_7_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_8_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'DRN_TLW084_9_bw' sc 0 lt 0 dc lt 0 0 0 flbr
+FLBR id 'GGB_TLW084_1' sc 0 lt 0 dc lt 6 ir  0.0001 ms '' ii  0 ar  45000 flbr
