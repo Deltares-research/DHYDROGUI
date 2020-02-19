@@ -497,6 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteBc1DFile(IEnumerable<IDelftIniCategory> generateModel1DNodeBoundaryDelftIniCategories, string filename, DelftBcWriter delftBcWriter)
         {
             var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories.ToList();
+            model1DNodeBoundaryDelftIniCategories = model1DNodeBoundaryDelftIniCategories.Except(model1DNodeBoundaryDelftIniCategories.OfType<DelftBcCategory>().Where(bc => bc.Table.Count == 0)).ToList();
             if (!File.Exists(filename))
             {
                 var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
