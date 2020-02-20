@@ -2,7 +2,7 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface IBridge : IStructure1D, IFrictionData, IGroundLayer
+    public interface IBridge : IStructureWithCrossSectionDefinition, IFrictionData, IGroundLayer
     {
         string Name { get; set; }
         string LongName { get; set; }
@@ -102,11 +102,14 @@ namespace DelftTools.Hydro.Structures
         /// Pillar (used for databinding). Use bridgegeometrytype to find out about geometry etc
         /// </summary>
         bool IsPillar { get; set; }
-        
+    }
+
+    public interface IStructureWithCrossSectionDefinition: IStructure1D
+    {
         /// <summary>
         /// Cross Section Definition as used for ini (filewriter).
         /// </summary>
-        ICrossSectionDefinition CrossSectionDefinition { get; }
+        ICrossSectionDefinition CrossSectionDefinition { get; set; }
     }
 
     public enum BridgeType

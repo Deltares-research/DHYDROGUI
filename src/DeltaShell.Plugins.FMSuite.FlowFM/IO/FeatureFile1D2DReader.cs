@@ -18,9 +18,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections)
         {
+            ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
             ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
-            ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
             ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections);
             ReadRetentionsFile(targetMduFilePath, modelDefinition, network);
         }

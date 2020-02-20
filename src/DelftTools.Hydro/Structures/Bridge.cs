@@ -57,6 +57,29 @@ namespace DelftTools.Hydro.Structures
                 UpdateCrossSectionDefinition(bridgeType);
                 return crossSectionDefinition;
             }
+            set
+            {
+                switch (value)
+                {
+                    case null:
+                        UpdateCrossSectionDefinition(bridgeType);
+                        break;
+                    case CrossSectionDefinitionStandard definitionStandard:
+                        if(definitionStandard.ShapeType != CrossSectionStandardShapeType.Rectangle)
+                            UpdateCrossSectionDefinition(bridgeType);
+                        else
+                        {
+                            Width = ((CrossSectionStandardShapeRectangle)definitionStandard.Shape).Width;
+                            Height = ((CrossSectionStandardShapeRectangle)definitionStandard.Shape).Height;
+                        }
+                        BridgeType = BridgeType.Rectangle;
+                        break;
+                    case CrossSectionDefinitionZW definitionZw:
+                        TabulatedCrossSectionDefinition = definitionZw;
+                        BridgeType = BridgeType.Tabulated;
+                        break;
+                }
+            }
         }
 
         /// <summary>
