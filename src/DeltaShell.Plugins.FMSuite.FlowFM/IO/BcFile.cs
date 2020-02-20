@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -498,22 +499,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var model1DNodeBoundaryDelftIniCategories = generateModel1DNodeBoundaryDelftIniCategories.ToList();
             model1DNodeBoundaryDelftIniCategories = model1DNodeBoundaryDelftIniCategories.Except(model1DNodeBoundaryDelftIniCategories.OfType<DelftBcCategory>().Where(bc => bc.Table.Count == 0)).ToList();
+            FileUtils.DeleteIfExists(filename);
             if (!File.Exists(filename))
             {
                 var generalRegion = GeneralRegionGenerator.GenerateGeneralRegion(
                     GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
                     GeneralRegion.FileTypeName.BoundaryConditions);
                 new IniFileWriter().WriteIniFile(new[] {generalRegion}, filename);
-            }
-            else
-            {
-                var existing = new DelftBcReader().ReadDelftBcFile(filename);
-                foreach (var delftBcCategory in existing)
-                {
-                    model1DNodeBoundaryDelftIniCategories.RemoveAllWhere(dic =>
-                        dic.GetPropertyValue(BoundaryRegion.Name.Key) ==
-                        delftBcCategory.GetPropertyValue(BoundaryRegion.Name.Key));
-                }
             }
 
             delftBcWriter.WriteBcFile(model1DNodeBoundaryDelftIniCategories, filename);

@@ -92,9 +92,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 
             IDefinitionGeneratorBoundary definitionGenerator = new DefinitionGeneratorBoundary(bcBoundaryHeader);
             string name = string.Empty;
+            var isManhole = false;
             if (boundaryNodeData.Node is Manhole manhole)
             {
                 name = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault()?.Name;
+                isManhole = true;
             }
             else
             {
@@ -102,6 +104,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             }
 
             var boundaryDefinition = definitionGenerator.CreateRegion(name, functionType, interpolationType, periodic);
+            if (isManhole)
+            {
+                boundaryDefinition.AddProperty("manHoleName", boundaryNodeData.Node.Name);
+            }
 
             switch (boundaryNodeData.DataType)
             {

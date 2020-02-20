@@ -44,16 +44,37 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var model1DBoundaryNodeDatas = boundaryConditions as Model1DBoundaryNodeData[] ?? boundaryConditions.ToArray();
                     var waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == name);
                     if (waterFlowModel1DBoundaryNodeData == null)
-                        continue; //throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
+                    {
+                        var manHoleName = boundaryCategory.ReadProperty<string>("manHoleName", true);
+                        if (manHoleName == null) continue;
+                        waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == manHoleName);
+                        if (waterFlowModel1DBoundaryNodeData == null)
+                            continue; //throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
+                    }
+
                     if (waterFlowModel1DBoundaryNodeData.Node is Manhole manhole)
                     {
-                        var outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
-                        if (outlet == null)
+                        var compartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));// name is compartment name not node name
+                        OutletCompartment outlet = null;
+                        
+                        if (compartment == null)
                         {
-                            var compartment = manhole.Compartments.FirstOrDefault();
-                            if (compartment != null) manhole.UpdateCompartmentToOutletCompartment(compartment);
+                            outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+                            if (outlet == null)
+                            {
+                                compartment = manhole.Compartments.FirstOrDefault();
+                                if (compartment != null) manhole.UpdateCompartmentToOutletCompartment(compartment);
+                            }
+
+                            outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
                         }
-                        outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+
+                        if (compartment is Compartment)
+                        {
+                            manhole.UpdateCompartmentToOutletCompartment(compartment);
+                            outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault(oc => oc.Name.Equals(compartment.Name, StringComparison.InvariantCultureIgnoreCase));
+                        }
+
                         if (outlet != null) waterFlowModel1DBoundaryNodeData.Attributes["Compartment"] = outlet;
                     }
                     ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundaryCategory);

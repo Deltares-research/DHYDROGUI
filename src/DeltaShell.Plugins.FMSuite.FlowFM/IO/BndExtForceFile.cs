@@ -475,7 +475,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     quantityName = delftBcQuantityData?.Quantity?.Value;
                 }
                 var nodeId = generateModel1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
-                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc =>bc.Feature.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
+                var manHoleName = generateModel1DNodeBoundaryDelftIniCategory.ReadProperty<string>("manHoleName", true);
+
+                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.Equals(manHoleName ?? nodeId, StringComparison.InvariantCultureIgnoreCase));
+
                 if (m1dbnd != null && m1dbnd.Attributes.ContainsKey("Compartment") && m1dbnd.Attributes["Compartment"] is OutletCompartment outletCompartment)
                 {
                     nodeId = outletCompartment.Name;
