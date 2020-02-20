@@ -741,6 +741,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     }
                 }
             }
+            
+            logHandler.LogReport();
         }
 
         private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)

@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -859,7 +860,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 var mdwFile = new MdwFile();
 
                 // Call
-                WaveModelDefinition result = mdwFile.Load(legacyFile);
+                WaveModelDefinition result = null; 
+
+                void Call() => result = mdwFile.Load(legacyFile);
+
+                List<string> logMessages =
+                    TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+
 
                 // Assert
                 WaveModelProperty timeFrameProperty =
@@ -874,6 +881,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"), 
                             Is.False,
                             "Expected no property with the file name TScale");
+
+                string expectedMsg = string.Format(
+                    Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
+                    "TScale", "TimeInterval");
+                Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }
         }
     }
