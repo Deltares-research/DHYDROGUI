@@ -22,6 +22,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             return new Bridge
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : GetBridgeTypeFromShapeType(standardCrossSectionDefinition?.ShapeType),

@@ -24,6 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var orifice = new Orifice
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
@@ -52,6 +53,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var weir = new Weir
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 CrestLevel = category.ReadProperty<double>(StructureRegion.CrestLevel.Key, true),
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,

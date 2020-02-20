@@ -16,6 +16,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var pump = new Pump
             {
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
+                LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
                 Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
                 DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key)?.ToLower() == "positive",
