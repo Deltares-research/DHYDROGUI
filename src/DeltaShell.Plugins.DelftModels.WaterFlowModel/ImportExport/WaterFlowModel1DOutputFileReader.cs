@@ -2,27 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Store1D;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ModelApiControllers.ModelApi;
 using DeltaShell.Plugins.DelftModels.WaterFlowModel.Validation;
 
 namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 {
-    public class WaterFlowModel1DOutputFileReader : Output1DFileReader<LocationMetaData, WaterFlow1DTimeDependentVariableMetaData>
+    public class WaterFlowModel1DOutputFileReader : Output1DFileReader<WaterFlow1DTimeDependentVariableMetaData>
     {
         public WaterFlowModel1DOutputFileReader()
         {
             timeVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.Time;
             timeDimensionNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.DimensionKeys.Time;
-            cfRoleAttributeNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.CfRole;
-            cfRoleAttributeValueInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeValues.CfRole;
-            branchidVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.BranchId;
-            chainageVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.Chainage;
-            xNodeCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.XCoordinate;
-            yNodeCoordinateVariableNameInNetCDFFile = WaterFlowModel1DOutputFileConstants.VariableNames.YCoordinate;
             unitsAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.Units;
             timeVariableUnitValuePrefixInNetCdfFile = WaterFlowModel1DOutputFileConstants.TimeVariableUnitValuePrefix;
             dateTimeFormat = WaterFlowModel1DOutputFileConstants.DateTimeFormat;
@@ -31,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
         private string aggregationOptionAttributeKeyNameInNetCdfFile = WaterFlowModel1DOutputFileConstants.AttributeKeys.AggregationOption;
 
-        public override OutputFile1DMetaData<LocationMetaData, WaterFlow1DTimeDependentVariableMetaData> ReadMetaData(string path, bool doValidation = true)
+        public override OutputFile1DMetaData<WaterFlow1DTimeDependentVariableMetaData> ReadMetaData(string path, bool doValidation = true)
         {
             if (doValidation)
             {

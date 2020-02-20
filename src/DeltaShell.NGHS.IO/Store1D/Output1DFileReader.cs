@@ -8,36 +8,25 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public abstract class Output1DFileReader<T, U> : IOutput1DFileReader<T, U> where T : ILocationMetaData, new() where U: ITimeDependentVariableMetaDataBase, new()
+    public abstract class Output1DFileReader<U> : IOutput1DFileReader<U> where U: ITimeDependentVariableMetaDataBase, new()
     {
         protected string timeVariableNameInNetCDFFile;
         protected string timeDimensionNameInNetCdfFile;
-        protected string cfRoleAttributeNameInNetCdfFile;
-        protected string cfRoleAttributeValueInNetCdfFile;
-        protected string branchidVariableNameInNetCDFFile;
-        protected string chainageVariableNameInNetCDFFile;
-        protected string edgeIdVariableNameInNetCDFFile;
-        protected string edgeBranchidVariableNameInNetCDFFile;
-        protected string edgeChainageVariableNameInNetCDFFile;
-        protected string xNodeCoordinateVariableNameInNetCDFFile;
-        protected string yNodeCoordinateVariableNameInNetCDFFile;
-        protected string xEdgeCoordinateVariableNameInNetCDFFile;
-        protected string yEdgeCoordinateVariableNameInNetCDFFile;
         protected string unitsAttributeKeyNameInNetCdfFile;
         protected string timeVariableUnitValuePrefixInNetCdfFile;
         protected string dateTimeFormat;
         protected string longNameAttributeKeyNameInNetCdfFile;
         
-        public virtual OutputFile1DMetaData<T, U> ReadMetaData(string path, bool doValidation = true)
+        public virtual OutputFile1DMetaData<U> ReadMetaData(string path, bool doValidation = true)
         {
             var times = ReadTimesFromNetCdfFile(path);
             var timeDependentVariableMetaData = ReadTimeDependentVariableMetaDataFromNetCdfFile(path);
             var locationMetaData = ReadLocationMetaDataFromNetCdfFile(timeDependentVariableMetaData, path);
 
-            return new OutputFile1DMetaData<T, U>(times, locationMetaData, timeDependentVariableMetaData);
+            return new OutputFile1DMetaData<U>(times, locationMetaData, timeDependentVariableMetaData);
         }
 
-        public double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<T, U> metaData)
+        public double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<U> metaData)
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
@@ -88,100 +77,67 @@ namespace DeltaShell.NGHS.IO.Store1D
             });
         }
 
-        private IDictionary<U, IList<T>> ReadLocationMetaDataFromNetCdfFile(IList<U> timeDependentVariableMetaData,
-            string path)
+        private IDictionary<U, IList<LocationMetaData>> ReadLocationMetaDataFromNetCdfFile(IList<U> timeDependentVariableMetaData, string path)
         {
             return DoWithNetCdfFile(path, (outputFile, timeDependentVariableMetaDatas) =>
             {
-                var retVal = new Dictionary<U, IList<T>>();
-                var netCdfVariables = outputFile.GetVariables().ToList();
+                var result = new Dictionary<U, IList<LocationMetaData>>();
+                
                 foreach (var timeDependentVariableMetaDataBase in timeDependentVariableMetaData)
                 {
                     var variable = outputFile.GetVariableByName(timeDependentVariableMetaDataBase.Name);
+                    
                     var netCdfDimensions = outputFile.GetDimensions(variable).ToList();
                     if (netCdfDimensions.Count != 2) continue;
+
                     var secondDimension = netCdfDimensions.LastOrDefault();
                     if (secondDimension == null) continue;
+
                     var secondDimensionName = outputFile.GetDimensionName(secondDimension);
-                    IEnumerable<NetCdfVariable> vars = netCdfVariables.Where(v => outputFile.GetDimensions(v).FirstOrDefault() != null && outputFile.GetDimensionName(outputFile.GetDimensions(v).First()) == secondDimensionName);
-                    IList<string> locationIds = null;
-                    IList<int> branchIds = null;
-                    IList<double> chainages = null;
-                    IList<double> xCoordinates = null;
-                    IList<double> yCoordinates = null;
 
-                    foreach (var netCdfVariable in vars)
-                    {
+                    var variableNames = new LocationVariableNames(secondDimensionName);
 
-                        // it's necessary to loop through since we don't know what the 'location'_id variable will be called
-                        var variableName = outputFile.GetVariableName(netCdfVariable);
+                    var locationIds = GetLocationData(path,variableNames.id, variableNames.OnNodes);
+                    var branchIds = Parse1DNetCdfVariable<int>(path, variableNames.BranchId);
+                    var chainages = Parse1DNetCdfVariable<double>(path, variableNames.Chainage);
+                    var xCoordinates = Parse1DNetCdfVariable<double>(path, variableNames.XNodeCoordinate);
+                    var yCoordinates = Parse1DNetCdfVariable<double>(path, variableNames.YNodeCoordinate);
 
-                        var attributes = outputFile.GetAttributes(netCdfVariable);
-                        if (attributes.Any(a =>
-                        {
-                            return a.Key == cfRoleAttributeNameInNetCdfFile &&
-                                   a.Value.ToString() == cfRoleAttributeValueInNetCdfFile;
-                        }))
-                        {
-                            // 'location'_id variable identified by CfRole attribute
-                            locationIds = ParseLocationIdVariable(path, variableName);
-                            continue;
-                        }
-
-                        if (variableName == edgeIdVariableNameInNetCDFFile)
-                        {
-                            var list = Parse1DNetCdfVariable<int>(path, variableName).ToList();
-                            var edgeNodesNameIds = new List<string>();
-                            for (int i = 0; i < list.Count; i += 2)
-                            {
-                                edgeNodesNameIds.Add(string.Format("{0}_{1}", list[i].ToString(),
-                                    list[i + 1].ToString()));
-                            }
-
-                            locationIds = edgeNodesNameIds;
-                        }
-
-                        if (variableName == branchidVariableNameInNetCDFFile)
-                            branchIds = Parse1DNetCdfVariable<int>(path, variableName);
-
-                        if (variableName == chainageVariableNameInNetCDFFile)
-                            chainages = Parse1DNetCdfVariable<double>(path, variableName);
-
-                        if (variableName == edgeBranchidVariableNameInNetCDFFile)
-                            branchIds = Parse1DNetCdfVariable<int>(path, variableName);
-
-                        if (variableName == edgeChainageVariableNameInNetCDFFile)
-                            chainages = Parse1DNetCdfVariable<double>(path, variableName);
-
-
-                        if (variableName == xNodeCoordinateVariableNameInNetCDFFile)
-                            xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
-
-                        if (variableName == yNodeCoordinateVariableNameInNetCDFFile)
-                            yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
-
-                        if (variableName == xEdgeCoordinateVariableNameInNetCDFFile)
-                            xCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
-
-                        if (variableName == yEdgeCoordinateVariableNameInNetCDFFile)
-                            yCoordinates = Parse1DNetCdfVariable<double>(path, variableName);
-                    }
-                    var meta = ParseLocationMetaData(locationIds, branchIds, chainages, xCoordinates, yCoordinates);
-                    retVal[timeDependentVariableMetaDataBase] = meta;
+                    result[timeDependentVariableMetaDataBase] = ParseLocationMetaData(locationIds, branchIds, chainages, xCoordinates, yCoordinates);
                 }
 
-                return retVal;
+                return result;
             });
         }
 
-        private IList<T> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages,
+        private IList<string> GetLocationData(string path, string variableName, bool onNodes)
+        {
+            return onNodes
+                ? ParseLocationIdVariable(path, variableName)
+                : GenerateEdgeIds(path, variableName);
+        }
+
+        private List<string> GenerateEdgeIds(string path, string variableName)
+        {
+            var list = Parse1DNetCdfVariable<int>(path, variableName).ToList();
+            var edgeNodesNameIds = new List<string>();
+            for (int i = 0; i < list.Count; i += 2)
+            {
+                edgeNodesNameIds.Add(string.Format("{0}_{1}", list[i].ToString(),
+                    list[i + 1].ToString()));
+            }
+
+            return edgeNodesNameIds;
+        }
+
+        private IList<LocationMetaData> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages,
             IList<double> xCoordinates, IList<double> yCoordinates)
         {
             if (locationIds == null || branchIds == null || chainages == null || xCoordinates == null ||
-                yCoordinates == null) return new List<T>();
+                yCoordinates == null) return new List<LocationMetaData>();
 
             return locationIds.Where((s, i) => branchIds[i] != int.MinValue + 1).Select((id, index) =>
-                    new T
+                    new LocationMetaData
                     {
                         Id = id,
                         BranchId = branchIds == null ? 0 : branchIds[index],
@@ -275,6 +231,41 @@ namespace DeltaShell.NGHS.IO.Store1D
             var unitString = unit == null ? string.Empty : unit.ToString();
 
             return new U { Name = variableName, LongName  = longNameString, Unit = unitString};
+        }
+
+        private class LocationVariableNames
+        {
+            public LocationVariableNames(string dimensionName)
+            {
+                OnNodes = dimensionName == "mesh1d_nNodes";
+            }
+
+            public bool OnNodes { get; }
+            
+            public string id
+            {
+                get { return OnNodes ? "mesh1d_node_id" : "mesh1d_edge_nodes"; }
+            }
+
+            public string BranchId
+            {
+                get { return OnNodes ? "mesh1d_node_branch" : "mesh1d_edge_branch"; }
+            }
+
+            public string Chainage
+            {
+                get { return OnNodes ? "mesh1d_node_offset" : "mesh1d_edge_offset"; }
+            }
+            
+            public string XNodeCoordinate
+            {
+                get { return OnNodes ? "mesh1d_node_x" : "mesh1d_edge_x"; }
+            }
+            
+            public string YNodeCoordinate
+            {
+                get { return OnNodes ? "mesh1d_node_y" : "mesh1d_edge_y"; }
+            }
         }
     }
 }

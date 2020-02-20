@@ -1,15 +1,6 @@
 ﻿namespace DeltaShell.NGHS.IO.Store1D
 {
-    public interface ILocationMetaData
-    {
-        string Id { get; set; }
-        int BranchId { get; set; }
-        double Chainage { get; set; }
-        double XCoordinate { get; set; }
-        double YCoordinate { get; set; }
-    }
-
-    public class LocationMetaData : ILocationMetaData
+    public class LocationMetaData
     {
         public string Id { get; set; }
         public int BranchId { get; set; }

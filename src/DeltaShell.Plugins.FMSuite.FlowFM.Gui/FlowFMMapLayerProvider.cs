@@ -330,10 +330,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
-            if (layer == null || e.Action != NotifyCollectionChangedAction.Add) return;
+            if (e.Action != NotifyCollectionChangedAction.Add) return;
 
-            layer.GridColor = Color.Gray;
+            var layer = e.GetRemovedOrAddedItem() as ILayer;
+            if (layer == null) return;
+            
+            if (layer is UnstructuredGridLayer unstructuredGridLayer)
+            {
+                unstructuredGridLayer.GridColor = Color.Gray;
+            }
+
+            if (layer is INetworkCoverageGroupLayer networkCoverageGroupLayer)
+            {
+                var attributes = ((IFunction) networkCoverageGroupLayer.NetworkCoverage).Attributes;
+                var location = attributes.ContainsKey(FM1DFileFunctionStore.LocationAttributeName)
+                    ? (NetworkDataLocation)Enum.Parse(typeof(NetworkDataLocation), attributes[FM1DFileFunctionStore.LocationAttributeName])
+                    : NetworkDataLocation.UnKnown;
+
+                if (networkCoverageGroupLayer.SegmentLayer == null) return;
+
+                if (location == NetworkDataLocation.Node)
+                {
+                    // hide SegmentLayer
+                    networkCoverageGroupLayer.SegmentLayer.ShowInLegend = false;
+                    networkCoverageGroupLayer.SegmentLayer.ShowInTreeView = false;
+                }
+
+                networkCoverageGroupLayer.SegmentLayer.Visible = false;
+            }
         }
 
         public bool CanCreateLayerFor(object data, object parentObject)

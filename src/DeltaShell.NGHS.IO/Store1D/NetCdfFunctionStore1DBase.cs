@@ -19,9 +19,9 @@ using ArrayExtensions = DelftTools.Utils.ArrayExtensions;
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public abstract class NetCdfFunctionStore1DBase<T, U> : IFunctionStore, IFileBased where T : ILocationMetaData, new() where U : ITimeDependentVariableMetaDataBase, new()
+    public abstract class NetCdfFunctionStore1DBase<U> : IFunctionStore, IFileBased where U : ITimeDependentVariableMetaDataBase, new()
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<T, U>));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(NetCdfFunctionStore1DBase<U>));
         private IEventedList<IFunction> functions;
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
@@ -30,18 +30,18 @@ namespace DeltaShell.NGHS.IO.Store1D
         protected string fileName;
         protected FeatureTypeConverter featureTypeConverter = new FeatureTypeConverter();
         protected NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
-        private OutputFile1DMetaData<T, U> metaData;
+        private OutputFile1DMetaData<U> metaData;
         private bool disableCaching;
-        private IOutput1DFileReader<T, U> outputFileReader;
+        private IOutput1DFileReader<U> outputFileReader;
         protected int sobekStartIndex = 1;// minus one because fortran is 1 based...
 
-        protected OutputFile1DMetaData<T, U> MetaData
+        protected OutputFile1DMetaData<U> MetaData
         {
             get
             {
                 if (metaData != null) return metaData;
 
-                if(!File.Exists(Path)) return new OutputFile1DMetaData<T, U>();
+                if(!File.Exists(Path)) return new OutputFile1DMetaData<U>();
 
                 try
                 {
@@ -50,13 +50,13 @@ namespace DeltaShell.NGHS.IO.Store1D
                 catch (Exception ex)
                 {
                     Log.ErrorFormat("Error reading MetaData for file: {0}{1}{2}", Path, Environment.NewLine, ex.Message);
-                    metaData = new OutputFile1DMetaData<T, U>();
+                    metaData = new OutputFile1DMetaData<U>();
                 }
                 return metaData;
             }
         }
 
-        protected IOutput1DFileReader<T, U> OutputFileReader
+        protected IOutput1DFileReader<U> OutputFileReader
         {
             get { return outputFileReader; }
             set { outputFileReader = value; }
@@ -466,7 +466,7 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         private int GetLocationIndex(string ncVariableName, IBranchFeature branchFeature)
         {
-            T location;
+            LocationMetaData location;
             var metaDataLocations = MetaData.Locations.FirstOrDefault(l => l.Key.Name == ncVariableName);
             if (branchFeature is INetworkLocation)
             {

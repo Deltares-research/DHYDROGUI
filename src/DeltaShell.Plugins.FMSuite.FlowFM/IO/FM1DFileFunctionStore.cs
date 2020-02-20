@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
@@ -15,9 +16,11 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class FM1DFileFunctionStore : NetCdfFunctionStore1DBase<LocationMetaData, TimeDependentVariableMetaDataBase>
+    public class FM1DFileFunctionStore : NetCdfFunctionStore1DBase<TimeDependentVariableMetaDataBase>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FM1DFileFunctionStore));
+        public static readonly string LocationAttributeName = "Location";
+
         private readonly object readLock = new object();
         protected NetCdfFile netCdfFile;
         private const string TimeDimensionName = "time";
@@ -205,23 +208,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IEnumerable<INetworkCoverage> Get1DFunctions(IEnumerable<NetCdfVariableInfo> dataVariables, bool isUgridConvention, string mesh1DName)
         {
             var timeDepVarSelectionCriteria = isUgridConvention
-                ? (Func<NetCdfVariableInfo, bool>)(v =>
+                ? (Func<NetCdfVariableInfo, bool>) (v =>
                 {
-                    var b = v.IsTimeDependent && v.NumDimensions > 1;
                     var attributes = netCdfFile.GetAttributes(v.NetCdfDataVariable);
-                    object meshName;
-                    object locationName;
-                    if (attributes.TryGetValue("mesh", out meshName) && attributes.TryGetValue("location", out locationName))
+                    if (!attributes.TryGetValue("mesh", out var meshName) ||
+                        !attributes.TryGetValue("location", out var locationName))
                     {
-                        return b && meshName.ToString() == mesh1DName && (locationName.ToString() == "edge" || locationName.ToString() == "node");
+                        return false;
                     }
-                    return false;
-                }) : (v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2);
+
+                    var location = GetNetworkLocation(locationName.ToString());
+
+                    return v.IsTimeDependent && 
+                           v.NumDimensions > 1 && 
+                           meshName.ToString() == mesh1DName &&
+                           (location == NetworkDataLocation.Edge ||
+                            location == NetworkDataLocation.Node );
+                })
+                : v => v.IsTimeDependent && v.NumDimensions > 1 && v.NumDimensions <= 2;
+
             var timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
             var functions = timeDepVariables.SelectMany(ProcessTimeDependent1DVariable).Where(c => c != null).ToList();
 
             return functions;
         }
+
         private IEnumerable<NetworkCoverage> ProcessTimeDependent1DVariable(NetCdfVariableInfo timeDependentVariable)
         {
             NetworkCoverage coverage = null;
@@ -242,17 +253,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
 
-            var location =
-                netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location);
-
+            var location = netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location);
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
 
             coverage = CreateNetworkCoverage(coverageLongName, unitSymbol);
             coverage.Attributes.Add("NetCdfVariableName",netCdfVariableName);
+            coverage.Attributes.Add(LocationAttributeName, GetNetworkLocation(location).ToString());
             coverage.Store = this;
             var times = MetaData.Times;
             AddNetworkLocationsToNetworkCoverage(outputDiscretization, times, coverage);
             yield return coverage;
+        }
+
+        private static NetworkDataLocation GetNetworkLocation(string locationName)
+        {
+            switch (locationName)
+            {
+                case "edge":
+                    return NetworkDataLocation.Edge;
+                case "node":
+                    return NetworkDataLocation.Node;
+                default:
+                    return NetworkDataLocation.UnKnown;
+            }
         }
 
         protected override string GetNetCdfVariableName(ICoverage coverage)
@@ -274,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             networkCoverage.Locations.FixedSize = networkLocations.Length;
 
             if (times.Count != 0) networkCoverage.Time.SetValues(times);
-            if (networkLocations.Count() != 0) networkCoverage.SetLocations(networkLocations);
+            if (networkLocations.Length != 0) networkCoverage.SetLocations(networkLocations);
         }
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol, int number = -1)
         {
@@ -282,8 +305,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var coverageName = coverageLongName + suffix;
             var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork };
             networkCoverage.Components[0].NoDataValue = double.NaN;
+            
             networkCoverage.Locations.FixedSize = 0;
+            networkCoverage.Locations.InterpolationType = InterpolationType.Constant;
+            networkCoverage.Locations.ExtrapolationType = ExtrapolationType.Constant;
             networkCoverage.IsEditable = false;
+
             return networkCoverage;
         }
 

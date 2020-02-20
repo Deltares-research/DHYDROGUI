@@ -2,10 +2,10 @@
 
 namespace DeltaShell.NGHS.IO.Store1D
 {
-    public interface IOutput1DFileReader<T, U> where T : ILocationMetaData, new()  where U : ITimeDependentVariableMetaDataBase, new()
+    public interface IOutput1DFileReader<U> where U : ITimeDependentVariableMetaDataBase, new()
     {
-        OutputFile1DMetaData<T, U> ReadMetaData(string path, bool doValidation = true);
-        double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<T, U> metaData);
+        OutputFile1DMetaData<U> ReadMetaData(string path, bool doValidation = true);
+        double[,] GetAllVariableData(string path, string variableName, OutputFile1DMetaData<U> metaData);
         IList<double> GetSelectionOfVariableData(string path, string variableName, int[] origin, int[] shape);
     }
 }
