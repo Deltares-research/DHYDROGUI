@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public bool IsConnected { get { return Feature != null; } }
 
-        public string Name { get; set; } = "[NotSet]";
+        public string Name { get; set; }
 
         public virtual string XmlName { get; }
 
@@ -130,6 +130,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (IsConnected)
             {
                 Name = LocationName + "_" + ParameterName;
+            }
+            else
+            {
+                Name = "[Not Set]";
             }
         }
 
