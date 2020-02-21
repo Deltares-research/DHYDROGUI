@@ -38,6 +38,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
+    [Ignore("Check if we need any of these Flow1D tests")]
     [Category("Build.Acceptance")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
