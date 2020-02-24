@@ -81,6 +81,11 @@ namespace DeltaShell.Sobek.Readers.Readers
             return typeNo == 4 || typeNo == 5 || typeNo == 13 || typeNo == 19;
         }
 
+        public static bool IsConnectionNode(int typeNo)
+        {
+            return typeNo == 12;
+        }
+
         public static IDictionary<string, int> ReadBranchTypes(string filePath)
         {
             return ParseBranchTypes(File.ReadLines(filePath));

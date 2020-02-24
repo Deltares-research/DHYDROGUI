@@ -117,5 +117,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(0, hydroNetwork.Retentions.Count()); //checked in sobek
 
         }
+
+        [Test]
+        public void ImportConnectionNodesWithOutdatedNodeDat_ResultsIn_NoRetentions()
+        {
+            //In node.dat are retentions defined but are out of sync. read network.ntw for checking if they're storage nodes
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Waardenburg_Rural\NETWORK.TP";
+
+            var hydroNetwork = new HydroNetwork();
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroNetwork, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekRetentionImporter() });
+
+            importer.Import();
+
+            Assert.AreEqual(0, hydroNetwork.Retentions.Count());
+
+        }
     }
 }
