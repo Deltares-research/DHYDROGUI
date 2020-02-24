@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     if (lateral == null) continue;
 
-                    var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName};
+                    var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName ?? lateral.Name};
                     if (Math.Abs(lateral.Chainage) < double.Epsilon)
                     {
                         lateralDef.NodeId = lateral.Branch.Source.Name;
