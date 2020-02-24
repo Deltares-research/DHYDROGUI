@@ -25,7 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             "GuiVersion",
             "TStart",
             "TStop",
-            "RestartDateTime"
+            "RestartDateTime",
+            "RefDate"
         };
 
         private static readonly string[] NetCdfLinesToIgnore =

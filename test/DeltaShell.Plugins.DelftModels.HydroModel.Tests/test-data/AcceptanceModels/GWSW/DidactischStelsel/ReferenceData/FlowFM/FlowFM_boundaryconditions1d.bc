@@ -3,7 +3,7 @@
     fileType              = boundConds          
 
 [forcing]
-    name                  = 01009U              
+    name                  = put60               
     function              = constant            
     timeInterpolation     = linear              
     quantity              = waterlevelbnd       
@@ -11,7 +11,7 @@
     -5 
 
 [forcing]
-    name                  = 09001U              
+    name                  = put61               
     function              = constant            
     timeInterpolation     = linear              
     quantity              = waterlevelbnd       
@@ -19,7 +19,7 @@
     -4 
 
 [forcing]
-    name                  = 07004               
+    name                  = put62               
     function              = constant            
     timeInterpolation     = linear              
     quantity              = waterlevelbnd       
@@ -27,7 +27,7 @@
     0.4 
 
 [forcing]
-    name                  = 10003U              
+    name                  = put63               
     function              = constant            
     timeInterpolation     = linear              
     quantity              = waterlevelbnd       
