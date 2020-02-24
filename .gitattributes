@@ -3486,6 +3486,7 @@ test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/c090_wetbed_map.nc -text
 test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/c12_trench_VanRijn1993_sandbnd_map.nc -text
 test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/write1d.nc -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/AcceptanceModelTestHelper.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FlowFmDataPersistenceAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FlowFmFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswDataPersistenceAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/SobekTwoDataPersistenceAcceptanceTests.cs -text

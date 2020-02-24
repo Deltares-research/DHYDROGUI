@@ -223,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceModelsTest.cs" />
+    <Compile Include="Acceptance\FlowFmDataPersistenceAcceptanceTests.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
