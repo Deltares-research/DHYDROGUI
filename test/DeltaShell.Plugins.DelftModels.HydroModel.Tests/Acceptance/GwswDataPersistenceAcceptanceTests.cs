@@ -46,6 +46,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
+        [TestCase("KorteWoerden", 84, 72)]
+        [TestCase("DidactischStelsel", 105, 73)]
+        [TestCase("Groesb2", 719, 675)]
+        [TestCase("Enschede", 90, 0)]
+        [TestCase("Pudong", 4974, 4936)]
+        public void GivenRunningDeltaShellGuiWithImportedGwswModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
+            string acceptanceModelName,
+            int preconditionExpectedBranchFeaturesCount,
+            int preconditionExpectedCatchmentsCount)
+        {
+            // [Given]
+            using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            {
+                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+
+                ImportGwswModelAndAssertPreconditions(
+                    acceptanceModelName,
+                    hydroModel,
+                    preconditionExpectedBranchFeaturesCount,
+                    preconditionExpectedCatchmentsCount);
+
+                // [When]
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
+
+                // [Then]
+                CompareResultDataWithReferenceData(Path.Combine(tempProjectPath1 + "_data", "FlowFM"));
+            }
+        }
+
+        [Test]
         [Ignore("Add when acceptance data is available")]
         [TestCase("KorteWoerden", 84, 72)]
         [TestCase("DidactischStelsel", 105, 73)]

@@ -45,10 +45,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
+        [TestCase("DarEsSalaam", "14", 177, 0)]
+        [TestCase("Waardenburg", "16", 297, 0)]
+        [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions
+        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
+            string acceptanceModelName,
+            string caseName,
+            int preconditionExpectedBranchFeaturesCount,
+            int preconditionExpectedCatchmentsCount)
+        {
+            // [Given]
+            using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
+            {
+                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+
+                ImportSobekTwoModelAndAssertPreconditions(
+                    acceptanceModelName,
+                    caseName,
+                    hydroModel,
+                    preconditionExpectedBranchFeaturesCount,
+                    preconditionExpectedCatchmentsCount);
+
+                // [When]
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
+
+                // [Then]
+                CompareResultDataWithReferenceData(Path.Combine(tempProjectPath1 + "_data", "FlowFM"));
+            }
+        }
+
+        [Test]
         [Ignore("Add when acceptance data is available")]
         [TestCase("DarEsSalaam", "14", 177, 0)]
         [TestCase("Waardenburg", "16", 297, 0)]
-        [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions and ReferenceData
+        [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions and AcceptanceData
         public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
             string acceptanceModelName,
             string caseName,
