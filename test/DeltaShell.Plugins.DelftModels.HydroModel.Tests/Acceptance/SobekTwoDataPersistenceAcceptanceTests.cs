@@ -45,6 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
+        [Ignore("Add when acceptance data is available")]
         [TestCase("DarEsSalaam", "14", 177, 0)]
         [TestCase("Waardenburg", "16", 297, 0)]
         [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions and ReferenceData
@@ -70,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
 
                 // [Then]
-                CompareResultDataWithReferenceData(acceptanceModelName);
+                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "ReferenceData", "FlowFM"));
             }
         }
 
@@ -105,10 +106,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
         }
 
-        private void CompareResultDataWithReferenceData(string testDataDirectory)
+        private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
         {
             var flowFmResultFiles = Directory.GetFiles(Path.Combine(tempProjectPath2 + "_data", "FlowFM"));
-            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(acceptanceModelsDirectory, testDataDirectory, "ReferenceData", "FlowFM"));
+            var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
 
             FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory2);
         }
