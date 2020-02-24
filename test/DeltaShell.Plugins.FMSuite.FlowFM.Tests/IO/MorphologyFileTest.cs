@@ -487,8 +487,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private static void AssertMessageContainsWarningForObsoleteProperty(string message, string propertyName)
         {
             string expectedMessage = string.Format(
-                Resources
-                    .MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_,
+                Common.Properties.Resources
+                    .Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file,
                 propertyName);
             Assert.That(message.Contains(expectedMessage), $"Expected the warning, <{expectedMessage}>, to be contained in the log report, {message}");
         }

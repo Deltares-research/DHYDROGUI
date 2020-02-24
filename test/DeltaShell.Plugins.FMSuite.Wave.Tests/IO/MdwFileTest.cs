@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -21,6 +22,8 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Rhino.Mocks.Constraints;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -819,6 +822,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_WithCommunicationFilePathWithBackSlashFileSeparators_ThenFilePathIsExportedWithForwardSlashFileSeparators()
         {
             // Arrange
@@ -841,6 +845,47 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
                 string exportedComFilePath = comFileLine.Split('=')[1].Trim();
                 Assert.That(exportedComFilePath, Is.EqualTo(comFilePath.Replace('\\','/')));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Load_LegacyPropertiesAreReplaced()
+        {
+            // Setup
+            using (var temporaryDirectory = new TemporaryDirectory())
+            {
+                string legacyFile = temporaryDirectory.CopyTestDataFileToTempDirectory("MdwFile\\TScaleLegacy.mdw");
+
+                var mdwFile = new MdwFile();
+
+                // Call
+                WaveModelDefinition result = null; 
+
+                void Call() => result = mdwFile.Load(legacyFile);
+
+                List<string> logMessages =
+                    TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+
+
+                // Assert
+                WaveModelProperty timeFrameProperty =
+                    result.Properties.FirstOrDefault(x => x.PropertyDefinition.FilePropertyName == "TimeInterval");
+
+                Assert.That(timeFrameProperty, Is.Not.Null, "Expected the TimeFrame property to be found.");
+                Assert.That(timeFrameProperty.PropertyDefinition.Category, Is.EqualTo("General"));
+
+                var value = (double) timeFrameProperty.Value;
+                Assert.That(value, Is.EqualTo(255.0));
+
+                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"), 
+                            Is.False,
+                            "Expected no property with the file name TScale");
+
+                string expectedMsg = string.Format(
+                    Resources.DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__,
+                    "TScale", "TimeInterval");
+                Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }
         }
     }

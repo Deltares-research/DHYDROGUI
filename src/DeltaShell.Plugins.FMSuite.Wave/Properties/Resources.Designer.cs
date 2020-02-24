@@ -61,6 +61,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to reading the mdw file.
+        /// </summary>
+        public static string MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file {
+            get {
+                return ResourceManager.GetString("MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap wave {

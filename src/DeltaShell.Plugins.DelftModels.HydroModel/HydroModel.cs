@@ -618,10 +618,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    int result = dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
-                    if (result != 0)
+                    int returnCode = dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
+                    if (returnCode != 0)
                     {
-                        throw new DimrErrorCodeException(Status, result);
+                        throw new DimrErrorCodeException(Status, returnCode);
                     }
 
                     CurrentTime = dimrApi.CurrentTime;
@@ -728,10 +728,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     dimrApi.KernelDirs = kernelDirectories;
                     dimrApi.DimrRefDate = StartTime;
 
-                    int result = dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
-                    if (result != 0)
+                    int returnCode = dimrApi.Initialize(Path.Combine(ExplicitWorkingDirectory, "dimr.xml"));
+                    if (returnCode != 0)
                     {
-                        throw new DimrErrorCodeException(Status, result);
+                        throw new DimrErrorCodeException(Status, returnCode);
                     }
 
                     CurrentTime = StartTime;

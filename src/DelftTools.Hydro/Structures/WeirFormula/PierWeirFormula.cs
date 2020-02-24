@@ -64,6 +64,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         /// <summary>
         /// Creates a PierWeirFormula with default values as found in Sobek.
+        /// </summary>
         /// <returns> </returns>
         public static PierWeirFormula CreateDefault()
         {
