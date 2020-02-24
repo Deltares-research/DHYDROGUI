@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 
@@ -141,16 +140,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// <param name="rtcModel"></param>
         /// <param name="unlink"></param>
         /// <returns></returns>
-        private static IEnumerable<ModelExchangeInfo> GetExchangeInfo(IModel flowModel, IModel rtcModel, bool unlink)
+        public static IEnumerable<ModelExchangeInfo> GetExchangeInfo(IModel flowModel, IModel rtcModel, bool unlink)
         {
-            List<IDataItem> flowInputItems = GetDataItems(flowModel, DataItemRole.Input).ToList();
-            List<IDataItem> flowOutputItems = GetDataItems(flowModel, DataItemRole.Output).ToList();
+            var flowInputItems = GetDataItems(flowModel, DataItemRole.Input).ToList();
+            var flowOutputItems = GetDataItems(flowModel, DataItemRole.Output).ToList();
 
-            List<IDataItem> rtcInputItems = GetDataItems(rtcModel, DataItemRole.Input).ToList();
-            IReadOnlyDictionary<IDataItem, string> rtcInputParameterNameMapping = GetDataItemNameMapping(rtcInputItems);
-
-            List<IDataItem> rtcOutputItems = GetDataItems(rtcModel, DataItemRole.Output).ToList();
-            IReadOnlyDictionary<IDataItem, string> rtcOutputParameterNameMapping = GetDataItemNameMapping(rtcOutputItems);
+            var rtcInputItems = GetDataItems(rtcModel, DataItemRole.Input).ToList();
+            var rtcOutputItems = GetDataItems(rtcModel, DataItemRole.Output).ToList();
 
             var exchangeInfoList = new List<ModelExchangeInfo>();
             var exchangeInfo = new ModelExchangeInfo(flowModel, rtcModel);
@@ -164,7 +160,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         if (unlink)
                         {
                             rtcInputItem.Unlink();
-                            RestoreDataItemName(rtcInputParameterNameMapping, rtcInputItem);
                         }
                     }
                 }
@@ -182,7 +177,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         if (unlink)
                         {
                             flowInputItem.Unlink();
-                            RestoreDataItemName(rtcOutputParameterNameMapping, rtcOutputItem);
                         }
                     }
                 }
@@ -190,40 +184,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             exchangeInfoList.Add(exchangeInfo);
 
             return exchangeInfoList;
-        }
-
-        /// <summary>
-        /// Gets the mapping between the <see cref="IDataItem"/> and the name that is associated with it.
-        /// </summary>
-        /// <param name="dataItems">The collection of <see cref="IDataItem"/> to retrieve  the mapping from.</param>
-        /// <returns>A mapping between the <see cref="IDataItem"/> and the parameter name it maps.</returns>
-        private static IReadOnlyDictionary<IDataItem, string> GetDataItemNameMapping(IEnumerable<IDataItem> dataItems)
-        {
-            // Filter the data items on INameable elements
-            IEnumerable<IDataItem> filteredDataItems = dataItems.Where(item => item.ValueConverter?.OriginalValue is INameable);
-
-            var mapping = new Dictionary<IDataItem, string>();
-            foreach (IDataItem item in filteredDataItems)
-            {
-                var connectionPoint = (INameable) item.ValueConverter.OriginalValue;
-                mapping.Add(item, connectionPoint.Name);
-            }
-            
-            return mapping;
-        }
-
-        /// <summary>
-        /// Restores the name of the <paramref name="dataItem"/> if applicable.
-        /// </summary>
-        /// <param name="mapping">The mapping to retrieve the name from.</param>
-        /// <param name="dataItem">The <see cref="IDataItem"/> to restore the name for.</param>
-        private static void RestoreDataItemName(IReadOnlyDictionary<IDataItem, string> mapping, IDataItem dataItem)
-        {
-            if (mapping.ContainsKey(dataItem))
-            {
-                var originalValue = (INameable) dataItem.ValueConverter.OriginalValue;
-                originalValue.Name = mapping[dataItem];
-            }
         }
 
         #endregion RTC-FlowFM coupling
