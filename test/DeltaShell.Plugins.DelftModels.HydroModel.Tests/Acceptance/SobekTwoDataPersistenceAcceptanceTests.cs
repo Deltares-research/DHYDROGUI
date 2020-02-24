@@ -20,12 +20,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private string tempProjectPath1;
         private string tempDirectory2;
         private string tempProjectPath2;
-        private string acceptanceModelDirectory;
+        private string acceptanceModelsDirectory;
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "AcceptanceModels", "SOBEK2");
+            acceptanceModelsDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "AcceptanceModels", "SOBEK2");
         }
 
         [SetUp]
@@ -48,9 +48,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         [TestCase("DarEsSalaam", "14", 177, 0)]
         [TestCase("Waardenburg", "16", 297, 0)]
         [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions and ReferenceData
-        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsAsExpected(
-            string testDataDirectory,
-            string caseFolder,
+        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
+            string acceptanceModelName,
+            string caseName,
             int preconditionExpectedBranchFeaturesCount,
             int preconditionExpectedCatchmentsCount)
         {
@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
 
                 ImportSobekTwoModelAndAssertPreconditions(
-                    testDataDirectory,
-                    caseFolder,
+                    acceptanceModelName,
+                    caseName,
                     hydroModel,
                     preconditionExpectedBranchFeaturesCount,
                     preconditionExpectedCatchmentsCount);
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
 
                 // [Then]
-                CompareResultDataWithReferenceData(testDataDirectory);
+                CompareResultDataWithReferenceData(acceptanceModelName);
             }
         }
 
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var caseDirectory = Path.Combine(acceptanceModelDirectory, testDataDirectory, "InputData", caseFolder);
+            var caseDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "InputData", caseFolder);
             var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
             
             var sobekHydroModelImporter = new SobekHydroModelImporter(true)
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private void CompareResultDataWithReferenceData(string testDataDirectory)
         {
             var flowFmResultFiles = Directory.GetFiles(Path.Combine(tempProjectPath2 + "_data", "FlowFM"));
-            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(acceptanceModelDirectory, testDataDirectory, "ReferenceData", "FlowFM"));
+            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(acceptanceModelsDirectory, testDataDirectory, "ReferenceData", "FlowFM"));
 
             FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory2);
         }
