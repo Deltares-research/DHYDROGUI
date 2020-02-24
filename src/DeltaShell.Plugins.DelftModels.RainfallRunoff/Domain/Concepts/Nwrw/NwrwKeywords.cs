@@ -22,7 +22,7 @@
         public const string AreaAdjustmentFactorKey = "aaf";
 
         // .alg
-        public const string RunoffDelayFactor = "ru";
+        public const string RunoffDelayFactor = "rf";
         public const string MaximumStorage = "ms";
         public const string MaximumInfiltrationCapacity = "ix";
         public const string MinimumInfiltrationCapacity = "im";

@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             AppendOpeningTagToAlgLine(line);
             AppendIdToAlgLine(line);
-            AppendNameToAlgLine(line);
             AppendRunoffDelayFactorToAlgLine(line, nwrwDefinitions);
             AppendMaximumStorageToAlgLine(line, nwrwDefinitions);
             AppendMaximumInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
@@ -62,31 +61,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             line.Append(" ");
         }
 
-        private void AppendNameToAlgLine(StringBuilder line)
-        {
-            // name
-            line.Append(NwrwKeywords.NameKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(String.Empty); // empty
-            line.Append("'");
-            line.Append(" ");
-        }
-
         private void AppendRunoffDelayFactorToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
         {
-            // runoff-delay factor for 3 types of slopes (with slope, flat, flat stretched)
+            // runoff-delay factor
             line.Append(NwrwKeywords.RunoffDelayFactor);
             line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.RunoffSlope);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedFlat))
-                ?.RunoffSlope);
-            line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedFlatStretch))?.RunoffSlope);
-            line.Append(" ");
+            foreach (NwrwDefinition nwrwDefinition in nwrwDefinitions)
+            {
+                line.Append(nwrwDefinition.RunoffDelay);
+                line.Append(" ");
+            }
         }
 
         private void AppendMaximumStorageToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
