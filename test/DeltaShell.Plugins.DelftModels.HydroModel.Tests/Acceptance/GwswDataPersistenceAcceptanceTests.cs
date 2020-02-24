@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "ReferenceData", "FlowFM"));
+                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "AcceptanceData", "FlowFM"));
             }
         }
 
