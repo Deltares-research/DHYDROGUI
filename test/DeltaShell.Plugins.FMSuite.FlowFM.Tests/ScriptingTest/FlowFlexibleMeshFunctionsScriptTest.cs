@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Jira)]  // D3DFMIQ-1713
         public void ExpendingGridShouldWork()
         {
             using (var gui = new DeltaShellGui())

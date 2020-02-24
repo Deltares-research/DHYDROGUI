@@ -55,7 +55,7 @@ namespace DeltaShell.NGHS.IO.Grid
         #region UGRID specifics
 
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_def_var", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref double fillValue);
+        private static extern int ionc_def_var_dll(ref int ioncid, ref int meshId, ref int networkId, ref int varId, ref int type, ref int locType, string varName, string standardName, string longName, string unit, ref int fillValueInt, ref double fillValue);
 
         /// <summary>
         /// Get the id of the geometry network.
@@ -697,10 +697,20 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual int DefineVariable(int ioncId, int meshId, int varId, int type, GridApiDataSet.LocationType locationType, string varName,
             string standardName, string longName, string unit, double fillValue)
-        {
+        { 
+            // Dummy value: will ensure the networkId gets ignored in io_netcdf.dll. 
+            //              The dll requires this value, however we do not
+            //              support networks at the time of writing.
+            int networkId = 0;
+
+            // Dummy value: required by the io_netcdf.dll.
+            int fillValueInt = -999;
+
             var locType = (int) locationType;
-            return ionc_def_var_dll(ref ioncId, ref meshId, ref varId, ref type, ref locType, varName, standardName,
-                longName, unit, ref fillValue);
+            return ionc_def_var_dll(ref ioncId, ref meshId, ref networkId, ref varId, 
+                                    ref type, ref locType, 
+                                    varName, standardName, longName, unit, 
+                                    ref fillValueInt, ref fillValue);
         }
 
         public virtual int Get1DNetworkId(int ioncId, ref int networkId)

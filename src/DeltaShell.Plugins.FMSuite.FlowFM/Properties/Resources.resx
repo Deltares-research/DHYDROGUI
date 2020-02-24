@@ -559,9 +559,6 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_" xml:space="preserve">
     <value>Unexpected keyword {0} on line {1} of file {2}</value>
   </data>
-  <data name="MorphologyFileBackwardsCompatibilityHelper_GetUpdatedPropertyName_Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
-    <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
-  </data>
   <data name="ShapeFileImporterHelper_Read_Shape_type__0__is_not_matching_expected_type__1__" xml:space="preserve">
     <value>Shape type {0} is not matching expected type {1}.</value>
   </data>
@@ -615,9 +612,6 @@ Manhole with unique id '{4}' is not imported.</value>
   </data>
   <data name="RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_" xml:space="preserve">
     <value>Unable to read diagnostics file {0}: {1}</value>
-  </data>
-  <data name="MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_" xml:space="preserve">
-    <value>Parameter {0} is not supported by our computational core and will be removed from your input file.</value>
   </data>
   <data name="CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_" xml:space="preserve">
     <value>Could not copy {0} to {1} due to: {2}</value>

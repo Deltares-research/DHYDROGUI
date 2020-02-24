@@ -94,7 +94,7 @@ namespace DeltaShell.Dimr
 
         public int Finish()
         {
-            if (api != null) api.Finish();
+            api?.Finish();
             return 0;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr.Properties;
 
@@ -10,11 +11,26 @@ namespace DeltaShell.Dimr
     [Serializable]
     public class DimrErrorCodeException : Exception
     {
+        /// <summary>
+        /// Creates a new <see cref="DimrErrorCodeException"/>.
+        /// </summary>
+        /// <param name="status">Status of the model run.</param>
+        /// <param name="errorCode"> Error code returned by Dimr.</param>
         public DimrErrorCodeException(ActivityStatus status, int errorCode)
            
         {
             ErrorCode = errorCode;
             Status = status;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DimrErrorCodeException"/>.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+        protected DimrErrorCodeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
 
         /// <summary>

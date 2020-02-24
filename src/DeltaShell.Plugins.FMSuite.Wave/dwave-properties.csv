@@ -23,8 +23,8 @@ General,ReferenceDate,General,General Settings,Reference date,DateTime,2000-01-0
 General,DirConvention,General,General Settings,Directional convention:nautical|cartesian,nautical|cartesian,nautical,,,,,,,,,Direction specification convention,
 General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
-General,TimeStep,General,Simulation mode,Time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation,
-General,TScale,General,Simulation mode,Time interval,Double,60,,,,SimMode=1,,,,,Unit of time, min
+General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
+General,TimeInterval,General,Simulation mode,D-Waves time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min
 General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
 General,FlowBedLevel,General,Data from D-Flow FM,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
 General,FlowWaterLevel,General,Data from D-Flow FM,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
@@ -79,9 +79,9 @@ Numerics,PercWet,Numerical Parameters,Numerical Parameters,Convergence percentag
 Numerics,MaxIter,Numerical Parameters,Numerical Parameters,Max. nr. of iterations,Integer,SimMode:50|15 ,,,,,,,,,Maximum number of iterations for convergence,
 Output,MapWriteInterval,Output,Map,Map file interval,Double,60.0,,,,,,,,,Interval for writing data to map file(s) in minutes, min
 Output,WriteTable,Output,Tables,Write tables,true|false,false,,,,,,,,,Write tables for output locations,
-Output,WriteSpec1D,Output,Tables,1D spectra,true|false,,,,,WriteTable,,,,,Write 1D spectra for output locations,
-Output,WriteSpec2D,Output,Tables,2D spectra,true|false,,,,,WriteTable,,,,,Write 2D spectra for output locations,
-Output,LocationFile,Output,Tables,Location file,FileName,,,,,WriteTable,,,,,File name of output locations,
+Output,WriteSpec1D,Output,Tables,Write 1D spectra,true|false,false,,,,,,,,,Write 1D spectra for output locations,
+Output,WriteSpec2D,Output,Tables,Write 2D spectra,true|false,false,,,,,,,,,Write 2D spectra for output locations,
+Output,LocationFile,Output,Tables,Location file,FileName,,,,,,,,,,File name of output locations,
 Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
 Output,COMFile,Output,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
 Output,WriteCOM,Output,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),

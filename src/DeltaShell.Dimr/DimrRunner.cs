@@ -97,11 +97,11 @@ namespace DeltaShell.Dimr
             dimrApi.DimrRefDate = model.StartTime;
             dimrApi.KernelDirs = model.KernelDirectoryLocation;
 
-            int result = dimrApi.Initialize(dimrFile);
+            int returnCode = dimrApi.Initialize(dimrFile);
 
-            if (result != 0)
+            if (returnCode != 0)
             {
-                throw new DimrErrorCodeException(model.Status, result);
+                throw new DimrErrorCodeException(model.Status, returnCode);
             }
             timeStep = dimrApi.TimeStep.TotalSeconds;
             stopTime = dimrApi.StopTime;
@@ -120,11 +120,11 @@ namespace DeltaShell.Dimr
             {
                 if (dimrApi == null) return;
 
-                int result = dimrApi.Update(timeStep);
+                int returnCode = dimrApi.Update(timeStep);
 
-                if (result != 0)
+                if (returnCode != 0)
                 {
-                    throw new DimrErrorCodeException(model.Status, result);
+                    throw new DimrErrorCodeException(model.Status, returnCode);
                 }
 
                 model.CurrentTime = dimrApi.CurrentTime;

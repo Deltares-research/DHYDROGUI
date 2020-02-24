@@ -5,7 +5,9 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common;
+using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -40,22 +42,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
         {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
             categories.ForEach(category => 
             {
-                category.RemoveAllPropertiesWhere(p => MduFileLegacyPropertyDeterminator.IsLegacyPropertyName(p.Name));
                 category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
+                category.RemoveAllPropertiesWhere(p => backwardsCompatibilityHelper.IsObsoletePropertyName(p.Name));
             });
         }
 
         private static void UpdateLegacyNames(IEnumerable<DelftIniCategory> categories)
         {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
+
             categories.ForEach(category =>
             {
-                category.Name = MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(category.Name);
+                category.Name = 
+                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ?? 
+                    category.Name;
                 category.Properties.ForEach(property =>
                 {
                     property.Name =
-                        MduFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name);
+                        backwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name) ?? 
+                        property.Name;
                 });
             });
         }
