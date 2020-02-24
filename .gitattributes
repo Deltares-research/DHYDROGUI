@@ -12350,6 +12350,7 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/DeltaShell.Plugins.ImportExport.
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/DelimeterSelectorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/GwswImportDialogTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/DefinitionsProviderTest.cs -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/DefinitionsVersionProviderTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTestHelper.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/ISewerFeatureTest.cs -text

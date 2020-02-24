@@ -121,6 +121,7 @@
     <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="IO\Importers\DefinitionsProviderTest.cs" />
+    <Compile Include="IO\Importers\DefinitionsVersionProviderTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
     <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
