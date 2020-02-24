@@ -23,6 +23,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private string tempProjectPath2;
         private string acceptanceModelsDirectory;
 
+        private static readonly object[] AcceptanceTests =
+        {
+            new object[] {"KorteWoerden", 84, 72},
+            new object[] {"DidactischStelsel", 105, 73},
+            new object[] {"Groesb2", 719, 675},
+            new object[] {"Enschede", 90, 0},
+            new object[] {"Pudong", 4974, 4936}
+        };
+
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
@@ -46,11 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
-        [TestCase("KorteWoerden", 84, 72)]
-        [TestCase("DidactischStelsel", 105, 73)]
-        [TestCase("Groesb2", 719, 675)]
-        [TestCase("Enschede", 90, 0)]
-        [TestCase("Pudong", 4974, 4936)]
+        [TestCaseSource(nameof(AcceptanceTests))]
         public void GivenRunningDeltaShellGuiWithImportedGwswModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
             int preconditionExpectedBranchFeaturesCount,
@@ -76,12 +81,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
+        [TestCaseSource(nameof(AcceptanceTests))]
         [Ignore("Add when acceptance data is available")]
-        [TestCase("KorteWoerden", 84, 72)]
-        [TestCase("DidactischStelsel", 105, 73)]
-        [TestCase("Groesb2", 719, 675)]
-        [TestCase("Enschede", 90, 0)]
-        [TestCase("Pudong", 4974, 4936)]
         public void GivenRunningDeltaShellGuiWithImportedGwswModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
             string acceptanceModelName,
             int preconditionExpectedBranchFeaturesCount,

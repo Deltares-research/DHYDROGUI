@@ -22,6 +22,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private string tempProjectPath2;
         private string acceptanceModelsDirectory;
 
+        private static readonly object[] AcceptanceTests =
+        {
+            new object[] {"DarEsSalaam", "14", 177, 0},
+            new object[] {"Waardenburg", "16", 297, 0},
+            new object[] {"HogeRaam", "9", 0, 0} // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
+        };
+
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
@@ -45,9 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
-        [TestCase("DarEsSalaam", "14", 177, 0)]
-        [TestCase("Waardenburg", "16", 297, 0)]
-        [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions
+        [TestCaseSource(nameof(AcceptanceTests))]
         public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
             string caseName,
@@ -75,10 +80,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         [Test]
+        [TestCaseSource(nameof(AcceptanceTests))]
         [Ignore("Add when acceptance data is available")]
-        [TestCase("DarEsSalaam", "14", 177, 0)]
-        [TestCase("Waardenburg", "16", 297, 0)]
-        [TestCase("HogeRaam", "9", 0, 0)] // TODO: Add preconditions and AcceptanceData
         public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
             string acceptanceModelName,
             string caseName,
