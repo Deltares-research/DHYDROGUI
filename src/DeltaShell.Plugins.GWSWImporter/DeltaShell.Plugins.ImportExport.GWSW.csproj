@@ -149,6 +149,8 @@
     <Compile Include="GWSWImporterApplicationPlugin.cs" />
     <Compile Include="GWSWImporterGuiPlugin.cs" />
     <Compile Include="IDefinitionsProvider.cs" />
+    <Compile Include="NwrwDischargeData.cs" />
+    <Compile Include="NwrwSurfaceData.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
     <Compile Include="SewerFeatures\GwswConnectionPump.cs" />

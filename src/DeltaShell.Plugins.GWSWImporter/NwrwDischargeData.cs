@@ -1,11 +1,13 @@
-﻿using DelftTools.Hydro;
-using GeoAPI.Geometries;
-using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using GeoAPI.Geometries;
+using log4net;
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// File Object Model for Gwsw debiet.csv.
@@ -38,11 +40,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 return;
             }
 
-            if (DischargeType == DischargeType.Lateral)
-            {
-                Log.Warn($"Could not add '{DryWeatherFlowId}' to {Name}. Discharge type '{nameof(DischargeType.Lateral)}' is not yet supported.");
-                return;
-            }
+//            if (DischargeType == DischargeType.Lateral)
+//            {
+//                Log.Warn($"Could not add '{DryWeatherFlowId}' to {Name}. Discharge type '{nameof(DischargeType.Lateral)}' is not yet supported.");
+//                return;
+//            }
 
             if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(DryWeatherFlowId)))
             {

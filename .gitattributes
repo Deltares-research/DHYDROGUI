@@ -1060,7 +1060,6 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwData.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDefinition.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDefinition.hbm.xml -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDischargeData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
@@ -1070,7 +1069,6 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywo
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.hbm.xml -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSurfaceData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwTpComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/OpenWaterData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/OpenWaterData.hbm.xml -text
@@ -2257,6 +2255,8 @@ src/DeltaShell.Plugins.GWSWImporter/IDefinitionsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ISewerFeatureGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/InvertedEggCrossSectionShapeGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ManholeMapping.cs -text
+src/DeltaShell.Plugins.GWSWImporter/NwrwDischargeData.cs -text
+src/DeltaShell.Plugins.GWSWImporter/NwrwSurfaceData.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/AssemblyInfo.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/Resources.Designer.cs -text

@@ -1,10 +1,12 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using GeoAPI.Geometries;
 using log4net;
-using System;
-using System.Linq;
 
-namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     /// <summary>
     /// File Object Model for Gwsw oppervlak.csv.

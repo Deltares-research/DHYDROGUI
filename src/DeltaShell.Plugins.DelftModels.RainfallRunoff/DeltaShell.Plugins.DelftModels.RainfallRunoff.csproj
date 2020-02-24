@@ -58,7 +58,6 @@
     <Compile Include="Domain\Concepts\Nwrw\Nwrw3BComponentFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwAlgComponentFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwComponentFileWriterBase.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwDischargeData.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDefinition.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="Domain\Concepts\Nwrw\NwrwModelFileWriter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwKeywords.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwSpecialArea.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwSurfaceData.cs" />
     <Compile Include="Domain\Concepts\OpenWaterDataProperties.cs" />
     <Compile Include="Domain\Concepts\Polder\PolderConceptProperties.cs" />
     <Compile Include="Domain\Concepts\SacramentoData.cs" />
