@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
             controlGroup.Rules.Add(pidRule);
 
-            var pidRule2 = GetNewSetUpPIDRule("PIDRule2 Test", input, output);
+            PIDRule pidRule2 = GetNewSetUpPIDRule("PIDRule2 Test", input, output);
             controlGroup.Rules.Add(pidRule2);
 
             condition.TrueOutputs.Add(pidRule);
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             var newInput = new Input();
             var newOutput = new Output();
-            var newPidRule = GetNewSetUpPIDRule(pidRuleName, newInput, newOutput);
+            PIDRule newPidRule = GetNewSetUpPIDRule(pidRuleName, newInput, newOutput);
 
             var newCondition = new StandardCondition();
             newCondition.TrueOutputs.Add(newPidRule);
@@ -316,7 +316,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
                       $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test\" />" +
                       $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test\" />";
-            if (addLookupSignal) result += $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID\" />";
+            if (addLookupSignal)
+            {
+                result += $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID\" />";
+            }
 
             result += "</exportSeries>";
             result += "</rtcDataConfig>";
@@ -330,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
             Assert.IsNotNull(xDocument);
 
-            var descendantsWithLocalName =
+            List<XElement> descendantsWithLocalName =
                 xDocument.Descendants().Where(d => d.Name.LocalName == descendantsLocalName).ToList();
             Assert.IsNotNull(descendantsWithLocalName);
 
@@ -341,14 +344,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             var controlGroups = new List<ControlGroup>();
             var controlledModel = new ControlledTestModel();
-            var controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             controlGroup1.Rules[0].Name = "Rule1";
             controlGroup1.Conditions[0].Name = "Condition1";
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
             controlGroups.Add(controlGroup1);
 
-            var controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             controlGroup2.Rules[0].Name = "Rule2";
             controlGroup2.Conditions[0].Name = "Condition2";
@@ -362,8 +365,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         /// <summary>
-        ///     See RTC Document Jaco
-        ///     6.3.2.c
+        /// See RTC Document Jaco
+        /// 6.3.2.c
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
@@ -421,7 +424,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             // Call
             XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
-            
+
             // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strC1AndC2_Or_NotC1AndC3, xDocument.ToString(SaveOptions.DisableFormatting));
@@ -478,7 +481,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             // Call
             XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
-            
+
             // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(expectedXml, xDocument.ToString(SaveOptions.DisableFormatting));
@@ -523,15 +526,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             // Call
             XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
-            
+
             // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(expectedXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
         /// <summary>
-        ///     See RTC Document Jaco
-        ///     6.3.2.a
+        /// See RTC Document Jaco
+        /// 6.3.2.a
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
@@ -595,8 +598,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         /// <summary>
-        ///     See RTC Document Jaco
-        ///     6.3.2.b(C1 and C2) or C3
+        /// See RTC Document Jaco
+        /// 6.3.2.b(C1 and C2) or C3
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
@@ -671,31 +674,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetRunTimeConfig()
         {
-            var strOutputXml = "<rtcRuntimeConfig" + FewsXmlheader + RtcRuntimeConfigxsd + ">" +
-                               "<period>" +
-                               "<userDefined>" +
-                               "<startDate date=\"" + "2000-01-01"
-                               //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StartTime.Year, realTimeControlModel.StartTime.Month, realTimeControlModel.StartTime.Day) 
-                               + "\" time=\"" + "00:15:30"
-                               //string.Format("{0:00}:{1:00}", realTimeControlModel.StartTime.Hour, realTimeControlModel.StartTime.Minute)
-                               + "\" />" + "<endDate date=\"" + "2001-02-03"
-                               //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StopTime.Year, realTimeControlModel.StopTime.Month, realTimeControlModel.StopTime.Day)
-                               + "\" time=\"" + "04:15:45"
-                               //string.Format("{0:00}:{1:00}", realTimeControlModel.StopTime.Hour, realTimeControlModel.StopTime.Minute)
-                               + "\" />" +
-                               "<timeStep unit=\"hour\" multiplier=\"" + "7" /*realTimeControlModel.TimeStep.Minutes*/ +
-                               "\" divider=\"1\" />" + //= optional "<numberEnsembles>1</numberEnsembles>" + 
-                               "</userDefined>" +
-                               "</period>" +
-                               "<mode>" +
-                               "<simulation>" +
-                               "<limitedMemory>true</limitedMemory>" +
-                               "</simulation>" +
-                               "</mode>" +
-                               "</rtcRuntimeConfig>";
+            string strOutputXml = "<rtcRuntimeConfig" + FewsXmlheader + RtcRuntimeConfigxsd + ">" +
+                                  "<period>" +
+                                  "<userDefined>" +
+                                  "<startDate date=\"" + "2000-01-01"
+                                  //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StartTime.Year, realTimeControlModel.StartTime.Month, realTimeControlModel.StartTime.Day) 
+                                  + "\" time=\"" + "00:15:30"
+                                  //string.Format("{0:00}:{1:00}", realTimeControlModel.StartTime.Hour, realTimeControlModel.StartTime.Minute)
+                                  + "\" />" + "<endDate date=\"" + "2001-02-03"
+                                  //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StopTime.Year, realTimeControlModel.StopTime.Month, realTimeControlModel.StopTime.Day)
+                                  + "\" time=\"" + "04:15:45"
+                                  //string.Format("{0:00}:{1:00}", realTimeControlModel.StopTime.Hour, realTimeControlModel.StopTime.Minute)
+                                  + "\" />" +
+                                  "<timeStep unit=\"hour\" multiplier=\"" + "7" /*realTimeControlModel.TimeStep.Minutes*/ +
+                                  "\" divider=\"1\" />" + //= optional "<numberEnsembles>1</numberEnsembles>" + 
+                                  "</userDefined>" +
+                                  "</period>" +
+                                  "<mode>" +
+                                  "<simulation>" +
+                                  "<limitedMemory>true</limitedMemory>" +
+                                  "</simulation>" +
+                                  "</mode>" +
+                                  "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                                                            {
-                                                               var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
+                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
                                                                Assert.IsNotNull(xDocument);
                                                                Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
                                                            },
@@ -705,35 +708,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void GetRunTimeConfigIncludingLogging()
         {
-            var strOutputXml = "<rtcRuntimeConfig" + FewsXmlheader + RtcRuntimeConfigxsd + ">" +
-                               "<period>" +
-                               "<userDefined>" +
-                               "<startDate date=\"" + "2000-01-01"
-                               //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StartTime.Year, realTimeControlModel.StartTime.Month, realTimeControlModel.StartTime.Day) 
-                               + "\" time=\"" + "00:15:30"
-                               //string.Format("{0:00}:{1:00}", realTimeControlModel.StartTime.Hour, realTimeControlModel.StartTime.Minute)
-                               + "\" />" + "<endDate date=\"" + "2001-02-03"
-                               //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StopTime.Year, realTimeControlModel.StopTime.Month, realTimeControlModel.StopTime.Day)
-                               + "\" time=\"" + "04:15:45"
-                               //string.Format("{0:00}:{1:00}", realTimeControlModel.StopTime.Hour, realTimeControlModel.StopTime.Minute)
-                               + "\" />" +
-                               "<timeStep unit=\"hour\" multiplier=\"" + "7" /*realTimeControlModel.TimeStep.Minutes*/ +
-                               "\" divider=\"1\" />" + //= optional "<numberEnsembles>1</numberEnsembles>" + 
-                               "</userDefined>" +
-                               "</period>" +
-                               "<mode>" +
-                               "<simulation>" +
-                               "<limitedMemory>true</limitedMemory>" +
-                               "</simulation>" +
-                               "</mode>" +
-                               "<logging>" +
-                               "<logLevel>4</logLevel>" +
-                               "<flushing>true</flushing>" +
-                               "</logging>" +
-                               "</rtcRuntimeConfig>";
+            string strOutputXml = "<rtcRuntimeConfig" + FewsXmlheader + RtcRuntimeConfigxsd + ">" +
+                                  "<period>" +
+                                  "<userDefined>" +
+                                  "<startDate date=\"" + "2000-01-01"
+                                  //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StartTime.Year, realTimeControlModel.StartTime.Month, realTimeControlModel.StartTime.Day) 
+                                  + "\" time=\"" + "00:15:30"
+                                  //string.Format("{0:00}:{1:00}", realTimeControlModel.StartTime.Hour, realTimeControlModel.StartTime.Minute)
+                                  + "\" />" + "<endDate date=\"" + "2001-02-03"
+                                  //string.Format("{0:0000}-{1:00}-{2:00}", realTimeControlModel.StopTime.Year, realTimeControlModel.StopTime.Month, realTimeControlModel.StopTime.Day)
+                                  + "\" time=\"" + "04:15:45"
+                                  //string.Format("{0:00}:{1:00}", realTimeControlModel.StopTime.Hour, realTimeControlModel.StopTime.Minute)
+                                  + "\" />" +
+                                  "<timeStep unit=\"hour\" multiplier=\"" + "7" /*realTimeControlModel.TimeStep.Minutes*/ +
+                                  "\" divider=\"1\" />" + //= optional "<numberEnsembles>1</numberEnsembles>" + 
+                                  "</userDefined>" +
+                                  "</period>" +
+                                  "<mode>" +
+                                  "<simulation>" +
+                                  "<limitedMemory>true</limitedMemory>" +
+                                  "</simulation>" +
+                                  "</mode>" +
+                                  "<logging>" +
+                                  "<logLevel>4</logLevel>" +
+                                  "<flushing>true</flushing>" +
+                                  "</logging>" +
+                                  "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                                                            {
-                                                               var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
+                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
                                                                Assert.IsNotNull(xDocument);
                                                                Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
                                                            },
@@ -753,7 +756,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</TimeSeries>";
 
             XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel,
-                                                                      new List<ControlGroup> {controlGroup});
+                                                                            new List<ControlGroup> {controlGroup});
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(piTimeSeries, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -763,7 +766,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
             var pidrule02TestName = "PIDRule02 Test";
-            var secondControlGroup = GetNewControlGroupWithNewPidRule(pidrule02TestName);
+            ControlGroup secondControlGroup = GetNewControlGroupWithNewPidRule(pidrule02TestName);
             var controlGroupList = new List<ControlGroup>
             {
                 controlGroup,
@@ -774,7 +777,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
 
             //Only one of the rules is constant, the document should still be written with the values of the second.
-            var descendantsWithLocalName =
+            List<XElement> descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
@@ -798,13 +801,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             SetUpTwoPidRulesSameOutput();
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
-            var pidrule02 = controlGroup.Rules.FirstOrDefault(r => r != pidRule);
+            RuleBase pidrule02 = controlGroup.Rules.FirstOrDefault(r => r != pidRule);
             Assert.NotNull(pidrule02);
-            var pidrule02TestName = pidrule02.Name;
+            string pidrule02TestName = pidrule02.Name;
 
             //The document should be written but the constant one will be excluded
             var controlGroupList = new List<ControlGroup> {controlGroup};
-            var descendantsWithLocalName =
+            List<XElement> descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
             Assert.AreNotEqual(pidRule.Name, descendantsWithLocalName[0].Value);
@@ -831,12 +834,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
             //Because it's constant and there are no more rules nothing should be written.
             var controlGroupList = new List<ControlGroup> {controlGroup};
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
+            XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
             Assert.IsNull(xDocument);
 
             //When changed to time series it should be valid, thus written.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            var descendantsWithLocalName =
+            List<XElement> descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
 
@@ -857,7 +860,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
+            XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
 
             // Then
             Assert.IsNull(xDocument);
@@ -937,7 +940,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.FalseOutputs.Add(intervalRule);
             intervalRule.IntervalType = intervalRuleIntervalType;
             var controlGroupList = new List<ControlGroup> {controlGroup};
-            string timeSeriesFileName = "timeseries_import.xml";
+            var timeSeriesFileName = "timeseries_import.xml";
 
             // When
             XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, timeSeriesFileName);
@@ -973,10 +976,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             SetUpGlobalPidRuleForGlobalControlGroup();
             SetUpLookupSignalForPidRule();
 
-            var strOutputXml = DataResultXml(input, output, true);
+            string strOutputXml = DataResultXml(input, output, true);
 
-            var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                                                                      new List<ControlGroup> {controlGroup}, null);
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
+                                                                            new List<ControlGroup> {controlGroup}, null);
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -985,10 +988,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void GetToolsDataXmlOnePIDRule()
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
-            var strOutputXml = DataResultXml(input, output, false);
+            string strOutputXml = DataResultXml(input, output, false);
 
-            var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                                                                      new List<ControlGroup> {controlGroup}, null);
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
+                                                                            new List<ControlGroup> {controlGroup}, null);
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -1016,8 +1019,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</rtcDataConfig>";
 
             XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                                                                      new List<ControlGroup> {controlGroup},
-                                                                      null);
+                                                                            new List<ControlGroup> {controlGroup},
+                                                                            null);
 
             //  Assert
             Assert.IsNotNull(xDocument);
@@ -1235,14 +1238,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateDataConfigFor2HydraulicRules()
         {
-            var controlGroups = CreateModelWithDuplicateInputOutputItems();
+            IList<ControlGroup> controlGroups = CreateModelWithDuplicateInputOutputItems();
 
-            var dataconfig = RealTimeControlXmlWriter
-                             .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
+            string dataconfig = RealTimeControlXmlWriter
+                                .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
             // generate the xml for dataconfig
-            var dataconfigXML = XElement.Parse(dataconfig);
+            XElement dataconfigXML = XElement.Parse(dataconfig);
             // parse the generated xml and check the number of input and output items
-            var descendants = dataconfigXML.Descendants();
+            IEnumerable<XElement> descendants = dataconfigXML.Descendants();
             Assert.AreEqual(2,
                             descendants.Where(
                                 d => d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
@@ -1263,11 +1266,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerate2IdenticalHydraulicRulesAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
 
-            var controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup2);
 
@@ -1293,7 +1296,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerateHydraulicRuleAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
             // As last step of the generation process an exception will be thrown if
@@ -1310,7 +1313,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerateHydraulicRuleWithoutTriggerAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
 
@@ -1327,7 +1330,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerateIntervalRuleAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupIntervalRule();
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupIntervalRule();
 
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
             // As last step of the generation process an exception will be thrown if
@@ -1344,7 +1347,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGeneratePidRuleAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(true);
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(true);
 
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
             // As last step of the generation process an exception will be thrown if
@@ -1361,7 +1364,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerateRelativeTimeRuleAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             ((RelativeTimeRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
             // As last step of the generation process an exception will be thrown if
@@ -1378,7 +1381,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void ValidateGenerateTimeRuleAgainstXsds()
         {
             var controlledModel = new ControlledTestModel();
-            var controlGroup = RealTimeControlModelHelper.CreateGroupTimeRuleWithCondition();
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupTimeRuleWithCondition();
 
             RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
             // As last step of the generation process an exception will be thrown if
