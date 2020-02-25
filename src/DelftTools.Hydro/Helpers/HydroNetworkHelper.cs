@@ -191,19 +191,24 @@ namespace DelftTools.Hydro.Helpers
                                                   bool gridAtFixedLength, double fixedLength,
                                                   IList<IChannel> selectedChannels=null)
         {
-            discretization.Locations.SkipUniqueValuesCheck = true;
-
-            selectedChannels = selectedChannels ?? discretization.Network.Branches.Where(b => b is IChannel).Cast<IChannel>().ToList();
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
-            foreach (Channel channel in selectedChannels)
+            if (!(discretization.Network is IHydroNetwork hydroNetwork))
             {
-                if (BranchLocationCount(discretization, channel) > 1)
+                log.Error("Could not find network to generate grid.");
+                return;
+            }
+
+            discretization.Locations.SkipUniqueValuesCheck = true;
+            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
+
+            selectedChannels = selectedChannels ?? hydroNetwork.Channels.ToList();
+            
+            foreach (var channel in selectedChannels)
+            {
+                if (BranchLocationCount(discretization, channel) > 1 && !overWriteSegments)
                 {
-                    if (!overWriteSegments)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
+
                 if (eraseExisting)
                 {
                     NetworkHelper.ClearLocations(discretization, channel);
@@ -221,41 +226,12 @@ namespace DelftTools.Hydro.Helpers
                 }
             }
 
+            // force refresh of caching (location dictionary) -> new locations are added
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
-            var locationsToRemove = new List<INetworkLocation>();
-            foreach (var node in discretization.Network.Nodes)
-            {
-                if (node.IsOnSingleBranch)
-                {
-                    continue;
-                }
 
-                var branches = node.IncomingBranches.Select(b => new {branch = b, incoming = true})
-                       .Concat(node.OutgoingBranches.Select(b => new {branch = b, incoming = false}));
+            discretization.RemoveLocations(discretization.GetDuplicateLocations());
 
-                var nodeLocations = branches.Select(b =>
-                {
-                    var locations = discretization.GetLocationsForBranch(b.branch);
-                    if (locations.Count == 0)
-                    {
-                        return null;
-                    }
-
-                    var index = b.incoming ? locations.Count - 1 : 0;
-                    return locations[index];
-                }).Where(l => l != null); 
-
-                locationsToRemove.AddRange(nodeLocations.Skip(1));
-            }
-
-            var locationsToSet = discretization.Locations.Values.ToList();
-            locationsToRemove.ForEach(l => locationsToSet.Remove(l));
-
-            discretization.Locations.Clear();
-            discretization.Locations.SetValues(locationsToSet);
-            
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
-
             discretization.Locations.SkipUniqueValuesCheck = false;
         }
 

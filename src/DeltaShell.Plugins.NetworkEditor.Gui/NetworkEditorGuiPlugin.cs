@@ -1307,7 +1307,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void removeCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var discretization = (IDiscretization)((ToolStripMenuItem)sender).Tag;
+
             discretization.Clear();
+            discretization.AddLocations(discretization.GenerateSewerConnectionNetworkLocations());
+
             //this should not be necessary...but collectionchanged is not properly handled in map
             var mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
             if (mapView != null)

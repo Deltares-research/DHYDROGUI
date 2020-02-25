@@ -718,7 +718,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             if (discretization == null) return;
 
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
+
             discretization.Clear();
+            discretization.AddLocations(discretization.GenerateSewerConnectionNetworkLocations());
+
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
             MapControl.SelectTool.RefreshSelection();
             MapControl.Refresh();
