@@ -152,7 +152,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             intervalRule.Outputs.Add(output);
 
             intervalRule.DeadbandAroundSetpoint = 0.1;
-            intervalRule.Setting = new Setting {Below = 0.2, Above = 0.3, MaxSpeed = 0.7};
+            intervalRule.Setting = new Setting
+            {
+                Below = 0.2,
+                Above = 0.3,
+                MaxSpeed = 0.7
+            };
             intervalRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
             intervalRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
             intervalRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
@@ -189,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var input2 = new Input
             {
                 ParameterName = "Discharge",
-                Feature = new RtcTestFeature { Name = "MeasureStationB" }
+                Feature = new RtcTestFeature {Name = "MeasureStationB"}
             };
 
             lookupSignal = new LookupSignal("SetPointForIntervalRule");
@@ -231,7 +236,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             newPidRule.Kd = 0.1;
             newPidRule.Ki = 0.2;
             newPidRule.Kp = 0.3;
-            newPidRule.Setting = new Setting {Min = 1.1, Max = 1.2, MaxSpeed = 1.3};
+            newPidRule.Setting = new Setting
+            {
+                Min = 1.1,
+                Max = 1.2,
+                MaxSpeed = 1.3
+            };
             newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
             newPidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 15, 30)] = 3.0;
             newPidRule.TimeSeries[new DateTime(2001, 2, 3, 4, 15, 45)] = 4.0;
@@ -268,7 +278,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
         private string DataResultXml(ConnectionPoint testInput, ConnectionPoint testOutput, bool addLookupSignal)
         {
-            var result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            string result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
             result += "<importSeries>";
             result += "<timeSeries id=\"" + testInput.XmlName + "\">" +
                       "<OpenMIExchangeItem>" +
@@ -277,9 +287,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "<unit>" + "m" + "</unit>" +
                       "</OpenMIExchangeItem>" +
                       "</timeSeries>" +
-                      "<timeSeries id=\"" + RtcXmlTag.SP + "/PIDRule Test\">" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test\">" +
                       "<PITimeSeries>" +
-                      $"<locationId>{RtcXmlTag.PIDRule}/PIDRule Test</locationId>" +
+                      $"<locationId>{RtcXmlTag.PIDRule}Control Group/PIDRule Test</locationId>" +
                       "<parameterId>SP</parameterId>" +
                       "<interpolationOption>LINEAR</interpolationOption>" +
                       "<extrapolationOption>BLOCK</extrapolationOption>" +
@@ -301,12 +311,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "<unit>" + "m" + "</unit>" +
                       "</OpenMIExchangeItem>" +
                       "</timeSeries>" +
-                      "<timeSeries id=\"[Status]" + "/" + condition.Name +
+                      "<timeSeries id=\"[Status]Control Group" + "/" + condition.Name +
                       "\" />" +
                       //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
-                      "<timeSeries id=\"[IP]/PIDRule Test\" />" +
-                      "<timeSeries id=\"[DP]/PIDRule Test\" />";
-            if (addLookupSignal) result += "<timeSeries id=\"[Signal]/SetPointForPID\" />";
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test\" />" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test\" />";
+            if (addLookupSignal) result += $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID\" />";
 
             result += "</exportSeries>";
             result += "</rtcDataConfig>";
@@ -314,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         }
 
         private List<XElement> GetxDocumentDescendantsForControlGroupListTimeSeries(string descendantsLocalName,
-            List<ControlGroup> controlGroupList)
+                                                                                    List<ControlGroup> controlGroupList)
         {
             XDocument xDocument;
             xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
@@ -359,41 +369,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void GenerateXml_C1AndC2_Or_NotC1AndC3()
         {
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strC1AndC2_Or_NotC1AndC3 =
+            // Setup
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strC1AndC2_Or_NotC1AndC3 =
                 header +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 "</general><rules><rule><unitDelay id=\"Interval Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                "</rule><rule><interval id=\"[IntervalRule]/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>" + RtcXmlTag.SP +  "/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]/Interval Test</status>" +
+                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
+                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[StandardCondition]/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                "</condition><true><trigger><standard id=\"[StandardCondition]/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C2</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C2</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</true><false><trigger><standard id=\"[StandardCondition]/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C3</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/C1</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 "</triggers>" +
                 "</rtcToolsConfig>";
-
 
             SetUpIntervalRule();
 
@@ -409,7 +419,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Conditions.Add(condition2);
             controlGroup.Conditions.Add(condition3);
 
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strC1AndC2_Or_NotC1AndC3, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -418,7 +431,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void GenerateXml_DirectionalCondition()
         {
-            var expectedXml =
+            // Setup
+            string expectedXml =
                 "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">" +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 $"</general><components><component><unitDelay id=\"{RtcXmlTag.Delayed}[Input]CondInputLocation/CondInputQuantityId\"><input><x>[Input]CondInputLocation/CondInputQuantityId</x>" +
@@ -430,15 +444,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                "</rule><rule><interval id=\"[IntervalRule]/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>" + RtcXmlTag.SP +  "/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]/Interval Test</status>" +
+                $"</rule><rule><interval id=\"{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
+                $"</input><output><y>[Output]WeirdWeir/Crest level</y><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[DirectionalCondition]/C5\"><condition><x1Series ref=\"EXPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Series ref=\"EXPLICIT\">[Input]CondInputLocation/CondInputQuantityId-1</x2Series>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.DirectionalCondition)}/C5\"><condition><x1Series ref=\"EXPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Series ref=\"EXPLICIT\">[Input]CondInputLocation/CondInputQuantityId-1</x2Series>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C5</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C5</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -462,39 +476,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             controlGroup.Conditions.Add(condition4);
 
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            
+            // Assert
             Assert.IsNotNull(xDocument);
-            var actualString = xDocument.ToString(SaveOptions.DisableFormatting);
-            Assert.AreEqual(expectedXml, actualString);
+            Assert.AreEqual(expectedXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
         [Test]
         [Category(TestCategory.Integration)]
         public void GenerateXml_LookupSignal()
         {
-            var expectedXml =
+            // Setup
+            string expectedXml =
                 "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">" +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 "</general><rules><rule><unitDelay id=\"PIDRule Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                "</rule><rule><lookupTable id=\"[LookupSignal]/SetPointForPID\"><table><record x=\"10\" y=\"3\" /><record x=\"100\" y=\"6\" />" +
+                $"</rule><rule><lookupTable id=\"{AppendDefaultControlGroupName(RtcXmlTag.LookupSignal)}/SetPointForPID\"><table><record x=\"10\" y=\"3\" /><record x=\"100\" y=\"6\" />" +
                 "</table><interpolationOption>LINEAR</interpolationOption><extrapolationOption>BLOCK</extrapolationOption><input><x ref=\"IMPLICIT\">[Input]MeasureStationB/Discharge</x>" +
-                "</input><output><y>[Signal]/SetPointForPID</y>" +
+                $"</input><output><y>{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID</y>" +
                 "</output>" +
                 "</lookupTable>" +
-                $"</rule><rule><pid id=\"{RtcXmlTag.PIDRule}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{RtcXmlTag.SP}/PIDRule Test</setpointSeries>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>[IP]/PIDRule Test</integralPart><differentialPart>[DP]/PIDRule Test</differentialPart>" +
+                $"</rule><rule><pid id=\"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test</setpointSeries>" +
+                $"</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test</integralPart><differentialPart>{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test</differentialPart>" +
                 "</output>" +
                 "</pid>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[StandardCondition]/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                $"</condition><true><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule Test</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
                 "</trigger>" +
-                $"</true><false><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule Test</ruleReference>" +
+                $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/Trigger31</status>" +
+                "</false><output><status>[Status]Control Group/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -504,12 +521,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             SetUpGlobalPidRuleForGlobalControlGroup();
             SetUpLookupSignalForPidRule();
 
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            
+            // Assert
             Assert.IsNotNull(xDocument);
-            var actualString = xDocument.ToString(SaveOptions.DisableFormatting);
-            Assert.AreEqual(expectedXml, actualString);
+            Assert.AreEqual(expectedXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
-
 
         /// <summary>
         ///     See RTC Document Jaco
@@ -519,41 +537,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void GenerateXmlC1And_C2orC3()
         {
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strC1And_C2OrC3 =
+            // Setup
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strC1And_C2OrC3 =
                 header +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 "</general><rules><rule><unitDelay id=\"Interval Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                "</rule><rule><interval id=\"[IntervalRule]/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>" + RtcXmlTag.SP +  "/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]/Interval Test</status>" +
+                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{RtcXmlTag.SP}Control Group/Interval Test</setpoint>" +
+                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[StandardCondition]/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                "</condition><true><trigger><standard id=\"[StandardCondition]/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><false><trigger><standard id=\"[StandardCondition]/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C3</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/C2</status>" +
+                "</false><output><status>[Status]Control Group/C2</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C1</status>" +
+                "</true><output><status>[Status]Control Group/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 "</triggers>" +
                 "</rtcToolsConfig>";
-
 
             SetUpIntervalRule();
 
@@ -568,7 +586,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Conditions.Add(condition2);
             controlGroup.Conditions.Add(condition3);
 
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strC1And_C2OrC3, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -581,48 +602,48 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void GenerateXmlOfC1AndC2_OrC3()
         {
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strC1AndC2_OrC3 =
+            // Setup
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strC1AndC2_OrC3 =
                 header +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 "</general><rules><rule><unitDelay id=\"Interval Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                "</rule><rule><interval id=\"[IntervalRule]/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>" + RtcXmlTag.SP +  "/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]/Interval Test</status>" +
+                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{RtcXmlTag.SP}Control Group/Interval Test</setpoint>" +
+                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[StandardCondition]/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                "</condition><true><trigger><standard id=\"[StandardCondition]/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><false><trigger><standard id=\"[StandardCondition]/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C3</status>" +
+                "</true><output><status>[Status]Control Group/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/C2</status>" +
+                "</false><output><status>[Status]Control Group/C2</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</true><false><trigger><standard id=\"[StandardCondition]/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
+                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]/C3</status>" +
+                "</true><output><status>[Status]Control Group/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/C1</status>" +
+                "</false><output><status>[Status]Control Group/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 "</triggers>" +
                 "</rtcToolsConfig>";
-
 
             SetUpIntervalRule();
 
@@ -639,7 +660,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Conditions.Add(condition2);
             controlGroup.Conditions.Add(condition3);
 
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strC1AndC2_OrC3, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -670,12 +694,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                "</mode>" +
                                "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-                {
-                    var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
-                    Assert.IsNotNull(xDocument);
-                    Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
-                },
-                "Depricated option \"Limited Memory\" of D-RTC model is set to True");
+                                                           {
+                                                               var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
+                                                               Assert.IsNotNull(xDocument);
+                                                               Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+                                                           },
+                                                           "Depricated option \"Limited Memory\" of D-RTC model is set to True");
         }
 
         [Test]
@@ -708,12 +732,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                "</logging>" +
                                "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-                {
-                    var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
-                    Assert.IsNotNull(xDocument);
-                    Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
-                },
-                "Depricated option \"Limited Memory\" of D-RTC model is set to True");
+                                                           {
+                                                               var xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
+                                                               Assert.IsNotNull(xDocument);
+                                                               Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
+                                                           },
+                                                           "Depricated option \"Limited Memory\" of D-RTC model is set to True");
         }
 
         [Test]
@@ -721,15 +745,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
             // preferred minimal coding in test string to avoid missing
-            var piTimeSeries =
+            string piTimeSeries =
                 "<TimeSeries" + PiXmlheader + PiTimeSeriesxsd + " version=\"1.2\">" +
-                $"<series><header><type>instantaneous</type><locationId>{RtcXmlTag.PIDRule}/PIDRule Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
+                $"<series><header><type>instantaneous</type><locationId>{RtcXmlTag.PIDRule}Control Group/PIDRule Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
                 "</header><event date=\"2000-01-01\" time=\"00:15:30\" value=\"3\" /><event date=\"2001-02-03\" time=\"04:15:45\" value=\"4\" />" +
                 "</series>" +
                 "</TimeSeries>";
 
-            var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup});
+            XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel,
+                                                                      new List<ControlGroup> {controlGroup});
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(piTimeSeries, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -740,7 +764,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             SetUpGlobalPidRuleForGlobalControlGroup();
             var pidrule02TestName = "PIDRule02 Test";
             var secondControlGroup = GetNewControlGroupWithNewPidRule(pidrule02TestName);
-            var controlGroupList = new List<ControlGroup> {controlGroup, secondControlGroup};
+            var controlGroupList = new List<ControlGroup>
+            {
+                controlGroup,
+                secondControlGroup
+            };
 
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
@@ -749,8 +777,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
-            Assert.AreEqual(RtcXmlTag.PIDRule + "/" + pidrule02TestName,
-                descendantsWithLocalName[0].Value); /* only the PidRule frome the second control group*/
+
+            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
+            Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value); // only the PidRule from the second control group
+
             pidRule.GetXmlNameWithTag("");
             /*Set both to time series, there should be two nodes now*/
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
@@ -758,9 +788,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(2, descendantsWithLocalName.Count);
 
-            var valuesInNodes = descendantsWithLocalName.Select(d => d.Value).ToList();
-            Assert.IsTrue(valuesInNodes.Contains(RtcXmlTag.PIDRule + "/" + pidRule.Name));
-            Assert.IsTrue(valuesInNodes.Contains(RtcXmlTag.PIDRule + "/" + pidrule02TestName));
+            IEnumerable<string> valuesInNodes = descendantsWithLocalName.Select(d => d.Value);
+            CollectionAssert.Contains(valuesInNodes, $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}");
+            CollectionAssert.Contains(valuesInNodes, $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}");
         }
 
         [Test]
@@ -778,7 +808,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
             Assert.AreNotEqual(pidRule.Name, descendantsWithLocalName[0].Value);
-            Assert.AreEqual(RtcXmlTag.PIDRule + "/" + controlGroup.Rules[1].Name, descendantsWithLocalName[0].Value);
+
+            string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{controlGroup.Rules[1].Name}";
+            Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value);
 
             /*Set both to time series, there should be two nodes now*/
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
@@ -786,9 +818,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(2, descendantsWithLocalName.Count);
 
-            var valuesInNodes = descendantsWithLocalName.Select(d => d.Value).ToList();
-            Assert.IsTrue(valuesInNodes.Contains(RtcXmlTag.PIDRule + "/" + pidRule.Name));
-            Assert.IsTrue(valuesInNodes.Contains(RtcXmlTag.PIDRule + "/" + pidrule02TestName));
+            IEnumerable<string> valuesInNodes = descendantsWithLocalName.Select(d => d.Value);
+            CollectionAssert.Contains(valuesInNodes, $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}");
+            CollectionAssert.Contains(valuesInNodes, $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}");
         }
 
         [Test]
@@ -807,7 +839,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
-            Assert.AreEqual(RtcXmlTag.PIDRule + "/" + pidRule.Name, descendantsWithLocalName[0].Value);
+
+            string expectedLocalNameValue = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidRule.Name}";
+            Assert.AreEqual(expectedLocalNameValue, descendantsWithLocalName[0].Value);
         }
 
         [Test]
@@ -820,7 +854,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.FalseOutputs.Add(intervalRule);
             SetUpLookupSignalForIntervalRule();
             intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
-            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
             var xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
@@ -839,14 +873,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.FalseOutputs.Add(intervalRule);
             SetUpLookupSignalForIntervalRule();
             intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
-            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
-            var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, null);
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, null);
 
             // Then
-            var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
-            var strIntervalRule =
+            Assert.IsNotNull(xDocument);
+
+            string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            string strIntervalRule =
                 header +
                 "<importSeries><timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
@@ -855,13 +891,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
                 "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
-                $"</timeSeries><timeSeries id=\"[Status]/Trigger31\" /><timeSeries id=\"[Status]/{intervalRule.Name}\" /><timeSeries id=\"[Signal]/SetPointForIntervalRule\" />" +
+                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"[Status]Control Group/{intervalRule.Name}\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForIntervalRule\" />" +
                 "</exportSeries>" +
                 "</rtcDataConfig>";
-            Assert.IsNotNull(xDocument);
             Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
         }
-        
+
+        [Test]
         [Category(TestCategory.Integration)]
         [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 3)]
         [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 6)]
@@ -872,7 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
             intervalRule.IntervalType = intervalRuleIntervalType;
-            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
             XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
@@ -882,7 +918,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             string piTimeSeries =
                 "<TimeSeries" + PiXmlheader + PiTimeSeriesxsd + " version=\"1.2\">" +
-                $"<series><header><type>instantaneous</type><locationId>{RtcXmlTag.IntervalRule}/Interval Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
+                $"<series><header><type>instantaneous</type><locationId>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
                 $"</header><event date=\"2000-01-01\" time=\"00:15:30\" value=\"{expectedValueInTimeSeriesFile}\" /><event date=\"2001-02-03\" time=\"04:15:45\" value=\"{expectedValueInTimeSeriesFile}\" />" +
                 "</series>" +
                 "</TimeSeries>";
@@ -900,7 +936,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
             intervalRule.IntervalType = intervalRuleIntervalType;
-            var controlGroupList = new List<ControlGroup> { controlGroup };
+            var controlGroupList = new List<ControlGroup> {controlGroup};
             string timeSeriesFileName = "timeseries_import.xml";
 
             // When
@@ -909,15 +945,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // Then
             Assert.IsNotNull(xDocument);
 
-            // Then
-            var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
-            var strIntervalRule =
+            string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            string strIntervalRule =
                 header +
                 $"<importSeries><PITimeSeriesFile><timeSeriesFile>{timeSeriesFileName}</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile>" +
                 "<timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
                 "</timeSeries>" +
-                $"<timeSeries id=\"[SP]/{intervalRule.Name}\"><PITimeSeries><locationId>{RtcXmlTag.IntervalRule}/{intervalRule.Name}</locationId><parameterId>SP</parameterId>" +
+                $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/{intervalRule.Name}\"><PITimeSeries><locationId>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/{intervalRule.Name}</locationId><parameterId>SP</parameterId>" +
                 "<interpolationOption>BLOCK</interpolationOption><extrapolationOption>BLOCK</extrapolationOption>" +
                 "</PITimeSeries>" +
                 "</timeSeries>" +
@@ -926,10 +961,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
                 "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
-                $"</timeSeries><timeSeries id=\"[Status]/Trigger31\" /><timeSeries id=\"[Status]/{intervalRule.Name}\" />" +
+                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{intervalRule.Name}\" />" +
                 "</exportSeries>" +
                 "</rtcDataConfig>";
-            Assert.IsNotNull(xDocument);
             Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
@@ -942,11 +976,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var strOutputXml = DataResultXml(input, output, true);
 
             var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup}, null);
+                                                                      new List<ControlGroup> {controlGroup}, null);
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
-
 
         [Test]
         public void GetToolsDataXmlOnePIDRule()
@@ -955,22 +988,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var strOutputXml = DataResultXml(input, output, false);
 
             var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup}, null);
+                                                                      new List<ControlGroup> {controlGroup}, null);
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
-
         [Test]
         public void HydraulicRuleWithTimeLagDataConfigGenerationTest()
         {
-            var hydraulicRule = GetHydraulicRuleWithTimeLagAddedToControlGroup();
+            // Setup
+            GetHydraulicRuleWithTimeLagAddedToControlGroup();
 
-            var index = hydraulicRule.TimeLagInTimeSteps;
-            var length = index - 1;
-
-            var header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
-            var strDataConfigWithHydraulicRuleTimeLag =
+            string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            string strDataConfigWithHydraulicRuleTimeLag =
                 header +
                 "<importSeries><timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
@@ -979,30 +1009,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
                 "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
-                $"</timeSeries><timeSeries id=\"[Status]/Trigger31\" /><timeSeries id=\"{RtcXmlTag.Delayed}[Input]MeasureStationA/Water level\" vectorLength=\"9\"><PITimeSeries><locationId>MeasureStationA</locationId><parameterId>Water level</parameterId>" +
+                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"{RtcXmlTag.Delayed}[Input]MeasureStationA/Water level\" vectorLength=\"9\"><PITimeSeries><locationId>MeasureStationA</locationId><parameterId>Water level</parameterId>" +
                 "</PITimeSeries>" +
                 "</timeSeries>" +
                 "</exportSeries>" +
                 "</rtcDataConfig>";
 
-            var xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
-            Assert.IsNotNull(xDocument);
-            var actual = xDocument.ToString(SaveOptions.DisableFormatting);
-            Assert.AreEqual(strDataConfigWithHydraulicRuleTimeLag, actual);
-        }
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
+                                                                      new List<ControlGroup> {controlGroup},
+                                                                      null);
 
+            //  Assert
+            Assert.IsNotNull(xDocument);
+            Assert.AreEqual(strDataConfigWithHydraulicRuleTimeLag, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
 
         [Test]
         public void HydraulicRuleWithTimeLagToolsConfigGenerationTest()
         {
-            var hydraulicRule = GetHydraulicRuleWithTimeLagAddedToControlGroup();
+            // Set
+            GetHydraulicRuleWithTimeLagAddedToControlGroup();
 
-            var index = hydraulicRule.TimeLagInTimeSteps - 2;
-
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strHydraulicRuleTimeLag =
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strHydraulicRuleTimeLag =
                 header +
                 "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
                 $"</general><components><component><unitDelay id=\"{RtcXmlTag.Delayed}[Input]MeasureStationA/Water level\"><input><x>[Input]MeasureStationA/Water level</x>" +
@@ -1010,24 +1039,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</output>" +
                 "</unitDelay>" +
                 "</component>" +
-                "</components><rules><rule><lookupTable id=\"[HydraulicRule]/HydraulicRule\"><table><record x=\"0\" y=\"0\" />" +
+                $"</components><rules><rule><lookupTable id=\"{AppendDefaultControlGroupName(RtcXmlTag.HydraulicRule)}/HydraulicRule\"><table><record x=\"0\" y=\"0\" />" +
                 $"</table><interpolationOption>BLOCK</interpolationOption><extrapolationOption>BLOCK</extrapolationOption><input><x ref=\"EXPLICIT\">{RtcXmlTag.Delayed}[Input]MeasureStationA/Water level[8]</x>" +
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</lookupTable>" +
                 "</rule>" +
-                "</rules><triggers><trigger><standard id=\"[StandardCondition]/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                "</condition><true><trigger><ruleReference>[HydraulicRule]/HydraulicRule</ruleReference>" +
+                $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.HydraulicRule)}/HydraulicRule</ruleReference>" +
                 "</trigger>" +
-                "</true><false><trigger><ruleReference>[HydraulicRule]/HydraulicRule</ruleReference>" +
+                $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.HydraulicRule)}/HydraulicRule</ruleReference>" +
                 "</trigger>" +
-                "</false><output><status>[Status]/Trigger31</status>" +
+                "</false><output><status>[Status]Control Group/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 "</triggers>" +
                 "</rtcToolsConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strHydraulicRuleTimeLag, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -1035,13 +1068,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void IntervalRuleToolsConfigGenerationTest()
         {
+            // Setup
             SetUpIntervalRule();
 
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
 
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strPid =
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strPid =
                 header +
                 "<general>" +
                 "<description>RTC Model DeltaShell</description>" +
@@ -1060,25 +1094,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"[IntervalRule]/Interval Test\">" +
+                "<interval id=\"[IntervalRule]Control Group/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
                 "<deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute>" +
                 "<input>" +
                 "<x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x>" +
-                "<setpoint>" + RtcXmlTag.SP +  "/Interval Test</setpoint>" +
+                $"<setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
                 "</input>" +
                 "<output>" +
                 "<y>[Output]WeirdWeir/Crest level</y>" +
-                "<status>[Status]/Interval Test</status>" +
+                "<status>[Status]Control Group/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
                 "</rules>" +
                 "<triggers>" +
                 "<trigger>" +
-                "<standard id=\"[StandardCondition]/Trigger31\">" +
+                $"<standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/Trigger31\">" +
                 "<condition>" +
                 "<x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
@@ -1086,22 +1120,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                "<ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
-                "<ruleReference>[IntervalRule]/Interval Test</ruleReference>" +
+                "<ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>[Status]/Trigger31</status>" +
+                "<status>[Status]Control Group/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 "</triggers>" +
                 "</rtcToolsConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strPid, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -1109,31 +1147,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void PidRuleToolsConfigGenerationTest()
         {
+            // Setup
             SetUpGlobalPidRuleForGlobalControlGroup();
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strPid = header +
-                         "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
-                         "</general><rules><rule><unitDelay id=\"PIDRule Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
-                         "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
-                         "</output>" +
-                         "</unitDelay>" +
-                         $"</rule><rule><pid id=\"{RtcXmlTag.PIDRule}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{RtcXmlTag.SP}/PIDRule Test</setpointSeries>" +
-                         "</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>[IP]/PIDRule Test</integralPart><differentialPart>[DP]/PIDRule Test</differentialPart>" +
-                         "</output>" +
-                         "</pid>" +
-                         "</rule>" +
-                         "</rules><triggers><trigger><standard id=\"[StandardCondition]/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                         $"</condition><true><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule Test</ruleReference>" +
-                         "</trigger>" +
-                         $"</true><false><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule Test</ruleReference>" +
-                         "</trigger>" +
-                         "</false><output><status>[Status]/Trigger31</status>" +
-                         "</output>" +
-                         "</standard>" +
-                         "</trigger>" +
-                         "</triggers>" +
-                         "</rtcToolsConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strPid = header +
+                            "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
+                            "</general><rules><rule><unitDelay id=\"PIDRule Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
+                            "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
+                            "</output>" +
+                            "</unitDelay>" +
+                            $"</rule><rule><pid id=\"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test</setpointSeries>" +
+                            $"</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test</integralPart><differentialPart>{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test</differentialPart>" +
+                            "</output>" +
+                            "</pid>" +
+                            "</rule>" +
+                            $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                            $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
+                            "</trigger>" +
+                            $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
+                            "</trigger>" +
+                            "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                            "</output>" +
+                            "</standard>" +
+                            "</trigger>" +
+                            "</triggers>" +
+                            "</rtcToolsConfig>";
+
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strPid, xDocument.ToString(SaveOptions.DisableFormatting));
         }
@@ -1141,42 +1184,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Test]
         public void TwoPidRulesSameOutputToolsConfigGenerationTest()
         {
+            // Setup
             SetUpTwoPidRulesSameOutput();
-            var header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
-            var strPid = header +
-                         "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
-                         "</general><rules><rule><unitDelay id=\"PIDRule Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
-                         "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
-                         "</output>" +
-                         "</unitDelay>" +
-                         $"</rule><rule><pid id=\"{RtcXmlTag.PIDRule}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{RtcXmlTag.SP}/PIDRule Test</setpointSeries>" +
-                         "</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>[IP]/PIDRule Test</integralPart><differentialPart>[DP]/PIDRule Test</differentialPart>" +
-                         "</output>" +
-                         "</pid>" +
-                         $"</rule><rule><pid id=\"{RtcXmlTag.PIDRule}/PIDRule2 Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{RtcXmlTag.SP}/PIDRule2 Test</setpointSeries>" +
-                         "</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>[IP]/PIDRule2 Test</integralPart><differentialPart>[DP]/PIDRule2 Test</differentialPart>" +
-                         "</output>" +
-                         "</pid>" +
-                         "</rule>" +
-                         "</rules><triggers><trigger><standard id=\"[StandardCondition]/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
-                         $"</condition><true><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule Test</ruleReference>" +
-                         "</trigger>" +
-                         $"</true><false><trigger><ruleReference>{RtcXmlTag.PIDRule}/PIDRule2 Test</ruleReference>" +
-                         "</trigger>" +
-                         "</false><output><status>[Status]/Trigger31</status>" +
-                         "</output>" +
-                         "</standard>" +
-                         "</trigger>" +
-                         "</triggers>" +
-                         "</rtcToolsConfig>";
-            var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+            string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
+            string strPid = header +
+                            "<general><description>RTC Model DeltaShell</description><poolRoutingScheme>Theta</poolRoutingScheme><theta>0.5</theta>" +
+                            "</general><rules><rule><unitDelay id=\"PIDRule Test_unitDelay\"><input><x>[Output]WeirdWeir/Crest level</x>" +
+                            "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
+                            "</output>" +
+                            "</unitDelay>" +
+                            $"</rule><rule><pid id=\"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test</setpointSeries>" +
+                            $"</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test</integralPart><differentialPart>{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test</differentialPart>" +
+                            "</output>" +
+                            "</pid>" +
+                            $"</rule><rule><pid id=\"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule2 Test\"><mode>PIDVEL</mode><settingMin>1.1</settingMin><settingMax>1.2</settingMax><settingMaxSpeed>1.3</settingMaxSpeed><kp>0.3</kp><ki>0.2</ki><kd>0.1</kd><input><x>[Input]MeasureStationA/Water level</x><setpointSeries>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule2 Test</setpointSeries>" +
+                            $"</input><output><y>[Output]WeirdWeir/Crest level</y><integralPart>{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule2 Test</integralPart><differentialPart>{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule2 Test</differentialPart>" +
+                            "</output>" +
+                            "</pid>" +
+                            "</rule>" +
+                            $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/Trigger31\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
+                            $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
+                            "</trigger>" +
+                            $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule2 Test</ruleReference>" +
+                            "</trigger>" +
+                            "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                            "</output>" +
+                            "</standard>" +
+                            "</trigger>" +
+                            "</triggers>" +
+                            "</rtcToolsConfig>";
+
+            // Call
+            XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
+
+            // Assert
             Assert.IsNotNull(xDocument);
             Assert.AreEqual(strPid, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
+        private static string AppendDefaultControlGroupName(string tag)
+        {
+            return $"{tag}Control Group";
+        }
+
         /// <summary>
-        ///     Check if duplicate input items are handled well in the xml for dataconfig
-        ///     note timeseries.xml will be empty
+        /// Check if duplicate input items are handled well in the xml for dataconfig
+        /// note timeseries.xml will be empty
         /// </summary>
         [Test]
         [Category(TestCategory.Integration)]
@@ -1185,26 +1238,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var controlGroups = CreateModelWithDuplicateInputOutputItems();
 
             var dataconfig = RealTimeControlXmlWriter
-                .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
+                             .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
             // generate the xml for dataconfig
             var dataconfigXML = XElement.Parse(dataconfig);
             // parse the generated xml and check the number of input and output items
             var descendants = dataconfigXML.Descendants();
             Assert.AreEqual(2,
-                descendants.Where(
-                    d => d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
+                            descendants.Where(
+                                d => d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
             Assert.AreEqual(1,
-                descendants.Where(
-                    d =>
-                        d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
-                        d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
+                            descendants.Where(
+                                d =>
+                                    d.Value.ToUpper().StartsWith("locationWater level".ToUpper()) &&
+                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
             Assert.AreEqual(1,
-                descendants.Where(
-                    d =>
-                        d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
-                        d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
+                            descendants.Where(
+                                d =>
+                                    d.Value.ToUpper().StartsWith("locationCrest level".ToUpper()) &&
+                                    d.Name.ToString().Contains("OpenMIExchangeItem")).Count());
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -1222,10 +1274,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup1, controlGroup2});
+                                                       new List<ControlGroup>
+                                                       {
+                                                           controlGroup1,
+                                                           controlGroup2
+                                                       });
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup1, controlGroup2},
-                null);
+                                                      new List<ControlGroup>
+                                                      {
+                                                          controlGroup1,
+                                                          controlGroup2
+                                                      },
+                                                      null);
         }
 
         [Test]
@@ -1239,10 +1299,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
+                                                      new List<ControlGroup> {controlGroup},
+                                                      null);
         }
 
         [Test]
@@ -1259,7 +1319,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
             //triggers element should not be generated
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
         }
 
         [Test]
@@ -1273,10 +1333,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
+                                                      new List<ControlGroup> {controlGroup},
+                                                      null);
         }
 
         [Test]
@@ -1290,10 +1350,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
+                                                      new List<ControlGroup> {controlGroup},
+                                                      null);
         }
 
         [Test]
@@ -1307,10 +1367,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
+                                                      new List<ControlGroup> {controlGroup},
+                                                      null);
         }
 
         [Test]
@@ -1324,10 +1384,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
-                new List<ControlGroup> {controlGroup});
+                                                       new List<ControlGroup> {controlGroup});
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
-                new List<ControlGroup> {controlGroup},
-                null);
+                                                      new List<ControlGroup> {controlGroup},
+                                                      null);
         }
     }
 }
