@@ -22,7 +22,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         public static void ReadFile(string structureFilename, string csdFilename, IHydroNetwork network)
         {
             var fileReadingExceptions = new List<FileReadingException>();
-            var crossSectionDefinitions = GetCrossSectionDefinitions(network, csdFilename, fileReadingExceptions);
+            var crossSectionDefinitions = new List<ICrossSectionDefinition>();
 
             if (fileReadingExceptions.Count > 0)
             {
@@ -109,43 +109,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
 
             return structuresCategories;
-        }
-
-        private static IList<ICrossSectionDefinition> GetCrossSectionDefinitions(IHydroNetwork network,string csdFilename, IList<FileReadingException> fileReadingExceptions)
-        {
-            if (!File.Exists(csdFilename))
-            {
-                return new List<ICrossSectionDefinition>();
-            }
-            //throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", csdFilename));
-
-            var csdCategories = new DelftIniReader().ReadDelftIniFile(csdFilename);
-
-            IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
-            foreach (var csdDefinitionCategory in csdCategories.Where(category =>
-                category.Name == DefinitionPropertySettings.Header))
-            {
-                try
-                {
-                    var crossSectionDefinition =
-                        CrossSectionFileReader.TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory,
-                            network);
-                    if (crossSectionDefinitions.Contains(crossSectionDefinition) ||
-                        crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
-                        throw new FileReadingException(string.Format(
-                            "cross section definition with id {0} is already read, id's CAN NOT be duplicates!",
-                            crossSectionDefinition.Name));
-
-                    crossSectionDefinitions.Add(crossSectionDefinition);
-                }
-                catch (FileReadingException fileReadingException)
-                {
-                    fileReadingExceptions.Add(new FileReadingException("Could not read cross section definition for structures",
-                        fileReadingException));
-                }
-            }
-
-            return crossSectionDefinitions;
         }
 
         private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories,

@@ -31,12 +31,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
+            var nonStructureCrossSectionDefinitions = csIniLocations.Select(csIniLocation => csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key)).ToArray();
+
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
             foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
             {
                 try
                 {
-                    var crossSectionDefinition = TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, network);
+                    var crossSectionDefinition = TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, network, nonStructureCrossSectionDefinitions);
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
 
@@ -181,7 +183,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
             
         }
 
-        public static ICrossSectionDefinition TransformDefinitionCategoryIntoCrossSectionDefinition(IDelftIniCategory crossSectionDefinitionCategory, IHydroNetwork network)
+        public static ICrossSectionDefinition TransformDefinitionCategoryIntoCrossSectionDefinition(
+            IDelftIniCategory crossSectionDefinitionCategory,
+            IHydroNetwork network,
+            string[] nonStructureCrossSectionDefinitions)
         {
             var typeProperty = crossSectionDefinitionCategory.Properties
                 .First(p => p.Name.ToLowerInvariant() == DefinitionPropertySettings.DefinitionType.Key.ToLowerInvariant());
@@ -197,8 +202,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
 
             var readCrossSectionDefinition = definitionReader.ReadDefinition(crossSectionDefinitionCategory);
-            SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network);
-            //groundlayer??
+
+            // Don't set friction for structure related cross sections
+            if (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name))
+            {
+                SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network);
+            }
+
             return readCrossSectionDefinition;
         }
 
