@@ -39,7 +39,7 @@ namespace DeltaShell.Dimr
             dimrRefDate = DateTime.MinValue;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FeedBackLevelKey, DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel(DimrApiDataSet.FeedbackLevelKey, DimrApiDataSet.FeedbackLevel);
             SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
             cMessageCallback = FeedbackLog;
             set_feedback_logger();
