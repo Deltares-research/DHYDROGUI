@@ -289,7 +289,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "</timeSeries>" +
                       $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test\">" +
                       "<PITimeSeries>" +
-                      $"<locationId>{RtcXmlTag.PIDRule}Control Group/PIDRule Test</locationId>" +
+                      $"<locationId>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</locationId>" +
                       "<parameterId>SP</parameterId>" +
                       "<interpolationOption>LINEAR</interpolationOption>" +
                       "<extrapolationOption>BLOCK</extrapolationOption>" +
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "<unit>" + "m" + "</unit>" +
                       "</OpenMIExchangeItem>" +
                       "</timeSeries>" +
-                      "<timeSeries id=\"[Status]Control Group" + "/" + condition.Name +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{condition.Name}" +
                       "\" />" +
                       //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
                       $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test\" />" +
@@ -381,14 +381,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
+                $"</rule><rule><interval id=\"{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
+                $"</input><output><y>[Output]WeirdWeir/Crest level</y><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
                 $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
                 $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C2</status>" +
                 "</output>" +
@@ -514,7 +514,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</trigger>" +
                 $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
                 "</trigger>" +
-                "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -549,27 +549,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{RtcXmlTag.SP}Control Group/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
+                $"</rule><rule><interval id=\"{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
+                $"</input><output><y>[Output]WeirdWeir/Crest level</y><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
                 $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
                 $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]Control Group/C2</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C2</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</true><output><status>[Status]Control Group/C1</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -614,34 +614,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</input><output><y>[Output]WeirdWeir/Crest level</y>" +
                 "</output>" +
                 "</unitDelay>" +
-                $"</rule><rule><interval id=\"[IntervalRule]Control Group/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{RtcXmlTag.SP}Control Group/Interval Test</setpoint>" +
-                "</input><output><y>[Output]WeirdWeir/Crest level</y><status>[Status]Control Group/Interval Test</status>" +
+                $"</rule><rule><interval id=\"{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test\"><settingBelow>0.2</settingBelow><settingAbove>0.3</settingAbove><settingMaxStep>0</settingMaxStep><deadbandSetpointAbsolute>0.1</deadbandSetpointAbsolute><input><x ref=\"EXPLICIT\">[Input]MeasureStationA/Water level</x><setpoint>{AppendDefaultControlGroupName(RtcXmlTag.SP)}/Interval Test</setpoint>" +
+                $"</input><output><y>[Output]WeirdWeir/Crest level</y><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
                 $"</rules><triggers><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C1\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>1.1</x2Value>" +
                 $"</condition><true><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C2\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Greater</relationalOperator><x2Value>2.2</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]Control Group/C3</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]Control Group/C2</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C2</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
                 $"</true><false><trigger><standard id=\"{AppendDefaultControlGroupName(RtcXmlTag.StandardCondition)}/C3\"><condition><x1Series ref=\"IMPLICIT\">[Input]CondInputLocation/CondInputQuantityId</x1Series><relationalOperator>Less</relationalOperator><x2Value>0.5</x2Value>" +
-                "</condition><true><trigger><ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"</condition><true><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
-                "</true><output><status>[Status]Control Group/C3</status>" +
+                $"</true><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C3</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
-                "</false><output><status>[Status]Control Group/C1</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/C1</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -750,7 +750,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             // preferred minimal coding in test string to avoid missing
             string piTimeSeries =
                 "<TimeSeries" + PiXmlheader + PiTimeSeriesxsd + " version=\"1.2\">" +
-                $"<series><header><type>instantaneous</type><locationId>{RtcXmlTag.PIDRule}Control Group/PIDRule Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
+                $"<series><header><type>instantaneous</type><locationId>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</locationId><parameterId>SP</parameterId><timeStep unit=\"hour\" multiplier=\"7\" divider=\"1\" /><startDate date=\"2000-01-01\" time=\"00:15:30\" /><endDate date=\"2001-02-03\" time=\"04:15:45\" /><missVal>-999.0</missVal><stationName /><units />" +
                 "</header><event date=\"2000-01-01\" time=\"00:15:30\" value=\"3\" /><event date=\"2001-02-03\" time=\"04:15:45\" value=\"4\" />" +
                 "</series>" +
                 "</TimeSeries>";
@@ -894,7 +894,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
                 "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
                 "</OpenMIExchangeItem>" +
-                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"[Status]Control Group/{intervalRule.Name}\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForIntervalRule\" />" +
+                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{intervalRule.Name}\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForIntervalRule\" />" +
                 "</exportSeries>" +
                 "</rtcDataConfig>";
             Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
@@ -1053,7 +1053,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</trigger>" +
                 $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.HydraulicRule)}/HydraulicRule</ruleReference>" +
                 "</trigger>" +
-                "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1097,7 +1097,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</unitDelay>" +
                 "</rule>" +
                 "<rule>" +
-                "<interval id=\"[IntervalRule]Control Group/Interval Test\">" +
+                $"<interval id=\"{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test\">" +
                 "<settingBelow>0.2</settingBelow>" +
                 "<settingAbove>0.3</settingAbove>" +
                 "<settingMaxStep>0</settingMaxStep>" +
@@ -1108,7 +1108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</input>" +
                 "<output>" +
                 "<y>[Output]WeirdWeir/Crest level</y>" +
-                "<status>[Status]Control Group/Interval Test</status>" +
+                $"<status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Interval Test</status>" +
                 "</output>" +
                 "</interval>" +
                 "</rule>" +
@@ -1123,16 +1123,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 "</condition>" +
                 "<true>" +
                 "<trigger>" +
-                "<ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"<ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
-                "<ruleReference>[IntervalRule]Control Group/Interval Test</ruleReference>" +
+                $"<ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/Interval Test</ruleReference>" +
                 "</trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>[Status]Control Group/Trigger31</status>" +
+                $"<status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>" +
@@ -1169,7 +1169,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "</trigger>" +
                             $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</ruleReference>" +
                             "</trigger>" +
-                            "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                            $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
@@ -1210,7 +1210,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                             "</trigger>" +
                             $"</true><false><trigger><ruleReference>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule2 Test</ruleReference>" +
                             "</trigger>" +
-                            "</false><output><status>[Status]Control Group/Trigger31</status>" +
+                            $"</false><output><status>{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31</status>" +
                             "</output>" +
                             "</standard>" +
                             "</trigger>" +
