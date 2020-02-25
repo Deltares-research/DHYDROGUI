@@ -122,6 +122,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DimrApiDataSetTest.cs" />
     <Compile Include="DimrApiTests.cs" />
     <Compile Include="DimrErrorCodeExceptionTests.cs" />
     <Compile Include="DimrGuiPluginTests.cs" />
