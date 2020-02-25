@@ -1792,7 +1792,6 @@ src/DeltaShell.Plugins.FMSuite.Common/Uml/BoundaryConditions.cd -text
 src/DeltaShell.Plugins.FMSuite.Common/WindDefinitionType.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/packages.config -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/BoundaryDataMapSymbols.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/CreateFmModelSettingViewViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Editors/BoundaryConditionExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Editors/BoundaryConditionListView.Designer.cs -text
@@ -1877,6 +1876,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.cs -tex
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/BoundaryDataImportDialog.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingView.xaml.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CreateFmModelSettingViewViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/CrossSectionViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/DataImportPointsListBox.resx -text

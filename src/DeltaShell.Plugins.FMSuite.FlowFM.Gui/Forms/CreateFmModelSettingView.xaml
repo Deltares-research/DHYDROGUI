@@ -4,14 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
-             xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
              xmlns:coordinateSystems="clr-namespace:GeoAPI.Extensions.CoordinateSystems;assembly=GeoAPI.Extensions"
              mc:Ignorable="d" 
              Loaded="CreateFmModelSettingViewOnLoaded"
              Background="White"
              Foreground="Black">
     <UserControl.DataContext>
-        <gui:CreateFmModelSettingViewViewModel x:Name="ViewModel"/>
+        <local:CreateFmModelSettingViewViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>

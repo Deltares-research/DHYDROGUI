@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,9 +8,8 @@ using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Shell.Core;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap;
-using SharpMap.Extensions.CoordinateSystems;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public class CreateFmModelSettingViewViewModel : INotifyPropertyChanged
     {
