@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Api\IWaveModelApi.cs" />
     <Compile Include="Api\RemoteWaveModelApi.cs" />
+    <Compile Include="Api\WaveEnvironmentHelper.cs" />
     <Compile Include="Api\WaveModelApi.cs" />
     <Compile Include="Api\WaveModelDll.cs" />
     <Compile Include="FunctionArgumentSyncer.cs" />

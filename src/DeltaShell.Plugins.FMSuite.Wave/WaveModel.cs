@@ -1155,13 +1155,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private static void RestoreEnvironment()
         {
-            string oldD3DHome = Environment.GetEnvironmentVariable("OLD_D3D_HOME");
-            if (!string.IsNullOrEmpty(oldD3DHome))
-            {
-                Environment.SetEnvironmentVariable("D3D_HOME", oldD3DHome);
-                Environment.SetEnvironmentVariable("OLD_D3D_HOME", null);
-            }
-
             string oldArch = Environment.GetEnvironmentVariable("OLD_ARCH");
             if (!string.IsNullOrEmpty(oldArch))
             {
@@ -1169,7 +1162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Environment.SetEnvironmentVariable("OLD_ARCH", null);
             }
 
-            WaveModelApi.WaveDllHelper.DimrRun = false;
+            WaveEnvironmentHelper.DimrRun = false;
         }
 
         protected override void OnCancel()
@@ -1592,12 +1585,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             get
             {
-                using (var waveDllHelper = new WaveModelApi.WaveDllHelper(string.Empty))
+                using (var waveDllHelper = new WaveEnvironmentHelper(string.Empty))
                 {
-                    WaveModelApi.WaveDllHelper.DimrRun = true;
-                    return waveDllHelper.WaveExeDir + ";" + waveDllHelper.SwanExeDir + ";" +
-                           waveDllHelper.SwanScriptDir + ";" + waveDllHelper.EsmfPath + ";" +
-                           waveDllHelper.EsmfScriptPath;
+                    WaveEnvironmentHelper.DimrRun = true;
+
+                    return string.Join(";",
+                                       DimrApiDataSet.WaveExePath,
+                                       DimrApiDataSet.SwanExePath,
+                                       DimrApiDataSet.SwanScriptPath,
+                                       DimrApiDataSet.EsmfExePath,
+                                       DimrApiDataSet.EsmfScriptPath);
                 }
             }
         }
