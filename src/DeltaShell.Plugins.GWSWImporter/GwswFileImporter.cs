@@ -5,6 +5,9 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
@@ -15,8 +18,11 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -25,13 +31,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
-using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
@@ -121,7 +120,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                           target as RainfallRunoffModel;
             if (rrModel != null && fmModel?.Network != null)
             {
-                ImportGwswNetworkInRrModel(elementTypesList, rrModel, fmModel?.Network);
+                ImportGwswNetworkInRrModel(elementTypesList, rrModel, fmModel?.Network, fmModel.LateralSourcesData);
                 if (hydroModel != null)
                 {
                     AddRRtoFMNwrwLinks(rrModel, fmModel.Network, fmModel.LateralSourcesData);
@@ -130,31 +129,42 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
             if (hydroModel != null)
             {
-                if (fmModel != null && rrModel == null)
-                {
-                    var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
-                    var hydroModelCurrentWorkflow =
-                        wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<IWaterFlowFMModel>().Any());
-                    if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
-                }
-                else if (fmModel != null && rrModel != null)
-                {
-                    var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 3);
-                    var hydroModelCurrentWorkflow = wfs.FirstOrDefault(wf =>
-                        wf.GetActivitiesOfType<IWaterFlowFMModel>().Any() &&
-                        wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
-                    if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
-                }
-                else if (fmModel == null && rrModel != null)
-                {
-                    var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
-                    var hydroModelCurrentWorkflow =
-                        wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
-                    if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
-                }
+                SetCurrentWorkflow(fmModel, rrModel, hydroModel);
             }
 
             return (target is Project || target == null) && !ShouldCancel ? hydroModel : null;
+        }
+
+        /// <summary>
+        /// Sets the CurrentWorkFlow property of the HydroModel.
+        /// </summary>
+        /// <param name="fmModel"></param>
+        /// <param name="rrModel"></param>
+        /// <param name="hydroModel"></param>
+        private void SetCurrentWorkflow(WaterFlowFMModel fmModel, RainfallRunoffModel rrModel, HydroModel hydroModel)
+        {
+            if (fmModel != null && rrModel == null)
+            {
+                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
+                var hydroModelCurrentWorkflow =
+                    wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<IWaterFlowFMModel>().Any());
+                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+            }
+            else if (fmModel != null && rrModel != null)
+            {
+                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 3);
+                var hydroModelCurrentWorkflow = wfs.FirstOrDefault(wf =>
+                    wf.GetActivitiesOfType<IWaterFlowFMModel>().Any() &&
+                    wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
+                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+            }
+            else if (fmModel == null && rrModel != null)
+            {
+                var wfs = hydroModel.Workflows.Where(w => w.GetAllActivitiesRecursive<IActivity>().Count() == 2);
+                var hydroModelCurrentWorkflow =
+                    wfs.FirstOrDefault(wf => wf.GetActivitiesOfType<RainfallRunoffModel>().Any());
+                if (hydroModelCurrentWorkflow != null) hydroModel.CurrentWorkflow = hydroModelCurrentWorkflow;
+            }
         }
 
         private void AddRRtoFMNwrwLinks(RainfallRunoffModel rrModel, IHydroNetwork network,
@@ -170,45 +180,23 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 {
                     try
                     {
-                        IBranch branch = network.Branches.FirstOrDefault(b =>
-                            b.Name.Equals(nwrwData.Name, StringComparison.InvariantCultureIgnoreCase));
-                        if (branch == null)
-                        {
-                            branch = network.Branches
-                                .OfType<IPipe>()
-                                .FirstOrDefault(p =>
-                                    p.TargetCompartmentName.Equals(nwrwData.Name,
-                                        StringComparison.InvariantCultureIgnoreCase) ||
-                                    p.SourceCompartmentName.Equals(nwrwData.Name,
-                                        StringComparison.InvariantCultureIgnoreCase));
-                        }
+                        IBranch branch = FindTargetBranchForNwrwCatchmentBranch(network, nwrwData.Name);
 
                         if (branch != null)
                         {
-                            // add lateral to branch
                             LateralSource lateralSource = new LateralSource
-                            { Branch = branch, Chainage = branch.Length, Name = nwrwData.Name, LongName = nwrwData.Name };
-                            if (branch is IPipe pipe)
                             {
-                                //lateralSource.Attributes["ConnectedToCompartment"] = true;
-                                lateralSource.Attributes["Compartment"] = pipe.SourceCompartmentName.Equals(nwrwData.Name) ? pipe.SourceCompartment : pipe.TargetCompartment;
-                            }
+                                Branch = branch,
+                                Chainage = branch.Length,
+                                Name = nwrwData.Name,
+                                LongName = nwrwData.Name
+                            };
 
-                            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
-                            branch.BranchFeatures.Add(lateralSource);
-
-                            // create hydrolink
-                            var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
-                            hydroLink.Geometry = new LineString(new[]
-                                {nwrwData.Catchment.InteriorPoint.Coordinate, lateralSource.Geometry.Coordinate});
+                            AddLateralSourceToBranch(branch, nwrwData.Name, lateralSource);
+                            AddHydroLinkToCatchment(nwrwData, lateralSource);
 
                             // at FM-side, create lateral data of type REALTIME
-                            Model1DLateralSourceData model1DLateralSourceData =
-                                lateralSourcesData.FirstOrDefault(lsd =>
-                                    lsd.Feature ==
-                                    lateralSource);
-                            model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-                            model1DLateralSourceData.Flow = 0d;
+                            AddLateralDataToFmModel(lateralSourcesData, lateralSource, Model1DLateralDataType.FlowRealTime, default(double));
                         }
                     }
                     catch (Exception e)
@@ -231,9 +219,92 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             
         }
 
+        /// <summary>
+        /// Adds the specified Model1DLateralDataType and Flow
+        /// to the Model1DLateralSourceData.
+        /// </summary>
+        /// <param name="lateralSourcesData"></param>
+        /// <param name="lateralSource"></param>
+        /// <param name="model1DBoundaryDataType"></param>
+        private void AddLateralDataToFmModel(
+            IEnumerable<Model1DLateralSourceData> lateralSourcesData,
+            LateralSource lateralSource,
+            Model1DLateralDataType model1DBoundaryDataType,
+            double flow)
+        {
+            Model1DLateralSourceData model1DLateralSourceData =
+                lateralSourcesData.FirstOrDefault(lsd =>
+                    lsd.Feature ==
+                    lateralSource);
+            model1DLateralSourceData.DataType = model1DBoundaryDataType;
+            model1DLateralSourceData.Flow = flow;
+        }
+
+        /// <summary>
+        /// Creates a link between the NwrwData and the LateralSource.
+        /// </summary>
+        /// <param name="nwrwData"></param>
+        /// <param name="lateralSource"></param>
+        private void AddHydroLinkToCatchment(NwrwData nwrwData, LateralSource lateralSource)
+        {
+
+            var hydroLink = nwrwData.Catchment.LinkTo(lateralSource);
+            hydroLink.Geometry = new LineString(new[]
+            {
+                nwrwData.Catchment.InteriorPoint.Coordinate,
+                lateralSource.Geometry.Coordinate
+            });
+        }
+
+        /// <summary>
+        /// Adds a LateralSource as a BranchFeature to a branch.
+        /// </summary>
+        /// <param name="branch"></param>
+        /// <param name="name"></param>
+        /// <param name="lateralSource"></param>
+        private void AddLateralSourceToBranch(IBranch branch, string name, LateralSource lateralSource)
+        {
+            if (branch is IPipe pipe)
+            {
+                lateralSource.Attributes["Compartment"] = pipe.SourceCompartmentName.Equals(name)
+                    ? pipe.SourceCompartment
+                    : pipe.TargetCompartment;
+            }
+
+            lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+            branch.BranchFeatures.Add(lateralSource);
+        }
+
+        /// <summary>
+        /// Finds a Branch in a Network based on a Node name or Branch name.
+        /// In case the name is Node name, we return the branch where the
+        /// target or source compartment name is equal to the provided name.
+        /// </summary>
+        /// <param name="network"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private IBranch FindTargetBranchForNwrwCatchmentBranch(IHydroNetwork network, string name)
+        {
+            if (network == null) throw new ArgumentNullException(nameof(network));
+            IBranch branch = network.Branches.FirstOrDefault(b =>
+                b.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            if (branch == null)
+            {
+                branch = network.Branches
+                    .OfType<IPipe>()
+                    .FirstOrDefault(p =>
+                        p.TargetCompartmentName.Equals(name,
+                            StringComparison.InvariantCultureIgnoreCase) ||
+                        p.SourceCompartmentName.Equals(name,
+                            StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            return branch;
+        }
+
         private void ImportGwswNetworkInRrModel(
             IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList, RainfallRunoffModel rrModel,
-            IHydroNetwork network)
+            IHydroNetwork network, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             var bubblingEnabledSetting = EventSettings.BubblingEnabled;
             try
@@ -249,7 +320,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 if (rrModel == null || network == null || ShouldCancel) return;
                 ReportProgress("Adding features to Rainfall Runoff Model.");
                 EventSettings.BubblingEnabled = false;
-                AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network);
+                AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, network, lateralSourcesData);
+
             }
             finally
             {
@@ -259,20 +331,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         }
 
         private void AddNwrwFeaturesToRainfallRunoffModel(IEnumerable<INwrwFeature> importedFeatureElements,
-            RainfallRunoffModel rrModel, IHydroNetwork network)
+            RainfallRunoffModel rrModel, IHydroNetwork network, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             var featureElements = importedFeatureElements.ToList();
             var nrOfImportedFeatureElements = featureElements.Count;
             var stepSize = nrOfImportedFeatureElements / 20;
 
-            //            var branchesGeometryDict = network.Branches.Select(b => new {b.Name, b.Target.Geometry});
-            //            var compartmentsGeometryDict = network.Nodes.OfType<IManhole>().SelectMany(m => m.Compartments)
-            //                .Select(c => new {c.Name, c.ParentManhole?.Geometry});
-            //            var nodesGeometryDict = network.Nodes.Select(n => new {n.Name, n.Geometry});
-            //            var networkFeatureNameAndGeometries = nodesGeometryDict.Concat(branchesGeometryDict)
-            //                .Concat(compartmentsGeometryDict)
-            //                .Distinct()
-            //                .ToDictionary(a => a.Name, b => b.Geometry, StringComparer.InvariantCultureIgnoreCase);
             var branchesGeometryDict = network.Branches.Select(b => new { b.Name, b.Target.Geometry });
             var compartmentsGeometryDict = network.Nodes.OfType<IManhole>().SelectMany(m => m.Compartments)
                 .Select(c => new { c.Name, c.Geometry });
@@ -303,6 +367,30 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         if (e.Name != null && networkFeatureNameAndGeometries.ContainsKey(e.Name))
                             e.Geometry = networkFeatureNameAndGeometries[e.Name];
                         e.AddNwrwCatchmentModelDataToModel(rrModel);
+                    }
+
+                    if (e is NwrwDischargeData nwrwDischargeData && nwrwDischargeData.DischargeType == DischargeType.Lateral)
+                    {
+                        IBranch branch = FindTargetBranchForNwrwCatchmentBranch(network, nwrwDischargeData.Name);
+                        if (branch != null)
+                        {
+                            LateralSource lateralSource = new LateralSource
+                            {
+                                Branch = branch,
+                                Chainage = branch.Length
+                            };
+                            lateralSource.Name = HydroNetworkHelper.GetUniqueFeatureName(network, lateralSource);
+                            lateralSource.LongName = lateralSource.Name;
+
+                            AddLateralSourceToBranch(branch, nwrwDischargeData.Name, lateralSource);
+
+                            // make sure the discharge data has the correct LateralSurface value
+                            nwrwDischargeData.GetLateralSurfaceFromDefinition(rrModel);
+
+                            // at FM-side, create lateral data of type REALTIME
+                            AddLateralDataToFmModel(lateralSourcesData, lateralSource, Model1DLateralDataType.FlowConstant, nwrwDischargeData.LateralSurface);
+                        }
+
                     }
                 }
                 catch (Exception exception)

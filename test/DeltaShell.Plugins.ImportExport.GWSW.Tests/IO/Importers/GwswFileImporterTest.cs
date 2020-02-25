@@ -1781,6 +1781,5 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 FileUtils.DeleteIfExists(testDir);
             }
         }
-
     }
 }

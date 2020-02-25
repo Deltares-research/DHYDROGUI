@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
-                    if (lateralData.DataType == Model1DLateralDataType.FlowRealTime)
+                    if (lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant)
                     {
                         if (lateral.Attributes["Compartment"] is ICompartment lateralCompartment)
                         {
@@ -966,7 +966,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var chainage = 0.0d;
                 var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
                 ICompartment compartment = null;
-                if (forcingFile == "realtime")
+                if (forcingFile == "realtime" || forcingFile == "FlowFM_lateral_sources.bc")
                 {
                     //node id is a compartment id, we need to find the bijbehorende Manhole
                     var compartmentId = delftIniCategory.GetPropertyValue(NodeIdKey);

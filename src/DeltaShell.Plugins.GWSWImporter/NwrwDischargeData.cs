@@ -40,11 +40,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return;
             }
 
-//            if (DischargeType == DischargeType.Lateral)
-//            {
-//                Log.Warn($"Could not add '{DryWeatherFlowId}' to {Name}. Discharge type '{nameof(DischargeType.Lateral)}' is not yet supported.");
-//                return;
-//            }
+            if (DischargeType == DischargeType.Lateral) {  return; } // handled in the importer, requires FM knowledge
 
             if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(DryWeatherFlowId)))
             {
@@ -89,6 +85,23 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 nwrwDataDryWeatherFlows[1] = dryweatherFlow;
             }
+        }
+
+        /// <summary>
+        /// Gets the LateralSurface value from the correct NwrwDryWeatherFlowDefinition.
+        /// </summary>
+        public void GetLateralSurfaceFromDefinition(IHydroModel model)
+        {
+            var rrModel = model as RainfallRunoffModel;
+            if (rrModel == null)
+            {
+                throw new ArgumentException();
+            }
+
+            if (string.IsNullOrWhiteSpace(DryWeatherFlowId)) return;
+
+            NwrwDryWeatherFlowDefinition dwf = rrModel.NwrwDryWeatherFlowDefinitions.FirstOrDefault(dwfd => dwfd.Name.Equals(DryWeatherFlowId));
+            LateralSurface = dwf.DailyVolumeConstant;
         }
     }
 }
