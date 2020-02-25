@@ -6,9 +6,12 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -57,7 +60,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     }).ToArray();
 
                     if (!crossSectionLocationInfos.Any())
+                    {
+                        PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition, network.Bridges.Concat(network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
                         continue;
+                    }
+                        
                     //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
 
 
@@ -120,6 +127,18 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     $"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}"
                     );
             }
+        }
+
+        private static void PlaceDefinitionOnBridgeOrCulvert(ICrossSectionDefinition crossSectionDefinition, IEnumerable<IStructureWithCrossSectionDefinition> structureWithCrossSectionDefinitions)
+        {
+            structureWithCrossSectionDefinitions
+                .Where(s => s.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
+                .ForEach(
+                    structureWithCrossSectionDefinition =>
+                    {
+                        structureWithCrossSectionDefinition.CrossSectionDefinition = crossSectionDefinition;
+                    });
+
         }
 
         private static CrossSection AddCrossSection(this IHydroNetwork network, DelftIniCategory crossSectionLocationInfo, ICrossSectionDefinition crossSectionDefinition, bool isFirstOfSharedCrossSectionDefinitions)
@@ -217,30 +236,21 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
             {
                 var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
+                var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
+                var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
 
                 var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main.Key);
                 var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1.Key,true);
                 var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths.Key);
+            
                 var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
                 double offset = 0.0d;
 
                 readCrossSectionDefinition.Sections.Clear();
                 readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
-
-                if (!floodPlain1Width.Equals(0.0d))
-                {
-                    var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
-
-                    readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
-                }
-
-                if (!floodPlain2Width.Equals(0.0d))
-                {
-                    var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
-
-                    readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
-                }
+                readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+                readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
             }
             
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.Standard)
