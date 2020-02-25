@@ -157,5 +157,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             Assert.AreEqual(5, count);
         }
+
+        [Test]
+        public void EmptyPatternGivesExpectedOutput()
+        {
+            Action testAction = () =>
+            {
+                string value = "";
+                var controlGroup = new ControlGroup();
+                controlGroup.Name = value;
+            };
+
+            string logError =
+                "Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.";
+            TestHelper.AssertLogMessageIsGenerated(testAction, logError, 1);
+        }
+
+        [Test]
+        public void NonEmptyPatternGivesExpectedOutput()
+        {
+            Action testAction = () =>
+            {
+                var message = "This is a test to test the regex";
+                var controlGroup = new ControlGroup();
+                controlGroup.Name = message;
+            };
+
+            TestHelper.AssertLogMessagesCount(testAction, 0);
+        }
     }
 }

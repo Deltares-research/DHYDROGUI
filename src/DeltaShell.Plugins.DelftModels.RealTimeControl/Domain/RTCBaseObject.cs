@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public const string Delayed = "[Delayed]";
         public const string Signal = "[Signal]";
 
-        public static IList<string> ComponentTags = new List<string>()
+        public static IList<string> ComponentTags = new List<string>
         {
             DirectionalCondition,
             FactorRule,
