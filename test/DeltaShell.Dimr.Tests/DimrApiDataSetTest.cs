@@ -7,12 +7,25 @@ namespace DeltaShell.Dimr.Tests
     [TestFixture]
     public class DimrApiDataSetTest
     {
+        private string previousPath;
+
+        [SetUp]
+        public void SetUp()
+        {
+            previousPath = Environment.GetEnvironmentVariable("PATH");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Environment.SetEnvironmentVariable("PATH", previousPath);
+        }
+
         [Test]
         public void SetSharedPath_NotContained_PathContainsSharedPathAtTheEnd()
         {
             // Setup
-            string oldPath = Environment.GetEnvironmentVariable("PATH");
-            Assert.That(oldPath.Contains(DimrApiDataSet.SharedDllPath), Is.False, "Precondition violated.");
+            Assert.That(previousPath.Contains(DimrApiDataSet.SharedDllPath), Is.False, "Precondition violated.");
 
             // Call
             DimrApiDataSet.SetSharedPath();
@@ -21,9 +34,6 @@ namespace DeltaShell.Dimr.Tests
             string newPath = Environment.GetEnvironmentVariable("PATH");
             string[] paths = newPath.Split(';');
             Assert.That(paths.Last(), Is.EqualTo(DimrApiDataSet.SharedDllPath));
-
-            // Clean up
-            Environment.SetEnvironmentVariable("PATH", oldPath);
         }
 
         [Test]
@@ -43,9 +53,6 @@ namespace DeltaShell.Dimr.Tests
             string newPath = Environment.GetEnvironmentVariable("PATH");
             string[] paths = newPath.Split(';');
             Assert.That(paths.Count(x => x == DimrApiDataSet.SharedDllPath), Is.EqualTo(1));
-
-            // Clean up
-            Environment.SetEnvironmentVariable("PATH", oldPath);
         }
     }
 }
