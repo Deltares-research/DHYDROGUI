@@ -14,20 +14,21 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// The DIMR DLL name
         /// </summary>
-        public const string DIMR_DLL_NAME = "dimr_dll.dll";
-        [Obsolete]
-        public const string DIMR_EXE_NAME = "dimr.exe";
+        public const string DimrDllName = "dimr_dll.dll";
 
-        private const string STANDARD_BINFOLDER_NAME = "bin";
-        private const string STANDARD_SCRIPTFOLDER_NAME = "scripts";
-        private const string SHARE_FOLDER_NAME = "share";
+        [Obsolete("No longer used, use the Dll instead.")]
+        public const string DimrExeName = "dimr.exe";
 
-        private const string DIMR_FOLDER_NAME = "dimr";
-        private const string WAVE_FOLDER_NAME = "dwaves";
-        private const string SWAN_FOLDER_NAME = "swan";
-        private const string ESMF_FOLDER_NAME = "esmf";
-        private const string DFLOWFM_FOLDER_NAME = "dflowfm";
-        private const string RTCTOOLS_FOLDER_NAME = "drtc";
+        private const string standardBinFolderName = "bin";
+        private const string standardScriptFolderName = "scripts";
+        private const string shareFolderName = "share";
+
+        private const string dimrFolderName = "dimr";
+        private const string waveFolderName = "dwaves";
+        private const string swanFolderName = "swan";
+        private const string esmfFolderName = "esmf";
+        private const string dflowfmFolderName = "dflowfm";
+        private const string rtcToolsFolderName = "drtc";
 
         private const string ARCH = "x64";
 
@@ -39,57 +40,57 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// Gets the shared DLL path.
         /// </summary>
-        public static string SharedDllPath => Path.Combine(KernelsDirectory, ARCH, SHARE_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string SharedDllPath => Path.Combine(KernelsDirectory, ARCH, shareFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the DIMR DLL path.
         /// </summary>
-        public static string DimrDllPath => Path.Combine(KernelsDirectory, ARCH, DIMR_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string DimrDllPath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the dimr executable path.
         /// </summary>
-        public static string DimrExePath => Path.Combine(KernelsDirectory, ARCH, DIMR_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string DimrExePath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the wave DLL path.
         /// </summary>
-        public static string WaveDllPath => Path.Combine(KernelsDirectory, ARCH, WAVE_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string WaveDllPath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the wave executable path.
         /// </summary>
-        public static string WaveExePath => Path.Combine(KernelsDirectory, ARCH, WAVE_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string WaveExePath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the swan executable path.
         /// </summary>
-        public static string SwanExePath => Path.Combine(KernelsDirectory, ARCH, SWAN_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string SwanExePath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the swan script path.
         /// </summary>
-        public static string SwanScriptPath => Path.Combine(KernelsDirectory, ARCH, SWAN_FOLDER_NAME, STANDARD_SCRIPTFOLDER_NAME);
+        public static string SwanScriptPath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardScriptFolderName);
 
         /// <summary>
         /// Gets the esmf executable path.
         /// </summary>
-        public static string EsmfExePath => Path.Combine(KernelsDirectory, ARCH, ESMF_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string EsmfExePath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the esmf script path.
         /// </summary>
-        public static string EsmfScriptPath => Path.Combine(KernelsDirectory, ARCH, ESMF_FOLDER_NAME, STANDARD_SCRIPTFOLDER_NAME);
+        public static string EsmfScriptPath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardScriptFolderName);
 
         /// <summary>
         /// Gets the D-FLOW FM DLL path.
         /// </summary>
-        public static string DFlowFmDllPath => Path.Combine(KernelsDirectory, ARCH, DFLOWFM_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string DFlowFmDllPath => Path.Combine(KernelsDirectory, ARCH, dflowfmFolderName, standardBinFolderName);
 
         /// <summary>
         /// Gets the RTC tools DLL path.
         /// </summary>
-        public static string RtcToolsDllPath => Path.Combine(KernelsDirectory, ARCH, RTCTOOLS_FOLDER_NAME, STANDARD_BINFOLDER_NAME);
+        public static string RtcToolsDllPath => Path.Combine(KernelsDirectory, ARCH, rtcToolsFolderName, standardBinFolderName);
 
         /// <summary>
         /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet.
@@ -112,26 +113,26 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// The feedback level key
         /// </summary>
-        public const string FEEDBACKLEVELKEY = "feedbackLevel";
+        public const string FeedbackLevelKey = "feedbackLevel";
 
         /// <summary>
         /// The logfile level key
         /// </summary>
-        public const string LOGFILELEVELKEY = "debugLevel";
+        public const string LogFileLevelKey = "debugLevel";
 
         /// <summary>
         /// The log file level
         /// </summary>
-        public static Level LogFileLevel = Level.None;
+        public static Level LogFileLevel { get; set; } = Level.None;
 
         /// <summary>
         /// The feedback level
         /// </summary>
-        public static Level FeedbackLevel = Level.None;
+        public static Level FeedbackLevel { get; set; } = Level.None;
 
         /// <summary>
         /// The DIMR fill value
         /// </summary>
-        public const double DIMR_FILL_VALUE = -999000.0d;
+        public const double DimrFillValue = -999000.0d;
     }
 }

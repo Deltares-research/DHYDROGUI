@@ -20,8 +20,8 @@ namespace DeltaShell.Dimr
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
             api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
-            api.SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, DimrApiDataSet.FeedbackLevel);
-            api.SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, DimrApiDataSet.LogFileLevel);
+            api.SetLoggingLevel(DimrApiDataSet.FeedBackLevelKey, DimrApiDataSet.FeedbackLevel);
+            api.SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
         }
 
         #region Implementation of IDisposable

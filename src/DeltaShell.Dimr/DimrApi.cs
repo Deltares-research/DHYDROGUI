@@ -29,7 +29,7 @@ namespace DeltaShell.Dimr
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DimrApiDataSet.DIMR_DLL_NAME, DimrApiDataSet.DimrDllPath);
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
         }
         public DimrApi():this(true){}
 
@@ -39,8 +39,8 @@ namespace DeltaShell.Dimr
             dimrRefDate = DateTime.MinValue;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, DimrApiDataSet.FeedbackLevel);
-            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, DimrApiDataSet.LogFileLevel);
+            SetLoggingLevel(DimrApiDataSet.FeedBackLevelKey, DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
             cMessageCallback = FeedbackLog;
             set_feedback_logger();
             Logger = BMI_Logger_function;

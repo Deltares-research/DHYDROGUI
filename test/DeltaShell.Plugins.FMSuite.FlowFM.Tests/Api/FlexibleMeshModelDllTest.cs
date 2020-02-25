@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     return c;
                 }).ToList();
                 model.Initialize();
-                Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE,
+                Assert.AreEqual(Dimr.DimrApiDataSet.DimrFillValue,
                     ((double[]) model.GetVar("party", "at", "myplace"))[0], 0.01d);
             }
             finally
