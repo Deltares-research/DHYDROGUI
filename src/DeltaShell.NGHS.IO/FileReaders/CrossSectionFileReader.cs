@@ -6,12 +6,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -60,11 +57,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     }).ToArray();
 
                     if (!crossSectionLocationInfos.Any())
-                    {
-                        PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition, network.Bridges.Concat(network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
                         continue;
-                    }
-                        
                     //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
 
 
@@ -127,18 +120,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     $"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}"
                     );
             }
-        }
-
-        private static void PlaceDefinitionOnBridgeOrCulvert(ICrossSectionDefinition crossSectionDefinition, IEnumerable<IStructureWithCrossSectionDefinition> structureWithCrossSectionDefinitions)
-        {
-            structureWithCrossSectionDefinitions
-                .Where(s => s.Name.Equals(crossSectionDefinition.Name, StringComparison.InvariantCultureIgnoreCase))
-                .ForEach(
-                    structureWithCrossSectionDefinition =>
-                    {
-                        structureWithCrossSectionDefinition.CrossSectionDefinition = crossSectionDefinition;
-                    });
-
         }
 
         private static CrossSection AddCrossSection(this IHydroNetwork network, DelftIniCategory crossSectionLocationInfo, ICrossSectionDefinition crossSectionDefinition, bool isFirstOfSharedCrossSectionDefinitions)

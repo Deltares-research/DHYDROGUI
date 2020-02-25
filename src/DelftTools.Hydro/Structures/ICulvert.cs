@@ -3,7 +3,7 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ICulvert : IStructureWithCrossSectionDefinition, IFrictionData, IGroundLayer
+    public interface ICulvert : IStructure1D, IFrictionData, IGroundLayer
     {
         //repeat members for binding in FPAT :(
         string Name { get; set; }
@@ -138,6 +138,11 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         CrossSectionDefinitionZW CrossSectionDefinitionForCalculation { get; }
         
+        /// <summary>
+        /// Cross Section Definition as used for ini (filewriter).
+        /// </summary>
+        ICrossSectionDefinition CrossSectionDefinition { get; }
+
         CulvertType CulvertType { get; set; }
 
     }
