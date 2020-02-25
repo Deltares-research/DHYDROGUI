@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         private void RestoreWorkingDirectory()
         {
-            if (string.IsNullOrEmpty(previousWorkingDirectory))
+            if (!string.IsNullOrEmpty(previousWorkingDirectory))
             {
                 Directory.SetCurrentDirectory(previousWorkingDirectory);
             }

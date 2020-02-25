@@ -200,6 +200,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileReaderTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileWriterTest.cs" />
