@@ -423,17 +423,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        public void CopyRuleXmlToClipboard(RuleBase rule)
+        private void CopyRuleXmlToClipboard(RuleBase rule)
         {
             Clipboard.SetText(rule.ToXml(fns, controlGroup.Name).ToString());
         }
 
-        public void CopyConditionXmlToClipboard(ConditionBase condition)
+        private void CopyConditionXmlToClipboard(ConditionBase condition)
         {
             Clipboard.SetText(condition.ToXml(fns, controlGroup.Name).ToString());
         }
 
-        public void CopySignalXmlToClipboard(SignalBase signal)
+        private void CopySignalXmlToClipboard(SignalBase signal)
         {
             Clipboard.SetText(signal.ToXml(fns, controlGroup.Name).ToString());
         }

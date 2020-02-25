@@ -22,6 +22,7 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -361,36 +362,148 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         }
 
         [Test]
-        public void CopyToClipboard()
+        public void CopyXMLToClipBoard_MenuItemTagUnsupportedNull_ReturnsEmptyClipboardText()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            // Setup
+            Clipboard.Clear();
+            using (var controlGroupEditor = new ControlGroupEditor())
             {
-                var menuItem = new MenuItem { Tag = rule };
+                var menuItem = new MenuItem
+                {
+                    Tag = new object()
+                };
+
+                // Precondition
+                Assert.IsEmpty(Clipboard.GetText());
+
+                // Call
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                Assert.AreEqual(rule.ToXml(Fns, "").ToString(), Clipboard.GetText());
-                menuItem = new MenuItem { Tag = condition };
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                Assert.AreEqual(condition.ToXml(Fns, "").ToString(), Clipboard.GetText());
+
+                // Assert
+                Assert.IsEmpty(Clipboard.GetText());
             }
         }
 
         [Test]
-        public void CopyRuleToClipBoard()
+        public void CopyXMLToClipboard_CopyConditionFromMenuItem_ReturnsExpectedClipboardText()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            // Setup
+            var controlGroup = new ControlGroup();
+
+            var xmlConditionElement = new XElement("ConditionElement");
+            var controlCondition = Substitute.For<ConditionBase>();
+            controlCondition.ToXml(Fns, controlGroup.Name).Returns(xmlConditionElement);
+
+            Clipboard.Clear();
+            using (var controlGroupEditor = new ControlGroupEditor
             {
-                controlGroupEditor.CopyRuleXmlToClipboard(rule);
-                Assert.AreEqual(rule.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                Data = controlGroup
+            })
+            {
+                var menuItem = new MenuItem
+                {
+                    Tag = controlCondition
+                };
+
+                // Precondition
+                Assert.IsEmpty(Clipboard.GetText());
+
+                // Call
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+
+                // Assert
+                Assert.AreEqual(xmlConditionElement.ToString(), Clipboard.GetText());
             }
         }
 
         [Test]
-        public void CopyConditionToClipBoard()
+        public void CopyXMLToClipboard_CopyRuleFromMenuItem_ReturnsExpectedClipboardText()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            // Setup
+            var controlGroup = new ControlGroup();
+
+            var xmlRuleElement = new XElement("RuleElement");
+            var controlRule = Substitute.For<RuleBase>();
+            controlRule.ToXml(Fns, controlGroup.Name).Returns(xmlRuleElement);
+
+            Clipboard.Clear();
+            using (var controlGroupEditor = new ControlGroupEditor
             {
-                controlGroupEditor.CopyConditionXmlToClipboard(condition);
-                Assert.AreEqual(condition.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                Data = controlGroup
+            })
+            {
+                var menuItem = new MenuItem
+                {
+                    Tag = controlRule
+                };
+
+                // Precondition
+                Assert.IsEmpty(Clipboard.GetText());
+
+                // Call
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+
+                // Assert
+                Assert.AreEqual(xmlRuleElement.ToString(), Clipboard.GetText());
+            }
+        }
+
+        [Test]
+        public void CopyXMLToClipboard_CopySignalFromMenuItem_ReturnsExpectedClipboardText()
+        {
+            // Setup
+            var controlGroup = new ControlGroup();
+            var controlSignal = new LookupSignal(); //Only a LookupSignal is supported by the controller. Therefore, mocking is not supported
+
+            using (var controlGroupEditor = new ControlGroupEditor
+            {
+                Data = controlGroup
+            })
+            {
+                var menuItem = new MenuItem
+                {
+                    Tag = controlSignal
+                };
+
+                // Call
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+
+                // Assert
+                Assert.AreEqual(controlSignal.ToXml(Fns, controlGroup.Name).ToString(), Clipboard.GetText());
+            }
+        }
+
+        [Test]
+        public void GivenControlGroupEditorCopyXmlToClipboard_WhenCopyingXmlToClipboardFromOtherItem_ThenNewValueCopied()
+        {
+            // Given
+            var controlGroup = new ControlGroup();
+
+            var xmlRuleElement = new XElement("RuleElement");
+            var controlRule = Substitute.For<RuleBase>();
+            controlRule.ToXml(Fns, controlGroup.Name).Returns(xmlRuleElement);
+
+            var xmlConditionElement = new XElement("ConditionElement");
+            var controlCondition = Substitute.For<ConditionBase>();
+            controlCondition.ToXml(Fns, controlGroup.Name).Returns(xmlConditionElement);
+            
+            Clipboard.Clear();
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
+            {
+                var menuItem = new MenuItem {Tag = controlRule};
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+                string clippedText = Clipboard.GetText();
+
+                // Precondition
+                Assert.AreEqual(xmlRuleElement.ToString(), clippedText);
+
+                // When
+                menuItem.Tag = controlCondition;
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+
+                // Then
+                string newClippedText = Clipboard.GetText();
+                Assert.AreEqual(xmlConditionElement.ToString(), newClippedText);
             }
         }
 
