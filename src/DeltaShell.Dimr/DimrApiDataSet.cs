@@ -105,7 +105,7 @@ namespace DeltaShell.Dimr
         /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
         /// using the specified environment.
         /// </summary>
-        /// <param name="environment"></param>
+        /// <param name="environment">The environment to interact with.</param>
         internal static void SetSharedPath(IEnvironment environment)
         {
             string path = environment.GetVariable("PATH");
