@@ -44,5 +44,20 @@ namespace DeltaShell.NGHS.Common.Tests
             // Assert
             Assert.That(Environment.GetEnvironmentVariable(key), Is.EqualTo(value));
         }
+
+        [Test]
+        public void GetVariable_ExpectedResults()
+        {
+            // Setup
+            var systemEnvironment = new SystemEnvironment();
+            const string expectedValue = "SomeValue";
+            Environment.SetEnvironmentVariable(key, expectedValue);
+
+            // Call
+            string result = systemEnvironment.GetVariable(key);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
+        }
     }
 }

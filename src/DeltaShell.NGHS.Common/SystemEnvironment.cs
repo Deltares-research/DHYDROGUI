@@ -12,5 +12,8 @@ namespace DeltaShell.NGHS.Common
                                 string value,
                                 EnvironmentVariableTarget target = EnvironmentVariableTarget.Process) =>
             Environment.SetEnvironmentVariable(key, value, target);
+
+        public string GetVariable(string key, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process) =>
+            Environment.GetEnvironmentVariable(key, target);
     }
 }
