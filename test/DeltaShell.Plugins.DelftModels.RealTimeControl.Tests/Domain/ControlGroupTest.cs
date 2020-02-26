@@ -159,31 +159,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        public void EmptyPatternGivesExpectedOutput()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void Name_SettingInvalidValue_LogsErrorAndMaintainsOriginalName(string invalidValue)
         {
-            Action testAction = () =>
-            {
-                string value = "";
-                var controlGroup = new ControlGroup();
-                controlGroup.Name = value;
-            };
+            // Setup
+            var controlGroup = new ControlGroup();
+            string originalName = controlGroup.Name;
 
-            string logError =
+            // Precondition
+            Assert.IsNotEmpty(originalName);
+
+            // Call
+            Action testAction = () => controlGroup.Name = invalidValue;
+           
+            // Assert
+            const string expectedErrorMessage =
                 "Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.";
-            TestHelper.AssertLogMessageIsGenerated(testAction, logError, 1);
+            TestHelper.AssertLogMessageIsGenerated(testAction, expectedErrorMessage, 1);
+
+            Assert.AreEqual(originalName, controlGroup.Name);
         }
 
         [Test]
-        public void NonEmptyPatternGivesExpectedOutput()
+        public void Name_SettingValidValue_ErrorNotLoggedAndNameUpdated()
         {
-            Action testAction = () =>
-            {
-                var message = "This is a test to test the regex";
-                var controlGroup = new ControlGroup();
-                controlGroup.Name = message;
-            };
+            // Setup
+            const string validName = "ControlGroupName";
+            var controlGroup = new ControlGroup();
 
+            // Call
+            Action testAction = () => controlGroup.Name = validName;
+
+            // Assert
             TestHelper.AssertLogMessagesCount(testAction, 0);
+            Assert.AreEqual(validName, controlGroup.Name);
         }
     }
 }
