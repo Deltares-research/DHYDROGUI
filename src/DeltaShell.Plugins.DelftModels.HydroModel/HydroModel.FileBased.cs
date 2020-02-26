@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
             {
                 modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, false));
+                modelExchangeInfos.AddRange(GetModelExchangeInfos(flowModel, rtcModel));
             }
         }
 
@@ -45,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
             {
                 modelExchangeInfos.Clear();
-                modelExchangeInfos.AddRange(GetExchangeInfo(flowModel, rtcModel, true));
+                modelExchangeInfos.AddRange(GetUnlinkedModelExchangeInfos(flowModel, rtcModel));
             }
         }
 
@@ -134,62 +135,121 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         /// <summary>
-        /// finds the currently linked dataitems of the models, stores them in exhangeInfo, and when unlink is
-        /// true, the linkage is broken. Currently only used for flowfm + rtc
+        /// Gets the collection of <see cref="ModelExchangeInfo"/> based on its input arguments.
         /// </summary>
-        /// <param name="flowModel"></param>
-        /// <param name="rtcModel"></param>
-        /// <param name="unlink"></param>
-        /// <returns></returns>
-        private static IEnumerable<ModelExchangeInfo> GetExchangeInfo(IModel flowModel, IModel rtcModel, bool unlink)
+        /// <param name="flowModel">The flow model to create the <see cref="ModelExchangeInfo"/> for.</param>
+        /// <param name="rtcModel">The rtc model to create the <see cref="ModelExchangeInfo"/> for.</param>
+        /// <returns>The collection of <see cref="ModelExchangeInfo"/>.</returns>
+        private static IEnumerable<ModelExchangeInfo> GetModelExchangeInfos(IModel flowModel, IModel rtcModel)
         {
-            List<IDataItem> flowInputItems = GetDataItems(flowModel, DataItemRole.Input).ToList();
-            List<IDataItem> flowOutputItems = GetDataItems(flowModel, DataItemRole.Output).ToList();
-
-            List<IDataItem> rtcInputItems = GetDataItems(rtcModel, DataItemRole.Input).ToList();
-            IReadOnlyDictionary<IDataItem, string> rtcInputParameterNameMapping = GetDataItemNameMapping(rtcInputItems);
-
-            List<IDataItem> rtcOutputItems = GetDataItems(rtcModel, DataItemRole.Output).ToList();
-            IReadOnlyDictionary<IDataItem, string> rtcOutputParameterNameMapping = GetDataItemNameMapping(rtcOutputItems);
-
-            var exchangeInfoList = new List<ModelExchangeInfo>();
-            var exchangeInfo = new ModelExchangeInfo(flowModel, rtcModel);
-            foreach (var flowOutputItem in flowOutputItems)
+            return new[]
             {
-                foreach (var rtcInputItem in rtcInputItems)
-                {
-                    if (rtcInputItem.LinkedTo != null && rtcInputItem.LinkedTo.Equals(flowOutputItem))
-                    {
-                        exchangeInfo.Exchanges.Add(new ModelExchange(flowOutputItem, rtcInputItem));
-                        if (unlink)
-                        {
-                            rtcInputItem.Unlink();
-                            RestoreDataItemName(rtcInputParameterNameMapping, rtcInputItem);
-                        }
-                    }
-                }
-            }
-            exchangeInfoList.Add(exchangeInfo);
+                CreateModelExchangeInfo(flowModel, rtcModel),
+                CreateModelExchangeInfo(rtcModel, flowModel)
+            };
+        }
 
-            exchangeInfo = new ModelExchangeInfo(rtcModel, flowModel);
-            foreach (var rtcOutputItem in rtcOutputItems)
+        /// <summary>
+        /// Creates a <see cref="ModelExchangeInfo"/>.
+        /// </summary>
+        /// <param name="inputModel">The <see cref="IModel"/> that serves as an input.</param>
+        /// <param name="outputModel">The <see cref="IModel"/> that serves as an output.</param>
+        /// <returns>A <see cref="ModelExchangeInfo"/>.</returns>
+        private static ModelExchangeInfo CreateModelExchangeInfo(IModel inputModel, IModel outputModel)
+        {
+            var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
+
+            IEnumerable<IDataItem> inputDataItems = GetDataItems(inputModel, DataItemRole.Input);
+            IEnumerable<IDataItem> outputDataItems = GetDataItems(outputModel, DataItemRole.Output);
+            foreach (IDataItem linkedDataItem in GetLinkedDataInputItems(inputDataItems, outputDataItems))
             {
-                foreach (var flowInputItem in flowInputItems)
-                {
-                    if (flowInputItem.LinkedTo != null && flowInputItem.LinkedTo.Equals(rtcOutputItem))
-                    {
-                        exchangeInfo.Exchanges.Add(new ModelExchange(rtcOutputItem, flowInputItem));
-                        if (unlink)
-                        {
-                            flowInputItem.Unlink();
-                            RestoreDataItemName(rtcOutputParameterNameMapping, rtcOutputItem);
-                        }
-                    }
-                }
+                modelExchange.Exchanges.Add(new ModelExchange(linkedDataItem.LinkedTo, linkedDataItem));
             }
-            exchangeInfoList.Add(exchangeInfo);
 
-            return exchangeInfoList;
+            return modelExchange;
+        }
+        /// <summary>
+        /// Gets the collection of <see cref="ModelExchangeInfo"/> based on its input arguments while breaking the linkage.
+        /// </summary>
+        /// <param name="flowModel">The flow model to create the <see cref="ModelExchangeInfo"/> for.</param>
+        /// <param name="rtcModel">The rtc model to create the <see cref="ModelExchangeInfo"/> for.</param>
+        /// <returns>The collection of <see cref="ModelExchangeInfo"/>.</returns>
+        private static IEnumerable<ModelExchangeInfo> GetUnlinkedModelExchangeInfos(IModel flowModel, IModel rtcModel)
+        {
+            // Create the name mappings of the RTC components. The name will be temporarily set to their
+            // default values when being unlinked during the save operation.
+            IReadOnlyDictionary<IDataItem, string> rtcInputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Input));
+            IReadOnlyDictionary<IDataItem, string> rtcOutputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Output));
+
+            return new []
+            {
+                CreateUnlinkedModelExchangeInfo(rtcModel, flowModel, rtcInputNameMapping, item => item),
+                CreateUnlinkedModelExchangeInfo(flowModel, rtcModel, rtcOutputNameMapping, item => item.LinkedTo)
+            };
+        }
+
+        /// <summary>
+        /// Creates a <see cref="ModelExchangeInfo"/> while unlinking the data items of the <paramref name="inputModel"/>.
+        /// </summary>
+        /// <param name="inputModel">The <see cref="IModel"/> that serves as an input.</param>
+        /// <param name="outputModel">The <see cref="IModel"/> that serves as an output.</param>
+        /// <param name="dataItemNameMapping">The mapping between the <see cref="IDataItem"/> and its original name.</param>
+        /// <param name="getDataItemFunc">The function to retrieve the data item to restore the name for.</param>
+        /// <returns>A <see cref="ModelExchangeInfo"/>.</returns>
+        private static ModelExchangeInfo CreateUnlinkedModelExchangeInfo(IModel inputModel, IModel outputModel,
+                                                                         IReadOnlyDictionary<IDataItem, string> dataItemNameMapping,
+                                                                         Func<IDataItem, IDataItem> getDataItemFunc)
+        {
+            var modelExchange = new ModelExchangeInfo(outputModel, inputModel);
+
+            IEnumerable<IDataItem> inputDataItems = GetDataItems(inputModel, DataItemRole.Input);
+            IEnumerable<IDataItem> outputDataItems = GetDataItems(outputModel, DataItemRole.Output);
+
+            // Cache the linked data input items as due to the unlinking, changes might occur that affects
+            // the collection of linked objects.
+            IEnumerable<IDataItem> linkedDataInputItems = GetLinkedDataInputItems(inputDataItems, outputDataItems).ToArray();
+            
+            foreach (IDataItem linkedInputDataItem in linkedDataInputItems)
+            {
+                IDataItem dataItemToRestore = getDataItemFunc(linkedInputDataItem);
+                modelExchange.Exchanges.Add(new ModelExchange(linkedInputDataItem.LinkedTo, linkedInputDataItem));
+                linkedInputDataItem.Unlink();
+
+                // Restore the name of the unlinked data item to its original value to prevent 
+                // it from appearing as its default value during saving.
+                RestoreDataItemName(dataItemNameMapping, dataItemToRestore);
+            }
+
+            return modelExchange;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="HashSet{T}"/> based on its input arguments.
+        /// </summary>
+        /// <param name="dataItems">The collection of <see cref="IDataItem"/> to create the set for.</param>
+        /// <returns>A <see cref="HashSet{T}"/>.</returns>
+        private static HashSet<IDataItem> CreateHashSet(IEnumerable<IDataItem> dataItems)
+        {
+            var set = new HashSet<IDataItem>();
+            foreach (IDataItem dataItem in dataItems)
+            {
+                set.Add(dataItem);
+            }
+
+            return set;
+        }
+
+        /// <summary>
+        /// Gets the collection of data input items that are linked to output data items.
+        /// </summary>
+        /// <param name="inputItems">The collection of input items to determine whether they are linked.</param>
+        /// <param name="outputItems">The collection of output items that the <paramref name="inputItems"/>
+        /// could be linked with.</param>
+        /// <returns>A collection of <paramref name="inputItems"/> that are linked.</returns>
+        private static IEnumerable<IDataItem> GetLinkedDataInputItems(IEnumerable<IDataItem> inputItems, IEnumerable<IDataItem> outputItems)
+        {
+            HashSet<IDataItem> outputSet = CreateHashSet(outputItems);
+            return inputItems.Where(item => item.LinkedTo != null && outputSet.Contains(item.LinkedTo));
         }
 
         /// <summary>
