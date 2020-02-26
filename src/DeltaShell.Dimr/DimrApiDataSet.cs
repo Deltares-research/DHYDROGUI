@@ -102,7 +102,9 @@ namespace DeltaShell.Dimr
             if (path != null && path.Contains(SharedDllPath)) 
                 return;
 
-            if (path.Length > 0 && path.Last() != ';')
+            if (path == null)
+                path = "";
+            else if (path.Length > 0 && path.Last() != ';')
                 path += ";";
 
             path += SharedDllPath;
