@@ -100,29 +100,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             // some of these are shortcuts because they have not specific data object
             // others are wrapped in shortcuts because they are not IProjectItem
 
-            yield return new FmModelTreeShortcut("General", NumParamIcon, model, "General");
-            yield return model.GetDataItemByValue(model.Area);
-            yield return model.GetDataItemByValue(model.Network);
-            if (model.NetworkDiscretization != null && model.NetworkDiscretization.Name != null)
+            yield return new FmModelTreeShortcut("General", NumParamIcon, model, "General", ShortCutType.SettingsTab,
+                new[]
+                {
+                    new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame"),
+                    new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes"),
+                    new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters"),
+                    new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters")
+                });
+
+            yield return new TreeFolder(model, new object[]
             {
-                yield return
-                    new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model,
-                        model.NetworkDiscretization, ShortCutType.Default);
-            }
-            yield return new FmModelTreeShortcut("Grid", UnstrucIcon, model, model.Grid, ShortCutType.Grid);
+                model.GetDataItemByValue(model.Network),
+                new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization, ShortCutType.Default),
+                new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections),
+                model.BoundaryConditions1DDataItemSet,
+                model.LateralSourcesDataItemSet,
+
+            }, "1D", FolderImageType.None);
+
+            yield return new TreeFolder(model, new object[]
+            {
+                model.GetDataItemByValue(model.Area),
+                new FmModelTreeShortcut("Grid", UnstrucIcon, model, model.Grid, ShortCutType.Grid),
+                new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage),
+                new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model)),
+                new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets),
+                new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", ShortCutType.SettingsTab, GetPhysicalSubItems(model)),
+                new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks)
+
+            }, "2D", FolderImageType.None);
+
             yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links);
-            yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
-            yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
-            yield return new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections);
-            yield return model.BoundaryConditions1DDataItemSet;
-            yield return model.LateralSourcesDataItemSet;
-            yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
-            yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", ShortCutType.SettingsTab, GetInitialConditionsItems(model));
-            yield return new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets);
-            yield return new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", ShortCutType.SettingsTab, GetPhysicalSubItems(model));
-            yield return new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks);
-            yield return new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters");
-            yield return new FmModelTreeShortcut("Output Parameters", OutParamIcon, model, "Output Parameters");
         }
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
@@ -148,11 +157,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (!model.UseMorSed) yield break;
 
-                foreach (var fraction in model.InitialFractions)
-                {
+            foreach (var fraction in model.InitialFractions)
+            {
                 yield return new FmModelTreeShortcut(fraction.Name, Resources.pipette, model, fraction, ShortCutType.SpatialCoverage);
-                }
             }
+        }
 
         private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel model)
         {

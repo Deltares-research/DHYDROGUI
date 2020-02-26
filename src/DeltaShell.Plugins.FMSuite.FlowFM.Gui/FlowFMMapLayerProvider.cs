@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -42,7 +43,6 @@ using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using GeoAPI.Extensions.Coverages;
 using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
@@ -72,7 +72,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var waterFlowFmModel = data as WaterFlowFMModel;
             if (waterFlowFmModel != null)
             {
-                return new ModelGroupLayer { Name = waterFlowFmModel.Name, Model = waterFlowFmModel, NameIsReadOnly = true};
+                return new ModelGroupLayer
+                {
+                    Name = waterFlowFmModel.Name, 
+                    Model = waterFlowFmModel, 
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
             }
 
             var importedGridFile = data as ImportedFMNetFile;
@@ -282,7 +288,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var link1d2dCoverage = data as Links1D2DCoverage;
             if (link1d2dCoverage != null)
             {
-                
                 // Create link 1d2d coverage layer
                 var featureCoverageLayer = new FeatureCoverageLayer()
                 {
@@ -297,14 +302,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
 
                 return featureCoverageLayer;
-                /*
-                var layer = new Link1D2DCoverageLayer()
-                {
-                    DataSource = new FeatureCollection(link1d2dCoverage.Links.ToList(), typeof(ILink1D2D)) {CoordinateSystem = link1d2dCoverage.CoordinateSystem},
-                    Coverage = link1d2dCoverage,
-                    ReadOnly = !link1d2dCoverage.IsEditable
-                };
-                return layer;*/
             }
 
             return null;
@@ -356,7 +353,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     networkCoverageGroupLayer.SegmentLayer.ShowInTreeView = false;
                 }
 
-                networkCoverageGroupLayer.SegmentLayer.Visible = false;
+                networkCoverageGroupLayer.LocationLayer.Visible = location != NetworkDataLocation.Edge;
+                networkCoverageGroupLayer.SegmentLayer.Visible = location == NetworkDataLocation.Edge;
             }
         }
 
@@ -395,7 +393,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     yield return model.Network;
                 }
-                
+
+                yield return model.NetworkDiscretization;
+                yield return model.RoughnessSections;
+
                 yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
                 yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
 
@@ -415,15 +416,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     }
                     yield return model.Area;
                 }
-                yield return model.NetworkDiscretization;
+                
                 yield return model.Grid;
-                yield return model.RoughnessSections;
-                yield return model.Links;
                 yield return model.Bathymetry;
-                yield return model.Roughness;
+                yield return model.InitialWaterLevel;
                 yield return model.BoundaryConditionSets;
                 yield return model.Boundaries;
-                yield return model.Pipes;
 
                 FMSnappedFeaturesGroupLayerData layerData;
                 if (!snappedGroupLayerDataMapping.TryGetValue(model, out layerData))
@@ -450,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     yield return outputLayerData;
                 }
 
-                yield return model.InitialWaterLevel;
+                yield return model.Roughness;
                 yield return model.Viscosity;
                 yield return model.Diffusivity;
 
@@ -477,10 +475,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     }
                 }
 
+                yield return model.Pipes;
+                yield return model.Links;
+
                 if (model.OutputMapFileStore != null)
                     yield return model.OutputMapFileStore;
-                
-                
+
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
 

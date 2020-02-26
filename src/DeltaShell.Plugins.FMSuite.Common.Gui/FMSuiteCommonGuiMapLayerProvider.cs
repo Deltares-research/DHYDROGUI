@@ -91,7 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                     NoDataValues = new List<string> { "" },
                     ThemeItems = new EventedList<IThemeItem>
                     {
-                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.None, Properties.Resources.none),
                         CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant, Properties.Resources.HConst),
                         CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, Properties.Resources.HBoundary),
                         CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant, Properties.Resources.QConst),
