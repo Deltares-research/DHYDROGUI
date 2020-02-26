@@ -28,11 +28,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null)
-            {
-                Log.Warn($"Could not add discharge data to {Name}.");
-                return;
-            }
+            if (rrModel == null) throw new ArgumentException();
 
             if (Geometry == null)
             {
@@ -93,15 +89,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         public void GetLateralSurfaceFromDefinition(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null)
+            if (rrModel == null) throw new ArgumentException();
+            if (string.IsNullOrWhiteSpace(DryWeatherFlowId))
             {
-                throw new ArgumentException();
+                LateralSurface /= 86400; // from m³/day to m³/s
+                return;
             }
 
-            if (string.IsNullOrWhiteSpace(DryWeatherFlowId)) return;
-
             NwrwDryWeatherFlowDefinition dwf = rrModel.NwrwDryWeatherFlowDefinitions.FirstOrDefault(dwfd => dwfd.Name.Equals(DryWeatherFlowId));
-            LateralSurface = dwf.DailyVolumeConstant;
+            if (dwf == null) return;
+
+            LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
         }
     }
 }

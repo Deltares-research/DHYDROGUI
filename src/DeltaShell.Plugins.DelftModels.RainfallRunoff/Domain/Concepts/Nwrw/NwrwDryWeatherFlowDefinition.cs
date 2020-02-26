@@ -28,29 +28,43 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
         {
-           var rrModel = model as RainfallRunoffModel;
+            var rrModel = model as RainfallRunoffModel;
+            if (rrModel == null) throw new ArgumentException();
+            if (rrModel.NwrwDryWeatherFlowDefinitions.Contains(this)) return;
+            if (NotSupportedByKernel()) return;
 
-            if (rrModel == null || rrModel.NwrwDryWeatherFlowDefinitions.Contains(this))
-            {
-                Log.Warn($"Could not add {Name} DWF definition to {nameof(RainfallRunoffModel)}.");
-                return;
-            }
+            ConvertGwswUnitsToKernelUnits();
+            rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
+        }
 
+        private void ConvertGwswUnitsToKernelUnits()
+        {
+            // In Gwsw the unit for DailyVolumeVariable is given in m³/day.
+            // RR expects DailyVolumeVariable to be dm³/day.
+            DailyVolumeVariable *= 1000;
+
+            // In Gwsw the unit for DailyVolumeConstant is given in m³/day.
+            // RR expects DailyVolumeConstant to be dm³/h.
+            DailyVolumeConstant = DailyVolumeConstant * 1000 / 24;
+        }
+
+        private bool NotSupportedByKernel()
+        {
             // The kernel only supports DWF definitions of type 'DAG' or
             // of type 'CST' where VER_DAG is empty.
             if (DistributionType == DwfDistributionType.Variable)
             {
                 Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
-                return;
+                return true;
             }
 
             if (DistributionType == DwfDistributionType.Constant && DayNumber != default(int))
             {
                 Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
-                return;
+                return true;
             }
 
-            rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
+            return false;
         }
 
         public static NwrwDryWeatherFlowDefinition CreateDefaultDwaDefinition()

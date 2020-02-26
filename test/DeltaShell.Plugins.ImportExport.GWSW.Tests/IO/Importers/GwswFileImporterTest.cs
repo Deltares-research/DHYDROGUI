@@ -1573,7 +1573,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.That(nwrwDryWeatherFlowDefinition.DryWeatherFlowId, Is.EqualTo("Inwoner"));
                 Assert.That(nwrwDryWeatherFlowDefinition.DistributionType, Is.EqualTo(DwfDistributionType.Daily));
                 Assert.That(nwrwDryWeatherFlowDefinition.DayNumber, Is.EqualTo(0.0));
-                Assert.That(nwrwDryWeatherFlowDefinition.DailyVolumeVariable, Is.EqualTo(0.12));
+                Assert.That(nwrwDryWeatherFlowDefinition.DailyVolumeVariable, Is.EqualTo(120));
                 Assert.That(nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume,
                     Is.EqualTo(expectedHourlyPercentages));
             }
