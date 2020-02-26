@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             Environment.SetEnvironmentVariable("PATH", previousPath);
             Environment.SetEnvironmentVariable("ARCH", previousArch);
             Directory.SetCurrentDirectory(previousWorkingDirectory);
+            WaveEnvironmentHelper.DimrRun = false;
         }
 
         [Test]
@@ -72,6 +73,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                 Assert.That(Environment.GetEnvironmentVariable("PATH"),
                             Is.EqualTo(expectedPath));
             }
+        }
+
+        [Test]
+        public void WaveEnvironmentHelper_DimrRunTrue_StoresArchInOldArch()
+        {
+            const string expectedArch = "x86";
+            Environment.SetEnvironmentVariable("ARCH", expectedArch);
+            
+            using (var _ = new WaveEnvironmentHelper(null))
+            {
+                WaveEnvironmentHelper.DimrRun = true;
+
+                // Assert | Update
+                Assert.That(Environment.GetEnvironmentVariable("ARCH", EnvironmentVariableTarget.Process),
+                            Is.EqualTo("x64"));
+                Assert.That(Environment.GetEnvironmentVariable("OLD_ARCH", EnvironmentVariableTarget.Process),
+                            Is.Null);
+
+            } // Call | Restore
+            
+            // Assert | Restore
+            Assert.That(Environment.GetEnvironmentVariable("OLD_ARCH", EnvironmentVariableTarget.Process),
+                        Is.EqualTo(expectedArch));
         }
     }
 }
