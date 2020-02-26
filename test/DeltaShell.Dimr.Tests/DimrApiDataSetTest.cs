@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using DeltaShell.NGHS.Common;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Dimr.Tests
@@ -7,52 +9,40 @@ namespace DeltaShell.Dimr.Tests
     [TestFixture]
     public class DimrApiDataSetTest
     {
-        private string previousPath;
-
-        [SetUp]
-        public void SetUp()
-        {
-            previousPath = Environment.GetEnvironmentVariable("PATH");
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Environment.SetEnvironmentVariable("PATH", previousPath);
-        }
-
         [Test]
         public void SetSharedPath_NotContained_PathContainsSharedPathAtTheEnd()
         {
             // Setup
-            Assert.That(previousPath.Contains(DimrApiDataSet.SharedDllPath), Is.False, "Precondition violated.");
+            const string somePath = "bin;more/bin;super/more/bin";
+
+            var environment = Substitute.For<IEnvironment>();
+            environment.GetVariable("PATH", EnvironmentVariableTarget.Process)
+                       .Returns(somePath);
 
             // Call
-            DimrApiDataSet.SetSharedPath();
+            DimrApiDataSet.SetSharedPath(environment);
 
             // Assert
-            string newPath = Environment.GetEnvironmentVariable("PATH");
-            string[] paths = newPath.Split(';');
-            Assert.That(paths.Last(), Is.EqualTo(DimrApiDataSet.SharedDllPath));
+            string expectedValue = $"{somePath};{DimrApiDataSet.SharedDllPath}";
+            environment.Received(1)
+                       .SetVariable("PATH", expectedValue, EnvironmentVariableTarget.Process);
         }
 
         [Test]
         public void SetSharedPath_Contained_DoesNotAddSecondSharedPath()
         {
             // Setup
-            string oldPath = Environment.GetEnvironmentVariable("PATH");
-
-            Environment.SetEnvironmentVariable("PATH", DimrApiDataSet.SharedDllPath + ";" + oldPath);
-            string modifiedPath = Environment.GetEnvironmentVariable("PATH");
-            Assert.That(modifiedPath.Contains(DimrApiDataSet.SharedDllPath), Is.True, "Precondition violated.");
+            string somePath = $"{DimrApiDataSet.SharedDllPath};bin;more/bin;super/more/bin";
+            var environment = Substitute.For<IEnvironment>();
+            environment.GetVariable("PATH", EnvironmentVariableTarget.Process)
+                       .Returns(somePath);
 
             // Call
-            DimrApiDataSet.SetSharedPath();
+            DimrApiDataSet.SetSharedPath(environment);
 
             // Assert
-            string newPath = Environment.GetEnvironmentVariable("PATH");
-            string[] paths = newPath.Split(';');
-            Assert.That(paths.Count(x => x == DimrApiDataSet.SharedDllPath), Is.EqualTo(1));
+            environment.DidNotReceiveWithAnyArgs()
+                       .SetVariable(null, null, EnvironmentVariableTarget.Process);
         }
     }
 }

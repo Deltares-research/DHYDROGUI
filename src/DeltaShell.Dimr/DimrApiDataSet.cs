@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Dimr
 {
@@ -97,7 +98,17 @@ namespace DeltaShell.Dimr
         /// </summary>
         public static void SetSharedPath()
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
+            SetSharedPath(new SystemEnvironment());
+        }
+        
+        /// <summary>
+        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
+        /// using the specified environment.
+        /// </summary>
+        /// <param name="environment"></param>
+        internal static void SetSharedPath(IEnvironment environment)
+        {
+            string path = environment.GetVariable("PATH");
 
             if (path != null && path.Contains(SharedDllPath)) 
                 return;
@@ -109,7 +120,7 @@ namespace DeltaShell.Dimr
 
             path += SharedDllPath;
 
-            Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
+            environment.SetVariable("PATH", path);
         }
 
         /// <summary>
