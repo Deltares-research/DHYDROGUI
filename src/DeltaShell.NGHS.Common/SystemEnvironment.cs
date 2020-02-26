@@ -3,10 +3,10 @@
 namespace DeltaShell.NGHS.Common
 {
     /// <summary>
-    /// <see cref="EnvironmentSetter"/> implements the interface to set Environment variables.
+    /// <see cref="SystemEnvironment"/> implements the interface to set Environment variables.
     /// </summary>
-    /// <seealso cref="IEnvironmentSetter" />
-    public sealed class EnvironmentSetter : IEnvironmentSetter
+    /// <seealso cref="IEnvironment" />
+    public sealed class SystemEnvironment : IEnvironment
     {
         public void SetVariable(string key, 
                                 string value,

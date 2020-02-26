@@ -95,7 +95,7 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
-    <Compile Include="EnvironmentSetterTest.cs" />
+    <Compile Include="SystemEnvironmentTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\RepeatTest.cs" />

@@ -54,8 +54,8 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
-    <Compile Include="EnvironmentSetter.cs" />
-    <Compile Include="IEnvironmentSetter.cs" />
+    <Compile Include="SystemEnvironment.cs" />
+    <Compile Include="IEnvironment.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />

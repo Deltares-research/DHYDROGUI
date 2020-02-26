@@ -3,9 +3,9 @@
 namespace DeltaShell.NGHS.Common
 {
     /// <summary>
-    /// <see cref="IEnvironmentSetter"/> provides the interface to set Environment variables.
+    /// <see cref="IEnvironment"/> provides the interface to set Environment variables.
     /// </summary>
-    public interface IEnvironmentSetter
+    public interface IEnvironment
     {
         /// <summary>
         /// Sets environment variable with key <paramref name="key"/> and value

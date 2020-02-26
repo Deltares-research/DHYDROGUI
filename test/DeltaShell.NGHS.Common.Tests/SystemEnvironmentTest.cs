@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.Common.Tests
 {
     [TestFixture]
-    public class EnvironmentSetterTest
+    public class SystemEnvironmentTest
     {
         private const string key = "TestKey";
         private string previousValue;
@@ -25,21 +25,21 @@ namespace DeltaShell.NGHS.Common.Tests
         public void Constructor_ExpectedResults()
         {
             // Call
-            var environmentSetter = new EnvironmentSetter();
+            var systemEnvironment = new SystemEnvironment();
             
             // Assert
-            Assert.That(environmentSetter, Is.InstanceOf<IEnvironmentSetter>());
+            Assert.That(systemEnvironment, Is.InstanceOf<IEnvironment>());
         }
 
         [Test]
         public void SetVariable_ExpectedResults()
         {
             // Setup
-            var environmentSetter = new EnvironmentSetter();
+            var systemEnvironment = new SystemEnvironment();
             const string value = "SomeValue";
 
             // Call
-            environmentSetter.SetVariable(key, value);
+            systemEnvironment.SetVariable(key, value);
 
             // Assert
             Assert.That(Environment.GetEnvironmentVariable(key), Is.EqualTo(value));
