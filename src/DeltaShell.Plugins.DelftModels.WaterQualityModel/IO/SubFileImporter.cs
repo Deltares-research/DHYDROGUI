@@ -153,7 +153,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             ImportElementInformation<WaterQualitySubstance> importInformation = GetImportInformation(librarySubstances, substances, Equals);
-            RemoveIrrelevantElements(librarySubstances, importInformation.ExistingElements, "substances");
+            WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(librarySubstances, substancesToRemove, "substances");
+
             AddNewElements(librarySubstances, importInformation.NewElements, "substances");
         }
 
@@ -182,7 +184,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             ImportElementInformation<WaterQualityParameter> importInformation = GetImportInformation(libraryParameters, parameters, Equals);
-            RemoveIrrelevantElements(libraryParameters, importInformation.ExistingElements, "parameters");
+            WaterQualityParameter[] parametersToRemove = libraryParameters.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(libraryParameters, parametersToRemove, "parameters");
+
             AddNewElements(libraryParameters, importInformation.NewElements, "parameters");
         }
 
@@ -202,7 +206,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             ImportElementInformation<WaterQualityProcess> importInformation = GetImportInformation(libraryProcesses, processes, Equals);
-            RemoveIrrelevantElements(libraryProcesses, importInformation.ExistingElements, "processes");
+            WaterQualityProcess[] processesToRemove = libraryProcesses.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(libraryProcesses, processesToRemove, "processes");
             AddNewElements(libraryProcesses, importInformation.NewElements, "processes");
         }
 
@@ -239,60 +244,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Except(existingOutputParameters)
                                                                                             .Where(outputParameter => !IsDefaultOutputParameter(outputParameter))
                                                                                             .ToArray();
-            for (var i = 0; i < outputParametersToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant output parameters", i + 1, outputParametersToRemove.Length);
-
-                libraryOutputParameters.Remove(outputParametersToRemove[i]);
-            }
-
-            // Add all new parameters
-            for (var i = 0; i < newOutputParameters.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new output parameters", i + 1, newOutputParameters.Count);
-                libraryOutputParameters.Add(newOutputParameters[i]);
-            }
-
-            // Add any default output parameter that is still missing (Tuple: name, description)
-            var defaultOutputParameters = new[]
-            {
-                new System.Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Volume,
-                                                 Resources.SubstanceProcessLibrary_OutputParameters_Volume_description),
-                new System.Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Surf,
-                                                 Resources.SubstanceProcessLibrary_OutputParameters_Surf_description),
-                new System.Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Temp,
-                                                 Resources.SubstanceProcessLibrary_OutputParameters_Temp_description),
-                new System.Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Rad,
-                                                 Resources.SubstanceProcessLibrary_OutputParameters_Rad_description)
-            };
-            for (var i = 0; i < defaultOutputParameters.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant output parameters", i + 1, defaultOutputParameters.Length);
-
-                if (libraryOutputParameters.All(op => op.Name != defaultOutputParameters[i].Item1))
-                {
-                    libraryOutputParameters.Add(new WaterQualityOutputParameter
-                    {
-                        Name = defaultOutputParameters[i].Item1,
-                        Description = defaultOutputParameters[i].Item2,
-                    });
-                }
-            }
+            RemoveIrrelevantElements(libraryOutputParameters, outputParametersToRemove, "output parameters");
+            AddNewElements(libraryOutputParameters, newOutputParameters, "output parameters");
+            AddDefaultOutputParameters(libraryOutputParameters);
         }
 
         /// <summary>
@@ -330,6 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
         /// <param name="existingElements"> The elements that are already present. </param>
         /// <param name="newElements"> The elements to determine the new elements from. </param>
+        /// <param name="getEqualityFunc">The function to determine the equality between two <typeparamref name="TWaterQualityElement"/>. </param>
         /// <returns> A collection of new elements. </returns>
         /// <remarks>
         /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
@@ -360,39 +315,98 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return new ImportElementInformation<TWaterQualityElement>(existingElementsDuringImport, newElementsDuringImport);
         }
 
-        private void RemoveIrrelevantElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> existingElements,
+        /// <summary>
+        /// Removes irrelevant elements from the <paramref name="target"/>.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement">The type of element of the water quality model.</typeparam>
+        /// <param name="target">The collection to remove elements from.</param>
+        /// <param name="elementsToRemove">The collection of elements that should not be removed.</param>
+        /// <param name="elementName">The name of the type of elements that are removed.</param>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private void RemoveIrrelevantElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> elementsToRemove,
                                                                     string elementName)
             where TWaterQualityElement : Unique<long>, INameable, ICloneable
         {
-            TWaterQualityElement[] substancesToRemove = target.Except(existingElements).ToArray();
-            for (var i = 0; i < substancesToRemove.Length; i++)
+            int nrOfElementsToRemove = elementsToRemove.Count();
+            for (var i = 0; i < nrOfElementsToRemove; i++)
             {
                 if (ShouldCancel)
                 {
                     return;
                 }
 
-                UpdateProgress($"Removing irrelevant {elementName}", i + 1, substancesToRemove.Length);
-                target.Remove(substancesToRemove[i]);
+                UpdateProgress($"Removing irrelevant {elementName}.", i + 1, nrOfElementsToRemove);
+                target.Remove(elementsToRemove.ElementAt(i));
             }
         }
 
-        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> newElements,
+        /// <summary>
+        /// Adds new elements to the <paramref name="target"/>.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement">The type of element of the water quality model.</typeparam>
+        /// <param name="target">The collection to add the elements to.</param>
+        /// <param name="elementsToAdd">The elements that should be added.</param>
+        /// <param name="elementName">The name of the type of elements that are added.</param>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> elementsToAdd,
                                                           string elementName)
             where TWaterQualityElement : Unique<long>, INameable, ICloneable
         {
             var j = 0;
-            int nrOfSubstancesToBeAdded = newElements.Count();
-            foreach (TWaterQualityElement substance in newElements)
+            int nrOfSubstancesToBeAdded = elementsToAdd.Count();
+            foreach (TWaterQualityElement substance in elementsToAdd)
             {
                 if (ShouldCancel)
                 {
                     return;
                 }
 
-                UpdateProgress($"Importing new {elementName}", j++, nrOfSubstancesToBeAdded);
+                UpdateProgress($"Importing new {elementName}.", j++, nrOfSubstancesToBeAdded);
                 target.Add(substance);
             }
+        }
+
+        private void AddDefaultOutputParameters(IEventedList<WaterQualityOutputParameter> target)
+        {
+            // Add any default output parameter that is still missing
+            var defaultOutputParameters = new[]
+            {
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
+                },
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
+                },
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
+                },
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
+                }
+            };
+
+            // Filter the elements to add whether they are unique
+            WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => target.FirstOrDefault(item => Equals(item, element)) == null).ToArray();
+            AddNewElements(target, uniqueElementsToAdd, "default output parameters");
+
         }
 
         private static WaterQualitySubstance GetSubstance(Match match)
