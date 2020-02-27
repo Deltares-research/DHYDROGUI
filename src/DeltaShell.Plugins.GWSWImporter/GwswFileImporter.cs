@@ -385,9 +385,9 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             AddLateralSourceToBranch(branch, nwrwDischargeData.Name, lateralSource);
 
                             // make sure the discharge data has the correct LateralSurface value
-                            nwrwDischargeData.GetLateralSurfaceFromDefinition(rrModel);
+                            nwrwDischargeData.SetCorrectLateralSurface(rrModel);
 
-                            // at FM-side, create lateral data of type REALTIME
+                            // at FM-side, create lateral data of type CONSTANT
                             AddLateralDataToFmModel(lateralSourcesData, lateralSource, Model1DLateralDataType.FlowConstant, nwrwDischargeData.LateralSurface);
                         }
 
