@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -42,6 +43,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
 
         # endregion
+
+        [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            var importer = new SubFileImporter();
+
+            // Assert
+            Assert.IsInstanceOf<IFileImporter>(importer);
+            Assert.AreEqual("Substance Process Library", importer.Name);
+            Assert.IsEmpty(importer.Description);
+            Assert.IsNull(importer.Image);
+            Assert.IsFalse(importer.CanImportOnRootLevel);
+            Assert.AreEqual("Sub Files (*.sub)|*.sub", importer.FileFilter);
+            Assert.IsFalse(importer.OpenViewAfterImport);
+            Assert.IsNull(importer.TargetDataDirectory);
+
+            CollectionAssert.AreEqual(new[]
+            {
+                typeof(SubstanceProcessLibrary)
+            }, importer.SupportedItemTypes);
+        }
+
+        [Test]
+        public void CanImportOn_Always_ReturnsTrue()
+        {
+            // Setup
+            var importer = new SubFileImporter();
+
+            // Call
+            bool result = importer.CanImportOn(null);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Substance process library is not set")]
