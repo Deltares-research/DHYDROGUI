@@ -84,22 +84,26 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         }
 
         /// <summary>
-        /// Gets the LateralSurface value from the correct NwrwDryWeatherFlowDefinition.
+        /// Sets the correct value for the lateral source property with the correct units.
+        /// If the NwrwDischargeData FOM has a DryWeatherFlowId, get the lateral source from
+        /// the corresponding definition. Else, we assume the lateral source was read directly
+        /// from Debiet.csv.
         /// </summary>
-        public void GetLateralSurfaceFromDefinition(IHydroModel model)
+        public void SetCorrectLateralSurface(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
-            if (string.IsNullOrWhiteSpace(DryWeatherFlowId))
-            {
-                LateralSurface /= 86400; // from m³/day to m³/s
-                return;
-            }
 
             NwrwDryWeatherFlowDefinition dwf = rrModel.NwrwDryWeatherFlowDefinitions.FirstOrDefault(dwfd => dwfd.Name.Equals(DryWeatherFlowId));
-            if (dwf == null) return;
 
-            LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
+            if (string.IsNullOrWhiteSpace(DryWeatherFlowId) || dwf == null)
+            {
+                LateralSurface /= 86400; // from m³/day to m³/s
+            }
+            else
+            {
+                LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
+            }
         }
     }
 }
