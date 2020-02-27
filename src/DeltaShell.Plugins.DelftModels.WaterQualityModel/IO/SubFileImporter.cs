@@ -154,8 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant substance variables
-            WaterQualitySubstance[] substancesToRemove = librarySubstances.Where(sub => !existingSubstanceVariables.Contains(sub))
-                                                                          .ToArray();
+            WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(existingSubstanceVariables).ToArray();
             for (var i = 0; i < substancesToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -164,7 +163,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
 
                 UpdateProgress("Removing irrelevant substances", i + 1, substancesToRemove.Length);
-
                 librarySubstances.Remove(substancesToRemove[i]);
             }
 
@@ -208,8 +206,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant parameters
-            WaterQualityParameter[] parametersToRemove = libraryParameters.Where(param => !existingParameters.Contains(param))
-                                                                          .ToArray();
+            WaterQualityParameter[] parametersToRemove = libraryParameters.Except(existingParameters).ToArray();
             for (var i = 0; i < parametersToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -264,8 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant processes
-            WaterQualityProcess[] processesToRemove = libraryProcesses.Where(proc => !existingProcesses.Contains(proc))
-                                                                      .ToArray();
+            WaterQualityProcess[] processesToRemove = libraryProcesses.Except(existingProcesses).ToArray();
             for (var i = 0; i < processesToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -321,8 +317,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant output parameters
-            WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Where(outputParameter => !IsDefaultOutputParameter(outputParameter)
-                                                                                                                      && !existingOutputParameters.Contains(outputParameter))
+            WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Except(existingOutputParameters)
+                                                                                            .Where(outputParameter => !IsDefaultOutputParameter(outputParameter))
                                                                                             .ToArray();
             for (var i = 0; i < outputParametersToRemove.Length; i++)
             {
