@@ -154,9 +154,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             ImportElementInformation<WaterQualitySubstance> importInformation = GetImportInformation(librarySubstances, substances, Equals);
             WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(importInformation.ExistingElements).ToArray();
-            RemoveIrrelevantElements(librarySubstances, substancesToRemove, "substances");
-
-            AddNewElements(librarySubstances, importInformation.NewElements, "substances");
+            RemoveIrrelevantElements(librarySubstances, substancesToRemove, Resources.SubFileImporter_Substances_Name);
+           
+            AddNewElements(librarySubstances, importInformation.NewElements, Resources.SubFileImporter_Substances_Name);
         }
 
         private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
@@ -185,9 +185,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             ImportElementInformation<WaterQualityParameter> importInformation = GetImportInformation(libraryParameters, parameters, Equals);
             WaterQualityParameter[] parametersToRemove = libraryParameters.Except(importInformation.ExistingElements).ToArray();
-            RemoveIrrelevantElements(libraryParameters, parametersToRemove, "parameters");
-
-            AddNewElements(libraryParameters, importInformation.NewElements, "parameters");
+            RemoveIrrelevantElements(libraryParameters, parametersToRemove, Resources.SubFileImporter_Parameters_Name);
+            
+            AddNewElements(libraryParameters, importInformation.NewElements, Resources.SubFileImporter_Parameters_Name);
         }
 
         private void ImportProcesses(IEventedList<WaterQualityProcess> libraryProcesses, string subFileText)
@@ -207,8 +207,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             ImportElementInformation<WaterQualityProcess> importInformation = GetImportInformation(libraryProcesses, processes, Equals);
             WaterQualityProcess[] processesToRemove = libraryProcesses.Except(importInformation.ExistingElements).ToArray();
-            RemoveIrrelevantElements(libraryProcesses, processesToRemove, "processes");
-            AddNewElements(libraryProcesses, importInformation.NewElements, "processes");
+            RemoveIrrelevantElements(libraryProcesses, processesToRemove, Resources.SubFileImporter_Processes_Name);
+
+            AddNewElements(libraryProcesses, importInformation.NewElements, Resources.SubFileImporter_Processes_Name);
         }
 
         private void ImportOutputParameters(IEventedList<WaterQualityOutputParameter> libraryOutputParameters, string subFileText)
@@ -244,8 +245,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Except(existingOutputParameters)
                                                                                             .Where(outputParameter => !IsDefaultOutputParameter(outputParameter))
                                                                                             .ToArray();
-            RemoveIrrelevantElements(libraryOutputParameters, outputParametersToRemove, "output parameters");
-            AddNewElements(libraryOutputParameters, newOutputParameters, "output parameters");
+            RemoveIrrelevantElements(libraryOutputParameters, outputParametersToRemove, Resources.SubFileImporter_OutputParameters_Name);
+            AddNewElements(libraryOutputParameters, newOutputParameters, Resources.SubFileImporter_OutputParameters_Name);
+
             AddDefaultOutputParameters(libraryOutputParameters);
         }
 
@@ -405,7 +407,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             // Filter the elements to add whether they are unique
             WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => target.FirstOrDefault(item => Equals(item, element)) == null).ToArray();
-            AddNewElements(target, uniqueElementsToAdd, "default output parameters");
+            AddNewElements(target, uniqueElementsToAdd, Resources.SubFileImporter_DefaultOutputParameters_Name);
 
         }
 
