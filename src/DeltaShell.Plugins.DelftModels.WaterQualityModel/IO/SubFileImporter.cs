@@ -136,12 +136,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 @"\s*waste-load-unit\s*'(?<WasteLoadUnit>" + UnitCharacters + @")'\s*\n" +
                 @"end-substance";
 
-            var newSubstanceVariables = new Collection<WaterQualitySubstance>();
-            var existingSubstanceVariables = new Collection<WaterQualitySubstance>();
-
             IEnumerable<WaterQualitySubstance> substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
-
-            // If there are no substances, try parsing the according to the new substance pattern
+            // If there are no substances, try parsing according to the new substance pattern where the definitions 
+            // are defined on a single line.
             if (!substances.Any())
             {
                 substancePattern =
@@ -155,43 +152,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
             }
 
-            foreach (WaterQualitySubstance substance in substances)
-            {
-                WaterQualitySubstance existingSubstanceVariable = librarySubstances.FirstOrDefault(sv => Equals(sv, substance));
-                if (existingSubstanceVariable != null)
-                {
-                    existingSubstanceVariables.Add(existingSubstanceVariable);
-                }
-                else
-                {
-                    newSubstanceVariables.Add(substance);
-                }
-            }
-
-            // Remove all irrelevant substance variables
-            WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(existingSubstanceVariables).ToArray();
-            for (var i = 0; i < substancesToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant substances", i + 1, substancesToRemove.Length);
-                librarySubstances.Remove(substancesToRemove[i]);
-            }
-
-            // Add all new substance variables
-            for (var i = 0; i < newSubstanceVariables.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new substances", i + 1, newSubstanceVariables.Count);
-                librarySubstances.Add(newSubstanceVariables[i]);
-            }
+            ImportElementInformation<WaterQualitySubstance> importInformation = GetImportInformation(librarySubstances, substances, Equals);
+            RemoveIrrelevantElements(librarySubstances, importInformation.ExistingElements, "substances");
+            AddNewElements(librarySubstances, importInformation.NewElements, "substances");
         }
 
         private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
@@ -203,10 +166,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                                       @"\s*value\s*(?<Value>" + RegularExpression.Characters + @")\s*\n" +
                                       @"end-parameter";
 
-            var newParameters = new Collection<WaterQualityParameter>();
-            var existingParameters = new Collection<WaterQualityParameter>();
-
             IEnumerable<WaterQualityParameter> parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
+            // If there are no parameters, try parsing according to the new parameter pattern where the definitions 
+            // are defined on a single line.
             if (!parameters.Any())
             {
                 parameterPattern =
@@ -219,44 +181,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
             }
 
-            foreach (WaterQualityParameter parameter in parameters)
-            {
-                WaterQualityParameter existingParameter = libraryParameters.FirstOrDefault(p => Equals(p, parameter));
-                if (existingParameter == null)
-                {
-                    newParameters.Add(parameter);
-                }
-                else
-                {
-                    existingParameters.Add(existingParameter);
-                }
-            }
-
-            // Remove all irrelevant parameters
-            WaterQualityParameter[] parametersToRemove = libraryParameters.Except(existingParameters).ToArray();
-            for (var i = 0; i < parametersToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant parameters", i + 1, parametersToRemove.Length);
-
-                libraryParameters.Remove(parametersToRemove[i]);
-            }
-
-            // Add all new parameters
-            for (var i = 0; i < newParameters.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new parameters", i + 1, newParameters.Count);
-                libraryParameters.Add(newParameters[i]);
-            }
+            ImportElementInformation<WaterQualityParameter> importInformation = GetImportInformation(libraryParameters, parameters, Equals);
+            RemoveIrrelevantElements(libraryParameters, importInformation.ExistingElements, "parameters");
+            AddNewElements(libraryParameters, importInformation.NewElements, "parameters");
         }
 
         private void ImportProcesses(IEventedList<WaterQualityProcess> libraryProcesses, string subFileText)
@@ -265,53 +192,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             const string processPattern = @"\s*name\s*'(?<Name>" + RegularExpression.Characters +
                                           @")'\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n";
 
-            var newProcesses = new Collection<WaterQualityProcess>();
-            var existingProcesses = new Collection<WaterQualityProcess>();
-
             MatchCollection processesMatches = RegularExpression.GetMatches(processesPattern, subFileText);
+
+            IEnumerable<WaterQualityProcess> processes = Enumerable.Empty<WaterQualityProcess>();
             if (processesMatches.Count > 0)
             {
                 string content = processesMatches[0].Groups["Processes"].Value;
-                IEnumerable<WaterQualityProcess> processes = CreateWaterQualityModelElements(processPattern, content, GetProcess);
-                foreach (WaterQualityProcess process in processes)
-                {
-                    WaterQualityProcess existingProcess = libraryProcesses.FirstOrDefault(p => Equals(p, process));
-                    if (existingProcess == null)
-                    {
-                        newProcesses.Add(process);
-                    }
-                    else
-                    {
-                        existingProcesses.Add(existingProcess);
-                    }
-                }
+                processes = CreateWaterQualityModelElements(processPattern, content, GetProcess);
             }
 
-            // Remove all irrelevant processes
-            WaterQualityProcess[] processesToRemove = libraryProcesses.Except(existingProcesses).ToArray();
-            for (var i = 0; i < processesToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant processes", i + 1, processesToRemove.Length);
-
-                libraryProcesses.Remove(processesToRemove[i]);
-            }
-
-            // Add all new processes
-            for (var i = 0; i < newProcesses.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new processes", i + 1, newProcesses.Count);
-                libraryProcesses.Add(newProcesses[i]);
-            }
+            ImportElementInformation<WaterQualityProcess> importInformation = GetImportInformation(libraryProcesses, processes, Equals);
+            RemoveIrrelevantElements(libraryProcesses, importInformation.ExistingElements, "processes");
+            AddNewElements(libraryProcesses, importInformation.NewElements, "processes");
         }
 
         private void ImportOutputParameters(IEventedList<WaterQualityOutputParameter> libraryOutputParameters, string subFileText)
@@ -406,30 +298,101 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Creates a collection of water quality model elements based on its input arguments.
         /// </summary>
-        /// <typeparam name="TWaterQualityModelElement"> The type of element of the water quality model that needs to be created. </typeparam>
+        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model that needs to be created. </typeparam>
         /// <param name="pattern"> The pattern to extract the elements from the <paramref name="subFileContents" />. </param>
         /// <param name="subFileContents"> The contents of the file to extract the elements from. </param>
         /// <param name="createElementFunc"> The function to create the element based on the pattern match. </param>
-        /// <returns> A collection of <typeparamref name="TWaterQualityModelElement" />. </returns>
+        /// <returns> A collection of <typeparamref name="TWaterQualityElement" />. </returns>
         /// <remarks>
         /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
         /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
-        private static IEnumerable<TWaterQualityModelElement> CreateWaterQualityModelElements<TWaterQualityModelElement>(string pattern, string subFileContents,
-                                                                                                                         Func<Match, TWaterQualityModelElement> createElementFunc)
-            where TWaterQualityModelElement : Unique<long>, INameable, ICloneable
+        private static IEnumerable<TWaterQualityElement> CreateWaterQualityModelElements<TWaterQualityElement>(string pattern, string subFileContents,
+                                                                                                               Func<Match, TWaterQualityElement> createElementFunc)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
         {
             MatchCollection matches = RegularExpression.GetMatches(pattern, subFileContents);
 
-            var elements = new List<TWaterQualityModelElement>();
+            var elements = new List<TWaterQualityElement>();
             foreach (Match match in matches)
             {
                 elements.Add(createElementFunc(match));
             }
 
             return elements;
+        }
+
+        /// <summary>
+        /// Retrieves the collection of new elements from <paramref name="newElements" />.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
+        /// <param name="existingElements"> The elements that are already present. </param>
+        /// <param name="newElements"> The elements to determine the new elements from. </param>
+        /// <returns> A collection of new elements. </returns>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private static ImportElementInformation<TWaterQualityElement> GetImportInformation<TWaterQualityElement>(IEventedList<TWaterQualityElement> existingElements,
+                                                                                                                 IEnumerable<TWaterQualityElement> newElements,
+                                                                                                                 Func<TWaterQualityElement, TWaterQualityElement, bool> getEqualityFunc)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            var existingElementsDuringImport = new Collection<TWaterQualityElement>();
+            var newElementsDuringImport = new Collection<TWaterQualityElement>();
+            foreach (TWaterQualityElement element in newElements)
+            {
+                TWaterQualityElement existingElement = existingElements.FirstOrDefault(p => getEqualityFunc(p, element));
+                if (existingElement != null)
+                {
+                    existingElementsDuringImport.Add(existingElement);
+                }
+                else
+                {
+                    newElementsDuringImport.Add(element);
+                }
+            }
+
+            return new ImportElementInformation<TWaterQualityElement>(existingElementsDuringImport, newElementsDuringImport);
+        }
+
+        private void RemoveIrrelevantElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> existingElements,
+                                                                    string elementName)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            TWaterQualityElement[] substancesToRemove = target.Except(existingElements).ToArray();
+            for (var i = 0; i < substancesToRemove.Length; i++)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                UpdateProgress($"Removing irrelevant {elementName}", i + 1, substancesToRemove.Length);
+                target.Remove(substancesToRemove[i]);
+            }
+        }
+
+        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, IEnumerable<TWaterQualityElement> newElements,
+                                                          string elementName)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            var j = 0;
+            int nrOfSubstancesToBeAdded = newElements.Count();
+            foreach (TWaterQualityElement substance in newElements)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                UpdateProgress($"Importing new {elementName}", j++, nrOfSubstancesToBeAdded);
+                target.Add(substance);
+            }
         }
 
         private static WaterQualitySubstance GetSubstance(Match match)
@@ -605,6 +568,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             return unit;
+        }
+
+        /// <summary>
+        /// Class to store the information about the imported elements.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of water quality element it needs to store data from. </typeparam>
+        private class ImportElementInformation<TWaterQualityElement>
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            /// <summary>
+            /// Creates a new instance of <see cref="ImportElementInformation{TWaterQualityElement}" />.
+            /// </summary>
+            /// <param name="existingElements"> The existing elements of the import. </param>
+            /// <param name="newElements"> The new elements that are imported. </param>
+            public ImportElementInformation(IEnumerable<TWaterQualityElement> existingElements, IEnumerable<TWaterQualityElement> newElements)
+            {
+                ExistingElements = existingElements;
+                NewElements = newElements;
+            }
+
+            /// <summary>
+            /// Gets the existing elements that were part of  the import.
+            /// </summary>
+            public IEnumerable<TWaterQualityElement> ExistingElements { get; }
+
+            /// <summary>
+            /// Gets the mew elements that were part of the import
+            /// </summary>
+            public IEnumerable<TWaterQualityElement> NewElements { get; }
         }
     }
 }
