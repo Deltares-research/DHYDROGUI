@@ -1,0 +1,5 @@
+substance 'EColi'   active   description 'E. coli bacteria'                          concentration-unit 'MPN/m3' waste-load-unit '-' end-substance
+substance 'OXY'     active   description 'Oxygen'                                    concentration-unit 'gO2/m3' waste-load-unit '-' end-substance
+
+parameter 'SWresusalg' description 'Respunsion Diat <0=Diat|1=DetC>'                 unit '-' value 1.000e+00 end-parameter
+parameter 'SWAdsP'     description 'switch formulation <0=Kd|1=Langmuir|2=GEM>'      unit '-' value 0.000e+00 end-parameter

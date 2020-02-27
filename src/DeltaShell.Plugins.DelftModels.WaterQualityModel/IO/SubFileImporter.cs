@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void ImportSubstances(IEventedList<WaterQualitySubstance> librarySubstances, string subFileText)
         {
-            const string substancePattern =
+            string substancePattern =
                 @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*(?<Active>" +
                 RegularExpression.Characters + @")\s*\n" +
                 @"\s*description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n" +
@@ -140,6 +140,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var existingSubstanceVariables = new Collection<WaterQualitySubstance>();
 
             IEnumerable<WaterQualitySubstance> substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
+
+            // If there are no substances, try parsing the according to the new substance pattern
+            if (!substances.Any())
+            {
+                substancePattern =
+                    @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*" +
+                    "(?<Active>" + RegularExpression.Characters + @")\s*" +
+                    @"description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*" +
+                    @"concentration-unit\s*'(?<ConcentrationUnit>" + UnitCharacters + @")'\s*" +
+                    @"waste-load-unit\s*'(?<WasteLoadUnit>" + UnitCharacters + @")'\s*" +
+                    @"end-substance";
+
+                substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
+            }
+
             foreach (WaterQualitySubstance substance in substances)
             {
                 WaterQualitySubstance existingSubstanceVariable = librarySubstances.FirstOrDefault(sv => Equals(sv, substance));
@@ -181,17 +196,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
         {
-            const string parameterPattern = @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
-                                            @"\s*description\s*'(?<Description>" +
-                                            RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                                            @"\s*unit\s*'(?<Unit>" + UnitCharacters + @")'\s*\n" +
-                                            @"\s*value\s*(?<Value>" + RegularExpression.Characters + @")\s*\n" +
-                                            @"end-parameter";
+            string parameterPattern = @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
+                                      @"\s*description\s*'(?<Description>" +
+                                      RegularExpression.ExtendedCharacters + @")'\s*\n" +
+                                      @"\s*unit\s*'(?<Unit>" + UnitCharacters + @")'\s*\n" +
+                                      @"\s*value\s*(?<Value>" + RegularExpression.Characters + @")\s*\n" +
+                                      @"end-parameter";
 
             var newParameters = new Collection<WaterQualityParameter>();
             var existingParameters = new Collection<WaterQualityParameter>();
 
             IEnumerable<WaterQualityParameter> parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
+            if (!parameters.Any())
+            {
+                parameterPattern =
+                    @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*" +
+                    @"description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*" +
+                    @"unit\s*'(?<Unit>" + UnitCharacters + @")'\s*" +
+                    @"value\s*(?<Value>" + RegularExpression.Characters + @")\s*" +
+                    @"end-parameter";
+
+                parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
+            }
+
             foreach (WaterQualityParameter parameter in parameters)
             {
                 WaterQualityParameter existingParameter = libraryParameters.FirstOrDefault(p => Equals(p, parameter));
