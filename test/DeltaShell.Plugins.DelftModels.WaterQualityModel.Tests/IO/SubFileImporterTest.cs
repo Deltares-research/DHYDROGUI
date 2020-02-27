@@ -114,21 +114,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(0, library.OutputParameters.Count);
 
             // Perform import on empty substance process library
-            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\Eutrof_simple_sobek.sub");
+            string testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\Eutrof_simple_sobek.sub");
             new SubFileImporter().Import(library, testFilePath);
 
             Assert.AreEqual("Eutrof_simple_sobek", library.Name);
             Assert.AreEqual(12, library.Substances.Count);
             Assert.AreEqual(58, library.Parameters.Count);
             Assert.AreEqual(37, library.Processes.Count);
-            Assert.AreEqual(15, library.OutputParameters.Count); // 11x imported output parameter, 4x default output parameter 
+            Assert.AreEqual(15, library.OutputParameters.Count);              // 11x imported output parameter, 4x default output parameter 
             Assert.AreEqual(testFilePath, library.ImportedSubstanceFilePath); //To check if the property ImportedSubstanceFilePath & the imported file path are equal.
 
-            var firstSubstanceVariable = library.Substances[0];
-            var firstParameter = library.Parameters[0];
-            var firstProcess = library.Processes[0];
-            var firstOutputParameter = library.OutputParameters[0];
-            var secondOutputParameter = library.OutputParameters[1];
+            WaterQualitySubstance firstSubstanceVariable = library.Substances[0];
+            WaterQualityParameter firstParameter = library.Parameters[0];
+            WaterQualityProcess firstProcess = library.Processes[0];
+            WaterQualityOutputParameter firstOutputParameter = library.OutputParameters[0];
+            WaterQualityOutputParameter secondOutputParameter = library.OutputParameters[1];
 
             Assert.AreEqual("AAP", firstSubstanceVariable.Name);
             Assert.AreEqual(true, firstSubstanceVariable.Active);
@@ -198,10 +198,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(1, library.Processes.Count);
             Assert.AreEqual(5, library.OutputParameters.Count); // 1x imported output parameter, 4x default output parameter
 
-            var firstSubstanceVariable = library.Substances[0];
-            var firstParameter = library.Parameters[0];
-            var firstProcess = library.Processes[0];
-            var firstOutputParameter = library.OutputParameters[0];
+            WaterQualitySubstance firstSubstanceVariable = library.Substances[0];
+            WaterQualityParameter firstParameter = library.Parameters[0];
+            WaterQualityProcess firstProcess = library.Processes[0];
+            WaterQualityOutputParameter firstOutputParameter = library.OutputParameters[0];
 
             Assert.AreEqual("Continuity", firstSubstanceVariable.Name);
             Assert.AreEqual(true, firstSubstanceVariable.Active);
@@ -221,7 +221,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Chloride!", firstOutputParameter.Description);
             Assert.AreEqual(true, firstOutputParameter.ShowInHis);
             Assert.AreEqual(true, firstOutputParameter.ShowInMap);
-
         }
 
         [Test]
@@ -236,9 +235,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(2, library.Processes.Count);
             Assert.AreEqual(21, library.OutputParameters.Count); // 17x imported output parameter, 4x default output parameter 
 
-            var substanceVariableTest1 = library.Substances.First(s => s.Name == "Test1");
-            var substanceVariableTest2 = library.Substances.First(s => s.Name == "Test2");
-            var parameterZon = library.Parameters.First(p => p.Name == "Zon");
+            WaterQualitySubstance substanceVariableTest1 = library.Substances.First(s => s.Name == "Test1");
+            WaterQualitySubstance substanceVariableTest2 = library.Substances.First(s => s.Name == "Test2");
+            WaterQualityParameter parameterZon = library.Parameters.First(p => p.Name == "Zon");
 
             Assert.AreEqual("%", substanceVariableTest1.ConcentrationUnit);
             Assert.AreEqual("-", substanceVariableTest1.WasteLoadUnit);
@@ -255,10 +254,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var library = new SubstanceProcessLibrary();
             var subFileImporter = new SubFileImporter();
 
-            var testFilePath = TestHelper.GetTestFilePath(@"IO\SubstateWithPercentageSign.sub");
+            string testFilePath = TestHelper.GetTestFilePath(@"IO\SubstateWithPercentageSign.sub");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
-            var expectedMessage = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_,testFilePath);
+            string expectedMessage = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, testFilePath);
 
             Action action = () =>
             {
@@ -333,4 +332,3 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         }
     }
 }
-
