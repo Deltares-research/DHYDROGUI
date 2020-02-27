@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -94,22 +95,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             if (!ShouldCancel)
             {
-                ImportSubstances(substanceProcessLibrary, subFileText);
+                ImportSubstances(substanceProcessLibrary.Substances, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportParameters(substanceProcessLibrary, subFileText);
+                ImportParameters(substanceProcessLibrary.Parameters, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportProcesses(substanceProcessLibrary, subFileText);
+                ImportProcesses(substanceProcessLibrary.Processes, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportOutputParameters(substanceProcessLibrary, subFileText);
+                ImportOutputParameters(substanceProcessLibrary.OutputParameters, subFileText);
             }
 
             substanceProcessLibrary.Name =
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             substanceProcessLibrary.ImportedSubstanceFilePath = path;
         }
 
-        private void ImportSubstances(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportSubstances(IEventedList<WaterQualitySubstance> librarySubstances, string subFileText)
         {
             const string substancePattern =
                 @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*(?<Active>" +
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             IEnumerable<WaterQualitySubstance> substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
             foreach (WaterQualitySubstance substance in substances)
             {
-                WaterQualitySubstance existingSubstanceVariable = substanceProcessLibrary.Substances.FirstOrDefault(sv => Equals(sv, substance));
+                WaterQualitySubstance existingSubstanceVariable = librarySubstances.FirstOrDefault(sv => Equals(sv, substance));
                 if (existingSubstanceVariable != null)
                 {
                     existingSubstanceVariables.Add(existingSubstanceVariable);
@@ -153,10 +154,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant substance variables
-            WaterQualitySubstance[] substancesToRemove = substanceProcessLibrary
-                                                         .Substances.Where(
-                                                             sub => !existingSubstanceVariables.Contains(sub))
-                                                         .ToArray();
+            WaterQualitySubstance[] substancesToRemove = librarySubstances.Where(sub => !existingSubstanceVariables.Contains(sub))
+                                                                          .ToArray();
             for (var i = 0; i < substancesToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -166,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 UpdateProgress("Removing irrelevant substances", i + 1, substancesToRemove.Length);
 
-                substanceProcessLibrary.Substances.Remove(substancesToRemove[i]);
+                librarySubstances.Remove(substancesToRemove[i]);
             }
 
             // Add all new substance variables
@@ -178,11 +177,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
 
                 UpdateProgress("Importing new substances", i + 1, newSubstanceVariables.Count);
-                substanceProcessLibrary.Substances.Add(newSubstanceVariables[i]);
+                librarySubstances.Add(newSubstanceVariables[i]);
             }
         }
 
-        private void ImportParameters(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
         {
             const string parameterPattern = @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
                                             @"\s*description\s*'(?<Description>" +
@@ -197,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             IEnumerable<WaterQualityParameter> parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
             foreach (WaterQualityParameter parameter in parameters)
             {
-                WaterQualityParameter existingParameter = substanceProcessLibrary.Parameters.FirstOrDefault(p => Equals(p, parameter));
+                WaterQualityParameter existingParameter = libraryParameters.FirstOrDefault(p => Equals(p, parameter));
                 if (existingParameter == null)
                 {
                     newParameters.Add(parameter);
@@ -209,9 +208,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant parameters
-            WaterQualityParameter[] parametersToRemove = substanceProcessLibrary
-                                                         .Parameters.Where(param => !existingParameters.Contains(param))
-                                                         .ToArray();
+            WaterQualityParameter[] parametersToRemove = libraryParameters.Where(param => !existingParameters.Contains(param))
+                                                                          .ToArray();
             for (var i = 0; i < parametersToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -221,7 +219,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 UpdateProgress("Removing irrelevant parameters", i + 1, parametersToRemove.Length);
 
-                substanceProcessLibrary.Parameters.Remove(parametersToRemove[i]);
+                libraryParameters.Remove(parametersToRemove[i]);
             }
 
             // Add all new parameters
@@ -233,11 +231,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
 
                 UpdateProgress("Importing new parameters", i + 1, newParameters.Count);
-                substanceProcessLibrary.Parameters.Add(newParameters[i]);
+                libraryParameters.Add(newParameters[i]);
             }
         }
 
-        private void ImportProcesses(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportProcesses(IEventedList<WaterQualityProcess> libraryProcesses, string subFileText)
         {
             const string processesPattern = @"active-processes\s*\n(?<Processes>.*)end-active-processes";
             const string processPattern = @"\s*name\s*'(?<Name>" + RegularExpression.Characters +
@@ -245,15 +243,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             var newProcesses = new Collection<WaterQualityProcess>();
             var existingProcesses = new Collection<WaterQualityProcess>();
-            MatchCollection processesMatches = RegularExpression.GetMatches(processesPattern, subFileText);
 
+            MatchCollection processesMatches = RegularExpression.GetMatches(processesPattern, subFileText);
             if (processesMatches.Count > 0)
             {
                 string content = processesMatches[0].Groups["Processes"].Value;
                 IEnumerable<WaterQualityProcess> processes = CreateWaterQualityModelElements(processPattern, content, GetProcess);
                 foreach (WaterQualityProcess process in processes)
                 {
-                    WaterQualityProcess existingProcess = substanceProcessLibrary.Processes.FirstOrDefault(p => Equals(p, process));
+                    WaterQualityProcess existingProcess = libraryProcesses.FirstOrDefault(p => Equals(p, process));
                     if (existingProcess == null)
                     {
                         newProcesses.Add(process);
@@ -266,9 +264,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant processes
-            WaterQualityProcess[] processesToRemove = substanceProcessLibrary
-                                                      .Processes.Where(proc => !existingProcesses.Contains(proc))
-                                                      .ToArray();
+            WaterQualityProcess[] processesToRemove = libraryProcesses.Where(proc => !existingProcesses.Contains(proc))
+                                                                      .ToArray();
             for (var i = 0; i < processesToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -278,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 UpdateProgress("Removing irrelevant processes", i + 1, processesToRemove.Length);
 
-                substanceProcessLibrary.Processes.Remove(processesToRemove[i]);
+                libraryProcesses.Remove(processesToRemove[i]);
             }
 
             // Add all new processes
@@ -290,11 +287,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
 
                 UpdateProgress("Importing new processes", i + 1, newProcesses.Count);
-                substanceProcessLibrary.Processes.Add(newProcesses[i]);
+                libraryProcesses.Add(newProcesses[i]);
             }
         }
 
-        private void ImportOutputParameters(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportOutputParameters(IEventedList<WaterQualityOutputParameter> libraryOutputParameters, string subFileText)
         {
             const string outputParameterPattern = @"output\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
                                                   @"\s*description\s*'(?<Description>" +
@@ -307,12 +304,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             foreach (WaterQualityOutputParameter output in outputs)
             {
                 // Ignore existing default output parameters
-                if (IsExistingDefaultOutputParameter(output, substanceProcessLibrary.OutputParameters))
+                if (IsExistingDefaultOutputParameter(output, libraryOutputParameters))
                 {
                     continue;
                 }
 
-                WaterQualityOutputParameter existingOutput = substanceProcessLibrary.OutputParameters.FirstOrDefault(p => Equals(p, output));
+                WaterQualityOutputParameter existingOutput = libraryOutputParameters.FirstOrDefault(p => Equals(p, output));
                 if (existingOutput == null)
                 {
                     newOutputParameters.Add(output);
@@ -324,12 +321,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
 
             // Remove all irrelevant output parameters
-            WaterQualityOutputParameter[] outputParametersToRemove =
-                substanceProcessLibrary.OutputParameters.Where(
-                                           outputParameter =>
-                                               !IsDefaultOutputParameter(outputParameter) &&
-                                               !existingOutputParameters.Contains(outputParameter))
-                                       .ToArray();
+            WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Where(outputParameter => !IsDefaultOutputParameter(outputParameter)
+                                                                                                                      && !existingOutputParameters.Contains(outputParameter))
+                                                                                            .ToArray();
             for (var i = 0; i < outputParametersToRemove.Length; i++)
             {
                 if (ShouldCancel)
@@ -339,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 UpdateProgress("Removing irrelevant output parameters", i + 1, outputParametersToRemove.Length);
 
-                substanceProcessLibrary.OutputParameters.Remove(outputParametersToRemove[i]);
+                libraryOutputParameters.Remove(outputParametersToRemove[i]);
             }
 
             // Add all new parameters
@@ -351,7 +345,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 }
 
                 UpdateProgress("Importing new output parameters", i + 1, newOutputParameters.Count);
-                substanceProcessLibrary.OutputParameters.Add(newOutputParameters[i]);
+                libraryOutputParameters.Add(newOutputParameters[i]);
             }
 
             // Add any default output parameter that is still missing (Tuple: name, description)
@@ -375,9 +369,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 UpdateProgress("Removing irrelevant output parameters", i + 1, defaultOutputParameters.Length);
 
-                if (substanceProcessLibrary.OutputParameters.All(op => op.Name != defaultOutputParameters[i].Item1))
+                if (libraryOutputParameters.All(op => op.Name != defaultOutputParameters[i].Item1))
                 {
-                    substanceProcessLibrary.OutputParameters.Add(new WaterQualityOutputParameter
+                    libraryOutputParameters.Add(new WaterQualityOutputParameter
                     {
                         Name = defaultOutputParameters[i].Item1,
                         Description = defaultOutputParameters[i].Item2,
@@ -389,14 +383,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Creates a collection of water quality model elements based on its input arguments.
         /// </summary>
-        /// <typeparam name="TWaterQualityModelElement">The type of element of the water quality model that needs to be created.</typeparam>
-        /// <param name="pattern">The pattern to extract the elements from the <paramref name="subFileContents"/>.</param>
-        /// <param name="subFileContents">The contents of the file to extract the elements from.</param>
-        /// <param name="createElementFunc">The function to create the element based on the pattern match.</param>
-        /// <returns>A collection of <typeparamref name="TWaterQualityModelElement"/>.</returns>
-        /// <remarks>The type constraint is currently loosely based on the <see cref="WaterQualitySubstance"/>,
-        /// <see cref="WaterQualitySubstance"/>, <see cref="WaterQualityProcess"/> and <see cref="WaterQualityOutputParameter"/>.
-        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.</remarks>
+        /// <typeparam name="TWaterQualityModelElement"> The type of element of the water quality model that needs to be created. </typeparam>
+        /// <param name="pattern"> The pattern to extract the elements from the <paramref name="subFileContents" />. </param>
+        /// <param name="subFileContents"> The contents of the file to extract the elements from. </param>
+        /// <param name="createElementFunc"> The function to create the element based on the pattern match. </param>
+        /// <returns> A collection of <typeparamref name="TWaterQualityModelElement" />. </returns>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
         private static IEnumerable<TWaterQualityModelElement> CreateWaterQualityModelElements<TWaterQualityModelElement>(string pattern, string subFileContents,
                                                                                                                          Func<Match, TWaterQualityModelElement> createElementFunc)
             where TWaterQualityModelElement : Unique<long>, INameable, ICloneable
