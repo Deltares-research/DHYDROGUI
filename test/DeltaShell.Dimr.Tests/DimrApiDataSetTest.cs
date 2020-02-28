@@ -23,7 +23,7 @@ namespace DeltaShell.Dimr.Tests
             DimrApiDataSet.SetSharedPath(environment);
 
             // Assert
-            string expectedValue = $"{somePath};{DimrApiDataSet.SharedDllPath}";
+            string expectedValue = $"{DimrApiDataSet.SharedDllPath};{somePath}";
             environment.Received(1)
                        .SetVariable(EnvironmentConstants.PathKey, 
                                     expectedValue, 
@@ -34,7 +34,7 @@ namespace DeltaShell.Dimr.Tests
         public void SetSharedPath_Contained_DoesNotAddSecondSharedPath()
         {
             // Setup
-            string somePath = $"{DimrApiDataSet.SharedDllPath};bin;more/bin;super/more/bin";
+            string somePath = $"bin;more/bin;super/more/bin;{DimrApiDataSet.SharedDllPath}";
             var environment = Substitute.For<IEnvironment>();
             environment.GetVariable(EnvironmentConstants.PathKey, 
                                     EnvironmentVariableTarget.Process)
@@ -46,6 +46,31 @@ namespace DeltaShell.Dimr.Tests
             // Assert
             environment.DidNotReceiveWithAnyArgs()
                        .SetVariable(null, null, EnvironmentVariableTarget.Process);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetSharedPath_NullOrEmpty_SetsPathCorrectly(string returnValue)
+        {
+            // Setup
+            const string somePath = null;
+
+            var environment = Substitute.For<IEnvironment>();
+            environment.GetVariable(EnvironmentConstants.PathKey,
+                                    EnvironmentVariableTarget.Process)
+                       .Returns(somePath);
+
+            // Call
+            DimrApiDataSet.SetSharedPath(environment);
+
+            // Assert
+            string expectedValue = $"{DimrApiDataSet.SharedDllPath}";
+            environment.Received(1)
+                       .SetVariable(EnvironmentConstants.PathKey, 
+                                    expectedValue, 
+                                    EnvironmentVariableTarget.Process);
+            
         }
     }
 }
