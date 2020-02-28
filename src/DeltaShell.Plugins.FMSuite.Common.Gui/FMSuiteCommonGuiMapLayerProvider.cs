@@ -85,8 +85,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 {
                     
                     AttributeName = nameof(Model1DBoundaryNodeData.DataType),
-                    DefaultStyle = new VectorStyle(){
-                        GeometryType = typeof(IPoint),}
+                    DefaultStyle = new VectorStyle
+                    {
+                        GeometryType = typeof(IPoint),
+                        Fill = new SolidBrush(Color.Transparent),
+                        EnableOutline = false
+                    }
                     ,
                     NoDataValues = new List<string> { "" },
                     ThemeItems = new EventedList<IThemeItem>
