@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -196,19 +197,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IEnumerable GetOutputDataItemsCore(WaterFlowFMModel model)
         {
-            if (model.OutputMapFileStore != null)
-            {
-                foreach (var func in model.OutputMapFileStore.Functions)
-                    yield return WrapIntoOutputItem(func, func.Name, model);
-                // wrapped in dataitems for central map resolve logic..
-            }
+            if (model.OutputHisFileStore == null) 
+                yield break;
 
-            if (model.OutputHisFileStore != null)
-            {
-                foreach (var func in model.OutputHisFileStore.Functions)
-                    yield return WrapIntoOutputItem(func, func.Name, model);
-                // wrapped in dataitems for central map resolve logic..
-            }
+            foreach (var func in model.OutputHisFileStore.Functions.OfType<TimeSeries>())
+                yield return WrapIntoOutputItem(func, func.Name, model);
+            // wrapped in dataitems for central map resolve logic..
         }
 
         private static IDataItem WrapIntoOutputItem(object o, string tag, IDataItemOwner model)
