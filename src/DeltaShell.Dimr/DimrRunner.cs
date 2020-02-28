@@ -132,7 +132,7 @@ namespace DeltaShell.Dimr
         }
         public void OnCleanup()
         {
-            dimrApi.Dispose();
+            dimrApi?.Dispose();
             dimrApi = null;
             var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
