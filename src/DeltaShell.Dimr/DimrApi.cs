@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using BasicModelInterface;
 using DelftTools.Utils.Interop;
+using DeltaShell.NGHS.Common;
 using log4net;
 
 namespace DeltaShell.Dimr
@@ -156,14 +157,14 @@ namespace DeltaShell.Dimr
                 Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
                 LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
                 
-                var path = Environment.GetEnvironmentVariable("PATH");
+                var path = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
                 path = KernelDirs + ";" +
                        DimrApiDataSet.DimrDllPath + ";" +
                        path;
-                Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
+                Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, path, EnvironmentVariableTarget.Process);
                 
-                LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable("PATH")));
+                LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey)));
 
                 
                 byte useMpi = 0;

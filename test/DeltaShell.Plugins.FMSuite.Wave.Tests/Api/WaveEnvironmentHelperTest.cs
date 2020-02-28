@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             // Setup
             const string expectedPath = "Path1;Path2;Path3";
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable("PATH").Returns(expectedPath);
+            environment.GetVariable(EnvironmentConstants.PathKey)
+                       .Returns(expectedPath);
 
             const string expectedArch = "x86";
             environment.GetVariable(WaveEnvironmentConstants.ArchKey)
@@ -60,7 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                                                               DimrApiDataSet.EsmfExePath,
                                                               DimrApiDataSet.EsmfScriptPath,
                                                               expectedPath);
-                    environment.Received(1).SetVariable("PATH", expectedModifiedPath, EnvironmentVariableTarget.Process);
+                    environment.Received(1).SetVariable(EnvironmentConstants.PathKey,
+                                                        expectedModifiedPath, 
+                                                        EnvironmentVariableTarget.Process);
                 } // Call | Restore
 
 
@@ -70,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                 environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
                                                     expectedArch, 
                                                     EnvironmentVariableTarget.Process);
-                environment.Received(1).SetVariable("PATH", 
+                environment.Received(1).SetVariable(EnvironmentConstants.PathKey, 
                                                     expectedPath, 
                                                     EnvironmentVariableTarget.Process);
             }
@@ -81,7 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
         {
             const string expectedPath = "Path1;Path2;Path3";
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable("PATH").Returns(expectedPath);
+            environment.GetVariable(EnvironmentConstants.PathKey)
+                       .Returns(expectedPath);
 
             const string expectedArch = "x86";
             environment.GetVariable(WaveEnvironmentConstants.ArchKey)

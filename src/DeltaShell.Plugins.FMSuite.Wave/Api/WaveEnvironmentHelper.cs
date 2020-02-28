@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         {
             this.environment = environment;
 
-            previousPath = environment.GetVariable("PATH");
+            previousPath = environment.GetVariable(EnvironmentConstants.PathKey);
             previousArch = environment.GetVariable(WaveEnvironmentConstants.ArchKey);
             previousWorkingDirectory = Directory.GetCurrentDirectory();
 
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                                               DimrApiDataSet.EsmfScriptPath, 
                                               previousPath);
 
-            environment.SetVariable("PATH", modifiedPath);
+            environment.SetVariable(EnvironmentConstants.PathKey, modifiedPath);
             environment.SetVariable(WaveEnvironmentConstants.ArchKey, 
                                     WaveEnvironmentConstants.ArchValue);
         }
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             string archVariableKey = DimrRun ? WaveEnvironmentConstants.OldArchKey 
                                              : WaveEnvironmentConstants.ArchKey;
             environment.SetVariable(archVariableKey, previousArch);
-            environment.SetVariable("PATH", previousPath);
+            environment.SetVariable(EnvironmentConstants.PathKey, previousPath);
         }
 
         private void RestoreWorkingDirectory()

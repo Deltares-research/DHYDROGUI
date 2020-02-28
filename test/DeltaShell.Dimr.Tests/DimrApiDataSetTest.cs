@@ -15,7 +15,8 @@ namespace DeltaShell.Dimr.Tests
             const string somePath = "bin;more/bin;super/more/bin;dev/null";
 
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable("PATH", EnvironmentVariableTarget.Process)
+            environment.GetVariable(EnvironmentConstants.PathKey,
+                                    EnvironmentVariableTarget.Process)
                        .Returns(somePath);
 
             // Call
@@ -24,7 +25,9 @@ namespace DeltaShell.Dimr.Tests
             // Assert
             string expectedValue = $"{somePath};{DimrApiDataSet.SharedDllPath}";
             environment.Received(1)
-                       .SetVariable("PATH", expectedValue, EnvironmentVariableTarget.Process);
+                       .SetVariable(EnvironmentConstants.PathKey, 
+                                    expectedValue, 
+                                    EnvironmentVariableTarget.Process);
         }
 
         [Test]
@@ -33,7 +36,8 @@ namespace DeltaShell.Dimr.Tests
             // Setup
             string somePath = $"{DimrApiDataSet.SharedDllPath};bin;more/bin;super/more/bin";
             var environment = Substitute.For<IEnvironment>();
-            environment.GetVariable("PATH", EnvironmentVariableTarget.Process)
+            environment.GetVariable(EnvironmentConstants.PathKey, 
+                                    EnvironmentVariableTarget.Process)
                        .Returns(somePath);
 
             // Call

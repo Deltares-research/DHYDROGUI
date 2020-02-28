@@ -108,7 +108,7 @@ namespace DeltaShell.Dimr
         /// <param name="environment">The environment to interact with.</param>
         internal static void SetSharedPath(IEnvironment environment)
         {
-            string path = environment.GetVariable("PATH");
+            string path = environment.GetVariable(EnvironmentConstants.PathKey);
 
             if (path != null && path.Contains(SharedDllPath)) 
                 return;
@@ -120,7 +120,7 @@ namespace DeltaShell.Dimr
 
             path += SharedDllPath;
 
-            environment.SetVariable("PATH", path);
+            environment.SetVariable(EnvironmentConstants.PathKey, path);
         }
 
         /// <summary>
