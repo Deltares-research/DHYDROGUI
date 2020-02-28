@@ -99,7 +99,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             get { return base.Path; }
             set
             {
+                var previousPath = base.Path;
                 base.Path = value;
+
+                if (previousPath == base.Path) return;
+
                 UpdateNetworkAndDiscretisationAfterPathSet();
                 UpdateFunctionsAfterPathSet();
             }
