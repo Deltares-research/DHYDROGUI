@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DeltaShell.NGHS.Common;
 using NSubstitute;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace DeltaShell.Dimr.Tests
         public void SetSharedPath_NotContained_PathContainsSharedPathAtTheEnd()
         {
             // Setup
-            const string somePath = "bin;more/bin;super/more/bin";
+            const string somePath = "bin;more/bin;super/more/bin;dev/null";
 
             var environment = Substitute.For<IEnvironment>();
             environment.GetVariable("PATH", EnvironmentVariableTarget.Process)
