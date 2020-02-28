@@ -36,7 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             environment.GetVariable("PATH").Returns(expectedPath);
 
             const string expectedArch = "x86";
-            environment.GetVariable("ARCH").Returns(expectedArch);
+            environment.GetVariable(WaveEnvironmentConstants.ArchKey)
+                       .Returns(expectedArch);
 
             string expectedDirectoryPath = Directory.GetCurrentDirectory();
 
@@ -48,7 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                     // Assert | Update
                     Assert.That(Directory.GetCurrentDirectory(),
                                 Is.EqualTo(tempDir.Path));
-                    environment.Received(1).SetVariable("ARCH", "x64", EnvironmentVariableTarget.Process);
+                    environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
+                                                        WaveEnvironmentConstants.ArchValue, 
+                                                        EnvironmentVariableTarget.Process);
 
                     string expectedModifiedPath = string.Join(";",
                                                               DimrApiDataSet.WaveExePath,
@@ -64,8 +67,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
                 // Assert | Restore
                 Assert.That(Directory.GetCurrentDirectory(),
                             Is.EqualTo(expectedDirectoryPath));
-                environment.Received(1).SetVariable("ARCH", expectedArch, EnvironmentVariableTarget.Process);
-                environment.Received(1).SetVariable("PATH", expectedPath, EnvironmentVariableTarget.Process);
+                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
+                                                    expectedArch, 
+                                                    EnvironmentVariableTarget.Process);
+                environment.Received(1).SetVariable("PATH", 
+                                                    expectedPath, 
+                                                    EnvironmentVariableTarget.Process);
             }
         }
 
@@ -77,18 +84,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             environment.GetVariable("PATH").Returns(expectedPath);
 
             const string expectedArch = "x86";
-            environment.GetVariable("ARCH").Returns(expectedArch);
+            environment.GetVariable(WaveEnvironmentConstants.ArchKey)
+                       .Returns(expectedArch);
 
             using (var _ = new WaveEnvironmentHelper(null, environment))
             {
                 WaveEnvironmentHelper.DimrRun = true;
 
                 // Assert | Update
-                environment.Received(1).SetVariable("ARCH", "x64", EnvironmentVariableTarget.Process);
+                environment.Received(1).SetVariable(WaveEnvironmentConstants.ArchKey,
+                                                    WaveEnvironmentConstants.ArchValue,
+                                                    EnvironmentVariableTarget.Process);
             } // Call | Restore
             
             // Assert | Restore
-            environment.Received(1).SetVariable("OLD_ARCH", expectedArch, EnvironmentVariableTarget.Process);
+            environment.Received(1).SetVariable(WaveEnvironmentConstants.OldArchKey,
+                                                expectedArch, 
+                                                EnvironmentVariableTarget.Process);
         }
     }
 }

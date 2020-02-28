@@ -1155,11 +1155,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private static void RestoreEnvironment()
         {
-            string oldArch = Environment.GetEnvironmentVariable("OLD_ARCH");
+            string oldArch = Environment.GetEnvironmentVariable(WaveEnvironmentConstants.OldArchKey);
             if (!string.IsNullOrEmpty(oldArch))
             {
-                Environment.SetEnvironmentVariable("ARCH", oldArch);
-                Environment.SetEnvironmentVariable("OLD_ARCH", null);
+                Environment.SetEnvironmentVariable(WaveEnvironmentConstants.ArchKey, oldArch);
+                Environment.SetEnvironmentVariable(WaveEnvironmentConstants.OldArchKey, null);
             }
 
             WaveEnvironmentHelper.DimrRun = false;

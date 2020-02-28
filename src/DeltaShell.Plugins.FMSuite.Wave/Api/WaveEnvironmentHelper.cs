@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             this.environment = environment;
 
             previousPath = environment.GetVariable("PATH");
-            previousArch = environment.GetVariable("ARCH");
+            previousArch = environment.GetVariable(WaveEnvironmentConstants.ArchKey);
             previousWorkingDirectory = Directory.GetCurrentDirectory();
 
             UpdateEnvironment();
@@ -56,7 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                                               previousPath);
 
             environment.SetVariable("PATH", modifiedPath);
-            environment.SetVariable("ARCH", "x64");
+            environment.SetVariable(WaveEnvironmentConstants.ArchKey, 
+                                    WaveEnvironmentConstants.ArchValue);
         }
 
         private void UpdateWorkingDirectory(string newWorkingDirectory)
@@ -74,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         private void RestoreEnvironment()
         {
-            string archVariableKey = DimrRun ? "OLD_ARCH" : "ARCH";
+            string archVariableKey = DimrRun ? WaveEnvironmentConstants.OldArchKey 
+                                             : WaveEnvironmentConstants.ArchKey;
             environment.SetVariable(archVariableKey, previousArch);
             environment.SetVariable("PATH", previousPath);
         }
