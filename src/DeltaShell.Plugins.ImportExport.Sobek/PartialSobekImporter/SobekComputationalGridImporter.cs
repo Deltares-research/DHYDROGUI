@@ -118,6 +118,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 //change stupid duplicate names of locations
                 //NamingHelper.MakeNamesUnique(locations.GroupBy(l => l.Name).Where(g => g.Count() > 1).SelectMany(g => g));
                 NamingHelper.MakeNamesUnique(locations);
+
+                // Remove locations with the same geometry
+                locations = locations
+                    .GroupBy(lv => lv.Geometry.Coordinate)
+                    .Select(crdGroup => crdGroup.First())
+                    .ToList();
+
                 networkDiscretization.Locations.SetValues(locations);
             }
             else
