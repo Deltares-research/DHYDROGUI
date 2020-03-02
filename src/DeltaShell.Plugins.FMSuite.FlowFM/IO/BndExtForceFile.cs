@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
                     if (lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant)
                     {
-                        if (lateral.Attributes["Compartment"] is ICompartment lateralCompartment)
+                        if (lateral.Attributes.ContainsKey("Compartment") && lateral.Attributes["Compartment"] is ICompartment lateralCompartment)
                         {
                             lateralDef.NodeId = lateralCompartment.Name;
                         }
