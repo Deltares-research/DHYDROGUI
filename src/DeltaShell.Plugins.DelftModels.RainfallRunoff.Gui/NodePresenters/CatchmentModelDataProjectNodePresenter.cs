@@ -4,6 +4,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
 
@@ -19,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         private static readonly Image imgOpenWaterConcept = Resources.openwater;
         private static readonly Image imgSacramentoConcept = Resources.sacramento;
         private static readonly Image imgHbvConcept = Resources.hbv;
+        private static readonly Image imgNwrwConcept = Resources.nwrw;
 
         public CatchmentModelDataProjectNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
         {
@@ -65,6 +67,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             else if (catchmentModelData.GetType() == typeof(HbvData))
             {
                 img = imgHbvConcept;
+            }
+            else if (catchmentModelData.GetType() == typeof(NwrwData))
+            {
+                img = imgNwrwConcept;
             }
             return img;
         }

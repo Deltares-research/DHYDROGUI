@@ -477,6 +477,9 @@
   <ItemGroup>
     <None Include="Resources\add.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\nwrw.png" />
+  </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
   </PropertyGroup>

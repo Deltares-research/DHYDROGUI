@@ -1002,7 +1002,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/AssemblyInfo.cs
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.nl-NL.resx -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.resx -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.resx -text svneol=unset#application/octet-stream
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/PropertyClasses/FixedFileTextDocumentPropertyGridEditor.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/PropertyClasses/RRInitialConditionsWrapperProperties.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/PropertyClasses/RainfallRunoffBoundaryDataProperties.cs -text
