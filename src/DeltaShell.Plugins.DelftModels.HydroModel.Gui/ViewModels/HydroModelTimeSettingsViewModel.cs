@@ -234,7 +234,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             }
         }
 
-        [InvokeRequired]
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if ((!(sender is Parameter) || e.PropertyName != parameterValueName) &&
@@ -245,9 +244,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                 return;
             }
 
+            if (isUpdatingModel) return;
             SyncTimesAfterAction();
         }
 
+        [InvokeRequired]
         private void SyncTimesAfterAction(Action action = null)
         {
             if (isUpdatingModel) return;

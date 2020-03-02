@@ -155,7 +155,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             }
         }
 
-        [InvokeRequired]
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (updating) return;
@@ -164,11 +163,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             switch (e.PropertyName)
             {
                 case "CurrentWorkflow":
-                    workflowEditorControl.CurrentWorkflow = model.CurrentWorkflow;
+                    UpdateWorkflowEditorControlCurrentWorkflowWithNewModelCurrentWorkflow();
                     break;
             }
 
             updating = false;
+        }
+
+        [InvokeRequired]
+        private void UpdateWorkflowEditorControlCurrentWorkflowWithNewModelCurrentWorkflow()
+        {
+            workflowEditorControl.CurrentWorkflow = model.CurrentWorkflow;
         }
 
         private void workflowEditorControl_CurrentWorkflowChanged(object sender, EventArgs e)
