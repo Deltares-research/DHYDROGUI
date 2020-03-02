@@ -48,27 +48,27 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         //todo: split this
         private IEnumerable GetInitialConditions(RainfallRunoffModel model)
         {
-            yield return
-                new DataItem(new RRInitialConditionsWrapper
-                    {
-                        Model = model,
-                        Name = "Unpaved",
-                        Type = RRInitialConditionsWrapper.InitialConditionsType.Unpaved,
-                    }, DataItemRole.Input) {Owner = model};
-            yield return
-                new DataItem(new RRInitialConditionsWrapper
-                    {
-                        Model = model,
-                        Name = "Paved",
-                        Type = RRInitialConditionsWrapper.InitialConditionsType.Paved,
-                    }, DataItemRole.Input) { Owner = model };
-            yield return
-                new DataItem(new RRInitialConditionsWrapper
-                    {
-                        Model = model,
-                        Name = "Greenhouse",
-                        Type = RRInitialConditionsWrapper.InitialConditionsType.Greenhouse,
-                    }, DataItemRole.Input) { Owner = model };
+//            yield return
+//                new DataItem(new RRInitialConditionsWrapper
+//                    {
+//                        Model = model,
+//                        Name = "Unpaved",
+//                        Type = RRInitialConditionsWrapper.InitialConditionsType.Unpaved,
+//                    }, DataItemRole.Input) {Owner = model};
+//            yield return
+//                new DataItem(new RRInitialConditionsWrapper
+//                    {
+//                        Model = model,
+//                        Name = "Paved",
+//                        Type = RRInitialConditionsWrapper.InitialConditionsType.Paved,
+//                    }, DataItemRole.Input) { Owner = model };
+//            yield return
+//                new DataItem(new RRInitialConditionsWrapper
+//                    {
+//                        Model = model,
+//                        Name = "Greenhouse",
+//                        Type = RRInitialConditionsWrapper.InitialConditionsType.Greenhouse,
+//                    }, DataItemRole.Input) { Owner = model };
 
             yield return model.GetDataItemByValue(model.RestartInput);
         }
