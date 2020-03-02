@@ -1020,6 +1020,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/greenhouse.png -
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/greenhouse_disabled.png -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/hbv.png -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/not_in_use_concept.png -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/nwrw.png -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/openwater.png -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/openwater_disabled.png -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Resources/paved.png -text
