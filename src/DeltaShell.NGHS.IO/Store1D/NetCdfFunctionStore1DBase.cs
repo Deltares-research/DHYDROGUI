@@ -180,6 +180,12 @@ namespace DeltaShell.NGHS.IO.Store1D
             if (variable.ValueType == typeof(double) && !variable.IsIndependent)
             {
                 var coverage = GetCoverage(variable);
+                if (coverage == null)
+                {
+                    //Log.WarnFormat("Could not find output coverage: {0}", coverage.Name);
+                    return new MultiDimensionalArray<double>(new List<double>(), new[] {0, 0});
+                }
+
                 var ncVariableName = GetNetCdfVariableName(coverage);
                 if (ncVariableName == null)
                 {
@@ -512,15 +518,18 @@ namespace DeltaShell.NGHS.IO.Store1D
         {
             if (functions.Any(f => f is INetworkCoverage))
             {
-                var networkCoverage = functions.OfType<INetworkCoverage>().First(f => f.Arguments.Contains(function));
-                networkLocationTypeConverter.Network = networkCoverage.Network;
-                networkLocationTypeConverter.Coverage = networkCoverage;
+                var networkCoverage = functions.OfType<INetworkCoverage>().FirstOrDefault(f => f.Arguments.Contains(function));
+                if (networkCoverage != null)
+                {
+                    networkLocationTypeConverter.Network = networkCoverage.Network;
+                    networkLocationTypeConverter.Coverage = networkCoverage;
+                }
             }
 
             if (functions.Any(f => f is IFeatureCoverage))
             {
-                var featureCoverage = functions.OfType<IFeatureCoverage>().First(f => f.Arguments.Contains(function));
-                featureTypeConverter.FeatureCoverage = featureCoverage;
+                var featureCoverage = functions.OfType<IFeatureCoverage>().FirstOrDefault(f => f.Arguments.Contains(function));
+                if (featureTypeConverter != null) featureTypeConverter.FeatureCoverage = featureCoverage;
             }
         }
 

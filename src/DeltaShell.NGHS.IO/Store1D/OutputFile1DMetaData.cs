@@ -21,7 +21,9 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         public int NumLocationsForFunctionId(string getNetCdfVariableName)
         {
-            return Locations.FirstOrDefault(l => l.Key.Name == getNetCdfVariableName).Value.Count;
+            return string.IsNullOrEmpty(getNetCdfVariableName) || !Locations.Any(l => l.Key.Name.Equals(getNetCdfVariableName, StringComparison.InvariantCultureIgnoreCase)) 
+                ? 0 
+                : Locations.FirstOrDefault(l => l.Key.Name.Equals(getNetCdfVariableName, StringComparison.InvariantCultureIgnoreCase)).Value.Count;
         }
     }
 }

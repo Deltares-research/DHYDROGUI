@@ -284,9 +284,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override string GetNetCdfVariableName(ICoverage coverage)
         {
-            var nwConverage = coverage as NetworkCoverage;
-            if (nwConverage == null && !nwConverage.Attributes.ContainsKey("NetCdfVariableName")) return base.GetNetCdfVariableName(coverage);
-            return nwConverage.Attributes["NetCdfVariableName"];
+            var networkCoverage = coverage as NetworkCoverage;
+            if (networkCoverage?.Attributes == null || !networkCoverage.Attributes.ContainsKey("NetCdfVariableName")) return base.GetNetCdfVariableName(coverage);
+            return networkCoverage.Attributes["NetCdfVariableName"];
         }
 
         public static void AddNetworkLocationsToNetworkCoverage(IDiscretization discretization, ICollection<DateTime> times, INetworkCoverage networkCoverage)
