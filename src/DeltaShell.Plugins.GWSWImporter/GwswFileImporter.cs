@@ -476,9 +476,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                                     EventSettings.BubblingEnabled = false;
                                 }
 
-                                var model1DLateralSourceData = new Model1DLateralSourceData {Feature = lateralSource, UseSalt = false, UseTemperature = false};
-                                fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                                fmModel.LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
+                                if (!fmModel.LateralSourcesData.Any(lsd => lsd.Feature == lateralSource))
+                                {
+                                    var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = false, UseTemperature = false };
+                                    fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                                    fmModel.LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
+                                }
                             }
                             catch (Exception exception)
                             {

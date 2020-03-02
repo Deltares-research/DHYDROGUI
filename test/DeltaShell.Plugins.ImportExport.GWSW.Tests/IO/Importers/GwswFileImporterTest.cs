@@ -24,6 +24,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 {
@@ -1775,6 +1776,50 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 };
                 gwswImporter.LoadFeatureFiles(testDir);
                 Assert.That(gwswImporter.GwswAttributesDefinition.Count(), Is.EqualTo(132));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenAGWSWImport_ShouldNotAddLateralDataForExistingLaterals()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            var testDir = FileUtils.CreateTempDirectory();
+
+            var fmModel = new WaterFlowFMModel();
+            var node1 = new HydroNode("haha") {Geometry = new Point(0, 0)};
+            var node2 = new HydroNode("hihi") {Geometry = new Point(100, 0)};
+            var channel = new Channel("hehe",node1,node2);
+            var lateralSourceToTest = new LateralSource {Name = "hoho",Branch = channel,Chainage = 0.0};
+            channel.BranchFeatures.Add(lateralSourceToTest);
+            fmModel.Network.Nodes.Add(node1);
+            fmModel.Network.Nodes.Add(node2);
+            fmModel.Network.Branches.Add(channel);
+
+            Assert.AreEqual(1,fmModel.Network.LateralSources.Count());
+            Assert.AreEqual(1, fmModel.LateralSourcesData.Count(lsd => lsd.Feature == lateralSourceToTest));
+
+
+            try
+            {
+                FileUtils.CopyDirectory(originalDir, testDir);
+                var gwswImporter = new GwswFileImporter(new DefinitionsProvider())
+                {
+                    FilesToImport =
+                    {
+                        Path.Combine(testDir, "Knooppunt.csv"),
+                        Path.Combine(testDir, "Verbinding.csv"),
+                        Path.Combine(testDir, "Profiel.csv"),
+                        Path.Combine(testDir, "Kunstwerk.csv"),
+                    }
+                };
+                gwswImporter.LoadFeatureFiles(testDir);
+                gwswImporter.ImportItem(testDir, fmModel);
+
+                Assert.AreEqual(1, fmModel.LateralSourcesData.Count(lsd => lsd.Feature == lateralSourceToTest));
             }
             finally
             {
