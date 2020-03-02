@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "Strickler = 6, " +
             "WhiteColebrook = 7, " +
             "BosBijkerk = 9");
-        public static readonly ConfigurationSetting Friction = new ConfigurationSetting(key: "friction", description: "Friction Value");
+        public static readonly ConfigurationSetting Friction = new ConfigurationSetting(key: "friction", description: "Friction Value", format: "F5");
         public static readonly ConfigurationSetting BedFrictionType = new ConfigurationSetting(key: "bedFrictionType", description:
             "Friction type, possible values are: " +
             "Chezy = 1, " +
@@ -67,7 +67,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "Strickler = 6, " +
             "WhiteColebrook = 7, " +
             "BosBijkerk = 9");
-        public static readonly ConfigurationSetting BedFriction = new ConfigurationSetting(key: "bedFriction", description: "Friction Value");
+        public static readonly ConfigurationSetting BedFriction = new ConfigurationSetting(key: "bedFriction", description: "Friction Value", format: "F5");
         public static readonly ConfigurationSetting GroundFrictionType = new ConfigurationSetting(key: "groundFrictionType", description: "Friction type for ground layer");
         public static readonly ConfigurationSetting GroundFriction = new ConfigurationSetting(key: "groundFriction", description: "Friction value for ground layer");
         #endregion
