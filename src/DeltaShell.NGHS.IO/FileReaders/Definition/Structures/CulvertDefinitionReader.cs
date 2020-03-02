@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
                 SiphonOnLevel = category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key, true),
                 SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key, true),
-                FrictionType = (CulvertFrictionType) Enum.Parse(typeof(CulvertFrictionType), category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
+                FrictionDataType = (Friction) Enum.Parse(typeof(Friction), category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
                 Friction = category.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
 
