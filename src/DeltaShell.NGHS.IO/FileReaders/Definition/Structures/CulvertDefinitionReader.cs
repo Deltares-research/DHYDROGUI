@@ -40,6 +40,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
                 SiphonOnLevel = category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key, true),
                 SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key, true),
+                FrictionType = (CulvertFrictionType) category.ReadProperty<string>(StructureRegion.BedFrictionType.Key).GetEnumValueFromDisplayName(typeof(CulvertFrictionType)),
+                Friction = category.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
 
             SetCulvertDimensionsBasedOnProfile(culvert, definition);
