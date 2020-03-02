@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             {
                 if (structure is IBridge)
                 {
-                    //key is bedfriction
+                    //key is friction
                     AddFrictionData(
                         structureCategory,
                         structurefrictionData.FrictionDataType,
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                 }
                 else
                 {
-                    //key is friction
+                    //key is bedfriction
                     AddBedFrictionData(
                         structureCategory,
                         structurefrictionData.FrictionDataType,

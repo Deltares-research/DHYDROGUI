@@ -32,9 +32,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key, true),
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),
-
                 PillarWidth = category.ReadProperty<double>(StructureRegion.PillarWidth.Key, true),
                 ShapeFactor = category.ReadProperty<double>(StructureRegion.FormFactor.Key, true),
+                FrictionType = (BridgeFrictionType) category.ReadProperty<string>(StructureRegion.FrictionType.Key).GetEnumValueFromDisplayName(typeof(BridgeFrictionType)),
+                Friction = category.ReadProperty<double>(StructureRegion.Friction.Key)
             };
         }
 
