@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// the corresponding definition. Else, we assume the lateral source was read directly
         /// from Debiet.csv.
         /// </summary>
+        /// <exception cref="ArgumentException">Thrown when the lateral surface could not be set.</exception>
         public void SetCorrectLateralSurface(IHydroModel model)
         {
             var rrModel = model as RainfallRunoffModel;

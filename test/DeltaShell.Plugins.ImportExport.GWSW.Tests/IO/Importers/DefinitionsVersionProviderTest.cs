@@ -1,9 +1,7 @@
 ﻿using System;
-using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.ImportExport.Gwsw;
-using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
@@ -19,34 +17,24 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GivenInvalidFolderToImport_WhenDeterminingGwswVersion_ThenOldDefinitionIsReturnedWithWarning()
         {
+            // Setup
             var testDir = FileUtils.CreateTempDirectory();
 
             try
             {
-                string gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
-                Assert.That(gwswVersion, Is.EqualTo("GWSWDefinition"));
+                string gwswVersion = null;
 
-                var msg =
+                // Call
+                Action call = () => gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
+
+                // Assert
+                const string msg =
                     "Can't determine the Gwsw file format. Please select a folder with a valid Verbinding.csv file.";
-                TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => DefinitionsVersionProvider.GetDefinitionVersionName(testDir), msg);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(testDir);
-            }
-        }
+                TestHelper.AssertLogMessagesAreGenerated(call, new[]
+                {
+                    msg
+                }, 1);
 
-        [Test]
-        public void GivenValidGwswFolderToImportWithOldVersion_WhenDeterminingGwswVersion_ThenOldDefinitionIsReturned()
-        {
-            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\2Connection3Manholes");
-            var testDir = FileUtils.CreateTempDirectory();
-            FileUtils.CopyDirectory(originalDir, testDir);
-
-            try
-            {
-                string gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
                 Assert.That(gwswVersion, Is.EqualTo("GWSWDefinition"));
             }
             finally
@@ -64,8 +52,26 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             try
             {
-                string gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
+                var gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
                 Assert.That(gwswVersion, Is.EqualTo("GWSWDefinition1_5"));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
+        [Test]
+        public void GivenValidGwswFolderToImportWithOldVersion_WhenDeterminingGwswVersion_ThenOldDefinitionIsReturned()
+        {
+            var originalDir = TestHelper.GetTestFilePath(@"gwswFiles\2Connection3Manholes");
+            var testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var gwswVersion = DefinitionsVersionProvider.GetDefinitionVersionName(testDir);
+                Assert.That(gwswVersion, Is.EqualTo("GWSWDefinition"));
             }
             finally
             {
