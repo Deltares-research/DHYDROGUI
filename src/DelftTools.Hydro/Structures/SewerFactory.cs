@@ -33,8 +33,8 @@ namespace DelftTools.Hydro.Structures
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
             pipe.Network = network;
-            SetPipeProperties(pipe, hydroNetwork);
             AddDefaultSewerProfileToNetwork(hydroNetwork);
+            SetPipeProperties(pipe, hydroNetwork);
 
             lock (network.Branches)
                 network.Branches.Add(pipe);
@@ -113,7 +113,10 @@ namespace DelftTools.Hydro.Structures
             pipe.LevelTarget = -2.0;
             pipe.WaterType = SewerConnectionWaterType.Combined;
             pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
-            pipe.CrossSection = DefaultSewerCrossSection;
+            var pipeCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
+            pipeCrossSection.UseSharedDefinition(DefaultSewerProfile);
+            pipe.CrossSection = pipeCrossSection;
+            
         }
 
         private static INode GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
