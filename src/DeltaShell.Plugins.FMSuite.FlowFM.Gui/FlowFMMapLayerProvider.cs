@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (data is FMMapFileFunctionStore)
             {
-                var groupLayer = new GroupLayer("Output (map)")
+                var groupLayer = new GroupLayer("Output 2D (map file)")
                     {
                         LayersReadOnly = true,
                         NameIsReadOnly = true
@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (data is FM1DFileFunctionStore)
             {
-                var groupLayer = new GroupLayer("Output (network)")
+                var groupLayer = new GroupLayer("Output 1D (map file)")
                 {
                     LayersReadOnly = true,
                     NameIsReadOnly = true
@@ -478,14 +478,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.Pipes;
                 yield return model.Links;
 
+                if (model.Output1DFileStore != null)
+                    yield return model.Output1DFileStore;
+
                 if (model.OutputMapFileStore != null)
                     yield return model.OutputMapFileStore;
 
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
-
-                if (model.Output1DFileStore != null)
-                    yield return model.Output1DFileStore;
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
