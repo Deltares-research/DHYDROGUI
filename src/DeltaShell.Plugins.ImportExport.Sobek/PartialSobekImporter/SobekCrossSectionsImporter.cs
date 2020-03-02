@@ -155,10 +155,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         offset = branch.Length;
                     }
 
+
                     var pipe = branch as Pipe;
+                    var sewerConnection = branch as SewerConnection;
                     if (pipe != null)
                     {
                         SetPipeProperties(pipe, definition, sobekCrossSectionMapping);
+                    }
+                    else if (sewerConnection != null)
+                    {
+                        log.WarnFormat(
+                            "Cross-section '{0}' can not be set on a sewer connection '{1}'.",location.ID,sewerConnection.Name);
                     }
                     else
                     {

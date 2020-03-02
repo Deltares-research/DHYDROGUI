@@ -158,5 +158,17 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         }
 
+        [Test]
+        public void ReadLine_WithExtraSpaces()
+        {
+            var line = "STDS id '10-BBB6c1-10-BBB6c2' nm '10-BBB6c1-10-BBB6c2' ty 6 cl  2.05 cw  8 ce  .8 sc 1 rt  0               stds";
+
+            var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
+
+            var definitions = reader.Parse(line);
+
+            Assert.AreEqual(1, definitions.Count());
+        }
+
     }
 }

@@ -27,7 +27,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 @"cw\s(?<cw>" + RegularExpression.Scientific + @")\s" +
                 @"ce\s(?<ce>" + RegularExpression.Scientific + @")\s" +
                 @"sc\s(?<sc>" + RegularExpression.Scientific + @")\s" +
-                @"rt\s(?<rt>" + RegularExpression.Integer + @")";
+                @"rt\s*(?<rt>" + RegularExpression.Integer + @")";
 
             var match = RegularExpression.GetFirstMatch(sobekWeirPattern,text);
             if (match == null)

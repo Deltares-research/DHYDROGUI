@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         public void ImportConnectionNodesWithOutdatedNodeDat_ResultsIn_NoRetentions()
         {
-            //In node.dat are retentions defined but are out of sync. read network.ntw for checking if they're storage nodes
+            //In node.dat are retentions defined but are out of sync. read network.ntw for checking if they're storage nodes or not
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Waardenburg_Rural\NETWORK.TP";
 
             var hydroNetwork = new HydroNetwork();

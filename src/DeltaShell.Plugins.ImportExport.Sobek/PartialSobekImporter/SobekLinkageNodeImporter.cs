@@ -47,8 +47,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
             var channels = HydroNetwork.Channels.ToDictionary(c => c.Name, c => c);
-            var highestOrderNumber = HydroNetwork.Channels.Select(c => c.OrderNumber).Max();
-
+            var highestOrderNumber = -1;
+            if (HydroNetwork.Channels.Any())
+            {
+                highestOrderNumber = HydroNetwork.Channels.Select(c => c.OrderNumber).Max();
+            }
             if (highestOrderNumber < 1)
             {
                 highestOrderNumber = 1; //starts order number with 1

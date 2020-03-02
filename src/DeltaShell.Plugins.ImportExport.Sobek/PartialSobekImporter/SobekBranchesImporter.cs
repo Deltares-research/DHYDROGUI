@@ -60,11 +60,90 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var nodesLookup = HydroNetwork.Nodes.ToDictionary(n => n.Name);
             var branchesLookUp = HydroNetwork.Branches.ToDictionary(b => b.Name);
 
+            TryToReconstructManholesWithCompartmentsForExternalSobekNodes(createdNodes, createdBranches, nodeTypes);
+            TryToReconstructUrbanOutlets(createdNodes,createdBranches, nodeTypes);
+
             AddToNetwork(createdNodes, nodesLookup, HydroNetwork);
             AddToNetwork(createdBranches, branchesLookUp, nodesLookup, HydroNetwork);
 
 
             ReadAndUpdateBranchOrderNumber(nodesPath, HydroNetwork, branchesLookUp);
+        }
+
+        private void TryToReconstructManholesWithCompartmentsForExternalSobekNodes(Dictionary<string, INode> createdNodes, Dictionary<string, IBranch> createdBranches, IDictionary<string, int> nodeTypes)
+        {
+            var sobekPreFix = "tmp";
+
+            var externalStructureNames = nodeTypes
+                .Where(nt => SobekNetworkNetterReader.IsExternalStructureNode(nt.Value))
+                .Select(nt => nt.Key);
+
+            foreach (var nodeName in externalStructureNames)
+            {
+                if (createdNodes.ContainsKey(nodeName) && 
+                    createdNodes.ContainsKey(sobekPreFix + nodeName) &&
+                    createdBranches.ContainsKey(sobekPreFix + nodeName))
+                {
+                    var manhole = createdNodes[nodeName] as Manhole;
+                    if (manhole != null)
+                    {
+                        var compartmentExternalStructure = new OutletCompartment(sobekPreFix + nodeName);
+                        var compartment = manhole.Compartments.FirstOrDefault(c => c.Name == nodeName);
+                        if (compartment != null)
+                        {
+                            compartmentExternalStructure = new OutletCompartment(compartment);
+                            compartmentExternalStructure.Name = sobekPreFix + nodeName;
+                        }
+
+                        //pipes are connected to the manholes, manhole geometry is the average of the compartments -> in this importer the pipes already have geometry, so do not change the geometry of the manhole
+                        var x = manhole.XCoordinate;
+                        var y = manhole.YCoordinate;
+                        manhole.Compartments.Add(compartmentExternalStructure);
+                        compartmentExternalStructure.Geometry = new Point(x,y);
+                        manhole.Geometry = new Point(x, y);
+
+                        var internalSewerConnection = new SewerConnection(sobekPreFix + nodeName)
+                        {
+                            SourceCompartment = compartment,
+                            SourceCompartmentName = nodeName,
+                            Source = manhole,
+                            TargetCompartment = compartmentExternalStructure,
+                            TargetCompartmentName = sobekPreFix + nodeName,
+                            Target = manhole,
+                        };
+
+                        //update dictionaries
+                        createdBranches[sobekPreFix + nodeName] = internalSewerConnection;
+                        createdNodes.Remove(sobekPreFix + nodeName);
+
+                    }
+                }
+            }
+        }
+
+        private void TryToReconstructUrbanOutlets(Dictionary<string, INode> createdNodes, Dictionary<string, IBranch> createdBranches, IDictionary<string, int> nodeTypes)
+        {
+            var outletCandidates = nodeTypes
+                .Where(nt => SobekNetworkNetterReader.IsConnectionNode(nt.Value))
+                .Select(nt => nt.Key);
+
+            foreach (var nodeName in outletCandidates)
+            {
+                if (createdNodes.ContainsKey(nodeName))
+                {
+                    var createdNode = createdNodes[nodeName];
+                    if (!(createdNode is Manhole))
+                    {
+                        var IsLinkedToSewerConnection = createdBranches.Any(vp => vp.Value is ISewerConnection && (vp.Value.Source?.Name == nodeName || vp.Value.Target?.Name == nodeName));
+                        if (IsLinkedToSewerConnection)
+                        {
+
+                            createdNodes[nodeName] = CreateManholeWithOutlet(createdNode);
+                        }
+
+                    }
+                }
+            }
         }
 
         private static void AddToNetwork(IDictionary<string, IBranch> createdChannels, IDictionary<string, IBranch> branchesLookUp, IDictionary<string, INode> nodesLookup, INetwork hydroNetwork)
@@ -167,7 +246,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         Source = fromNode,
                         Target = toNode,
                         SourceCompartment = fromManhole?.Compartments?.FirstOrDefault(),
-                        TargetCompartment = toManhole?.Compartments?.FirstOrDefault()
+                        TargetCompartment = toManhole?.Compartments?.FirstOrDefault(),
                     };
                     return sewerConnection;
                 }
@@ -250,15 +329,38 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var compartment = new Compartment
             {
                 Name = sobekNode.ID,
+                ManholeWidth = 1,
+                ManholeLength = 1,
+                FloodableArea = 1,
                 Geometry = new Point(sobekNode.X, sobekNode.Y)
             };
             var manhole = new Manhole(sobekNode.ID);
             manhole.Geometry = new Point(sobekNode.X, sobekNode.Y);
             manhole.Compartments.Add(compartment);
             compartment.ParentManhole = manhole;
+            compartment.ParentManholeName = sobekNode.ID;
 
             return manhole;
         }
+
+        private static IManhole CreateManholeWithOutlet(INode node)
+        {
+            var compartment = new OutletCompartment(node.Name)
+            {
+                Geometry = node.Geometry,
+                ManholeWidth = 1,
+                ManholeLength = 1,
+                FloodableArea = 1
+            };
+            var manhole = new Manhole(node.Name);
+            manhole.Geometry = node.Geometry;
+            manhole.Compartments.Add(compartment);
+            compartment.ParentManhole = manhole;
+            compartment.ParentManholeName = node.Name;
+
+            return manhole;
+        }
+
         private static void UpdateManholeWithNodeData(IManhole manhole, Retention retention)
         {
             var dimension = 0.0;

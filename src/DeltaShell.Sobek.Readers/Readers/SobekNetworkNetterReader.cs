@@ -61,6 +61,16 @@ namespace DeltaShell.Sobek.Readers.Readers
             return typeNo >= 10 && typeNo <= 13;
         }
 
+        public static bool IsPreasurePipeWithPump(int typeNo)
+        {
+            return typeNo == 13;
+        }
+
+        public static bool IsPreasurePipeWithWeir(int typeNo)
+        {
+            return typeNo == 10 || typeNo == 11;
+        }
+
         public static bool IsDryWeatherPipe(int typeNo)
         {
             return typeNo == 6;
@@ -83,7 +93,17 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public static bool IsConnectionNode(int typeNo)
         {
-            return typeNo == 12;
+            return typeNo == 14;
+        }
+
+        public static bool IsExternalStructureNode(int typeNo)
+        {
+            return typeNo >= 7 && typeNo <= 11;
+        }
+
+        public static bool IsBoundaryNode(int typeNo)
+        {
+            return typeNo == 14;
         }
 
         public static IDictionary<string, int> ReadBranchTypes(string filePath)

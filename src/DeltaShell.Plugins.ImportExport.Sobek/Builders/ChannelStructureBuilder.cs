@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
         private static ILog log = LogManager.GetLogger(typeof(ChannelStructureBuilder));
         protected static readonly ILog Log = LogManager.GetLogger(typeof(ChannelStructureBuilder));
         private readonly IList<IBranchStructureBuilder> structurebuilders;
-        private readonly IDictionary<string, IChannel> channels;
+        private readonly IDictionary<string, IBranch> channels;
         private readonly IDictionary<string, SobekStructureDefinition> definitions;
         private readonly IEnumerable<SobekStructureLocation> locations;
         private readonly IDictionary<string, SobekStructureMapping> mappings; // structure mappings from STRUCT.DAT
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
 
 
-        public ChannelStructureBuilder(IDictionary<string, IChannel> channels,
+        public ChannelStructureBuilder(IDictionary<string, IBranch> channels,
                                         IEnumerable<SobekStructureLocation> locations,
                                         IEnumerable<SobekStructureDefinition> definitions,
                                         IEnumerable<SobekStructureMapping> mappings,
@@ -102,7 +103,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
         }
 
         /// <summary>
-        /// Validates the mapping of the structure on the channel.
+        /// Validates the mapping of the structure on the branch.
         /// </summary>
         /// <param name="locationId"></param>
         /// <returns></returns>
@@ -174,18 +175,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                         location.ID, location.BranchID);
                         continue;
                     }
-                    var channel = channels[location.BranchID];
+                    var branch = channels[location.BranchID];
                     var offset = location.Offset;
 
-                    if (offset > channel.Length)
+                    if (offset > branch.Length)
                     {
-                        log.ErrorFormat("The chainage of structure '{0} - {1}' is out of the branch length. The chainage has been set from {2} to {3}.", location.ID, location.Name, offset, channel.Length);
-                        offset = channel.Length;
+                        log.ErrorFormat("The chainage of structure '{0} - {1}' is out of the branch length. The chainage has been set from {2} to {3}.", location.ID, location.Name, offset, branch.Length);
+                        offset = branch.Length;
                     }
 
-                    IGeometry geometry = GeometryHelper.GetPointGeometry(channel, offset);
+                    IGeometry geometry = GeometryHelper.GetPointGeometry(branch, offset);
 
-                    ICompositeBranchStructure compositeStructure = CreateCompositeStructureAndAddItToTheBranch(channel,
+                    ICompositeBranchStructure compositeStructure = CreateCompositeStructureAndAddItToTheBranch(branch,
                                                                            offset, geometry);
 
                     compositeStructure.Name = location.ID + " [compound]"; // to prevent duplicates with substructure
@@ -223,7 +224,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                                 structureName = definitionMapping.Name;
                             }
 
-                            ProcesStruct(location, channel, definitionMapping, compositeStructure, existingStructures, structureName);
+                            ProcesStruct(location, branch, definitionMapping, compositeStructure, existingStructures, structureName);
                         }
                     }
                     else
@@ -240,7 +241,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
                         string structureName = location.Name;
 
-                        ProcesStruct(location, channel, definitionMapping, compositeStructure, existingStructures, structureName);
+                        ProcesStruct(location, branch, definitionMapping, compositeStructure, existingStructures, structureName);
                     }
                 }
             }
@@ -266,7 +267,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             }
         }
 
-        private void ProcesStruct(SobekStructureLocation location, IChannel channel, SobekStructureMapping definitionMapping, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure1D> existingStructures, string structureName)
+        private void ProcesStruct(SobekStructureLocation location, IBranch branch, SobekStructureMapping definitionMapping, ICompositeBranchStructure compositeStructure, IEnumerable<IStructure1D> existingStructures, string structureName)
         {
             SobekStructureDefinition sobekStructureDefinition = definitions[definitionMapping.DefinitionId];
 
@@ -291,7 +292,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
                 if (structure is IWeir)
                 {
-                    SetWeirOffSetY((IWeir)structure, channel, location);
+                    var channel = branch as Channel;
+                    if (channel != null)
+                    {
+                        SetWeirOffSetY((IWeir)structure, channel, location);
+                    }
+                    else
+                    {
+                        log.WarnFormat("Couldn't set the offset of weir {0} because its not a channel.", structure.Name);
+                    }
                 }
                 if (structure is IBridge)
                 {
@@ -424,7 +433,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             double crossSectionOffset = 100;
             if (channel.CrossSections.Count() != 0)
             {
-                // if channel has cross section, find nearest and use it to update 
+                // if branch has cross section, find nearest and use it to update 
                 // the y-coordinate related values
                 //throw new InvalidOperationException("Does not look OK.Use Abs");
                 var nearestCrossSection = channel.CrossSections.OrderBy(o => Math.Abs( o.Chainage - location.Offset)).First();
@@ -438,16 +447,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
         }
 
 
-        public static ICompositeBranchStructure CreateCompositeStructureAndAddItToTheBranch(IChannel channel, double offset, IGeometry geometry)
+        public static ICompositeBranchStructure CreateCompositeStructureAndAddItToTheBranch(IBranch branch, double offset, IGeometry geometry)
         {
             var compositeStructure = new CompositeBranchStructure
                                          {
-                                             Network = channel.Network,
+                                             Network = branch.Network,
                                              Chainage = offset,
                                              Geometry = geometry
                                          };
 
-            NetworkHelper.AddBranchFeatureToBranch(compositeStructure, channel, compositeStructure.Chainage);
+            NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch, compositeStructure.Chainage);
             return compositeStructure;
         }
 

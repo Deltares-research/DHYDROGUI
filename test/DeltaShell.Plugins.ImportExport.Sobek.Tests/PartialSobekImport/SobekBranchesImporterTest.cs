@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using GeoAPI.Geometries;
@@ -162,11 +164,36 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             branchesFromSobekImporter.Import();
 
             var network = (HydroNetwork)branchesFromSobekImporter.TargetObject;
-            Assert.AreEqual(870, network.Nodes.Count);
+            Assert.AreEqual(868, network.Nodes.Count);
             Assert.AreEqual(914, network.Branches.Count);
-            Assert.AreEqual(864, network.Manholes.Count());
-            Assert.AreEqual(912, network.SewerConnections.Count());
+            Assert.AreEqual(868, network.Manholes.Count());
+            Assert.AreEqual(914, network.SewerConnections.Count());
             Assert.AreEqual(892, network.Pipes.Count());
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void ImportExternalStructures_Result_Manhole_Compartment_Outlet_InnerConnectionFor_ExternalWeir()
+        {
+            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\waard08.lit\network.tp";
+            var branchesFromSobekImporter = new SobekBranchesImporter
+            {
+                TargetObject = new HydroNetwork(),
+                PathSobek = pathToSobekNetwork
+            };
+
+            branchesFromSobekImporter.Import();
+
+            var network = (HydroNetwork)branchesFromSobekImporter.TargetObject;
+            var manhole13_680O = network.Manholes.FirstOrDefault(m => m.Name == "13-680O");
+
+            Assert.IsNotNull(manhole13_680O);
+            Assert.AreEqual(2,manhole13_680O.Compartments.Count);
+            Assert.IsNotNull(manhole13_680O.Compartments.FirstOrDefault(c => c.Name == "13-680O"));
+            Assert.IsNotNull(manhole13_680O.Compartments.FirstOrDefault(c => c.Name == "tmp13-680O"));
+            Assert.IsTrue(manhole13_680O.Compartments.Any(c => c is OutletCompartment));
+            Assert.AreEqual(1, manhole13_680O.InternalConnections().Count());
+            Assert.IsNotNull(manhole13_680O.InternalConnections().FirstOrDefault(ic => ic.Name == "tmp13-680O"));
         }
     }
 }

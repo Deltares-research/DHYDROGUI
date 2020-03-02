@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
@@ -42,16 +43,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var sobekCrossSectionDefinitionsLookup = GetSobekCrossSectionDefinitionsLookup();
             var sobekFriction = GetSobekFriction();
             var sobekValveData = GetSobekValveData();
-            var channels = HydroNetwork.Channels.ToDictionary(b => b.Name, b => b);
+            var branches = HydroNetwork.Branches.ToDictionary(b => b.Name, b => b);
 
-            if (channels.Count == 0)
+            if (branches.Count == 0)
             {
                 log.Error("There are no branches. Structures can not be placed.");
                 return;
             }
 
             var channelStructureBuilder = new Builders.ChannelStructureBuilder(
-                channels,
+                branches,
                 new SobekNetworkStructureReader().Read(structureLocationPath),
                 definitions,
                 mappings,
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     foreach (var extraFriction in extraFrictions)
                     {
-                        FindAndReplaceOrAddExtraFrictionToNetwork(extraFriction, channels, extraResistances);
+                        FindAndReplaceOrAddExtraFrictionToNetwork(extraFriction, branches, extraResistances);
                     }
                 }
             }
@@ -143,11 +144,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return true;
         }
 
-        private void FindAndReplaceOrAddExtraFrictionToNetwork(SobekReExtraResistance extraFriction, Dictionary<string, IChannel> channels, Dictionary<string, IExtraResistance> extraResistances)
+        private void FindAndReplaceOrAddExtraFrictionToNetwork(SobekReExtraResistance extraFriction, Dictionary<string, IBranch> branches, Dictionary<string, IExtraResistance> extraResistances)
         {
-            var channel = channels[extraFriction.BranchId];
+            var branch = branches[extraFriction.BranchId];
             var offset = extraFriction.Chainage;
-            var geometry = GeometryHelper.GetPointGeometry(channel, offset);
+            var geometry = GeometryHelper.GetPointGeometry(branch, offset);
 
             if (extraResistances.ContainsKey(extraFriction.Id))
             {
@@ -155,16 +156,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 extraResistance.LongName = extraFriction.Name;
                 extraResistance.FrictionTable.Clear();
                 FunctionHelper.AddDataTableRowsToFunction(extraFriction.Table, extraResistance.FrictionTable);
-                if (extraResistance.Branch != channel)
+                if (extraResistance.Branch != branch)
                 {
                     extraResistance.Branch.BranchFeatures.Remove(extraResistance);
-                    extraResistance.Branch = channel;
-                    channel.BranchFeatures.Add(extraResistance);
+                    extraResistance.Branch = branch;
+                    branch.BranchFeatures.Add(extraResistance);
                 }
             }
             else
             {
-                var compositeStructure = Builders.ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(channel, offset, geometry);
+                var compositeStructure = Builders.ChannelStructureBuilder.CreateCompositeStructureAndAddItToTheBranch(branch, offset, geometry);
                 var extraResistance = new ExtraResistance
                 {
                     Name = extraFriction.Id,

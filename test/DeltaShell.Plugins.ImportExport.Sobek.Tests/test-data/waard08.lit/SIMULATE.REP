@@ -1,0 +1,360 @@
+Information about Simulation
+============================
+
+SOBEKVersion                       : Sobek Advanced Version 2.15.003
+Case Name                          : 170111 Waardenburg bui08_korte woerden_streetA
+
+Simulation Mode                    : Run RR (Rainfall-Runoff) and 1DFLOW (Urban) module sequentially
+
+Start                              : 02-October-2018 10:10:39
+End                                : 02-October-2018 10:10:48
+
+Rainfall-Runoff Module used        : Yes
+Channel Module used                : No
+Sewer Module used                  : Yes
+River Module used                  : No
+1D Morphology Module used          : No
+1D2D Module used                   : No
+Real Time Control Module used      : No
+Water Quality Module used          : No
+Emission Module used               : No
+Ground Water Module used           : No
+Simulation parallel                : No
+Flow modules unsteady              : Yes
+2D Water Quality Module used       : No
+Delft3D Flow used                  : No
+Delft3D WAQ  used                  : No
+
+Network imported or started        : SUF_HYD
+Network imported at                : 1-2-2012 15:41:34
+Imported SUF-HYD file              : T:\Sobek\Neerijnen\244794 BRP Neerijnen\in\Sobek\Sufhyd\W315Suf.hyd
+
+
+Overview of Rainfall Runoff Module
+==================================
+
+Results 3B calculation
+
+Rainfall file                      : \S215003\FIXED\STNBUI08.BUI
+Evaporation file                   : \S215003\FIXED\3B\EVAPOR.GEM
+Timestep size (s)                  :      300
+Simulated period (hours)           :        2.00 for number of Events=     1
+
+
+Summary results Sobek-RR Urban model
+
+Total area (m2)                    :     40616.91
+Total rainfall (m3)                :       804.21
+Total evaporation (m3)             :         0.37
+Total infiltration depressions (m3):        30.23
+Total infiltration from runoff (m3):         0.00
+Total storage change (m3)          :         3.29
+Total inflow sewer excl. DWD (m3)  :       770.32
+Total DWA (m3)                     :        10.28
+Total inflow sewer (m3)            :       780.60
+Balance error (m3)                 :         0.00 ( 0.0000%)
+Maximum balance error in simulation:           0.00
+
+
+Overview of Flow Module
+=======================
+
+Under License to                   :           Deltares
+
+
+Numerical Parameters Used
+=========================
+Accuracy Level                     : Low Speed/More Accurate
+Structure Stability Factor         :  0
+Theta                              :                 1.00
+Maximum Courant number             :                 1.00
+Epsilon value Volume (m3/s)        :           0.00010000
+Epsilon value Level (m)            :           0.00010000
+
+Threshold Values ...
+Flooding (m)                       :              0.01000
+Drying (m)                         :              0.00100
+
+Min. Length Reach Segment (m)      :                 1.00
+Relaxation Factor (0..1)           :                 1.00
+Structure Dynamics Factor          :                 1.00
+Maximum Iterations                 :                    8
+Gravity g (m/s2)                   :                 9.81
+Fluid Density (m3)                 :              1000.00
+upwindculvert (-)                  :                    1
+Relaxation structures alfa (-)     :                 0.90
+Timestep size (s)                  :              60.0000
+Lowest Timestep (s)                :               0.0164
+Largest Timestep (s)               :              60.0000
+
+External structure                  Spilled volume (m3)
+13-680O                                          128.9696
+
+Boundaries in (m3)                 :                 0.00
+Boundaries out (m3)                :                64.71
+Structures in (m3)                 :                 0.14
+Structures out (m3)                :               129.11
+Lateral disch. in (m3)             :               780.60
+Lateral disch. out (m3)            :                 0.00
+Storage (m3)                       :               586.92
+Error (m3)                         :                 0.00
+
+Initial conditions
+==================
+Rainfall Runoff Module             : user defined
+Flow Module                        : user defined
+
+
+Version Information of Modules
+==============================
+
+Vervang                            : 10/22/2013 4:50:12 PM, Version: 4.05.012
+Caseman                            : 10/22/2013 4:50:12 PM, Version: 4.07.03
+CmUtil                             : 10/22/2013 4:50:12 PM, Version: 4.07.03
+CmUpdate                           : 10/22/2013 4:50:12 PM, Version: 4.07.03
+Sobek_3B (RR)                      : 1/7/2016 6:09:36 PM, Version: 3.214.21.43860
+Parsen                             : 11/13/2015 3:12:44 PM, Version: 2.06.062.43061
+Parsen2D                           : 6/17/2016 10:53:22 AM, Version: 1.03.001.45686
+Flow (Delftflow) (Details Below)   : 8/3/2016 4:18:08 PM, Version: 1.01.00.46968
+RTC                                : 6/17/2016 12:35:10 PM, Version: 3.214.005.41603
+EM                                 : 10/22/2013 4:50:12 PM, Version: 1.00.0001
+WQInt                              : 4/13/2016 12:57:20 PM, Version: 2.03.08
+Delwaq1                            : 6/15/2016 2:31:28 PM, Version: 5.05.00.6201
+Delwaq2                            : 6/15/2016 2:31:28 PM, Version: 5.05.00.6201
+Waterbal                           : 10/22/2013 4:50:12 PM, Version: 2.00.04
+Simulate                           : 1/20/2016 4:39:18 PM, Version: 2.13.0023
+
+
+Detailed Information about Flow (DelftFlow):
+============================================
+
+Intel Fortran RTL Message Catalog	V15.0-103 March 03 2015
+Deltares, DELFTIO Version 1.09.00.6403, Aug 03 2016, 15:15:02
+Deltares, DELTARES_COMMON Version 1.00.00.6403, Aug 03 2016, 15:14:51
+Deltares, Authorisation module, Version 5.05.00.275, Jan 20 2016, 14:19:54
+FlexNet Licensing v11.12.0.0 build 136775 (ipv6) i86_n3 (lmgr.lib), Copyright (c) 1988-2013 Flexera Software LLC. All Rights Reserved.
+Deltares, DELFTFLOW Version 1.01.00.46968, Aug  3 2016, 15:14:47
+Deltares, SOBEKSIM Version 4.08.035.46968, Aug  3 2016, 15:14:45
+Deltares, NEFIS Version 5.08.02.5573 (Win32), Nov  8 2015, 22:29:41
+Deltares, WL_OPENMI_SUPPORT Version 1.00.00.46968, Aug  3 2016, 15:14:45
+Deltares, GW_SOBEK Version 0.08.00.46968, Aug  3 2016, 15:14:45
+
+
+SOBEKVersion   = Sobek Advanced Version 2.15.003
+Case Name      = 170111 Waardenburg bui08_korte woerden_streetA
+
+
+===== Start Contents of SOBEKSIM.INI =====
+
+[General]
+Version=PLUV2.70
+Language=1
+
+[InitialConditions]
+InitialEmptyWells=-1
+InitialSalinity=0.0
+
+[RunoffOptions]
+MultipleStormEvents=0
+
+[ResultsNodes]
+Density=0
+Dispersion=0
+Freeboard=0
+LateralOnNodes=0
+LevelFromStreetLevel=-1
+RunOff=-1
+Salinity=0
+TimeWaterOnStreet=-1
+TotalArea=0
+TotalWidth=0
+Volume=0
+VolumeError=0
+VolumesOnStreet=-1
+WaterDepth=-1
+WaterLevel=-1
+WaterOnStreet=-1
+
+[ResultsBranches]
+Discharge=-1
+EnergyHeadMethod=0
+Froude=0
+InfiltrationPipes=0
+Levelsoutputonpipes=0
+RiverSubsectionParameters=0
+SedimentFrijlink=0
+SedimentVanRijn=0
+Velocity=-1
+WaterLevelSlope=0
+Wind=0
+TWind=0
+FWind=0
+Chezy=0
+
+[ResultsStructures]
+CrestLevel=-1
+CrestLevelOpeningsHeight=0
+CrestWidth=0
+Discharge=-1
+GateLowerEdgeLevel=-1
+Head=0
+OpeningsArea=0
+PressureDifference=0
+ThresholdForSpillCountInHours=24
+Velocity=0
+WaterLevel=-1
+Waterleveloncrest=0
+
+[ResultsPumps]
+PumpResults=0
+
+[ResultsGeneral]
+ActualValue=-1
+DelwaqNoStaggeredGrid=-1
+FlowAnalysisTimeSeries=0
+MaximumValue=0
+MeanValue=0
+SobeksimStamp=-1
+Zero2DRainEvap2Delwaq=0
+ReducedIdResults=0
+
+[ResultsGrid]
+1DFlowDischargeMeasuringSection=0
+
+[Specials]
+DesignFactorDLG=1
+
+[Indication]
+VelocityReachSegments=.5
+VelocityStructures=.75
+
+[NumericalParameters]
+AccelerationTermFactor=1
+AccurateVersusSpeed=3
+CourantNumber=1
+DtMinimum=0.001
+EpsilonValueVolume=0.0001
+EpsilonValueWaterDepth=0.0001
+Gravity=9.81
+MaxDegree=17
+MaxIterations=8
+MinimumSurfaceatStreet=0.1
+MinimumSurfaceinNode=0.1
+MinumumLength=1
+RelaxationFactor=1
+Rho=1000
+StructureInertiaDampingFactor=1
+Theta=1
+ThresholdValueFlooding=0.01
+ThresholdValueFloodingFLS=0.001
+UseTimeStepReducerStructures=0
+
+[SimulationOptions]
+allowablelargertimestep=0
+ASCIIFileUVComponent=0
+Cflcheckalllinks=0
+Channel=0
+Debug=0
+DebugTime=0
+DepthsBelowBobs=0
+DispMaxFactor=0.45
+DumpInput=0
+Iadvec1D=1
+Limtyphu1D=1
+Manhloss=0
+MissingValue=-999.999
+Momdilution1D=1
+Morphology=0
+OnlineCommunicationFile=
+Onlineplot=0
+OnLineWQ=0
+PercentAllowableVolumeError=1
+PreissmannMinClosedManholes=0.001
+Readsamples=0
+River=0
+RTCInUse=0
+RunoffInUse=-1
+Salinity=0
+Sewer=-1
+SimulationSynchron=0
+SiphonUpstreamThresholdSwitchOff=0.1
+StructureStabilityFactor=0
+ThresholdForSummerDike=0.4
+TimersOutputFrequency=1
+Treat2DFrictiontermsameas1D=0
+Use1D2DNode=-1
+Use1D2DRestartInputFile=0
+Use1D2DRestartOutputFile=0
+Use2DWindFrictSameAs1DFormulation=-1
+UseExtraFrictionDepth1D=-1
+UseFls=0
+UseGridAsSurface=-1
+UseTimers=0
+Usevariableteta=0
+VolumeCheck=0
+Writesamples=0
+StructureDynamicsFactor=1
+VolumeCorrection=0
+WaterQualityInUse=0
+OnlineDelft3DFlow=0
+OnlineRunoff=0
+SimulationTimeFromEvents=-1
+UseRestart=0
+TypeDikelvl=0
+
+[SteadyState]
+ComputeSteadyState=0
+Dtsteady=7200
+EpsMaxU=1e-6
+Ntendcontrolsteady=200
+Ntintcontrolsteady=20
+Ntmaxsteady=1500
+
+[AdvancedOptions]
+CalculateDelwaqOutput=0
+ExtraResistanceGeneralStructure=0
+LateralLocation=1
+MaxLoweringCrossAtCulvert=0
+MaxVolFact=.9
+NoNegativeQlatWhenThereIsNoWater=-1
+TransitionHeightSD=1.0
+
+[Salinity]
+DiffusionAtBoundaries=false
+SaltComputation=0
+
+[Morphology]
+AdditionalOutput=0
+MorphologyInputFile=
+SedimentInputFile=
+
+[Sediment]
+DepthUsedForSediment=0.3
+D50=.0005
+D90=.001
+LevelAffectedBySediment=.3
+
+[Overland Flow]
+2DEddyViscosity=0.0
+DefaultChezy1D2DConnections=
+Limtyp=1
+NorocoBufferFactor=2
+Noslip=0
+Use2DDikeLimiter=-1
+Minimum2DDikeHeightLimit=0.50
+Jslopec2D=0
+
+[ResultsARCVIEW]
+FilePath=..\WORK\
+UvelocityVvelocityResultingvelocityNoDecimalsInASCIIMapFiles=4
+WaterlevelWaterdepthBedlevelNoDecimalsInASCIIMapFiles=4
+[ResultsFLS]
+MAPParamH=0
+MAPParamC=0
+MAPParamZ=0
+MAPParamU=0
+MAPParamV=0
+AsciiOutput=0
+
+===== End Contents of SOBEKSIM.INI =====
+
