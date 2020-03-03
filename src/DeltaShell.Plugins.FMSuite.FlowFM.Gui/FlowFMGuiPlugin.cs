@@ -8,6 +8,7 @@ using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -259,8 +260,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return allBoundarySetsViewInfo;
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
-
+            
             yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, () => Gui);
+
+            var viewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ILink1D2D, WaterFlowFMModel>("Links", m => m.Links, () => Gui);
+
+            yield return viewInfo;
+
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(viewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
 
             // Sources and sinks
             var sourceAndSinkViewInfo = new ViewInfo<SourceAndSink, SourceAndSinkView>

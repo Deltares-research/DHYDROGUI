@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Validation;
@@ -19,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
                 WaterFlowFMModelNetworkValidator.Validate(model.Network, model.NetworkDiscretization, model.RoughnessSections),
                 WaterFlowFMGridValidator.Validate(model),
+                ValidateLinks(model.Links),
                 ValidateBathymetry(model),
                 ValidatePhysicalProcesses(model),
                 WaterFlowFMWindValidator.Validate(model),
@@ -39,6 +42,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 subReports);
             
             return validationReport;
+        }
+        private static ValidationReport ValidateLinks(IEnumerable<ILink1D2D> links)
+        {
+            var invalidLinkIssues = links
+                .Where(l => l.FaceIndex < 0 || l.DiscretisationPointIndex < 0)
+                .Select(l => $"Link {l.Name} has invalid indices (cell index {l.FaceIndex} - computation point {l.DiscretisationPointIndex})")
+                .Select(m => new ValidationIssue(links, ValidationSeverity.Error, m, links))
+                .ToArray();
+
+            return new ValidationReport("Links", invalidLinkIssues);
         }
 
         private static ValidationReport ValidateSpatiallyVaryingSedimentCoverage(WaterFlowFMModel model)
