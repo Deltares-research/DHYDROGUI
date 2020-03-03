@@ -154,7 +154,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var discretisationPointDescription = discretisationPointDescriptions[i];
 
                 var networkLocation =
-                    new NetworkLocation(branch, offset[i])
+                    new NetworkLocation(branch, Math.Abs(branch.Length - offset[i]) < 0.00001 ? branch.Length : offset[i] )
                     {
                         Name = discretisationPointId,
                         LongName = discretisationPointDescription
