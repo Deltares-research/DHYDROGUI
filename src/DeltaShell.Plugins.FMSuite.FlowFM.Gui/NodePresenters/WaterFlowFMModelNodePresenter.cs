@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             }, "2D", FolderImageType.None);
 
-            yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links);
+            yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links, ShortCutType.FeatureSet);
         }
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)
