@@ -15,8 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     {
         private bool disposed;
         private IFlexibleMeshModelApi remoteInstanceApi;
-        private string outputDirectory;
-        private string workingDirectory;
 
         public RemoteFlexibleMeshModelApi(bool showDebugConsole = false)
         {
@@ -29,27 +27,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             //remoteInstanceApi = new FlexibleMeshModelApi();
         }
 
-        private string WorkingDirectory
-        {
-            get { return workingDirectory; }
-            set
-            {
-                workingDirectory = value;
-                outputDirectory = workingDirectory;
-            }
-        }
+        private string WorkingDirectory { get; set; }
 
         public int Initialize(string path)
         {
             WorkingDirectory = Path.GetDirectoryName(path);
-            outputDirectory = Path.Combine(WorkingDirectory, "DFM_OUTPUT_" + Path.GetFileNameWithoutExtension(path));
             try
             {
                 return remoteInstanceApi.Initialize(path);
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -62,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -75,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -199,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -212,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -225,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -238,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -251,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -264,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
             catch (Exception e)
             {
-                TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                 throw;
             }
         }
@@ -406,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     }
                     catch (Exception e)
                     {
-                        TryThrowWithKernelLoggedErrors(e, outputDirectory);
+                        TryThrowWithKernelLoggedErrors(e, WorkingDirectory);
                         throw;
                     }
                 }
