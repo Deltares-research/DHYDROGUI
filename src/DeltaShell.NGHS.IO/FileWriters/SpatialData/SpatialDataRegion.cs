@@ -10,7 +10,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.SpatialData
 
         public const string DefinitionIniHeader = "Definition";
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "");
-        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "");
+        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "", format: "F6");
         public static readonly ConfigurationSetting Value = new ConfigurationSetting(key: "value", description: "", format:"F5");
     }
 }

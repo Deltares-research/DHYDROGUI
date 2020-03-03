@@ -217,17 +217,17 @@ namespace DeltaShell.NGHS.IO.Grid
                     {
                         var compartmentX = m.Geometry.Coordinate.X - offset + i;
                         var compartmentY = m.Geometry.Coordinate.Y;
-                        compartmentsX.Add(compartmentX);
-                        compartmentsY.Add(compartmentY);
+                        compartmentsX.Add(Math.Round(compartmentX - 0.0000005, 6));
+                        compartmentsY.Add(Math.Round(compartmentY - 0.0000005, 6));
                         compartmentCoordinateDictionary.Add(m.Compartments[i].Name, new Coordinate(compartmentX, compartmentY));
                     }
                 });
 
                 NumberOfNodes = nonManholeNetworkNodes.Count + compartmentCount;
                 NodesX = nonManholeNetworkNodes
-                    .Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].X : 0).Concat(compartmentsX)
+                    .Select(n => n.Geometry.Coordinates.Any() ? Math.Round(n.Geometry.Coordinates[0].X - 0.0000005, 6) : 0).Concat(compartmentsX)
                     .ToArray();
-                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].Y : 0).Concat(compartmentsY).ToArray();
+                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? Math.Round(n.Geometry.Coordinates[0].Y - 0.0000005, 6) : 0).Concat(compartmentsY).ToArray();
                 NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
                 NodesDescriptions = nonManholeNetworkNodes.OfType<IHydroNode>().Select(n => n.LongName).Concat(compartments.Select(c => string.Empty)).ToArray();
                 
@@ -257,7 +257,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 }).ToArray();
                 TargedNodesIds = targetNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
 
-                BranchLengths = network.Branches.Select(b => b.Length).ToArray();
+                BranchLengths = network.Branches.Select(b => Math.Round(b.Length - 0.0000005, 6)).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
                 NumberOfGeometryPointsPerBranch = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
@@ -283,8 +283,8 @@ namespace DeltaShell.NGHS.IO.Grid
                 GeopointsX = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X)).Concat(compartmentXCoordinates).ToArray();
                 GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();*/
                 var networkBranches = network.Branches.ToArray();
-                GeopointsX = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.X)).ToArray();
-                GeopointsY = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => c.Y)).ToArray();
+                GeopointsX = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => Math.Round(c.X - 0.0000005, 6))).ToArray();
+                GeopointsY = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => Math.Round(c.Y - 0.0000005, 6))).ToArray();
                 BranchTypes = networkBranches.Select(GetBranchType).ToArray();
             }
         }

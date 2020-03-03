@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
         public static readonly ConfigurationSetting NodeId = new ConfigurationSetting(key: "nodeId", description: "");
         public static readonly ConfigurationSetting X = new ConfigurationSetting(key: "x", description: "");
         public static readonly ConfigurationSetting Y = new ConfigurationSetting(key: "y", description: "");
-        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "");
+        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "", format:"F6");
         public static readonly ConfigurationSetting StorageType = new ConfigurationSetting(key: "storageType", description: "Possible values: Reservoir (default), Closed and Loss");
         public static readonly ConfigurationSetting UseTable = new ConfigurationSetting(key: "useTable", description: "0=false, 1=true");
 

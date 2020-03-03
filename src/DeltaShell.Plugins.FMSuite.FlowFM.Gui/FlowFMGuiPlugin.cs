@@ -716,7 +716,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
-        [InvokeRequired]
         private void OnActivityRunnerStatusChanged(object sender,
             ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
@@ -728,48 +727,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
                     {
-                        if (ActiveMapView != null)
-                        {
-                            ActiveMapView.Map.ZoomToExtents();
-                        }                        
+                        RefreshTreeViewAndZoomActiveMapViewToExtends();                     
                     }
                 }
                 if (importer is WaterFlowFMFileImporter &&
                     activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
                 {
-                    Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
-                    if (ActiveMapView != null)
-                    {
-                        ActiveMapView.Map.ZoomToExtents();
-                    }
+                    RefreshTreeViewAndZoomActiveMapViewToExtends();
                 }
             }
 
             var model = sender as WaterFlowFMModel;
             if ( model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
-                //Clean output snapped layers;
-                // release file locks
-                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where( m => (m.Data as WaterFlowFMModel) == model);
-
-                foreach (var mapView in mapViews)
-                {
-                    var modelLayer = mapView.MapView.GetLayerForData(model);
-                    var groupModelLayer = modelLayer as GroupLayer;
-                    if (groupModelLayer != null)
-                    {
-                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
-                        if (snappedOutputLayer == null) continue;
-
-                        snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>().ForEach(sf => sf.Close());
-                    }
-                }
+                CleanOutputSnappedLayersAndReleaseFileLocks(model);
             }
 
             if (!(sender is WaterFlowFMModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed) return;
+            ShowValidationView(sender);
+        }
 
+        [InvokeRequired]
+        private void CleanOutputSnappedLayersAndReleaseFileLocks(WaterFlowFMModel model)
+        {
+            //Clean output snapped layers;
+            // release file locks
+            var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
+
+            foreach (var mapView in mapViews)
+            {
+                var modelLayer = mapView.MapView.GetLayerForData(model);
+                var groupModelLayer = modelLayer as GroupLayer;
+                if (groupModelLayer != null)
+                {
+                    var snappedOutputLayer =
+                        groupModelLayer.Layers.FirstOrDefault(l =>
+                            l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                    if (snappedOutputLayer == null) continue;
+
+                    snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>().ForEach(sf => sf.Close());
+                }
+            }
+        }
+
+        [InvokeRequired]
+        private void ShowValidationView(object sender)
+        {
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
         }
+
+        [InvokeRequired]
+        private void RefreshTreeViewAndZoomActiveMapViewToExtends()
+        {
+            Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
+            if (ActiveMapView != null)
+            {
+                ActiveMapView.Map.ZoomToExtents();
+            }
+        }
+
         private IList<Type> ClosedViewTypes { get; set; }
 
         [InvokeRequired]

@@ -65,7 +65,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 
             }
 
-            Offsets = discretisationPoints.Select(l => l.Chainage).ToArray();
+            Offsets = discretisationPoints.Select(l => Math.Round(l.Chainage - 0.0000005, 6)).ToArray();
 
             DiscretisationPointIds = discretisationPoints.Select(p => p.Name).ToArray();
             //Branch1dMeshCalculationNodesIdx = discretisationPoints.Select(l => l.) 
@@ -76,14 +76,14 @@ namespace DeltaShell.NGHS.IO.Grid
 */
 
             DiscretisationPointDescriptions = discretisationPoints.Select(p => p.LongName).ToArray();
-            DiscretisationPointsX = discretisationPoints.Select(dp => dp.Geometry.Coordinate.X).ToArray();
-            DiscretisationPointsY = discretisationPoints.Select(dp => dp.Geometry.Coordinate.Y).ToArray();
+            DiscretisationPointsX = discretisationPoints.Select(dp => Math.Round(dp.Geometry.Coordinate.X - 0.0000005, 6)).ToArray();
+            DiscretisationPointsY = discretisationPoints.Select(dp => Math.Round(dp.Geometry.Coordinate.Y - 0.0000005, 6)).ToArray();
             var networkSegments = discretisation.Segments.Values.OfType<NetworkSegment>().ToArray();
             EdgeIdx = networkSegments.Select(s => discretisation.Network.Branches.IndexOf(s.Branch)).ToArray();
             
-            EdgeChainage = networkSegments.Select(s => (s.Chainage + s.EndChainage)/2).ToArray(); 
-            EdgePointsX = networkSegments.Select(s => s.Geometry.Centroid.X).ToArray();
-            EdgePointsY = networkSegments.Select(s => s.Geometry.Centroid.Y).ToArray();
+            EdgeChainage = networkSegments.Select(s => Math.Round(((s.Chainage + s.EndChainage)/ 2) - 0.0000005, 6)).ToArray(); 
+            EdgePointsX = networkSegments.Select(s => Math.Round(s.Geometry.Centroid.X - 0.0000005, 6)).ToArray();
+            EdgePointsY = networkSegments.Select(s => Math.Round(s.Geometry.Centroid.Y - 0.0000005, 6)).ToArray();
 
             var epsilonLocation = 0.01;
             EdgeNodes = networkSegments.SelectMany(s => new int[]

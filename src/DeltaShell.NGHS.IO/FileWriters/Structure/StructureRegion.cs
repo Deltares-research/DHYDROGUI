@@ -32,7 +32,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting Id = new ConfigurationSetting(key: "id", description: "Unique definition id");
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Given name in the user interface (optional)");
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "Branch id");
-        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Chainage on the branch (m)");
+        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Chainage on the branch (m)", format: "F6");
         public static readonly ConfigurationSetting NumberOfCoordinates = new ConfigurationSetting(key: "numCoordinates", description: "Number of values in xCoordinates and yCoordinates. This value should be greater or equal 2");
         public static readonly ConfigurationSetting XCoordinates = new ConfigurationSetting(key: "xCoordinates", description: "x-coordinates of the location of the structure.");
         public static readonly ConfigurationSetting YCoordinates = new ConfigurationSetting(key: "yCoordinates", description: "y-coordinates of the location of the structure.");
