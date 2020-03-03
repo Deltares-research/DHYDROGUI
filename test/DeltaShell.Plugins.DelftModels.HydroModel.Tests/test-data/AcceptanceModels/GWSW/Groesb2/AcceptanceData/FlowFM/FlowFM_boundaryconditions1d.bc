@@ -6,6 +6,7 @@
     name                  = Wgroeske_5          
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = Wgroeske_5          
     quantity              = waterlevelbnd       
     unit                  = m                   
     0 
@@ -14,6 +15,7 @@
     name                  = WCN_Oost_2          
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = WCN_Oost_2          
     quantity              = waterlevelbnd       
     unit                  = m                   
     0 
@@ -22,6 +24,7 @@
     name                  = WR2                 
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = WR2                 
     quantity              = waterlevelbnd       
     unit                  = m                   
     0 
@@ -30,6 +33,7 @@
     name                  = W86                 
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = W86                 
     quantity              = waterlevelbnd       
     unit                  = m                   
     0 
@@ -38,6 +42,7 @@
     name                  = 18_M                
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 18_M                
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
@@ -46,6 +51,7 @@
     name                  = 5_M                 
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 5_M                 
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 

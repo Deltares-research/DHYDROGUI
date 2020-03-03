@@ -6,6 +6,7 @@
     name                  = 10BBB7U             
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 10BBB7U             
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
@@ -14,6 +15,7 @@
     name                  = 2                   
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 2                   
     quantity              = waterlevelbnd       
     unit                  = m                   
     -1 
@@ -22,6 +24,7 @@
     name                  = 13680O_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 13680O_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 

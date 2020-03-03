@@ -2,3 +2,27 @@
     fileVersion           = 1.01                
     fileType              = boundConds          
 
+[forcing]
+    name                  = LateralSource_1D_1  
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = lateral_discharge   
+    unit                  = m³/s                
+    0.00306 
+
+[forcing]
+    name                  = LateralSource_1D_2  
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = lateral_discharge   
+    unit                  = m³/s                
+    0.00333 
+
+[forcing]
+    name                  = LateralSource_1D_3  
+    function              = constant            
+    timeInterpolation     = linear              
+    quantity              = lateral_discharge   
+    unit                  = m³/s                
+    0.000138888888888889 
+

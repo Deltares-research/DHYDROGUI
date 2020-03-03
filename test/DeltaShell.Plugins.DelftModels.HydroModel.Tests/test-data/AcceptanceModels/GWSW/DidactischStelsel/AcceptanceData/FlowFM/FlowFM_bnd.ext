@@ -7,21 +7,43 @@
 quantity=waterlevelbnd
 nodeId=put60
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=put61
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=put62
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=put63
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
+
+[Lateral]
+id=LateralSource_1D_1
+name=LateralSource_1D_1
+nodeId=put9
+discharge=FlowFM_lateral_sources.bc
+
+[Lateral]
+id=LateralSource_1D_2
+name=LateralSource_1D_2
+nodeId=put10
+discharge=FlowFM_lateral_sources.bc
+
+[Lateral]
+id=LateralSource_1D_3
+name=LateralSource_1D_3
+nodeId=put10
+discharge=FlowFM_lateral_sources.bc
 
 [Lateral]
 id=cmp66

@@ -6,6 +6,7 @@
     name                  = put60               
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 01009U              
     quantity              = waterlevelbnd       
     unit                  = m                   
     -5 
@@ -14,6 +15,7 @@
     name                  = put61               
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 09001U              
     quantity              = waterlevelbnd       
     unit                  = m                   
     -4 
@@ -22,6 +24,7 @@
     name                  = put62               
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 07004               
     quantity              = waterlevelbnd       
     unit                  = m                   
     0.4 
@@ -30,6 +33,7 @@
     name                  = put63               
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 10003U              
     quantity              = waterlevelbnd       
     unit                  = m                   
     -5 

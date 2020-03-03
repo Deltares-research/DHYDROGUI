@@ -7,36 +7,42 @@
 quantity=waterlevelbnd
 nodeId=Wgroeske_5
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=WCN_Oost_2
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=WR2
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=W86
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=18_M
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Boundary]
 quantity=waterlevelbnd
 nodeId=5_M
 forcingfile=FlowFM_boundaryconditions1d.bc
+isOnOutletCompartment=true
 
 [Lateral]
 id=0230_007v
 name=0230_007v
-nodeId=0230_009v
+nodeId=0230_007v
 discharge=realtime
 
 [Lateral]
@@ -48,7 +54,7 @@ discharge=realtime
 [Lateral]
 id=0270_015v
 name=0270_015v
-nodeId=0270_021
+nodeId=0270_015v
 discharge=realtime
 
 [Lateral]
@@ -60,7 +66,7 @@ discharge=realtime
 [Lateral]
 id=0270_019
 name=0270_019
-nodeId=0270_021
+nodeId=0270_019
 discharge=realtime
 
 [Lateral]
@@ -90,13 +96,13 @@ discharge=realtime
 [Lateral]
 id=17
 name=17
-nodeId=18
+nodeId=17
 discharge=realtime
 
 [Lateral]
 id=19
 name=19
-nodeId=8127
+nodeId=19
 discharge=realtime
 
 [Lateral]
@@ -108,7 +114,7 @@ discharge=realtime
 [Lateral]
 id=2230_033
 name=2230_033
-nodeId=2230_035
+nodeId=2230_033
 discharge=realtime
 
 [Lateral]
@@ -132,7 +138,7 @@ discharge=realtime
 [Lateral]
 id=8075
 name=8075
-nodeId=8076
+nodeId=8075
 discharge=realtime
 
 [Lateral]
@@ -180,7 +186,7 @@ discharge=realtime
 [Lateral]
 id=8083
 name=8083
-nodeId=8084
+nodeId=8083
 discharge=realtime
 
 [Lateral]
@@ -258,7 +264,7 @@ discharge=realtime
 [Lateral]
 id=8097
 name=8097
-nodeId=8098
+nodeId=8097
 discharge=realtime
 
 [Lateral]
@@ -270,13 +276,13 @@ discharge=realtime
 [Lateral]
 id=8101
 name=8101
-nodeId=8109
+nodeId=8101
 discharge=realtime
 
 [Lateral]
 id=8102
 name=8102
-nodeId=8103
+nodeId=8102
 discharge=realtime
 
 [Lateral]
@@ -288,7 +294,7 @@ discharge=realtime
 [Lateral]
 id=8104
 name=8104
-nodeId=8105
+nodeId=8104
 discharge=realtime
 
 [Lateral]
@@ -300,13 +306,13 @@ discharge=realtime
 [Lateral]
 id=8106
 name=8106
-nodeId=8108
+nodeId=8106
 discharge=realtime
 
 [Lateral]
 id=8107
 name=8107
-nodeId=8108
+nodeId=8107
 discharge=realtime
 
 [Lateral]
@@ -324,7 +330,7 @@ discharge=realtime
 [Lateral]
 id=8110
 name=8110
-nodeId=8111
+nodeId=8110
 discharge=realtime
 
 [Lateral]
@@ -378,7 +384,7 @@ discharge=realtime
 [Lateral]
 id=8118
 name=8118
-nodeId=8119
+nodeId=8118
 discharge=realtime
 
 [Lateral]
@@ -432,7 +438,7 @@ discharge=realtime
 [Lateral]
 id=8127
 name=8127
-nodeId=8128
+nodeId=8127
 discharge=realtime
 
 [Lateral]
@@ -456,7 +462,7 @@ discharge=realtime
 [Lateral]
 id=8131
 name=8131
-nodeId=8132
+nodeId=8131
 discharge=realtime
 
 [Lateral]
@@ -468,7 +474,7 @@ discharge=realtime
 [Lateral]
 id=8133
 name=8133
-nodeId=8134
+nodeId=8133
 discharge=realtime
 
 [Lateral]
@@ -486,7 +492,7 @@ discharge=realtime
 [Lateral]
 id=8136
 name=8136
-nodeId=8137_01
+nodeId=8136
 discharge=realtime
 
 [Lateral]
@@ -498,7 +504,7 @@ discharge=realtime
 [Lateral]
 id=8137
 name=8137
-nodeId=8137_01
+nodeId=8137
 discharge=realtime
 
 [Lateral]
@@ -540,7 +546,7 @@ discharge=realtime
 [Lateral]
 id=8143
 name=8143
-nodeId=8144
+nodeId=8143
 discharge=realtime
 
 [Lateral]
@@ -552,7 +558,7 @@ discharge=realtime
 [Lateral]
 id=8145
 name=8145
-nodeId=8146
+nodeId=8145
 discharge=realtime
 
 [Lateral]
@@ -642,7 +648,7 @@ discharge=realtime
 [Lateral]
 id=8161
 name=8161
-nodeId=8162
+nodeId=8161
 discharge=realtime
 
 [Lateral]
@@ -678,7 +684,7 @@ discharge=realtime
 [Lateral]
 id=8167
 name=8167
-nodeId=8168
+nodeId=8167
 discharge=realtime
 
 [Lateral]
@@ -774,7 +780,7 @@ discharge=realtime
 [Lateral]
 id=8180
 name=8180
-nodeId=8181
+nodeId=8180
 discharge=realtime
 
 [Lateral]
@@ -792,7 +798,7 @@ discharge=realtime
 [Lateral]
 id=8183
 name=8183
-nodeId=8184
+nodeId=8183
 discharge=realtime
 
 [Lateral]
@@ -804,7 +810,7 @@ discharge=realtime
 [Lateral]
 id=8185
 name=8185
-nodeId=8186
+nodeId=8185
 discharge=realtime
 
 [Lateral]
@@ -816,7 +822,7 @@ discharge=realtime
 [Lateral]
 id=8187
 name=8187
-nodeId=8188
+nodeId=8187
 discharge=realtime
 
 [Lateral]
@@ -840,7 +846,7 @@ discharge=realtime
 [Lateral]
 id=8190_01
 name=8190_01
-nodeId=8190
+nodeId=8190_01
 discharge=realtime
 
 [Lateral]
@@ -894,7 +900,7 @@ discharge=realtime
 [Lateral]
 id=8196
 name=8196
-nodeId=8197
+nodeId=8196
 discharge=realtime
 
 [Lateral]
@@ -924,7 +930,7 @@ discharge=realtime
 [Lateral]
 id=8201
 name=8201
-nodeId=8201_01
+nodeId=8201
 discharge=realtime
 
 [Lateral]
@@ -990,7 +996,7 @@ discharge=realtime
 [Lateral]
 id=8213
 name=8213
-nodeId=8214
+nodeId=8213
 discharge=realtime
 
 [Lateral]
@@ -1008,7 +1014,7 @@ discharge=realtime
 [Lateral]
 id=8216
 name=8216
-nodeId=8217
+nodeId=8216
 discharge=realtime
 
 [Lateral]
@@ -1098,7 +1104,7 @@ discharge=realtime
 [Lateral]
 id=8229
 name=8229
-nodeId=8230
+nodeId=8229
 discharge=realtime
 
 [Lateral]
@@ -1146,13 +1152,13 @@ discharge=realtime
 [Lateral]
 id=8237
 name=8237
-nodeId=8096
+nodeId=8237
 discharge=realtime
 
 [Lateral]
 id=8238_01
 name=8238_01
-nodeId=8238_02
+nodeId=8238_01
 discharge=realtime
 
 [Lateral]
@@ -1188,7 +1194,7 @@ discharge=realtime
 [Lateral]
 id=8241
 name=8241
-nodeId=8242
+nodeId=8241
 discharge=realtime
 
 [Lateral]
@@ -1200,7 +1206,7 @@ discharge=realtime
 [Lateral]
 id=8243
 name=8243
-nodeId=8244
+nodeId=8243
 discharge=realtime
 
 [Lateral]
@@ -1242,7 +1248,7 @@ discharge=realtime
 [Lateral]
 id=8250
 name=8250
-nodeId=8251
+nodeId=8250
 discharge=realtime
 
 [Lateral]
@@ -1296,7 +1302,7 @@ discharge=realtime
 [Lateral]
 id=8260
 name=8260
-nodeId=8261
+nodeId=8260
 discharge=realtime
 
 [Lateral]
@@ -1344,7 +1350,7 @@ discharge=realtime
 [Lateral]
 id=8268
 name=8268
-nodeId=8269
+nodeId=8268
 discharge=realtime
 
 [Lateral]
@@ -1356,7 +1362,7 @@ discharge=realtime
 [Lateral]
 id=8270
 name=8270
-nodeId=8271
+nodeId=8270
 discharge=realtime
 
 [Lateral]
@@ -1410,7 +1416,7 @@ discharge=realtime
 [Lateral]
 id=8279
 name=8279
-nodeId=8280
+nodeId=8279
 discharge=realtime
 
 [Lateral]
@@ -1452,7 +1458,7 @@ discharge=realtime
 [Lateral]
 id=8286
 name=8286
-nodeId=8287
+nodeId=8286
 discharge=realtime
 
 [Lateral]
@@ -1470,7 +1476,7 @@ discharge=realtime
 [Lateral]
 id=8289
 name=8289
-nodeId=8290
+nodeId=8289
 discharge=realtime
 
 [Lateral]
@@ -1518,7 +1524,7 @@ discharge=realtime
 [Lateral]
 id=8297
 name=8297
-nodeId=8298
+nodeId=8297
 discharge=realtime
 
 [Lateral]
@@ -1530,7 +1536,7 @@ discharge=realtime
 [Lateral]
 id=8299
 name=8299
-nodeId=8300
+nodeId=8299
 discharge=realtime
 
 [Lateral]
@@ -1596,7 +1602,7 @@ discharge=realtime
 [Lateral]
 id=8309
 name=8309
-nodeId=8310
+nodeId=8309
 discharge=realtime
 
 [Lateral]
@@ -1698,7 +1704,7 @@ discharge=realtime
 [Lateral]
 id=8325
 name=8325
-nodeId=8326
+nodeId=8325
 discharge=realtime
 
 [Lateral]
@@ -1740,7 +1746,7 @@ discharge=realtime
 [Lateral]
 id=8332
 name=8332
-nodeId=8333_03
+nodeId=8332
 discharge=realtime
 
 [Lateral]
@@ -1752,13 +1758,13 @@ discharge=realtime
 [Lateral]
 id=8333
 name=8333
-nodeId=8334
+nodeId=8333
 discharge=realtime
 
 [Lateral]
 id=8333_01
 name=8333_01
-nodeId=8333_03
+nodeId=8333_01
 discharge=realtime
 
 [Lateral]
@@ -1782,7 +1788,7 @@ discharge=realtime
 [Lateral]
 id=8335
 name=8335
-nodeId=8336
+nodeId=8335
 discharge=realtime
 
 [Lateral]
@@ -1818,7 +1824,7 @@ discharge=realtime
 [Lateral]
 id=8341
 name=8341
-nodeId=8342
+nodeId=8341
 discharge=realtime
 
 [Lateral]
@@ -1854,7 +1860,7 @@ discharge=realtime
 [Lateral]
 id=8347
 name=8347
-nodeId=8348
+nodeId=8347
 discharge=realtime
 
 [Lateral]
@@ -1962,7 +1968,7 @@ discharge=realtime
 [Lateral]
 id=8363
 name=8363
-nodeId=8363_01
+nodeId=8363
 discharge=realtime
 
 [Lateral]
@@ -1974,7 +1980,7 @@ discharge=realtime
 [Lateral]
 id=8363_02
 name=8363_02
-nodeId=8364
+nodeId=8363_02
 discharge=realtime
 
 [Lateral]
@@ -1986,7 +1992,7 @@ discharge=realtime
 [Lateral]
 id=8366
 name=8366
-nodeId=8367
+nodeId=8366
 discharge=realtime
 
 [Lateral]
@@ -2004,7 +2010,7 @@ discharge=realtime
 [Lateral]
 id=8370
 name=8370
-nodeId=8371
+nodeId=8370
 discharge=realtime
 
 [Lateral]
@@ -2016,7 +2022,7 @@ discharge=realtime
 [Lateral]
 id=8372
 name=8372
-nodeId=8373
+nodeId=8372
 discharge=realtime
 
 [Lateral]
@@ -2064,7 +2070,7 @@ discharge=realtime
 [Lateral]
 id=8380
 name=8380
-nodeId=8383
+nodeId=8380
 discharge=realtime
 
 [Lateral]
@@ -2136,7 +2142,7 @@ discharge=realtime
 [Lateral]
 id=8390
 name=8390
-nodeId=8540
+nodeId=8390
 discharge=realtime
 
 [Lateral]
@@ -2160,7 +2166,7 @@ discharge=realtime
 [Lateral]
 id=8411
 name=8411
-nodeId=8412
+nodeId=8411
 discharge=realtime
 
 [Lateral]
@@ -2220,13 +2226,13 @@ discharge=realtime
 [Lateral]
 id=8422
 name=8422
-nodeId=8453
+nodeId=8422
 discharge=realtime
 
 [Lateral]
 id=8423
 name=8423
-nodeId=8424
+nodeId=8423
 discharge=realtime
 
 [Lateral]
@@ -2298,7 +2304,7 @@ discharge=realtime
 [Lateral]
 id=8433
 name=8433
-nodeId=8434
+nodeId=8433
 discharge=realtime
 
 [Lateral]
@@ -2310,7 +2316,7 @@ discharge=realtime
 [Lateral]
 id=8435
 name=8435
-nodeId=8436
+nodeId=8435
 discharge=realtime
 
 [Lateral]
@@ -2400,7 +2406,7 @@ discharge=realtime
 [Lateral]
 id=8451
 name=8451
-nodeId=8452
+nodeId=8451
 discharge=realtime
 
 [Lateral]
@@ -2436,7 +2442,7 @@ discharge=realtime
 [Lateral]
 id=8456_01
 name=8456_01
-nodeId=8457
+nodeId=8456_01
 discharge=realtime
 
 [Lateral]
@@ -2526,7 +2532,7 @@ discharge=realtime
 [Lateral]
 id=8477
 name=8477
-nodeId=8478
+nodeId=8477
 discharge=realtime
 
 [Lateral]
@@ -2538,7 +2544,7 @@ discharge=realtime
 [Lateral]
 id=8479
 name=8479
-nodeId=8479_01
+nodeId=8479
 discharge=realtime
 
 [Lateral]
@@ -2640,7 +2646,7 @@ discharge=realtime
 [Lateral]
 id=8492
 name=8492
-nodeId=8493
+nodeId=8492
 discharge=realtime
 
 [Lateral]
@@ -2682,7 +2688,7 @@ discharge=realtime
 [Lateral]
 id=8497
 name=8497
-nodeId=8498
+nodeId=8497
 discharge=realtime
 
 [Lateral]
@@ -2730,7 +2736,7 @@ discharge=realtime
 [Lateral]
 id=8505_01
 name=8505_01
-nodeId=8505_02
+nodeId=8505_01
 discharge=realtime
 
 [Lateral]
@@ -2838,7 +2844,7 @@ discharge=realtime
 [Lateral]
 id=8519
 name=8519
-nodeId=8520
+nodeId=8519
 discharge=realtime
 
 [Lateral]
@@ -2892,7 +2898,7 @@ discharge=realtime
 [Lateral]
 id=8532
 name=8532
-nodeId=8604
+nodeId=8532
 discharge=realtime
 
 [Lateral]
@@ -2910,7 +2916,7 @@ discharge=realtime
 [Lateral]
 id=8534
 name=8534
-nodeId=8535
+nodeId=8534
 discharge=realtime
 
 [Lateral]
@@ -2928,7 +2934,7 @@ discharge=realtime
 [Lateral]
 id=8536_04
 name=8536_04
-nodeId=8536_06
+nodeId=8536_04
 discharge=realtime
 
 [Lateral]
@@ -2994,13 +3000,13 @@ discharge=realtime
 [Lateral]
 id=8541
 name=8541
-nodeId=8541_03
+nodeId=8541
 discharge=realtime
 
 [Lateral]
 id=8541_01
 name=8541_01
-nodeId=8541_02
+nodeId=8541_01
 discharge=realtime
 
 [Lateral]
@@ -3048,13 +3054,13 @@ discharge=realtime
 [Lateral]
 id=8544
 name=8544
-nodeId=8545
+nodeId=8544
 discharge=realtime
 
 [Lateral]
 id=8544_01
 name=8544_01
-nodeId=8544_02
+nodeId=8544_01
 discharge=realtime
 
 [Lateral]
@@ -3090,13 +3096,13 @@ discharge=realtime
 [Lateral]
 id=8552
 name=8552
-nodeId=8554
+nodeId=8552
 discharge=realtime
 
 [Lateral]
 id=8553_01
 name=8553_01
-nodeId=8554
+nodeId=8553_01
 discharge=realtime
 
 [Lateral]
@@ -3132,7 +3138,7 @@ discharge=realtime
 [Lateral]
 id=8559
 name=8559
-nodeId=8560
+nodeId=8559
 discharge=realtime
 
 [Lateral]
@@ -3162,7 +3168,7 @@ discharge=realtime
 [Lateral]
 id=8564
 name=8564
-nodeId=8565
+nodeId=8564
 discharge=realtime
 
 [Lateral]
@@ -3204,7 +3210,7 @@ discharge=realtime
 [Lateral]
 id=8571
 name=8571
-nodeId=8572
+nodeId=8571
 discharge=realtime
 
 [Lateral]
@@ -3240,7 +3246,7 @@ discharge=realtime
 [Lateral]
 id=8580
 name=8580
-nodeId=8581
+nodeId=8580
 discharge=realtime
 
 [Lateral]
@@ -3258,7 +3264,7 @@ discharge=realtime
 [Lateral]
 id=8584
 name=8584
-nodeId=8586
+nodeId=8584
 discharge=realtime
 
 [Lateral]
@@ -3300,7 +3306,7 @@ discharge=realtime
 [Lateral]
 id=8596
 name=8596
-nodeId=8597
+nodeId=8596
 discharge=realtime
 
 [Lateral]
@@ -3312,7 +3318,7 @@ discharge=realtime
 [Lateral]
 id=8601
 name=8601
-nodeId=8601_04V
+nodeId=8601
 discharge=realtime
 
 [Lateral]
@@ -3324,7 +3330,7 @@ discharge=realtime
 [Lateral]
 id=8601_02V
 name=8601_02V
-nodeId=8601_01V
+nodeId=8601_02V
 discharge=realtime
 
 [Lateral]
@@ -3348,7 +3354,7 @@ discharge=realtime
 [Lateral]
 id=8603_03V
 name=8603_03V
-nodeId=8601_02V
+nodeId=8603_03V
 discharge=realtime
 
 [Lateral]
@@ -3372,7 +3378,7 @@ discharge=realtime
 [Lateral]
 id=8606_01
 name=8606_01
-nodeId=8606_02
+nodeId=8606_01
 discharge=realtime
 
 [Lateral]
@@ -3432,7 +3438,7 @@ discharge=realtime
 [Lateral]
 id=8612
 name=8612
-nodeId=8613
+nodeId=8612
 discharge=realtime
 
 [Lateral]
@@ -3480,7 +3486,7 @@ discharge=realtime
 [Lateral]
 id=8620
 name=8620
-nodeId=8621
+nodeId=8620
 discharge=realtime
 
 [Lateral]
@@ -3516,7 +3522,7 @@ discharge=realtime
 [Lateral]
 id=8626
 name=8626
-nodeId=8628
+nodeId=8626
 discharge=realtime
 
 [Lateral]
@@ -3546,7 +3552,7 @@ discharge=realtime
 [Lateral]
 id=8631
 name=8631
-nodeId=8632
+nodeId=8631
 discharge=realtime
 
 [Lateral]
@@ -3570,7 +3576,7 @@ discharge=realtime
 [Lateral]
 id=8635
 name=8635
-nodeId=8636
+nodeId=8635
 discharge=realtime
 
 [Lateral]
@@ -3612,7 +3618,7 @@ discharge=realtime
 [Lateral]
 id=8642
 name=8642
-nodeId=8643
+nodeId=8642
 discharge=realtime
 
 [Lateral]
@@ -3660,7 +3666,7 @@ discharge=realtime
 [Lateral]
 id=8656_02
 name=8656_02
-nodeId=8656_03
+nodeId=8656_02
 discharge=realtime
 
 [Lateral]
@@ -3678,7 +3684,7 @@ discharge=realtime
 [Lateral]
 id=8656_05
 name=8656_05
-nodeId=8656_06
+nodeId=8656_05
 discharge=realtime
 
 [Lateral]
@@ -3738,13 +3744,13 @@ discharge=realtime
 [Lateral]
 id=8658_01
 name=8658_01
-nodeId=8658_03
+nodeId=8658_01
 discharge=realtime
 
 [Lateral]
 id=8658_02
 name=8658_02
-nodeId=8658_03
+nodeId=8658_02
 discharge=realtime
 
 [Lateral]
@@ -3792,7 +3798,7 @@ discharge=realtime
 [Lateral]
 id=8665
 name=8665
-nodeId=8666
+nodeId=8665
 discharge=realtime
 
 [Lateral]
@@ -3840,13 +3846,13 @@ discharge=realtime
 [Lateral]
 id=8672_01
 name=8672_01
-nodeId=8672_03
+nodeId=8672_01
 discharge=realtime
 
 [Lateral]
 id=8672_02
 name=8672_02
-nodeId=8675_01
+nodeId=8672_02
 discharge=realtime
 
 [Lateral]
@@ -3858,7 +3864,7 @@ discharge=realtime
 [Lateral]
 id=8673
 name=8673
-nodeId=8674
+nodeId=8673
 discharge=realtime
 
 [Lateral]
@@ -3900,7 +3906,7 @@ discharge=realtime
 [Lateral]
 id=8703
 name=8703
-nodeId=8704
+nodeId=8703
 discharge=realtime
 
 [Lateral]
@@ -3912,7 +3918,7 @@ discharge=realtime
 [Lateral]
 id=8705
 name=8705
-nodeId=8706
+nodeId=8705
 discharge=realtime
 
 [Lateral]
@@ -3924,7 +3930,7 @@ discharge=realtime
 [Lateral]
 id=8706_01
 name=8706_01
-nodeId=8706_02
+nodeId=8706_01
 discharge=realtime
 
 [Lateral]
@@ -3996,7 +4002,7 @@ discharge=realtime
 [Lateral]
 id=9
 name=9
-nodeId=10
+nodeId=9
 discharge=realtime
 
 [Lateral]
@@ -4020,25 +4026,25 @@ discharge=realtime
 [Lateral]
 id=D01v
 name=D01v
-nodeId=8220
+nodeId=D01v
 discharge=realtime
 
 [Lateral]
 id=G10020f
 name=G10020f
-nodeId=8508_01
+nodeId=G10020f
 discharge=realtime
 
 [Lateral]
 id=G10024v
 name=G10024v
-nodeId=8092
+nodeId=G10024v
 discharge=realtime
 
 [Lateral]
 id=G10026v
 name=G10026v
-nodeId=G10028v
+nodeId=G10026v
 discharge=realtime
 
 [Lateral]
@@ -4050,7 +4056,7 @@ discharge=realtime
 [Lateral]
 id=G10038f
 name=G10038f
-nodeId=8675_01
+nodeId=G10038f
 discharge=realtime
 
 [Lateral]
@@ -4062,7 +4068,7 @@ discharge=realtime
 [Lateral]
 id=V34
 name=V34
-nodeId=V35
+nodeId=V34
 discharge=realtime
 
 [Lateral]
@@ -4080,5 +4086,5 @@ discharge=realtime
 [Lateral]
 id=WR8475_02
 name=WR8475_02
-nodeId=2
+nodeId=WR8475_02
 discharge=realtime

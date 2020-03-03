@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private static readonly object[] AcceptanceTests =
         {
             new object[] {"KorteWoerden", 84, 72},
-            new object[] {"DidactischStelsel", 105, 73},
+            new object[] {"DidactischStelsel", 108, 73},
             new object[] {"Groesb2", 719, 675},
-            new object[] {"Enschede", 90, 0},
+            new object[] {"Enschede", 4838, 4748},
             new object[] {"Pudong", 4974, 4936}
         };
 

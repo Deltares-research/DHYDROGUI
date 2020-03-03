@@ -3,49 +3,55 @@
     fileType              = boundConds          
 
 [forcing]
-    name                  = Manhole01           
+    name                  = 233012_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 233012_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
 
 [forcing]
-    name                  = Manhole02           
+    name                  = 121374_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 121374_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
 
 [forcing]
-    name                  = Manhole03           
+    name                  = 141397_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 141397_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
 
 [forcing]
-    name                  = Manhole04           
+    name                  = 222071_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 222071_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
 
 [forcing]
-    name                  = Manhole05           
+    name                  = 169904_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 169904_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
 
 [forcing]
-    name                  = Manhole06           
+    name                  = 172258_M            
     function              = constant            
     timeInterpolation     = linear              
+    manHoleName           = 172258_M            
     quantity              = waterlevelbnd       
     unit                  = m                   
     -999 
