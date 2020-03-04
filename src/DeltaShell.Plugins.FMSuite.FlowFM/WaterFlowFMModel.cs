@@ -2730,9 +2730,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveOutput()
         {
-            var oldMapFilePath = OutputMapFileStore == null ? null : OutputMapFileStore.Path;
+            var mapFilePath2D = File.Exists(OutputMapFileStore?.Path)
+                ? OutputMapFileStore?.Path
+                : null;
+
+            var mapFilePath1D = File.Exists(Output1DFileStore?.Path)
+                ? Output1DFileStore?.Path
+                : null;
+
+            var oldMapFilePath = mapFilePath2D ?? mapFilePath1D;
+
             var oldFM1DFilePath = oldMapFilePath != null || Output1DFileStore == null ? null : Output1DFileStore.Path;
             var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
+
+            DisconnectOutput();
 
             if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower() )
                 
@@ -2742,7 +2753,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     Directory.CreateDirectory(directory);
                 }
-                File.Copy(oldMapFilePath, MapFilePath, true);
+                if (!File.Exists(MapFilePath) && File.Exists(oldMapFilePath)) //saveas filestore copies to new location and deletes in old location via the ProjectFileBasedItemRepository. no need to copy
+                    File.Copy(oldMapFilePath, MapFilePath, true);
             }
             else if (oldMapFilePath == null && oldFM1DFilePath != null && Path.GetFullPath(oldFM1DFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
             {
@@ -2751,7 +2763,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     Directory.CreateDirectory(directory);
                 }
-                File.Copy(oldFM1DFilePath, MapFilePath, true);
+                if (!File.Exists(MapFilePath) && File.Exists(oldFM1DFilePath))
+                    File.Copy(oldFM1DFilePath, MapFilePath, true);
             }
             else if (oldMapFilePath == null && oldFM1DFilePath == null && File.Exists(MapFilePath))
             {
