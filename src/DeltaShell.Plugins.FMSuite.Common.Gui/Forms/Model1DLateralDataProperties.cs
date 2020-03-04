@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -103,6 +104,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
                            ? type
                            : ExtrapolationTypeQh.Constant;
             }
+        }
+
+        [PropertyOrder(7)]
+        [DynamicVisible]
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "Model1DLateralDataProperties_Compartment_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "Model1DLateralDataProperties_Compartment_Description")]
+        public string Compartment
+        {
+            get { return data.Compartment.ToString(); }
+        }
+
+        [DynamicVisibleValidationMethod]
+        public bool DynamicVisibleValidationMethod(string propertyName)
+        {
+            if (propertyName.Equals(nameof(Model1DLateralSourceData.Compartment), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return data.Compartment != null;
+            }
+
+            return true;
         }
 
         [DynamicReadOnlyValidationMethod]

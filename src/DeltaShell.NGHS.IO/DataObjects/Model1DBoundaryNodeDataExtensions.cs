@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 var outlet = manhole.Compartments.OfType<OutletCompartment>().First();
                 bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 bc.WaterLevel = outlet.SurfaceWaterLevel;
-                bc.Attributes["Compartment"] = outlet;
+                bc.OutletCompartment = outlet;
             }
         }
     }

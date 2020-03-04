@@ -5,9 +5,11 @@ using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf.Editors;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -287,7 +289,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
+            var attributeTableLateralSourcesData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
+            attributeTableLateralSourcesData.AfterCreate = (view, datas) =>
+            {
+                SetLateralSourceCompartmentComboBoxTypeEditor(view);
+
+                view.TableView.FocusedRowChanged += (sender, args) => { SetLateralSourceCompartmentComboBoxTypeEditor(view); };
+            };
+            yield return attributeTableLateralSourcesData;
             var networkDiscretizationCoverageViewInfo = new ViewInfo<ICoverage, CoverageTableView>
             {
                 Description = "Network Discretization",
@@ -412,7 +421,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
         }
+        private static void SetLateralSourceCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view)
+        {
+            var model1DBoundaryNode = view.TableView.CurrentFocusedRowObject as Model1DLateralSourceData;
+            var list = Enumerable.Empty<ICompartment>();
+            if (model1DBoundaryNode == null) return;
+            var node = Math.Abs(model1DBoundaryNode.Feature.Branch.Length - model1DBoundaryNode.Feature.Chainage) < 0.001 ? model1DBoundaryNode.Feature.Branch.Target :
+                Math.Abs(model1DBoundaryNode.Feature.Chainage) < 0.001 ? model1DBoundaryNode.Feature.Branch.Source : null;
+            if (node is Manhole manhole)
+                list = manhole.Compartments;
 
+            var column = view.TableView.Columns.FirstOrDefault(c =>c.Caption.Equals(nameof(Model1DLateralSourceData.Compartment), StringComparison.InvariantCultureIgnoreCase)); 
+            if (column != null)
+                column.Editor = new ComboBoxTypeEditor
+                {
+
+                    Items = list,
+                    ItemsMandatory = false
+                };
+        }
         private object GetPipesFromSourcesAndSinks(FmModelTreeShortcut treeShortCut)
         {
             var sourcesAndSinks = treeShortCut.Data as IEventedList<SourceAndSink>;

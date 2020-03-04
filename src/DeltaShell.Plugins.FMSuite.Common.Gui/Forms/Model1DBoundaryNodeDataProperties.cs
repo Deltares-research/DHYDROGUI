@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Functions.Generic;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -120,7 +121,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             get { return data.Node.Name; }
             set { data.Node.Name = value; }
         }
-        
+
+        [PropertyOrder(8)]
+        [DynamicVisible]
+        [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDisplayName(typeof(Resources), "Model1DBoundaryNodeDataProperties_OutletCompartment_DisplayName")]
+        [ResourcesDescription(typeof(Resources), "Model1DBoundaryNodeDataProperties_OutletCompartment_Description")]
+        public OutletCompartment OutletCompartment
+        {
+            get { return data.OutletCompartment; }
+        }
         /// <summary>
         /// Returns whether or not the BC has data in a function. If so, interpolation and extrapolation can be set and read
         /// </summary>
@@ -131,7 +141,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
                     || data.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries)
                    && data.Data != null;
         }
-        
+
+        [DynamicVisibleValidationMethod]
+        public bool DynamicVisibleValidationMethod(string propertyName)
+        {
+            if (propertyName.Equals(nameof(Model1DBoundaryNodeData.OutletCompartment), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return data.OutletCompartment != null;
+            }
+
+            return true;
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {

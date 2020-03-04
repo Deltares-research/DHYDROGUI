@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -115,6 +119,22 @@ namespace DeltaShell.NGHS.IO.DataObjects
 
                 AfterSetDataType();
             }
+        }
+        [FeatureAttribute]
+        [DynamicReadOnly]
+        [NoNotifyPropertyChange]
+        public ICompartment Compartment { get; set; }
+
+        [DynamicReadOnlyValidationMethod]
+        public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
+        {
+            if (propertyName == nameof(Compartment))
+            {
+                var node = Math.Abs(Feature.Branch.Length - Feature.Chainage) < 0.001 ? Feature.Branch.Target :
+                    Math.Abs(Feature.Chainage) < 0.001 ? Feature.Branch.Source : null;
+                if (node is Manhole manhole && manhole.Compartments.Any()) return false;
+            }
+            return true;
         }
 
         [EditAction]

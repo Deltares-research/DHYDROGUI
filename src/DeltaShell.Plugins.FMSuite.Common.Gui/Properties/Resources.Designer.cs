@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -571,6 +571,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name of the outlet compartment associated with this boundary data..
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_OutletCompartment_Description {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_OutletCompartment_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundary outlet compartment name.
+        /// </summary>
+        public static string Model1DBoundaryNodeDataProperties_OutletCompartment_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_OutletCompartment_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data type of the boundary node data..
         /// </summary>
         public static string Model1DBoundaryNodeDataProperties_Type_Description {
@@ -585,6 +603,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Properties {
         public static string Model1DBoundaryNodeDataProperties_Type_DisplayName {
             get {
                 return ResourceManager.GetString("Model1DBoundaryNodeDataProperties_Type_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The compartment on which this lateral source data is connected to.
+        /// </summary>
+        public static string Model1DLateralDataProperties_Compartment_Description {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_Compartment_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lateral source data compartment..
+        /// </summary>
+        public static string Model1DLateralDataProperties_Compartment_DisplayName {
+            get {
+                return ResourceManager.GetString("Model1DLateralDataProperties_Compartment_DisplayName", resourceCulture);
             }
         }
         

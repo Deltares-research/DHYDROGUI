@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                                 LongName = nwrwData.Name
                             };
 
-                            AddLateralSourceToBranch(branch, nwrwData.Name, lateralSource);
+                            AddLateralSourceToBranch(branch, lateralSource);
                             AddHydroLinkToCatchment(nwrwData, lateralSource);
 
                             // at FM-side, create lateral data of type REALTIME
@@ -262,15 +262,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// <param name="branch"></param>
         /// <param name="name"></param>
         /// <param name="lateralSource"></param>
-        private void AddLateralSourceToBranch(IBranch branch, string name, LateralSource lateralSource)
+        private void AddLateralSourceToBranch(IBranch branch, LateralSource lateralSource)
         {
-            if (branch is IPipe pipe)
-            {
-                lateralSource.Attributes["Compartment"] = pipe.SourceCompartmentName.Equals(name)
-                    ? pipe.SourceCompartment
-                    : pipe.TargetCompartment;
-            }
-
             lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
             branch.BranchFeatures.Add(lateralSource);
         }
@@ -377,12 +370,12 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             LateralSource lateralSource = new LateralSource
                             {
                                 Branch = branch,
-                                Chainage = branch.Length
+                                Chainage = branch.Length,
+                                Name = nwrwDischargeData.Name,
+                                LongName = nwrwDischargeData.Name
                             };
-                            lateralSource.Name = HydroNetworkHelper.GetUniqueFeatureName(network, lateralSource);
-                            lateralSource.LongName = lateralSource.Name;
 
-                            AddLateralSourceToBranch(branch, nwrwDischargeData.Name, lateralSource);
+                            AddLateralSourceToBranch(branch, lateralSource);
 
                             // make sure the discharge data has the correct LateralSurface value
                             nwrwDischargeData.SetCorrectLateralSurface(rrModel);

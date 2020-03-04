@@ -75,7 +75,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault(oc => oc.Name.Equals(compartment.Name, StringComparison.InvariantCultureIgnoreCase));
                         }
 
-                        if (outlet != null) waterFlowModel1DBoundaryNodeData.Attributes["Compartment"] = outlet;
+                        if (outlet != null) waterFlowModel1DBoundaryNodeData.OutletCompartment = outlet;
                     }
                     ReadBoundaryCondition(waterFlowModel1DBoundaryNodeData, boundaryCategory);
                 }

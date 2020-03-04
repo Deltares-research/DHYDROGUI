@@ -7,10 +7,12 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -187,6 +189,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
         }
 
         [FeatureAttribute]
+        [DynamicReadOnly]
         public virtual Model1DBoundaryNodeDataType DataType
         {
             get { return dataType; }
@@ -206,7 +209,22 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 AfterSetDataType();
             }
         }
-        
+
+        [FeatureAttribute]
+        [DisplayName("Outlet Compartment")]
+        [ReadOnly(true)]
+        public virtual OutletCompartment OutletCompartment { get; set; }
+
+        [DynamicReadOnlyValidationMethod]
+        public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
+        {
+            if (propertyName == nameof(DataType))
+            {
+                if (Node is Manhole manhole && manhole.Compartments.OfType<OutletCompartment>().Any()|| !(Node is Manhole)) return false;
+            }
+            return true;
+        }
+
         public virtual InterpolationType InterpolationType
         {
             get
@@ -492,6 +510,9 @@ namespace DeltaShell.NGHS.IO.DataObjects
         [EditAction]
         private void AfterSetDataType()
         {
+            if (Node is Manhole manhole)
+                OutletCompartment = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+
             switch (dataType)
             {
                 case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
@@ -506,6 +527,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
                     break;
                 case Model1DBoundaryNodeDataType.None:
                     Data = null;
+                    OutletCompartment = null;
                     break;
                 case Model1DBoundaryNodeDataType.FlowConstant:
                     Data = null; // To fire PropertyChange for Data, as value to be returned from Data has changed

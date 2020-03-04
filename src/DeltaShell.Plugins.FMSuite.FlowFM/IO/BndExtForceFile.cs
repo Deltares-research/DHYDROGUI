@@ -233,12 +233,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
-                    if (lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant)
+                    if ((lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant) && lateralData.Compartment is ICompartment lateralCompartment)
                     {
-                        if (lateral.Attributes.ContainsKey("Compartment") && lateral.Attributes["Compartment"] is ICompartment lateralCompartment)
-                        {
-                            lateralDef.NodeId = lateralCompartment.Name;
-                        }
+                        lateralDef.NodeId = lateralCompartment.Name;
                     }
 
                     lateralDef.DischargeForcingFile = filename;
@@ -479,12 +476,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.Equals(manHoleName ?? nodeId, StringComparison.InvariantCultureIgnoreCase));
 
-                if (m1dbnd != null && m1dbnd.Attributes.ContainsKey("Compartment") && m1dbnd.Attributes["Compartment"] is OutletCompartment outletCompartment)
+                if (m1dbnd?.OutletCompartment != null)
                 {
-                    nodeId = outletCompartment.Name;
+                    nodeId = m1dbnd.OutletCompartment.Name;
                 }
                 var thatcherHarlemanTimeLag =  m1dbnd != null && m1dbnd.UseSalt ? new TimeSpan(0,0, (int)m1dbnd.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
-                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd != null && m1dbnd.Attributes.ContainsKey("Compartment"));
+                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd?.OutletCompartment != null);
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
             bcFile.Write(model1DNodeBoundaryDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
@@ -1008,8 +1005,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (branch == null) continue;
 
                 var lateralSource = new LateralSource() { Branch = branch, Chainage = chainage, Name = id, LongName = name };
-                if (compartment != null)
-                    lateralSource.Attributes["Compartment"] = compartment;
                 var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
                 var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
                 lateralSource.Geometry = new Point((Coordinate)lengthIndexedLine.ExtractPoint(mapOffset).Clone());
@@ -1018,6 +1013,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
                 if (model1DLateralSourceData == null) 
                     model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = false, UseTemperature = false};
+                if (compartment != null)
+                    model1DLateralSourceData.Compartment = compartment;
                 if (forcingFile == "realtime")
                     model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                 if(lateralSourcesData.All(lsd => lsd.Feature != lateralSource))

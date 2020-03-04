@@ -8,6 +8,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -733,7 +734,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    AddLateralSourceData(new Model1DLateralSourceData { Feature = lateralSource });
+                    
+                    var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource };
+                    if (lateralSource.Branch is IPipe pipe)
+                    {
+                        model1DLateralSourceData.Compartment = pipe.SourceCompartmentName.Equals(lateralSource.Name)
+                            ? pipe.SourceCompartment
+                            : pipe.TargetCompartment;
+                    }
+                    //lateralSource.Name = HydroNetworkHelper.GetUniqueFeatureName(Network, lateralSource, true);
+                    NamingHelper.MakeNamesUnique(Network.LateralSources);
+                    AddLateralSourceData(model1DLateralSourceData);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     RemoveLateralSourceData(lateralSource);
