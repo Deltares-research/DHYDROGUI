@@ -28,20 +28,20 @@ forcingfile=FlowFM_boundaryconditions1d.bc
 isOnOutletCompartment=true
 
 [Lateral]
-id=LateralSource_1D_1
-name=LateralSource_1D_1
+id=put9
+name=put9
 nodeId=put9
 discharge=FlowFM_lateral_sources.bc
 
 [Lateral]
-id=LateralSource_1D_2
-name=LateralSource_1D_2
+id=lei3
+name=lei3
 nodeId=put10
 discharge=FlowFM_lateral_sources.bc
 
 [Lateral]
-id=LateralSource_1D_3
-name=LateralSource_1D_3
+id=put10
+name=put10
 nodeId=put10
 discharge=FlowFM_lateral_sources.bc
 
@@ -118,7 +118,7 @@ nodeId=put9
 discharge=realtime
 
 [Lateral]
-id=lei3
+id=lei31
 name=lei3
 nodeId=put10
 discharge=realtime
@@ -316,7 +316,7 @@ nodeId=put35
 discharge=realtime
 
 [Lateral]
-id=lei31
+id=lei311
 name=lei31
 nodeId=put36
 discharge=realtime

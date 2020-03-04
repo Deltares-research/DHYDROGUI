@@ -82,7 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        [Ignore("Add when acceptance data is available")]
         public void GivenRunningDeltaShellGuiWithImportedGwswModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
             string acceptanceModelName,
             int preconditionExpectedBranchFeaturesCount,

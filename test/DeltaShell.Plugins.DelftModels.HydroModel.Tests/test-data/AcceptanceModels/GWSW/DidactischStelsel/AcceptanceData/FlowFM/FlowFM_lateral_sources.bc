@@ -3,7 +3,7 @@
     fileType              = boundConds          
 
 [forcing]
-    name                  = LateralSource_1D_1  
+    name                  = put9                
     function              = constant            
     timeInterpolation     = linear              
     quantity              = lateral_discharge   
@@ -11,7 +11,7 @@
     0.00306 
 
 [forcing]
-    name                  = LateralSource_1D_2  
+    name                  = lei3                
     function              = constant            
     timeInterpolation     = linear              
     quantity              = lateral_discharge   
@@ -19,7 +19,7 @@
     0.00333 
 
 [forcing]
-    name                  = LateralSource_1D_3  
+    name                  = put10               
     function              = constant            
     timeInterpolation     = linear              
     quantity              = lateral_discharge   
