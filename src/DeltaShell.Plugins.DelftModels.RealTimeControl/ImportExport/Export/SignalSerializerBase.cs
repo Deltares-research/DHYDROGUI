@@ -22,20 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             yield return signalBase.StoreAsRule
-                       ? new XElement(xNamespace + "rule")
-                       : new XElement(xNamespace + "signal");
-        }
-
-        /// <summary>
-        ///     <returns> </returns>
-        public virtual IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        {
-            yield break;
+                             ? new XElement(xNamespace + "rule")
+                             : new XElement(xNamespace + "signal");
         }
     }
 }
