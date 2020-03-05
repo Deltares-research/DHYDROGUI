@@ -91,48 +91,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        // TODO STW, remove these 3 private variables and the method below. This has to be moved to the framework.
-        private const string pluginVersionTableName = "PluginVersion";
-        private const string pluginNameColumnName = "PluginName";
-        private const string pluginFileVersionColumnName = "VersionString";
-
-        private static Dictionary<string, string> GetColumnDataFromPluginTable(string path)
-        {
-            var result = new Dictionary<string, string>();
-
-            using (var dbConnection = new SQLiteConnection($"Data Source={path};"))
-            {
-                dbConnection.Open();
-                bool tableExists;
-
-                using (var command = dbConnection.CreateCommand())
-                {
-                    var tableExistsQuery = $"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{pluginVersionTableName}';";
-                    command.CommandText = tableExistsQuery;
-                    tableExists = ((long)command.ExecuteScalar()) == 1l;
-                }
-
-                if (tableExists)
-                {
-                    using (var command = dbConnection.CreateCommand())
-                    {
-                        command.CommandText = $"SELECT * FROM {pluginVersionTableName}";
-                        using (var reader = command.ExecuteReader())
-                        {
-                           while (reader.Read())
-                           {
-                                var pluginName = (string)reader[pluginNameColumnName];
-                                var pluginFileVersion = (string) reader[pluginFileVersionColumnName];
-                                result.Add(pluginName, pluginFileVersion);
-                           }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
         /// <summary>
         /// If the RTC loads a project where the <see cref="FileFormatVersion"/> is 3.5.0.0 or lower it should update the RTC.
         /// Because of the current database table structure of RTC it is not possible to use the NHibernate LegacyLoader or DataAccessListener to update
@@ -145,17 +103,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private bool ShouldUpgradeDataBaseUsingSqlQueries(string path)
         {
             // TODO STW, fix this once the DSF supports retrieval of the PluginFileFormatVersions.
-            var pluginVersions = GetColumnDataFromPluginTable(path);
-            //var pluginVersions = Application.HybridProjectRepository.GetPluginFileFormatVersions(path);
+            var pluginVersions = Application.HybridProjectRepository.GetFileFormatVersions(path);
 
-            if (pluginVersions.TryGetValue(Name, out string versionString))
+            if (pluginVersions.TryGetValue(Name, out Version currentVersion))
             {
-                var currentVersion = new Version(versionString);
                 var needsUpgradingVersion = new Version(3,5,0,0);
 
                 if (currentVersion <= needsUpgradingVersion)
                 {
-
                     return true;
                 }
             }
