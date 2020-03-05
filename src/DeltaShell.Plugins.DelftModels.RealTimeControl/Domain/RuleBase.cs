@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using ValidationAspects;
@@ -9,18 +8,18 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public abstract class RuleBase : RtcBaseObject
+    public abstract class RuleBase : RtcBaseObject, IItemContainer
     {
         [Aggregation]
-        public IEventedList<Input> Inputs { get; set; }
+        public IEventedList<IInput> Inputs { get; set; }
 
         [Aggregation]
         public IEventedList<Output> Outputs { get; set; }
 
-        protected RuleBase() : base()
+        protected RuleBase()
         {
             Name = RuleProvider.GetTitle(GetType());
-            Inputs = new EventedList<Input>();
+            Inputs = new EventedList<IInput>();
             Outputs = new EventedList<Output>();
         }
 
@@ -32,48 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public virtual bool IsLinkedFromSignal()
         {
             return CanBeLinkedFromSignal();
-        }
-
-        /// <summary>
-        /// Converts the information of the rule needed for writing the tools config file to an xml element.
-        /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return new XElement(xNamespace + "rule");
-        }
-
-        /// <summary>
-        /// some rule might require their output logged
-        /// eg. Integral part for PID rule
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        ///// <summary>
-        ///// some rule might require their output logged
-        ///// eg. Integral part for PID rule
-        ///// </summary>
-        ///// <returns></returns>
-        //public virtual IEnumerable<XElement> ToOutputXml(XNamespace xNamespace)
-        //{
-        //    yield break;
-        //}
-
-        /// <summary>
-        /// implement this if the rule needs to write some state to the
-        /// state_import.xml file.
-        /// eg. Integral part for PID rule
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        {
-            yield break;
         }
 
         [ValidationMethod]
@@ -98,13 +55,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public override object Clone()
-        {
-            var ruleBase = (RuleBase)Activator.CreateInstance(GetType());
-            ruleBase.CopyFrom(this);
-            return ruleBase;
-        }
-
         public override void CopyFrom(object source)
         {
             var ruleBase = source as RuleBase;
@@ -113,5 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 base.CopyFrom(source);
             }
         }
+
+        public abstract IEnumerable<object> GetDirectChildren();
     }
 }

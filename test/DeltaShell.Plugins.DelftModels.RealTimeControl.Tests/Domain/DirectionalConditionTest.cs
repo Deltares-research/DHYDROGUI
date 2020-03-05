@@ -1,8 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 {
@@ -15,24 +17,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private const string InputName = "AlarmREGEN";
         private const string InputParameterName = "DeadBandTime";
         private const string TrueReference = "REGEN-ORANGE";
-        private const string TrueAndFalseReference = "Thunersee Messung";
         private const string FalseReference = "REGEN-ROT";
 
-        private MockRepository mocks;
-        private IControlGroup controlGroup;
         private PIDRule trueRule;
         private PIDRule falseRule;
-        private PIDRule trueAndFalseRule;
         private DirectionalCondition directionalCondition;
 
         [SetUp]
         public void SetUp()
         {
-            mocks = new MockRepository();
-            controlGroup = mocks.StrictMock<IControlGroup>();
             trueRule = new PIDRule { Name = TrueReference };
             falseRule = new PIDRule { Name = FalseReference };
-            trueAndFalseRule = new PIDRule { Name = TrueAndFalseReference };
 
             directionalCondition = new DirectionalCondition
             {
@@ -53,13 +48,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             directionalCondition.TrueOutputs.Add(trueRule);
             directionalCondition.FalseOutputs.Add(falseRule);
 
-            Assert.AreEqual(ExpectedXml(), directionalCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
+            var serializer = new DirectionalConditionSerializer(directionalCondition);
+            Assert.AreEqual(ExpectedXml(), serializer.ToXml(Fns, "").First().ToString(SaveOptions.DisableFormatting));
         }
 
         private string ExpectedXml()
         {
             var seriesOne = RtcXmlTag.Input + InputName + "/" + InputParameterName;
-            var previousTimeStep = seriesOne + DirectionalCondition.TimeLagPostFix;
+            var previousTimeStep = seriesOne + "-1";
 
             return
                 "<trigger xmlns=\"" + Fns.ToString() + "\">" +

@@ -8,6 +8,12 @@
       <File Id="DeltaShell.Plugins.DelftModels.RTCShapes.dll" Source="$(var.rtc_plugin_bin)DeltaShell.Plugins.DelftModels.RTCShapes.dll" />
       <File Id="DeltaShell.Plugins.DelftModels.RealTimeControl.dll" Source="$(var.rtc_plugin_bin)DeltaShell.Plugins.DelftModels.RealTimeControl.dll" />
       <File Id="DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.dll" Source="$(var.rtc_gui_plugin_bin)DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.dll" />
+      <File Id="FParsec.dll" Source="$(var.rtc_plugin_bin)FParsec.dll" />
+      <File Id="FParsecCS.dll" Source="$(var.rtc_plugin_bin)FParsecCS.dll" />
+      <File Id="FParsecPipes.dll" Source="$(var.rtc_plugin_bin)FParsec-Pipes.dll" />
+      <File Id="FSharp.Core.dll" Source="$(var.rtc_plugin_bin)FSharp.Core.dll" />
+      <File Id="MathematicalExpressionParser.Core.dll" Source="$(var.rtc_plugin_bin)MathematicalExpressionParser.Core.dll" />
+      <File Id="System.ValueTuple.dll" Source="$(var.rtc_plugin_bin)System.ValueTuple.dll" />
     </Component>
   </Directory>
   <?undef rtc_gui_plugin_bin ?>

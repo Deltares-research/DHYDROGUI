@@ -32,22 +32,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         /// <summary>
-        /// Gets the control group name from the xml element id, provided that it does not belong to a connection point.
+        /// Gets the control group name from the xml element id.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The control group name</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>id is expected to not be NULL.</remarks>
         public static string GetControlGroupNameFromElementId(string id)
         {
-            var tags = GetAllTagsFromId(id).ToList();
+            string controlGroupName = id.Split('/').FirstOrDefault();
 
-            if (tags.Any(t => RtcXmlTag.ConnectionPointTags.Contains(t))) return null;
-
-            tags.ForEach(t => id = id.Replace(t, string.Empty));
-
-            var controlGroupName = id.Split('/').FirstOrDefault();
+            string tag = GetTag(controlGroupName);
+            if (tag != null)
+            {
+                controlGroupName = controlGroupName.Substring(tag.Length);
+            }
 
             return controlGroupName;
+        }
+
+        private static string GetTag(string str)
+        {
+            var regex = new Regex(@"^\[.*?\]");
+            return regex.IsMatch(str)
+                       ? regex.Match(str).Value
+                       : null;
         }
 
         /// <summary>
@@ -82,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding connection point.</returns>
         /// <remarks>Parameter name is expected to not be NULL.</remarks>
-        public static ConnectionPoint GetByName<T>(this IEnumerable<ConnectionPoint> connectionPoints, string name, ILogHandler logHandler) where T : ConnectionPoint
+        public static T GetByName<T>(this IEnumerable<ConnectionPoint> connectionPoints, string name, ILogHandler logHandler) where T : ConnectionPoint
         {
             if (connectionPoints == null) return null;
 
@@ -170,7 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding rule.</returns>
         /// <remarks>Parameter id is expected to not be NULL.</remarks>
-        public static ConditionBase GetConditionByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : ConditionBase
+        public static T GetConditionByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : ConditionBase
         {
             if (controlGroup == null) return null;
 
@@ -183,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             if (condition == null)
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___, conditionName, RealTimeControlXMLFiles.XmlData);
 
-            return condition;
+            return (T) condition;
         }
 
 

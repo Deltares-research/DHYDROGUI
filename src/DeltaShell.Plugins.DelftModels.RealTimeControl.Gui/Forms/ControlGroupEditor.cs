@@ -4,10 +4,12 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Swf.Graph;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -17,6 +19,7 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -41,34 +44,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public IGui Gui { get; set; } // selection and opening views
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (ControlGroupEditor));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditor));
 
         private ControlGroupEditorViewContext context;
         private ControlGroupEditorController controller;
 
         public ControlGroupEditorController Controller
         {
-            get { return controller; }
-            private set { controller = value; }
+            get => controller;
+            private set => controller = value;
         }
 
         private ControlGroup controlGroup;
-        
-        private IList<ShapeBase> shapesInputs = new List<ShapeBase>();
-        private IList<ShapeBase> shapesOutputs = new List<ShapeBase>();
-        private IList<ShapeBase> shapesRules = new List<ShapeBase>();
-        private IList<ShapeBase> shapesConditions = new List<ShapeBase>();
-        private IList<ShapeBase> shapesSignals = new List<ShapeBase>();
+
+        private IList<ShapeBase> shapes = new List<ShapeBase>();
 
         public ControlGroupEditor()
         {
             InitializeComponent();
             Text = "ControlGroupEditor";
 
-            controller = new ControlGroupEditorController
-                {
-                    GetAutoResizeState = () => toolStripButtonResize.Checked
-                };
+            controller = new ControlGroupEditorController {GetAutoResizeState = () => toolStripButtonResize.Checked};
 
             graphControl.ScrollBars = true;
             graphControl.ReadOnly = false;
@@ -88,33 +84,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
         }
 
-        void graphControl_OnShowProperties(object sender, object[] props)
+        private void graphControl_OnShowProperties(object sender, object[] props)
         {
             // Hack : need to do this after selection is changed (after mouse up is handled)
             ValidateButtons();
         }
-        
+
         private void GraphControlOnOnShapeRemove(object sender, Shape shape)
         {
-            if (shape is InputItemShape)
+            if (shape is ShapeBase shapeBase)
             {
-                shapesInputs.Remove((ShapeBase) shape);
-            }
-            if (shape is OutputItemShape)
-            {
-                shapesOutputs.Remove((ShapeBase) shape);
-            }
-            if (shape is RuleShape)
-            {
-                shapesRules.Remove((ShapeBase) shape);
-            }
-            if (shape is ConditionShape)
-            {
-                shapesConditions.Remove((ShapeBase) shape);
-            }
-            if (shape is SignalShape)
-            {
-                shapesSignals.Remove((ShapeBase)shape);
+                shapes.Remove(shapeBase);
             }
 
             UpdateShapesInViewContext();
@@ -123,35 +103,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void GraphControlOnOnShapeAdded(object sender, Shape shape)
         {
-            if (shape is InputItemShape)
+            if (shape is ShapeBase shapeBase)
             {
-                shapesInputs.Add((ShapeBase) shape);
-            }
-            if (shape is OutputItemShape)
-            {
-                shapesOutputs.Add((ShapeBase) shape);
-            }
-            if (shape is RuleShape)
-            {
-                shapesRules.Add((ShapeBase) shape);
-            }
-            if (shape is ConditionShape)
-            {
-                shapesConditions.Add((ShapeBase)shape);
-            }
-            if (shape is SignalShape)
-            {
-                shapesSignals.Add((ShapeBase)shape);
+                shapes.Add(shapeBase);
             }
 
             UpdateShapesInViewContext();
             ValidateButtons();
         }
 
-        public DelftTools.Controls.Swf.Graph.GraphControl GraphControl
-        {
-            get { return graphControl; }
-        }
+        public GraphControl GraphControl => graphControl;
 
         private void GraphControlMouseMove(object sender, MouseEventArgs e)
         {
@@ -166,15 +127,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void FixNegativeLocationsOfSelectedShapes()
         {
-            var selectedShapes = graphControl.GetSelectedShapes<ShapeBase>();
+            IEnumerable<ShapeBase> selectedShapes = graphControl.GetSelectedShapes<ShapeBase>();
 
-            foreach (var selectedShape in selectedShapes)
+            foreach (ShapeBase selectedShape in selectedShapes)
             {
-                var r = selectedShape.Rectangle;
-                if (!(r.Left < 0) && !(r.Top < 0)) continue;
+                RectangleF r = selectedShape.Rectangle;
+                if (!(r.Left < 0) && !(r.Top < 0))
+                {
+                    continue;
+                }
 
-                var left = r.Left < 0 ? 0.0f : r.Left;
-                var top = r.Top < 0 ? 0.0f : r.Top;
+                float left = r.Left < 0 ? 0.0f : r.Left;
+                float top = r.Top < 0 ? 0.0f : r.Top;
 
                 selectedShape.Rectangle = new RectangleF(left, top, r.Width, r.Height);
                 graphControl.NetronGraph.Refresh();
@@ -183,27 +147,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ValidateButtons()
         {
-            var canAlign = graphControl.GetSelectedShapes<ShapeBase>().Count() > 1;
+            bool canAlign = graphControl.GetSelectedShapes<ShapeBase>().Count() > 1;
             toolStripButtonAlignCenter.Enabled = canAlign;
             toolStripButtonAlignMiddle.Enabled = canAlign;
             toolStripButtonMakeSameHeight.Enabled = canAlign;
             toolStripButtonMakeSameWidth.Enabled = canAlign;
         }
-        
+
         public object Data
         {
-            get { return controlGroup; }
+            get => controlGroup;
             set
             {
-                shapesInputs.Clear();
-                shapesOutputs.Clear();
-                shapesRules.Clear();
-                shapesConditions.Clear();
-                shapesSignals.Clear();
+                shapes.Clear();
 
                 controlGroup = (ControlGroup) value;
                 controller.GraphControl = graphControl.NetronGraph;
-                context = new ControlGroupEditorViewContext {ControlGroup = controlGroup, AutoSize = toolStripButtonResize.Checked};
+                context = new ControlGroupEditorViewContext
+                {
+                    ControlGroup = controlGroup,
+                    AutoSize = toolStripButtonResize.Checked
+                };
                 controller.ControlGroup = controlGroup;
                 UpdateShapesInViewContext();
             }
@@ -213,23 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             context.ShapeList.Clear();
 
-            foreach (var shape in shapesInputs)
-            {
-                context.ShapeList.Add(shape);
-            }
-            foreach (var shape in shapesOutputs)
-            {
-                context.ShapeList.Add(shape);
-            }
-            foreach (var shape in shapesRules)
-            {
-                context.ShapeList.Add(shape);
-            }
-            foreach (var shape in shapesConditions)
-            {
-                context.ShapeList.Add(shape);
-            }
-            foreach (var shape in shapesSignals)
+            foreach (ShapeBase shape in shapes)
             {
                 context.ShapeList.Add(shape);
             }
@@ -237,8 +185,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public Image Image
         {
-            get { return null; }
-            set { }
+            get => null;
+            set {}
         }
 
         public void EnsureVisible(object item)
@@ -255,6 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 Log.WarnFormat("OnShowProperties: Gui not set.");
                 return;
             }
+
             try
             {
                 if (lastCreated != null)
@@ -263,12 +212,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     lastCreated = null;
                     return;
                 }
-                if ((props.Length == 1) && (props[0] is PropertyBag))
+
+                if (props.Length == 1 && props[0] is PropertyBag)
                 {
                     var propertyBag = (PropertyBag) props[0];
                     Gui.Selection = propertyBag.Owner.Tag;
                     return;
                 }
+
                 Gui.Selection = null;
             }
             catch (Exception exception)
@@ -280,57 +231,86 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void OnGraphControlContextMenu(object sender, MouseEventArgs e)
         {
             graphControl.ContextMenuItems.Clear();
-            var selectedShapes = graphControl.GetSelectedShapes<ShapeBase>().ToList();
+            List<ShapeBase> selectedShapes = graphControl.GetSelectedShapes<ShapeBase>().ToList();
 
             if (selectedShapes.Count == 1 && Model != null)
             {
-                if (selectedShapes[0].Tag is Input)
+                var selectedShape = selectedShapes[0];
+                var tag = selectedShape.Tag;
+
+                if (tag is Input)
                 {
-                    var locations = Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
+                    List<IFeature> locations =
+                        Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
 
                     if (locations.Count <= MaxLocationsToDisplayIndividually) // DELFT3DFM-1165
                     {
                         // retrieve locations from controlled models where values are available
-                        SetLocationsToContextMenu("Input locations", locations, InputLocationClick, selectedShapes[0]);
+                        SetLocationsToContextMenu("Input locations", locations, InputLocationClick, selectedShape);
                     }
 
-                    graphControl.ContextMenuItems.Add(new MenuItem("Choose input locations...", (s, ev) => OpenInputDialog(DataItemRole.Output, "Select Input")));
+                    graphControl.ContextMenuItems.Add(new MenuItem("Choose input locations...",
+                                                                   (s, ev) => OpenInputDialog(
+                                                                       DataItemRole.Output, "Select Input")));
                 }
-                if (selectedShapes[0].Tag is Output)
+
+                if (tag is Output)
                 {
-                    var locations = Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input).ToList();
+                    List<IFeature> locations =
+                        Model.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input).ToList();
 
                     if (locations.Count <= MaxLocationsToDisplayIndividually) // DELFT3DFM-1165
                     {
                         // retrieve locations from controlled models where values can be set
-                        SetLocationsToContextMenu("Output locations", locations, OutputLocationClick, selectedShapes[0]);
+                        SetLocationsToContextMenu("Output locations", locations, OutputLocationClick,
+                                                  selectedShape);
                     }
 
-                    graphControl.ContextMenuItems.Add(new MenuItem("Choose output locations...", (s, ev) => OpenInputDialog(DataItemRole.Input, "Select Output")));
+                    graphControl.ContextMenuItems.Add(new MenuItem("Choose output locations...",
+                                                                   (s, ev) => OpenInputDialog(
+                                                                       DataItemRole.Input, "Select Output")));
                 }
-                if (selectedShapes[0].Tag is ConditionBase)
+
+                if (tag is ConditionBase)
                 {
-                    graphControl.ContextMenuItems.Add(new MenuItem("Copy xml to clipboard", CopyXmlToClipboard) { Tag = selectedShapes[0].Tag });
-                    SetConvertConditionToContextMenu(selectedShapes[0]);
+                    graphControl.ContextMenuItems.Add(
+                        new MenuItem("Copy xml to clipboard", CopyXmlToClipboard)
+                        {
+                            Tag = tag
+                        });
+                    SetConvertConditionToContextMenu(selectedShape);
                 }
-                if ((selectedShapes[0].Tag is RuleBase))
+
+                if (tag is RuleBase)
                 {
-                    graphControl.ContextMenuItems.Add(new MenuItem("Copy xml to clipboard", CopyXmlToClipboard) { Tag = selectedShapes[0].Tag });
-                    SetConvertRuleToContextMenu(selectedShapes[0]);
+                    graphControl.ContextMenuItems.Add(
+                        new MenuItem("Copy xml to clipboard", CopyXmlToClipboard)
+                        {
+                            Tag = tag
+                        });
+                    SetConvertRuleToContextMenu(selectedShape);
                 }
-                if ((selectedShapes[0].Tag is SignalBase))
+
+                if (tag is SignalBase || tag is MathematicalExpression)
                 {
-                    graphControl.ContextMenuItems.Add(new MenuItem("Copy xml to clipboard", CopyXmlToClipboard) { Tag = selectedShapes[0].Tag });
+                    graphControl.ContextMenuItems.Add(
+                        new MenuItem("Copy xml to clipboard", CopyXmlToClipboard)
+                        {
+                            Tag = tag
+                        });
                 }
             }
+
             if (selectedShapes.Count >= 1)
             {
-                graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) { Tag = selectedShapes });
+                graphControl.ContextMenuItems.Add(new MenuItem("Copy", CopyAction) {Tag = selectedShapes});
             }
+
             if (RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet() && !selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Paste", PasteAction));
             }
+
             if (!selectedShapes.Any())
             {
                 graphControl.ContextMenuItems.Add(new MenuItem("Copy as image", CopyAsImageToClipboard));
@@ -341,14 +321,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void OpenInputDialog(DataItemRole role, string title)
         {
             var dialog = new InputSelectionDialog
-                             {
-                                 Text = title,
-                                 Features = Model.GetChildDataItemLocationsFromControlledModels(role).ToList(),
-                                 GetDataItemsForFeature = location =>
-                                                          Model.GetChildDataItemsFromControlledModelsForLocation(location)
-                                                               .Where(di => ((di.Role & role) == role))
-                                                               .ToList()
-                             };
+            {
+                Text = title,
+                Features = Model.GetChildDataItemLocationsFromControlledModels(role).ToList(),
+                GetDataItemsForFeature = location =>
+                    Model.GetChildDataItemsFromControlledModelsForLocation(location)
+                         .Where(di => (di.Role & role) == role)
+                         .ToList()
+            };
 
             if (dialog.ShowDialog() != DialogResult.OK)
             {
@@ -361,12 +341,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void PasteAction(object sender, EventArgs e)
         {
-            var clipBoardRtcObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
+            IEnumerable<ShapeBase> clipBoardRtcObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
 
-            var mea = PointToClient(MousePosition);
+            Point mea = PointToClient(MousePosition);
             if (clipBoardRtcObjects.Any())
             {
-                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(clipBoardRtcObjects, controller, mea);
+                RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(
+                    clipBoardRtcObjects, controller, mea);
             }
         }
 
@@ -404,83 +385,78 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void CopyXmlToClipboard(object sender, EventArgs e)
         {
-            var menuItem = (MenuItem) sender;
-            var baseType = menuItem.Tag.GetType().BaseType;
-            if (baseType == typeof (RuleBase))
+            object tag = ((MenuItem) sender).Tag;
+            if (tag is RtcBaseObject rtcObj)
             {
-                var rule = (RuleBase) menuItem.Tag;
-                CopyRuleXmlToClipboard(rule);
-            }
-            else if (baseType == typeof (ConditionBase))
-            {
-                var condition = (ConditionBase) menuItem.Tag;
-                CopyConditionXmlToClipboard(condition);
-            }
-            else if (baseType == typeof(SignalBase))
-            {
-                var signal= (SignalBase)menuItem.Tag;
-                CopySignalXmlToClipboard(signal);
+                CopyXmlToClipboard(rtcObj);
             }
         }
 
-        public void CopyRuleXmlToClipboard(RuleBase rule)
+        public void CopyXmlToClipboard(RtcBaseObject rtcObj)
         {
-            Clipboard.SetText(rule.ToXml(fns, controlGroup.Name).ToString());
-        }
+            RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcObj);
+            IEnumerable<XElement> listXElements = serializer.ToXml(fns, controlGroup.Name);
+            var stringBuilder = new StringBuilder();
+            foreach (XElement xElement in listXElements)
+            {
+                stringBuilder.Append(xElement+Environment.NewLine);
+            }
 
-        public void CopyConditionXmlToClipboard(ConditionBase condition)
-        {
-            Clipboard.SetText(condition.ToXml(fns, controlGroup.Name).ToString());
-        }
-
-        public void CopySignalXmlToClipboard(SignalBase signal)
-        {
-            Clipboard.SetText(signal.ToXml(fns, controlGroup.Name).ToString());
+            Clipboard.SetText(stringBuilder.ToString());
         }
 
         private void SetConvertRuleToContextMenu(Shape shape)
         {
-            var ruleBase = (RuleBase)shape.Tag;
+            var ruleBase = (RuleBase) shape.Tag;
             IEnumerable<Type> rulesToConvertTo = null;
             if (ruleBase.IsLinkedFromSignal())
             {
-                rulesToConvertTo = RuleProvider.GetAllRules().Where(rt => rt != ruleBase.GetType()).
-                    Where(rt => ((RuleBase)Activator.CreateInstance(rt)).CanBeLinkedFromSignal() == ruleBase.CanBeLinkedFromSignal());
+                rulesToConvertTo = RuleProvider.GetAllRules().Where(rt => rt != ruleBase.GetType())
+                                               .Where(rt => ((RuleBase) Activator.CreateInstance(rt))
+                                                            .CanBeLinkedFromSignal() ==
+                                                            ruleBase.CanBeLinkedFromSignal());
             }
             else
             {
                 rulesToConvertTo = RuleProvider.GetAllRules().Where(rt => rt != ruleBase.GetType());
             }
-                                              
-            graphControl.ContextMenuItems.Add(string.Format("Convert {0} to", RuleProvider.GetTitle(ruleBase.GetType())),
-                                              rulesToConvertTo.Select
-                                                  (
-                                                   ruleType => new MenuItem(RuleProvider.GetTitle(ruleType), OnConvertRuleType)
-                                                   {
-                                                       Tag = new DelftTools.Utils.Tuple<Shape, Type>(shape, ruleType)
-                                                   }
-                                                  ).ToArray());
+
+            graphControl.ContextMenuItems.Add(
+                string.Format("Convert {0} to", RuleProvider.GetTitle(ruleBase.GetType())),
+                rulesToConvertTo.Select
+                (
+                    ruleType =>
+                        new MenuItem(RuleProvider.GetTitle(ruleType), OnConvertRuleType)
+                        {
+                            Tag = new DelftTools.Utils.Tuple<Shape, Type>(
+                                shape, ruleType)
+                        }
+                ).ToArray());
         }
 
         private void SetConvertConditionToContextMenu(Shape shape)
         {
             var conditionBase = (ConditionBase) shape.Tag;
-            graphControl.ContextMenuItems.Add(string.Format("Convert {0} to", ConditionProvider.GetTitle(conditionBase.GetType())),
-                                              ConditionProvider.GetAllConditions().Where(rt => rt != conditionBase.GetType()).Select
-                                                  (
-                                                   conditionType => new MenuItem(ConditionProvider.GetTitle(conditionType), OnConvertConditionType)
-                                                                        {
-                                                                            Tag = new DelftTools.Utils.Tuple<Shape, Type>(shape, conditionType)
-                                                                        }
-                                                  ).ToArray());
+            graphControl.ContextMenuItems.Add(
+                string.Format("Convert {0} to", ConditionProvider.GetTitle(conditionBase.GetType())),
+                ConditionProvider.GetAllConditions().Where(rt => rt != conditionBase.GetType()).Select
+                (
+                    conditionType =>
+                        new MenuItem(ConditionProvider.GetTitle(conditionType),
+                                     OnConvertConditionType)
+                        {
+                            Tag = new DelftTools.Utils.Tuple<Shape, Type>(
+                                shape, conditionType)
+                        }
+                ).ToArray());
         }
 
         private void OnConvertRuleType(object sender, EventArgs e)
         {
-            var menuItem = (MenuItem)sender;
-            var tuple = (DelftTools.Utils.Tuple<Shape, Type>)menuItem.Tag;
-            var ruleBase = ((RuleBase)tuple.First.Tag);
-            var newType = tuple.Second;
+            var menuItem = (MenuItem) sender;
+            var tuple = (DelftTools.Utils.Tuple<Shape, Type>) menuItem.Tag;
+            var ruleBase = (RuleBase) tuple.First.Tag;
+            Type newType = tuple.Second;
 
             controlGroup.BeginEdit(string.Format("Converting condition from {0} to {1}",
                                                  ruleBase.GetType(), newType));
@@ -492,8 +468,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             var menuItem = (MenuItem) sender;
             var tuple = (DelftTools.Utils.Tuple<Shape, Type>) menuItem.Tag;
-            var conditionBase = ((ConditionBase) tuple.First.Tag);
-            var newType = tuple.Second;
+            var conditionBase = (ConditionBase) tuple.First.Tag;
+            Type newType = tuple.Second;
 
             controlGroup.BeginEdit(string.Format("Converting condition from {0} to {1}",
                                                  conditionBase.GetType(), newType));
@@ -501,39 +477,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             controlGroup.EndEdit();
         }
 
-        private void SetLocationsToContextMenu(string subMenuText, IEnumerable<IFeature> locations, EventHandler OnClick, Shape shape)
+        private void SetLocationsToContextMenu(string subMenuText, IEnumerable<IFeature> locations,
+                                               EventHandler OnClick, Shape shape)
         {
-            var featureTypes = locations.GroupBy(t => t.GetEntityType());
-            
+            IEnumerable<IGrouping<Type, IFeature>> featureTypes = locations.GroupBy(t => t.GetEntityType());
+
             var items = new List<MenuItem>();
 
             var action = new DelftTools.Utils.Tuple<Shape, EventHandler>(shape, OnClick);
 
             const int maxPerGroup = 30;
-            foreach (var featureType in featureTypes)
+            foreach (IGrouping<Type, IFeature> featureType in featureTypes)
             {
-                var choosableFeatures =
+                List<IFeature> choosableFeatures =
                     featureType.Where(f => ContainsDataItemsForShape(f, shape))
                                .OrderBy(f => f.ToString(), new AlphanumComparator()) //sort 'natural order' iso ASCII
                                .ToList();
 
                 if (choosableFeatures.Count == 0)
+                {
                     continue;
-                
+                }
+
                 var item = new MenuItem(featureType.Key.Name);
                 items.Add(item);
 
-                var featureGroups = choosableFeatures.SplitInGroups(maxPerGroup).ToList(); //split in to groups of 30 items
-                
+                List<IList<IFeature>>
+                    featureGroups =
+                        choosableFeatures.SplitInGroups(maxPerGroup).ToList(); //split in to groups of 30 items
+
                 if (featureGroups.Count == 1) //only one group, so just a few items: create subitems directly
                 {
                     featureGroups[0].ForEach(f => AddContextMenuItemForFeature(f, action, item));
                 }
                 else // many items, add some nesting to limit number of items per list
                 {
-                    foreach (var group in featureGroups)
+                    foreach (IList<IFeature> group in featureGroups)
                     {
-                        var groupName = group.First() + " -> " + group.Last();
+                        string groupName = group.First() + " -> " + group.Last();
                         var groupItem = new MenuItem(groupName);
                         item.MenuItems.Add(groupItem);
                         group.ForEach(f => AddContextMenuItemForFeature(f, action, groupItem));
@@ -547,13 +528,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private void AddContextMenuItemForFeature(IFeature subEntry, DelftTools.Utils.Tuple<Shape, EventHandler> action, MenuItem itemToAddTo)
+        private void AddContextMenuItemForFeature(IFeature subEntry, DelftTools.Utils.Tuple<Shape, EventHandler> action,
+                                                  MenuItem itemToAddTo)
         {
             var subItem = new MenuItem(subEntry.ToString())
-                {
-                    Tag = new DelftTools.Utils.Tuple<DelftTools.Utils.Tuple<Shape, EventHandler>, IFeature>(
-                            action, subEntry)
-                };
+            {
+                Tag = new DelftTools.Utils.Tuple<DelftTools.Utils.Tuple<Shape, EventHandler>, IFeature>(
+                    action, subEntry)
+            };
             subItem.Popup += LocationDataItemsPopup;
             subItem.MenuItems.Add(new MenuItem("{dummy}"));
             itemToAddTo.MenuItems.Add(subItem);
@@ -564,13 +546,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (shape is OutputItemShape)
             {
                 return Model.GetChildDataItemsFromControlledModelsForLocation(feature).Any(
-                    di => ((di.Role & DataItemRole.Input) == DataItemRole.Input));
+                    di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
             }
+
             if (shape is InputItemShape)
             {
                 return Model.GetChildDataItemsFromControlledModelsForLocation(feature).Any(
-                    di => ((di.Role & DataItemRole.Output) == DataItemRole.Output));
+                    di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
             }
+
             return false;
         }
 
@@ -579,30 +563,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             var menuItem = (MenuItem) sender;
             menuItem.MenuItems.Clear();
             var tuple = (DelftTools.Utils.Tuple<DelftTools.Utils.Tuple<Shape, EventHandler>, IFeature>) menuItem.Tag;
-            var location = tuple.Second;
-            var shapeEventHandlerTuple = tuple.First;
-            var shape = shapeEventHandlerTuple.First;
+            IFeature location = tuple.Second;
+            DelftTools.Utils.Tuple<Shape, EventHandler> shapeEventHandlerTuple = tuple.First;
+            Shape shape = shapeEventHandlerTuple.First;
 
-            var dataItems=new List<IDataItem>();
+            var dataItems = new List<IDataItem>();
 
             if (shape is OutputItemShape)
             {
                 dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(location).Where(
-                    di => ((di.Role & DataItemRole.Input) == DataItemRole.Input)).ToList();
+                    di => (di.Role & DataItemRole.Input) == DataItemRole.Input).ToList();
             }
             else if (shape is InputItemShape)
             {
                 dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(location).Where(
-                    di => ((di.Role & DataItemRole.Output) == DataItemRole.Output)).ToList();
+                    di => (di.Role & DataItemRole.Output) == DataItemRole.Output).ToList();
             }
 
             foreach (
-                var subMenuItem in
-                    dataItems.Select(
-                        dataItem => new MenuItem(dataItem.GetParameterName(), shapeEventHandlerTuple.Second)
-                            {
-                                Tag = new DelftTools.Utils.Tuple<Shape, IDataItem>(shape, dataItem)
-                            }))
+                MenuItem subMenuItem in
+                dataItems.Select(
+                    dataItem => new MenuItem(dataItem.GetParameterName(), shapeEventHandlerTuple.Second)
+                    {
+                        Tag = new DelftTools.Utils.Tuple<Shape, IDataItem>(shape, dataItem)
+                    }))
             {
                 menuItem.MenuItems.Add(subMenuItem);
             }
@@ -641,6 +625,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
                 }
             }
+
             shape.Text = dataItem.ToString();
             graphControl.NetronGraph.Invalidate();
         }
@@ -652,11 +637,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             // unlink any existing items connected to this item
             if (unlinkExisting)
             {
-                foreach (var linkee in source.LinkedBy.ToList())
+                foreach (IDataItem linkee in source.LinkedBy.ToList())
                 {
                     linkee.Unlink();
                 }
             }
+
             target.LinkTo(source);
 
             Model.EndEdit();
@@ -670,71 +656,88 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private static IFeature GetFeatureFromDragEvents(DragEventArgs dragEventArgs)
         {
             var dataObject = (DataObject) dragEventArgs.Data;
-            var formats = dataObject.GetFormats();
+            string[] formats = dataObject.GetFormats();
             return formats.Select(dataObject.GetData).OfType<IFeature>().FirstOrDefault();
         }
 
         private bool OnGraphControlGraphDragOver(object sender, DragEventArgs dragEventArgs)
         {
-            var point = PointToClient(new Point(dragEventArgs.X, dragEventArgs.Y));
-            var feature = GetFeatureFromDragEvents(dragEventArgs);
+            Point point = PointToClient(new Point(dragEventArgs.X, dragEventArgs.Y));
+            IFeature feature = GetFeatureFromDragEvents(dragEventArgs);
 
             if (feature != null)
             {
-                var entity = graphControl.NetronGraph.HitEntity(point);
+                Entity entity = graphControl.NetronGraph.HitEntity(point);
                 if (entity is Shape)
                 {
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (InputItemShape), DataItemRole.Output)) return true;
-                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (OutputItemShape), DataItemRole.Input)) return true;
+                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                                              DataItemRole.Output))
+                    {
+                        return true;
+                    }
+
+                    if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                                              DataItemRole.Input))
+                    {
+                        return true;
+                    }
                 }
+
                 dragEventArgs.Effect = DragDropEffects.None;
                 return true;
             }
+
             return false;
         }
 
         private bool OnGraphControlGraphDragDrop(object sender, DragEventArgs dragEventArgs)
         {
-            var point = PointToClient(new Point(dragEventArgs.X, dragEventArgs.Y));
-            var feature = GetFeatureFromDragEvents(dragEventArgs);
+            Point point = PointToClient(new Point(dragEventArgs.X, dragEventArgs.Y));
+            IFeature feature = GetFeatureFromDragEvents(dragEventArgs);
             if (feature != null)
             {
-                var entity = graphControl.NetronGraph.HitEntity(point);
+                Entity entity = graphControl.NetronGraph.HitEntity(point);
                 if (entity is Shape)
                 {
                     if (entity is InputItemShape)
                     {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (InputItemShape), DataItemRole.Output))
+                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                                                  DataItemRole.Output))
                         {
                             DropFeatureOnShape(feature, entity, DataItemRole.Output);
                         }
                     }
+
                     if (entity is OutputItemShape)
                     {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (OutputItemShape), DataItemRole.Input))
+                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                                                  DataItemRole.Input))
                         {
                             DropFeatureOnShape(feature, entity, DataItemRole.Input);
                         }
                     }
                 }
+
                 dragEventArgs.Effect = DragDropEffects.None;
                 return true;
             }
+
             return false;
         }
 
         private void DropFeatureOnShape(IFeature feature, Entity entity, DataItemRole role)
         {
-            var dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(feature);
-            var choices = dataItems.Where(e => (e.Role & role) == role).Select(e => e.GetParameterName()).ToArray();
+            IEnumerable<IDataItem> dataItems = Model.GetChildDataItemsFromControlledModelsForLocation(feature);
+            string[] choices = dataItems.Where(e => (e.Role & role) == role).Select(e => e.GetParameterName())
+                                        .ToArray();
             string answer;
             if (choices.Count() > 1)
             {
                 var dialog = new ListBasedDialog
-                                 {
-                                     DataSource = choices,
-                                     SelectionMode = SelectionMode.One
-                                 };
+                {
+                    DataSource = choices,
+                    SelectionMode = SelectionMode.One
+                };
                 if (DialogResult.OK == dialog.ShowDialog())
                 {
                     answer = (string) dialog.SelectedItems[0];
@@ -748,11 +751,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 answer = choices.FirstOrDefault();
             }
-            var dataItem = dataItems.FirstOrDefault(e => e.GetParameterName() == answer);
+
+            IDataItem dataItem = dataItems.FirstOrDefault(e => e.GetParameterName() == answer);
             Link((Shape) entity, dataItem);
         }
 
-        private bool CanLinkFeaturetoShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t, DataItemRole role)
+        private bool CanLinkFeaturetoShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t,
+                                           DataItemRole role)
         {
             if (entity.GetType() == t)
             {
@@ -762,12 +767,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     return true;
                 }
             }
+
             return false;
         }
 
         private void OnTsbConditionClick(object sender, EventArgs e)
         {
-            created = new StandardCondition {Name = NamingHelper.GetUniqueName("condition{0:D2}", controlGroup.Conditions, null)};
+            created = new StandardCondition
+            {
+                Name = NamingHelper.GetUniqueName("condition{0:D2}", controlGroup.Conditions, null)
+            };
             ResetNewObjectButtons();
             tsbCondition.CheckState = CheckState.Checked;
         }
@@ -793,9 +802,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             tsbInput.CheckState = CheckState.Checked;
         }
 
+        private void OnTsbMathExpressionSignalClick(object sender, EventArgs e)
+        {
+            created = new MathematicalExpression
+            {
+                Name = NamingHelper.GetUniqueName("f{0}", controlGroup.MathematicalExpressions, null)
+            };
+            ResetNewObjectButtons();
+            tsbMathExpression.CheckState = CheckState.Checked;
+        }
+
         private void OnTsbSignalClick(object sender, EventArgs e)
         {
-            created = new LookupSignal {Name = NamingHelper.GetUniqueName("lookup table{0:D2}", controlGroup.Signals, null)};
+            created = new LookupSignal
+            {
+                Name = NamingHelper.GetUniqueName("lookup table{0:D2}", controlGroup.Signals, null)
+            };
             ResetNewObjectButtons();
             tsbSignal.CheckState = CheckState.Checked;
         }
@@ -805,14 +827,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (created != null)
             {
                 var objecten = new List<object> {created};
-                var rule = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
-                var condition = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
-                var input = objecten.Where(c => c is Input).Cast<Input>().ToList();
-                var output = objecten.Where(c => c is Output).Cast<Output>().ToList();
-                var signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-                controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal,
-                                                           new Point((int) (e.X/graphControl.NetronGraph.Zoom),
-                                                                     (int) (e.Y/graphControl.NetronGraph.Zoom)));
+                List<RuleBase> rule = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
+                List<ConditionBase> condition = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
+                List<Input> input = objecten.Where(c => c is Input).Cast<Input>().ToList();
+                List<Output> output = objecten.Where(c => c is Output).Cast<Output>().ToList();
+                List<SignalBase> signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
+                List<MathematicalExpression> mathExpressions = objecten.Where(c => c is MathematicalExpression).Cast<MathematicalExpression>().ToList();
+                controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, mathExpressions,
+                                                           new Point((int) (e.X / graphControl.NetronGraph.Zoom),
+                                                                     (int) (e.Y / graphControl.NetronGraph.Zoom)));
 
                 lastCreated = created;
                 created = null;
@@ -827,12 +850,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             tsbCondition.CheckState = CheckState.Unchecked;
             tsbRule.CheckState = CheckState.Unchecked;
             tsbOutput.CheckState = CheckState.Unchecked;
-            tsbSignal.CheckState=CheckState.Unchecked;
+            tsbSignal.CheckState = CheckState.Unchecked;
+            tsbMathExpression.CheckState = CheckState.Unchecked;
         }
 
         public IViewContext ViewContext
         {
-            get { return context; }
+            get => context;
             set
             {
                 context = (ControlGroupEditorViewContext) value;
@@ -841,30 +865,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 if (context.ShapeList == null)
                 {
                     ResumeLayout();
-                    throw new NullReferenceException("Invalid view context is passed to ControlGroupEditor, shape list can't be null");
+                    throw new NullReferenceException(
+                        "Invalid view context is passed to ControlGroupEditor, shape list can't be null");
                 }
 
                 toolStripButtonResize.Checked = context.AutoSize;
 
-                var graphControlShapes = graphControl.GetShapes<ShapeBase>().ToList();
+                List<ShapeBase> graphControlShapes = graphControl.GetShapes<ShapeBase>().ToList();
                 if (graphControlShapes.Count == context.ShapeList.Count)
                 {
                     // copy shape locations from view context to graph control
                     var i = 0;
-                    foreach (var contextShape in context.ShapeList)
+                    foreach (ShapeBase contextShape in context.ShapeList)
                     {
                         graphControlShapes[i].Location = new PointF(contextShape.X, contextShape.Y);
                         graphControlShapes[i].AutoResize = context.AutoSize;
 
                         if (!contextShape.Rectangle.IsEmpty)
                         {
-                            graphControlShapes[i].Rectangle = new RectangleF(contextShape.Rectangle.Location, contextShape.Rectangle.Size);
+                            graphControlShapes[i].Rectangle =
+                                new RectangleF(contextShape.Rectangle.Location, contextShape.Rectangle.Size);
                         }
-                        
+
                         i++;
                     }
                 }
-                
+
                 UpdateShapesInViewContext();
 
                 ResumeLayout();
@@ -875,22 +901,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ToolStripButtonAlignCenterClick(object sender, EventArgs e)
         {
-            var center = graphControl.GetSelectedShapes<ShapeBase>().Average(s => s.Width/2 + s.Rectangle.X);
+            float center = graphControl.GetSelectedShapes<ShapeBase>().Average(s => (s.Width / 2) + s.Rectangle.X);
 
             DoWithSelectedShapes((shape, currentRectangle) =>
-                {
-                    shape.Rectangle = new RectangleF(center - (currentRectangle.Width/2), currentRectangle.Y, currentRectangle.Width, currentRectangle.Height);
-                });
+            {
+                shape.Rectangle = new RectangleF(center - (currentRectangle.Width / 2),
+                                                 currentRectangle.Y, currentRectangle.Width,
+                                                 currentRectangle.Height);
+            });
         }
 
         private void ToolStripButtonAlignMiddleClick(object sender, EventArgs e)
         {
-            var middle = graphControl.GetSelectedShapes<ShapeBase>().Average(s => s.Height / 2 + s.Rectangle.Y);
+            float middle = graphControl.GetSelectedShapes<ShapeBase>().Average(s => (s.Height / 2) + s.Rectangle.Y);
 
             DoWithSelectedShapes((shape, currentRectangle) =>
-                {
-                    shape.Rectangle = new RectangleF(currentRectangle.X, middle - (currentRectangle.Height/2), currentRectangle.Width, currentRectangle.Height);
-                });
+            {
+                shape.Rectangle = new RectangleF(currentRectangle.X,
+                                                 middle - (currentRectangle.Height / 2),
+                                                 currentRectangle.Width, currentRectangle.Height);
+            });
         }
 
         private void ToolStripButtonMakeSameHeightClick(object sender, EventArgs e)
@@ -900,12 +930,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 toolStripButtonResize.Checked = false;
             }
 
-            var maxHeight = graphControl.GetSelectedShapes<ShapeBase>().Max(s => s.Rectangle.Height);
+            float maxHeight = graphControl.GetSelectedShapes<ShapeBase>().Max(s => s.Rectangle.Height);
 
             DoWithSelectedShapes((shape, currentRectangle) =>
-                {
-                    shape.Rectangle = new RectangleF(currentRectangle.X, currentRectangle.Y, currentRectangle.Width, maxHeight);
-                });
+            {
+                shape.Rectangle = new RectangleF(currentRectangle.X, currentRectangle.Y,
+                                                 currentRectangle.Width, maxHeight);
+            });
         }
 
         private void ToolStripButtonMakeSameWidthClick(object sender, EventArgs e)
@@ -915,19 +946,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 toolStripButtonResize.Checked = false;
             }
 
-            var maxWidth = graphControl.GetSelectedShapes<ShapeBase>().Max(s => s.Rectangle.Width);
+            float maxWidth = graphControl.GetSelectedShapes<ShapeBase>().Max(s => s.Rectangle.Width);
 
             DoWithSelectedShapes((shape, currentRectangle) =>
-                {
-                    shape.Rectangle = new RectangleF(currentRectangle.X, currentRectangle.Y, maxWidth, currentRectangle.Height);
-                });
+            {
+                shape.Rectangle = new RectangleF(currentRectangle.X, currentRectangle.Y, maxWidth,
+                                                 currentRectangle.Height);
+            });
         }
 
         private void DoWithSelectedShapes(Action<ShapeBase, RectangleF> shapeAction)
         {
             graphControl.NetronGraph.SuspendLayout();
 
-            foreach (var shape in graphControl.GetSelectedShapes<ShapeBase>())
+            foreach (ShapeBase shape in graphControl.GetSelectedShapes<ShapeBase>())
             {
                 shapeAction(shape, shape.Rectangle);
             }
@@ -938,7 +970,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ToolStripButtonResizeCheckedChanged(object sender, EventArgs e)
         {
-            foreach (var shape in graphControl.GetShapes<ShapeBase>())
+            foreach (ShapeBase shape in graphControl.GetShapes<ShapeBase>())
             {
                 shape.AutoResize = toolStripButtonResize.Checked;
             }
@@ -949,16 +981,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             graphControl.NetronGraph.Invalidate();
-        }
-
-        private void tsbInput_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void graphControl_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

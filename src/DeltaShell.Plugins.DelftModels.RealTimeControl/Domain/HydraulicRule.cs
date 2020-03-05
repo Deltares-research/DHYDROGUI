@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -14,7 +11,7 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public class HydraulicRule : RuleBase, IItemContainer
+    public class HydraulicRule : RuleBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydraulicRule));
         private const string LookupTable = "lookupTable";
@@ -24,7 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public HydraulicRule()
         {
             Function = DefineFunction();
-            XmlTag = RtcXmlTag.HydraulicRule;
         }
 
         /// <summary>
@@ -45,72 +41,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             function.Components.Add(new Variable<double>("f"));
             function.Name = LookupTable; 
             return function;
-        }
-
-        // Example of ToXml:
-        //  <lookupTable id ="[HydraulicRule]control_group_1/lookup_table_rule" >
-        //      <table>
-        //          <record x="1" y="5"/>
-        //          <record x="2" y="4"/>
-        //          <record x="3" y="3"/>
-        //      </table>
-        //      <interpolationOption>LINEAR</interpolationOption>
-        //      <extrapolationOption>BLOCK</extrapolationOption>
-        //      <input>
-        //          <x ref="EXPLICIT">[Delayed][Input]ObservationPoint1/Water level(op)[0]</x>
-        //      </input>
-        //      <output>
-        //          <y>[Output]Weir1/Crest level(s)</y>
-        //      </output>
-        //  </lookupTable>
-
-        /// <summary>
-        /// Converts the information of the hydraulic rule needed for writing the tools config file to an xml element.
-        /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            var result = base.ToXml(xNamespace, prefix);
-            IEventedList<Record> table = new EventedList<Record>();
-            foreach (var x in Function.Arguments[0].Values)
-            {
-                table.Add(new Record{X = (double) x, Y = (double) Function[x]});
-            }
-
-            var xElementsInput = Inputs.Select(input => input.ToXml(xNamespace, "x")).ToList();
-
-            if(timeLagInTimeSteps > 0)
-            {
-                //input will be an unitDelay component with the name "delayed<Name>"
-                //a time lag index is needed as 'pointer' and will be added to the name [timeLagInTimeSteps]
-                foreach (var xElementInput in xElementsInput)
-                {
-                    var xElement = xElementInput.Elements().First();
-                    // we need the last element from vector with length (timeLagInTimeSteps-1)
-                    xElement.Value = string.Format(RtcXmlTag.Delayed + xElement.Value + $"[{timeLagInTimeSteps - 2}]");
-                    xElement.Add(new XAttribute("ref","EXPLICIT"));
-                }
-            }
-            else
-            {
-                foreach (var xElementInput in xElementsInput)
-                {
-                    var xElement = xElementInput.Elements().First();
-                    xElement.Add(new XAttribute("ref", "IMPLICIT"));
-                }
-
-            }
-
-            result.Add(new XElement(xNamespace + "lookupTable",
-                            new XAttribute("id", GetXmlNameWithTag(prefix)),
-                            new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
-                            new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
-                            new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),
-                            xElementsInput,
-                            Outputs.Select(output => output.ToXml(xNamespace, "y", null))));
-            return result;
         }
 
         [NoNotifyPropertyChange]
@@ -207,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override object Clone()
         {
-            var hydraulicRule = (HydraulicRule)Activator.CreateInstance(GetType());
+            var hydraulicRule = new HydraulicRule();
             hydraulicRule.CopyFrom(this);
             return hydraulicRule;
         }
@@ -226,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public IEnumerable<object> GetDirectChildren()
+        public override IEnumerable<object> GetDirectChildren()
         {
             yield return Function;
         }

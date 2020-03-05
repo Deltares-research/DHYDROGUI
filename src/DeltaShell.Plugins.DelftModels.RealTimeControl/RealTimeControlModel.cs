@@ -27,6 +27,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Validation;
@@ -449,9 +450,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 var connectionPoint = propertyValueConverter.OriginalValue as ConnectionPoint;
 
-                if (connectionPoint != null)
-                {
-                    return connectionPoint.XmlName;
+                switch (connectionPoint) {
+                    case Input input:
+                        var inputSerializer = new InputSerializer(input);
+                        return inputSerializer.GetXmlName();
+                    case Output output:
+                        var outputSerializer = new OutputSerializer(output);
+                        return outputSerializer.GetXmlName();
                 }
             }
 

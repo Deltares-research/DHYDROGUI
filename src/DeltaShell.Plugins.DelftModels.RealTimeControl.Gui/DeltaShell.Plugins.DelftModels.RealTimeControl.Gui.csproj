@@ -41,6 +41,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -74,20 +75,23 @@
     <Compile Include="Forms\InputSelectionDialog.Designer.cs">
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PropertyGrid\ControlGroupProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\DirectionalConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\FactorRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydraulicRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\InputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\IntervalRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\LookupSignalProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\OutputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PIDRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RelativeTimeRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\StandardConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\ControlGroupProperties.cs" />
+    <Compile Include="Forms\Properties\DirectionalConditionProperties.cs" />
+    <Compile Include="Forms\Properties\FactorRuleProperties.cs" />
+    <Compile Include="Forms\Properties\HydraulicRuleProperties.cs" />
+    <Compile Include="Forms\Properties\InputProperties.cs" />
+    <Compile Include="Forms\Properties\IntervalRuleProperties.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairArrayConverter.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairPropertyDescriptor.cs" />
+    <Compile Include="Forms\Properties\LookupSignalProperties.cs" />
+    <Compile Include="Forms\Properties\MathematicalExpressionProperties.cs" />
+    <Compile Include="Forms\Properties\OutputProperties.cs" />
+    <Compile Include="Forms\Properties\PIDRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RelativeTimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RuleProperties.cs" />
+    <Compile Include="Forms\Properties\StandardConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeRuleProperties.cs" />
     <Compile Include="Forms\Connection.cs" />
     <Compile Include="Forms\RtcExporterDialog.cs">
       <SubType>Form</SubType>
@@ -95,8 +99,6 @@
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
-    <Compile Include="NodePresenters\InputNodePresenter.cs" />
-    <Compile Include="NodePresenters\OutputNodePresenter.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenter.cs" />
     <Compile Include="NodePresenters\RtcObjectNodePresenter.cs">
       <SubType>Code</SubType>
@@ -328,10 +330,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\propertieshs1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\region.png" />
+    <None Include="Resources\mathexpression.png" />
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

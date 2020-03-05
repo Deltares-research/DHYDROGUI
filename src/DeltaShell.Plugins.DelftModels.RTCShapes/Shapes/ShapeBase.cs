@@ -120,10 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
         public override PointF ConnectionPoint(Connector c)
         {
-            if (c == TopNode) return new PointF(Rectangle.Left + (Rectangle.Width * 1 / 2), Rectangle.Top);
-            if (c == BottomNode) return new PointF(Rectangle.Left + (Rectangle.Width * 1 / 2), Rectangle.Bottom);
-            if (c == LeftNode) return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height * 1 / 2));
-            if (c == RightNode) return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height * 1 / 2));
+            if (c == TopNode) return new PointF(Rectangle.Left + (Rectangle.Width / 2), Rectangle.Top);
+            if (c == BottomNode) return new PointF(Rectangle.Left + (Rectangle.Width / 2), Rectangle.Bottom);
+            if (c == LeftNode) return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height / 2));
+            if (c == RightNode) return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height / 2));
             return new PointF(0, 0);
         }
 

@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 using log4net;
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return node;
         }
 
-        private static XDocument GetRuntimeXDocument(string xsdPath)
+        private static XDocument GetRuntimeConfigXDocument(string xsdPath)
         {
             var xDocument = new XDocument();
 
@@ -124,11 +125,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return xDocument;
         }
 
-        public static XDocument GetRuntimeXml(string xsdPath, RealTimeControlModel realTimeControlModel, bool limitMemory, int logLevel)
+        public static XDocument GetRuntimeConfigXml(string xsdPath, RealTimeControlModel realTimeControlModel, bool limitMemory, int logLevel)
         {
             var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcRuntimeConfigxsd });
 
-            var xDocument = GetRuntimeXDocument(xsdPath);
+            var xDocument = GetRuntimeConfigXDocument(xsdPath);
 
             if (xDocument.Root != null)
             {
@@ -162,9 +163,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             if (xDocument.Root != null)
             {
-                // xDocument.Root.Add(GetXmlSignalsFromControlGroups(controlGroups)); // Will be used later
                 xDocument.Root.Add(GetXmlRulesFromControlGroups(controlGroups, includeExtraStatesForRestart));
-                xDocument.Root.Add(GetXmlConditionsFromControlGroups(controlGroups));
+                xDocument.Root.Add(GetXmlConditionsAndExpressionsFromControlGroups(controlGroups));
             }
 
             AddUnitDelayComponents(xDocument, controlGroups);
@@ -233,22 +233,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return xDocument;
         }
 
-        private static XElement GetXmlConditionsFromControlGroups(IEnumerable<ControlGroup> controlGroups)
+        private static XElement GetXmlConditionsAndExpressionsFromControlGroups(IEnumerable<ControlGroup> controlGroups)
         {
             var triggersElement = new XElement(Fns + "triggers");
             foreach (ControlGroup group in controlGroups)
             {
-                //find start condition for each output
-                foreach (Output output in group.Outputs)
+                IEnumerable<RtcBaseObject> startObjects = ControlGroupHelper
+                                                          .RetrieveTriggerObjects(group)
+                                                          .Where(t => t is ConditionBase ||
+                                                                      t is MathematicalExpression);
+                foreach (RtcBaseObject startObject in startObjects)
                 {
-                    IList<RtcBaseObject> startObjects = ControlGroupHelper.StartObjectsForOutput(group, output);
-                    foreach (RtcBaseObject startObject in startObjects)
-                    {
-                        if (startObject is ConditionBase condition)
-                        {
-                            triggersElement.Add(condition.ToXml(Fns, GetGroupNameWithSeparator(group.Name)));
-                        }
-                    }
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(startObject);
+                    triggersElement.Add(serializer.ToXml(Fns, GetGroupNameWithSeparator(group.Name)));
                 }
             }
 
@@ -293,7 +290,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     if (signal is LookupSignal)
                     {
                         signal.StoreAsRule = true;
-                        rulesElementXmlContents.Add(signal.ToXml(Fns, groupNameWithSeparator));
+                        RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(signal);
+                        rulesElementXmlContents.Add(serializer.ToXml(Fns, groupNameWithSeparator).First());
                     }
                 }
 
@@ -305,7 +303,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // to be able to store a complete state.
                     if (includeExtraStatesForRestart || rule is PIDRule || rule is IntervalRule || rule is RelativeTimeRule)
                     {
-                        var outputXmlName = rule.Outputs.First().XmlName;
+                        var outputSerializer = new OutputSerializer(rule.Outputs.First());
+                        var outputXmlName = outputSerializer.GetXmlName();
                         if (!oneMemoryBackupPerOutput.Contains(outputXmlName) && group.Conditions.Any(c => (c.TrueOutputs.Contains(rule) || c.FalseOutputs.Contains(rule))))
                         {
                             // RTCTools needs extra rule for this controller
@@ -335,38 +334,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         input.SetPoint = setPointId;
                     }
 
-                    rulesElementXmlContents.Add(rule.ToXml(Fns, groupNameWithSeparator));
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rule);
+                    rulesElementXmlContents.Add(serializer.ToXml(Fns, groupNameWithSeparator).First());
                 }
             }
 
             rulesElement.Add(rulesElementXmlGlobalContents.Concat(rulesElementXmlContents));
 
             return rulesElement.HasElements ? rulesElement : null;
-        }
-
-        private static XElement GetXmlSignalsFromControlGroups(IEnumerable<ControlGroup> controlGroups)
-        {
-            var signalsElement = new XElement(Fns + "signals");
-
-            // Create two lists so we can selectively add the elements we find in the loop to one of the lists. After, we create one list with
-            // the elements in a specific order ('global' elements which should appear at the top, and the remaining elements below them).
-            var signalsElementXmlGlobalContents = new List<XElement>();
-            var signalsElementXmlContents = new List<XElement>();
-
-            foreach (var group in controlGroups)
-            {
-                foreach (var signal in group.Signals)
-                {
-                    if (!(signal is LookupSignal))
-                    {
-                        signalsElementXmlContents.Add(signal.ToXml(Fns, GetGroupNameWithSeparator(group.Name)));
-                    }
-                }
-            }
-
-            signalsElement.Add(signalsElementXmlGlobalContents.Concat(signalsElementXmlContents));
-
-            return signalsElement.HasElements ? signalsElement : null;
         }
 
         /// <summary>
@@ -456,7 +431,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return new XElement(xNamespace + timestepName, new XAttribute("unit", unit.unit), new XAttribute("multiplier", seconds / unit.multiplier));
         }
 
-        public static XElement DateTimeToXElement(string tag, DateTime dateTime)
+        private static XElement DateTimeToXElement(string tag, DateTime dateTime)
         {
             return new XElement(Fns + tag,
                                 new XAttribute("date", string.Format("{0:0000}-{1:00}-{2:00}",
@@ -520,7 +495,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         continue;
                     }
                     inputItems.Add(input.Name);
-                    var tempElement = new XElement(Fns + "timeSeries", new XAttribute("id", input.XmlName));
+                    var serializer = new InputSerializer(input);
+                    var tempElement = new XElement(Fns + "timeSeries", new XAttribute("id", serializer.GetXmlName()));
 
                     if (input.IsConnected)
                     {
@@ -536,7 +512,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var importTimeSeries in conditionBase.ToDataConfigImportSeries(groupNameWithSeparator, Fns))
+                    var serializer = SerializerCreator.CreateSerializerType<ConditionSerializerBase>(conditionBase);
+                    foreach (var importTimeSeries in serializer.ToDataConfigImportSeries(groupNameWithSeparator, Fns))
                     {
                         var key = importTimeSeries.Attribute("id").Value;
 
@@ -557,7 +534,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     // some rule require their output item also as input. The user will not have to make this connection. RTCTools
                     // does require an explicit reference. This allows future implementations to user other exchange itens as input
                     // used by RelativeTimeRule and PIDRule
-                    import.Add(ruleBase.OutputAsInputToDataConfigXml(Fns));
+                    RuleSerializerBase serializer = SerializerCreator.CreateSerializerType<RuleSerializerBase>(ruleBase);
+                    import.Add(serializer.OutputAsInputToDataConfigXml(Fns));
 
                     if (ruleBase is IntervalRule intervalRule &&
                         intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
@@ -566,7 +544,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     }
 
                     // add tines series that are part of the rules to the xml
-                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+                    foreach (var timeSeries in serializer.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
                         import.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, false));
                     }
@@ -608,7 +586,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     }
                     outputItems.Add(nameWithoutHashSigns);
 
-                    var openMi = new XElement(Fns + "timeSeries", new XAttribute("id", output.XmlName));
+                    var serializer = new OutputSerializer(output);
+                    var openMi = new XElement(Fns + "timeSeries", new XAttribute("id", serializer.GetXmlName()));
                     if (output.IsConnected)
                     {
 
@@ -621,7 +600,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 }
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var exportTimeSeries in conditionBase.ToDataConfigExportSeries(Fns, groupNameWithSeparator))
+                    ConditionSerializerBase serializer = SerializerCreator.CreateSerializerType<ConditionSerializerBase>(conditionBase);
+                    foreach (var exportTimeSeries in serializer.ToDataConfigExportSeries(Fns, groupNameWithSeparator))
                     {
                         var key = exportTimeSeries.Attribute("id").Value;
 
@@ -638,7 +618,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var ruleBase in group.Rules)
                 {
-                    foreach (var timeSeries in ruleBase.XmlExportTimeSeries(groupNameWithSeparator))
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(ruleBase);
+                    foreach (var timeSeries in serializer.XmlExportTimeSeries(groupNameWithSeparator))
                     {
                         export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
                     }
@@ -646,9 +627,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
                 foreach (var signal in group.Signals)
                 {
-                    foreach (var timeSeries in signal.XmlExportTimeSeries(groupNameWithSeparator))
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(signal);
+                    foreach (var timeSeries in serializer.XmlExportTimeSeries(groupNameWithSeparator))
                     {
                         export.Add(timeSeries.GetTimeSeriesXElementForDataConfigFile(Fns, true));
+                    }
+                }
+
+                foreach (var expression in group.MathematicalExpressions)
+                {
+                    var serializer = new MathematicalExpressionSerializer(expression);
+                    foreach (XElement element in serializer.GetDataConfigXmlElements(Fns))
+                    {
+                        export.Add(element);
                     }
                 }
             }
@@ -663,7 +654,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             return export;
         }
-
+        
         /// <summary>
         /// Returns a XElement with the initial state of the RTC calculation.
         /// </summary>
@@ -681,14 +672,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         continue;
                     }
                     names.Add(output.Name);
-
+                    var serializer = new OutputSerializer(output);
                     states.Add(new XElement(OpenDa + "treeVectorLeaf",
-                                            new XAttribute("id", output.XmlName),
+                                            new XAttribute("id", serializer.GetXmlName()),
                                             new XElement(OpenDa + "vector", output.Value)));
                 }
                 foreach (var ruleBase in group.Rules)
                 {
-                    foreach (var state in ruleBase.ToImportState(OpenDa))
+                    RuleSerializerBase serializer = SerializerCreator.CreateSerializerType<RuleSerializerBase>(ruleBase);
+                    foreach (var state in serializer.ToImportState(OpenDa))
                     {
                         var name = state.Attributes().First(a => a.Name == "id").Value;
                         if (names.Contains(name))
@@ -733,7 +725,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal, intervalRule.Name);
                         continue;
                     }
-                    foreach (var timeSeries in ruleBase.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(ruleBase);
+                    foreach (var timeSeries in serializer.XmlImportTimeSeries(groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
                         var key = groupNameWithSeparator + timeSeries.LocationId + "/" + timeSeries.ParameterId;
                         if (seriesNames.Contains(key))
@@ -748,7 +742,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 }
                 foreach (var conditionBase in group.Conditions)
                 {
-                    foreach (var timeSeries in conditionBase.XmlImportTimeSeries(@groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
+                    RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(conditionBase);
+                    foreach (var timeSeries in serializer.XmlImportTimeSeries(@groupNameWithSeparator, timeDependentModel.StartTime, timeDependentModel.StopTime, timeDependentModel.TimeStep))
                     {
                         var key = groupNameWithSeparator + timeSeries.LocationId + "/" + timeSeries.ParameterId;
 
@@ -773,7 +768,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static void AddUnitDelayComponents(XDocument xDocument, IList<ControlGroup> controlGroups)
         {
             var timeLagHydraulicRules = controlGroups.SelectMany(controlGroup => controlGroup.Rules.OfType<HydraulicRule>().Where(r => r.TimeLagInTimeSteps > 0)).ToList();
-            var inputNames = timeLagHydraulicRules.SelectMany(timeLagHydraulicRule => timeLagHydraulicRule.Inputs.OfType<Input>().Select(i => i.XmlName)).Distinct();
+            var inputNames = timeLagHydraulicRules.SelectMany(timeLagHydraulicRule => timeLagHydraulicRule.Inputs.OfType<Input>().Select(input =>
+            {
+                var serializer = new InputSerializer(input);
+                return serializer.GetXmlName();
+            }).Distinct());
 
             var xElementComponents = new XElement(Fns + "components");
 
@@ -811,19 +810,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             foreach (var directionalCondition in directionalConditions)
             {
-                if (passedNames.Contains(directionalCondition.Input.XmlName)) //avoid double elements
+                var conditionInput = directionalCondition.Input;
+                if (conditionInput is Input input)
                 {
-                    continue;
-                }
-                passedNames.Add(directionalCondition.Input.XmlName);
+                    var inputSerializer = new InputSerializer(input);
+                    string inputXmlName = inputSerializer.GetXmlName();
+                    if (passedNames.Contains(inputXmlName)) //avoid double elements
+                    {
+                        continue;
+                    }
 
-                xElementComponents.Add(new XElement(Fns + "component",
-                                    new XElement(Fns + "unitDelay",
-                                        new XAttribute("id", RtcXmlTag.Delayed + directionalCondition.Input.XmlName),
-                                        new XElement(Fns + "input", new XElement(Fns + "x", directionalCondition.Input.XmlName)),
-                                        new XElement(Fns + "output", new XElement(Fns + "y", directionalCondition.GetLaggedInputName()))
-                                    )
-                                ));
+                    passedNames.Add(inputXmlName);
+
+                    var serializer = new DirectionalConditionSerializer(directionalCondition);
+                    xElementComponents.Add(new XElement(Fns + "component",
+                                                        new XElement(Fns + "unitDelay",
+                                                                     new XAttribute("id", RtcXmlTag.Delayed + inputXmlName),
+                                                                     new XElement(Fns + "input", new XElement(Fns + "x", inputXmlName)),
+                                                                     new XElement(Fns + "output", new XElement(Fns + "y", serializer.GetLaggedInputName()))
+                                                        )
+                                           ));
+                }
             }
 
             if(xElementComponents.HasElements)
@@ -831,7 +838,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 var xElementGeneral = xDocument.Root.Elements().First();
                 xElementGeneral.AddAfterSelf(xElementComponents);
             }
-
         }
 
         private static void AddHydraulicRulesWithTimeLagAsTimeSerieToDataConfig(XElement exportSeries, IEnumerable<HydraulicRule> hydraulicRulesWithLimeLag)
@@ -839,35 +845,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             Dictionary<string, HydraulicRule> dictInputAndHydraulicRuleWithBiggestDelay = new Dictionary<string, HydraulicRule>();
             foreach (var hydraulicRule in hydraulicRulesWithLimeLag)
             {
-                foreach (var input in hydraulicRule.Inputs)
+                foreach (var input in hydraulicRule.Inputs.OfType<Input>())
                 {
-                    if(dictInputAndHydraulicRuleWithBiggestDelay.ContainsKey(input.XmlName))
+                    var serializer = new InputSerializer(input);
+                    string inputXmlName = serializer.GetXmlName();
+                    if(dictInputAndHydraulicRuleWithBiggestDelay.ContainsKey(inputXmlName))
                     {
-                        if(hydraulicRule.TimeLagInTimeSteps > dictInputAndHydraulicRuleWithBiggestDelay[input.XmlName].TimeLagInTimeSteps)
+                        if(hydraulicRule.TimeLagInTimeSteps > dictInputAndHydraulicRuleWithBiggestDelay[inputXmlName].TimeLagInTimeSteps)
                         {
-                            dictInputAndHydraulicRuleWithBiggestDelay[input.XmlName] = hydraulicRule;
+                            dictInputAndHydraulicRuleWithBiggestDelay[inputXmlName] = hydraulicRule;
                         }
                     }
                     else
                     {
-                        dictInputAndHydraulicRuleWithBiggestDelay.Add(input.XmlName, hydraulicRule);
+                        dictInputAndHydraulicRuleWithBiggestDelay.Add(inputXmlName, hydraulicRule);
                     }
                 }
             }
 
             foreach (var hydraulicRule in dictInputAndHydraulicRuleWithBiggestDelay.Values)
             {
-                var input = hydraulicRule.Inputs.First();
-                var timeSeriesElement = new XElement(Fns + "timeSeries",
-                                            new XAttribute("id", RtcXmlTag.Delayed + input.XmlName),
-                                            new XAttribute("vectorLength", hydraulicRule.TimeLagInTimeSteps - 1));
+                var ruleInput = hydraulicRule.Inputs.First();
+                if (ruleInput is Input input)
+                {
+                    var serializer = new InputSerializer(input);
+                    var timeSeriesElement = new XElement(Fns + "timeSeries",
+                                                         new XAttribute("id", RtcXmlTag.Delayed + serializer.GetXmlName()),
+                                                         new XAttribute("vectorLength", hydraulicRule.TimeLagInTimeSteps - 1));
 
-                var piTimeSeriesElement = new XElement(Fns + "PITimeSeries",
-                                                       new XElement(Fns + "locationId", input.LocationName),
-                                                       new XElement(Fns + "parameterId", input.ParameterName));
-                timeSeriesElement.Add(piTimeSeriesElement);
+                    var piTimeSeriesElement = new XElement(Fns + "PITimeSeries",
+                                                           new XElement(Fns + "locationId", input.LocationName),
+                                                           new XElement(Fns + "parameterId", input.ParameterName));
+                    timeSeriesElement.Add(piTimeSeriesElement);
 
-                exportSeries.Add(timeSeriesElement);
+                    exportSeries.Add(timeSeriesElement);
+                }
             }
         }
     }

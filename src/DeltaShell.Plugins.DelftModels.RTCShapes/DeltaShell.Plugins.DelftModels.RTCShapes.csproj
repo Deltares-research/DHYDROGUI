@@ -89,6 +89,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Shapes\MathematicalExpressionShape.cs" />
     <Compile Include="Shapes\OutputItemShape.cs" />
     <Compile Include="Shapes\RuleShape.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Signal.png" />
+    <EmbeddedResource Include="Shapes\MathematicalExpressionShape.hbm.xml" />
     <EmbeddedResource Include="Shapes\SignalShape.hbm.xml" />
     <EmbeddedResource Include="Shapes\ConditionShape.hbm.xml" />
     <EmbeddedResource Include="Shapes\InputItemShape.hbm.xml" />

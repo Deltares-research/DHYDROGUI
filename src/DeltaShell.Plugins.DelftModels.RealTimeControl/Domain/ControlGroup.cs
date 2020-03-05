@@ -1,40 +1,37 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Features.Generic;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public class ControlGroup : EditableObjectUnique<long>, INameable, ICloneable, IControlGroup, IItemContainer
+    public class ControlGroup : EditableObjectUnique<long>, ICloneable, IControlGroup, IItemContainer
     {
         public ControlGroup()
         {
-            Name = String.Empty;
+            Name = string.Empty;
             Conditions = new EventedList<ConditionBase>();
             Rules = new EventedList<RuleBase>();
             Inputs = new EventedList<Input>();
             Outputs = new EventedList<Output>();
             Signals = new EventedList<SignalBase>();
+            MathematicalExpressions = new EventedList<MathematicalExpression>();
         }
         
         public string Name { get; set; }
         
-        public IEventedList<RuleBase> Rules { get; set; }
-        public IEventedList<ConditionBase> Conditions { get; set; }
-        public IEventedList<SignalBase> Signals { get; set; }
-        
-        public IEventedList<Input> Inputs { get; set; }
-        public IEventedList<Output> Outputs { get; set; }
+        public IEventedList<RuleBase> Rules { get; protected set; }
+        public IEventedList<ConditionBase> Conditions { get; protected set; }
+        public IEventedList<SignalBase> Signals { get; protected set; }
+        public IEventedList<MathematicalExpression> MathematicalExpressions { get; protected set; }
+        public IEventedList<Input> Inputs { get; protected set; }
+        public IEventedList<Output> Outputs { get; protected set; }
 
         [ValidationMethod]
         public static void Validate(ControlGroup controlGroup)
@@ -54,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                     exceptions.Add(new ValidationException(string.Format("Input item at index {0} in control group '{1}' is not connected.",
                         controlGroup.Inputs.IndexOf(input), controlGroup.Name)));
                 }
-                if (!InputInConditionRuleOrSignal(controlGroup, input))
+                if (!InputInConditionRuleSignalOrMathematicalExpression(controlGroup, input))
                 {
                     exceptions.Add(new ValidationException(string.Format("Input item at index {0} in control group '{1}' is not connected to a rule or condition.", 
                         controlGroup.Inputs.IndexOf(input), controlGroup.Name)));
@@ -116,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        private static bool InputInConditionRuleOrSignal(ControlGroup controlGroup, Input input)
+        private static bool InputInConditionRuleSignalOrMathematicalExpression(ControlGroup controlGroup, Input input)
         {
             foreach (var ruleBase in controlGroup.Rules)
             {
@@ -135,6 +132,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             foreach (var conditionBase in controlGroup.Conditions)
             {
                 if (conditionBase.Input == input)
+                {
+                    return true;
+                }
+            }
+
+            foreach (var expression in controlGroup.MathematicalExpressions)
+            {
+                if (expression.Inputs.Contains(input))
                 {
                     return true;
                 }
@@ -259,8 +264,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             
         }
 
-        private bool EnableUglyFewsHack { get { return Environment.GetEnvironmentVariable("UGLY_FEWS_HACK") == "true"; } }
-
         public IEnumerable<object> GetDirectChildren()
         {
             // probably we should just return rules here and let them return connection points
@@ -278,75 +281,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 yield return condition;
             }
-
-            if (EnableUglyFewsHack)
-            {
-                foreach (var c in Conditions)
-                {
-                    //HACK: ugly hack for FewsAdapter, makes a lot of things very slow!!
-                    if (c is TimeCondition)
-                    {
-                        var timeCondition = c as TimeCondition;
-                        timeCondition.TimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcTimeCondition;
-                        var feature = new FakeRtcTimeSeriesFeature { Name = Name + "_" + c.Name };
-                            //invent fake feature for FewsAdapter
-                        yield return
-                            new DataItem(
-                                new FeatureData<ITimeSeries, IFeature>
-                                    { Data = timeCondition.TimeSeries, Feature = feature },
-                                DataItemRole.Input);
-                    }
-                    yield return c;
-                }
-                foreach (var r in Rules)
-                {
-                    //HACK: ugly hack for FewsAdapter, makes a lot of things very slow!!
-                    var timeSeriesData = GetFeatureDataForFewsAdapter(r);
-                    if (timeSeriesData != null) yield return new DataItem(timeSeriesData, DataItemRole.Input);
-
-                    yield return r;
-                }
-                foreach (var c in Inputs)
-                {
-                    yield return c;
-                }
-                foreach (var c in Outputs)
-                {
-                    yield return c;
-                }
-            }
-        }
-
-        private IFeatureData GetFeatureDataForFewsAdapter(RuleBase r)
-        {
-            if (r is TimeRule) //ugly hack for FewsAdapter
-            {
-                var timeRule = r as TimeRule;
-                timeRule.TimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcTimeRule;
-                var feature = new FakeRtcTimeSeriesFeature {Name = Name + "_" + r.Name}; //invent fake feature for FewsAdapter
-                return new FeatureData<ITimeSeries, IFeature> { Data = timeRule.TimeSeries, Feature = feature };
-            }
-            if (r is PIDRule) //ugly hack for FewsAdapter
-            {
-                var pidRule = r as PIDRule;
-                if (pidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries)
-                {
-                    pidRule.TimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcPidRule;
-                    var feature = new FakeRtcTimeSeriesFeature {Name = Name + "_" + r.Name}; //invent fake feature for FewsAdapter
-                    return new FeatureData<ITimeSeries, IFeature> {Data = pidRule.TimeSeries, Feature = feature};
-                }
-            }
-            else if (r is IntervalRule) //ugly hack for FewsAdapter
-            {
-                var intervalRule = r as IntervalRule;
-                if (intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable)
-                {
-                    intervalRule.TimeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcIntervalRule;
-                    var feature = new FakeRtcTimeSeriesFeature { Name = Name + "_" + r.Name }; //invent fake feature for FewsAdapter
-                    return new FeatureData<ITimeSeries, IFeature> { Data = intervalRule.TimeSeries, Feature = feature };
-                }
-            }
-            return null;
         }
 
         public override string ToString()

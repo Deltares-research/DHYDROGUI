@@ -34,32 +34,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [TestCase(InputId, typeof(Input))]
         [TestCase(OutputId, typeof(Output))]
-        public void GivenAnRTCTimeSeriesXMLElement_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenCollectionOfConnectionPointsIsReturned(string elementId, Type expectedConnectionPointType)
+        public void GivenAnRTCTimeSeriesXMLElement_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenCollectionOfConnectionPointsIsReturned(
+            string elementId, Type expectedConnectionPointType)
         {
             // Given
-            var timeSeriesElements = CreateTimeSeriesXml(elementId);
+            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId);
 
             // When
-            var connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements).ToList();
+            List<ConnectionPoint> connectionPoints =
+                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements).ToList();
 
             // Then
-            Assert.AreEqual(1, connectionPoints.Count, "Number of connection points was expected to be 1." );
-            var connectionPoint = connectionPoints.Single();
-            Assert.AreEqual(elementId, connectionPoint.Name, $"Name of connection point was expected to be '{elementId}' but was '{connectionPoint.Name}'.");
-            Assert.AreEqual(expectedConnectionPointType, connectionPoint.GetType(), $"The type of the created connection point '{elementId}' was expected to be different.");
+            Assert.AreEqual(1, connectionPoints.Count, "Number of connection points was expected to be 1.");
+            ConnectionPoint connectionPoint = connectionPoints.Single();
+            Assert.AreEqual(elementId, connectionPoint.Name,
+                            $"Name of connection point was expected to be '{elementId}' but was '{connectionPoint.Name}'.");
+            Assert.AreEqual(expectedConnectionPointType, connectionPoint.GetType(),
+                            $"The type of the created connection point '{elementId}' was expected to be different.");
         }
 
         [TestCase(RtcXmlTag.TimeRule + ControlGroupName + "/" + "time_rule_name")]
         [TestCase(OutputId + RtcXmlTag.OutputAsInput + "something")]
         [TestCase(RtcXmlTag.Delayed + OutputId)]
         [TestCase(ControlGroupName + "/" + "time_rule_name")]
-        public void GivenAnRTCTimeSeriesXMLElementWithInvalidOrWithoutValidTag_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(string elementId)
+        public void GivenAnRTCTimeSeriesXMLElementWithInvalidOrWithoutValidTag_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
+            string elementId)
         {
             // Given
-            var timeSeriesElements = CreateTimeSeriesXml(elementId);
+            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId);
 
             // When
-            var connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
+            IEnumerable<ConnectionPoint> connectionPoints =
+                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
 
             // Then
             AssertNotNullAndEmpty(connectionPoints);
@@ -67,13 +73,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [TestCase(InputId)]
         [TestCase(OutputId)]
-        public void GivenAnRTCTimeSeriesXMLElementWithoutOpenExchangeItemWithId_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(string elementId)
+        public void GivenAnRTCTimeSeriesXMLElementWithoutOpenExchangeItemWithId_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenElementIsIgnored(
+            string elementId)
         {
             // Given
-            var timeSeriesElements = CreateTimeSeriesXml(elementId, true);
+            List<RTCTimeSeriesXML> timeSeriesElements = CreateTimeSeriesXml(elementId, true);
 
             // When
-            var connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
+            IEnumerable<ConnectionPoint> connectionPoints =
+                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
 
             // Then
             AssertNotNullAndEmpty(connectionPoints);
@@ -85,7 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             IEnumerable<ConnectionPoint> connectionPoints = null;
 
             // Given, When
-            Assert.DoesNotThrow(() => connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(null),
+            Assert.DoesNotThrow(
+                () => connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(null),
                 "Method throws an unexpected exception when parameter 'elements' is null.");
 
             // Then
@@ -99,10 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 new RTCTimeSeriesXML
                 {
                     id = elementId,
-                    OpenMIExchangeItem = new OpenMIExchangeItemXML
-                    {
-                        elementId = isEmpty ? null : "not_empty"
-                    }
+                    OpenMIExchangeItem = new OpenMIExchangeItemXML {elementId = isEmpty ? null : "not_empty"}
                 },
             };
             return timeSeriesElements;
@@ -110,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private static void AssertNotNullAndEmpty(IEnumerable<ConnectionPoint> connectionPoints)
         {
-            Assert.NotNull(connectionPoints, "List of connection points was expected to not be NULL." );
+            Assert.NotNull(connectionPoints, "List of connection points was expected to not be NULL.");
             Assert.AreEqual(0, connectionPoints.Count(), "List of connection points was expected to be empty.");
         }
     }

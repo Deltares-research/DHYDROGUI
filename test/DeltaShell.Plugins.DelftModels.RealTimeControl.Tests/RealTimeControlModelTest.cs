@@ -10,7 +10,6 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Units.Generics;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -660,21 +659,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CleanUpModelAfterModelCoupling_ShouldResetInputIfUnlinked()
         {
             // Given
-            var inputs = new EventedList<Input>
+            var input = new Input
             {
-                new Input
-                {
-                    Name = "test",
-                    Feature = null,
-                    ParameterName = "CrestLevel",
-                    UnitName = "[m]"
-                }
+                Name = "test",
+                Feature = null,
+                ParameterName = "CrestLevel",
+                UnitName = "[m]"
             };
 
-            ControlGroup controlGroup = new ControlGroup
-            {
-                Inputs = inputs
-            };
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
 
             var rtcModel = new RealTimeControlModel();
             rtcModel.ControlGroups.Add(controlGroup);
@@ -694,20 +688,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CleanUpModelAfterModelCoupling_ShouldNotResetInputIfLinked()
         {
             // Given
-            var inputs = new EventedList<Input>
+            var input = new Input
             {
-                new Input
-                {
-                    Feature = new ObservationPoint(),
-                    ParameterName = "CrestLevel",
-                    UnitName = "[m]"
-                }
+                Feature = new ObservationPoint(),
+                ParameterName = "CrestLevel",
+                UnitName = "[m]"
             };
 
-            ControlGroup controlGroup = new ControlGroup
-            {
-                Inputs = inputs
-            };
+            var controlGroup = new ControlGroup();
+            controlGroup.Inputs.Add(input);
 
             var rtcModel = new RealTimeControlModel();
             rtcModel.ControlGroups.Add(controlGroup);
@@ -719,11 +708,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             rtcModel.CleanUpModelAfterModelCoupling();
 
             // Then
-            Assert.AreEqual("observation_CrestLevel", inputs[0].Name,
+            Assert.AreEqual("observation_CrestLevel", input.Name,
                             "The clean up should not have changed the name of the output");
-            Assert.AreEqual("CrestLevel", inputs[0].ParameterName,
+            Assert.AreEqual("CrestLevel", input.ParameterName,
                             "The clean up should not have changed the parameter name of the output");
-            Assert.AreEqual("[m]", inputs[0].UnitName,
+            Assert.AreEqual("[m]", input.UnitName,
                             "The clean up should not have changed the unit name of the output");
         }
 
@@ -731,22 +720,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CleanUpModelAfterModelCoupling_ShouldResetOutputIfUnlinked()
         {
             // Given
-            var outputs = new EventedList<Output>
+            var output = new Output
             {
-                new Output
-                {
-                    Name = "test",
-                    Feature = null,
-                    ParameterName = "CrestLevel",
-                    UnitName = "[m]"
-                }
+                Name = "test",
+                Feature = null,
+                ParameterName = "CrestLevel",
+                UnitName = "[m]"
             };
 
-            ControlGroup controlGroup = new ControlGroup
-            {
-                Outputs = outputs
-            };
-
+            var controlGroup = new ControlGroup();
+            controlGroup.Outputs.Add(output);
             var rtcModel = new RealTimeControlModel();
             rtcModel.ControlGroups.Add(controlGroup);
 
@@ -765,36 +748,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void CleanUpModelAfterModelCoupling_ShouldNotResetOutputIfLinked()
         {
             // Given
-            var outputs = new EventedList<Output>
+            var output = new Output
             {
-                new Output
-                {
-                    Feature = new Weir2D(),
-                    ParameterName = "CrestLevel",
-                    UnitName = "[m]"
-                }
-            };
-            
-            ControlGroup controlGroup = new ControlGroup
-            {
-                Outputs = outputs
+                Feature = new Weir2D(),
+                ParameterName = "CrestLevel",
+                UnitName = "[m]"
             };
 
+            var controlGroup = new ControlGroup();
+            controlGroup.Outputs.Add(output);
             var rtcModel = new RealTimeControlModel();
             rtcModel.ControlGroups.Add(controlGroup);
 
-           Assert.IsTrue(outputs[0].IsConnected, "Setup of the test is incorrect");
+           Assert.IsTrue(output.IsConnected, "Setup of the test is incorrect");
             
 
             // When
             rtcModel.CleanUpModelAfterModelCoupling();
 
             // Then
-            Assert.AreEqual("Structure_CrestLevel", outputs[0].Name, 
+            Assert.AreEqual("Structure_CrestLevel", output.Name, 
                             "The clean up should not have changed the name of the output");
-            Assert.AreEqual("CrestLevel", outputs[0].ParameterName,
+            Assert.AreEqual("CrestLevel", output.ParameterName,
                             "The clean up should not have changed the parameter name of the output");
-            Assert.AreEqual("[m]", outputs[0].UnitName,
+            Assert.AreEqual("[m]", output.UnitName,
                             "The clean up should not have changed the unit name of the output");
             
         }

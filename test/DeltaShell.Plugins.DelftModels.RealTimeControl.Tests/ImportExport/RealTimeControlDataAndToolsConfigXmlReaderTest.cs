@@ -90,27 +90,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenExistingDataAndToolsConfigFilesWithValidDataWithoutConnectionPoints_WhenReading_ThenEmptyListOfControlGroupIsReturnedAndExpectedErrorsAreLogged()
-        {
-            // Given
-            var dataConfigFilePath = Path.Combine(DirectoryPath, "rtcDataConfig_NoConnectionPoints.xml");
-            Assert.That(File.Exists(dataConfigFilePath), $"Path '{dataConfigFilePath}' was expected to exist.");
-
-            var expectedMessage =
-                string.Format(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_file___0___,
-                    dataConfigFilePath);
-
-            // When
-            var controlGroups = dataAndToolsConfigReader.Read(dataConfigFilePath, validToolsConfigFilePath, timeSpan);
-
-            // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
-            AssertNotNullAndEmpty(controlGroups);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenExistingDataAndToolsConfigFilesWithValidDataWithoutControlGroups_WhenReading_ThenEmptyListOfControlGroupIsReturnedAndExpectedErrorsAreLogged()
         {
             // Given

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms

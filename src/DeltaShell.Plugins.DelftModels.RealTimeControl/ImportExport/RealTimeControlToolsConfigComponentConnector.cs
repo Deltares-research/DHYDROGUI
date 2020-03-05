@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
@@ -14,410 +12,207 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
     /// </summary>
     public class RealTimeControlToolsConfigComponentConnector
     {
-        private readonly ILogHandler logHandler;
+        private readonly IControlGroup controlGroup;
+        private readonly IList<Output> outputs = new List<Output>();
+        private readonly IList<Input> inputs = new List<Input>();
+        private IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects;
 
-        public RealTimeControlToolsConfigComponentConnector(ILogHandler logHandler)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RealTimeControlToolsConfigComponentConnector" /> class.
+        /// </summary>
+        /// <param name="controlGroupName"> Name of the control group. </param>
+        public RealTimeControlToolsConfigComponentConnector(string controlGroupName)
         {
-            this.logHandler = logHandler;
+            controlGroup = new ControlGroup {Name = controlGroupName};
         }
 
         /// <summary>
-        /// Connects inputs and outputs of rules to rules.
+        /// Assembles a control group by connecting the specified <paramref name="groupedDataAccessObjects" />.
         /// </summary>
-        /// <param name="ruleElements">The rule elements.</param>
-        /// <param name="controlGroups">The control groups.</param>
-        /// <param name="connectionPoints">The connection points.</param>
-        /// <remarks>If parameter ruleElements or controlGroups or connectionPoints is NULL, methods returns.</remarks>
-        public void ConnectRules(IEnumerable<RuleXML> ruleElements, IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
+        /// <param name="groupedDataAccessObjects"> The data access objects that belong to one control group. </param>
+        /// <returns>
+        /// The assembled control group
+        /// </returns>
+        public IControlGroup AssembleControlGroup(IRtcDataAccessObject<RtcBaseObject>[] groupedDataAccessObjects)
         {
-            if (ruleElements == null || controlGroups == null || connectionPoints == null) return;
+            dataAccessObjects = groupedDataAccessObjects;
 
-            foreach (var ruleElement in ruleElements)
+            foreach (IRtcDataAccessObject<RtcBaseObject> dataAccessObject in dataAccessObjects)
             {
-                var item = ruleElement.Item;
+                switch (dataAccessObject)
+                {
+                    case ConditionDataAccessObject conditionDataAccessObject:
+                        ConnectCondition(conditionDataAccessObject);
+                        controlGroup.Conditions.Add(conditionDataAccessObject.Object);
+                        break;
+                    case RuleDataAccessObject ruleDataAccessObject:
+                        ConnectRule(ruleDataAccessObject);
+                        controlGroup.Rules.Add(ruleDataAccessObject.Object);
+                        break;
+                    case SignalDataAccessObject signalDataAccessObject:
+                        ConnectSignal(signalDataAccessObject);
+                        controlGroup.Signals.Add(signalDataAccessObject.Object);
+                        break;
+                    case ExpressionTree expressionTree:
+                        ConnectMathematicalExpression(expressionTree);
+                        controlGroup.MathematicalExpressions.Add(expressionTree.Object);
+                        break;
+                }
+            }
 
-                if (item is TimeAbsoluteXML timeRuleElement)
-                {
-                    ConnectTimeRule(controlGroups, connectionPoints, timeRuleElement);
-                }
-                else if (item is TimeRelativeXML relativeTimeRuleElement)
-                {
-                    ConnectRelativeTimeRule(controlGroups, connectionPoints, relativeTimeRuleElement);
-                }
-                else if (item is PidXML pidRuleElement)
-                {
-                    ConnectPidRule(controlGroups, connectionPoints, pidRuleElement);
-                }
-                else if (item is IntervalXML intervalRuleElement)
-                {
-                    ConnectIntervalRule(controlGroups, connectionPoints, intervalRuleElement);
-                }
-                else if (item is LookupTableXML lookupTableElement)
-                {
-                    ConnectHydraulicRule(controlGroups, connectionPoints, lookupTableElement);
-                }
+            controlGroup.Inputs.AddRange(inputs);
+            controlGroup.Outputs.AddRange(outputs);
+
+            return controlGroup;
+        }
+
+        private void ConnectCondition(ConditionDataAccessObject dataAccessObject)
+        {
+            ConditionBase condition = dataAccessObject.Object;
+            foreach (string inputReference in dataAccessObject.InputReferences)
+            {
+                condition.Input = FindInputs(inputReference).FirstOrDefault();
+            }
+
+            foreach (string trueOutputRef in dataAccessObject.TrueOutputReferences)
+            {
+                RtcBaseObject trueOutput = FindById(trueOutputRef);
+                condition.TrueOutputs.Add(trueOutput);
+            }
+
+            foreach (string falseOutputRef in dataAccessObject.FalseOutputReferences)
+            {
+                RtcBaseObject falseOutput = FindById(falseOutputRef);
+                condition.FalseOutputs.Add(falseOutput);
             }
         }
 
-        /// <summary>
-        /// Connects inputs and outputs of conditions to conditions.
-        /// </summary>
-        /// <param name="conditionElements">The condition elements.</param>
-        /// <param name="controlGroups">The control groups.</param>
-        /// <param name="connectionPoints">The connection points.</param>
-        /// <remarks>If parameter conditionElements or controlGroups or connectionPoints is NULL, methods returns.</remarks>
-        public void ConnectConditions(IEnumerable<TriggerXML> conditionElements, IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
+        private void ConnectRule(RuleDataAccessObject dataAccessObject)
         {
-            if (conditionElements == null || controlGroups == null || connectionPoints == null) return;
-
-            foreach (var conditionElement in conditionElements)
+            RuleBase rule = dataAccessObject.Object;
+            foreach (string inputRef in dataAccessObject.InputReferences)
             {
-                var item = conditionElement.Item;
-
-                if (item is StandardTriggerXML standardConditionElement)
-                {
-                    ConnectStandardCondition(controlGroups, connectionPoints, standardConditionElement);
-                }
-            }
-        }
-        /// <summary>
-        /// Connects input to signals. Rules will be connected to signals during ConnectRules.
-        /// </summary>
-        /// <param name="signalElements"></param>
-        /// <param name="controlGroups"></param>
-        /// <param name="connectionPoints"></param>
-        public void ConnectSignals(IList<RuleXML> signalElements, IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints)
-        {
-            if (signalElements == null || controlGroups == null || connectionPoints == null) return;
-
-            foreach (var signalElement in signalElements)
-            {
-                var item = signalElement.Item;
-
-                if (item is LookupTableXML lookupTableXml)
-                {
-                    ConnectSignal(controlGroups, connectionPoints, lookupTableXml);
-                }
-            }
-        }
-
-        private void ConnectTimeRule(IEnumerable<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, TimeAbsoluteXML timeRuleElement)
-        {
-            var id = timeRuleElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-
-            if (controlGroup == null) return;
-
-            var rule = controlGroup.GetRuleByElementId<TimeRule>(id, logHandler);
-
-            if (rule == null) return;
-
-            var ruleOutputElementName = timeRuleElement.output.y;
-            ConnectOutputToRule(connectionPoints, ruleOutputElementName, rule, controlGroup);
-        }
-
-        private void ConnectRelativeTimeRule(IEnumerable<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, TimeRelativeXML relativeTimeRuleElement)
-        {
-            var id = relativeTimeRuleElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return;
-
-            var rule = (RelativeTimeRule) controlGroup.GetRuleByElementId<RelativeTimeRule>(id, logHandler);
-            if (rule == null)
-            {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlToolsConfigComponentConnector_ConnectRelativeTimeRules_Could_not_find_Relative_Time_Rule_with_id___0____See_file____1___,
-                    id, RealTimeControlXMLFiles.XmlTools);
-                return;
+                rule.Inputs.AddRange(FindInputs(inputRef));
             }
 
-            var ruleOutputElementName = relativeTimeRuleElement.output.y;
-            ConnectOutputToRule(connectionPoints, ruleOutputElementName, rule, controlGroup);
-        }
-
-        private void ConnectPidRule(IEnumerable<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, PidXML pidRuleElement)
-        {
-            var id = pidRuleElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return;
-
-            var rule = controlGroup.GetRuleByElementId<PIDRule>(id, logHandler);
-            if (rule == null) return;
-
-            var ruleInputElementName = pidRuleElement.input.x;
-            ConnectInputToRule(connectionPoints, ruleInputElementName, rule, controlGroup);
-
-            var setPointItem = pidRuleElement.input.Item;
-
-            if (setPointItem == null)
+            foreach (SignalBase signal in dataAccessObject.SignalReferences.Select(FindById<SignalBase>))
             {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlDataConfigXmlSetter_SetSetPointOnPIDRules_PID_rule___0___must_have_a_setpoint__Please_check_file____1___,
-                    id, RealTimeControlXMLFiles.XmlTools);
-            }
-            else if (setPointItem is string signalId && signalId.Contains(RtcXmlTag.Signal))
-            {
-                var signal = controlGroup.GetSignalByElementId<LookupSignal>(signalId, logHandler);
                 signal.RuleBases.Add(rule);
             }
 
-            var ruleOutputElementName = pidRuleElement.output.y;
-            ConnectOutputToRule(connectionPoints, ruleOutputElementName, rule, controlGroup);
-        }
-
-        private void ConnectIntervalRule(IEnumerable<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, IntervalXML intervalRuleElement)
-        {
-            var id = intervalRuleElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return;
-
-            var rule = controlGroup.GetRuleByElementId<IntervalRule>(id, logHandler);
-            if (rule == null) return;
-
-            var ruleInputElementName = intervalRuleElement.input.x.Value;
-            ConnectInputToRule(connectionPoints, ruleInputElementName, rule, controlGroup);
-
-            var setPoint = intervalRuleElement.input.setpoint;
-
-            if (setPoint == null)
+            foreach (string outputRef in dataAccessObject.OutputReferences)
             {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlDataConfigXmlSetter_SetSetPointOnIntervalRules_Interval_rule___0___must_have_a_setpoint__Please_check_file____1___,
-                    id, RealTimeControlXMLFiles.XmlTools);
-            }
-            else if (setPoint.Contains(RtcXmlTag.Signal))
-            {
-                id = setPoint;
-                var signal = controlGroup.GetSignalByElementId<LookupSignal>(id, logHandler);
-                signal.RuleBases.Add(rule);
-            };
-
-            var ruleOutputElementName = intervalRuleElement.output.y;
-            ConnectOutputToRule(connectionPoints, ruleOutputElementName, rule, controlGroup);
-        }
-
-        private void ConnectHydraulicRule(IEnumerable<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, LookupTableXML lookupTableElement)
-        {
-            var id = lookupTableElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return;
-
-            var rule = controlGroup.GetRuleByElementId<HydraulicRule>(id, logHandler);
-            if (rule == null) return;
-
-            var ruleInputElementName = lookupTableElement.input.x.Value;
-            ConnectInputToRule(connectionPoints, ruleInputElementName, rule, controlGroup);
-
-            var ruleOutputElementName = lookupTableElement.output.y;
-            ConnectOutputToRule(connectionPoints, ruleOutputElementName, rule, controlGroup);
-        }
-
-        private void ConnectInputToRule(IEnumerable<ConnectionPoint> connectionPoints, string ruleInputElementName, RuleBase rule, IControlGroup controlGroup)
-        {
-            if (ruleInputElementName == null)
-            {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_rule___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___,
-                    rule.Name, controlGroup.Name, RealTimeControlXMLFiles.XmlTools);
-                return;
-            }
-            // in case there is a time delay between brackets in the name
-            var regex = new Regex(@"\[(\d+)\]");
-            var inputName = regex
-                .Replace(ruleInputElementName, string.Empty)
-                .Replace(RtcXmlTag.Delayed, string.Empty);
-
-            var input = (Input)connectionPoints.GetByName<Input>(inputName, logHandler);
-            AddInputToRule(rule, input);
-            AddConnectionPointToControlGroup(input, controlGroup);
-        }
-
-        private void ConnectSignal(IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, LookupTableXML lookupTableElement)
-        {
-            var id = lookupTableElement.id;
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return;
-
-            var signal = controlGroup.GetSignalByElementId<LookupSignal>(id, logHandler);
-            if (signal == null) return;
-
-            var signalInputElementName = lookupTableElement.input.x.Value;
-            ConnectInputToSignal(connectionPoints, signalInputElementName, signal, controlGroup);
-        }
-
-        private void ConnectInputToSignal(IList<ConnectionPoint> connectionPoints, string signalInputElementName,SignalBase signal, IControlGroup controlGroup)
-        {
-            if (signalInputElementName == null)
-            {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlXmlReaderHelper_ConnectInputToRule_Could_not_find_the_input_for_signal___0____in_control_group__1___The_input_needs_to_be_referenced_in_file___2___,
-                    signal.Name, controlGroup.Name, RealTimeControlXMLFiles.XmlTools);
-                return;
-            }
-            var correspondingInput = (Input)connectionPoints.GetByName<Input>(signalInputElementName, logHandler);
-            if (!signal.Inputs.Contains(correspondingInput))
-            {
-                signal.Inputs.Add(correspondingInput);
-            }
-
-            AddConnectionPointToControlGroup(correspondingInput, controlGroup);
-        }
-
-        private void AddInputToRule(RuleBase rule, Input input)
-        {
-            if (!rule.Inputs.Contains(input))
-            {
-                rule.Inputs.Add(input);
-            }
-        }
-
-        private void ConnectOutputToRule(IEnumerable<ConnectionPoint> connectionPoints, string ruleOutputElementName, RuleBase rule, IControlGroup controlGroup)
-        {
-            if (ruleOutputElementName == null)
-            {
-                logHandler.ReportWarningFormat(
-                    Resources
-                        .RealTimeControlXmlReaderHelper_ConnectOutputToRule_Could_not_find_the_output_for_rule___0____in_control_group__1___The_output_needs_to_be_referenced_in_file___2___,
-                    rule.Name, controlGroup.Name, RealTimeControlXMLFiles.XmlTools);
-                return;
-            }
-            
-            var output = (Output)connectionPoints.GetByName<Output>(ruleOutputElementName, logHandler);
-            AddOutputToRule(rule, output);
-            AddConnectionPointToControlGroup(output, controlGroup);
-        }
-
-        private void AddOutputToRule(RuleBase rule, Output output)
-        {
-            if (!rule.Outputs.Contains(output))
-            {
+                Output output = GetOutput(outputRef);
                 rule.Outputs.Add(output);
             }
         }
-       
-        private StandardCondition ConnectStandardCondition(IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, StandardTriggerXML standardConditionElement)
+
+        private void ConnectSignal(SignalDataAccessObject dataAccessObject)
         {
-            var id = standardConditionElement.id;
-            var tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
-
-            var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
-            if (controlGroup == null) return null;
-
-            var condition = FindStandardConditionWithCorrectType(tag, controlGroup, id);
-            if (condition == null) return null;
-
-            if (condition.Reference == StandardCondition.ReferenceType.Explicit)
+            SignalBase signal = dataAccessObject.Object;
+            foreach (string inputRef in dataAccessObject.InputReferences)
             {
-                ConnectStandardConditionToInput(connectionPoints, standardConditionElement, condition, controlGroup);
-            }
-
-            ConnectStandardConditionToTrueOutputs(controlGroups, connectionPoints, standardConditionElement, condition, controlGroup);
-            ConnectStandardConditionToFalseOutputs(controlGroups, connectionPoints, standardConditionElement, condition, controlGroup);
-
-            return condition;
-        }
-
-        private void ConnectStandardConditionToInput(IEnumerable<ConnectionPoint> connectionPoints, StandardTriggerXML standardConditionElement, StandardCondition condition, IControlGroup controlGroup)
-        {
-            var inputName = (standardConditionElement.condition.Item as RelationalConditionXMLX1Series)?.Value;
-            var correspondingInput = (Input) connectionPoints.GetByName<Input>(inputName, logHandler);
-            condition.Input = correspondingInput;
-            AddConnectionPointToControlGroup(correspondingInput, controlGroup);
-        }
-
-        private void ConnectStandardConditionToTrueOutputs(IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, StandardTriggerXML standardConditionElement, StandardCondition condition, IControlGroup controlGroup)
-        {
-            var trueOutputItems = standardConditionElement.@true.Select(t => t.Item);
-            foreach (var trueOutputItem in trueOutputItems)
-            {
-                var trueOutputs = condition.TrueOutputs;
-
-                ConnectStandardConditionToOutput(controlGroups, connectionPoints, controlGroup, trueOutputItem, trueOutputs);
+                Input input = GetInput(inputRef);
+                signal.Inputs.Add(input);
             }
         }
 
-        private void ConnectStandardConditionToFalseOutputs(IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints, StandardTriggerXML standardConditionElement, StandardCondition condition, IControlGroup controlGroup)
+        private void ConnectMathematicalExpression(ExpressionTree tree)
         {
-            var falseOutputItems = standardConditionElement.@false.Select(f => f.Item);
-            foreach (var falseOutputItem in falseOutputItems)
-            {
-                var falseOutputs = condition.FalseOutputs;
+            MathematicalExpression mathematicalExpression = tree.Object;
 
-                ConnectStandardConditionToOutput(controlGroups, connectionPoints, controlGroup, falseOutputItem, falseOutputs);
+            IEnumerable<string> inputReferences = tree.RootNode.GetChildNodes().OfType<ParameterLeafNode>()
+                                                      .Select(n => n.Value)
+                                                      .Distinct();
+
+            foreach (string inputName in inputReferences)
+            {
+                mathematicalExpression.Inputs.AddRange(FindInputs(inputName));
             }
+
+            MapInputParameters(tree);
+            mathematicalExpression.Expression = tree.RootNode.GetExpression();
         }
 
-        private void ConnectStandardConditionToOutput(IList<IControlGroup> controlGroups, IList<ConnectionPoint> connectionPoints,
-            IControlGroup controlGroup, object falseOutputItem, IEventedList<RtcBaseObject> falseOutputs)
+        private static void MapInputParameters(ExpressionTree expressionTree)
         {
-            if (falseOutputItem is string ruleID)
+            MathematicalExpression mathematicalExpression = expressionTree.Object;
+            IEnumerable<ParameterLeafNode> leafNodes = expressionTree.RootNode.GetChildNodes().OfType<ParameterLeafNode>();
+            foreach (ParameterLeafNode leafNode in leafNodes)
             {
-                var ruleAsOutput = controlGroup.GetRuleByElementId(ruleID, logHandler);
-
-                if (!falseOutputs.Contains(ruleAsOutput))
-                    falseOutputs.Add(ruleAsOutput);
-                return;
-            }
-
-            if (falseOutputItem is StandardTriggerXML standardConditionAsOutputElement)
-            {
-                var standardConditionAsOutput =
-                    ConnectStandardCondition(controlGroups, connectionPoints, standardConditionAsOutputElement);
-
-                if (!falseOutputs.Contains(standardConditionAsOutput))
-                    falseOutputs.Add(standardConditionAsOutput);
-            }
-        }
-
-        private StandardCondition FindStandardConditionWithCorrectType(string tag, IControlGroup controlGroup, string id)
-        {
-            StandardCondition condition = null;
-
-            switch (tag)
-            {
-                case RtcXmlTag.StandardCondition:
-                    condition = (StandardCondition) controlGroup.GetConditionByElementId<StandardCondition>(id, logHandler);
-                    break;
-                case RtcXmlTag.TimeCondition:
-                    condition = (TimeCondition) controlGroup.GetConditionByElementId<TimeCondition>(id, logHandler);
-                    break;
-                case RtcXmlTag.DirectionalCondition:
-                    condition = (DirectionalCondition) controlGroup.GetConditionByElementId<DirectionalCondition>(id, logHandler);
-                    break;
-            }
-
-            return condition;
-        }
-
-        private void AddConnectionPointToControlGroup(ConnectionPoint connectionPoint, IControlGroup controlGroup)
-        {
-            if (connectionPoint == null || controlGroup == null) return;
-
-            if (connectionPoint is Input input)
-            {
-                if (!controlGroup.Inputs.Contains(connectionPoint) &&
-                    !controlGroup.Inputs.Select(i => i.Name).Contains(input.Name))
+                KeyValuePair<char, string> parameterKvp =
+                    mathematicalExpression.InputMapping.FirstOrDefault(i => i.Value == leafNode.Value);
+                if (!parameterKvp.Equals(default(KeyValuePair<char, string>)))
                 {
-                    controlGroup.Inputs.Add(input);
-                }
-
-                return;
-            }
-
-            if (connectionPoint is Output output)
-            {
-                if (!controlGroup.Outputs.Contains(output) &&
-                    !controlGroup.Outputs.Select(o => o.Name).Contains(output.Name))
-                {
-                    controlGroup.Outputs.Add(output);
+                    leafNode.Value = parameterKvp.Key.ToString();
                 }
             }
+        }
+
+        private IEnumerable<IInput> FindInputs(string reference)
+        {
+            if (reference.StartsWith(RtcXmlTag.Input) || reference.StartsWith(RtcXmlTag.DelayedInput))
+            {
+                yield return GetInput(reference);
+            }
+            else
+            {
+                foreach (MathematicalExpression expression in FindByName<MathematicalExpression>(reference))
+                {
+                    yield return expression;
+                }
+            }
+        }
+
+        private Input GetInput(string inputRef)
+        {
+            string inputName = new Regex(@"\[(\d+)\]")
+                               .Replace(inputRef, string.Empty)
+                               .Replace(RtcXmlTag.Delayed, string.Empty);
+
+            Input input = inputs.GetByName(inputName);
+            if (input != null)
+            {
+                return input;
+            }
+
+            input = new Input {Name = inputName};
+            inputs.Add(input);
+
+            return input;
+        }
+
+        private Output GetOutput(string outputRef)
+        {
+            Output output = outputs.GetByName(outputRef);
+            if (output != null)
+            {
+                return output;
+            }
+
+            output = new Output {Name = outputRef};
+            outputs.Add(output);
+
+            return output;
+        }
+
+        private T FindById<T>(string id) where T : RtcBaseObject
+        {
+            return dataAccessObjects.Where(o => o.Id == id)
+                                    .Select(o => o.Object).OfType<T>()
+                                    .FirstOrDefault();
+        }
+
+        private RtcBaseObject FindById(string id)
+        {
+            return dataAccessObjects.FirstOrDefault(o => o.Id == id)?.Object;
+        }
+
+        private IEnumerable<T> FindByName<T>(string name) where T : RtcBaseObject
+        {
+            return dataAccessObjects.OfType<IRtcDataAccessObject<T>>()
+                                    .Where(o => o.Object.Name == name)
+                                    .Select(o => o.Object);
         }
     }
 }
-

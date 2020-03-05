@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [TestCase("[TimeCondition]control_group_name/time_condition_name", "control_group_name")]
         [TestCase("[TimeRule]control_group_name/time_rule_name", "control_group_name")]
         [TestCase("control_group_name/time_rule_name", "control_group_name")]
-        [TestCase("[Input]parameter/quantity", null)]
+        [TestCase("[tag]control_group_name/other_name", "control_group_name")]
         [TestCase("", "")]
         public void GivenAnIdFromAnRtcXmlElement_WhenGetControlGroupNameFromElementIdIsCalled_ThenExpectedStringIsReturned(string id, string expectedString)
         {

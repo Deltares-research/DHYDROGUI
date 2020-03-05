@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -208,6 +208,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mathematical expression {0} contains invalid expression &quot;{1}&quot;..
+        /// </summary>
+        public static string MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__ {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Math" +
+                        "ematical_expression__0__contains_invalid_expression__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MathExpr {
+            get {
+                object obj = ResourceManager.GetObject("MathExpr", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap output {
@@ -233,6 +253,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         public static System.Drawing.Bitmap PropertiesHS {
             get {
                 object obj = ResourceManager.GetObject("PropertiesHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap QuestionMark {
+            get {
+                object obj = ResourceManager.GetObject("QuestionMark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
