@@ -246,6 +246,8 @@
     <Compile Include="Forms\Properties\HydraulicRulePropertiesTest.cs" />
     <Compile Include="Forms\Properties\InputPropertiesTest.cs" />
     <Compile Include="Forms\Properties\IntervalRulePropertiesTest.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairArrayConverterTest.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairPropertyDescriptorTest.cs" />
     <Compile Include="Forms\Properties\LookupSignalPropertiesTest.cs" />
     <Compile Include="Forms\Properties\OutputPropertiesTest.cs" />
     <Compile Include="Forms\Properties\PIDRulePropertiesTest.cs" />
