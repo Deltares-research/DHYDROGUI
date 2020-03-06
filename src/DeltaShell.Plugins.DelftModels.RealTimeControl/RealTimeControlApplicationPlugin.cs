@@ -102,7 +102,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <returns><c>true</c> when the version of the database provided by <see cref="path"/> is 3.5.0.0 or lower</returns>
         private bool ShouldUpgradeDataBaseUsingSqlQueries(string path)
         {
-            // TODO STW, fix this once the DSF supports retrieval of the PluginFileFormatVersions.
             var pluginVersions = Application.HybridProjectRepository.GetFileFormatVersions(path);
 
             if (pluginVersions.TryGetValue(Name, out Version currentVersion))
