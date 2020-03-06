@@ -697,27 +697,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             if (feature != null)
             {
                 Entity entity = graphControl.NetronGraph.HitEntity(point);
-                if (entity is Shape)
-                {
-                    if (entity is InputItemShape)
-                    {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
-                                                  DataItemRole.Output))
-                        {
-                            DropFeatureOnShape(feature, entity, DataItemRole.Output);
-                        }
-                    }
 
-                    if (entity is OutputItemShape)
-                    {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
-                                                  DataItemRole.Input))
-                        {
-                            DropFeatureOnShape(feature, entity, DataItemRole.Input);
-                        }
-                    }
+                if (entity is Shape &&
+                    entity is InputItemShape &&
+                    CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                                          DataItemRole.Output))
+                {
+                    DropFeatureOnShape(feature, entity, DataItemRole.Output);
                 }
 
+                if (entity is Shape &&
+                    entity is OutputItemShape &&
+                    CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                                          DataItemRole.Input))
+                {
+                    DropFeatureOnShape(feature, entity, DataItemRole.Input);
+                }
+                
                 dragEventArgs.Effect = DragDropEffects.None;
                 return true;
             }
