@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     public abstract class RuleSerializerBase : RtcSerializerBase
     {
-        public RuleSerializerBase(RuleBase ruleBase) : base(ruleBase) {}
+        protected RuleSerializerBase(RuleBase ruleBase) : base(ruleBase) {}
 
         /// <summary>
         /// Converts the information of the rule needed for writing the tools config file to an xml element.
@@ -28,17 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             yield break;
         }
-
-        ///// <summary>
-        ///// some rule might require their output logged
-        ///// eg. Integral part for PID rule
-        ///// </summary>
-        ///// <returns></returns>
-        //public virtual IEnumerable<XElement> ToOutputXml(XNamespace xNamespace)
-        //{
-        //    yield break;
-        //}
-
+        
         /// <summary>
         /// implement this if the rule needs to write some state to the
         /// state_import.xml file.

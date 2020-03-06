@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     {
         private readonly ConditionBase conditionBase;
 
-        public ConditionSerializerBase(ConditionBase conditionBase) : base(conditionBase)
+        protected ConditionSerializerBase(ConditionBase conditionBase) : base(conditionBase)
         {
             this.conditionBase = conditionBase;
         }

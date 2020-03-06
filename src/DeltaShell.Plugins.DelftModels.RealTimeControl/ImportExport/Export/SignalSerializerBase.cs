@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     {
         private readonly SignalBase signalBase;
 
-        public SignalSerializerBase(SignalBase signalBase) : base(signalBase)
+        protected SignalSerializerBase(SignalBase signalBase) : base(signalBase)
         {
             this.signalBase = signalBase;
         }
