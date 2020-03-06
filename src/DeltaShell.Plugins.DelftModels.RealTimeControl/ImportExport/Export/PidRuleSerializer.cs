@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                                     PidRule.Inputs.Select(
                                         input =>
                                         {
-                                            var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject)input);
+                                            var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>(input);
                                             return PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant
                                                        ? GenerateConstantValueSetPointXml(xNamespace, serializer.GetXmlName())
                                                        : serializer.ToXmlInputReference(xNamespace, "x", "setpointSeries");

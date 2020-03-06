@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             List<XElement> xElementsInput =
                 HydraulicRule.Inputs.Select(input =>
                 {
-                    var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject)input);
+                    var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>(input);
                     return serializer.ToXmlInputReference(xNamespace, "x");
                 }).ToList();
 

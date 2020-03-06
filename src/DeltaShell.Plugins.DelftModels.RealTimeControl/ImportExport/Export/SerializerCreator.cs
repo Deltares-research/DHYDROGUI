@@ -49,5 +49,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
             return (RtcSerializerBase) Activator.CreateInstance(serializerType, rtcObject);
         }
+
+        public static T CreateSerializerType<T>(IInput input)
+        {
+            return CreateSerializerType<T>((RtcBaseObject)input);
+        }
     }
 }

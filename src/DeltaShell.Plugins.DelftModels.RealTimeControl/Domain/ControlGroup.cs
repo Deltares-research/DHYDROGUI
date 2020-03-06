@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                     exceptions.Add(new ValidationException(string.Format("Input item at index {0} in control group '{1}' is not connected.",
                         controlGroup.Inputs.IndexOf(input), controlGroup.Name)));
                 }
-                if (!InputInConditionRuleSignalOrMathematicalExpression(controlGroup, input))
+                if (!InputUsedByRtcObjects(controlGroup, input))
                 {
                     exceptions.Add(new ValidationException(string.Format("Input item at index {0} in control group '{1}' is not connected to a rule or condition.", 
                         controlGroup.Inputs.IndexOf(input), controlGroup.Name)));
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        private static bool InputInConditionRuleSignalOrMathematicalExpression(ControlGroup controlGroup, Input input)
+        private static bool InputUsedByRtcObjects(ControlGroup controlGroup, Input input)
         {
             foreach (var ruleBase in controlGroup.Rules)
             {
