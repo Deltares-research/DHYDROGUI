@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class MathematicalExpression : RtcBaseObject, IInput
     {
+        private IEventedList<IInput> inputs;
         private readonly Dictionary<char, string> inputMapping = new Dictionary<char, string>();
 
         /// <summary>
@@ -31,15 +32,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public MathematicalExpression()
         {
             Inputs = new EventedList<IInput>();
-            Inputs.CollectionChanged += OnInputCollectionChanged;
-
             Expression = string.Empty;
         }
 
         /// <summary>
-        /// Gets the inputs of the mathematical expression.
+        /// Gets or sets the inputs of the mathematical expression.
         /// </summary>
-        public IEventedList<IInput> Inputs { get; set; }
+        public IEventedList<IInput> Inputs
+        {
+            get => inputs;
+            set
+            {
+                if (inputs == value)
+                {
+                    return;
+                }
+
+                if (inputs != null)
+                {
+                    inputs.CollectionChanged -= OnInputCollectionChanged;
+                    inputs.ForEach(Unsubscribe);
+                }
+
+                inputs = value;
+
+                if (inputs != null)
+                {
+                    inputs.CollectionChanged += OnInputCollectionChanged;
+                    inputs.ForEach(Subscribe);
+                }
+
+                ResetMapping();
+            }
+        }
 
         /// <summary>
         /// Gets the input mapping in which capital letters are mapped

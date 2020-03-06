@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using NSubstitute;
 using NUnit.Framework;
@@ -264,6 +265,67 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             const char firstExpectedKey = 'A';
             Assert.That(existingKeys[0], Is.EqualTo(firstExpectedKey));
             Assert.That(mapping[firstExpectedKey], Is.EqualTo(secondInputName));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SetInputs_UpdatesInputMappingCorrectly()
+        {
+            // Setup
+            var mathematicalExpression = new MathematicalExpression();
+
+            const string inputName = "input_name";
+            IInput input = Substitute.For<IInput, INotifyPropertyChange>();
+            input.Name = inputName;
+
+            IInput[] inputs =
+            {
+                input
+            };
+
+            // Call
+            mathematicalExpression.Inputs = new EventedList<IInput>(inputs);
+
+            // Assert
+            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            char[] existingKeys = mapping.Keys.ToArray();
+            Assert.That(existingKeys, Has.Length.EqualTo(1));
+
+            const char expectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
+            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [TestCaseSource(nameof(GetInputsTestCases))]
+        public void RenameInput_AfterSetInputs_UpdatesInputMappingCorrectly(IInput input)
+        {
+            // Setup
+            var mathematicalExpression = new MathematicalExpression();
+
+            const string firstInputName = "input_name_1";
+            input.Name = firstInputName;
+
+            IInput[] inputs =
+            {
+                input
+            };
+
+            mathematicalExpression.Inputs = new EventedList<IInput>(inputs);
+
+            // Call
+            const string secondInputName = "input_name_2";
+            input.Name = secondInputName;
+
+            // Assert
+            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            char[] existingKeys = mapping.Keys.ToArray();
+            Assert.That(existingKeys, Has.Length.EqualTo(1));
+
+            const char expectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
+            Assert.That(mapping[expectedKey], Is.EqualTo(secondInputName));
         }
 
         [Test]
