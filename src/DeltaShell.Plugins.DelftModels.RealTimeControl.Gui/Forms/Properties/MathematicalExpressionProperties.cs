@@ -24,9 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [TypeConverter(typeof(KeyValuePairArrayConverter<string>))]
         [PropertyOrder(2)]
-        public KeyValuePair<string, string>[] Inputs => data.InputMapping
-                                                            .Select(i => new KeyValuePair<string, string>(i.Key.ToString(), i.Value))
-                                                            .ToArray();
+        public KeyValuePair<string, string>[] Inputs => GetInputs();
 
         [DisplayName("Expression")]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
@@ -42,6 +40,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             get => data;
             set => data = (MathematicalExpression) value;
+        }
+
+        private KeyValuePair<string, string>[] GetInputs()
+        {
+            return data.InputMapping
+                       .Select(i => new KeyValuePair<string, string>(i.Key.ToString(), i.Value))
+                       .ToArray();
         }
     }
 }

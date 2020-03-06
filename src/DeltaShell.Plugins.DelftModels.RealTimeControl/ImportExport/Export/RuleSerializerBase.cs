@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <summary>
         /// Converts the information of the rule needed for writing the tools config file to an xml element.
         /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
+        /// <param name="xNamespace"> The x namespace. </param>
+        /// <param name="prefix"> The control group name. </param>
+        /// <returns> The Xml Element. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             yield return new XElement(xNamespace + "rule");
@@ -23,18 +23,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// some rule might require their output logged
         /// eg. Integral part for PID rule
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public virtual IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
         {
             yield break;
         }
-        
+
         /// <summary>
         /// implement this if the rule needs to write some state to the
         /// state_import.xml file.
         /// eg. Integral part for PID rule
         /// </summary>
-        /// <returns></returns>
+        /// <returns> </returns>
         public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
         {
             yield break;

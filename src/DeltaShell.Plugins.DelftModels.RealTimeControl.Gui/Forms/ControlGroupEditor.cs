@@ -698,22 +698,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 Entity entity = graphControl.NetronGraph.HitEntity(point);
 
-                if (entity is Shape &&
-                    entity is InputItemShape &&
-                    CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
-                                          DataItemRole.Output))
+                if (entity is Shape)
                 {
-                    DropFeatureOnShape(feature, entity, DataItemRole.Output);
+                    if (entity is InputItemShape &&
+                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(InputItemShape),
+                                              DataItemRole.Output))
+                    {
+                        DropFeatureOnShape(feature, entity, DataItemRole.Output);
+                    }
+
+                    if (entity is OutputItemShape &&
+                        CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
+                                              DataItemRole.Input))
+                    {
+                        DropFeatureOnShape(feature, entity, DataItemRole.Input);
+                    }
                 }
 
-                if (entity is Shape &&
-                    entity is OutputItemShape &&
-                    CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof(OutputItemShape),
-                                          DataItemRole.Input))
-                {
-                    DropFeatureOnShape(feature, entity, DataItemRole.Input);
-                }
-                
                 dragEventArgs.Effect = DragDropEffects.None;
                 return true;
             }
@@ -861,7 +862,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 if (context.ShapeList == null)
                 {
                     ResumeLayout();
-                    throw new NullReferenceException(
+                    throw new InvalidOperationException(
                         "Invalid view context is passed to ControlGroupEditor, shape list can't be null");
                 }
 

@@ -75,40 +75,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                                 IList<Output> outputs, IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
                                 Point mea)
         {
-            int x = mea.X;
-            int y = mea.Y;
             bool useOffset = rules.Count + conditions.Count + inputs.Count + outputs.Count > 1;
-            if (controlGroup != null && graphControl != null)
+            if (controlGroup == null || graphControl == null)
             {
-                for (var i = 0; i < inputs.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(inputs[i], useOffset ? x + 10 : x, useOffset ? y + 10 + (50 * i) : y);
-                }
+                return;
+            }
 
-                for (var i = 0; i < mathExpressions.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(mathExpressions[i], useOffset ? (x + 110) : x, useOffset ? (y + 10 + (50 * i)) : y);
-                }
+            PlaceShapes(inputs, useOffset, mea, 10);
+            PlaceShapes(mathExpressions, useOffset, mea, 110);
+            PlaceShapes(conditions, useOffset, mea, 210);
+            PlaceShapes(signals, useOffset, mea, 310);
+            PlaceShapes(rules, useOffset, mea, 410);
+            PlaceShapes(outputs, useOffset, mea, 510);
+        }
 
-                for (var i = 0; i < conditions.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(conditions[i], useOffset ? x + 210 : x, useOffset ? y + 10 + (50 * i) : y);
-                }
+        private void PlaceShapes<T>(ICollection<T> objects, bool useOffset, Point startPoint, int xOffset)
+        {
+            int x = startPoint.X;
+            int y = startPoint.Y;
 
-                for (var i = 0; i < rules.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(rules[i], useOffset ? x + 350 : x, useOffset ? y + 10 + (50 * i) : y);
-                }
-
-                for (var i = 0; i < signals.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(signals[i], useOffset ? x + 350 : x, useOffset ? y + 110 + (50 * i) : y);
-                }
-
-                for (var i = 0; i < outputs.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(outputs[i], useOffset ? x + 510 : x, useOffset ? y + 10 + (50 * i) : y);
-                }
+            for (var i = 0; i < objects.Count; i++)
+            {
+                int yOffset = 10 + (50 * i);
+                PlaceShapeOnGraphControl(objects.ElementAt(i),
+                                         useOffset ? x + xOffset : x,
+                                         useOffset ? y + yOffset : y);
             }
         }
 
@@ -795,43 +786,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     }
                 }
 
-                if (to is SignalBase)
+                if (to is SignalBase && toConnector != ConnectorType.Top && toConnector != ConnectorType.Left)
                 {
-                    if (toConnector != ConnectorType.Top && toConnector != ConnectorType.Left)
-                    {
-                        log.Error("Input can only be connected to the left or top connection point.");
-                        return false;
-                    }
+                    log.Error("Input can only be connected to the left or top connection point.");
+                    return false;
                 }
 
-                if (to is ConditionBase conditionBase)
+                if (to is ConditionBase conditionBase && conditionBase.Input != null)
                 {
-                    if (conditionBase.Input != null)
-                    {
-                        log.Error("Condition can only have 1 input.");
-                        return false;
-                    }
+                    log.Error("Condition can only have 1 input.");
+                    return false;
                 }
             }
 
             if (from is IInput)
             {
-                if (to is RuleBase ruleBase)
+                if (to is RuleBase ruleBase && ruleBase.Inputs.Any())
                 {
-                    if (ruleBase.Inputs.Any())
-                    {
-                        log.Error("Rule can only have 1 input.");
-                        return false;
-                    }
+                    log.Error("Rule can only have 1 input.");
+                    return false;
                 }
 
-                if (to is ConditionBase conditionBase)
+                if (to is ConditionBase conditionBase && conditionBase.Input is Input)
                 {
-                    if (conditionBase.Input is Input)
-                    {
-                        log.Error("Condition can only have 1 input.");
-                        return false;
-                    }
+                    log.Error("Condition can only have 1 input.");
+                    return false;
                 }
             }
 
@@ -1088,12 +1067,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             adjustingConnectionInDomain = true;
 
-            if (from is Input fromInput)
+            if (from is Input fromInput && to is SignalBase toSignal)
             {
-                if (to is SignalBase toSignal)
-                {
-                    toSignal.Inputs.Add(fromInput);
-                }
+                toSignal.Inputs.Add(fromInput);
             }
 
             if (from is IInput fromIInput)
