@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                                       null);
 
             string[] relevantMduFilesInZip = 
-                filesInZip.Where(p => p.EndsWith(".mdu") && !p.ToLowerInvariant().Contains("dimr_expected"))
+                filesInZip.Where(p => p.EndsWith(".mdu") && !IsIgnored(p))
                           .ToArray();
 
             bool hasMultipleMduFiles = relevantMduFilesInZip.Length> 1;
@@ -159,6 +159,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 yield return testCase;
             }
+        }
+
+        private static bool IsIgnored(string path)
+        {
+            string lowerCase = path.ToLowerInvariant();
+            return lowerCase.Contains("dimr_expected") || lowerCase.Contains("_output");
         }
 
         private static string GetTestName(DirectoryInfo testModel, 
