@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             foreach (ShapeBase selectedShape in selectedShapes)
             {
                 RectangleF r = selectedShape.Rectangle;
-                if (!(r.Left < 0) && !(r.Top < 0))
+                if (r.Left >= 0 && r.Top >= 0)
                 {
                     continue;
                 }
