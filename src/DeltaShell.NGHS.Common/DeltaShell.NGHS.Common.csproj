@@ -61,7 +61,7 @@
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repeat.cs" />
+    <Compile Include="Utils\Repeat.cs" />
     <Compile Include="Utils\NameableCollectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
-﻿using DelftTools.Utils.Guards;
-using System;
+﻿using System;
+using DelftTools.Utils.Guards;
 
-// TODO: move to actual Utils folder, when RTC branch is merged back.
 namespace DeltaShell.NGHS.Common.Utils
 {
     /// <summary>
