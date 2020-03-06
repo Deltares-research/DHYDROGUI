@@ -1,9 +1,7 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
-
-namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
+﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents an expression parameter reference that references another <see cref="ExpressionXML" />
+    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionXML" />
     /// </summary>
     public class ExpressionReference : IExpressionReference
     {

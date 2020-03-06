@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Utils.Aop;
+﻿using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain

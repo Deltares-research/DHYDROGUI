@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
@@ -35,8 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <summary>
         /// Returns all input items that are connected via conditions or are Input to the rule.
         /// </summary>
-        /// <param name="output"></param>
         /// <param name="controlGroup"></param>
+        /// <param name="ruleBase"> </param>
         /// <returns></returns>
         private static IEnumerable<Input> InputsForRule(ControlGroup controlGroup, RuleBase ruleBase)
         {
@@ -99,8 +98,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// Returns all input items that are connected via conditions or are Input to the condition.
         /// This function is recursive; conditions can be connected to other conditions.
         /// </summary>
-        /// <param name="output"></param>
         /// <param name="controlGroup"></param>
+        /// <param name="conditionBase"> </param>
         /// <returns></returns>
         private static IEnumerable<Input> InputsForCondition(ControlGroup controlGroup, ConditionBase conditionBase)
         {
