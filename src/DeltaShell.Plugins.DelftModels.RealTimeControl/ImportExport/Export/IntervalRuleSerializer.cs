@@ -79,9 +79,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                     new XElement(xNamespace + "settingAbove", IntervalRule.Setting.Above.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + settingMax, settingMaxValue.ToString(CultureInfo.InvariantCulture)),
                     new XElement(xNamespace + deadBandSetpoint, IntervalRule.DeadbandAroundSetpoint.ToString(CultureInfo.InvariantCulture)),
-                    IntervalRule.Inputs.OfType<Input>().Select(input =>
+                    IntervalRule.Inputs.Select(input =>
                     {
-                        var serializer = new InputSerializer(input);
+                        var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>(input);
                         return serializer.ToXmlInputReference(xNamespace, "x", "setpoint");
                     }),
                        IntervalRule.Outputs.Select(output =>
