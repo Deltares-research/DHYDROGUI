@@ -38281,12 +38281,3 @@ test/RainfallRunoffModelEngineTest/Properties/AssemblyInfo.cs -text
 test/RainfallRunoffModelEngineTest/RRModelHybridEngineTest.cs -text
 test/RainfallRunoffModelEngineTest/RainfallRunoffModelEngineTests.csproj -text
 test/RainfallRunoffModelEngineTest/packages.config -text
-test/SobekImport.Tests/App.config -text
-test/SobekImport.Tests/Helpers/ModelImportAndExportChecker.cs -text
-test/SobekImport.Tests/Properties/AssemblyInfo.cs -text
-test/SobekImport.Tests/SOBEKTestBench.cs -text
-test/SobekImport.Tests/SobekImport.Tests.csproj -text
-test/SobekImport.Tests/SobekTestBenchHelper.cs -text
-test/SobekImport.Tests/TestCategorySobekImport.cs -text
-test/SobekImport.Tests/packages.config -text
-test/SobekImport.Tests/test-data/testbench/remove_model_export_dirs.bat -text

@@ -6209,16 +6209,6 @@ test/RainfallRunoffModelEngineTest/Properties/packages
 test/RainfallRunoffModelEngineTest/bin
 test/RainfallRunoffModelEngineTest/obj
 test/RainfallRunoffModelEngineTest/packages
-test/SobekImport.Tests/*.aps
-test/SobekImport.Tests/*.eto
-test/SobekImport.Tests/*.user
-test/SobekImport.Tests/ClientBin
-test/SobekImport.Tests/GeneratedArtifacts
-test/SobekImport.Tests/[Bb]in
-test/SobekImport.Tests/[Dd]ebug
-test/SobekImport.Tests/[Rr]elease
-test/SobekImport.Tests/_Pvt_Extensions
-test/SobekImport.Tests/obj
 test/bin
 test/obj
 test/packages
