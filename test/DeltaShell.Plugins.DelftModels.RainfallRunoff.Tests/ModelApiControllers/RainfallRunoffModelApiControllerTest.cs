@@ -429,6 +429,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         [Category(TestCategory.Slow)]
         [Ignore("Time aggregation should be done by kernel not deltashell")]
+        [Category("ToCheck")]
         public void RunModelTestAggregation()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())            {

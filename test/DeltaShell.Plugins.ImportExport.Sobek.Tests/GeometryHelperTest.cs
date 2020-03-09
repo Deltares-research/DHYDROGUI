@@ -102,6 +102,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Ignore("In progress update to SobekRE")]
+        [Category("ToCheck")]
         public void Rijn301BranchRT2_001()
         {
             var branchGeometry = new BranchGeometry();

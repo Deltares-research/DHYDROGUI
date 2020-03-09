@@ -559,6 +559,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Ignore("Run this test to generate expected model definition files")]
+        [Category("ToCheck")]
         public void GenerateExpectedResultsFolder()
         {
             var mduDir = Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen");

@@ -64,6 +64,7 @@ namespace DelftTools.Hydro.Tests
 
         [Test]
         [Ignore("TODO: not working anymore due to refactoring; re-enable later")]
+        [Category("ToCheck")]
         public void AddCrossSectionToBranchUsingCollections()
         {
             var crossSection = new CrossSection(null);

@@ -69,6 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Test]
         [Ignore("Some strange bug, hangs")]
         [Category(TestCategory.WindowsForms)]
+        [Category("ToCheck")]
         public void CheckIfHydroNetworkEditorViewContextIsRestoredAfterViewIsClosed()
         {
             using (var gui = new DeltaShellGui())

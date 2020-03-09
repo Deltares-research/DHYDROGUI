@@ -94,6 +94,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Ignore("doesn't work yet, should check with arthur van dam")]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void TestCallValidateFileIsUgridWithCallToApi()
         {
             var testFilePath =
@@ -163,6 +164,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Ignore("doesn't work yet, should check with arthur van dam")]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void TestCallGetDataSetConventionViaApi()
         {
             var testFilePath =
@@ -498,6 +500,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Ignore]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void TestCallWriteGeometry()
         {
             var testDir = FileUtils.CreateTempDirectory();
@@ -508,6 +511,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [Ignore]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void TestCallWriteMapFile()
         {
             var testDir = FileUtils.CreateTempDirectory();

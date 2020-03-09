@@ -72,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void TargetCoverageIsInitializedCorrectly()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -89,6 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void TargetCoverageIsUpdatedCorrectly()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -108,6 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
         
         [Test]
+        [Category("ToCheck")]
         public void TargetCoverageIsUpdatedCorrectlyOnClearOfSourceCoverage()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -125,6 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void TargetCoverageIsRebuildWhenItsFeaturesAreChanged()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -146,6 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 
         [Test]
         [Category(TestCategory.Performance)]
+        [Category("ToCheck")]
         public void RebuildIsQuick()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -188,6 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void NumberOfConvertOperationsShouldBeMinimal()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -210,6 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("ToCheck")]
         public void LinkWithDataItems()
         {
             // setup dataitems

@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         [Test]
         [Ignore("Just 2 points are imported, id 3 and 5, ToDo: Why?")]
+        [Category("ToCheck")]
         public void PointGMLImport()
         {
             var filePath = TestHelper.GetTestFilePath(@"gisFiles\points.gml");

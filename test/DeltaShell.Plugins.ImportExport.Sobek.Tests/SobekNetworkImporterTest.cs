@@ -834,6 +834,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Should be fixed by issue SOBEK3-1644")]
+        [Category("ToCheck")]
         public void RunZwolleModel()
         {
             InitializeSobekLicense();
@@ -895,6 +896,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         [Ignore("Should be fixed by issue SOBEK3-1644")]
+        [Category("ToCheck")]
         public void RunZwolleModelWithAddedCrossSection()
         {
             InitializeSobekLicense();

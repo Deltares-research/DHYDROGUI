@@ -62,6 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void FeatureCoverageIsInitializedCorrectly()
         {
             var convertor = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
@@ -85,6 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void FeatureCoverageIsUpdatedCorrectly()
         {
             var convertor = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
@@ -109,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void FeatureCoverageIsUpdatedCorrectlyOnClearOfNetworkCoverage()
         {
             new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
@@ -126,6 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
+        [Category("ToCheck")]
         public void FeatureCoverageUpdateWithoutLinksDoesNotCrash()
         {
             // Remove links:
@@ -156,6 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("ToCheck")]
         public void LinkWithDataItems()
         {
             var c1 = featureCoverage.Features.First();

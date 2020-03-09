@@ -132,6 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //1.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopes_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
@@ -203,6 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //1.2
+        [Category("ToCheck")]
         public void GivenAnFMModelWithMorphology_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
@@ -274,6 +276,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //1.3
+        [Category("ToCheck")]
         public void GivenAnFMModelWithWind_WhenProjectSavedAs_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
@@ -345,6 +348,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //2.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopes_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
@@ -431,6 +435,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //2.2
+        [Category("ToCheck")]
         public void GivenAnFMModelWithMorphology_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
@@ -519,6 +524,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //2.3
+        [Category("ToCheck")]
         public void GivenAnFMModelWithWind_WhenRun_ThenWorkDirIsCreatedInTemp()
         {
             CreateTestDirectories();
@@ -605,6 +611,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //2.4
+        [Category("ToCheck")]
         public void GivenAnFMModelWithWind_WhenRunAndSaved_ThenOutputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();
@@ -711,6 +718,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //3.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopes_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
@@ -796,6 +804,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //3.2
+        [Category("ToCheck")]
         public void GivenAnFMModelWithMorphology_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
@@ -884,6 +893,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //3.3
+        [Category("ToCheck")]
         public void GivenAnFMModelWithWind_WhenDimrExported_ThenCorrectFoldersAndFilesAreGiven()
         {
             CreateTestDirectories();
@@ -970,6 +980,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //4.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutput_ThenOutputFolderShouldBePresentButEmpty()
         {
             CreateTestDirectories();
@@ -1029,6 +1040,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //4.2
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopesThatRunsAndSaves_WhenUserClearsOutputAndReopensTheProject_ThenOpeningShouldNotGiveAnyErrorsAndOutputFolderShouldBePresentButEmpty()
         {
             CreateTestDirectories();
@@ -1096,6 +1108,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [TestCase(TrachytopesModelProjectDirName)]
         [TestCase(NoordzeeModelProjectDirName)]
         //5.1 & 5.2
+        [Category("ToCheck")]
         public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(string projectFolder)
         {
             FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
@@ -1175,6 +1188,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test] 
         //6.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopes_WhenCustomDirectoryIsAddedInMdu_ThenOutputIsPlacedInCustomFolder()
         {
             CreateTestDirectories();
@@ -1289,6 +1303,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         // 7
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopesAfterARun_WhenSavingItAndRenamingItAndSavingItAgain_OnlyFolderNameOfModelIsChangedAndTheMDUFileName()
         {
             CreateTestDirectories();
@@ -1365,6 +1380,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         //8.1
+        [Category("ToCheck")]
         public void GivenAnFMModelWithTrachytopes_WhenRunAndProjectSavedAsInAnotherDirectory_ThenInputFolderWithCorrectFilesAreGiven()
         {
             CreateTestDirectories();

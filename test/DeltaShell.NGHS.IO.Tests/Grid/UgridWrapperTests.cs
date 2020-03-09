@@ -629,6 +629,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void Create1dUGRIDNetcdf()
         { 
             
@@ -669,6 +670,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void Create1d2dLinks_CheckNumberOfLinks()
         {
             var wrapper = new GridWrapper();
@@ -732,6 +734,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void Read1dUGRIDNetcdf()
         {
             //1. Open a netcdf file 
@@ -766,6 +769,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void DeltaShellClones2dMesh()
         {
             var wrapper = new GridWrapper();
@@ -864,6 +868,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void Load1D2DlinksTest()
         {
             var wrapper = new GridWrapper();
@@ -912,6 +917,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         [HandleProcessCorruptedStateExceptions]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public void SaveAndLoad1D2DlinksTest()
         {
             var wrapper = new GridWrapper();

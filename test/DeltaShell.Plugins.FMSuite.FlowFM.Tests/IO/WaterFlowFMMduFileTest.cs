@@ -439,6 +439,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test, Ignore("We are not able to read 1D2D-models at the moment, so this test will fail at the moment.")] /* Roundtrip test */
+        [Category("ToCheck")]
         public void MduFileReadsAndWritesIGroupableFeatures()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
@@ -550,6 +551,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test, Ignore("We are not able to read 1D2D-models at the moment, so this test will fail at the moment.")] /* Roundtrip test */
+        [Category("ToCheck")]
         public void MduFileWritesDefaultValueForIGroupableFeatures()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");

@@ -59,6 +59,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Ignore("Local test method for performance")]
         [Category(TestCategory.Performance)]
+        [Category("ToCheck")]
         public void ConvertTimeTablePerformance()
         {
             var dataTable = SobekFlowBoundaryCondition.TimeTableStructure;

@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
     {
         [Test]
         [Ignore("A bit too fragile for the build server, useful for local debugging")]
+        [Category("ToCheck")]
         public void BruteForceDatabindingCheck()
         {
             var unpaved = new UnpavedData(new Catchment());

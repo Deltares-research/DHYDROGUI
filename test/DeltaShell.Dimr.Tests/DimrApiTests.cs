@@ -95,6 +95,7 @@ namespace DeltaShell.Dimr.Tests
 
         [Test()]
         [Ignore("Crashes build server")]
+        [Category("ToCheck")]
         public void TestInitializeUpdateFinishAndGetValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");

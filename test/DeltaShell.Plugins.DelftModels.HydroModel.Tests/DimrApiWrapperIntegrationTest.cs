@@ -99,6 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Ignore("Hangs on build server")]
         [TestCase("AdvancedFlowFM.py", "waterlevelSeries", "dischargeSeries")]
         [TestCase("BasicFlowFM.py", "waterlevelSeries", "dischargeSeries")]
+        [Category("ToCheck")]
         public void DimrFlowFmTest(string scriptPath, params string[] variables)
         {
             Action<IEnumerable<KeyValuePair<string, object>>> checks = outputFlowFm =>
@@ -129,6 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Ignore("Hangs on build server")]
         [TestCase("FlowFMRTC.py", "waterlevelSeries", "dischargeSeries")]
+        [Category("ToCheck")]
         public void DimrFlowFmRtcTest(string scriptPath, params string[] variables)
         {
             Action<IEnumerable<KeyValuePair<string, object>>> checks = outputFlowFmRtc =>

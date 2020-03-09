@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.DataAccess)]
         [Ignore("Also fails on the trunk. No action needed here.")]
+        [Category("ToCheck")]
         public void TestGetUnstructuredGridFromUGridMeshId_WithExportedNetGeomFile()
         {
             /*

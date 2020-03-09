@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [TestCase("bla_bnd.ext" , KnownProperties.ExtForceFile, TestName = "ExtForceFile")]
         [TestCase("bla_thd.pli", KnownProperties.ThinDamFile, TestName = "ThinDamFile")]
         [TestCase("bla_structures.ini", KnownProperties.StructuresFile, TestName = "StructuresFile")]
-
+        [Category("Quarantine")]
         public void GivenModelsWithPropertiesToClear_WhenGridSnappingIsCalled_ThenThesePropertiesShouldBeEmpty(string file, string knownProperties)
         {
             var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");

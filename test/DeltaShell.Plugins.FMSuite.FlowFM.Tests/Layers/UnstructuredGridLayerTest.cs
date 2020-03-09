@@ -135,6 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         [Ignore("too big, local data")]
         [Category(TestCategory.Performance)]
+        [Category("ToCheck")]
         public void ProfileElbeGridLayer()
         {
             var grid = NetFileImporter.ImportGrid(@"D:\schre_tn\Desktop\Elbe\elbe_big_net.nc");
@@ -157,6 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         [Ignore("too big, local data")]
         [Category(TestCategory.Performance)]
+        [Category("ToCheck")]
         public void ProfileElbeGridLayerExtensive()
         {
             // to make sure OpenGL etc have been loaded into the process already (takes up quite some mbs)

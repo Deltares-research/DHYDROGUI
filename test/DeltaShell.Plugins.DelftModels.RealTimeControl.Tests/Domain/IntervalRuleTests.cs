@@ -107,6 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
         [Test]
         [Ignore("Waste of time to keep this up to date")]
+        [Category("ToCheck")]
         public void RuleFromXml()
         {
             var intervalRule = new IntervalRule {Name = RuleName};

@@ -75,6 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.ChartEditors
 
         [Ignore("not implemented yet")]
         [Test]
+        [Category("ToCheck")]
         public void DeleteAt()
         {
             double offset = weir.OffsetY;

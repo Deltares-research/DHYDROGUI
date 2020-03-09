@@ -9,6 +9,7 @@ namespace DelftTools.Hydro.Tests
     {
         [Test]
         [Ignore("WIP")]
+        [Category("ToCheck")]
         public void UnsubscribeOldSectionType()
         {
             var section = new CrossSectionSection();

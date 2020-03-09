@@ -1897,6 +1897,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [Ignore]
+        [Category("ToCheck")]
         public void ReadNetworkGeometryTest()
         {
             double[] geopointsX;
@@ -2655,6 +2656,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [Test]
         [Ignore]
+        [Category("ToCheck")]
         public void Read1D2DLinksTest()
         {
             double[] geopointsX;

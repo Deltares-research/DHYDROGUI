@@ -113,6 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test, Ignore("Issue FM1D2D-189")]
+        [Category("ToCheck")]
         public void GivenFmModel_With1DAnd2DStructures_CheckStructureIniFile()
         {
             var mduFilePath = Path.Combine(tempDirectory, "myFmModel.mdu");

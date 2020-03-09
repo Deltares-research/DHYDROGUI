@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Ignore]
+        [Category("ToCheck")]
         public void SideViewFunctionCanGoAndComeBack()
         {
             //NOT implemented might cause lot's of other troubles (structures in sideview for example) 
@@ -173,6 +174,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Ignore("Not implemented. Because veeery slow evaluate :(")]
+        [Category("ToCheck")]
         public void MinMaxOnATimeDependentCoverageCanUseInterpolation()
         {
             IHydroNetwork network = NetworkSideViewFunctionTestHelper.CreateNetwork();

@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test, Ignore]
+        [Category("ToCheck")]
         public void ErrorReadingFile() //DELFT3DFM-908
         {
             var mapPath = TestHelper.GetTestFilePath(@"data\Testrun5000_mk1d2d_map.nc");
