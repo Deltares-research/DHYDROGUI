@@ -45,6 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
         }
 
         [Test, Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Jira)]  // D3DFMIQ-1713
+        [Category("Quarantine")]
         public void ExpendingGridShouldWork()
         {
             using (var gui = new DeltaShellGui())
@@ -55,6 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                 var script = "from Libraries.FlowFlexibleMeshFunctions import *\n" +
                              "GenerateRegularGridForModel(fmModel, 5, 11, 100, 100, 0, 0)\n" +
                              "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
+
                 var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(tempDirectory);
                 var waterFlowFmModel = new WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
@@ -89,6 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                 });
             }
         }
+
         private static void AddPlugins(IGui gui)
         {
             var app = gui.Application;

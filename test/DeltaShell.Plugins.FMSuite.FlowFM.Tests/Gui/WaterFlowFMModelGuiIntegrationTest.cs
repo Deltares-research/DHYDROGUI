@@ -1015,6 +1015,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
         {
             using (var gui = new DeltaShellGui())
