@@ -37,13 +37,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <returns>IEnumerable with XElements for every expression block</returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
-            BranchNode rootNode = ParseMathematicalExpressionToRootBranchNode(
-                    MathematicalExpression, out List<BranchNode> subBranchNodes);
+            IBranchNode rootNode = RetrieveRootBranchNode();
+            
+            List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
+            List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
+            IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
+
+            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
 
             string idRootNode = GetXmlNameWithoutTag(prefix);
             yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode);
 
-            foreach (BranchNode subBranchNode in subBranchNodes)
+            foreach (IBranchNode subBranchNode in subBranchNodes)
             {
                 string idSubBranchNodes = prefix + subBranchNode.YName;
                 yield return CreateTriggerForExpression(xNamespace, subBranchNode, idSubBranchNodes);
@@ -61,21 +66,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
         public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace)
         {
-            BranchNode rootNode = ParseMathematicalExpressionToRootBranchNode(MathematicalExpression, out List<BranchNode> subBranchNodes);
+            IBranchNode rootNode = RetrieveRootBranchNode();
+
+            List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
+            List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
+            IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
+
+            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
 
             yield return new XElement(xNamespace + "timeSeries",
                                       new XAttribute("id", rootNode.YName));
 
-            foreach (BranchNode branchNode in subBranchNodes)
+            foreach (IBranchNode branchNode in subBranchNodes)
             {
                 yield return new XElement(xNamespace + "timeSeries",
                                           new XAttribute("id", branchNode.YName));
             }
         }
 
-        private XElement CreateTriggerForExpression(XNamespace xNamespace, BranchNode branchNode, string id)
+        private XElement CreateTriggerForExpression(XNamespace xNamespace, IBranchNode branchNode, string id)
         {
-            XElement trigger = new XElement(xNamespace + "trigger");
             var expression = new XElement(xNamespace + "expression", new XAttribute("id", id));
 
             expression.Add(CreateXElementForNode(xNamespace, branchNode.FirstNode, "x1Value", "x1Series"));
@@ -84,8 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             expression.Add(CreateXElementForNode(xNamespace, branchNode.SecondNode, "x2Value", "x2Series"));
             expression.Add(new XElement(xNamespace + "y", branchNode.YName));
 
-            trigger.Add(expression);
-            return trigger;
+            return new XElement(xNamespace + "trigger", expression);
         }
 
         private XElement CreateXElementForNode(XNamespace xNamespace, IExpressionNode node, string constantName,
@@ -127,10 +136,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                     throw new ArgumentOutOfRangeException(nameof(mathOperator), mathOperator, null);
             }
         }
-        
-        private static BranchNode ParseMathematicalExpressionToRootBranchNode(MathematicalExpression mathematicalExpression, out List<BranchNode> subBranchNodes)
+
+        private void CorrectAllNodesByUsingOriginalInputNames(IBranchNode rootNode, IEnumerable<IBranchNode> subBranchNodes, IEnumerable<ParameterLeafNode> subParameterLeafNodes)
         {
-            bool resultParsing = ExpressionParser.TryParse(mathematicalExpression.Expression, out IExpressionNode iRootNode,
+            CorrectXmlInputNamesForLeafNodes(subParameterLeafNodes);
+            SetYNameOfRootNode(rootNode);
+            SetYNamesOfSubBranchNodes(subBranchNodes);
+        }
+
+        private IBranchNode RetrieveRootBranchNode()
+        {
+            bool resultParsing = ExpressionParser.TryParse(MathematicalExpression.Expression, out IExpressionNode iRootNode,
                                                            out string errorMessage);
 
             if (!resultParsing)
@@ -144,30 +160,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                     String.Format(
                         Resources
                             .MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__,
-                        mathematicalExpression.Name, mathematicalExpression.Expression));
+                        MathematicalExpression.Name, MathematicalExpression.Expression));
             }
 
-            List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
-
-            subBranchNodes = allSubNodes.OfType<BranchNode>().ToList();
-            List<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>().ToList();
-
-            CorrectXmlInputNamesForLeafNodes(mathematicalExpression, subParameterLeafNodes);
-
-            SetYNameOfRootNode(rootNode, mathematicalExpression);
-            SetYNamesOfSubBranchNodes(subBranchNodes, mathematicalExpression);
             return rootNode;
         }
-        private static void CorrectXmlInputNamesForLeafNodes(MathematicalExpression mathematicalExpression, List<ParameterLeafNode> leafNodes)
+
+        private void CorrectXmlInputNamesForLeafNodes(IEnumerable<ParameterLeafNode> leafNodes)
         {
             foreach (ParameterLeafNode leafNode in leafNodes)
             {
                 KeyValuePair<char, string> parameterKvp =
-                    mathematicalExpression.InputMapping.FirstOrDefault(i => i.Key.ToString() == leafNode.Value);
+                    MathematicalExpression.InputMapping.FirstOrDefault(i => i.Key.ToString() == leafNode.Value);
                 if (!parameterKvp.Equals(default(KeyValuePair<char, string>)))
                 {
                     IInput expressionInput =
-                        mathematicalExpression.Inputs.First(i => i.Name.Equals(parameterKvp.Value));
+                        MathematicalExpression.Inputs.First(i => i.Name.Equals(parameterKvp.Value));
                     
                     InputSerializerBase serializer =
                         SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject)expressionInput);
@@ -178,16 +186,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             }
         }
 
-        private static void SetYNameOfRootNode(BranchNode branchNode, MathematicalExpression mathematicalExpression)
+        private void SetYNameOfRootNode(IBranchNode branchNode)
         {
-            branchNode.YName = mathematicalExpression.Name;
+            branchNode.YName = MathematicalExpression.Name;
         }
 
-        private static void SetYNamesOfSubBranchNodes(List<BranchNode> branchNodes, MathematicalExpression mathematicalExpression)
+        private void SetYNamesOfSubBranchNodes(IEnumerable<IBranchNode> branchNodes)
         {
-            foreach (BranchNode branchNode in branchNodes)
+            foreach (IBranchNode branchNode in branchNodes)
             {
-                branchNode.YName = mathematicalExpression.Name + "/" + branchNode;
+                branchNode.YName = MathematicalExpression.Name + "/" + branchNode;
             }
         }
     }

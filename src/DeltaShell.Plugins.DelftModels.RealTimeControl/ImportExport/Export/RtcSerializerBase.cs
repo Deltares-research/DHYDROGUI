@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// </summary>
         /// <param name="prefix"> The prefix </param>
         /// <returns> The XML name </returns>
-        public string GetXmlNameWithoutTag(string prefix)
+        protected string GetXmlNameWithoutTag(string prefix)
         {
             return prefix + RtcObject.Name;
         }

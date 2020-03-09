@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// <summary>
         /// Gets the y name, or output name, of the branch node.
         /// </summary>
-        string YName { get; }
+        string YName { get; set; }
 
         /// <summary>
         /// Gets all child nodes recursively.

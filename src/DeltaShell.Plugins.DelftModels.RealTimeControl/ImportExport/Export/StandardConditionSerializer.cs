@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                                       new XElement(xNamespace + "relationalOperator",
                                                    standardCondition.Operation.ToString()),
                                       // see above comment
-                                      GetX2Element(xNamespace, inputName)));
+                                      GetX2Element(xNamespace)));
             if (standardCondition.TrueOutputs.OfType<RuleBase>().Any())
             {
                 //rules
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return result;
         }
 
-        protected virtual XElement GetX2Element(XNamespace xNamespace, string inputName)
+        protected virtual XElement GetX2Element(XNamespace xNamespace)
         {
             return new XElement(xNamespace + "x2Value", standardCondition.Value);
         }

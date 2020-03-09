@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             if (xDocument.Root != null)
             {
                 xDocument.Root.Add(GetXmlRulesFromControlGroups(controlGroups, includeExtraStatesForRestart));
-                xDocument.Root.Add(GetXmlConditionsAndExpressionsFromControlGroups(controlGroups));
+                xDocument.Root.Add(GetTriggersElementFromControlGroups(controlGroups));
             }
 
             AddUnitDelayComponents(xDocument, controlGroups);
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return xDocument;
         }
 
-        private static XElement GetXmlConditionsAndExpressionsFromControlGroups(IEnumerable<ControlGroup> controlGroups)
+        private static XElement GetTriggersElementFromControlGroups(IEnumerable<ControlGroup> controlGroups)
         {
             var triggersElement = new XElement(Fns + "triggers");
             foreach (ControlGroup group in controlGroups)

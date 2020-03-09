@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return timeSeriesElement;
         }
 
-        protected override XElement GetX2Element(XNamespace xNamespace, string inputName)
+        protected override XElement GetX2Element(XNamespace xNamespace)
         {
             return new XElement(xNamespace + "x2Series",
                                 directionalCondition.Reference == string.Empty
