@@ -2,6 +2,7 @@
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using NUnit.Framework;
+using Category = NUnit.Framework.CategoryAttribute;
 
 namespace DelftTools.Hydro.Tests.Structures
 {

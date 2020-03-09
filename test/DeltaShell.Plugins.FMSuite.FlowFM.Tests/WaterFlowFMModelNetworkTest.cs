@@ -7,10 +7,11 @@ using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Category = NUnit.Framework.CategoryAttribute;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    [TestFixture]
+    [TestFixture] 
     public class WaterFlowFMModelNetworkTest
     {
         [Test]
