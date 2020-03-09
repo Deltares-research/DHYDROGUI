@@ -144,7 +144,7 @@ PRAGMA foreign_keys = on;
                 }
                 catch (SQLiteException exception)
                 {
-                    throw new ApplicationException("Loaded a project that was already upgraded, but not saved. RTC database schema is in corrupted state.", exception);
+                    throw new SQLiteException("Loaded a project that was already upgraded, but not saved. RTC database schema is in corrupted state.", exception);
                 }
             }
             
