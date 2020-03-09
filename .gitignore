@@ -1899,9 +1899,6 @@ test/DeltaShell.Plugins.FMSuite.Common.Tests/packages
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/*.suo
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/*.user
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/bin
-test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/hydamo/script/.idea
-test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/hydamo/script/__pycache__
-test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/hydamo/script/pyugrid-master
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/obj
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/packages
 test/DeltaShell.Plugins.FMSuite.Common.Tests/test-data/structures/*.suo

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Gui;
@@ -295,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void LoadAndRunModelWithMorphologyAndSpatialOperationsTest()
+        public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShoulLoadAndRun()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
             {
@@ -306,26 +307,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Run();
 
-                app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
-                //app.OpenProject(TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj"));
+                app.SaveProjectAs("spatial_hibernate.dsproj");
 
-                var mduPath = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm\zm_dfm.mdu");
-                var mduFilePath = TestHelper.CreateLocalCopy(mduPath);
+                var testDataDirectory = TestHelper.GetTestFilePath(@"MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm");
+                var zipFileName = "zm_dfm.zip";
+                var zipFilePath = Path.Combine(testDataDirectory, zipFileName);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+                {
+                    FileUtils.CopyDirectory(testDataDirectory, tempDir);
+                    ZipFileUtils.Extract(zipFilePath, tempDir);
 
-                app.Project.RootFolder.Add(model);
+                    var mduFileName = "zm_dfm.mdu";
+                    var model = new WaterFlowFMModel(Path.Combine(tempDir, mduFileName));
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
-                loadedModel.ClearOutput();
-                Assert.NotNull(loadedModel);
-                Assert.IsTrue(loadedModel.OutputIsEmpty);
+                    app.Project.RootFolder.Add(model);
 
-                app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
-                app.RunActivity(loadedModel);
-                Assert.IsFalse(loadedModel.OutputIsEmpty);
+                    var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                    loadedModel.ClearOutput();
+                    Assert.NotNull(loadedModel);
+                    Assert.IsTrue(loadedModel.OutputIsEmpty);
 
-                app.CloseProject();
+                    app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
+                    app.RunActivity(loadedModel);
+                    Assert.IsFalse(loadedModel.OutputIsEmpty);
+
+                    app.CloseProject();
+                });
             }
         }
 
