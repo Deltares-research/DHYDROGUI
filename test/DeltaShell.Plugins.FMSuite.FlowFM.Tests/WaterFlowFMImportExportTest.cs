@@ -63,6 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         //[Ignore("outofmemory")]
+        [Category("Quarantine")]
         public void ModelImportTestDcsm()
         {
             var mduPath = TestHelper.GetTestFilePath(@"dcsm\par16.mdu");
@@ -75,6 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ExportOutputCoverage()
         {
             if(Map.CoordinateSystemFactory == null)
@@ -112,6 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(false)]
         [TestCase(true)]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void GivenTimFile_WhenImportingMeteorologicalDataFromFile_ThenImportResultIsAsExpected(bool useSolarRadiation)
         {
             var originalTimFilePath = TestHelper.GetTestFilePath(Path.Combine("timFiles", "FlowFM_MeteoData.tim"));

@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ImportModelWithLinkageNodesCheckUpdateDiscretization()
         {
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"LMW_LinkageNodes\Network.TP");

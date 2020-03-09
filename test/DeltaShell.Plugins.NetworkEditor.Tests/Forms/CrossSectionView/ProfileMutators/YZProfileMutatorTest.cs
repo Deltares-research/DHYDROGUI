@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
     public class YZProfileMutatorTest
     {
         [Test]
+        [Category("Quarantine")]
         public void AddPointSetsStorageWidth()
         {
             var crossSection = new CrossSectionDefinitionYZ();

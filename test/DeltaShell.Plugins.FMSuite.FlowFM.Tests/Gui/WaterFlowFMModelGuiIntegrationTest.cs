@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     {
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void RunModelShouldNotCrashWithOldOutputOpen()
         {
             var mduPath =
@@ -103,6 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void FmModelShouldBeReplacedWhenImportedInRootFolder()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -146,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void FmModelShouldBeReplacedWhenImportedInFolder()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -242,6 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void DoubleClickingOnMapOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath =
@@ -289,6 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void DoubleClickingOnHisOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath =
@@ -339,6 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void ShowSnappedFeatureLayersInMap()
         {
             var mduPath =
@@ -381,6 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void RunningFMModelShouldGiveVectorVelocityLayer()
         {
             var mduPath =

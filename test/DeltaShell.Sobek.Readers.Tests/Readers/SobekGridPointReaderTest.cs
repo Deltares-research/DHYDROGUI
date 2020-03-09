@@ -242,6 +242,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadReGridFile()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly,  @"ReModels\RIJN301.SBK\8\DEFGRD.1");

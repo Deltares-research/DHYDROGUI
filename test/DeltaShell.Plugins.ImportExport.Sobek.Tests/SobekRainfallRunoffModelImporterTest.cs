@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ImportTholenGeneralCheck()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
@@ -54,6 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportRRBoundariesAndConditions()
         {
             string pathToModel = TestHelper.GetTestDataDirectory() + @"\RR.Lit\1\Network.TP";
@@ -75,6 +77,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ImportTholenUnpavedLinkCheck()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP";
@@ -95,6 +98,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void ImportRrStandaloneWithFlowConnectionNode()
         {
             // TOOLS-20516

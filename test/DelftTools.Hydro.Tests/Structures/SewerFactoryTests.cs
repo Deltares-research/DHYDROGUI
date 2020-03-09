@@ -13,6 +13,7 @@ namespace DelftTools.Hydro.Tests.Structures
     public class SewerFactoryTests
     {
         [Test]
+        [Category("Quarantine")]
         public void GeneratingAPipe_CheckCrossSectionDefaultSettings()
         {
             var network = new HydroNetwork();

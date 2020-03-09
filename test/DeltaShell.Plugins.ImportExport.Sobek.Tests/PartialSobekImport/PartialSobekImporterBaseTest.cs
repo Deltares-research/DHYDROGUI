@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SobekTypeRE()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";

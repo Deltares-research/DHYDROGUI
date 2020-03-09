@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WhenWritingRetentionFile_ThenRetentionFileIsExisting()
         {
             NodeFile.Write(filePath, new List<Compartment>(),null);

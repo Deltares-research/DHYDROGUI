@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenOnePipeTwoManholes_WhenWritingAndReading_ThenNetworksAreTheSame()
         {
             var pipeName = "myPipe";
@@ -77,6 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenFmModelWith1DRoughness_WhenWritingFmModel_ThenCorrectFilesAreWritten()
         {
             var mduFilePath = Path.Combine(tempDirectory, "myFmModel.mdu");

@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void GivenFmModelWithSewerNetworkWithoutCompartments_WhenWritingMduFile_ThenNodeFileIsNotWrittenAndMduFileDoesNotReferenceANodeFile()
         {
             var tempFolder = FileUtils.CreateTempDirectory();
@@ -245,6 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenFmModelWith2DPump_WhenWritingMduFile_ThenStructureFilesAreWrittenAndMduReferenceIsCorrect()
         {
             var pumpName = "my2DPump";

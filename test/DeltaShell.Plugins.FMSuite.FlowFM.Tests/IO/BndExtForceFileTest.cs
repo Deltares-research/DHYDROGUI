@@ -112,6 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void OpenBoundaryToleranceIsOnlyWrittenForEmbankments()
         {
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
@@ -147,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteReadEmptyBoundaries()
         {
             var modelDefinition = CreateModelDefinitionWithTwoBoundaries();
@@ -879,6 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteBndExtForceFileSubFilesReturnsItemsWhenNameIsNotMissing()
         {
             var bndExtForceFile = new BndExtForceFile();

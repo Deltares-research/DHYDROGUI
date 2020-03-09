@@ -301,6 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void CreateGateWithTimeSeriesTest()
         {
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);

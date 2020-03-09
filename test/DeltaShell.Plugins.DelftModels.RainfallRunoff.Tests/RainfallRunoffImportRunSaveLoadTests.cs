@@ -29,6 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ImportRunSaveLoadMiniModel2()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
@@ -36,6 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportRunSaveLoadMiniModel4()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP");
@@ -43,6 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportRunSaveLoadMiniModel6()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\6\NETWORK.TP");

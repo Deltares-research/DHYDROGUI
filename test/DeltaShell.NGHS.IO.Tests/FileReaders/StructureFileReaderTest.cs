@@ -14,6 +14,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     public class StructureFileReaderTest
     {
         [Test, Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void GivenStructureFileReader_ReadingStructureFile_ShouldResultInAddedStructuresInNetwork()
         {
             //Arrange

@@ -104,6 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportReadsAllCrossSections()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";
@@ -127,6 +128,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportNetworkWithWeirs()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\network.tp";

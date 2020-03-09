@@ -265,6 +265,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddingOrificeToNetworkSequence3()
         {
             var network = new HydroNetwork();
@@ -282,6 +283,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddingOrificeToNetworkSequence4()
         {
             var network = new HydroNetwork();
@@ -303,6 +305,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddingOrificeToNetworkSequence5()
         {
             var network = new HydroNetwork();
@@ -646,6 +649,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddingGwswConnectionOrificeToNetworkSequence3()
         {
             var network = new HydroNetwork();
@@ -731,6 +735,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddingGwswConnectionOrificeToNetworkSequence6()
         {
             var network = new HydroNetwork();

@@ -68,6 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(@"f105_cross-sections\c11_rectangular-profile-storage\rectangular_storage.mdu", "c11_rectangular-profile-storage")]
         [TestCase(@"f105_cross-sections\c14_tabulated-profile-zw-storage\ZW_Storage.mdu", "c14_tabulated-profile-zw-storage")]
         [TestCase(@"f105_cross-sections\c16_YZ-profile_lumped\Lumped_YZ_flow_area.mdu", "c16_YZ-profile_lumped")]
+        [Category("Quarantine")]
         public void WaterFlowFMModel_CompareReadWriteTest(string relativeMduFilePath, string testname)
         {
             var mduPathTestBench = Path.Combine(PathTestBench,relativeMduFilePath);

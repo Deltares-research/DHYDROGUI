@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportMiniModelCheckErnst()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\8\NETWORK.TP";
@@ -86,6 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportMiniModelCheckPaved()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\15\NETWORK.TP";
@@ -122,6 +124,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportMiniModelCheckSewerTypeImproved()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP";
@@ -143,6 +146,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportMiniModelCheckGreenhouseArea()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
@@ -158,6 +162,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportMiniModelCheckGreenhouseStorageAndCapacities()         // fix for JIRA issues 6372 and 6373
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
@@ -184,6 +189,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportTholenCheckUnpavedDataCount()
         {
             SetUpTholen();
@@ -192,6 +198,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportTholenCheckUnpavedDataOfFirstItem()
         {
             //UNPV id 'upGFE820' na 16 ga 99826 ar 99392 0 0 0 196 238 0 0 0 0 0 0 0 0 0 0 su 0 '' lv -0.18 co 3 ad '' rc 0 ed 'Drain1' sp 'GFE820' ic 'INF1' sd 'STOR1' ig 0  1.07 gl 2 bt 115 is 2566.2 ms 'Station1' aaf 1 unpv
@@ -266,6 +273,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportTholenCheckPavedDataCount()
         {
             SetUpTholen();
@@ -274,6 +282,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportTholenCheckPavedDataOfFirstItem()
         {
             //PAVE id 'GS01' ar 5400 lv 9.99 ss 1 sd 'PAV1' qc 0 0 0.0315 qo 2 0 ms 'GFE1000' aaf 1 is 0 np 70 dw '1' ro 0 ru 0 qh '' pave
@@ -337,6 +346,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportZBOtestCheckGreenhouseDataCount()
         {
             SetUpZBOtest();
@@ -344,6 +354,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
         
         [Test]
+        [Category("Quarantine")]
         public void ImportZBOtestCheckGreenhouseDataOfSeventhItem()
         {
             // GRHS id 'GH3_GFE1224' na 10 ar 0 334051 0 0 0 0 0 0 0 0 sl 0.94 as 0 sd 'STOR1' si '1' ms 'GFE1224' aaf 1 is 50 grhs

@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Test_SettingsCategories_ShowOnly_VisibleCategories()
         {
             var viewModel = new WpfSettingsViewModel();

@@ -232,6 +232,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
         [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
+        [Category("Quarantine")]
         public void WriteZCoordinateValuesTest(GridApiDataSet.LocationType location)
         {
             DoWithMockedUGridApi(
@@ -270,6 +271,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         [TestCase(GridApiDataSet.LocationType.UG_LOC_FACE)]
         [TestCase(GridApiDataSet.LocationType.UG_LOC_NODE)]
+        [Category("Quarantine")]
         public void WriteZCoordinateValuesApiCallFailedTest(GridApiDataSet.LocationType location)
         {
             DoWithMockedUGridApi(

@@ -68,6 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void ShowHarlingenFileStructure()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

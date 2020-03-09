@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     {
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportSettingsRe()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";

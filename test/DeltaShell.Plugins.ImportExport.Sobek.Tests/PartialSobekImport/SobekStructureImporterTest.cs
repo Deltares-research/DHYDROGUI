@@ -13,6 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     public class SobekStructureImporterTest
     {
         [Test]
+        [Category("Quarantine")]
         public void ImportStructures()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
@@ -26,6 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void UpdateExistingStructures()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
@@ -51,6 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void UpdateExistingStructureOnAnotherBranch()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
@@ -162,6 +165,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CheckStructureNamesAfterImportStructuresFromSobekRE()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\26\DEFTOP.1";

@@ -43,6 +43,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportModelWithSacramentoCatchmentData()
         {
             var pathToSobekModel = TestHelper.GetTestFilePath(@"TEST_SAC.lit\2\NETWORK.TP");
@@ -70,6 +71,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportModelWithHbvCatchmentData()
         {
             var pathToSobekModel = TestHelper.GetTestFilePath(@"TEST_HBV.lit\2\NETWORK.TP");

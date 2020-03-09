@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class BcFileExportImportTest
     {
         [Test]
+        [Category("Quarantine")]
         public void ExportImportSalinityToSingleFile()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
@@ -90,6 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ExportImportWaterLevelToFilePerFeature()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
@@ -167,6 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ExportImportWaterLevelSalinityToSeparateFiles()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));

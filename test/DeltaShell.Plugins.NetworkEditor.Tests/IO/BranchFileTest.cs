@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenSewerConnections_WhenWritingBranchTypeFile_ThenWaterTypeIsWrittenToBranchFile()
         {
             var pipes = new List<IBranch>
@@ -93,6 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenDifferentTypesOfBranches_WhenWritingBranchTypeFile_ThenBranchTypesAreCorretlyWritten()
         {
             var branches = new List<IBranch>

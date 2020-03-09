@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void StructuresFileWriteGeneralStructureGivesExpectedResultTest()
         {
             List<IStructure1D> structs = new List<IStructure1D>();

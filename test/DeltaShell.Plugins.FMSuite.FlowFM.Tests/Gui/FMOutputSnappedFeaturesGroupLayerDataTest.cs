@@ -296,6 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void OpenProjectThenRunItThenCheckSnappedFeaturesWereGenerated(bool saving)
         {
             var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
@@ -369,6 +370,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void OpenProjectWithOutputSnappedFeaturesTest(bool initialize)
         {
             /* Because this test loads the output snapped features directly without running, we can use

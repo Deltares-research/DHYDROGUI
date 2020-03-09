@@ -392,6 +392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CreateModelFromScratchModifySaveAsAndReload()
         {
             using (var app = new DeltaShellApplication())
@@ -424,6 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CreateModelFromScratchSaveModifySaveAndReload()
         {
             using (var app = new DeltaShellApplication())
@@ -527,6 +529,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportHarlingenRunSaveAsLoadCheckOutput()
         {
             using (var app = new DeltaShellApplication())
@@ -563,6 +566,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportHarlingenSaveRunCloseLoadCheckOutput()
         {
             using (var app = new DeltaShellApplication())
@@ -745,6 +749,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestRunWithGate()
         {
             using (var app = new DeltaShellApplication())

@@ -226,6 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void MduFileReadsFromMultipleFilesAnAssignsGroupNamesToIGroupableFeatures()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\FlowFM.mdu");
@@ -693,6 +694,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenAProjectFolderWithFeatureFilesOutsideOfTheMduFolder_WhenReadingMdu_ThenAllFilesAreCopiedAndRead()
         {
             // Preparations
@@ -734,6 +736,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [TestCase(@"FilesInsideMduSubFolderProject.dsproj_data\FlowFM\FlowFM.mdu")]
         [TestCase(@"FilesInsideMduSubFolderButWithRelativePathsProject.dsproj_data\FlowFM\FlowFM.mdu")]
+        [Category("Quarantine")]
         public void GivenAProjectFolderWithFeatureFilesInsideOfAnMduSubFolder_WhenReadingMdu_ThenAllFilesAreRead(string mduProjectFilePath)
         {
             // Preparations
@@ -1355,6 +1358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenStructuresFileWithReferenceToNonExsistentFile_WhenReadingMdu_ThenStructuresFileIsIgnoredAndDeltaShellGivesWarning()
         {
             // Preparations

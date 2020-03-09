@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         //test is available on model in root
         [Test]
+        [Category("Quarantine")]
         public void FMRstFileImporterWorksOnModel()
         {
             using (var gui = new DeltaShellGui())
@@ -46,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         //test if available on model in integrated model
         [Test]
+        [Category("Quarantine")]
         public void FMRstFileImporterWorksOnModelInIntegratedModel()
         {
             using (var gui = new DeltaShellGui())
@@ -70,6 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         
         //test if restart file is copied
         [Test]
+        [Category("Quarantine")]
         public void FMRstFileImporterCopiedRestartFile()
         {
             using (var gui = new DeltaShellGui())

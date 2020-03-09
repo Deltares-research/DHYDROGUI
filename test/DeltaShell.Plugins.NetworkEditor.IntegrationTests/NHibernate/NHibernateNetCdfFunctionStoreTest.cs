@@ -573,6 +573,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveAndRetrieveBranchFeatureCoverageWithNetCdf()
         {
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";

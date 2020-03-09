@@ -1417,6 +1417,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadNetworkNodesTest()
         {
             // arrange
@@ -1606,6 +1607,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
 
         [Test]
+        [Category("Quarantine")]
         public void ReadNetworkBranchesLocalTest()
         {
             // arrange
@@ -1666,6 +1668,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadNetworkBranchesRemoteTest()
         {
             // arrange
@@ -2210,6 +2213,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CreateNetworkDiscretisationExceptionTest()
         {
             int nmeshedges = 12;
@@ -2339,6 +2343,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteNetworkDiscretisationTest()
         {
             int[] branchIdx = new int[] {1, 1,};
@@ -2388,6 +2393,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteNetworkMeshDiscretisationApiCallFailedTest()
         {
             int[] branchIdx = new int[] {1, 1,};

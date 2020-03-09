@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WaterFlowFMModelNetworkValidatesIfNoCrossSectionIsPresent()
         {
             var model = new WaterFlowFMModel();
@@ -184,6 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ZWCrossSectionShouldHaveAtMostOneEntryWithWidthEqualToZero()
         {
             var network = new HydroNetwork();

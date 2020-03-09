@@ -47,6 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void RunModelAndTakeInitialConditions()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
@@ -331,6 +332,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category("Quarantine")]
         public void RunModelWithWWTPAndGetOutputCoverage()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())

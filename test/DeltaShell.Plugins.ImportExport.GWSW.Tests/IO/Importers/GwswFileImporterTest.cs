@@ -1115,6 +1115,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestImportSewerConnectionReplacesExistingOne()
         {
             //Create network

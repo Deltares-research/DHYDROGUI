@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void TestRunningSmallModelWithManyTimeSteps()
         {
             var mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
@@ -305,6 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportHarlingenShowVelocityOutput()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -345,6 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportHarlingenRunShowVelocityOutput()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

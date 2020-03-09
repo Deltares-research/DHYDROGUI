@@ -132,6 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 */
 
         [Test]
+        [Category("Quarantine")]
         public void CheckEventLeaksThroughDataItemWrappers()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -168,6 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void CheckEventLeaksThroughDataItemAfterModelRun()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

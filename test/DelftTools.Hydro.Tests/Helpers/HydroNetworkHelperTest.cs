@@ -77,6 +77,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsTools8709()
         {
             var network = CreateTestNetwork();
@@ -103,6 +104,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsAtBeginOfBranchTools8709()
         {
             var network = CreateTestNetwork();
@@ -505,6 +507,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CreateSegementsAndIgnoreFor1Channel()
         {
             var network = new HydroNetwork();

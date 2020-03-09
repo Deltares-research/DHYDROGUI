@@ -31,6 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GetCoverages()
         {
             var unpavedFeatureCoverageProvider = new UnpavedFeatureCoverageProvider(model);

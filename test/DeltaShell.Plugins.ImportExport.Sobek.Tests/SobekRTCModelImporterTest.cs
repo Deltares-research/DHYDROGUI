@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportREModel_NDB_Check_Structure13()
         {
             rtcMmodel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");
@@ -66,6 +67,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportREModel_NDB_Check_Structure24()
         {
             rtcMmodel = GetRtcModel(@"\ReModels\20110331_NDB.sbk\6\deftop.1");

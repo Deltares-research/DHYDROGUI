@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
         
         [Test]
+        [Category("Quarantine")]
         public void Create1D2DLinksForAreaCompleteMesh1D()
         {
             var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
@@ -60,6 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Create1D2DLinksForAreaPartialMesh1D()
         {
             var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
@@ -90,6 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Create1D2DLinksForAreaNotAPartOfTheMesh1D()
         {
             var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();
@@ -182,6 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }*/
 
         [Test]
+        [Category("Quarantine")]
         public void CreateGullyLinks()
         {
             var caseMaking1D2DLinks = new TestCaseMaking1D2DLinks();

@@ -67,6 +67,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestReModel()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\J_10BANK.sbk\4\DEFCRS.3");

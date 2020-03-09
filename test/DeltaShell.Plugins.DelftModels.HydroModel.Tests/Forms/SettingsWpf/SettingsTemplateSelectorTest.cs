@@ -63,6 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(typeof(TimeSpan))]
         [TestCase(typeof(IList<double>))]
         [TestCase(typeof(Enum))]
+        [Category("Quarantine")]
         public void Test_SelectTemplate_GivenWpfGuiProperty_ReturnsTemplate(Type propertyType)
         {
             var item = new WpfGuiProperty(new FieldUIDescription(null, null)

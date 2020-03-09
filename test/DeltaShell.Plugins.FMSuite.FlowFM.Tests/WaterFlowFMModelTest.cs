@@ -425,6 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void RunModelCheckIfStatisticsAreWrittenToDiaFile()
         {
             var mduPath =
@@ -536,6 +537,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
         [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void RunModelTwice()
         {
             var mduPath =
@@ -631,6 +633,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void TestWarningGivenIfDiaFileFileNotFound()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -877,6 +880,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportHarlingenAndCheckTimeSeries()
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
@@ -1095,6 +1099,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         [NUnit.Framework.Category(TestCategory.Slow)]
         [Test]
+        [Category("Quarantine")]
         public void FmModelGetVarCellsToFeaturesNameShouldReturnEmptyTimeseries()
         {
             if (Map.CoordinateSystemFactory == null)
@@ -1291,6 +1296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void GivenValidFmModel_WhenModelHasRun_ThenProgressTextHasBeenReset()
         {
             var originalDir = TestHelper.GetTestFilePath("flow1d2dLinks");
@@ -1403,6 +1409,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
        [NUnit.Framework.Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void RunModelWithGeneralStructuresAcceptanceTest()
         {
             var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");
@@ -1509,6 +1516,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ResultsFromWeirGeneralStructuresShouldDifferFromSimpleWeirAcceptanceTest()
         {
             var filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM.mdu");
@@ -1833,6 +1841,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void GivenFMModelWithPrecipitationDataWhenDeepCloneThenReadBackMeteoData()
         {
             TestHelper.PerformActionInTemporaryDirectory(s =>

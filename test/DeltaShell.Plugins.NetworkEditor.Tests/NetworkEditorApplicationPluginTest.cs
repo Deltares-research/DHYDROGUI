@@ -236,6 +236,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddExampleHydroRegionDataTest()
         {
             var mocks = new MockRepository();

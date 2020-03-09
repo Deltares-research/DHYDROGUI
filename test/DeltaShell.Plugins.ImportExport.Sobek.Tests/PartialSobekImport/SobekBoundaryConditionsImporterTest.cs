@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportBoundaryConditions()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
@@ -97,6 +98,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportInitialConditionsLandelijkSobekModel()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\12\NETWORK.TP";

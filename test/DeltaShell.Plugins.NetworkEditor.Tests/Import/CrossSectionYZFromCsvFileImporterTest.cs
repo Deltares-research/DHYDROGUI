@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportYZCrossSections()
         {
             var path = TestHelper.GetTestFilePath("testcsYZ.csv");

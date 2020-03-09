@@ -131,6 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void OpenHisFileInModelContextAndExpectFeaturesToBeSameInstance()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -183,6 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void OpenLeveeBreachHisFileInModelContextAndExpectFeaturesToBeSameInstance()
         {
             var mduPath = TestHelper.GetTestFilePath(@"bommelerwaard\testcrop_breach_2.mdu");
@@ -204,6 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void RunModelDeleteObservationPointsRunAgain()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -239,6 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void OpenHisFile()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -267,6 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void RunFMModelWithStructuresReadHisFile()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");

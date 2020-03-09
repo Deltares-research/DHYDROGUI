@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         private static readonly MockRepository mocks = new MockRepository();
 
         [Test]
+        [Category("Quarantine")]
         public void ExecuteShowOpenViewForCorrectData()
         {
             //test the command issues a command to the commandhandler to open a view with the correct coverages..
@@ -97,6 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SideViewIsOpenedWithCoveragesInTheMapView()
         {
             //mock the needs

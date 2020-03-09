@@ -217,6 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadWriteModelWithSpatialOperationsTest()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
@@ -372,6 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void SaveModelAndCheckNewModelDirectory()
         {
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterFlowFMNHibernateIntegrationTest)).Location);
@@ -422,6 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadFlowFMModelWithDifferentPluginConfiguration()
         {
             string dsprojName = "FM_Only.dsproj";
@@ -465,6 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadFlowFMModelWithDifferentPluginConfigurationGui()
         {
             var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof (WaterFlowFMNHibernateIntegrationTest)).Location);
@@ -526,6 +530,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ReadFlowFMModelWithLessPluginConfigurations()
         {
             string dsprojName = "FM_Only.dsproj";

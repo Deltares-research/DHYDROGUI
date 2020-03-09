@@ -125,6 +125,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
         [Test]
         [Category(TestCategory.Performance)]
+        [Category("Quarantine")]
         public void PerformanceOfTableCellsSelectionShouldBeFast()
         {
             using (var gui = new DeltaShellGui())

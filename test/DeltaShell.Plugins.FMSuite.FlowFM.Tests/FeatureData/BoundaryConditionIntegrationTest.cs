@@ -366,6 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestBedLoadTransportNotContainingMudFraction()
         {
             /* Expected mock behavior */

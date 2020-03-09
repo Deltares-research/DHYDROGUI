@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportRoughness()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
@@ -38,6 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportReverseRoughness()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REVERSE.sbk\3\DEFTOP.1";
@@ -116,6 +118,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportReverseRoughnessNDB()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
@@ -195,6 +198,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportRoughnessShouldBeEfficient()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\12\network.tp";

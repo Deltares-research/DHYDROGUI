@@ -222,6 +222,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         
         [Test]
         [Category(TestCategory.Performance)]
+        [Category("Quarantine")]
         public void MinMaxIsFastForCoverageInNetCdf()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),
@@ -249,6 +250,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         
         [Test]
         [Category(TestCategory.Performance)]
+        [Category("Quarantine")]
         public void MinMaxIsVeryFastSecondTimeForCoverageInNetCdf()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),

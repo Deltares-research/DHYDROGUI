@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         [TestCase(true)]
         [TestCase(false)]
+        [Category("Quarantine")]
         public void SaveAndLoadNetworkTest(bool useSimpleNetwork)
         {
             var networkDiscretisation = useSimpleNetwork 
@@ -53,6 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveAndLoadNetwork_WithCustomizedLengthBranchTest()
         {
             var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();
@@ -77,6 +79,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         [TestCase(true)]
         [TestCase(false)]
+        [Category("Quarantine")]
         public void SaveAndLoadNetworkAndDiscretisationTest(bool useSimpleNetwork)
         {
             var networkDiscretisation = useSimpleNetwork

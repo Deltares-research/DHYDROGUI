@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadStructuresUsingExampleFile()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
@@ -79,6 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadStructuresWithUnsupportedCategories()
         {
             // [test]
@@ -113,6 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadStructuresWithKeysNotInSchema()
         {
             // [structure]
@@ -147,6 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadStructuresWithMissingTypeProperty()
         {
             // [structure]
@@ -203,6 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteLeveeBreach()
         {
             var mocks = new MockRepository();
@@ -276,6 +281,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void CanRepeatedlyReadAndWrite()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
@@ -298,6 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void GivenGeneralStructureWhenWritingToFileAndReadingFromThatFileThenResultingStructuresAreTheSame()
         {
             var iniFilePath = TestHelper.GetTestFilePath(@"structures\temp_file.ini");
@@ -407,6 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadAsSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
@@ -430,6 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadTimeDependentSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");
@@ -464,6 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteSobekStructuresTest()
         {
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
@@ -575,6 +585,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteTimeDependentSobekStructuresTest()
         {
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
@@ -704,6 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteReadLeveeBreachVerheij_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -764,6 +776,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteReadLeveeBreachUserDefined_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -826,6 +839,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void WriteReadLeveeBreachWithInactiveBreachGrowth_ExportedAndImportedStructuresShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";

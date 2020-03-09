@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void SaveAndRetrieveNetworkCoverageWithHisFunctionStore()
         {
             var pathProject = TestHelper.GetCurrentMethodName() + ".dsproj";

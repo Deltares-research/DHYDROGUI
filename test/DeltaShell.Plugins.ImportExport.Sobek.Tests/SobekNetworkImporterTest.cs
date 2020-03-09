@@ -98,6 +98,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadTabulatedCSWithSummerdike()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\40\Deftop.1";
@@ -235,6 +236,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadRiverProfileWithMainChannelAnFloodplain1()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
@@ -374,6 +376,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadCrossSectionZW()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -393,6 +396,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test] 
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void AllProfileChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -404,6 +408,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AllStructureChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -430,6 +435,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReadNetworkWithRetentions212()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Retent.lit\2\NETWORK.TP";
@@ -442,6 +448,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadNetworkWithRetentionsRE()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
@@ -475,6 +482,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadingNetworkWithRetentionsAddsCrossSectionToNewBranchWhenTheBranchWasSplitDueToRetentionAndThereWasACrossSectionAtTheSplitNode()
         {
             //pretty coarse test...jist import a network with that crossections at retententions locations.
@@ -492,6 +500,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadNetworkWithExtraResistanceRe()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
@@ -613,6 +622,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestReadNetworkWithCompoundStructures_CompositeStructureNamesAreUnique()
         {
             // we use this test-data since it contains composite structures with non-unique names
@@ -627,6 +637,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadLargeNetwork()
         {
             var t = DateTime.Now;
@@ -663,6 +674,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ImportCalculationGridWithNetworkInDutchCulture()
         {
             var oldCulture = Thread.CurrentThread.CurrentCulture;
@@ -689,6 +701,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void UpdateCalcGridForLinkageNodes()
         {
             // import model and network.
@@ -721,6 +734,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadNotSupportedEngelundAndSetToDefault()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\120_001.lit\3\network.tp";
@@ -739,6 +753,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadComplexNetwork()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\network2\network.tp";
@@ -1140,6 +1155,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadNetworkWithRiverFriction()
         {
             var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
@@ -1199,6 +1215,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadNetworkWithYzFriction()
         {
             var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";

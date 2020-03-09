@@ -246,6 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void EmbankmentChannelIntersectionTest()
         {
             // Create Waterflow Network

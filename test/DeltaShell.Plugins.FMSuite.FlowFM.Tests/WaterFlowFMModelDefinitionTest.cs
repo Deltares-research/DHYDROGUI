@@ -181,6 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadWriteMduFilesWithDifferentUnknownProperties()
         {
             // read model A
@@ -347,6 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadStructuresFile()
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"fm_files\fm_files.mdu");
@@ -493,6 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadAndWriteModelDefinitionHarlingenModel()
         {
             var mduDir =
@@ -805,6 +808,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void IrregularlyNamedMduSubfilesShouldKeepNames()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -875,6 +879,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void SelectSpatialOperationsOnlySelectsCompletedOperationsTest()
         {
             // Issue#: DELFT3DFM-508
@@ -938,6 +943,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportSpatialOperationsTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -1040,6 +1046,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(KnownProperties.Wrishp_src)]
         [TestCase(KnownProperties.Wrishp_pump)]
         [Category(TestCategory.Jira)] // D3DFMIQ-278
+        [Category("Quarantine")]
         public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
         {
             var mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");

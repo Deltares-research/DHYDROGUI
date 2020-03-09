@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
+        [Category("Quarantine")]
         public void InitializeUnstrucGridOperationApi_DoesNotWrite_StructureProperty()
         {
             var mduPath = TestHelper.GetTestFilePath(@"GridOperationApi\FlowFM\FlowFM.mdu");

@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AdditionalOwnerCheckTest_HydroModel()
         {
             using (var app = new DeltaShellApplication())
@@ -88,6 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
 
         [Test]
+        [Category("Quarantine")]
         public void AdditionalOwnerCheckTest_FlowFM()
         {
             using (var app = new DeltaShellApplication())

@@ -111,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateWithConsistentState()
         {
             var validRestartFilePath = TestHelper.GetTestFilePath("valid_state_RR.zip");
@@ -128,6 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ValidateConsistentStateWithoutMetadataFile()
         {
             var validRestartFilePath = TestHelper.GetTestFilePath("valid_state_without_meta_RR.zip");
@@ -144,6 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateWithInconsistentState()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_state_RR.zip");
@@ -171,6 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateStateWithInvalidModelType()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_ModelType_state_RR.zip");
@@ -188,6 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateStateWithInvalidVersion()
         {
             var invalidRestartFilePath = TestHelper.GetTestFilePath("invalid_Version_state_RR.zip");
@@ -205,6 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateRainfallRunoffModelInputRestartStatePathIncorect()
         {
             var model = CreateValidMiniModel();
@@ -225,6 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateRainfallRunoffModelInputRestartStatePathToNonZip()
         {
             var filePathToNonZipFile =
@@ -246,6 +253,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ValidateRainfallRunoffWithoutHydroLinkReportError()
         {
             var model = CreateValidMiniModel();

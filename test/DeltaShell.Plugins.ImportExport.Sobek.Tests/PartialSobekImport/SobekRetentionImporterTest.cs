@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     public class SobekRetentionImporterTest
     {
         [Test]
+        [Category("Quarantine")]
         public void ImportRetentions()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
@@ -49,6 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         //To complex for updating (specially from RE)
+        [Category("Quarantine")]
         public void NoUpdateExistingRetentions()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
@@ -74,6 +76,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void RemoveMarkerLateralsAfterAddingRetention()
         {
             //issue 5344
@@ -89,6 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportLateralSourcesAndRetentions()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\263_000.lit\1\NETWORK.TP";
@@ -104,6 +108,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportLateralSourcesAndNoRetentions()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\271_000\NETWORK.TP";
@@ -119,6 +124,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ImportConnectionNodesWithOutdatedNodeDat_ResultsIn_NoRetentions()
         {
             //In node.dat are retentions defined but are out of sync. read network.ntw for checking if they're storage nodes or not

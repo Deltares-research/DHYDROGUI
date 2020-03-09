@@ -9,6 +9,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     public class SobekNetworkNetterReaderTest
     {
         [Test]
+        [Category("Quarantine")]
         public void ReadFromStringSobek212Format()
         {
             var fileText = GetTestFile();
@@ -109,6 +110,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void testNodeIsLinkageNode()
         {
 

@@ -81,6 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenNetworkWithOneCompartmentInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
             // Check network node properties
@@ -95,6 +96,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenNetworkWithTwoCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
             // Check network node properties
@@ -109,6 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenNetworkWithThreeCompartmentsInOneManhole_WhenInstantiatingNetworkUGridDataModel_ThenCompartmentsAreTreatedAsIndividualNodes()
         {
             // Check network node properties

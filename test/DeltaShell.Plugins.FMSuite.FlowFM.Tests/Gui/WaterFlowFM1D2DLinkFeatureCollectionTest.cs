@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class WaterFlowFM1D2DLinkFeatureCollectionTest
     {
         [Test]
+        [Category("Quarantine")]
         public void GivenWaterFlowFMModel_WhenChangingCoordinateSystem_ThenWaterFlowFM1D2DLinkFeatureCollectionCoordinateSystemShouldBeInSync()
         {
             var mocks = new MockRepository();

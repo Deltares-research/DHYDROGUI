@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadApplicationCsvFile()
         {
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(ApplicationStructuresSchemaCsvFilePath);

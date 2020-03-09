@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         private readonly MockRepository mocks = new MockRepository();
 
         [Test]
+        [Category("Quarantine")]
         public void AddPaved()
         {
             var links = new List<ModelLink>();
@@ -49,6 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddPavedWithMeteoPerStation()
         {
             var links = new List<ModelLink>();
@@ -89,6 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddPavedWithStorage()
         {
             var links = new List<ModelLink>();
@@ -119,6 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category("Quarantine")]
         public void AddPavedWithVariablePumpCapacity()
         {
             var links = new List<ModelLink>();

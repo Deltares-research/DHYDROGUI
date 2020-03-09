@@ -25,6 +25,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void ParseDefRun1File()
         {
             var settingsFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defrun.1");

@@ -236,6 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category("Quarantine")]
         public void FlowFmMapLayerProviderCanCreateLayerForListOfWaterFlowFm1D2DLinks()
         {
             var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new EventedList<Link1D2D>(), new WaterFlowFMModel());
@@ -243,6 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenWaterFlowFmModel_WhenGettingChildLayerObjects_ThenIncludesModelLinks()
         {
             var fromCell = 0;
@@ -257,6 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenWaterFlowFmModelLinks_WhenCreatingLayer_ThenReturnVectorLayer()
         {
             var fromCell = 0;

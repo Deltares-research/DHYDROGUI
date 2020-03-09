@@ -98,6 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WaterFlowFMModel1DAllBranchesRequireDiscretizationToValidate()
         {
             var model = WaterFlowFMTestHelper.CreateModelWithDemoNetwork();

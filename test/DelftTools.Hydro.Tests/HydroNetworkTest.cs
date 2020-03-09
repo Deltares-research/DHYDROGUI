@@ -80,6 +80,7 @@ namespace DelftTools.Hydro.Tests
 
         [Test]
         [Category(TestCategory.Performance)]
+        [Category("Quarantine")]
         public void AddManyBranchesWithCrossSections()
         {
             Console.WriteLine("TrackChanges: " + DataTableObserver.TrackChanges);

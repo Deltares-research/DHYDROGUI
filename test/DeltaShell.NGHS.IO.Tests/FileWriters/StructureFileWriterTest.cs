@@ -28,6 +28,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
         
         [Test]
+        [Category("Quarantine")]
         public void TestStructuresFileWriterGivesExpectedResults_MultipleTypes()
         {
             var relativePathStructuresExpectedFile = TestHelper.GetTestFilePath(@"FileWriters/Structures_expected.txt");

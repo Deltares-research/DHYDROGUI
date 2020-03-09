@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
     public class RainfallRunoffDataRowProviderFactoryTest
     {
         [Test]
+        [Category("Quarantine")]
         public void CreateAllRows()
         {
             var model = new RainfallRunoffModel();

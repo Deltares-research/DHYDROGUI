@@ -56,6 +56,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void ReadSaltBoundaryFile()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\NatSobek.sbk\6\DEFICN.4");

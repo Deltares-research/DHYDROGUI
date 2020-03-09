@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, false, "11110.tim")]
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, true, "11111.tim")]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void TestExport_SourceAndSinks(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent, string fileName)
         {
             var expectedFile = TestHelper.GetTestFilePath(@"timFiles\" + fileName);

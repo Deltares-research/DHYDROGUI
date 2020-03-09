@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     {
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportSalt()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
@@ -35,6 +36,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportSaltWithTatcherHarlemanF1F3F4()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\030_NDB_zout_grotere_DX.lit\3\Network.TP";
@@ -76,6 +78,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ImportModelWithSaltCheckSaltBoundariesAndSaltLaterals()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\301_00.lit\2\Network.TP";

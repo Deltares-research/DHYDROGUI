@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
+        [Category("Quarantine")]
         public void ImportTholenCheckBoundaryConditions()
         {
             SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\Tholen.lit\29\NETWORK.TP");
@@ -36,6 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void ImportRrMiniTestModelsUnpavedBoundaryConditions()
         {
             SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
@@ -55,6 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void ImportRrMiniTestModelsUnpavedBoundaryConditionsTable()
         {
             SetImporterForFile(TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\6\NETWORK.TP");

@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     public class WaterFlowFMGuiPropertyExtractorTest
     {
         [Test]
+        [Category("Quarantine")]
         public void CheckExtraction()
         {
             var model = new WaterFlowFMModel();

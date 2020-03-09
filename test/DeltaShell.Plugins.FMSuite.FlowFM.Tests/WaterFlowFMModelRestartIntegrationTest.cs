@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class WaterFlowFMModelRestartIntegrationTest
     {
         [Test]
+        [Category("Quarantine")]
         public void WriteRestart()
         {
             var model = LoadBendProfModelWithWriteRestart();
@@ -117,6 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void LoadModelWithRestartOptionsSetCheckThem()
         {
             var mduPath = TestHelper.GetTestFilePath(@"restart\bendprof.mdu");
@@ -134,6 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteRestartMultipleTimes()
         {
             var model = LoadBendProfModelWithWriteRestart();
@@ -149,6 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteAndUseRestart()
         {
             // make sure the test is clean:
@@ -174,6 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteExportImportRestart()
         {
             // make sure the test is clean:
@@ -201,6 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void CompareFullRunWithRestartedRun()
         {
             var measureLocation = new Coordinate(100, 100);

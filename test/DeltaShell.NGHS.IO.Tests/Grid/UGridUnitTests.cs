@@ -350,6 +350,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WhenInvoking_GetEdgeNodesForMesh_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
             int[,] edgeNodes = { { 0, 1 }, { 1, 2 } };
@@ -397,6 +398,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WhenInvoking_GetFaceNodesForMesh_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
             int[,] faceNodes = { { 0, 1 }, { 1, 2 } };
@@ -480,6 +482,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WhenInvoking_GetNamesAtLocation_AndApiReturnsNoErrorValueThenMethodCompletesWithoutErrors()
         {
             int[] varIds = { 1, 1, 2, 3, 5, 8 };

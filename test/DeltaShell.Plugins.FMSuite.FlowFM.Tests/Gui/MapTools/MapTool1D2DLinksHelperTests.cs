@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Get_Lateral1D2DLinks() 
         {
             var linkType = LinkType.Lateral;
@@ -60,6 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Get_Gully1D2DLinks()
         {
             var linkType = LinkType.GullySewer;
@@ -92,6 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Get_EmbeddedOneToOneLinks()
         {
             var linkType = LinkType.EmbeddedOneToOne;
@@ -124,6 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         }
 
         [Test]
+        [Category("Quarantine")]
         public void Get_EmbeddedOneToManyLinks()
         {
             var linkType = LinkType.EmbeddedOneToOne;

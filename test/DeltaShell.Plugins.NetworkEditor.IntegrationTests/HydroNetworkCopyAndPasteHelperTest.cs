@@ -160,6 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void PasteChannelToOtherNetwork()
         {
             string errorMessage;
@@ -266,6 +267,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void PasteBranchFeatureToBranchInOtherNetwork()
         {
             string errorMessage;
@@ -447,6 +449,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void PasteProxiedCrossSection()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0));
