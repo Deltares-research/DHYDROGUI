@@ -87,14 +87,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ContextMenuStrip convertCoordinateSystemContextMenu;
         private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private IGui gui;
-        private readonly IGraphicsProvider graphicsProvider;
+        private IGraphicsProvider graphicsProvider;
 
         public NetworkEditorGuiPlugin()
         {
             InitializeComponent();
             Instance = this;
             networkEditorMapLayerProvider = new NetworkEditorMapLayerProvider();
-            graphicsProvider = new NetworkEditorGraphicsProvider();
         }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }
@@ -153,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IGraphicsProvider GraphicsProvider
         {
-            get { return graphicsProvider; }
+            get { return graphicsProvider ?? (graphicsProvider = new NetworkEditorGraphicsProvider()); }
         }
 
         public override IRibbonCommandHandler RibbonCommandHandler
