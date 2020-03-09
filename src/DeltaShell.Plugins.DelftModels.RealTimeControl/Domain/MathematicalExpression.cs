@@ -93,7 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (mathematicalExpression != null)
             {
                 base.CopyFrom(source);
-                // TODO add properties that need to be cloned / copied.
+
+                Expression = mathematicalExpression.Expression;
             }
         }
 

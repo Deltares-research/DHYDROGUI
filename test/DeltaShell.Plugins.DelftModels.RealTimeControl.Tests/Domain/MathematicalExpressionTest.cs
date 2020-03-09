@@ -333,13 +333,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         {
             // Setup
             var mathematicalExpression = new MathematicalExpression();
-
+            const string mathExpression = "A * B";
             const string sourceName = "expression_name";
             const string sourceLongName = "expression_long_name";
             var sourceExpression = new MathematicalExpression
             {
                 Name = sourceName,
-                LongName = sourceLongName
+                LongName = sourceLongName,
+                Expression = mathExpression
             };
 
             // Call
@@ -348,6 +349,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Assert
             Assert.That(mathematicalExpression.Name, Is.EqualTo(sourceName));
             Assert.That(mathematicalExpression.LongName, Is.EqualTo(sourceLongName));
+            Assert.That(mathematicalExpression.Expression, Is.EqualTo(mathExpression));
         }
 
         [Test]
@@ -374,12 +376,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         public void Clone_ReturnsCorrectResult()
         {
             // Setup
+            const string expression = "A * B";
             const string name = "expression_name";
             const string longName = "expression_long_name";
             var mathematicalExpression = new MathematicalExpression
             {
                 Name = name,
-                LongName = longName
+                LongName = longName,
+                Expression =  expression
             };
 
             // Call
@@ -391,6 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.That(clonedExpression, Is.Not.SameAs(mathematicalExpression));
             Assert.That(clonedExpression.Name, Is.EqualTo(name));
             Assert.That(clonedExpression.LongName, Is.EqualTo(longName));
+            Assert.That(clonedExpression.Expression, Is.EqualTo(expression));
         }
 
         private static IEnumerable<IInput> GetInputsTestCases()
