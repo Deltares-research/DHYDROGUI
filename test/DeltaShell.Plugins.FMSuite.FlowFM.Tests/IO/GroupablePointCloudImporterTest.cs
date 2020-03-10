@@ -25,9 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class GroupablePointCloudImporterTest
     {
         [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Performance)]
-        [Category(TestCategory.WindowsForms)]
         public void ImportLargeAmountOfDryPoints()
         {
             var xyzFilePath = TestHelper.GetTestFilePath(@"xyzFiles\largeSampleFile.xyz");
