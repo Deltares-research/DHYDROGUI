@@ -4,9 +4,9 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
-using GeoAPI.Geometries;
 using DelftTools.Hydro.Tests.TestObjects;
 using DelftTools.Utils.Reflection;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 

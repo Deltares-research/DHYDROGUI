@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -25,7 +26,6 @@ using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Control = System.Windows.Controls.Control;
-using System.Windows.Forms.Integration;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {

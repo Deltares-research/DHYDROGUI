@@ -6,7 +6,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved;
-using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests

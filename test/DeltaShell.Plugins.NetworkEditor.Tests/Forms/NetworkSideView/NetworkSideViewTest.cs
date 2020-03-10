@@ -17,8 +17,8 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
@@ -93,6 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void CanCreateSideViewForRouteAndTimeDependendNetworkCoverage()
         {
             var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
@@ -313,6 +314,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void SideViewRespondsToTimeSerieNavigator()
         {
             var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
@@ -347,6 +349,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void SideViewCanDrawFeatureCoverages()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
@@ -485,6 +488,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void ShowSideViewWithExtraFunctions()
         {
             //network side view is given all coverages known by default. In the view the visibility is changed.
@@ -522,6 +526,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void ShowSideViewWithExtraFunctionsForTwoModels()
         {
             //network side view is given all coverages known by default. In the view the visibility is changed.
@@ -561,6 +566,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void ShowSideViewWithExtraFunctionsForMultipleModels()
         {
             //network side view is given all coverages known by default. In the view the visibility is changed.
@@ -733,6 +739,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void CreateSideViewForCoveragesWithTheSameName()
         {
             var viewData = NetworkSideViewTestHelper.CreateDefaultViewData();

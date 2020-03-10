@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
-using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
 

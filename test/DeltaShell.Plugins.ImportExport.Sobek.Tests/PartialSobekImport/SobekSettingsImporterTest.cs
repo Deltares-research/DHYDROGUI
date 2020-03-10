@@ -1,5 +1,4 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;

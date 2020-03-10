@@ -16,8 +16,8 @@ using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui

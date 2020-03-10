@@ -8,7 +8,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
 {

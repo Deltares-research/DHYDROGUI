@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;

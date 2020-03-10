@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.Gwsw;

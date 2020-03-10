@@ -20,7 +20,6 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

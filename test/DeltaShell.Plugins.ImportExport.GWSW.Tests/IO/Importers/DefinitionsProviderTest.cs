@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using DelftTools.Utils.Csv.Importer;
-using DeltaShell.Plugins.ImportExport.Gwsw;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 {

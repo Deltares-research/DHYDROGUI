@@ -1,12 +1,12 @@
-﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 {

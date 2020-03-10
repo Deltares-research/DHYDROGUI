@@ -4,17 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.GridGeomApi;
-using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 {

@@ -2,11 +2,11 @@
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Resources = DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
 {

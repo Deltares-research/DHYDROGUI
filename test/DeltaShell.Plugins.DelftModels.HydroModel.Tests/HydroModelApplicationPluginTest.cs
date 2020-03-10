@@ -1,4 +1,5 @@
-﻿using DelftTools.Shell.Core;
+﻿using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
@@ -12,7 +13,6 @@ using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
 using NUnit.Framework;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

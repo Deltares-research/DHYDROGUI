@@ -175,6 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         }
         [Test]
         [Category(TestCategory.WindowsForms)]
+        [Category("Quarantine")]
         public void AddFeatureWithDifferentCoordinateSystemsActive()
         {
             var oldFactory = Map.CoordinateSystemFactory;

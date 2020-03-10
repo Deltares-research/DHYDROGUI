@@ -5,9 +5,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using NetTopologySuite.IO;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests

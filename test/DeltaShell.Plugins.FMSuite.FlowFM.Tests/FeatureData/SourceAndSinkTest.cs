@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -7,8 +9,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {

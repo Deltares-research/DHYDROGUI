@@ -1,4 +1,11 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -6,13 +13,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions;
-using DelftTools.Functions.Generic;
-using DelftTools.Utils.Collections.Generic;
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters

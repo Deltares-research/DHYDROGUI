@@ -6,7 +6,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using ValidationAspects;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests.Structures
 {

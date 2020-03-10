@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using DelftTools.TestUtils;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {

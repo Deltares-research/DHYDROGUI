@@ -7,8 +7,8 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
 {

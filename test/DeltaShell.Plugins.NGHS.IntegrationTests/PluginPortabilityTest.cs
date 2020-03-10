@@ -1,16 +1,12 @@
 using System;
-using System.IO;
 using System.Linq;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
-using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -23,23 +19,17 @@ using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
-using PointwiseOperationType = SharpMap.SpatialOperations.PointwiseOperationType;
-using Point = NetTopologySuite.Geometries.Point;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DeltaShell.Plugins.NGHS.IntegrationTests
 {

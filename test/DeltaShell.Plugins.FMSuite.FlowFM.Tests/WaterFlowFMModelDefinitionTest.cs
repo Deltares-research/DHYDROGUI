@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -15,21 +16,19 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
-using NUnit.Framework;
 using NetTopologySuite.Extensions.Geometries;
-using SharpMap;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

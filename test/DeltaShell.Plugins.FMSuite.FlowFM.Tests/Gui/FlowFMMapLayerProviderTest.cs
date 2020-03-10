@@ -2,18 +2,19 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Link1d2d;
-using DelftTools.Hydro.Structures;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -25,7 +26,6 @@ using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

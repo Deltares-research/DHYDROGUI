@@ -10,7 +10,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {

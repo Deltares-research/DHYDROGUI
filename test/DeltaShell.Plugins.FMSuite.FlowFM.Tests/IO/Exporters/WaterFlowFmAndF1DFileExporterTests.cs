@@ -1,8 +1,7 @@
 ﻿using System;
-using NUnit.Framework;
 using System.Linq;
+using NUnit.Framework;
 using Rhino.Mocks;
-using Contains = NUnit.Framework.Contains;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters.Tests
 {

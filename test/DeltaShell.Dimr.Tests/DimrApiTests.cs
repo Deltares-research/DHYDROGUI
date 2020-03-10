@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -7,6 +6,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
+using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 

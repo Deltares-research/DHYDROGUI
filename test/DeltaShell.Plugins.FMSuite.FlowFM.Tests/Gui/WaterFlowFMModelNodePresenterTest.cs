@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
@@ -14,7 +15,6 @@ using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
-using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

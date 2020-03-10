@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using NUnit.Framework;
 using Rhino.Mocks;
-using GroupableFeatureExtensions = DelftTools.Hydro.GroupableFeatureExtensions;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {

@@ -1,10 +1,10 @@
-﻿using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+﻿using System;
+using System.Drawing;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using NUnit.Framework;
-using SharpMap.Layers;
-using System.Drawing;
 using SharpMap;
-using System;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
 {

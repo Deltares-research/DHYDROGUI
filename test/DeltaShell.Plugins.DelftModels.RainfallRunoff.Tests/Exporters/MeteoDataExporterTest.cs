@@ -1,11 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using NUnit.Framework;
-using System;
-using System.IO;
-
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 {

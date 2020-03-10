@@ -1,24 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using BasicModelInterface;
-using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Hydro.Structures;
-using DelftTools.Shell.Core.Workflow;
-using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Sobek.Readers.Readers;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {

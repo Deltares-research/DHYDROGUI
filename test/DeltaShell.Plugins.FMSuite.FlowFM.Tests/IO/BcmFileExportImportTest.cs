@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Reflection;
@@ -16,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

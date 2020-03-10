@@ -12,7 +12,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 {

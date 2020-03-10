@@ -12,14 +12,13 @@ using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.IO;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpMap.Layers;
 using SharpTestsEx;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {

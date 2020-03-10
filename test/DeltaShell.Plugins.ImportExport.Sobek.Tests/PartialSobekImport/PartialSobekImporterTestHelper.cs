@@ -3,7 +3,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {

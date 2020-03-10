@@ -6,7 +6,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 {

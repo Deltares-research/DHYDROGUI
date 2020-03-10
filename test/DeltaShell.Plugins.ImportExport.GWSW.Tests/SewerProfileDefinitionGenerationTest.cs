@@ -8,7 +8,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.Gwsw;
 using NUnit.Framework;
-using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 {

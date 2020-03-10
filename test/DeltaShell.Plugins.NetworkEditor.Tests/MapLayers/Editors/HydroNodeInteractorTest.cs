@@ -7,7 +7,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 {

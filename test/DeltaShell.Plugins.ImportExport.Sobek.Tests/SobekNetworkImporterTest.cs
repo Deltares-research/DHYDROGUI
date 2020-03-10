@@ -16,7 +16,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
@@ -26,10 +25,10 @@ using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {

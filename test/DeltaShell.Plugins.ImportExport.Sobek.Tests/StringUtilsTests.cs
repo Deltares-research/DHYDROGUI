@@ -1,4 +1,3 @@
-using DeltaShell.Sobek.Readers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests

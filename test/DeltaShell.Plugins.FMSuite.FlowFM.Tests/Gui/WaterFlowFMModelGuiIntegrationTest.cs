@@ -1,10 +1,19 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using BasicModelInterface;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DeltaShell.Dimr;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
@@ -29,18 +38,7 @@ using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
-using BasicModelInterface;
-using DeltaShell.Dimr;
 using Control = System.Windows.Controls.Control;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {

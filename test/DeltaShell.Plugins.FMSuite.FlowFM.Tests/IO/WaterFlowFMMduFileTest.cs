@@ -16,7 +16,6 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]

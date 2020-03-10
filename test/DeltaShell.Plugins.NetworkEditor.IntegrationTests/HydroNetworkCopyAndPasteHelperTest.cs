@@ -5,10 +5,9 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {

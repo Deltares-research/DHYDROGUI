@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -11,7 +17,9 @@ using DeltaShell.Core;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -22,18 +30,6 @@ using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
-using TimeSpan = System.TimeSpan;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {

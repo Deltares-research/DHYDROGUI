@@ -1,10 +1,15 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -20,14 +25,9 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using SharpMapTestUtils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DeltaShell.NGHS.IO;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {

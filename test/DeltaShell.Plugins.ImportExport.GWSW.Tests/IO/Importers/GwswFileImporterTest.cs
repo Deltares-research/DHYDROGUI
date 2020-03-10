@@ -1,4 +1,11 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
@@ -16,15 +23,8 @@ using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
 using GeoAPI.Geometries;
-using NUnit.Framework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 {

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Linq;
-
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
-
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
-
 using NUnit.Framework;
-
 using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation

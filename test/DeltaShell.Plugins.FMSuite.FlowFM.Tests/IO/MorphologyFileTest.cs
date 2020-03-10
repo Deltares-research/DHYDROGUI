@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -15,7 +16,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

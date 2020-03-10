@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Utils.Reflection;
 using Fluent;
+using NUnit.Framework;
 
 namespace DeltaShell.Dimr.Gui.Tests
 {

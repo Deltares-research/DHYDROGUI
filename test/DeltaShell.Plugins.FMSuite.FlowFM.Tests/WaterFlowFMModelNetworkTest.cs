@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     public class WaterFlowFMModelNetworkTest
     {
         [Test]
-        [Category("Quarantine")]
+        [NUnit.Framework.Category("Quarantine")]
         public void CreateNewModelCheckNetworkStuff()
         {
             var model = new WaterFlowFMModel(); // empty model

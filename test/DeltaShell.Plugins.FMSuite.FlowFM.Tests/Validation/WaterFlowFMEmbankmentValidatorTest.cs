@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {

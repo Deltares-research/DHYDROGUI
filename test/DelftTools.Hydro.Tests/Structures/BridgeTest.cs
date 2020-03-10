@@ -10,7 +10,7 @@ namespace DelftTools.Hydro.Tests.Structures
     public class BridgeTest
     {
         [Test]
-        [Category("Quarantine")]
+        [NUnit.Framework.Category("Quarantine")]
         public void PropertyChangedForTabulatedCrossection()
         {
             var bridge = new Bridge();

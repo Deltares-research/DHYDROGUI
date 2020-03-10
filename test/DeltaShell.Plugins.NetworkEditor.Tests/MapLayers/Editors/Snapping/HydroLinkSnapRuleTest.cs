@@ -3,11 +3,11 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping;
 using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Snapping
 {
