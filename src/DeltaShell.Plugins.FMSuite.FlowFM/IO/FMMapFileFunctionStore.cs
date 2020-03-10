@@ -981,7 +981,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var locationAttributeValue = netCdfFile.GetAttributeValue(netcdfVariable, "mesh");
-            if(!locationAttributeValue.Equals("mesh2d",StringComparison.InvariantCultureIgnoreCase))
+            if(locationAttributeValue == null || !locationAttributeValue.Equals("mesh2d",StringComparison.InvariantCultureIgnoreCase))
                 yield break;
 
 
