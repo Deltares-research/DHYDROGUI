@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
     public class NHibernateCrossSectionTest : NHibernateHydroRegionTestBase
     {
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCrossSectionXYZ()
         {
             var crossSection = new CrossSectionDefinitionXYZ();
@@ -47,6 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCrossSectionSummerdike()
         {
             var crossSection = new CrossSectionDefinitionZW
@@ -68,6 +70,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCrossSectionYZ()
         {
             var crossSectionDefinition = new CrossSectionDefinitionYZ();
@@ -88,6 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCrossSectionStorage()
         {
             var crossSection = new CrossSectionDefinitionYZ();
@@ -122,6 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCrossSectionProxiedInNetwork()
         {
             var name = "zwName";
@@ -157,6 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteAndReadProjectWithCrossSection()
         {
             var network = new HydroNetwork();

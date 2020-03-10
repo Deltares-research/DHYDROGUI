@@ -172,6 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void ReadManyFeaturesWithColumnsAndLocationNames()
         {
             const int featureCount = 10000;

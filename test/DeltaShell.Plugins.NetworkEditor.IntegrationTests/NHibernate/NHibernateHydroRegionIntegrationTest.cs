@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category("Quarantine")]
         public void SaveLoadRegionWithLinks()
         {
             var catchment = new Catchment();

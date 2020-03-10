@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             //add a network to this map
             HydroNetwork network = new HydroNetwork();
             project.RootFolder.Add(network);
-            var networkMapLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
+            var networkMapLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() });
             map.Layers.Add(networkMapLayer);
 
             //save
@@ -119,6 +119,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
         */
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroNetworkWithSharedDefinitions()
         {
             var network = new HydroNetwork();
@@ -144,6 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroNetworkWithDefaultDefinition()
         {
             var network = new HydroNetwork();
@@ -203,6 +205,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroNetworkWithRoutes()
         {
             var network = CreateDummyHydroNetwork();
@@ -231,11 +234,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroNetwork()
         {
             //node 1 --(b1)--> node2 <--(b2)- node 3 <--(b3)- node 4
             var network = new HydroNetwork();
-            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0),LongName = "LongName"};
+            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0), LongName = "LongName" };
             var node2 = new HydroNode("Node2") { Geometry = new Point(10, 0) };
             var node3 = new HydroNode("Node3") { Geometry = new Point(20, 0) };
             var node4 = new HydroNode("Node4") { Geometry = new Point(30, 0) };
@@ -405,6 +409,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 */
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadPump()
         {
             // add pump
@@ -438,6 +443,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadCulvert()
         {
             // add culvert
@@ -510,6 +516,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadBridge()
         {
             var bridge = new Bridge("Name");
@@ -572,6 +579,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
         
         [Test]
+        [Category("Quarantine")]
         public void SaveMoveSaveLoadCulvert()
         {
             //demonstrates issue 4120..had a problem with cascade from comp. branch. structure. 
@@ -625,6 +633,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void MoveCulvertToOtherBranch()
         {
             //demonstrates issue 4237..
@@ -676,6 +685,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void MoveCulvertToOtherBranch2Issue4237()
         {
             //demonstrates issue 4237..
@@ -717,6 +727,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadWeir()
         {
             var weir = new Weir
@@ -736,6 +747,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadGate()
         {
             var gate = new Gate()
@@ -753,15 +765,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadLateralSource()
         {
             var lateralSource = new LateralSource
             {
                 Name = "Source1",
                 Chainage = 50,
-                Geometry = new Point(0,0)
+                Geometry = new Point(0, 0)
             };
-            var retrievedLateralSource = SaveLoadBranchFeature(lateralSource,TestHelper.GetCurrentMethodName());
+            var retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
 
             Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
             Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
@@ -769,6 +782,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
         
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadLateralSourceGeometry()
         {
             var path = TestHelper.GetCurrentMethodName() + ".dsproj";
@@ -814,11 +828,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 var network = (HydroNetwork)project.RootFolder.DataItems.First(di => di.Value is HydroNetwork).Value;
                 var lateral = network.LateralSources.First();
 
-                Assert.AreEqual(new Point(50,0), lateral.Geometry);
+                Assert.AreEqual(new Point(50, 0), lateral.Geometry);
             }
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadDiffuseLateralSource()
         {
             var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
@@ -842,6 +857,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadRetention()
         {
             var retention = new Retention()
@@ -873,6 +889,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadObservationPoint()
         {
             var observationPoint = new ObservationPoint()
@@ -890,6 +907,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void ReloadNetworkDoesWorkWithNotifyCollectionChanged()
         {
             var network = new HydroNetwork();
@@ -911,7 +929,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                                                             });
             branch.BranchFeatures.Add(crossSection);
             int callCount = 0;
-            ((INotifyCollectionChange) network.Branches[0]).CollectionChanged += delegate
+            ((INotifyCollectionChange)network.Branches[0]).CollectionChanged += delegate
             {
                 callCount++;
             };
@@ -949,6 +967,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void WriteAndReadProjectNetworkContainingAllSubItems()
         {
             var network = new HydroNetwork();
@@ -1096,6 +1115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadChannel()
         {
             //save it to a project.
