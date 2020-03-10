@@ -1011,6 +1011,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
         [Test]
         [Ignore("Does not work since NetworkLocation is not a branchfeature in the mapping")]
+        [Category("ToCheck")]
         public void WriteAndReadNetworkWithNetworkLocation()
         {
             var network = new global::DelftTools.Hydro.HydroNetwork();

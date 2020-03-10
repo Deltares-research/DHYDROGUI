@@ -189,6 +189,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Ignore("This test will be disabled (and moved to UGridToNetworkAdapterTest)")]
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("ToCheck")]
         public static void WriteRead1DNetworkAndTest()
         {
 
