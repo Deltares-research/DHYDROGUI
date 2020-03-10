@@ -82,6 +82,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category("Quarantine")]
         public void ReadErnstAlfaFileLandelijkSobekModel()
         {
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"LSM1_0.lit\12\Unpaved.Alf");

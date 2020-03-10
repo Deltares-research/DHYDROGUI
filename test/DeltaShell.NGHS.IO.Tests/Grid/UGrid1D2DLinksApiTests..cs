@@ -40,6 +40,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(false)]
         [TestCase(true)]
         [Ignore("Seems not to work on the build server!")]
+        [Category("ToCheck")]
         public void Create1D2DLinksApiCallTest(bool remote)
         {
             // UGrid1D2DLinksApi
