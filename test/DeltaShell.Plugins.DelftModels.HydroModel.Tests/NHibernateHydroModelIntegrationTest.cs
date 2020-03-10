@@ -36,6 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroModelWithSeveralSubActivities()
         {
             var hydroModelBuilder = new HydroModelBuilder();
@@ -48,6 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category("Quarantine")]
         public void SaveLoadHydroModelWithCurrentWorkflowData()
         {
             var hydroModelBuilder = new HydroModelBuilder();
