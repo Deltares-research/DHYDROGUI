@@ -7,7 +7,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {

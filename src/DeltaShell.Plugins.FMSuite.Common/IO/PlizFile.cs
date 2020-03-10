@@ -8,7 +8,6 @@ using DeltaShell.NGHS.IO;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {

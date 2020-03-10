@@ -6,7 +6,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
 using GeoAPI.Geometries;
 using SharpMap.Api.Editors;
 using SharpMap.Styles;
-using Point = System.Drawing.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 {

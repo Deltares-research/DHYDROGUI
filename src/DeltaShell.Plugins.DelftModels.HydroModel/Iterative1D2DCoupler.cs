@@ -11,10 +11,10 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -29,7 +29,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
-using IUnit = DelftTools.Units.IUnit;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {

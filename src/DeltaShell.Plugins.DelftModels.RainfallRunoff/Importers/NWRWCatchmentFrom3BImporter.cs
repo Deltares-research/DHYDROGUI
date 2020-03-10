@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers

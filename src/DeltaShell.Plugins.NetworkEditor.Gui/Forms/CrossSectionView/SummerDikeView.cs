@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {

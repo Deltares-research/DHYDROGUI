@@ -8,8 +8,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Utils.Reflection;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls

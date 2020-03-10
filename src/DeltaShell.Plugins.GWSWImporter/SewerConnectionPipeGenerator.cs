@@ -1,5 +1,4 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {

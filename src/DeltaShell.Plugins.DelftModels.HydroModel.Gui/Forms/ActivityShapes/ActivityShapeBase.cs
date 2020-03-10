@@ -4,8 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Net.Mime;
 using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow;
+using Netron.GraphLib;
 using Netron.GraphLib.Interfaces;
-using Shape = Netron.GraphLib.Shape;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
 {

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Shell.Core;
-using DeltaShell.Sobek.Readers.Readers;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek

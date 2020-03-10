@@ -15,7 +15,6 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using Point = System.Drawing.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {

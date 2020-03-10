@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -26,13 +29,6 @@ using SharpMap.Editors.Interactors;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
 using SharpMap.Rendering;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Utils.Reflection;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {

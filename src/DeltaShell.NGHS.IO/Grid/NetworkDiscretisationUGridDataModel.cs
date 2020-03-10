@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.NGHS.IO.Grid

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
 using GeoAPI.Extensions.Coverages;
-﻿using GeoAPI.Extensions.Networks;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-﻿using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {

@@ -38,7 +38,6 @@ using SharpMap.UI.Forms;
 using SharpMap.UI.Helpers;
 using SharpMap.UI.Tools;
 using Point = NetTopologySuite.Geometries.Point;
-using ShapeType = SharpMap.Styles.ShapeType;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {

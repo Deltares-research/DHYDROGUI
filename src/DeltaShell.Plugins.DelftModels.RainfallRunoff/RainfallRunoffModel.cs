@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO; 
+using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
@@ -39,9 +39,8 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.NetCDF;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Coverages;
 using log4net;
-using Comparer = DelftTools.Utils.Comparer;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {

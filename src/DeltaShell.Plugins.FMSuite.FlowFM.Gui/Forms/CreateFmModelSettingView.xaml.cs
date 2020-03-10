@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using Image = System.Drawing.Image;

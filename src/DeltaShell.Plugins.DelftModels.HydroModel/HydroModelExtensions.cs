@@ -4,8 +4,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
-using DefaultEditAction = DelftTools.Utils.Editing.DefaultEditAction;
-
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {

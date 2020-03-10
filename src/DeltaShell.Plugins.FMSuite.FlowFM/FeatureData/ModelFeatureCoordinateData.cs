@@ -10,7 +10,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     [Entity]

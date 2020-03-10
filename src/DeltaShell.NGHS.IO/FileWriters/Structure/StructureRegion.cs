@@ -1,6 +1,4 @@
-﻿using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.Helpers;
+﻿using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {

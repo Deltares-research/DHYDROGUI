@@ -5,8 +5,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
-using log4net;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {

@@ -1,4 +1,7 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
@@ -7,9 +10,6 @@ using log4net;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {

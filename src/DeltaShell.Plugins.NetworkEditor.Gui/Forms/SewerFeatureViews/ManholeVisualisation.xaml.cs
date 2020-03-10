@@ -6,7 +6,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.SewerFeatures;
-using Point = System.Windows.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {

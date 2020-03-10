@@ -6,7 +6,6 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BcMeteoFileDataBuilder : BcFileFlowBoundaryDataBuilder

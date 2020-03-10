@@ -1,14 +1,14 @@
 ﻿using System;
-﻿using System.Collections.Generic;
-﻿using System.Linq;
-﻿using DelftTools.Functions;
-﻿using DelftTools.Functions.Generic;
-﻿using DelftTools.Utils.Editing;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
-﻿using NetTopologySuite.Extensions.Grids;
-﻿using SharpMap.Api;
+using NetTopologySuite.Extensions.Grids;
+using SharpMap.Api;
 using SharpMap.Api.ECModule;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages

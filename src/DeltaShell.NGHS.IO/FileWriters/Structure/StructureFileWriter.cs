@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 

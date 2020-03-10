@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
@@ -17,7 +16,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Helpers
 {

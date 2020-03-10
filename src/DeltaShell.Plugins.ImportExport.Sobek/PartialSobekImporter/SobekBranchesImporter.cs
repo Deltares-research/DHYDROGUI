@@ -10,8 +10,8 @@ using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
 using log4net;
-using NetTopologySuite.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

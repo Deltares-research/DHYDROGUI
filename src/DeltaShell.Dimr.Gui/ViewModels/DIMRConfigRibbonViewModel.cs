@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Aop;
 using BasicModelInterface;
+using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Dimr.Gui.ViewModels
 {

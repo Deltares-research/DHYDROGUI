@@ -1,7 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw

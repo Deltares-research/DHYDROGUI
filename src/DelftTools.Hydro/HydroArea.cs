@@ -4,8 +4,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using NetTopologySuite.Extensions.Features;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
 
 namespace DelftTools.Hydro
 {

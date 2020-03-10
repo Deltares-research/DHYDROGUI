@@ -5,7 +5,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using log4net;
-using AggregationOptions = DeltaShell.Plugins.DelftModels.RainfallRunoff.AggregationOptions;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

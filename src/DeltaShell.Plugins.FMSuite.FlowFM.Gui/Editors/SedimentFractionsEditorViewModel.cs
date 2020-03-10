@@ -1,5 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {

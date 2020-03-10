@@ -7,8 +7,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
-
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {

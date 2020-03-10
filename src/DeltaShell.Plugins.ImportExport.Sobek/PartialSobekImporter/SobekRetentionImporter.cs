@@ -14,7 +14,6 @@ using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

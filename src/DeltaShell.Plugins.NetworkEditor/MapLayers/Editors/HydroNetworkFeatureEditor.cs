@@ -12,7 +12,6 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using SharpMap.Layers;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
@@ -20,6 +19,7 @@ using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors.Network;
+using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 {

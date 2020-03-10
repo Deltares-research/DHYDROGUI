@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using DelftTools.Controls;
 using DelftTools.Hydro.CrossSections;
-using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {

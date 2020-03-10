@@ -1,5 +1,5 @@
-﻿using DelftTools.Controls;
-using Image = System.Drawing.Image;
+﻿using System.Drawing;
+using DelftTools.Controls;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Views
 {

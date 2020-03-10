@@ -5,13 +5,11 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {

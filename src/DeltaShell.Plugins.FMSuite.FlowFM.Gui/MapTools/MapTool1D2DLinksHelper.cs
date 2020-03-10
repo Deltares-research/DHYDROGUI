@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
@@ -12,7 +11,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {

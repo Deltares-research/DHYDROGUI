@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro.Validators

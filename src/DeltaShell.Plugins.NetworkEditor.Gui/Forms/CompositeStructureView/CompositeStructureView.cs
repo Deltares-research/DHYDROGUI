@@ -13,7 +13,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView

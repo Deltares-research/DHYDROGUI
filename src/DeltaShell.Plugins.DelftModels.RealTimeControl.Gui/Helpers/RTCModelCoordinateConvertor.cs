@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;

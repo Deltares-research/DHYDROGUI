@@ -1,10 +1,6 @@
-﻿using System;
-using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro.SewerFeatures
 {

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     /// <summary>

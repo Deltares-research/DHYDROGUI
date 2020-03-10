@@ -7,8 +7,8 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
+using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
-using Feature = NetTopologySuite.Extensions.Features.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {

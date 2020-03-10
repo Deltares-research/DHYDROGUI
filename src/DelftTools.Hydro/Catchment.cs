@@ -9,7 +9,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro
 {

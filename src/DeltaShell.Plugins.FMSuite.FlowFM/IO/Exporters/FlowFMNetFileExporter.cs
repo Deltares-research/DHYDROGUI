@@ -4,11 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using Resources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters
 {

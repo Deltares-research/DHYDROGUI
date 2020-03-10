@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;

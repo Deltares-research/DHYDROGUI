@@ -6,12 +6,12 @@ using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Api.Editors;
+using SharpMap.Converters.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Snapping;
 using SharpMap.Layers;
 using SharpMap.Styles;
 using SharpMap.UI.Tools;
-using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {

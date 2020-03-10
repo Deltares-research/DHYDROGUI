@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
-using SharpMap.UI.Tools;
 using log4net;
+using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {

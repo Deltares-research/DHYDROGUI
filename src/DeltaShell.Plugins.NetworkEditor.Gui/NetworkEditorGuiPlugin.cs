@@ -59,12 +59,7 @@ using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
-using FixedWeir = DelftTools.Hydro.Structures.FixedWeir;
-using LandBoundary2D = DelftTools.Hydro.LandBoundary2D;
-using ObservationCrossSection2D = DelftTools.Hydro.ObservationCrossSection2D;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
-using ThinDam2D = DelftTools.Hydro.Structures.ThinDam2D;
-using BridgePillar = DelftTools.Hydro.Structures.BridgePillar;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {

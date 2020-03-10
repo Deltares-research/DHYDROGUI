@@ -8,7 +8,6 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Geometries;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

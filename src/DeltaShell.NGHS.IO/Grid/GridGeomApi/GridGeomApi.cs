@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
-using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

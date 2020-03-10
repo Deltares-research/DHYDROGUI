@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews

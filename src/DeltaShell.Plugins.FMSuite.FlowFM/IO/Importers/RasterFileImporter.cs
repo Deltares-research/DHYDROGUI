@@ -14,7 +14,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class RasterFileImporter : IFileImporter

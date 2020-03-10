@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -28,11 +27,14 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors;
@@ -41,9 +43,6 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {

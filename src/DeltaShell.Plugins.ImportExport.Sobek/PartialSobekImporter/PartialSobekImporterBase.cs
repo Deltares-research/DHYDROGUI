@@ -9,7 +9,6 @@ using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Sobek.Readers;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {

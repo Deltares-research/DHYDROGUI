@@ -1,8 +1,8 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
-using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {

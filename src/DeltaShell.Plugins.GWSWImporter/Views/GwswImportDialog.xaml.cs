@@ -1,8 +1,8 @@
-﻿using System.Windows;
+﻿using System.Drawing;
+using System.Windows;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DeltaShell.Plugins.ImportExport.Gwsw;
-using Image = System.Drawing.Image;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Views
