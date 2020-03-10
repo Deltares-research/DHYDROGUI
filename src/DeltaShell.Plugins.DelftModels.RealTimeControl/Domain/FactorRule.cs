@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         }
 
         private double factor;
-        public double Factor
+        public virtual double Factor
         {
             get { return factor; }
             set
