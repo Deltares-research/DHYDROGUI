@@ -1,0 +1,56 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.3164, Nov 29 2013, 11:42:41
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=19
+NumberOfLocations=4167
+T0=2007.02.03 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+ 
+[Long Locations]
+3676=cid_UpCid_Cdg_us_Cdg_Link_us
+3677=cid_UpCid_Cdg_us_1_16
+3678=cid_UpCid_Cdg_us_1_17
+3679=cid_UpCid_Cdg_us_1_18
+3680=cid_UpCid_Cdg_us_1_19
+3681=cid_UpCid_Cdg_us_1_20
+3682=cid_UpCid_Cdg_us_1_21
+3683=cid_UpCid_Cdg_us_1_22
+3684=cid_UpCid_Cdg_us_1_23
+3685=cid_UpCid_Cdg_us_1_24
+3686=cid_UpCid_Cdg_us_1_25
+3687=cid_UpCid_Cdg_us_1_26
+3688=cid_UpCid_Cdg_us_1_27
+3689=cid_UpCid_Cdg_us_1_28
+3690=cid_UpCid_Cdg_us_1_29
+3691=cid_UpCid_Cdg_us_1_30
+3692=cid_UpCid_Cdg_us_1_31
+3693=cid_UpCid_Cdg_us_1_32
+3694=cid_UpCid_Cdg_us_1_33
+3695=cid_UpCid_Cdg_us_1_34
+3696=cid_UpCid_Cdg_us_1_35
+3697=cid_UpCid_Cdg_us_1_36
+3698=cid_UpCid_Cdg_us_1_37
+ 
+[Location Descriptions]
+367=62
+1394=69
+1797=390
+1810=6
+2041=KALI SENTIONG_1
+2175=EBC_1
+2280=121
+2391=74
+2470=70
+3568=1_1
+3570=1_1
+3582=1_1
+3603=1_1
+3612=4
+3676=Cdg_Link_us
+ 

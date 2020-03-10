@@ -1,0 +1,333 @@
+STDS id '27' nm '' ty 7 cl 1.11 cw 5.5 gh 9.11 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id '26' nm '' ty 7 cl -0.5 cw 5.6 gh 7.58 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id '28' nm '' ty 7 cl 0.7 cw 4 gh 5.4 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id '8' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+6.7 0.8 0.6 0 0 <
+13.4 1.15 0.8 0 0 <
+20.1 1.3 1.15 0 0 <
+26.8 1.45 1.3 0 0 <
+40.2 1.6 1.45 0 0 <
+tble stds
+STDS id '2' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'LOWANG1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'OldCakungGate' nm '' ty 7 cl 0.45 cw 10 gh 10.45 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'MOOKERVART1' nm '' ty 7 cl -0.45 cw 4 gh 1.55 mu 0.5 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'SET_BUD1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id '29' nm '' ty 7 cl 2.062 cw 5.2 gh 2.062 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'BUND_GROG1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'KRUKUT1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'BANDENGAN1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'CIDENG_14' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                     stds
+STDS id 'KALIDURI_9' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'BIDARA1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'ACIL1' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id '13' nm '' ty 6 cl -0.18 cw 32 ce 1.7 sc 1 rt 0 stds
+STDS id '35' nm '' ty 7 cl -0.7 cw 6 gh 2.3 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id '10' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+8 0.5 0 0 0 <
+tble stds
+STDS id 'ITEM1' nm '' ty 7 cl 0 cw 4 gh 0 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id '30' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0                                stds
+STDS id 'MELATI_WEIR' nm '' ty 6 cl 1.2 cw 120 ce 1 sc 1 rt 1 stds
+STDS id '22' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+8 -1.8 -1.9 0 0 <
+12 -1.6 -1.7 0 0 <
+16 -1.4 -1.5 0 0 <
+tble stds
+STDS id 'MELATI_PUMP' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4.4 1.65 1.17 0 0 <
+9.7 2.15 1.65 0 0 <
+13.6 2.5 2.15 0 0 <
+tble stds
+STDS id 'CFW_01' nm '' ty 7 cl 0 cw 60 gh 5 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0                                stds
+STDS id '36' nm '' ty 7 cl 19 cw 5 gh 19 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id 'Katulampa' nm '' ty 6 cl 367.2 cw 4 ce 0.7 sc 1 rt 0    stds
+STDS id '257' nm '' ty 6 cl 367.7 cw 7.69 ce 0.7 sc 1 rt 0    stds
+STDS id '256' nm '' ty 6 cl 368 cw 2.2 ce 0.7 sc 1 rt 0    stds
+STDS id '255' nm '' ty 6 cl 367.7 cw 5.4 ce 0.7 sc 1 rt 0    stds
+STDS id '248' nm '' ty 6 cl 367.1 cw 4 ce 0.7 sc 1 rt 0    stds
+STDS id '249' nm '' ty 6 cl 367 cw 4 ce 0.7 sc 1 rt 0    stds
+STDS id '254' nm '' ty 6 cl 367.6 cw 11.13 ce 0.7 sc 1 rt 0    stds
+STDS id '250' nm '' ty 6 cl 367.3 cw 8.2 ce 0.7 sc 1 rt 0    stds
+STDS id '253' nm '' ty 6 cl 367.4 cw 10.9 ce 0.7 sc 1 rt 0    stds
+STDS id '252' nm '' ty 6 cl 367.4 cw 11.1 ce 0.7 sc 1 rt 0    stds
+STDS id '251' nm '' ty 6 cl 367.3 cw 8.4 ce 0.7 sc 1 rt 0    stds
+STDS id '188' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4.6 4.64 4.59 0 0 <
+tble    stds
+STDS id '196' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2 1.5 1.2 0 0 <
+4 2 1.5 0 0 <
+6 2.25 2 0 0 <
+8 2.5 2.25 0 0 <
+tble    stds
+STDS id '202' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 -1 -1.1 0 0 <
+tble    stds
+STDS id '246' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 2.5 2.45 0 0 <
+tble    stds
+STDS id '215' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+6.6 -1.4 -1.5 0 0 <
+9.9 -1.3 -1.49 0 0 <
+19.9 -1.1 -1.48 0 0 <
+tble    stds
+STDS id '227' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+15 -1.3 -1.5 0 0 <
+tble    stds
+STDS id '103' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.36 5.25 5.2 0 0 <
+tble    stds
+STDS id 'TuguUtaraPomp' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 0.82 0.77 0 0 <
+tble    stds
+STDS id '125' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4 1.14 1.09 0 0 <
+tble    stds
+STDS id 'Pinangsia' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 -1.33 -1.38 0 0 <
+tble    stds
+STDS id 'SMRBatu' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 2.43 2.38 0 0 <
+tble    stds
+STDS id 'JatiPinggirPomp' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 5.83 5.78 0 0 <
+tble    stds
+STDS id '126' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 0.67 0.62 0 0 <
+tble    stds
+STDS id '114' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 2.1 2.05 0 0 <
+tble    stds
+STDS id '198' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2 -1 -1.1 0 0 <
+tble    stds
+STDS id '214' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3 -1.5 -1.6 0 0 <
+tble    stds
+STDS id '207' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 0.5 0.2 0 0 <
+1.7 1 0.9 0 0 <
+tble stds
+STDS id '233' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.6 0.6 0 0 0 <
+3.9 0.9 0.6 0 0 <
+tble    stds
+STDS id '225' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3.7 -1.4 -1.5 0 0 <
+7.4 -1.25 -1.4 0 0 <
+tble    stds
+STDS id '240' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.5 0.5 0 0 0 <
+5 0.95 0.5 0 0 <
+7.5 1.2 0.95 0 0 <
+tble    stds
+STDS id '241' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+5.48 0.2 0 0 0 <
+8.22 0.5 0.2 0 0 <
+10.96 0.6 0.5 0 0 <
+tble    stds
+STDS id 'Bimoli' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 -1.5 -1.6 0 0 <
+tble stds
+STDS id 'PenjaringanPomp' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4.5 -1.5 -1.6 0 0 <
+tble    stds
+STDS id 'KartiniPomp' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0.5 2.27 2.22 0 0 <
+tble    stds
+STDS id 'KapukSelatanPump' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2 -1.5 -1.6 0 0 <
+tble    stds
+STDS id '247' nm '' ty 7 cl -1 cw 2 gh -1 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0    stds
+STDS id 'ACL_2' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+5 0.05 -0.05 0 0 <
+10 0.1 0.05 0 0 <
+15 0.45 0.1 0 0 <
+tble               stds
+STDS id 'EBC_Gate_III' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0    stds
+STDS id 'EBC_Gate_IV' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0    stds
+STDS id 'EBC_Gate_II' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0    stds
+STDS id '32' nm '' ty 7 cl 0 cw 16 gh 4 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'EBC_Gate_I' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0   stds
+STDS id 'PKPR_TG_top' nm '' ty 6 cl 2.8 cw 46.5 ce 0.63 sc 1 rt 1 stds
+STDS id 'Marina_4' ty 7 cl -2 cw 9.3 gh 5.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Marina_5' ty 7 cl -2 cw 9.3 gh 5.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Marina_3' ty 7 cl -2 cw 9.3 gh 5.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Marina_1' nm '' ty 7 cl -2 cw 9.3 gh 5.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Marina_2' ty 7 cl -2 cw 9.3 gh 5.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'CDG_02' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2 -1.2 -1.8 0 0 <
+4 -0.6 -1.2 0 0 <
+6 0 -0.6 0 0 <
+8 0.6 0 0 0 <
+tble stds
+STDS id 'Pluit_barat' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+6 -1.4 -1.5 0 0 <
+12 -1 -1.1 0 0 <
+18 -0.5 -0.6 0 0 <
+tble stds
+STDS id 'Pluit_timur' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+6.4 -1.7 -1.8 0 0 <
+13.3 -1.5 -1.6 0 0 <
+tble stds
+STDS id 'Cipondoh' nm '' ty 7 cl 18.05 cw 4.2 gh 19.55 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0  stds
+STDS id 'Kutub' nm '' ty 7 cl 32 cw 0.8 gh 34 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'S3I_107' nm '' ty 7 cl 18.1 cw 1.35 gh 18.1 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'S3I_110' nm '' ty 7 cl 18.35 cw 0.8 gh 18.35 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_weirs3' nm '' ty 6 cl 15 cw 33.5 ce 0.63 sc 1 rt 0 stds
+STDS id 'P09_BKT_weirs2' nm '' ty 6 cl 15 cw 31.28 ce 0.63 sc 1 rt 0 stds
+STDS id 'P09_BKT_weirs1' nm '' ty 6 cl 15 cw 26.8 ce 0.63 sc 1 rt 0 stds
+STDS id 'P09_BKT_WEIR_CIP' nm '' ty 6 cl 10.49 cw 36 ce 1 sc 1 rt 0 stds
+STDS id 'P09_258' nm '' ty 7 cl 4.414 cw 6.7 gh 10.364 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_259' nm '' ty 7 cl 4.414 cw 6.7 gh 10.414 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_260' nm '' ty 7 cl 4.414 cw 6.7 gh 10.364 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_261' nm '' ty 7 cl 4.414 cw 6.7 gh 10.364 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate2_4' nm '' ty 7 cl 1.03 cw 6.430 gh 8.23 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate2_5' nm '' ty 7 cl 1.03 cw 6.245 gh 8.23 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate2_3' nm '' ty 7 cl 1.03 cw 6.095 gh 8.23 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate2_2' nm '' ty 7 cl 1.03 cw 6.090 gh 8.23 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate2_1' nm '' ty 7 cl 1.03 cw 6.420 gh 8.23 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate3_1' nm '' ty 7 cl -1.6 cw 6.7 gh 5.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate3_2' nm '' ty 7 cl -1.6 cw 6.7 gh 5.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate3_3' nm '' ty 7 cl -1.6 cw 6.7 gh 5.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate3_4' nm '' ty 7 cl -1.6 cw 6.7 gh 5.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P09_BKT_Gate3_5' nm '' ty 7 cl -1.6 cw 6.7 gh 5.6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'Mang_Gate3' nm '' ty 7 cl 1.11 cw 5.5 gh 9.11 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Mang_Gate1' ty 7 cl 1.11 cw 5.5 gh 9.11 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'KRT_gate2' ty 7 cl -0.5 cw 5.6 gh 7.58 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'KRT_gate3' ty 7 cl -0.5 cw 5.6 gh 7.58 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id '158' nm '' ty 7 cl 8 cw 15 gh 12 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id '166' ty 7 cl 8 cw 15 gh 12 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id 'KRT_gate4' ty 7 cl -0.5 cw 5.6 gh 7.58 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'KRT_gate5' ty 7 cl -0.5 cw 5.6 gh 7.58 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id 'PompaJelembarTimur' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.25 -1 -1.1 0 0 <
+tble stds
+STDS id 'PompaJelembar2' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 -1 -1.1 0 0 <
+tble stds
+STDS id 'PompaJelembar3' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1 -1 -1.1 0 0 <
+tble stds
+STDS id 'PompaDudi' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2 -0.15 -0.2 0 0 <
+tble stds
+STDS id 'TobAngke1' nm '' ty 7 cl -0.75 cw 1.5 gh -0.25 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'CAKG_02' ty 7 cl 0.7 cw 4 gh 5.4 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'CAKG_03' ty 7 cl 0.7 cw 4 gh 5.4 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'PintuMuaraKarang' nm '' ty 7 cl 0.7 cw 2 gh 0.9 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id 'ITEM2' nm '' ty 7 cl 0 cw 12 gh 4 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'ISTIQLAL_1' nm '' ty 7 cl -0.127 cw 2.9 gh 5.373 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'ISTIQLAL_2' ty 7 cl -0.127 cw 3 gh 5.373 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'ISTIQLAL_3' ty 7 cl -0.127 cw 6.3 gh 5.373 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Jembatan_Merah' nm '' ty 7 cl 2 cw 14 gh 7 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Sogo_gate' nm '' ty 7 cl 0.5 cw 2 gh 0.5 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'PompaAir_PasarIkan' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+10 -0.4 -0.5 0 0 <
+20 -0.35 -0.45 0 0 <
+30 -0.3 -0.4 0 0 <
+tble stds
+STDS id 'KojaPump' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+1.5 -1.6 -1.8 0 0 <
+3 -1.5 -1.7 0 0 <
+6.5 -1.45 -1.6 0 0 <
+10 -1.4 -1.5 0 0 <
+tble stds
+STDS id 'SodetanGrogolGate' nm '' ty 7 cl 18.5 cw 8 gh 23.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'Tanjungan' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+4 -1.8 -1.9 0 0 <
+8 -1.75 -1.85 0 0 <
+12 -1.7 -1.8 0 0 <
+tble stds
+STDS id 'KamalPump' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+0 -1.8 -1.9 0 0 <
+tble stds
+STDS id 'P04_71' nm '' ty 6 cl 4 cw 400 ce 1 sc 1 rt 0 stds
+STDS id 'P04_70' nm '' ty 6 cl 4 cw 400 ce 1 sc 1 rt 0 stds
+STDS id 'TanjunganGate' nm '' ty 7 cl -1.7 cw 15 gh 2.3 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'KamalGate' nm '' ty 7 cl -1.7 cw 30 gh 2.3 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'P06_98' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.2 2 1.5 0 0 <
+6.78 2.5 2 0 0 <
+8.52 3 2.5 0 0 <
+tble    stds
+STDS id 'P06_186' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3.3 2 1.5 0 0 <
+5.5 2.5 2 0 0 <
+8.9 3 2.5 0 0 <
+tble    stds
+STDS id 'P06_UpCid_Cdg_8' nm '' ty 7 cl 5.5 cw 15 gh 7.5 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_12' nm '' ty 7 cl 5 cw 4 gh 5 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_17' nm '' ty 6 cl 8 cw 2 ce 1 sc 1 rt 0 stds
+STDS id 'P06_UpCid_Cdg_18' nm '' ty 6 cl 8 cw 2 ce 1 sc 1 rt 0 stds
+STDS id 'P06_UpCid_Cdg_33' nm '' ty 6 cl 6.95 cw 13 ce 1 sc 1 rt 0 stds
+STDS id 'P06_UpCid_Cdg_36' nm '' ty 6 cl 7.5 cw 3.5 ce 1 sc 1 rt 0 stds
+STDS id 'P06_UpCid_Cdg_34' nm '' ty 7 cl 6 cw 2.5 gh 6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_35' nm '' ty 7 cl 6 cw 2.5 gh 6 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_41' nm '' ty 7 cl 6 cw 2.5 gh 8 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_43' nm '' ty 7 cl 6 cw 2.5 gh 8 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_44' nm '' ty 7 cl 8 cw 2.5 gh 10 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_42' nm '' ty 7 cl 8 cw 2.5 gh 10 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_25' nm '' ty 7 cl 7.5 cw 2.5 gh 7.5 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_UpCid_Cdg_27' nm '' ty 6 cl 8.5 cw 3.5 ce 1 sc 1 rt 0 stds
+STDS id 'P06_UpCid_Cdg_26' nm '' ty 7 cl 7.5 cw 2.5 gh 7.5 mu 0.63 sc 1 rt 0 mp 0 0 mn 0 0 stds
+STDS id 'P06_98' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+2.2 2 1.5 0 0 <
+6.78 2.5 2 0 0 <
+8.52 3 2.5 0 0 <
+tble    stds
+STDS id 'P06_186' nm '' ty 9 dn 1 rt cr 0 1 0 ct lt 1
+TBLE
+3.3 2 1.5 0 0 <
+5.5 2.5 2 0 0 <
+8.9 3 2.5 0 0 <
+tble    stds
+STDS id 'BlencongGate' nm '' ty 7 cl 0.7 cw 2 gh 0.7 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds
+STDS id 'PETUKANGAN_GATE' nm '' ty 7 cl 2.8 cw 2 gh 5.8 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'TANGKI_GATE' nm '' ty 7 cl -0.3 cw 5 gh 3.7 mu 0.63 sc 1 rt 1 mp 0 0 mn 0 0 stds
+STDS id 'SUNTER_SELATAN_GATE' nm '' ty 7 cl -0.1 cw 4 gh -0.1 mu 0.63 sc 1 rt 3 mp 0 0 mn 0 0 stds

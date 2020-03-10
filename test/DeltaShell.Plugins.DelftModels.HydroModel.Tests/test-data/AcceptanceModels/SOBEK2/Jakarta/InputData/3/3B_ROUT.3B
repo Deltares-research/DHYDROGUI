@@ -1,0 +1,316 @@
+RDEF id '271'     nm '271'     rt 0 nl 2 x 0.10  0.02     k 0.0368604       0.2211622   qm  4.1   qi 0 0 qo 0 0 rdef
+RDEF id '379'     nm '379'     rt 0 nl 2 x 0.10  0.02     k 0.0379923       0.2279537   qm  2.9   qi 0 0 qo 0 0 rdef
+RDEF id 'x262'    nm 'x262'    rt 0 nl 2 x 0.11  0.02     k 0.0199517       0.1197105   qm  6.8   qi 0 0 qo 0 0 rdef
+RDEF id '326'     nm '326'     rt 0 nl 2 x 0.11  0.02     k 0.0965898       0.5795390   qm  5.5   qi 0 0 qo 0 0 rdef
+RDEF id '386'     nm '386'     rt 0 nl 2 x 0.11  0.02     k 0.0262803       0.1576818   qm  5.2   qi 0 0 qo 0 0 rdef
+RDEF id '12'      nm '12'      rt 0 nl 2 x 0.11  0.02     k 0.01158315      0.0694989   qm  7.3   qi 0 0 qo 0 0 rdef
+RDEF id '31'      nm '31'      rt 0 nl 2 x 0.12  0.02     k 0.01807634      0.108458    qm  8.5   qi 0 0 qo 0 0 rdef
+RDEF id '97'      nm '97'      rt 0 nl 2 x 0.14  0.02     k 0.00705957      0.0423574   qm  12.4  qi 0 0 qo 0 0 rdef
+RDEF id '126'     nm '126'     rt 0 nl 2 x 0.14  0.02     k 0.01294907      0.0776944   qm  12.8  qi 0 0 qo 0 0 rdef
+RDEF id '131'     nm '131'     rt 0 nl 2 x 0.13  0.02     k 0.02013361      0.1208016   qm  9.9   qi 0 0 qo 0 0 rdef
+RDEF id '132'     nm '132'     rt 0 nl 2 x 0.13  0.02     k 0.00884097      0.0530458   qm  11.3  qi 0 0 qo 0 0 rdef
+RDEF id '138'     nm '138'     rt 0 nl 2 x 0.13  0.02     k 0.01278838      0.0767303   qm  10.5  qi 0 0 qo 0 0 rdef
+RDEF id '139'     nm '139'     rt 0 nl 2 x 0.16  0.02     k 0.00380355      0.0416667   qm  14.9  qi 0 0 qo 0 0 rdef
+RDEF id '152'     nm '152'     rt 0 nl 2 x 0.15  0.02     k 0.01851256      0.1110753   qm  14.5  qi 0 0 qo 0 0 rdef
+RDEF id '155'     nm '155'     rt 0 nl 2 x 0.12  0.02     k 0.00566713      0.0416667   qm  8.6   qi 0 0 qo 0 0 rdef
+RDEF id '159'     nm '159'     rt 0 nl 2 x 0.11  0.02     k 0.02562743      0.1537646   qm  6.2   qi 0 0 qo 0 0 rdef
+RDEF id '160'     nm '160'     rt 0 nl 2 x 0.15  0.02     k 0.003472222     0.0416667   qm  13.2  qi 0 0 qo 0 0 rdef
+RDEF id '161'     nm '161'     rt 0 nl 2 x 0.11  0.02     k 0.03422265      0.2053359   qm  5.5   qi 0 0 qo 0 0 rdef
+RDEF id '162'     nm '162'     rt 0 nl 2 x 0.11  0.02     k 0.02515787      0.1509472   qm  5.4   qi 0 0 qo 0 0 rdef
+RDEF id '164'     nm '164'     rt 0 nl 2 x 0.14  0.02     k 0.01343713      0.0806228   qm  13.0  qi 0 0 qo 0 0 rdef
+RDEF id '166'     nm '166'     rt 0 nl 2 x 0.12  0.02     k 0.01468854      0.0881313   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id '167'     nm '167'     rt 0 nl 2 x 0.16  0.02     k 0.01071973      0.0643184   qm  15.5  qi 0 0 qo 0 0 rdef
+RDEF id '173'     nm '173'     rt 0 nl 2 x 0.10  0.02     k 0.03695156      0.2217094   qm  2.2   qi 0 0 qo 0 0 rdef
+RDEF id '174'     nm '174'     rt 0 nl 2 x 0.10  0.02     k 0.06682957      0.4009774   qm  1.9   qi 0 0 qo 0 0 rdef
+RDEF id '181'     nm '181'     rt 0 nl 2 x 0.12  0.02     k 0.00857605      0.0514563   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id '182'     nm '182'     rt 0 nl 2 x 0.14  0.02     k 0.00629194      0.0416667   qm  12.2  qi 0 0 qo 0 0 rdef
+RDEF id '183'     nm '183'     rt 0 nl 2 x 0.12  0.02     k 0.01047625      0.0628575   qm  9.4   qi 0 0 qo 0 0 rdef
+RDEF id '186'     nm '186'     rt 0 nl 2 x 0.13  0.02     k 0.0055512       0.0416667   qm  10.3  qi 0 0 qo 0 0 rdef
+RDEF id '187'     nm '187'     rt 0 nl 2 x 0.12  0.02     k 0.03322696      0.1993618   qm  7.7   qi 0 0 qo 0 0 rdef
+RDEF id '188'     nm '188'     rt 0 nl 2 x 0.11  0.02     k 0.01132883      0.067973    qm  6.6   qi 0 0 qo 0 0 rdef
+RDEF id '189'     nm '189'     rt 0 nl 2 x 0.11  0.02     k 0.03194059      0.1916435   qm  5.9   qi 0 0 qo 0 0 rdef
+RDEF id '194'     nm '194'     rt 0 nl 2 x 0.20  0.02     k 0.00535626      0.0416667   qm  19.2  qi 0 0 qo 0 0 rdef
+RDEF id '195'     nm '195'     rt 0 nl 2 x 0.20  0.02     k 0.00347365      0.0416667   qm  19.7  qi 0 0 qo 0 0 rdef
+RDEF id '196'     nm '196'     rt 0 nl 2 x 0.12  0.02     k 0.00696884      0.0418131   qm  9.6   qi 0 0 qo 0 0 rdef
+RDEF id '197'     nm '197'     rt 0 nl 2 x 0.14  0.02     k 0.01502542      0.0901525   qm  12.1  qi 0 0 qo 0 0 rdef
+RDEF id '198'     nm '198'     rt 0 nl 2 x 0.15  0.02     k 0.03116485      0.1869891   qm  13.5  qi 0 0 qo 0 0 rdef
+RDEF id '200'     nm '200'     rt 0 nl 2 x 0.18  0.02     k 0.003472222     0.0416667   qm  17.8  qi 0 0 qo 0 0 rdef
+RDEF id '203'     nm '203'     rt 0 nl 2 x 0.10  0.02     k 0.04795855      0.2877513   qm  1.7   qi 0 0 qo 0 0 rdef
+RDEF id '208'     nm '208'     rt 0 nl 2 x 0.18  0.02     k 0.00479751      0.0416667   qm  17.9  qi 0 0 qo 0 0 rdef
+RDEF id '210'     nm '210'     rt 0 nl 2 x 0.12  0.02     k 0.01771565      0.4         qm  8.6   qi 0 0 qo 0 0 rdef
+RDEF id '211'     nm '211'     rt 0 nl 2 x 0.14  0.02     k 0.00501134      0.0416667   qm  12.0  qi 0 0 qo 0 0 rdef
+RDEF id '212'     nm '212'     rt 0 nl 2 x 0.18  0.02     k 0.003472222     0.0416667   qm  17.7  qi 0 0 qo 0 0 rdef
+RDEF id '214'     nm '214'     rt 0 nl 2 x 0.12  0.02     k 0.02467316      0.1480389   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id '224'     nm '224'     rt 0 nl 2 x 0.11  0.02     k 0.01608633      0.096518    qm  6.2   qi 0 0 qo 0 0 rdef
+RDEF id '230'     nm '230'     rt 0 nl 2 x 0.12  0.02     k 0.01703621      0.1022173   qm  8.1   qi 0 0 qo 0 0 rdef
+RDEF id '231'     nm '231'     rt 0 nl 2 x 0.11  0.02     k 0.02211107      0.1326664   qm  5.9   qi 0 0 qo 0 0 rdef
+RDEF id '232'     nm '232'     rt 0 nl 2 x 0.11  0.02     k 0.02803564      0.1682138   qm  4.8   qi 0 0 qo 0 0 rdef
+RDEF id '237'     nm '237'     rt 0 nl 2 x 0.12  0.02     k 0.00497256      0.0416667   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id '238'     nm '238'     rt 0 nl 2 x 0.11  0.02     k 0.00468939      0.0416667   qm  7.4   qi 0 0 qo 0 0 rdef
+RDEF id '239'     nm '239'     rt 0 nl 2 x 0.11  0.02     k 0.00814351      0.048861    qm  5.3   qi 0 0 qo 0 0 rdef
+RDEF id '243'     nm '243'     rt 0 nl 2 x 0.15  0.02     k 0.01708021      0.1024812   qm  13.9  qi 0 0 qo 0 0 rdef
+RDEF id '250'     nm '250'     rt 0 nl 2 x 0.14  0.02     k 0.00781848      0.0469109   qm  12.2  qi 0 0 qo 0 0 rdef
+RDEF id '255'     nm '255'     rt 0 nl 2 x 0.12  0.02     k 0.01992151      0.1195291   qm  9.1   qi 0 0 qo 0 0 rdef
+RDEF id '257'     nm '257'     rt 0 nl 2 x 0.12  0.02     k 0.02782465      0.1669479   qm  7.9   qi 0 0 qo 0 0 rdef
+RDEF id '258'     nm '258'     rt 0 nl 2 x 0.11  0.02     k 0.02390894      0.1434536   qm  6.3   qi 0 0 qo 0 0 rdef
+RDEF id '259'     nm '259'     rt 0 nl 2 x 0.15  0.02     k 0.003472222     0.0416667   qm  13.9  qi 0 0 qo 0 0 rdef
+RDEF id '263'     nm '263'     rt 0 nl 2 x 0.13  0.02     k 0.01339033      0.080342    qm  10.2  qi 0 0 qo 0 0 rdef
+RDEF id '264'     nm '264'     rt 0 nl 2 x 0.14  0.02     k 0.01665489      0.0999294   qm  11.9  qi 0 0 qo 0 0 rdef
+RDEF id '265'     nm '265'     rt 0 nl 2 x 0.14  0.02     k 0.02349706      0.1409824   qm  12.0  qi 0 0 qo 0 0 rdef
+RDEF id '268'     nm '268'     rt 0 nl 2 x 0.11  0.02     k 0.07428368      0.4457021   qm  7.1   qi 0 0 qo 0 0 rdef
+RDEF id '136'     nm '136'     rt 0 nl 2 x 0.36  0.02     k 0.01253237      0.0375971   qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '272'     nm '272'     rt 0 nl 2 x 0.36  0.02     k 0.01253237      0.0375971   qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '273'     nm '273'     rt 0 nl 2 x 0.36  0.02     k 0.00822562      0.0246768   qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '277'     nm '277'     rt 0 nl 2 x 0.36  0.02     k 0.003472222     0.0208333   qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '278'     nm '278'     rt 0 nl 2 x 0.50  0.02     k 0.003472222     0.0208333   qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '280'     nm '280'     rt 0 nl 2 x 0.31  0.02     k 0.01225666      0.03677     qm  100.   qi 0 0 qo 0 0 rdef
+RDEF id '281'     nm '281'     rt 0 nl 2 x 0.29  0.02     k 0.003472222     0.0208333   qm  150.   qi 0 0 qo 0 0 rdef
+RDEF id '284'     nm '284'     rt 0 nl 2 x 0.28  0.02     k 0.003472222     0.0208333   qm  150.   qi 0 0 qo 0 0 rdef
+RDEF id '285'     nm '285'     rt 0 nl 2 x 0.24  0.02     k 0.00831488      0.0249446   qm  150.   qi 0 0 qo 0 0 rdef
+RDEF id '288'     nm '288'     rt 0 nl 2 x 0.29  0.02     k 0.00482514      0.0208333   qm  150.   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8428' nm 'ro_8428' rt 0 nl 2 x 0.16  0.02     k 0.01921715      0.1153029   qm  15.2  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8433' nm 'ro_8433' rt 0 nl 2 x 0.14  0.02     k 0.01103172      0.0661903   qm  12.3  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8434' nm 'ro_8434' rt 0 nl 2 x 0.16  0.02     k 0.00366857      0.0416667   qm  15.4  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8444' nm 'ro_8444' rt 0 nl 2 x 0.13  0.02     k 0.02924839      0.1754904   qm  10.5  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8445' nm 'ro_8445' rt 0 nl 2 x 0.13  0.02     k 0.01291835      0.0775101   qm  11.1  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8450' nm 'ro_8450' rt 0 nl 2 x 0.13  0.02     k 0.01757338      0.1054403   qm  10.5  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8451' nm 'ro_8451' rt 0 nl 2 x 0.14  0.02     k 0.01162033      0.069722    qm  12.3  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8454' nm 'ro_8454' rt 0 nl 2 x 0.17  0.02     k 0.00606854      0.0416667   qm  16.3  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8457' nm 'ro_8457' rt 0 nl 2 x 0.12  0.02     k 0.02290418      0.1374251   qm  9.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8461' nm 'ro_8461' rt 0 nl 2 x 0.12  0.02     k 0.03320431      0.3         qm  9.3   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8462' nm 'ro_8462' rt 0 nl 2 x 0.13  0.02     k 0.01713991      0.1028395   qm  10.3  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8464' nm 'ro_8464' rt 0 nl 2 x 0.11  0.02     k 0.01886203      0.1131722   qm  4.5   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8466' nm 'ro_8466' rt 0 nl 2 x 0.13  0.02     k 0.01975836      0.1185501   qm  10.8  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8468' nm 'ro_8468' rt 0 nl 2 x 0.15  0.02     k 0.00489067      0.0416667   qm  14.0  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8469' nm 'ro_8469' rt 0 nl 2 x 0.12  0.02     k 0.0164983       0.2         qm  9.4   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8470' nm 'ro_8470' rt 0 nl 2 x 0.14  0.02     k 0.01454275      0.0872565   qm  12.4  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8471' nm 'ro_8471' rt 0 nl 2 x 0.12  0.02     k 0.02728652      0.1637191   qm  8.2   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8474' nm 'ro_8474' rt 0 nl 2 x 0.14  0.02     k 0.0197047       0.1182282   qm  12.6  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8475' nm 'ro_8475' rt 0 nl 2 x 0.13  0.02     k 0.02617775      0.1570665   qm  10.1  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8476' nm 'ro_8476' rt 0 nl 2 x 0.10  0.02     k 0.02008745      0.1205247   qm  3.3   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8477' nm 'ro_8477' rt 0 nl 2 x 0.13  0.02     k 0.00401215      0.0416667   qm  11.1  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8480' nm 'ro_8480' rt 0 nl 2 x 0.15  0.02     k 0.02474798      0.1484879   qm  13.4  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8481' nm 'ro_8481' rt 0 nl 2 x 0.12  0.02     k 0.0157941       0.0947646   qm  9.5   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8487' nm 'ro_8487' rt 0 nl 2 x 0.12  0.02     k 0.003472222     0.0416667   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8490' nm 'ro_8490' rt 0 nl 2 x 0.17  0.02     k 0.01253616      0.0752169   qm  16.6  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8492' nm 'ro_8492' rt 0 nl 2 x 0.12  0.02     k 0.06068829      0.3641298   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8494' nm 'ro_8494' rt 0 nl 2 x 0.17  0.02     k 0.01285326      0.0771196   qm  16.2  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8500' nm 'ro_8500' rt 0 nl 2 x 0.10  0.02     k 0.07533907      0.4520344   qm  1.4   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8504' nm 'ro_8504' rt 0 nl 2 x 0.12  0.02     k 0.02834592      0.1700755   qm  9.6   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8510' nm 'ro_8510' rt 0 nl 2 x 0.19  0.02     k 0.003472222     0.0416667   qm  18.8  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8514' nm 'ro_8514' rt 0 nl 2 x 0.10  0.02     k 0.08024403      0.4814642   qm  1.6   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8520' nm 'ro_8520' rt 0 nl 2 x 0.12  0.02     k 0.04896622      0.2937973   qm  8.2   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8524' nm 'ro_8524' rt 0 nl 2 x 0.12  0.02     k 0.03065738      0.1839443   qm  8.3   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8530' nm 'ro_8530' rt 0 nl 2 x 0.12  0.02     k 0.02076047      0.1245628   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8537' nm 'ro_8537' rt 0 nl 2 x 0.15  0.02     k 0.00408604      0.0416667   qm  14.2  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8539' nm 'ro_8539' rt 0 nl 2 x 0.13  0.02     k 0.02956134      0.177368    qm  11.5  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8540' nm 'ro_8540' rt 0 nl 2 x 0.11  0.02     k 0.01019675      0.0611805   qm  6.9   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8542' nm 'ro_8542' rt 0 nl 2 x 0.12  0.02     k 0.01705468      0.1023281   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8545' nm 'ro_8545' rt 0 nl 2 x 0.18  0.02     k 0.003472222     0.0416667   qm  17.1  qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8550' nm 'ro_8550' rt 0 nl 2 x 0.11  0.02     k 0.02902275      0.1741365   qm  6.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8552' nm 'ro_8552' rt 0 nl 2 x 0.11  0.02     k 0.01550075      0.0930045   qm  6.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8553' nm 'ro_8553' rt 0 nl 2 x 0.11  0.02     k 0.01856629      0.1113977   qm  5.6   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8556' nm 'ro_8556' rt 0 nl 2 x 0.11  0.02     k 0.04566989      0.2740193   qm  6.6   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8558' nm 'ro_8558' rt 0 nl 2 x 0.12  0.02     k 0.03162291      0.1897374   qm  7.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8559' nm 'ro_8559' rt 0 nl 2 x 0.11  0.02     k 0.01061994      0.0637197   qm  5.4   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8562' nm 'ro_8562' rt 0 nl 2 x 0.11  0.02     k 0.02829129      0.1697478   qm  6.1   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8563' nm 'ro_8563' rt 0 nl 2 x 0.10  0.02     k 0.07095797      0.4257478   qm  1.3   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8564' nm 'ro_8564' rt 0 nl 2 x 0.12  0.02     k 0.04161957      0.2497174   qm  8.3   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8565' nm 'ro_8565' rt 0 nl 2 x 0.11  0.02     k 0.01127863      0.0676718   qm  7.2   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8571' nm 'ro_8571' rt 0 nl 2 x 0.11  0.02     k 0.01332752      0.0799651   qm  5.9   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8578' nm 'ro_8578' rt 0 nl 2 x 0.11  0.02     k 0.02012397      0.1207438   qm  4.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8580' nm 'ro_8580' rt 0 nl 2 x 0.13  0.02     k 0.01449965      0.0869979   qm  9.9   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8581' nm 'ro_8581' rt 0 nl 2 x 0.11  0.02     k 0.01480275      0.0888165   qm  5.4   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8582' nm 'ro_8582' rt 0 nl 2 x 0.11  0.02     k 0.02580996      0.1548598   qm  7.1   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8596' nm 'ro_8596' rt 0 nl 2 x 0.10  0.02     k 0.0276694       0.1660164   qm  4.2   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8614' nm 'ro_8614' rt 0 nl 2 x 0.12  0.02     k 0.003472222     0.0416667   qm  8.7   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8655' nm 'ro_8655' rt 0 nl 2 x 0.11  0.02     k 0.03101869      0.1861122   qm  5.9   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8659' nm 'ro_8659' rt 0 nl 2 x 0.11  0.02     k 0.04441749      0.266505    qm  4.6   qi 0 0 qo 0 0 rdef
+RDEF id 'ro_8669' nm 'ro_8669' rt 0 nl 2 x 0.11  0.02     k 0.02330439      0.1398263   qm  5.3   qi 0 0 qo 0 0 rdef
+RDEF id '301'  nm 'lnk_1004' rt 0 nl 2 x 0.1  0.02 k 0.09 0.4   qm 1. qi 0 qo 0 rdef
+RDEF id '299'  nm 'lnk_1195' rt 0 nl 1 x 0.02 k 0.5583  qm qi 0 qo 0 rdef
+RDEF id '298'  nm 'lnk_1196' rt 0 nl 2 x 0.1  0.02 k 0.18 0.5   qm 10. qi 0 qo 0 rdef
+RDEF id '297'  nm 'lnk_1261' rt 0 nl 2 x 0.05 0.02 k 0.4 0.8    qm 10. qi 0 qo 0 rdef
+RDEF id '295'  nm 'lnk_1287' rt 0 nl 1 x 0.09 k 0.15    qm qi 0 qo 0 rdef
+RDEF id '294'  nm 'lnk_1300' rt 0 nl 2 x 0.12 0.02 k 0.10 0.5   qm 15. qi 0 qo 0 rdef
+RDEF id '293'  nm 'lnk_1311' rt 0 nl 2 x 0.12 0.02 k 0.25 0.5   qm 10. qi 0 qo 0 rdef
+RDEF id '292'  nm 'lnk_1315' rt 0 nl 2 x 0.12 0.02 k 0.25 0.5   qm 15. qi 0 qo 0 rdef
+RDEF id '289'  nm 'lnk_1341' rt 0 nl 2 x 0.33 0.02 k 0.043 0.5  qm 20. qi 0 qo 0 rdef
+RDEF id '290'  nm 'lnk_1343' rt 0 nl 1 x 0.01 k 0.5500  qm qi 0 qo 0 rdef
+RDEF id '291'  nm 'lnk_1351' rt 0 nl 2 x 0.13 0.02 k 0.1155 0.5 qm 15. qi 0 qo 0 rdef
+RDEF id '296'  nm 'lnk_154'  rt 0 nl 2 x 0.05 0.02 k 0.4533 0.8 qm 10. qi 0 qo 0 rdef
+RDEF id '300'  nm 'lnk_299'  rt 0 nl 1 x 0.03 k 0.40    qm qi 0 qo 0 rdef
+RDEF id '302'  nm '172'      rt 0 nl 1 x 0.25  k 0.02    qm qi 0 qo 0 rdef
+RDEF id '303'  nm '153'      rt 0 nl 1 x 0.25  k 0.02    qm qi 0 qo 0 rdef
+RDEF id '304'  nm 'lnk_1269' rt 0 nl 1 x 0.12  k 0.05    qm qi 0 qo 0 rdef
+RDEF id '305'  nm 'lnk_1255' rt 0 nl 1 x 0.22  k 0.02    qm qi 0 qo 0 rdef
+RDEF id '306'  nm '307'      rt 0 nl 1 x 0.2   k 0.03    qm qi 0 qo 0 rdef
+RDEF id '307'  nm 'lnk_1087' rt 0 nl 1 x 0.25  k 0.02    qm qi 0 qo 0 rdef
+RDEF id '308'  nm 'lnk_1250' rt 0 nl 1 x 0.064 k 0.05    qm qi 0 qo 0 rdef
+RDEF id '309'  nm 'lnk_1204' rt 0 nl 1 x 0.2   k 0.03    qm qi 0 qo 0 rdef
+RDEF id '310'  nm 'lnk_1281' rt 0 nl 1 x 0.024 k 0.05    qm qi 0 qo 0 rdef
+RDEF id '311'  nm 'lnk_1148' rt 0 nl 1 x 0.25  k 0.02    qm qi 0 qo 0 rdef
+RDEF id '312'  nm 'lnk_1241' rt 0 nl 1 x 0.2   k 0.03    qm qi 0 qo 0 rdef
+RDEF id '313'  nm 'lnk_1245' rt 0 nl 1 x 0.1   k 0.05    qm qi 0 qo 0 rdef
+RDEF id '314'  nm '233'      rt 0 nl 1 x 0.031 k 0.05    qm qi 0 qo 0 rdef
+RDEF id '315'  nm 'lnk_1292' rt 0 nl 2 x 0.12 0.02 k 0.01771565      0.1062939   qm  8.6  qi 0 qo 0 rdef
+RDEF id '316'  nm 'lnk_1291' rt 0 nl 2 x 0.12 0.02 k 0.01771565      0.1062939   qm  8.6  qi 0 qo 0 rdef
+RDEF id '317'  nm 'lnk_1295' rt 0 nl 2 x 0.12 0.02 k 0.01042         0.1062939   qm  8.6  qi 0 qo 0 rdef
+ROUT id 'l_271'  di '271'  rout
+ROUT id 'l_379'  di '379'  rout
+ROUT id 'l_x262' di 'x262' rout
+ROUT id 'l_326'  di '326'  rout
+ROUT id 'l_386'  di '386'  rout
+ROUT id 'l_12' di '12' rout
+ROUT id 'l_31' di '31' rout
+ROUT id 'l_97' di '97' rout
+ROUT id 'l_126' di '126' rout
+ROUT id 'l_131' di '131' rout
+ROUT id 'l_132' di '132' rout
+ROUT id 'l_138' di '138' rout
+ROUT id 'l_139' di '139' rout
+ROUT id 'l_152' di '152' rout
+ROUT id 'l_155' di '155' rout
+ROUT id 'l_159' di '159' rout
+ROUT id 'l_160' di '160' rout
+ROUT id 'l_161' di '161' rout
+ROUT id 'l_162' di '162' rout
+ROUT id 'l_164' di '164' rout
+ROUT id 'l_166' di '166' rout
+ROUT id 'l_167' di '167' rout
+ROUT id 'l_173' di '173' rout
+ROUT id 'l_174' di '174' rout
+ROUT id 'l_181' di '181' rout
+ROUT id 'l_182' di '182' rout
+ROUT id 'l_183' di '183' rout
+ROUT id 'l_186' di '186' rout
+ROUT id 'l_187' di '187' rout
+ROUT id 'l_188' di '188' rout
+ROUT id 'l_189' di '189' rout
+ROUT id 'l_194' di '194' rout
+ROUT id 'l_195' di '195' rout
+ROUT id 'l_196' di '196' rout
+ROUT id 'l_197' di '197' rout
+ROUT id 'l_198' di '198' rout
+ROUT id 'l_200' di '200' rout
+ROUT id 'l_203' di '203' rout
+ROUT id 'l_208' di '208' rout
+ROUT id 'l_210' di '210' rout
+ROUT id 'l_211' di '211' rout
+ROUT id 'l_212' di '212' rout
+ROUT id 'l_214' di '214' rout
+ROUT id 'l_224' di '224' rout
+ROUT id 'l_230' di '230' rout
+ROUT id 'l_231' di '231' rout
+ROUT id 'l_232' di '232' rout
+ROUT id 'l_237' di '237' rout
+ROUT id 'l_238' di '238' rout
+ROUT id 'l_239' di '239' rout
+ROUT id 'l_243' di '243' rout
+ROUT id 'l_250' di '250' rout
+ROUT id 'l_255' di '255' rout
+ROUT id 'l_257' di '257' rout
+ROUT id 'l_258' di '258' rout
+ROUT id 'l_259' di '259' rout
+ROUT id 'l_263' di '263' rout
+ROUT id 'l_264' di '264' rout
+ROUT id 'l_265' di '265' rout
+ROUT id 'l_268' di '268' rout
+ROUT id 'l_136' di '136' rout
+ROUT id 'l_272' di '272' rout
+ROUT id 'l_273' di '273' rout
+ROUT id 'l_277' di '277' rout
+ROUT id 'l_278' di '278' rout
+ROUT id 'l_280' di '280' rout
+ROUT id 'l_281' di '281' rout
+ROUT id 'l_284' di '284' rout
+ROUT id 'l_285' di '285' rout
+ROUT id 'l_288' di '288' rout
+ROUT id 'l_ro_8428' di 'ro_8428' rout
+ROUT id 'l_ro_8433' di 'ro_8433' rout
+ROUT id 'l_ro_8434' di 'ro_8434' rout
+ROUT id 'l_ro_8444' di 'ro_8444' rout
+ROUT id 'l_ro_8445' di 'ro_8445' rout
+ROUT id 'l_ro_8450' di 'ro_8450' rout
+ROUT id 'l_ro_8451' di 'ro_8451' rout
+ROUT id 'l_ro_8454' di 'ro_8454' rout
+ROUT id 'l_ro_8457' di 'ro_8457' rout
+ROUT id 'l_ro_8461' di 'ro_8461' rout
+ROUT id 'l_ro_8462' di 'ro_8462' rout
+ROUT id 'l_ro_8464' di 'ro_8464' rout
+ROUT id 'l_ro_8466' di 'ro_8466' rout
+ROUT id 'l_ro_8468' di 'ro_8468' rout
+ROUT id 'l_ro_8469' di 'ro_8469' rout
+ROUT id 'l_ro_8470' di 'ro_8470' rout
+ROUT id 'l_ro_8471' di 'ro_8471' rout
+ROUT id 'l_ro_8474' di 'ro_8474' rout
+ROUT id 'l_ro_8475' di 'ro_8475' rout
+ROUT id 'l_ro_8476' di 'ro_8476' rout
+ROUT id 'l_ro_8477' di 'ro_8477' rout
+ROUT id 'l_ro_8480' di 'ro_8480' rout
+ROUT id 'l_ro_8481' di 'ro_8481' rout
+ROUT id 'l_ro_8487' di 'ro_8487' rout
+ROUT id 'l_ro_8490' di 'ro_8490' rout
+ROUT id 'l_ro_8492' di 'ro_8492' rout
+ROUT id 'l_ro_8494' di 'ro_8494' rout
+ROUT id 'l_ro_8500' di 'ro_8500' rout
+ROUT id 'l_ro_8504' di 'ro_8504' rout
+ROUT id 'l_ro_8510' di 'ro_8510' rout
+ROUT id 'l_ro_8514' di 'ro_8514' rout
+ROUT id 'l_ro_8520' di 'ro_8520' rout
+ROUT id 'l_ro_8524' di 'ro_8524' rout
+ROUT id 'l_ro_8530' di 'ro_8530' rout
+ROUT id 'l_ro_8537' di 'ro_8537' rout
+ROUT id 'l_ro_8539' di 'ro_8539' rout
+ROUT id 'l_ro_8540' di 'ro_8540' rout
+ROUT id 'l_ro_8542' di 'ro_8542' rout
+ROUT id 'l_ro_8545' di 'ro_8545' rout
+ROUT id 'l_ro_8550' di 'ro_8550' rout
+ROUT id 'l_ro_8552' di 'ro_8552' rout
+ROUT id 'l_ro_8553' di 'ro_8553' rout
+ROUT id 'l_ro_8556' di 'ro_8556' rout
+ROUT id 'l_ro_8558' di 'ro_8558' rout
+ROUT id 'l_ro_8559' di 'ro_8559' rout
+ROUT id 'l_ro_8562' di 'ro_8562' rout
+ROUT id 'l_ro_8563' di 'ro_8563' rout
+ROUT id 'l_ro_8564' di 'ro_8564' rout
+ROUT id 'l_ro_8565' di 'ro_8565' rout
+ROUT id 'l_ro_8571' di 'ro_8571' rout
+ROUT id 'l_ro_8578' di 'ro_8578' rout
+ROUT id 'l_ro_8580' di 'ro_8580' rout
+ROUT id 'l_ro_8581' di 'ro_8581' rout
+ROUT id 'l_ro_8582' di 'ro_8582' rout
+ROUT id 'l_ro_8596' di 'ro_8596' rout
+ROUT id 'l_ro_8614' di 'ro_8614' rout
+ROUT id 'l_ro_8655' di 'ro_8655' rout
+ROUT id 'l_ro_8659' di 'ro_8659' rout
+ROUT id 'l_ro_8669' di 'ro_8669' rout
+ROUT id 'l_lnk_1341' di '289' rout
+ROUT id 'l_lnk_1343' di '290' rout
+ROUT id 'l_lnk_1351' di '291' rout
+ROUT id 'l_lnk_1315' di '292' rout
+ROUT id 'l_lnk_1311' di '293' rout
+ROUT id 'l_lnk_1300' di '294' rout
+ROUT id 'l_lnk_1287' di '295' rout
+ROUT id 'l_154' di '296' rout
+ROUT id 'l_lnk_1261' di '297' rout
+ROUT id 'l_lnk_1196' di '298' rout
+ROUT id 'l_lnk_1195' di '299' rout
+ROUT id 'l_299' di '300' rout
+ROUT id 'l_lnk_1004' di '301' rout
+ROUT id 'l_172' di '302' rout
+ROUT id 'l_153' di '303' rout
+ROUT id 'l_lnk_1269' di '304' rout
+ROUT id 'l_lnk_1255' di '305' rout
+ROUT id 'l_307' di '306' rout
+ROUT id 'l_lnk_1087' di '307' rout
+ROUT id 'l_lnk_1250' di '308' rout
+ROUT id 'l_lnk_1204' di '309' rout
+ROUT id 'l_lnk_1281' di '310' rout
+ROUT id 'l_lnk_1148' di '311' rout
+ROUT id 'l_lnk_1241' di '312' rout
+ROUT id 'l_lnk_1245' di '313' rout
+ROUT id 'l_233' di '314' rout
+ROUT id 'l_lnk_1292' di '315' rout
+ROUT id 'l_lnk_1291' di '316' rout
+ROUT id 'l_lnk_1295' di '317' rout

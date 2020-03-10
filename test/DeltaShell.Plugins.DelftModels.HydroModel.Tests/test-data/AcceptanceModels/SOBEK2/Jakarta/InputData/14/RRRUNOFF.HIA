@@ -1,0 +1,20 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.3464, Feb 24 2014, 15:26:01
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=33
+NumberOfLocations=8
+T0=2007. 2. 3  0: 0: 0
+TimeStepUnit=Second
+TimeStepMultiplyer=900
+ 
+[Long Parameters]
+8=Ovrlnd/QuickFlow [mm]
+10=FreeWaterContent [mm]
+12=UpperZoneContent [mm]
+13=LowerZoneContent [mm]
+ 
+[Long Locations]
+ 

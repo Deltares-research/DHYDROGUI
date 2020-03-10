@@ -1,0 +1,257 @@
+** INFO   : @(#)Deltares, SOBEKSIM Version 4.06.091.31199, Nov 29 2013, 11:46:00
+** WARNING: Minimum Length set for reachsegment 20      33.166843     40.000000
+** WARNING: Minimum Length set for reachsegment aR_2_1      11.234025     40.000000
+** INFO   : Minimum Length set for reachsegment 603       5.031982     40.000000
+** WARNING: Minimum Length set for reachsegment bR_9_1      37.483891     40.000000
+** INFO   : Minimum Length set for reachsegment 604       4.681644     40.000000
+** WARNING: Minimum Length set for reachsegment 81      24.786572     40.000000
+** WARNING: Minimum Length set for reachsegment 75      25.923910     40.000000
+** WARNING: Minimum Length set for reachsegment 5_1       8.292327     40.000000
+** WARNING: Minimum Length set for reachsegment 16      10.685329     40.000000
+** WARNING: Minimum Length set for reachsegment 1231       9.106729     40.000000
+** WARNING: Minimum Length set for reachsegment 1233       8.165223     40.000000
+** WARNING: Minimum Length set for reachsegment 1234       7.789422     40.000000
+** WARNING: Minimum Length set for reachsegment 1235       7.427434     40.000000
+** WARNING: Minimum Length set for reachsegment 1236       7.662293     40.000000
+** WARNING: Minimum Length set for reachsegment 1237       7.316318     40.000000
+** WARNING: Minimum Length set for reachsegment 1238       7.399565     40.000000
+** WARNING: Minimum Length set for reachsegment 1239       7.328845     40.000000
+** WARNING: Minimum Length set for reachsegment 1240       7.292380     40.000000
+** INFO   : Minimum Length set for reachsegment 27      33.985931     40.000000
+** INFO   : Minimum Length set for reachsegment 390      15.827888     40.000000
+** INFO   : Minimum Length set for reachsegment 6       7.676392     40.000000
+** WARNING: Minimum Length set for reachsegment 493      21.197302     40.000000
+** WARNING: Minimum Length set for reachsegment S3I_end871      35.466297     40.000000
+** WARNING: Minimum Length set for reachsegment 414      17.136293     40.000000
+** WARNING: Minimum Length set for reachsegment 66       8.882479     40.000000
+** WARNING: Minimum Length set for reachsegment 70      25.688265     40.000000
+** WARNING: Minimum Length set for reachsegment 122_98      23.579029     40.000000
+** WARNING: Minimum Length set for reachsegment 94      27.343409     40.000000
+** WARNING: Minimum Length set for reachsegment 415      21.424032     40.000000
+** INFO   : Minimum Length set for reachsegment 86_212      12.248291     40.000000
+** WARNING: Minimum Length set for reachsegment 14      21.087755     40.000000
+** WARNING: Minimum Length set for reachsegment 2_3      35.988453     40.000000
+** WARNING: Minimum Length set for reachsegment 482      21.796223     40.000000
+** WARNING: Minimum Length set for reachsegment 480      22.952940     40.000000
+** WARNING: Minimum Length set for reachsegment 127_197      13.194913     40.000000
+** WARNING: Minimum Length set for reachsegment 80      17.040392     40.000000
+** WARNING: Minimum Length set for reachsegment 87       6.908788     40.000000
+** INFO   : Minimum Length set for reachsegment 401       6.468689     40.000000
+** INFO   : Minimum Length set for reachsegment 468       4.939117     40.000000
+** INFO   : Minimum Length set for reachsegment 503       5.929916     40.000000
+** INFO   : Minimum Length set for reachsegment 504       9.422424     40.000000
+** INFO   : Minimum Length set for reachsegment 45       5.085243     40.000000
+** INFO   : Minimum Length set for reachsegment 50      14.846039     40.000000
+** INFO   : Minimum Length set for reachsegment 57      31.068085     40.000000
+** INFO   : Minimum Length set for reachsegment 51      30.408844     40.000000
+** WARNING: Minimum Length set for reachsegment KA_2907_1      29.298872     40.000000
+** WARNING: Minimum Length set for reachsegment KA_5      35.540855     40.000000
+** WARNING: Minimum Length set for reachsegment cid_3      24.182629     40.000000
+** WARNING: Minimum Length set for reachsegment cid_10      22.427696     40.000000
+** WARNING: Minimum Length set for reachsegment cid_11      16.337561     40.000000
+** WARNING: Minimum Length set for reachsegment cid_16      16.704805     40.000000
+** WARNING: Minimum Length set for reachsegment cid_18      11.874714     40.000000
+** WARNING: Minimum Length set for reachsegment cid_2      19.982195     40.000000
+** WARNING: Minimum Length set for reachsegment cid_27      20.185184     40.000000
+** WARNING: Minimum Length set for reachsegment cid_29      18.941479     40.000000
+** WARNING: Minimum Length set for reachsegment cid_34      21.896158     40.000000
+** WARNING: Minimum Length set for reachsegment cid_40      36.425861     40.000000
+** WARNING: Minimum Length set for reachsegment cid_44       5.276196     40.000000
+** INFO   : Minimum Length set for reachsegment cid_17_4      20.859406     40.000000
+** WARNING: Minimum Length set for reachsegment cid_45       4.891294     40.000000
+** INFO   : Minimum Length set for reachsegment cid_18_3      15.523499     40.000000
+** WARNING: Minimum Length set for reachsegment 110      21.971266     40.000000
+** WARNING: Minimum Length set for reachsegment 115      19.585831     40.000000
+** WARNING: Minimum Length set for reachsegment eR_6_17      39.871185     40.000000
+** WARNING: Minimum Length set for reachsegment 606      33.199772     40.000000
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 2' and 'Orifice, id= KRT_gate1'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 2' and 'Orifice, id= KRT_gate5'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 2' and 'Orifice, id= KRT_gate3'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 2' and 'Orifice, id= KRT_gate2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 2' and 'Orifice, id= KRT_gate4'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= MKV_01' and 'Orifice, id= CFW_01'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= BUND_GROG1' and 'Pump, id= WalikotaTrisakti'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KALIDURI_9' and 'Pump, id= CDG_02'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KALIDURI_9' and 'Pump, id= CDG_01'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= BIDARA1' and 'Pump, id= PompaDudi'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= ACIL1' and 'Orifice, id= Jembatan_Merah'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= ITEM2' and 'Orifice, id= SUNTER_GATE'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= 33' and 'Orifice, id= SodetanGrogolGate'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= SodetanGrogolGate' and 'Orifice, id= 33'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= EBC_Gate_I' and 'Weir, id= BKT_WEIR_CIP'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= EBC_Gate_I' and 'Orifice, id= 166'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Pump, id= CDG_02' and 'Orifice, id= KALIDURI_9'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_dambrk380' and 'Orifice, id= S3I_107'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_dambrk380' and 'Orifice, id= S3I_110'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_107' and 'Orifice, id= S3I_dambrk380'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_107' and 'Orifice, id= S3I_110'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_110' and 'Orifice, id= S3I_dambrk380'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= S3I_110' and 'Orifice, id= S3I_107'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= BKT_WEIR_CIP' and 'Orifice, id= EBC_Gate_I'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= BKT_WEIR_CIP' and 'Orifice, id= 166'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= CIL-SRB' and 'Orifice, id= Mang_Gate1'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= CIL-SRB' and 'Orifice, id= Mang_Gate3'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= CIL-SRB' and 'Orifice, id= Mang_Gate2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= Mang_Gate1' and 'Orifice, id= CIL-SRB'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= Mang_Gate3' and 'Orifice, id= CIL-SRB'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= Mang_Gate2' and 'Orifice, id= CIL-SRB'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KRT_gate1' and 'Orifice, id= 2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KRT_gate5' and 'Orifice, id= 2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KRT_gate3' and 'Orifice, id= 2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= CFW_01' and 'Orifice, id= MKV_01'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Pump, id= CDG_01' and 'Orifice, id= KALIDURI_9'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= Jembatan_Merah' and 'Orifice, id= ACIL1'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KRT_gate2' and 'Orifice, id= 2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= KRT_gate4' and 'Orifice, id= 2'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Pump, id= PompaDudi' and 'Orifice, id= BIDARA1'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_8' and 'Orifice, id= cid_UpCid_Cdg_12'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_12' and 'Orifice, id= cid_UpCid_Cdg_8'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= SET_BUD1' and 'Orifice, id= cid_UpCid_Cdg_12'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_18' and 'Weir, id= cid_UpCid_Cdg_17'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_17' and 'Weir, id= cid_UpCid_Cdg_18'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_25' and 'Orifice, id= cid_UpCid_Cdg_42'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_25' and 'Orifice, id= cid_UpCid_Cdg_44'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_26' and 'Orifice, id= cid_UpCid_Cdg_42'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_26' and 'Orifice, id= cid_UpCid_Cdg_44'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_27' and 'Orifice, id= cid_UpCid_Cdg_42'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_27' and 'Orifice, id= cid_UpCid_Cdg_44'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_33' and 'Orifice, id= cid_UpCid_Cdg_35'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_33' and 'Orifice, id= cid_UpCid_Cdg_34'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_33' and 'Weir, id= cid_UpCid_Cdg_36'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_33' and 'Orifice, id= cid_UpCid_Cdg_41'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Weir, id= cid_UpCid_Cdg_33' and 'Orifice, id= cid_UpCid_Cdg_43'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_42' and 'Orifice, id= cid_UpCid_Cdg_25'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_42' and 'Orifice, id= cid_UpCid_Cdg_26'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_42' and 'Weir, id= cid_UpCid_Cdg_27'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_42' and 'Orifice, id= cid_UpCid_Cdg_44'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_44' and 'Orifice, id= cid_UpCid_Cdg_25'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_44' and 'Orifice, id= cid_UpCid_Cdg_26'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_44' and 'Weir, id= cid_UpCid_Cdg_27'
+** INFO   : Adjacent structures, better keep 1 normal link in between them: 'Orifice, id= cid_UpCid_Cdg_44' and 'Orifice, id= cid_UpCid_Cdg_42'
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_25_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_25_2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_25_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach dki31022_6 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_105 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach S3I_108 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 8_837 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_4 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_5 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_6 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_7 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_8 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_9 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_10 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_11 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_12 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_13 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 186_14 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach EBC_UP_ex . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach KA_2987 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach KA_2905_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach KA_2988 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_UpCid_Cdg_23 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 175 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_17_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_17_2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 163 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_UpCid_Cdg_31 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_UpCid_Cdg_23 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 176 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_18_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_18_2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 164 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach cid_UpCid_Cdg_31 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 40_7 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 55_1 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 55_2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 55_3 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 55_4 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach 55_5 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine plinfl: Part of cross-section table smaller than 0.0001 m at reach f2 . This part of cross-section table is set to 0.0001 m. width
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= TobAngke1
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= 2
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= 2
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= EBC_Gate_III
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= EBC_Gate_III
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= EBC_Gate_IV
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= EBC_Gate_IV
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= EBC_Gate_II
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= EBC_Gate_II
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= EBC_Gate_I
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= EBC_Gate_I
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= Marina_4
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= Marina_5
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= Marina_2
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= Marina_1
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= Marina_3
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Weir, id= BKT_WEIR_CIP
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= CIL-SRB
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= CIL-SRB
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= OldCakungGate
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= SUNTER_GATE
+** WARNING: Subroutine initial: Crest level adjusted to bed level in structure Orifice, id= SET_BUD1
+** WARNING: Subroutine initial: Gate opening height adjusted to bed level in structure Orifice, id= SET_BUD1
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node 15
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node MGSpill_6
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node MGSpill_2
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node outlet_5
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node MGSpill_7
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node 6
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node 105
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node 155
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node 2_6
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node dki31022_6
+** WARNING: Subroutine initial: Extreme differences in bottomlevels of connected reaches in node S3I_situ380
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 1232
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_5
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_6
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_7
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_8
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_9
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_10
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_19
+** WARNING: Subroutine initial: Extreme differences in bottomlevel in reach segment 8_20
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 489
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 401
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 492
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 468
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 535
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 503
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 536
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 504
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 455
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 45
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 451
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 50
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 440
+** WARNING: Subroutine initial: Surface level is lower than bottom level+ground layer in reachsegment 51
+** WARNING: Subroutine plchst: Structure Orifice, id= TobAngke1 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= 2 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= EBC_Gate_III might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= EBC_Gate_IV might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= EBC_Gate_II might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= CIL-SRB might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= 158 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= 166 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= SET_BUD1 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_25 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_26 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_35 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_34 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_41 might generate numerical oscillations due to broad crest and small storage area around the structure
+** WARNING: Subroutine plchst: Structure Orifice, id= cid_UpCid_Cdg_43 might generate numerical oscillations due to broad crest and small storage area around the structure
+** INFO   : cpu computation =     247.875000
+
+****************************************
+Info Messages :    82
+Warnings      :   168
+****************************************
+
+** Normal End of Sobeksim

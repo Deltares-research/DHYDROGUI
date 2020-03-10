@@ -1,0 +1,153 @@
+STRU id 'Mang_Gate2' nm 'MANGGARAI_GATE' dd '27' stru
+STRU id 'KRT_gate1' nm 'KARET_GATE' dd '26' stru
+STRU id 'CAKG_01' nm 'CAKUNG_GATE' dd '28' stru
+STRU id 'CDG_01' nm 'Cideng old (axial)' dd '8' stru
+STRU id '2' nm '' dd '2' stru
+STRU id 'LOWANG1' nm '' dd 'LOWANG1' stru
+STRU id 'OldCakungGate' nm 'OldCakungGate' dd 'OldCakungGate' stru
+STRU id 'MKV_01' nm '(2x3 meter estimated @121124 open, could not close)' dd 'MOOKERVART1' stru
+STRU id 'SET_BUD1' nm '' dd 'SET_BUD1' stru
+STRU id 'CLW_OLD' nm 'CILWUNG LAMA' dd '29' ca 1 cj 'CLW_OLD' stru
+STRU id 'BUND_GROG1' nm '' dd 'BUND_GROG1' stru
+STRU id 'KRUKUT1' nm '' dd 'KRUKUT1' stru
+STRU id 'BANDENGAN1' nm '' dd 'BANDENGAN1' stru
+STRU id 'CIDENG_14' nm '' dd 'CIDENG_14' stru
+STRU id 'KALIDURI_9' nm '' dd 'KALIDURI_9' stru
+STRU id 'BIDARA1' nm '' dd 'BIDARA1' stru
+STRU id 'ACIL1' nm '' dd 'ACIL1' stru
+STRU id 'PompaAir_PasarIkan' nm 'SOP_estimated' dd 'PompaAir_PasarIkan' stru
+STRU id 'PLT_01' nm 'PLUIT WEIR' dd '13' stru
+STRU id 'ITEM_01' nm 'PINTU KALI ITEM-SUNTER' dd '35' stru
+STRU id 'ITEM_02' nm 'PUMP_KALI ITEM-SUNTER' dd '10' stru
+STRU id 'ITEM1' nm 'dimensions estimated' dd 'ITEM1' stru
+STRU id 'CIL-SRB' nm 'CILIWUNG_FLUSH' dd '30' stru
+STRU id 'MELATI_WEIR' nm '' dd 'MELATI_WEIR' stru
+STRU id 'Pluit_tengah' nm '' dd '22' stru
+STRU id 'MELATI_PUMP' nm '' dd 'MELATI_PUMP' stru
+STRU id 'CFW_01' nm 'CENGKARENG_GATE' dd 'CFW_01' stru
+STRU id '33' nm 'GateGrogolPasangUp' dd '36' stru
+STRU id 'Katulampa' nm '' dd 'Katulampa' stru
+STRU id 'Katulampa11' nm '' dd '257' stru
+STRU id 'Katulampa10' nm '' dd '256' stru
+STRU id 'Katulampa9' nm '' dd '255' stru
+STRU id 'Katulampa2' nm '' dd '248' stru
+STRU id 'Katulampa3' nm '' dd '249' stru
+STRU id 'Katulampa8' nm '' dd '254' stru
+STRU id 'Katulampa4' nm '' dd '250' stru
+STRU id 'Katulampa7' nm '' dd '253' stru
+STRU id 'Katulampa6' nm '' dd '252' stru
+STRU id 'Katulampa5' nm '' dd '251' stru
+STRU id 'SUNTER_SELATAN_GATE' nm '' dd 'SUNTER_SELATAN_GATE' stru
+STRU id 'PondokBandungPump' nm '' dd '188' stru
+STRU id 'RawaKepaPump' nm '' dd '196' stru
+STRU id 'AirJelambarPump' nm '' dd '202' stru
+STRU id 'IstanaPump' nm '' dd '246' stru
+STRU id 'WadukSunterUtaraPump' nm '' dd '215' stru
+STRU id 'Pompa_Sunter_Selatan' nm '' dd '227' stru
+STRU id 'DukuhAtasPump' nm '' dd '103' stru
+STRU id 'TuguUtaraPomp' nm '' dd 'TuguUtaraPomp' stru
+STRU id 'DonBoscoPump' nm '' dd '125' stru
+STRU id 'Pinangsia' nm '' dd 'Pinangsia' stru
+STRU id 'SMRBatu' nm '' dd 'SMRBatu' stru
+STRU id 'JatiPinggirPomp' nm '' dd 'JatiPinggirPomp' stru
+STRU id '126' nm '' dd '126' stru
+STRU id 'WalikotaTrisakti' nm '' dd '114' stru
+STRU id 'MuaraAngkePump' nm '' dd '198' stru
+STRU id 'TelukGongPump' nm '' dd '214' stru
+STRU id 'GrogolPump' nm '' dd '207' stru
+STRU id 'SunterTimurIPump' nm '' dd '233' stru
+STRU id 'SunterTimurIIIRawabadakPump' nm '' dd '225' stru
+STRU id 'PuloMasPump' nm '' dd '240' stru
+STRU id 'TomangBaratPump' nm '' dd '241' stru
+STRU id 'Bimoli' nm '' dd 'Bimoli' stru
+STRU id 'PenjaringanPomp' nm '' dd 'PenjaringanPomp' stru
+STRU id 'KartiniPomp' nm '' dd 'KartiniPomp' stru
+STRU id 'KapukSelatanPump' nm '' dd 'KapukSelatanPump' stru
+STRU id '21' nm '' dd '247' stru
+STRU id 'ACL_2' nm 'ANCOL_PUMP' dd 'ACL_2' stru
+STRU id 'EBC_Gate_III' nm '' dd 'EBC_Gate_III' stru
+STRU id 'EBC_Gate_IV' nm '' dd 'EBC_Gate_IV' stru
+STRU id 'EBC_Gate_II' dd 'EBC_Gate_II' stru
+STRU id 'SUNTER_GATE' nm 'dimensions estimated' dd '32' stru
+STRU id 'EBC_Gate_I' nm '' dd 'EBC_Gate_I' stru
+STRU id 'PKPR_TG_top' nm '' dd 'PKPR_TG_top' stru
+STRU id 'Marina_4' dd 'Marina_4' stru
+STRU id 'Marina_5' nm '' dd 'Marina_5' stru
+STRU id 'Marina_3' nm '' dd 'Marina_3' stru
+STRU id 'Marina_1' nm '' dd 'Marina_1' stru
+STRU id 'Marina_2' dd 'Marina_2' stru
+STRU id 'CDG_02' nm 'Cideng new (submersible)' dd 'CDG_02' stru
+STRU id 'Pluit_barat' nm '' dd 'Pluit_barat' stru
+STRU id 'Pluit_timur' nm '' dd 'Pluit_timur' stru
+STRU id 'S3I_dambrk380' nm 'Rawa Cipondoh' dd 'Cipondoh' stru
+STRU id 'S3I_dambrk871' nm 'Rawa Kutub' dd 'Kutub' stru
+STRU id 'S3I_107' nm '' dd 'S3I_107' stru
+STRU id 'S3I_110' nm '' dd 'S3I_110' stru
+STRU id 'BKT_Gate1_1' nm '' dd 'P09_258' stru
+STRU id 'BKT_Gate1_2' nm 'EBC_Weir1' dd 'P09_259' stru
+STRU id 'BKT_Gate1_3' nm '' dd 'P09_260' stru
+STRU id 'BKT_Gate1_4' nm '' dd 'P09_261' stru
+STRU id 'BKT_Gate3_1' nm '' dd 'P09_BKT_Gate3_1' stru
+STRU id 'BKT_Gate3_2' nm '' dd 'P09_BKT_Gate3_2' stru
+STRU id 'BKT_Gate3_3' nm 'EBC_Weir3' dd 'P09_BKT_Gate3_3' stru
+STRU id 'BKT_Gate3_4' nm '' dd 'P09_BKT_Gate3_4' stru
+STRU id 'BKT_Gate3_5' nm '' dd 'P09_BKT_Gate3_5' stru
+STRU id 'BKT_Gate2_3' nm 'EBC_Weir2' dd 'P09_BKT_Gate2_3' stru
+STRU id 'BKT_Gate2_4' nm '' dd 'P09_BKT_Gate2_4' stru
+STRU id 'BKT_Gate2_5' nm '' dd 'P09_BKT_Gate2_5' stru
+STRU id 'BKT_Gate2_2' nm '' dd 'P09_BKT_Gate2_2' stru
+STRU id 'BKT_Gate2_1' nm '' dd 'P09_BKT_Gate2_1' stru
+STRU id 'BKT_weirs3' nm '' dd 'P09_BKT_weirs3' stru
+STRU id 'BKT_weirs2' nm '' dd 'P09_BKT_weirs2' stru
+STRU id 'BKT_weirs1' nm '' dd 'P09_BKT_weirs1' stru
+STRU id 'BKT_WEIR_CIP' nm '' dd 'P09_BKT_WEIR_CIP' stru
+STRU id 'Mang_Gate3' nm 'finished 2014' dd 'Mang_Gate3' stru
+STRU id 'Mang_Gate1' dd 'Mang_Gate1' stru
+STRU id 'KRT_gate2' dd 'KRT_gate2' stru
+STRU id 'KRT_gate3' dd 'KRT_gate3' stru
+STRU id '158' nm '' dd '158' stru
+STRU id '166' dd '166' stru
+STRU id 'KRT_gate4' dd 'KRT_gate4' stru
+STRU id 'KRT_gate5' dd 'KRT_gate5' stru
+STRU id 'PompaJelembarTimur' nm '' dd 'PompaJelembarTimur' stru
+STRU id 'PompaJelembar2' nm '' dd 'PompaJelembar2' stru
+STRU id 'PompaJelembar3' nm '' dd 'PompaJelembar3' stru
+STRU id 'PompaDudi' nm '' dd 'PompaDudi' stru
+STRU id 'TobAngke1' nm '' dd 'TobAngke1' stru
+STRU id 'CAKG_02' dd 'CAKG_02' stru
+STRU id 'CAKG_03' dd 'CAKG_03' stru
+STRU id 'PintuMuaraKarang' nm '' dd 'PintuMuaraKarang' stru
+STRU id 'ITEM2' nm 'dimensions estimated' dd 'ITEM2' stru
+STRU id 'ISTIQLAL_1' nm '' dd 'ISTIQLAL_1' ca 1 cj 'ISTIQLAL_1' stru
+STRU id 'ISTIQLAL_2' nm '' dd 'ISTIQLAL_2' ca 1 cj 'ISTIQLAL_2' stru
+STRU id 'ISTIQLAL_3' nm '' dd 'ISTIQLAL_3' ca 1 cj 'ISTIQLAL_3' stru
+STRU id 'Jembatan_Merah' nm '' dd 'Jembatan_Merah' stru
+STRU id 'Sogo_gate' nm '' dd 'Sogo_gate' ca 1 cj 'Sogo_gate' stru
+STRU id 'SU_KojaPump' nm 'Koja pumping station' dd 'KojaPump' stru
+STRU id 'SodetanGrogolGate' nm 'dimensions estimated' dd 'SodetanGrogolGate' stru
+STRU id 'KA_1-TanjunganPump' nm 'Tanjungan' dd 'Tanjungan' stru
+STRU id 'KA_2-KamalPump' nm 'Kamal' dd 'KamalPump' stru
+STRU id 'KA_71' nm '' dd 'P04_71' stru
+STRU id 'KA_70' nm '' dd 'P04_70' stru
+STRU id 'KA_TanjunganGate' nm '' dd 'TanjunganGate' stru
+STRU id 'KA_10-KamalGate' nm '' dd 'KamalGate' stru
+STRU id 'cid_PompaAirSetiabudiTimur' nm '' dd 'P06_98' stru
+STRU id 'cid_PompaAirSetiabudiBarat' nm '' dd 'P06_186' stru
+STRU id 'cid_UpCid_Cdg_8' nm '' dd 'P06_UpCid_Cdg_8' stru
+STRU id 'cid_UpCid_Cdg_12' nm '' dd 'P06_UpCid_Cdg_12' stru
+STRU id 'cid_UpCid_Cdg_17' nm '' dd 'P06_UpCid_Cdg_17' stru
+STRU id 'cid_UpCid_Cdg_18' nm '' dd 'P06_UpCid_Cdg_18' stru
+STRU id 'cid_UpCid_Cdg_33' nm '' dd 'P06_UpCid_Cdg_33' stru
+STRU id 'cid_UpCid_Cdg_36' nm '' dd 'P06_UpCid_Cdg_36' stru
+STRU id 'cid_UpCid_Cdg_34' nm '' dd 'P06_UpCid_Cdg_34' ca 1 cj 'P06_UpCid_Cdg_34' stru
+STRU id 'cid_UpCid_Cdg_35' nm '' dd 'P06_UpCid_Cdg_35' ca 1 cj 'P06_UpCid_Cdg_35' stru
+STRU id 'cid_UpCid_Cdg_41' nm '' dd 'P06_UpCid_Cdg_41' stru
+STRU id 'cid_UpCid_Cdg_43' nm '' dd 'P06_UpCid_Cdg_43' stru
+STRU id 'cid_UpCid_Cdg_44' nm '' dd 'P06_UpCid_Cdg_44' stru
+STRU id 'cid_UpCid_Cdg_42' nm '' dd 'P06_UpCid_Cdg_42' stru
+STRU id 'cid_UpCid_Cdg_25' nm '' dd 'P06_UpCid_Cdg_25' ca 1 cj 'P06_UpCid_Cdg_25' stru
+STRU id 'cid_UpCid_Cdg_27' nm '' dd 'P06_UpCid_Cdg_27' stru
+STRU id 'cid_UpCid_Cdg_26' nm '' dd 'P06_UpCid_Cdg_26' ca 1 cj 'P06_UpCid_Cdg_26' stru
+STRU id 'BlencongGate' nm 'dimensions unknown' dd 'BlencongGate' stru
+STRU id 'PETUKANGAN_GATE' nm 'dimensions estimated' dd 'PETUKANGAN_GATE' stru
+STRU id 'TANGKI_GATE' nm '' dd 'TANGKI_GATE' stru

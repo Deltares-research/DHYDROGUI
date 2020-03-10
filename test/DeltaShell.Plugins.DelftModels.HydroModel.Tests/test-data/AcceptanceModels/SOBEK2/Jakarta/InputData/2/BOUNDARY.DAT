@@ -1,0 +1,27 @@
+FLBO id 'dki310_23' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'dki310_54' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'dki310_102' st 0 ty 0 h_ wt 11 'FHM2017-east' flbo
+FLBO id 'dki310_76' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'dki31043' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'dki310156' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'dki31084' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'dki310114' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'p_dki310298' st 0 ty 1 q_ dw 0  0 0 flbo
+FLBO id 'N_CGS_1_1' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'N_MuK_1_3' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'N_Plu_0_18' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'a_N_Plu_0_20' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'dki310_45' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'N_Sen_1_5' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'EBC_DWN' st 0 ty 0 h_ wt 11 'FHM2017-east' flbo
+FLBO id 'dki310_65' st 0 ty 0 h_ wt 11 'FHM2017-east' flbo
+FLBO id 'S3I_105' st 0 ty 0 h_ wd 0  18.5 0 flbo
+FLBO id 'S3I_108' st 0 ty 0 h_ wd 0  18.5 0 flbo
+FLBO id 'SU_5' st 0 ty 0 h_ wt 11 'FHM2017-east' flbo
+FLBO id 'KA_2971' st 0 ty 1 q_ dw 0  0.05 0 flbo
+FLBO id 'KA_3041' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'KA_3027' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo
+FLBO id 'cid_UpCid_Cdg_Cdg_CA101' st 0 ty 1 q_ dw 0  0.05 0 flbo
+FLBO id 'cid_UpCid_Cdg_3' st 0 ty 1 q_ dw 0  0.05 0 flbo
+FLBO id 'mar_74' st 0 ty 0 h_ wt 11 'FHM2017-east' flbo
+FLBO id 'pik_35' st 0 ty 0 h_ wt 11 'FHM2017-west' flbo

@@ -1,0 +1,102 @@
+[General]
+FileType=DelftIO HIA file
+DioVersion=Deltares, DELFTIO Version 1.09.00.3164, Nov 29 2013, 11:42:41
+HiaVersion=1.00
+ 
+[DioCheck]
+NumberOfParameters=5
+NumberOfLocations=4001
+T0=2007.02.03 00:00:00
+TimeStepUnit=Second
+TimeStepMultiplyer=60
+ 
+[Long Parameters]
+ 
+[Long Locations]
+3546=cid_UpCid_Cdg_us_1_10
+3547=cid_UpCid_Cdg_us_1_11
+3548=cid_UpCid_Cdg_us_1_12
+3549=cid_UpCid_Cdg_us_1_13
+3550=cid_UpCid_Cdg_us_1_14
+3551=cid_UpCid_Cdg_us_1_15
+3552=cid_UpCid_Cdg_us_1_16
+3553=cid_UpCid_Cdg_us_1_17
+3554=cid_UpCid_Cdg_us_1_18
+3555=cid_UpCid_Cdg_us_1_19
+3556=cid_UpCid_Cdg_us_1_20
+3557=cid_UpCid_Cdg_us_1_21
+3558=cid_UpCid_Cdg_us_1_22
+3998=cid_UpCid_Cdg_Cdg_CA101
+ 
+[Location Descriptions]
+6=0
+19=0
+20=0
+21=0
+22=0
+24=0
+26=0
+28=0
+30=0
+31=0
+32=0
+34=juction kali item dengan sungai sentiong
+36=0
+61=junction ancol storage dengan sungai anc
+65=AREA UNKNOWN THEREFORE ESTIMATED
+95=5.00000e-001
+119=inlet culvert plaza indonesia
+143=4.00000e+000
+2108=copy of MK67
+2109=copy of MK67
+2110=copy of MK67
+3369=di
+3370=di
+3371=di
+3372=di
+3374=di
+3375=di
+3376=di
+3537=di
+3538=di
+3539=di
+3540=di
+3541=di
+3542=di
+3543=di
+3544=di
+3545=di
+3546=di
+3547=di
+3548=di
+3549=di
+3550=di
+3551=di
+3552=di
+3553=di
+3554=di
+3555=di
+3556=di
+3557=di
+3558=di
+3559=di
+3560=di
+3561=di
+3562=di
+3563=di
+3564=di
+3565=di
+3578=di
+3581=di
+3587=di
+3588=di
+3603=di
+3604=di
+3605=di
+3606=di
+3607=di
+3608=di
+3609=di
+3610=di
+3998=101
+ 

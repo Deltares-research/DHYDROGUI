@@ -1,0 +1,260 @@
+Sobek Parser V2.06.014.27565
+file_glb_glb =                                                                                 
+file_top_ntw = \SB213002\NCICD1.LIT\14\NETWORK.NTW                                             
+file_top_net = \SB213002\NCICD1.LIT\14\NETWORK.TP                                              
+file_top_cpt = \SB213002\NCICD1.LIT\14\NETWORK.CP                                              
+file_top_nfl =                                                                                 
+file_top_nsa =                                                                                 
+file_top_nsm =                                                                                 
+file_top_dat = \SB213002\NCICD1.LIT\14\NODES.DAT                                               
+file_top_xyc = \SB213002\NCICD1.LIT\14\NETWORK.D12                                             
+file_crs_net = \SB213002\NCICD1.LIT\14\NETWORK.CR                                              
+file_crs_def = \SB213002\NCICD1.LIT\14\PROFILE.DEF                                             
+file_crs_dat = \SB213002\NCICD1.LIT\14\PROFILE.DAT                                             
+file_str_net = \SB213002\NCICD1.LIT\14\NETWORK.ST                                              
+file_str_def = \SB213002\NCICD1.LIT\14\STRUCT.DEF                                              
+file_str_dbs = \SB213002\NCICD1.LIT\14\STRUCT.DEF                                              
+file_str_dat = \SB213002\NCICD1.LIT\14\STRUCT.DAT                                              
+file_str_con = \SB213002\NCICD1.LIT\14\CONTROL.DEF                                             
+file_str_trg = \SB213002\NCICD1.LIT\14\TRIGGER.DEF                                             
+file_str_cmp = \SB213002\NCICD1.LIT\14\STRUCT.CMP                                              
+file_str_vlv = \SB213002\NCICD1.LIT\14\VALVE.TAB                                               
+file_str_mud =                                                                                 
+file_str_mum =                                                                                 
+file_frc_bed = \SB213002\NCICD1.LIT\14\FRICTION.DAT                                            
+file_frc_wnd = \SB213002\NCICD1.LIT\14\FRICTION.DAT                                            
+file_frc_exr = \SB213002\NCICD1.LIT\14\FRICTION.DAT                                            
+file_frc_glf = \SB213002\NCICD1.LIT\14\FRICTION.DAT                                            
+file_cnd_net = \SB213002\NCICD1.LIT\14\NETWORK.CN                                              
+file_cnd_flb = \SB213002\NCICD1.LIT\14\BOUNDARY.DAT                                            
+file_cnd_fll = \SB213002\NCICD1.LIT\14\LATERAL.DAT                                             
+file_cnd_fbd = \SB213002\NCICD1.LIT\14\BOUNDLAT.DAT                                            
+file_cnd_wqb =                                                                                 
+file_cnd_wql =                                                                                 
+file_cnd_sab = \SB213002\NCICD1.LIT\14\BOUNDARY.SAL                                            
+file_cnd_sal = \SB213002\NCICD1.LIT\14\LATERAL.SAL                                             
+file_cnd_mob =                                                                                 
+file_cnd_mon =                                                                                 
+file_cnd_mol =                                                                                 
+file_ini_igl = \SB213002\NCICD1.LIT\WORK\INITIAL.DAT                                           
+file_ini_ifl = \SB213002\NCICD1.LIT\WORK\INITIAL.DAT                                           
+file_ini_iwq =                                                                                 
+file_ini_isa = \SB213002\NCICD1.LIT\14\INITIAL.SAL                                             
+file_ini_imo =                                                                                 
+file_met_wnd = \SB213002\FIXED\JKWB0100.WND                                                    
+file_met_wnd = \SB213002\FIXED\JKWB0100.WND                                                    
+file_met_bui = \SB213002\FIXED\JKWB0100.BUI                                                    
+file_met_sun =                                                                                 
+file_met_wat =                                                                                 
+file_met_air =                                                                                 
+file_dsp_gld = \SB213002\NCICD1.LIT\14\GLOBDISP.DAT                                            
+file_dsp_lod = \SB213002\NCICD1.LIT\14\LOKDISP.DAT                                             
+file_dsp_fwt = \SB213002\NCICD1.LIT\14\FRESHWAT.DAT                                            
+file_dsp_mou = \SB213002\NCICD1.LIT\14\MOUTH.DAT                                               
+file_dsp_brm = \SB213002\NCICD1.LIT\14\BRMOUTH.DAT                                             
+file_grd_net = \SB213002\NCICD1.LIT\14\NETWORK.GR                                              
+file_grd_seg =                                                                                 
+file_grd_lim =                                                                                 
+file_rtm_flt = ..\work\runtime.dat                                                             
+file_rtm_fln = ..\work\runtime.dat                                                             
+file_rtm_flm = ..\work\runtime.dat                                                             
+file_rtm_flh = ..\work\runtime.dat                                                             
+file_rtm_san = ..\work\runtime.dat                                                             
+file_rtm_sam = ..\work\runtime.dat                                                             
+file_rtm_sah = ..\work\runtime.dat                                                             
+file_rtm_sen =                                                                                 
+file_rtm_sem =                                                                                 
+file_rtm_seh =                                                                                 
+file_rtm_mon =                                                                                 
+file_rtm_mom =                                                                                 
+file_rtm_moh =                                                                                 
+file_rtm_wqt =                                                                                 
+file_rtm_wqn =                                                                                 
+file_rtm_wqm =                                                                                 
+file_rtm_wqh =                                                                                 
+file_rtm_pwq =                                                                                 
+file_rtm_gwn =                                                                                 
+file_trp_dat =                                                                                 
+file_sub_sub =                                                                                 
+file_gwm_gwm =                                                                                 
+file_mea_net = \SB213002\NCICD1.LIT\14\NETWORK.ME                                              
+Channel Flow/Urban/River version
+SRW option switched off
+ConveyanceAccuracyFactor= 0.015
+D:\Sb213002\programs\ini\NtrPluv.ini                            
+CalculationPointMinDistDwn1=  0.50
+CalculationPointMinDistUp 1=  0.50
+CalculationPointMinDistDwn2=  0.50
+CalculationPointMinDistUp 2=  0.50
+CalculationPointMinDistDwn3=  0.50
+CalculationPointMinDistUp 3=  0.50
+CalculationPointMinDistDwn4=  0.50
+CalculationPointMinDistUp 4=  0.50
+CompoundObjectDistance= 10.00
+No range check
+Existance check
+ max_increase_width_with_h_subs=    99999.00    
+ max_increase_width_with_h_nosubs=    99999.00    
+ max_change_deltax_with_x =    99999.00    
+ max_change_totwidth_with_x =    99999.00    
+ max_change_flowwidth_with_x =    99999.00    
+ dx_structure =    1.000000    
+ dx_min =    1.000000    
+Conveyance tables created
+Output for total of sections only
+ applications: <RIVR><FLOW> 
+ Start parsing FLOW data
+ Counting objects ......
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.TP
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.CN
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.NTW
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.ME
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\CONTROL.DEF
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.ST
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\STRUCT.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\TRIGGER.DEF
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.CR
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\PROFILE.DEF
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+ Topography layer ......
+ Reading Obi Data
+ Start Reading Topo Data
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.TP
+File Opened
+ Start hashing branches, nodes
+ Start converting topo_1
+ Start converting topo_2
+ Start parsing pluvius nodes
+Opening File: \SB213002\NCICD1.LIT\14\NODES.DAT
+File Opened
+ Reading Measurement Layer ......
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.ME
+File Opened
+ Grid layer ......
+ Start reading cs-locations
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.CR
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\PROFILE.DAT
+File Opened
+ Start ordering cross-sections
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.NTW
+File Opened
+ Start reading struct locations
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.ST
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.ST
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\STRUCT.CMP
+File Opened
+ Start reading grid data
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.GR
+File Opened
+Opening File: ..\work\runtime.dat
+File Opened
+Opening File: \SB213002\FIXED\JKWB0100.BUI
+File Opened
+Opening File: ..\work\runtime.dat
+File Opened
+ Structure layer ......
+Opening File: \SB213002\NCICD1.LIT\14\STRUCT.DAT
+File Opened
+ Start converting grid data
+Opening File: \SB213002\NCICD1.LIT\14\STRUCT.DEF
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.TP
+File Opened
+ Start converting structure data
+Opening File: \SB213002\NCICD1.LIT\14\STRUCT.DEF
+File Opened
+ Conditions layer ......
+ Conditions layer ......
+ Read Condition Tables
+Opening File: \SB213002\NCICD1.LIT\14\BOUNDLAT.DAT
+File Opened
+ Read Condition Locations
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.CN
+File Opened
+ Convert Boundary Conditions
+Opening File: \SB213002\NCICD1.LIT\14\BOUNDARY.DAT
+File Opened
+ Convert Lateral Discharges
+Opening File: \SB213002\NCICD1.LIT\14\LATERAL.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.NTW
+File Opened
+ Controllers and Triggers ......
+ Convert Controllers
+Opening File: \SB213002\NCICD1.LIT\14\CONTROL.DEF
+File Opened
+ Convert Triggers
+Opening File: \SB213002\NCICD1.LIT\14\TRIGGER.DEF
+File Opened
+ Convert Measurement Stations ......
+ Convert Lateral U-Discharges
+Opening File: \SB213002\NCICD1.LIT\14\LATERAL.DAT
+File Opened
+ Cross sections layer ......
+ Start reading cs-definition data
+Opening File: \SB213002\NCICD1.LIT\14\PROFILE.DEF
+File Opened
+ Start reading cs-location data
+Opening File: \SB213002\NCICD1.LIT\14\PROFILE.DAT
+File Opened
+ Friction layer ......
+ Global Friction
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+ Bed Friction
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+ Cross-Section Friction
+Opening File: \SB213002\NCICD1.LIT\14\FRICTION.DAT
+File Opened
+ No section output
+ Convert Cross-Sections to Grid
+ Maximum number of conveyance levels computed:           75
+ Wind Friction
+Opening File: \SB213002\NCICD1.LIT\14\WND_LOC.DAT
+File Opened
+Opening File: \SB213002\FIXED\JKWB0100.WND
+File Opened
+ Curving Points
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.CP
+File Opened
+ 2D-Connections
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.D12
+File Opened
+Opening File: \SB213002\NCICD1.LIT\14\NETWORK.GR
+File Opened
+ Initial conditions layer ......
+Opening File: \SB213002\NCICD1.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\WORK\INITIAL.DAT
+File Opened
+Opening File: \SB213002\NCICD1.LIT\WORK\INITIAL.DAT
+File Opened
+ Output options ......
+Opening File: ..\work\runtime.dat
+File Opened
+Opening File: ..\work\runtime.dat
+File Opened
+ Stop parsing FLOW data
+
+End of program

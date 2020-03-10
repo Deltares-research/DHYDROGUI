@@ -26,7 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         {
             new object[] {"DarEsSalaam", "14", 177, 0},
             new object[] {"Waardenburg", "23", 279, 0},
-            new object[] {"HogeRaam", "9", 0, 0} // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
+            new object[] {"HogeRaam", "9", 0, 0}, // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
+            new object[] {"Jakarta", "14", 0, 0} // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
         };
 
         [TestFixtureSetUp]
