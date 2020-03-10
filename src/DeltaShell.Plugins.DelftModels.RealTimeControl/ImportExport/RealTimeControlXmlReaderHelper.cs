@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The rule, condition or signal name.</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static string GetComponentNameFromElementId(string id)
         {
             var tags = GetAllTagsFromId(id).ToList();
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The control group name</returns>
-        /// <remarks>id is expected to not be NULL.</remarks>
+        /// <remarks>id is expected to not be <c>null</c>.</remarks>
         public static string GetControlGroupNameFromElementId(string id)
         {
             string controlGroupName = id.Split('/').FirstOrDefault();
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="id">The id.</param>
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding control group.</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static IControlGroup GetControlGroupByElementId(this IEnumerable<IControlGroup> controlGroups, string id, ILogHandler logHandler)
         {
             if (controlGroups == null) return null;
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="name">The name of the connection point.</param>
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding connection point.</returns>
-        /// <remarks>Parameter name is expected to not be NULL.</remarks>
+        /// <remarks>Parameter name is expected to not be <c>null</c>.</remarks>
         public static T GetByName<T>(this IEnumerable<ConnectionPoint> connectionPoints, string name, ILogHandler logHandler) where T : ConnectionPoint
         {
             if (connectionPoints == null) return null;
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="id">The id of the rule element.</param>
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding rule.</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : RuleBase
         {
             if (controlGroup == null) return null;
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="controlGroup"></param>
         /// <param name="id"></param>
         /// <param name="logHandler"></param>
-        /// <returns></returns>
+        /// <returns> The corresponding signal. </returns>
         public static SignalBase GetSignalByElementId<T>(this IControlGroup controlGroup, string id,
             ILogHandler logHandler) where T : SignalBase
         {
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="id">The id of the rule element.</param>
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding rule.</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId(this IControlGroup controlGroup, string id, ILogHandler logHandler)
         {
             if (controlGroup == null) return null;
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="id">The id of the rule element.</param>
         /// <param name="logHandler">The log handler to which log messages can be added</param>
         /// <returns>The corresponding rule.</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static T GetConditionByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : ConditionBase
         {
             if (controlGroup == null) return null;
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The tag</returns>
-        /// <remarks>Parameter id is expected to not be NULL.</remarks>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static string GetTagFromElementId(string id)
         {
             var tags = GetAllTagsFromId(id);

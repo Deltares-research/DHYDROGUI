@@ -9,10 +9,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="PidRule"/>.
+    /// </summary>
+    /// <seealso cref="RuleSerializerBase" />
     public class PidRuleSerializer : RuleSerializerBase
     {
         private PIDRule PidRule { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PidRuleSerializer" /> class.
+        /// </summary>
+        /// <param name="pidRule"> The pid rule to serialize. </param>
         public PidRuleSerializer(PIDRule pidRule) : base(pidRule)
         {
             PidRule = pidRule;
@@ -21,17 +29,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         protected override string XmlTag { get; } = RtcXmlTag.PIDRule;
 
         /// <summary>
-        /// Gets the content of the time series that should be added to the timeseries_import.xml file.
+        /// Converts the pid rule to a collection of <see cref="XElement" />
+        /// to be written to the import series in the data config xml file
+        /// and the time series import xml file.
         /// </summary>
-        /// <param name="prefix"> The control group name with a separator ('/') </param>
-        /// <param name="start"> Start time of the model </param>
-        /// <param name="stop"> Stop time of the model </param>
-        /// <param name="step"> Time step of the model </param>
-        /// <returns> Objects with the values to write the time series element </returns>
-        /// <remarks>
-        /// Will only return an element when the <see cref="PidRuleSetpointType" /> is
-        /// <see cref="PIDRule.PIDRuleSetpointType.TimeSeries" /> />
-        /// </remarks>
+        /// <param name="prefix"> The prefix. </param>
+        /// <param name="start"> The start time of the model. </param>
+        /// <param name="stop"> The stop time of the model. </param>
+        /// <param name="step"> The time step of the model. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop,
                                                                         TimeSpan step)
         {
@@ -41,6 +47,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             }
         }
 
+        /// <summary>
+        /// Converts the pid rule to a collection of <see cref="IXmlTimeSeries" />
+        /// to be written to the export time series in the data config xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(GetIntegralPartId(prefix));
@@ -78,11 +90,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </pid>
 
         /// <summary>
-        /// Converts the information of the PID rule needed for writing the tools config file to an xml element.
+        /// Converts the pid rule to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"> The x namespace. </param>
-        /// <param name="prefix"> The control group name. </param>
-        /// <returns> The Xml Element. </returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();

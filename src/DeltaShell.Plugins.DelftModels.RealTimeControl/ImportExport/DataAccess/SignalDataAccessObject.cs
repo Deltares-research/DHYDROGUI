@@ -40,6 +40,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// </value>
         public IList<string> InputReferences { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets the <see cref="SignalBase" /> that was created from the tools config file.
+        /// </summary>
+        /// <value>
+        /// The created signal.
+        /// </value>
         public SignalBase Object { get; }
     }
 }

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// <param name="signalElement"> The rule XML. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
-        /// A <see cref="SignalDataAccessObject" /> from the specified <paramref name="signalElement" />.
+        /// A <see cref="SignalDataAccessObject" /> created from the specified <paramref name="signalElement" />.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="signalElement"/> is <c>null</c>.

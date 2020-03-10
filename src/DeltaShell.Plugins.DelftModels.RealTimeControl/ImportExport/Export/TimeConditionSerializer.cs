@@ -9,6 +9,10 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="TimeCondition" />.
+    /// </summary>
+    /// <seealso cref="StandardConditionSerializer" />
     public class TimeConditionSerializer : StandardConditionSerializer
     {
         private const string quantityId = "TimeSeries";
@@ -16,6 +20,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
         protected override string XmlTag { get; } = RtcXmlTag.TimeCondition;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeConditionSerializer" /> class.
+        /// </summary>
+        /// <param name="timeCondition"> The time condition to serialize. </param>
         public TimeConditionSerializer(TimeCondition timeCondition) : base(timeCondition)
         {
             this.timeCondition = timeCondition;
@@ -39,16 +47,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //     </standard>
 
         /// <summary>
-        /// Converts the information of the time condition needed for writing the tools config file to an xml element.
+        /// Converts the time condition to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"> The x namespace. </param>
-        /// <param name="prefix"> The control group name. </param>
-        /// <returns> The Xml Element. </returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             return ToXml(xNamespace, prefix, GetXmlNameWithoutTag(prefix));
         }
 
+        /// <summary>
+        /// Converts the condition to a collection of <see cref="XElement" />
+        /// to be written to the import series in the data config xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
         {
             foreach (XElement export in base.ToDataConfigImportSeries(prefix, xNamespace))
@@ -73,6 +89,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                                       ));
         }
 
+        /// <summary>
+        /// Converts the time condition to a collection of <see cref="XElement" />
+        /// to be written to the import series in the data config xml file
+        /// and the time series import xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <param name="start"> The start time of the model. </param>
+        /// <param name="stop"> The stop time of the model. </param>
+        /// <param name="step"> The time step of the model. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop,
                                                                         TimeSpan step)
         {

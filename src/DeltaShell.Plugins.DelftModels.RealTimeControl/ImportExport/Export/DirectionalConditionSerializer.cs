@@ -4,11 +4,19 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="DirectionalCondition" />.
+    /// </summary>
+    /// <seealso cref="StandardConditionSerializer" />
     public class DirectionalConditionSerializer : StandardConditionSerializer
     {
         private readonly DirectionalCondition directionalCondition;
         private const string timeLagPostFix = "-1";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectionalConditionSerializer" /> class.
+        /// </summary>
+        /// <param name="directionalCondition"> The directional condition to serialize. </param>
         public DirectionalConditionSerializer(DirectionalCondition directionalCondition) : base(directionalCondition)
         {
             this.directionalCondition = directionalCondition;
@@ -16,6 +24,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
         protected override string XmlTag { get; } = RtcXmlTag.DirectionalCondition;
 
+        /// <summary>
+        /// Converts the directional connection to a collection of <see cref="XElement" />
+        /// to be written to the export series in the data config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
             foreach (XElement export in base.ToDataConfigExportSeries(xNamespace, prefix))
@@ -27,6 +42,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return timeSeriesElement;
         }
 
+        /// <summary>
+        /// Gets the x2 element for the condition element in the tools config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The x2 element. </returns>
         protected override XElement GetX2Element(XNamespace xNamespace)
         {
             return new XElement(xNamespace + "x2Series",
@@ -36,6 +56,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                                 GetLaggedInputName());
         }
 
+        /// <summary>
+        /// Gets the xml name of the lagged input.
+        /// </summary>
+        /// <returns> The xml name of the lagged input </returns>
         public string GetLaggedInputName()
         {
             return GetInputName() + timeLagPostFix;

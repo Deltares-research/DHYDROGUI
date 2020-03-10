@@ -3,28 +3,46 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for an <see cref="Output"/>
+    /// </summary>
     public class OutputSerializer
     {
         private readonly Output output;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OutputSerializer" /> class.
+        /// </summary>
+        /// <param name="output"> The output to serialize. </param>
         public OutputSerializer(Output output)
         {
             this.output = output;
         }
 
         /// <summary>
+        /// Converts the output to an xml element used as a reference by other xml elements.
         /// </summary>
         /// <param name="xNamespace"> </param>
         /// <param name="lableName">
-        /// For most rules this should be y; for relative time rule x
+        /// The name of the label. For most rules this should be y; for relative time rule x
         /// </param>
-        /// <param name="integralName"> </param>
-        /// <returns> </returns>
+        /// <param name="integralName"> The integral name. </param>
+        /// <returns> The reference xml element. </returns>
         public XElement ToXmlOutputReference(XNamespace xNamespace, string lableName, string integralName)
         {
             return ToXmlOutputReference(xNamespace, lableName, integralName, null);
         }
 
+        /// <summary>
+        /// Converts the output to an xml element used as a reference by other xml elements.
+        /// </summary>
+        /// <param name="xNamespace"> </param>
+        /// <param name="lableName">
+        /// The name of the label. For most rules this should be y; for relative time rule x
+        /// </param>
+        /// <param name="integralName"> The integral name. </param>
+        /// <param name="differentialName"> The differential name. </param>
+        /// <returns> The reference xml element. </returns>
         public XElement ToXmlOutputReference(XNamespace xNamespace, string lableName, string integralName,
                                      string differentialName)
         {
@@ -43,6 +61,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             return result;
         }
 
+        /// <summary>
+        /// Gets the xml name of the output.
+        /// </summary>
+        /// <returns> The xml name of the output. </returns>
         public string GetXmlName()
         {
             return RtcXmlTag.Output + output.LocationName.Replace("##", "~~") + "/" + output.ParameterName;

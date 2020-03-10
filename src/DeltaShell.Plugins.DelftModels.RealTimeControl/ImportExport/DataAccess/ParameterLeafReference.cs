@@ -6,16 +6,16 @@
     public class ParameterLeafReference : IExpressionReference
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LeafReference"/> class.
+        /// Initializes a new instance of the <see cref="ParameterLeafReference" /> class.
         /// </summary>
-        /// <param name="value">The parameter name.</param>
+        /// <param name="value"> The parameter reference. </param>
         public ParameterLeafReference(string value)
         {
             Value = value;
         }
 
         /// <summary>
-        /// Gets the parameter name.
+        /// Gets the parameter reference.
         /// </summary>
         public string Value { get; }
     }

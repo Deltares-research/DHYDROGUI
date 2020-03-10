@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// <param name="standardTriggerXml"> The standard trigger XML. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
-        /// A <see cref="ConditionDataAccessObject" /> from the specified <paramref name="standardTriggerXml" />.
+        /// A <see cref="ConditionDataAccessObject" /> created from the specified <paramref name="standardTriggerXml" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="standardTriggerXml"/> is <c>null</c>.

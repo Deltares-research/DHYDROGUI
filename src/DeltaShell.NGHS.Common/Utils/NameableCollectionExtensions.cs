@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.Common.Utils
         /// <returns>
         /// The first object with the same name; default if the object was not found.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="objects"/> is <c>null</c>.
         /// </exception>
         public static T GetByName<T>(this IEnumerable<T> objects, string name) where T : INameable
@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.Common.Utils
         /// <returns>
         /// A collection containing the objects with the same name.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="objects"/> is <c>null</c>.
         /// </exception>
         public static IEnumerable<T> GetAllByName<T>(this IEnumerable<T> objects, string name) where T : INameable

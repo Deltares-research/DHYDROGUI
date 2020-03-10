@@ -11,10 +11,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for an <see cref="IntervalRule"/>.
+    /// </summary>
+    /// <seealso cref="RuleSerializerBase" />
     public class IntervalRuleSerializer : RuleSerializerBase
     {
         private IntervalRule IntervalRule { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IntervalRuleSerializer"/> class.
+        /// </summary>
+        /// <param name="intervalRule">The interval rule to serialize.</param>
         public IntervalRuleSerializer(IntervalRule intervalRule) : base(intervalRule)
         {
             IntervalRule = intervalRule;
@@ -39,11 +47,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </interval>
 
         /// <summary>
-        /// Converts the information of the interval rule needed for writing the tools config file to an xml element.
+        /// Converts the interval rule to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             var result = base.ToXml(xNamespace, prefix).First();
@@ -91,12 +100,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                        })));
             yield return result;
         }
-        
+
+        /// <summary>
+        /// Converts the interval rule to a collection of <see cref="XElement" />
+        /// to be written to the import series in the data config xml file
+        /// and the time series import xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <param name="start"> The start time of the model. </param>
+        /// <param name="stop"> The stop time of the model. </param>
+        /// <param name="step"> The time step of the model. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             yield return GetImportTimeSeries(prefix, start, stop, step);
         }
 
+        /// <summary>
+        /// Converts the interval rule to a collection of <see cref="XElement" />
+        /// to be written to the export series in the data config xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(prefix);

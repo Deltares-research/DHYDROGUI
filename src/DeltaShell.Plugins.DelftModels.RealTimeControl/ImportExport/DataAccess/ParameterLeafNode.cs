@@ -1,14 +1,14 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents an leaf node containing a value
+    /// Represents an leaf node containing a parameter name as value.
     /// </summary>
     public class ParameterLeafNode : ILeafNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterLeafNode"/> class.
+        /// Initializes a new instance of the <see cref="ParameterLeafNode" /> class.
         /// </summary>
-        /// <param name="value">The leaf value.</param>
+        /// <param name="value"> The parameter name. </param>
         public ParameterLeafNode(string value)
         {
             Value = value;

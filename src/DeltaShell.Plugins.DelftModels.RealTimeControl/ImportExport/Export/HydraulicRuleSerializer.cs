@@ -7,10 +7,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="HydraulicRule"/>.
+    /// </summary>
+    /// <seealso cref="RuleSerializerBase" />
     public class HydraulicRuleSerializer : RuleSerializerBase
     {
         private HydraulicRule HydraulicRule { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HydraulicRuleSerializer"/> class.
+        /// </summary>
+        /// <param name="hydraulicRule">The hydraulic rule to serialize.</param>
         public HydraulicRuleSerializer(HydraulicRule hydraulicRule) : base(hydraulicRule)
         {
             HydraulicRule = hydraulicRule;
@@ -36,11 +44,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </lookupTable>
 
         /// <summary>
-        /// Converts the information of the hydraulic rule needed for writing the tools config file to an xml element.
+        /// Converts the hydraulic rule to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"> The x namespace. </param>
-        /// <param name="prefix"> The control group name. </param>
-        /// <returns> The Xml Element. </returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();

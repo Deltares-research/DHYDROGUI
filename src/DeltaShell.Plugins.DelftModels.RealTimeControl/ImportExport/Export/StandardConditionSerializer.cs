@@ -5,10 +5,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="StandardCondition" />.
+    /// </summary>
+    /// <seealso cref="ConditionSerializerBase" />
     public class StandardConditionSerializer : ConditionSerializerBase
     {
         private readonly StandardCondition standardCondition;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StandardConditionSerializer" /> class.
+        /// </summary>
+        /// <param name="standardCondition"> The standard condition to serialize. </param>
         public StandardConditionSerializer(StandardCondition standardCondition) : base(standardCondition)
         {
             this.standardCondition = standardCondition;
@@ -34,16 +42,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //     </standard>
 
         /// <summary>
-        /// Converts the information of the standard condition needed for writing the tools config file to an xml element.
+        /// Converts the standard condition to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"> The x namespace. </param>
-        /// <param name="prefix"> The control group name. </param>
-        /// <returns> The Xml Element. </returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             return ToXml(xNamespace, prefix, GetInputName());
         }
-        
+
+        /// <summary>
+        /// Converts the information of the condition needed for writing the
+        /// tools config file to a collection of <see cref="XElement"/>.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <param name="inputName"> The input name. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix, string inputName)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -133,6 +150,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return result;
         }
 
+        /// <summary>
+        /// Gets the x2 element for the condition element in the tools config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The x2 element. </returns>
         protected virtual XElement GetX2Element(XNamespace xNamespace)
         {
             return new XElement(xNamespace + "x2Value", standardCondition.Value);

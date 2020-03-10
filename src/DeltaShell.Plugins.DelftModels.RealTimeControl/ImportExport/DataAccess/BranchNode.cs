@@ -2,8 +2,16 @@
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
+    /// <summary>
+    /// Represents an expression branch node containing two child nodes and a mathematical operator.
+    /// </summary>
+    /// <seealso cref="IBranchNode" />
     public class BranchNode : IBranchNode
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BranchNode"/> class.
+        /// </summary>
+        /// <param name="operatorValue">The operator value.</param>
         public BranchNode(Operator operatorValue)
         {
             OperatorValue = operatorValue;
@@ -16,6 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             YName = yName;
         }
 
+        /// <summary>
+        /// Gets the first child node reference.
+        /// </summary>
         public NodeReference FirstNodeReference { get; }
 
         public IExpressionNode FirstNode
@@ -26,6 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 
         public Operator OperatorValue { get; }
 
+        /// <summary>
+        /// Gets the second child node reference.
+        /// </summary>
         public NodeReference SecondNodeReference{ get; }
 
         public IExpressionNode SecondNode

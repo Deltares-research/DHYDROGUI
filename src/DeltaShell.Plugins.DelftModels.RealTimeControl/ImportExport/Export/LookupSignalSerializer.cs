@@ -8,10 +8,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="LookupSignal" />.
+    /// </summary>
+    /// <seealso cref="SignalSerializerBase" />
     public class LookupSignalSerializer : SignalSerializerBase
     {
         private readonly LookupSignal lookupSignal;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LookupSignalSerializer" /> class.
+        /// </summary>
+        /// <param name="lookupSignal"> The lookup signal to serialize. </param>
         public LookupSignalSerializer(LookupSignal lookupSignal) : base(lookupSignal)
         {
             this.lookupSignal = lookupSignal;
@@ -19,6 +27,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
         protected override string XmlTag { get; } = RtcXmlTag.LookupSignal;
 
+        /// <summary>
+        /// Converts the lookup signal to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -62,6 +77,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return result;
         }
 
+        /// <summary>
+        /// Converts the signal to a collection of <see cref="IXmlTimeSeries" />
+        /// to be written to the export series in the data config xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="IXmlTimeSeries" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix));

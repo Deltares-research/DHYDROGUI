@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// <param name="id"> The identifier that was read from the file. </param>
         /// <param name="rule"> The created rule. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="id"/> or <paramref name="rule"/> is <c>null</c>.
+        /// Thrown when <paramref name="id" /> or <paramref name="rule" /> is <c> null </c>.
         /// </exception>
         public RuleDataAccessObject(string id, RuleBase rule)
         {
@@ -56,6 +56,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// </value>
         public IList<string> SignalReferences { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets the <see cref="RuleBase" /> that was created from the tools config file.
+        /// </summary>
+        /// <value>
+        /// The created rule.
+        /// </value>
         public RuleBase Object { get; }
     }
 }

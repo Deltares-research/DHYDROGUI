@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
     /// <summary>
     /// Data access object for importing a <see cref="RtcBaseObject" /> from the tools config xml file.
     /// </summary>
-    /// <typeparam name="T"> Type of the <see cref="RtcBaseObject" /> </typeparam>
+    /// <typeparam name="T"> Type of the <see cref="RtcBaseObject" /> that is contained by this instance. </typeparam>
     public interface IRtcDataAccessObject<out T> where T : RtcBaseObject
     {
         /// <summary>

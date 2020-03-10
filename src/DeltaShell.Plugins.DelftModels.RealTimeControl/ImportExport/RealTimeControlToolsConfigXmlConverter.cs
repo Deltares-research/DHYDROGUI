@@ -1,27 +1,27 @@
-﻿using DelftTools.Utils.Collections.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
-using System.Collections.Generic;
-using System.Linq;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     /// <summary>
     /// Responsible for taking the objects that come from the tools config xml file
-    /// and converting them into a set of <see cref="IRtcDataAccessObject{RtcBaseObject}"/>.
+    /// and converting them into a set of <see cref="IRtcDataAccessObject{T}" />.
     /// </summary>
     public static class RealTimeControlToolsConfigXmlConverter
     {
         /// <summary>
-        /// Converts the specified <paramref name="ruleElements"/>
-        /// and <paramref name="triggerElements"/> to rtc data access objects.
+        /// Converts the specified <paramref name="ruleElements" />
+        /// and <paramref name="triggerElements" /> to rtc data access objects.
         /// </summary>
-        /// <param name="ruleElements">The rule xml elements.</param>
-        /// <param name="triggerElements">The trigger xml elements.</param>
-        /// <param name="logHandler">The log handler.</param>
-        /// <returns></returns>
+        /// <param name="ruleElements"> The rule xml elements. </param>
+        /// <param name="triggerElements"> The trigger xml elements. </param>
+        /// <param name="logHandler"> The log handler. </param>
+        /// <returns> A collection of <see cref="IRtcDataAccessObject{T}" />. </returns>
         public static IEnumerable<IRtcDataAccessObject<RtcBaseObject>> ConvertToDataAccessObjects(RuleXML[] ruleElements,
                                                                                                   TriggerXML[] triggerElements,
                                                                                                   ILogHandler logHandler = null)

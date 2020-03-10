@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -10,7 +9,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for Mathematical Expressions.
+    /// Serializer for a <see cref="MathematicalExpression" />.
     /// </summary>
     public class MathematicalExpressionSerializer : InputSerializerBase
     {
@@ -20,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// Creates a MathematicalExpressionSerializer for one GUI Mathematical Expression,
         /// which can be defined by using multiple expression blocks in the toolsconfig.xml.
         /// </summary>
-        /// <param name="mathematicalExpression"></param>
+        /// <param name="mathematicalExpression"> The mathematical expression to serialize. </param>
         public MathematicalExpressionSerializer(MathematicalExpression mathematicalExpression) : base(
             mathematicalExpression)
         {
@@ -30,11 +29,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         protected override string XmlTag { get; }
 
         /// <summary>
-        /// Creates XElement(s) for the Mathematical Expression.
+        /// Converts the mathematical expression to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"></param>
-        /// <param name="prefix"></param>
-        /// <returns>IEnumerable with XElements for every expression block</returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             IBranchNode rootNode = RetrieveRootBranchNode();
@@ -58,12 +58,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <summary>
         /// Used by other RTC components if they are connected to a Mathematical Expression.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The xml name of the mathematical expression. </returns>
         public override string GetXmlName()
         {
             return MathematicalExpression.Name;
         }
 
+        /// <summary>
+        /// Converts the mathematical expression to a collection of <see cref="XElement" />
+        /// to be written to export time series in the data config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace)
         {
             IBranchNode rootNode = RetrieveRootBranchNode();

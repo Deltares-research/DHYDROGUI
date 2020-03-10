@@ -56,6 +56,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// </value>
         public IList<string> FalseOutputReferences { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets the <see cref="ConditionBase" /> that was created from the tools config file.
+        /// </summary>
+        /// <value>
+        /// The created condition.
+        /// </value>
         public ConditionBase Object { get; }
     }
 }

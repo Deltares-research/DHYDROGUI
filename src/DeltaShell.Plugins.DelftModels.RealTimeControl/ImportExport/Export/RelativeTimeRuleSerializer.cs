@@ -7,10 +7,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
+    /// <summary>
+    /// Serializer for a <see cref="RelativeTimeRule"/>.
+    /// </summary>
+    /// <seealso cref="RuleSerializerBase" />
     public class RelativeTimeRuleSerializer : RuleSerializerBase
     {
         private RelativeTimeRule RelativeTimeRule { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RelativeTimeRuleSerializer"/> class.
+        /// </summary>
+        /// <param name="relativeTimeRule">The relative time rule to serialize.</param>
         public RelativeTimeRuleSerializer(RelativeTimeRule relativeTimeRule) : base(relativeTimeRule)
         {
             RelativeTimeRule = relativeTimeRule;
@@ -37,11 +45,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </timeRelative>
 
         /// <summary>
-        /// Converts the information of the relative time rule needed for writing the tools config file to an xml element.
+        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// to be written to the tools config xml file.
         /// </summary>
-        /// <param name="xNamespace"> The x namespace. </param>
-        /// <param name="prefix"> The control group name. </param>
-        /// <returns> The Xml Element. </returns>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -82,6 +91,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             yield return result;
         }
 
+        /// <summary>
+        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// to be written to the import series in the data config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
         {
             if (RelativeTimeRule.FromValue)
@@ -107,6 +122,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             }
         }
 
+        /// <summary>
+        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// to be written to the export series in the data config xml file.
+        /// </summary>
+        /// <param name="prefix"> The prefix. </param>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(prefix);

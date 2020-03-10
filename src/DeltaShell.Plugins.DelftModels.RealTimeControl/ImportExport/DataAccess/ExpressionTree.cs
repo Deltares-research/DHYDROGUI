@@ -3,7 +3,7 @@
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents a binary expression tree starting at a root node
+    /// Represents a binary expression tree starting at a root node.
     /// </summary>
     /// <seealso cref="IRtcDataAccessObject{MathematicalExpression}" />
     public class ExpressionTree : IRtcDataAccessObject<MathematicalExpression>
@@ -30,6 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 
         public string ControlGroupName { get; }
 
+        /// <summary>
+        /// Gets the <see cref="MathematicalExpression"/> that was created from the tools config file.
+        /// </summary>
         public MathematicalExpression Object { get; }
 
         public string Id { get; }
