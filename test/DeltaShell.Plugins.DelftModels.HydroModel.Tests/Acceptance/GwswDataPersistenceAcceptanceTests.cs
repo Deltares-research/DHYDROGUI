@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             new object[] {"KorteWoerden", 84, 72},
             new object[] {"DidactischStelsel", 108, 73},
             new object[] {"Groesb2", 719, 675},
-            new object[] {"Enschede", 4838, 4748},
             new object[] {"Pudong", 4974, 4936}
         };
 
@@ -80,39 +79,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        [Test]
-        [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedGwswModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
-            string acceptanceModelName,
-            int preconditionExpectedBranchFeaturesCount,
-            int preconditionExpectedCatchmentsCount)
-        {
-            // [Given]
-            using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
-            {
-                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
-
-                ImportGwswModelAndAssertPreconditions(
-                    acceptanceModelName,
-                    hydroModel,
-                    preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
-
-                // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
-
-                // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "AcceptanceData", "FlowFM"));
-            }
-        }
-
         private void ImportGwswModelAndAssertPreconditions(
             string testDataDirectory, 
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "InputData");
+            var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory);
 
             var fileImporter = new GwswFileImporter(new DefinitionsProvider())
             {

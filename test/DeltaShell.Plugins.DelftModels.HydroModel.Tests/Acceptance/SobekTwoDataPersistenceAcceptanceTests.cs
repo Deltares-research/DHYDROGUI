@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private static readonly object[] AcceptanceTests =
         {
             new object[] {"DarEsSalaam", "14", 177, 0},
-            new object[] {"Waardenburg", "23", 279, 0},
+            new object[] {"Waardenburg", "27", 288, 0},
             new object[] {"HogeRaam", "9", 0, 0}, // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
             new object[] {"Jakarta", "14", 0, 0} // TODO: Add preconditions and AcceptanceData when the model can be correctly imported
         };
@@ -80,35 +80,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        [Test]
-        [TestCaseSource(nameof(AcceptanceTests))]
-        [Ignore("Add when acceptance data is available")]
-        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
-            string acceptanceModelName,
-            string caseName,
-            int preconditionExpectedBranchFeaturesCount,
-            int preconditionExpectedCatchmentsCount)
-        {
-            // [Given]
-            using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
-            {
-                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
-
-                ImportSobekTwoModelAndAssertPreconditions(
-                    acceptanceModelName,
-                    caseName,
-                    hydroModel,
-                    preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
-
-                // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
-
-                // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "AcceptanceData", "FlowFM"));
-            }
-        }
-
         private void ImportSobekTwoModelAndAssertPreconditions(
             string testDataDirectory,
             string caseFolder,
@@ -116,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var caseDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "InputData", caseFolder);
+            var caseDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory, caseFolder);
             var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
             
             var sobekHydroModelImporter = new SobekHydroModelImporter(true)
