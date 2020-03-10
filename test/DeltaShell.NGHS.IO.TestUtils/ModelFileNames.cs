@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -6,11 +6,10 @@ using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Helpers;
 
-namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
+namespace DeltaShell.NGHS.IO.TestUtils
 {
     public class ModelFileNames
     {
@@ -41,14 +40,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
         private const string SobekSimFilename = "SobekSim.ini";
         private const string RetentionFilename = "Retention.ini";
         private const string LogFileName = "sobek.log";
-        private const string BoundaryConditionsFilename = "BoundaryConditions.bc"; 
+        private const string BoundaryConditionsFilename = "BoundaryConditions.bc";
         public const string ModelDefinitionFilename = "ModelDefinition.md1d";
         public const string ModelFilenameExtension = ".md1d";
-        
-        
+
+
         public IEventedList<string> RoughnessFiles { get; private set; }
-        
-        public ModelFileNames(string modelFilename): this()
+
+        public ModelFileNames(string modelFilename) : this()
         {
             if (!File.Exists(modelFilename))
             {
@@ -134,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
 
             var readRoughnessFiles =
                 fileSection[0].ReadPropertiesToListOfType<string>(ModelDefinitionsRegion.RoughnessFile.Key,
-                    separator: ';', isOptional:true);
+                    separator: ';', isOptional: true);
             if (readRoughnessFiles == null) return;
             foreach (var file in readRoughnessFiles)
             {
@@ -167,12 +166,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 var files = sender as IList<string>;
-                if (files == null) 
+                if (files == null)
                     throw new FileReadingException("Reading roughness files list from md1d file went wrong.");
-                files[files.Count-1] = Path.Combine(targetPath, e.GetRemovedOrAddedItem().ToString());
+                files[files.Count - 1] = Path.Combine(targetPath, e.GetRemovedOrAddedItem().ToString());
             }
         }
-        
+
         public string Network
         {
             get { return Path.Combine(targetPath, network); }

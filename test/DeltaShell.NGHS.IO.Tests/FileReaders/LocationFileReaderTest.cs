@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.Plugins.DelftModels.WaterFlowModel.ImportExport;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders

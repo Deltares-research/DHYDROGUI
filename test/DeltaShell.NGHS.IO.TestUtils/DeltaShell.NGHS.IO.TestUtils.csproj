@@ -105,6 +105,7 @@
     <Compile Include="GridGeomLibWrapper.cs" />
     <Compile Include="IoNetcdfLibWrapper.cs" />
     <Compile Include="LocationFileReaderTestHelper.cs" />
+    <Compile Include="ModelFileNames.cs" />
     <Compile Include="NetworkAndGridReaderTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StructureFileWriterTestHelper.cs" />
@@ -119,11 +120,6 @@
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.WaterFlowModel\DeltaShell.Plugins.DelftModels.WaterFlowModel.csproj">
-      <Project>{3038FF2F-A3B0-462E-8C41-30DFE1247822}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.WaterFlowModel</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
