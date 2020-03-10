@@ -9,18 +9,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
     /// <summary>
     /// Provides a type converter to convert a <see cref="KeyValuePair{TKey,TValue}" /> array to another representation.
     /// </summary>
-    /// <typeparam name="T"> </typeparam>
+    /// <typeparam name="T"> The type of the key value pair value. </typeparam>
     /// <seealso cref="ArrayConverter" />
     public class KeyValuePairArrayConverter<T> : ArrayConverter
     {
         /// <summary>
-        /// Converts to.
+        /// Converts the specified key value pair in <paramref name="value"/> to a string.
         /// </summary>
         /// <param name="context"> The context. </param>
         /// <param name="culture"> The culture. </param>
         /// <param name="value"> The value. </param>
         /// <param name="destinationType"> Type of the destination. </param>
-        /// <returns> </returns>
+        /// <returns> The string representation of the specified key value pair in <paramref name="value"/>. </returns>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="value" /> is not an array of type <see cref="KeyValuePair{String, T}" />
         /// </exception>
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         /// <param name="context"> This parameter is not used. </param>
         /// <param name="value"> The key value pairs. </param>
         /// <param name="attributes"> The attributes. </param>
-        /// <returns> </returns>
+        /// <returns> The property descriptor collection for the specified <paramref name="value" />. </returns>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="value" /> is not an array of type <see cref="KeyValuePair{String, T}" />
         /// </exception>

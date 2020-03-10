@@ -11,8 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     {
         private readonly Random random = new Random();
 
-        [Test]
-        public void Constructor_InitializesInstanceCorrectly()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Constructor_InitializesInstanceCorrectly(bool isReadOnly)
         {
             // Setup
             const string key = "descriptor_key";
@@ -22,16 +23,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
             {
                 attribute
             };
-            bool isReadonly = random.Next(1) == 1; // TODO use random boolean
 
             // Call
-            var descriptor = new KeyValuePairPropertyDescriptor<string>(key, attributes, isReadonly);
+            var descriptor = new KeyValuePairPropertyDescriptor<string>(key, attributes, isReadOnly);
 
             // Assert
             Assert.That(descriptor.Name, Is.EqualTo(key));
             Assert.That(descriptor.Attributes.Count, Is.EqualTo(1));
             Assert.That(descriptor.Attributes[0], Is.SameAs(attribute));
-            Assert.That(descriptor.IsReadOnly, Is.EqualTo(isReadonly));
+            Assert.That(descriptor.IsReadOnly, Is.EqualTo(isReadOnly));
         }
 
         [Test]
@@ -115,8 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         {
             // Setup
             var descriptor = new KeyValuePairPropertyDescriptor<string>("key", null, true);
-            var kvpArray = new KeyValuePair<string, string>[]
-                {};
+            var kvpArray = new KeyValuePair<string, string>[0];
 
             // Call
             void Call() => descriptor.SetValue(kvpArray, "new_value");
@@ -131,8 +130,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         {
             // Setup
             var descriptor = new KeyValuePairPropertyDescriptor<string>("key", null, false);
-            var kvpArray = new KeyValuePair<string, string>[]
-                {};
 
             // Call
             void Call() => descriptor.SetValue(new object(), "new_value");
@@ -148,8 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         {
             // Setup
             var descriptor = new KeyValuePairPropertyDescriptor<string>("key", null, true);
-            var kvpArray = new KeyValuePair<string, string>[]
-                {};
+            var kvpArray = new KeyValuePair<string, string>[0];
 
             // Call
             bool result = descriptor.CanResetValue(kvpArray);
@@ -163,8 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         {
             // Setup
             var descriptor = new KeyValuePairPropertyDescriptor<string>("key", null, true);
-            var kvpArray = new KeyValuePair<string, string>[]
-                {};
+            var kvpArray = new KeyValuePair<string, string>[0];
 
             // Call
             void Call() => descriptor.ResetValue(kvpArray);
@@ -179,8 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         {
             // Setup
             var descriptor = new KeyValuePairPropertyDescriptor<string>("key", null, true);
-            var kvpArray = new KeyValuePair<string, string>[]
-                {};
+            var kvpArray = new KeyValuePair<string, string>[0];
 
             // Call
             bool result = descriptor.ShouldSerializeValue(kvpArray);

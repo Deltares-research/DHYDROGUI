@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
     /// <summary>
     /// Property descriptor for a <see cref="KeyValuePair{TKey,TValue}" />
     /// </summary>
-    /// <typeparam name="T"> </typeparam>
+    /// <typeparam name="T"> Type of key value pair value </typeparam>
     /// <seealso cref="PropertyDescriptor" />
     public class KeyValuePairPropertyDescriptor<T> : PropertyDescriptor
     {
@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             keyValuePairs[index] = new KeyValuePair<string, T>(kvp.Key, (T) value);
         }
 
+        /// <inheritdoc/>
         public override bool CanResetValue(object component)
         {
             return false;
@@ -90,15 +91,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             throw new NotSupportedException("Resetting property value is not supported.");
         }
 
+        /// <inheritdoc/>
         public override bool ShouldSerializeValue(object component)
         {
             return false;
         }
 
+        /// <inheritdoc/>
         public override bool IsReadOnly { get; }
 
+        /// <inheritdoc/>
         public override Type ComponentType => typeof(KeyValuePair<string, T>[]);
 
+        /// <inheritdoc/>
         public override Type PropertyType => typeof(T);
     }
 }
