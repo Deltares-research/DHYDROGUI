@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             if (mismatchingLinesInExpected.Any())
             {
-                if (AreDifferentButEquivalent(mismatchingLinesInExpected, mismatchingLinesInActual))
+                if (AreEquivalent(mismatchingLinesInExpected, mismatchingLinesInActual))
                 {
                     return true;
                 }
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        private static bool AreDifferentButEquivalent(
+        private static bool AreEquivalent(
             IEnumerable<Tuple<int, string>> mismatchingLinesInExpected,
             IEnumerable<Tuple<int, string>> mismatchingLinesInActual)
         {
