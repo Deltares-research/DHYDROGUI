@@ -100,7 +100,7 @@ numerics,Fixedweirtalud,numerics,Fixed weir parameters,Fixed weir talud,Double,4
 numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,FALSE,,,,,,"Position of z boundary (0: D3Dflow, 1: on net boundary, 2: on specifiend polyline)",
 numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,0,0,,FALSE,,,,,,Fourier smoothing time (s) on water level boundaries,
 numerics,Slopedrop2D,advanced,Advanced,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)",
-numerics,Slopedrop1D,general,Urban,Apply drop losses,0|1,1,0,1,FALSE,,,,,,"Apply drop losses, (==0: no drop losses)",
+numerics,Drop1D,general,Urban,Apply drop losses,0|1,1,0,1,FALSE,,,,,,"Apply drop losses, (==0: no drop losses)",
 numerics,Chkadvd,advanced,Advanced,Advection checks depth,Double,0.1,0,,FALSE,,,,,,"Check advection terms if depth < chkadvdp, => less setbacks",
 numerics,Teta0,advanced,Advanced,Time integration theta,Double,0.55,0.5,1,FALSE,,,,,,Theta of time integration (0.5 < theta < 1),
 numerics,Qhrelax,advanced,Advanced,Relaxation on h(Q) boundaries,Double,1.d-2,0,1,FALSE,,,,,,Relaxation on Q-h open boundaries,
