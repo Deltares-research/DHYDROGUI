@@ -17,10 +17,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
     [Category(TestCategory.WindowsForms)]
     public class GwswDataPersistenceAcceptanceTests
     {
-        private string tempDirectory1;
-        private string tempProjectPath1;
-        private string tempDirectory2;
-        private string tempProjectPath2;
+        private string tempDirectory;
+        private string firstSaveProjectPath;
+        private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
 
         private static readonly object[] AcceptanceTests =
@@ -41,17 +40,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         [SetUp]
         public void SetUp()
         {
-            tempDirectory1 = FileUtils.CreateTempDirectory();
-            tempProjectPath1 = Path.Combine(tempDirectory1, "TestProject.dsproj");
-            tempDirectory2 = FileUtils.CreateTempDirectory();
-            tempProjectPath2 = Path.Combine(tempDirectory2, "TestProject.dsproj");
+            tempDirectory = FileUtils.CreateTempDirectory();
+
+            var firstSaveDirectory = Path.Combine(tempDirectory, "First save");
+            firstSaveProjectPath = Path.Combine(firstSaveDirectory, "TestProject.dsproj");
+
+            var secondSaveDirectory = Path.Combine(tempDirectory, "Second save");
+            secondSaveProjectPath = Path.Combine(secondSaveDirectory, "TestProject.dsproj");
+
+            Directory.CreateDirectory(firstSaveDirectory);
+            Directory.CreateDirectory(secondSaveDirectory);
         }
 
         [TearDown]
         public void TearDown()
         {
-            FileUtils.DeleteIfExists(tempDirectory1);
-            FileUtils.DeleteIfExists(tempDirectory2);
+            FileUtils.DeleteIfExists(tempDirectory);
         }
 
         [Test]
@@ -73,10 +77,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                     preconditionExpectedCatchmentsCount);
 
                 // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
+                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(tempProjectPath1 + "_data", "FlowFM"));
+                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data", "FlowFM"));
             }
         }
 
@@ -111,10 +115,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
         {
-            var flowFmResultFiles = Directory.GetFiles(Path.Combine(tempProjectPath2 + "_data", "FlowFM"));
+            var flowFmResultFiles = Directory.GetFiles(Path.Combine(secondSaveProjectPath + "_data", "FlowFM"));
             var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
 
-            FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory2);
+            FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);
         }
     }
 }
