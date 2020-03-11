@@ -108,7 +108,6 @@ numerics,Jbasqbnddownwindhs,advanced,Advanced,Downwind cell h on Q-boundaries?,0
 numerics,cstbnd,advanced,Advanced,Use Delft3D velocity handling,0|1,0,,,FALSE,,,,,,"Delft3D type velocity treatment near boundaries for small coastal models (1: yes, 0: no)",
 numerics,Maxitverticalforestersal,advanced,Advanced,Max vertical Forester iterations for salinity,Integer,0,0,,TRUE,,,,,,"Forester iterations for salinity (0: no vertical filter for salinity, > 0: max nr of iterations)",
 numerics,Maxitverticalforestertem,advanced,Advanced,Max vertical Forester iterations for temperature,Integer,0,,,TRUE,,,,,,"Forester iterations for temperature (0: no vertical filter for temperature, > 0: max nr of iterations)",
-numerics,Jaorgsethu,,,Velocity reconstruction order,0|1,1,,,TRUE,,,,,,"Velocity reconstruction scheme (0 : setumod, sethu, setau sequence, 1 : sethu, setau, setumod sequence (standard))",
 numerics,Turbulencemodel,,,Turbulence model:None|Constant|Algebraic|k-eps|k-tau,0|1|2|3|4,3,,,FALSE,,kmx>0,,,,"Turbulence model (0: none, 1: constant, 2: algebraic, 3: k-epsilon, 4: k-tau)",
 numerics,Turbulenceadvection,,,Turbulence advection:None|horizontally explicit and vertically implicit,0|3,3,,,FALSE,,,,,,"Turbulence advection (0: none, 3: horizontally explicit and vertically implicit)",
 numerics,AntiCreep,numerics,Numerical Parameters,Use anti-creep,0|1,0,,,FALSE,,kmx>0,,,,"Include anti-creep calculation (0: no, 1: yes)",
