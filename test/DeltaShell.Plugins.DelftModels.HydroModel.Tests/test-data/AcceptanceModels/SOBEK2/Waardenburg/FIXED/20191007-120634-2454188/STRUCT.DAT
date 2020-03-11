@@ -1,6 +1,0 @@
-STRU id 'l_URB_16-650Bc1_16-650Bc2' dd '16-650Bc1-16-650Bc2' stru
-STRU id 'l_URB_16-D045c1_16-D045c2' nm '' dd '16-D045c1-16-D045c2' stru
-STRU id 'l_URB_16-R016c1_16-R016c2' nm '' dd '16-R016c1-16-R016c2' stru
-STRU id 'l_URB_1' nm '' dd 'l_1' stru
-STRU id 'l_URB_12-501O_12-501OU' nm '' dd 'P02_l_12-501O_12-501OU' stru
-STRU id 'l_URB_3' nm '' dd 'l_3' stru
