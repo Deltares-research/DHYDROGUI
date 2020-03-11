@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         private static readonly object[] AcceptanceTests =
         {
-            new object[] {"Groesbeek", 0, 0}
+            new object[] {"Groesbeek", 0, 0} // TODO: Add preconditions when the model can be correctly imported
         };
 
         [TestFixtureSetUp]
@@ -75,33 +75,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        [Test]
-        [TestCaseSource(nameof(AcceptanceTests))]
-        [Ignore("Add when acceptance data is available")]
-        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsAcceptanceData(
-            string acceptanceModelName,
-            int preconditionExpectedBranchFeaturesCount,
-            int preconditionExpectedCatchmentsCount)
-        {
-            // [Given]
-            using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
-            {
-                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
-
-                ImportFlowFmModelAndAssertPreconditions(
-                    acceptanceModelName,
-                    hydroModel,
-                    preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
-
-                // [When]
-                AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, tempProjectPath1, tempProjectPath2);
-
-                // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "AcceptanceData", "FlowFM"));
-            }
-        }
-
         private void ImportFlowFmModelAndAssertPreconditions(
             string testDataDirectory, 
             HydroModel hydroModel,
@@ -109,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             int expectedCatchmentsCount)
         {
             var importer = new WaterFlowFMFileImporter();
-            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "InputData", "FlowFM.mdu");
+            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "FlowFM.mdu");
            
             var errorMessages = TestHelper.GetAllRenderedMessages(() => importer.ImportItem(pathToMduFile, hydroModel), Level.Error);
 
