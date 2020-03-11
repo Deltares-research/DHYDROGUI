@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                            ? string.Format("{0} ({1})", longName, variableName)
                                            : variableName;
 
-                if (netCdfFile.GetVariableDataType(netcdfVariable) != NetCdfDataType.NcDoublePrecision) continue;//AHHHH we need to show integers too
                 IFunction function;
                 IVariable<DateTime> functionTimeVariable;
 
@@ -124,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     case NetCdfDataType.NcInteger:
                     {
-                        //DOES NOT WORK BECAUSE OF IN THEME!
                         var outputVariable = GenerateOutputVariable<int>(variableName, unitSymbol);
                         outputVariable.Attributes[NcNameAttribute] = variableName;
                         outputVariable.Attributes[NcUseVariableSizeAttribute] = "true";
