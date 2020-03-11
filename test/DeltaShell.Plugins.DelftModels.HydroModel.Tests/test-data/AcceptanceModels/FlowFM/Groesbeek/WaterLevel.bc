@@ -1,0 +1,66 @@
+[forcing]
+Name                            = Wgroeske_5_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      30.41
+86400  30.41
+
+[forcing]
+Name                            = WCN_Oost_2_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      24.21
+86400  24.21
+
+[forcing]
+Name                            = WR2_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      31.91
+86400  31.91
+
+[forcing]
+Name                            = W86_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      22.31
+86400  22.31
+
+[forcing]
+Name                            = 18_M_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      60.01
+86400  60.01
+
+[forcing]
+Name                            = 5_M_0001
+Function                        = timeseries
+Time-interpolation              = linear
+Quantity                        = time
+Unit                            = seconds since 2001-01-01 00:00:00
+Quantity                        = waterlevelbnd
+Unit                            = m
+0      22.35
+86400  22.35
+
