@@ -49,6 +49,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <param name="expectedFlowFmFiles">The file paths of the expected FlowFM files.</param>
         /// <param name="actualFlowFmFiles">The file paths of the actual FlowFM files.</param>
         /// <param name="tempDirectory">A temporary working directory to use during the comparison.</param>
+        /// <remarks>
+        /// Files are also considered to be equal when the relevant file contents are equivalent (i.o.w. same file contents but in different order).
+        /// </remarks>
         public static void Compare(string[] expectedFlowFmFiles, string[] actualFlowFmFiles, string tempDirectory)
         {
             var identical = true;
@@ -127,16 +130,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             ParseFile(filePathExpected, linesToIgnore, out var relevantLinesInExpectedText, out var ignoredLinesInExpectedText);
             ParseFile(filePathActual, linesToIgnore, out var relevantLinesInActualText, out var ignoredLinesInActualText);
-
+            
             GetMismatchingLines(relevantLinesInExpectedText, relevantLinesInActualText, out var mismatchingLinesInExpected, out var mismatchingLinesInActual);
+            
+            RemoveEquivalentLines(mismatchingLinesInExpected, mismatchingLinesInActual);
 
             if (mismatchingLinesInExpected.Any())
             {
-                if (AreEquivalent(mismatchingLinesInExpected, mismatchingLinesInActual))
-                {
-                    return true;
-                }
-                
                 errorMessage = $"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':" +
                                $"{Environment.NewLine}" +
                                $"{CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First(), ignoredLinesInExpectedText, ignoredLinesInActualText)}";
@@ -185,8 +185,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
             {
-                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
-                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
+                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? CreateDummyLine();
+                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? CreateDummyLine();
 
                 if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
                 {
@@ -196,14 +196,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        private static bool AreEquivalent(
-            IEnumerable<Tuple<int, string>> mismatchingLinesInExpected,
-            IEnumerable<Tuple<int, string>> mismatchingLinesInActual)
+        private static Tuple<int, string> CreateDummyLine()
         {
-            var mismatchingTextInExpected = mismatchingLinesInExpected.Select(l => l.Item2).ToArray();
-            var mismatchingTextInActual = mismatchingLinesInActual.Select(l => l.Item2).ToArray();
+            return new Tuple<int, string>(-1, "<end of file>");
+        }
 
-            return mismatchingTextInExpected.Intersect(mismatchingTextInActual).Count() == mismatchingTextInExpected.Length;
+        private static void RemoveEquivalentLines(
+            ICollection<Tuple<int, string>> mismatchingLinesInExpected,
+            ICollection<Tuple<int, string>> mismatchingLinesInActual)
+        {
+            var lineEqualityComparer = new LineEqualityComparer();
+            var equivalentLinesInExpected = mismatchingLinesInExpected.Intersect(mismatchingLinesInActual, lineEqualityComparer).ToList();
+            var equivalentLinesInActual = mismatchingLinesInActual.Intersect(mismatchingLinesInExpected, lineEqualityComparer).ToList();
+
+            if (equivalentLinesInExpected.Count != equivalentLinesInActual.Count)
+            {
+                throw new NotSupportedException("Extend comparison algorithm when getting here...");
+            }
+
+            foreach (var equivalentLineInExpected in equivalentLinesInExpected)
+            {
+                mismatchingLinesInExpected.Remove(equivalentLineInExpected);
+            }
+
+            foreach (var equivalentLineInActual in equivalentLinesInActual)
+            {
+                mismatchingLinesInActual.Remove(equivalentLineInActual);
+            }
+        }
+
+        private class LineEqualityComparer : IEqualityComparer<Tuple<int, string>>
+        {
+            public bool Equals(Tuple<int, string> first, Tuple<int, string> second)
+            {
+                return first.Item2.Equals(second.Item2);
+            }
+
+            public int GetHashCode(Tuple<int, string> obj)
+            {
+                return obj.Item2.GetHashCode();
+            }
         }
 
         private static string CreateErrorMessage(
