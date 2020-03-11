@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -269,25 +268,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        public void SetInputs_WithSameValue_ShouldNotReceiveNewSubscriptions()
-        {
-            // Setup
-            var mathematicalExpression = new MathematicalExpression();
-            var inputs = Substitute.For<IEventedList<IInput>>();
-            mathematicalExpression.Inputs = inputs;
-
-            inputs.ClearReceivedCalls();
-
-            // Call
-            void Call() => mathematicalExpression.Inputs = inputs;
-
-            // Assert
-            Assert.DoesNotThrow(Call);
-            inputs.DidNotReceiveWithAnyArgs().CollectionChanged += Arg.Any<NotifyCollectionChangedEventHandler>();
-            inputs.DidNotReceiveWithAnyArgs().CollectionChanged -= Arg.Any<NotifyCollectionChangedEventHandler>();
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void SetInputs_UpdatesInputMappingCorrectly()
         {
@@ -307,10 +287,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             mathematicalExpression.Inputs = new EventedList<IInput>(inputs);
 
             // Assert
-            Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
+            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            char[] existingKeys = mapping.Keys.ToArray();
+            Assert.That(existingKeys, Has.Length.EqualTo(1));
 
-            var expectedEntry = new KeyValuePair<char, string>('A', inputName);
-            Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
+            const char expectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
+            Assert.That(mapping[expectedKey], Is.EqualTo(inputName));
         }
 
         [Test]
@@ -319,24 +302,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         public void RenameInput_AfterSetInputs_UpdatesInputMappingCorrectly(IInput input)
         {
             // Setup
-            var mathematicalExpression = new MathematicalExpression
+            var mathematicalExpression = new MathematicalExpression();
+
+            const string firstInputName = "input_name_1";
+            input.Name = firstInputName;
+
+            IInput[] inputs =
             {
-                Name = "input_name_1",
-                Inputs = new EventedList<IInput>(new[]
-                {
-                    input
-                })
+                input
             };
+
+            mathematicalExpression.Inputs = new EventedList<IInput>(inputs);
 
             // Call
             const string secondInputName = "input_name_2";
             input.Name = secondInputName;
 
             // Assert
-            Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
+            IReadOnlyDictionary<char, string> mapping = mathematicalExpression.InputMapping;
+            char[] existingKeys = mapping.Keys.ToArray();
+            Assert.That(existingKeys, Has.Length.EqualTo(1));
 
-            var expectedEntry = new KeyValuePair<char, string>('A', secondInputName);
-            Assert.That(mathematicalExpression.InputMapping, Has.Member(expectedEntry));
+            const char expectedKey = 'A';
+            Assert.That(existingKeys[0], Is.EqualTo(expectedKey));
+            Assert.That(mapping[expectedKey], Is.EqualTo(secondInputName));
         }
 
         [Test]
