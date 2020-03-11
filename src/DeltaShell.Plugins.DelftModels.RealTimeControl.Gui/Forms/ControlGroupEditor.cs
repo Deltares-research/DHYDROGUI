@@ -14,6 +14,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
@@ -382,20 +383,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void SaveAsImageAction(object sender, EventArgs e)
         {
-            var tempImagePath = Path.GetTempFileName();
-            graphControl.NetronGraph.SaveImage(tempImagePath, true);
-            var image = Image.FromFile(tempImagePath);
-
-            var fs = new SaveFileDialog
+            var dialog = new SaveFileDialog
             {
-                Title = "Save image", Filter = "PNG image|*.png"
+                Title = "Save image",
+                Filter = "PNG image|*.png"
             };
-            fs.ShowDialog();
 
-            if (fs.FileName != String.Empty)
+            dialog.ShowDialog();
+            
+            if (dialog.FileName == string.Empty) return;
+
+            string tempImagePath = Path.GetTempFileName();
+            graphControl.NetronGraph.SaveImage(tempImagePath, true);
+
+            // re-save to png
+            using (var image = Image.FromFile(tempImagePath))
             {
-                image.Save(fs.FileName, ImageFormat.Png);
+                image.Save(dialog.FileName, ImageFormat.Png);
             }
+
+            FileUtils.DeleteIfExists(tempImagePath);
         }
 
         public void CopyXmlToClipboard(object sender, EventArgs e)
