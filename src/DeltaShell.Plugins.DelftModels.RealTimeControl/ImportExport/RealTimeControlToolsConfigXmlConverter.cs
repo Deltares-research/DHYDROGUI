@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(IEnumerable<TriggerXML> triggerElements,
                                                                                                   ILogHandler logHandler = null)
         {
-            return triggerElements.SelectMany(e => ConvertToConditionDataAccessObjects(e, logHandler));
+            return triggerElements.SelectMany(e => ConvertToConditionDataAccessObjects(e, logHandler)).RemoveDuplicateIds();
         }
 
         private static IEnumerable<ConditionDataAccessObject> ConvertToConditionDataAccessObjects(TriggerXML triggerXml,
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerXML> triggerElements)
         {
             IEnumerable<ExpressionObjectGroup> expressionGroups = GetExpressionGroupsRecursively(triggerElements);
-            return AssembleExpressionTrees(expressionGroups);
+            return AssembleExpressionTrees(expressionGroups).RemoveDuplicateIds();
         }
 
         private static IEnumerable<ExpressionObjectGroup> GetExpressionGroupsRecursively(IEnumerable<TriggerXML> triggerElements)
@@ -147,6 +147,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             return false;
+        }
+
+        private static IEnumerable<T> RemoveDuplicateIds<T>(this IEnumerable<T> source) where T : IRtcDataAccessObject<RtcBaseObject>
+        {
+            return source.GroupBy(o => o?.Id)
+                         .Select(g => g.First());
         }
     }
 }

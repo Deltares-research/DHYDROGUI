@@ -892,6 +892,65 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             AssertCorrectBranchNodeWithTwoLeafNodes(treeH.RootNode, nameH, @operator, leafInput, leafInput);
         }
 
+        [TestCaseSource(nameof(GetTriggerObjects))]
+        [Category(TestCategory.Integration)]
+        public void ConvertToDataAccessObjects_TriggerReferencedTwice_ReturnsCorrectResult(object trigger)
+        {
+            // Setup
+            var conditionA = (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                 ControlGroupName,
+                                                                                 "condition_A").Item;
+
+            var conditionB = (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                                 ControlGroupName,
+                                                                                 "condition_B").Item;
+
+            ConditionXmlBuilder.Start(conditionA)
+                               .WithTrueOutput(conditionB)
+                               .WithFalseOutput(trigger);
+
+            ConditionXmlBuilder.Start(conditionB)
+                               .WithFalseOutput(trigger);
+
+            TriggerXML[] triggers = WrapTriggers(conditionA);
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(new RuleXML[0], triggers)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(3));
+            IEnumerable<string> ids = dataAccessObjects.Select(o => o.Id);
+            Assert.That(ids, Is.Unique);
+        }
+
+        [TestCaseSource(nameof(GetTriggerObjects))]
+        public void ConvertToDataAccessObjects_TriggerElementsWithDuplicateIds_ReturnsCorrectResult(object obj)
+        {
+            // Setup
+            TriggerXML[] triggers = WrapTriggers(obj, obj);
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(new RuleXML[0], triggers)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+        }
+
+        private static IEnumerable<object> GetTriggerObjects()
+        {
+            yield return (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
+                                                                             ControlGroupName,
+                                                                             "condition").Item;
+
+            yield return ExpressionXMLBuilder.Create("expression_id", Operator.Add, "y")
+                                             .WithConstantAsFirstReference("1")
+                                             .AndConstantAsSecondReference("2");
+        }
+
         private IEnumerable<TestCaseData> ExpressionTestCases()
         {
             const string yName = "expression_name";
