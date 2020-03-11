@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             var weir = new Weir("weir1");
             NetworkHelper.AddBranchFeatureToBranch(weir, channel, 50);
 
-            var weirFeatureCoverage = FeatureCoverage.GetTimeDependentFeatureCoverage<Weir>();
+            var weirFeatureCoverage = FeatureCoverage.GetTimeDependentFeatureCoverage<Weir, double>();
             var waterLevelNetworkCoverage = new NetworkCoverage("water Level", true) { Network = network };
             
             weirFeatureCoverage.Components[0].Unit = new Unit("m AD", "m AD");
@@ -644,6 +644,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
 
             var firstTime = timeDependendCoverage.Time.Values.First();
+            timeDependendCoverage.Filters.Add(new VariableValueFilter<DateTime>(timeDependendCoverage.Time, firstTime));
             viewData.AllNetworkCoverages = new[] { timeDependendCoverage };
             viewData.AddRenderedCoverage(timeDependendCoverage);
 
