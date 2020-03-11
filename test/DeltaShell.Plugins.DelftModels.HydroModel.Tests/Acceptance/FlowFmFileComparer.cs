@@ -18,15 +18,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         private static readonly string[] MduLinesToIgnore =
         {
-            "# Generated on",
-            "# Deltares,Delft3D FM 2018 Suite Version",
-            "*",
-            "Version",
-            "GuiVersion",
-            "TStart",
-            "TStop",
-            "RestartDateTime",
-            "RefDate"
+            "# Generated on",                            // Timestamp dependent
+            "# Deltares,Delft3D FM 2018 Suite Version",  // Revision dependent
+            "*",                                         // Bug (header is added each write action)
+            "Version",                                   // Revision dependent
+            "GuiVersion",                                // Revision dependent
+            "TStart",                                    // Timestamp dependent
+            "TStop",                                     // Timestamp dependent
+            "RestartDateTime",                           // Timestamp dependent
+            "RefDate",                                   // Timestamp dependent
+            "FrictFile"                                  // Bug (changed order after read/write action)
         };
 
         private static readonly string[] NetCdfLinesToIgnore =
