@@ -128,19 +128,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             ParseFile(filePathExpected, linesToIgnore, out var relevantLinesInExpectedText, out var ignoredLinesInExpectedText);
             ParseFile(filePathActual, linesToIgnore, out var relevantLinesInActualText, out var ignoredLinesInActualText);
 
-            for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
+            GetMismatchingLines(relevantLinesInExpectedText, relevantLinesInActualText, out var mismatchingLinesInExpected, out var mismatchingLinesInActual);
+
+            if (mismatchingLinesInExpected.Any())
             {
-                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
-                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
-
-                if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
+                if (AreDifferentButEquivalent(mismatchingLinesInExpected, mismatchingLinesInActual))
                 {
-                    errorMessage = $"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':" +
-                                   $"{Environment.NewLine}" +
-                                   $"{CreateErrorMessage(expectedLine, actualLine, ignoredLinesInExpectedText, ignoredLinesInActualText)}";
-
-                    return false;
+                    return true;
                 }
+                
+                errorMessage = $"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':" +
+                               $"{Environment.NewLine}" +
+                               $"{CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First(), ignoredLinesInExpectedText, ignoredLinesInActualText)}";
+
+                return false;
             }
 
             return true;
@@ -171,6 +172,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                     relevantLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
                 }
             }
+        }
+
+        private static void GetMismatchingLines(
+            IReadOnlyCollection<Tuple<int, string>> relevantLinesInExpectedText,
+            IReadOnlyCollection<Tuple<int, string>> relevantLinesInActualText,
+            out List<Tuple<int, string>> mismatchingLinesInExpected,
+            out List<Tuple<int, string>> mismatchingLinesInActual)
+        {
+            mismatchingLinesInExpected = new List<Tuple<int, string>>();
+            mismatchingLinesInActual = new List<Tuple<int, string>>();
+
+            for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
+            {
+                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
+                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? new Tuple<int, string>(-1, "<end of file>");
+
+                if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
+                {
+                    mismatchingLinesInExpected.Add(expectedLine);
+                    mismatchingLinesInActual.Add(actualLine);
+                }
+            }
+        }
+
+        private static bool AreDifferentButEquivalent(
+            IEnumerable<Tuple<int, string>> mismatchingLinesInExpected,
+            IEnumerable<Tuple<int, string>> mismatchingLinesInActual)
+        {
+            var mismatchingTextInExpected = mismatchingLinesInExpected.Select(l => l.Item2).ToArray();
+            var mismatchingTextInActual = mismatchingLinesInActual.Select(l => l.Item2).ToArray();
+
+            return mismatchingTextInExpected.Intersect(mismatchingTextInActual).Count() == mismatchingTextInExpected.Length;
         }
 
         private static string CreateErrorMessage(
