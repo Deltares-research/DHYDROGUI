@@ -299,3 +299,4 @@ output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE
 output,Writebalancefile,output,Others,Write water balance file,0|1,0,0,1,FALSE,,,,,,"Write balance file (1: yes, 0: no)",
 output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval,
 output,Richardsononoutput,output,Others,Write Richardson numbers?,0|1,1,,,FALSE,,,,,,"Write Richardson numbers (1: yes, 0: no)",
+output,Wrimap_wet_waterdepth_threshold,output,Others,Write map wet waterdepth threshold?,Double,0.01,,,FALSE,,,,,,"Waterdepth threshold above which a grid point counts as wet. Used for Wrimap_time_water_on_ground.",
