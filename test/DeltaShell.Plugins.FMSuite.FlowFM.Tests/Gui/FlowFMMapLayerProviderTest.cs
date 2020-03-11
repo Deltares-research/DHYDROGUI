@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Structures;
@@ -9,8 +12,14 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Utils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -26,6 +35,12 @@ using SharpMap;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
+using NetTopologySuite.Extensions.Coverages;
+using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -82,50 +97,161 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             ShowModelLayers(model);
         }
 
-/*        [Test]
-        public void CheckLayerIsSetCorrectlyWhenOpeningFMItems()
+        [Test]
+        public void OpenHisFileCheckFunctions()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
-            mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
-
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
+            var branch = network.Branches[0];
+            var pump = new Pump("PMP1", true) { Chainage = branch.Length / 4 };
+            var pump2 = new Pump("PMP2", true) {Chainage = branch.Length / 4 * 3};
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(pump, branch);
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(pump2, branch);
+            var area = new HydroArea();
+            var store = new FMHisFileFunctionStore(network, area)
+                {Path = TestHelper.GetTestFilePath("output_hisfiles\\pump_his.nc")};
+            
             using (var gui = new DeltaShellGui())
             {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
+                var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
+                TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store);
                 var app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Application.UserSettings["ShowStartUpScreen"] = false;
                 gui.Run();
 
                 Action mainWindowShown = delegate
                 {
                     var project = app.Project;
-                    project.RootFolder.Add(model);
+                    project.RootFolder.Add(fmModel);
+                    gui.CommandHandler.OpenView(fmModel);
+                    var mapView = gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
+                    mapView.MapControl.SelectTool.Select(pump);
 
-                    var modelNodePresenter = new WaterFlowFMModelNodePresenter(fmGuiPlugin);
-                    var fmTreeShortcut = modelNodePresenter.GetChildNodeObjects(model, null)
-                                          .OfType<FlowFMTreeShortcut>()
-                                          .First(s => s.Text == "General");
+                    //mapView.MapControl.GetToolByType<QueryTimeSeriesMapTool>().Execute();
 
-                    gui.CommandHandler.OpenView(fmTreeShortcut);
+                    var timeSeriesList = new List<IFunction>();
+                    var coverages = GetTimeDependentCoverages(new[] {pump});
+                    foreach (var coverage in coverages)
+                    {
+                        var dictionary = mapView.MapControl.SelectedFeatures.ToDictionary(GetLocationName, sf => coverage.GetTimeSeries(sf));
+                        foreach (var kvp in dictionary)
+                        {
+                            var timeSeries = kvp.Value;
+                            if (timeSeries == null)
+                            {
+                                continue;
+                            }
+                            if (coverage != null)
+                            {
+                                timeSeries.Components[0].Name = string.Format("{0}: {1}, {2}", kvp.Key, timeSeries.Components[0].Name, coverage);
+                            }
 
-                    var activeView = (ProjectItemMapView)gui.DocumentViews.ActiveView;
-                    var activeTab = activeView.MapView.TabControl.ActiveView;
-
-                    Assert.IsInstanceOf<WaterFlowFMModelView>(activeTab);
-                    Assert.IsNotNull(((ILayerEditorView) activeTab).Layer);
+                            timeSeries.IsEditable = false;
+                            timeSeriesList.Add(timeSeries);
+                        }
+                    }
+                    if (timeSeriesList.Count > 0)
+                    {
+                        SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(timeSeriesList);
+                    }
+                    //SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(coverages);
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
-        }*/
+        }
+        private static string GetLocationName(IFeature feature)
+        {
+            var networkLocation = feature as INetworkLocation;
+            if (networkLocation != null) // Grid point
+            {
+                return String.Format("{0}_{1}", networkLocation.Branch, networkLocation.Chainage);
+            }
 
+            var nameable = feature as INameable;
+            if (nameable != null && nameable.Name != null)
+            {
+                return nameable.Name;
+            }
+
+            return feature.ToString();
+        }
+
+        private static IEnumerable<ICoverage> GetTimeDependentCoverages(IEnumerable<IFeature> selectedFeatures)
+        {
+            var app = SharpMapGisGuiPlugin.Instance.Gui.Application;
+            var networks = selectedFeatures.OfType<INetworkFeature>().Select(nf => nf.Network).Distinct();
+
+            return app.Project.GetAllItemsRecursive()
+                .OfType<ICoverage>()
+                .Where(c => IsValidCoverage(c, networks, selectedFeatures));
+        }
+        private static bool IsValidCoverage(ICoverage coverage, IEnumerable<INetwork> networks, IEnumerable<IFeature> selectedFeatures)
+        {
+            if (!coverage.IsTimeDependent)
+            {
+                return false;
+            }
+
+            var networkCoverage = coverage as INetworkCoverage;
+            if (networkCoverage != null)
+            {
+                return networks.Contains(networkCoverage.Network);
+            }
+
+            var featureCoverage = coverage as IFeatureCoverage;
+            if (featureCoverage != null)
+            {
+                return selectedFeatures.All(feature =>
+                {
+                    try
+                    {
+                        var features = featureCoverage.FeatureVariable.Values.OfType<IFeature>();
+                        return features.Contains(feature);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        return false;
+                    }
+                });
+            }
+
+            var cellCoverage = coverage as UnstructuredGridCellCoverage;
+            if (cellCoverage != null)
+            {
+                var grids = selectedFeatures.OfType<UnstructuredGridFeature>().Where(f => f.Type == UnstructuredGridFeatureType.Cell).Select(c => c.UnstructuredGrid).Distinct();
+                return grids.Contains(cellCoverage.Grid);
+            }
+
+            var vertexCoverage = coverage as UnstructuredGridVertexCoverage;
+            if (vertexCoverage != null)
+            {
+                var grids = selectedFeatures.OfType<UnstructuredGridFeature>().Where(f => f.Type == UnstructuredGridFeatureType.Vertex).Select(c => c.UnstructuredGrid).Distinct();
+                return grids.Contains(vertexCoverage.Grid);
+            }
+
+            var flowLinkCoverage = coverage as UnstructuredGridFlowLinkCoverage;
+            if (flowLinkCoverage != null)
+            {
+                var grids = selectedFeatures.OfType<UnstructuredGridFeature>().Where(f => f.Type == UnstructuredGridFeatureType.Edge).Select(c => c.UnstructuredGrid).Distinct();
+                return grids.Contains(flowLinkCoverage.Grid);
+            }
+
+            var regularGridCoverage = coverage as IRegularGridCoverage;
+            if (regularGridCoverage != null)
+            {
+                return selectedFeatures.OfType<IRegularGridCoverageCell>().All(c => Equals(c.RegularGridCoverage, regularGridCoverage));
+            }
+
+            return false;
+        }
         [Test]
         public void CheckFMEnclosureLayerIsCreated()
         {

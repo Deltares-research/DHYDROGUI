@@ -56,9 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             else
             {
-                ///empty?
-                modelDefinition.SetModelProperty(KnownProperties.ObsFile, string.Empty);
-                modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.Empty);
+                ///empty? dont set to empty string!! because you suck and i have to debug everything again. obspoints can also be in 2d!!
+                //modelDefinition.SetModelProperty(KnownProperties.ObsFile, string.Empty);
+                //modelDefinition.SetModelProperty(KnownProperties.ObsCrsFile, string.Empty);
             }
         }
 

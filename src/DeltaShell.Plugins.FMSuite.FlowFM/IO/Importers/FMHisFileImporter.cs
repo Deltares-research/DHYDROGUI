@@ -52,7 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            return new FMHisFileFunctionStore(path);
+            var currentHisFileFunctionStore = target as FMHisFileFunctionStore;
+            if (currentHisFileFunctionStore == null)
+                return null;
+            return new FMHisFileFunctionStore(currentHisFileFunctionStore.Network, currentHisFileFunctionStore.Area){Path = path, CoordinateSystem = currentHisFileFunctionStore.CoordinateSystem};
         }
     }
 }

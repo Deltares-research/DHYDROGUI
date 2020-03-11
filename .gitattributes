@@ -1853,7 +1853,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/Api/UnstrucGridOperationApi.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Api/WriteNetGeomApi.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/ClassDiagram1.cd -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/CoverageDefinition/CoverageDepthLayersList.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/Coverages/FileBasedFeatureCoverage.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Coverages/UnstructuredGridCoverageExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/DeltaShell.Plugins.FMSuite.FlowFM.csproj -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/EmbankmentGenerator.cs -text
@@ -1906,6 +1905,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ExtForceFileItem.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ExtForceQuantNames.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FM1DFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMHisFileFunctionStore.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMHisFileFunctionStoreHelper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMMapFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMMapFileFunctionStore.hbm.xml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FeatureFile1D2DReader.cs -text
@@ -10269,6 +10269,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/generalSt
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/har_1d2d_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/har_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/leveeBreach_his.nc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/pump_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/sfbay_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/FlowFM_map.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_mapfiles/bendprof_map.nc -text

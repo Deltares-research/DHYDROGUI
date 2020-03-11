@@ -20,7 +20,6 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
-using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
@@ -43,6 +42,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            var coverage = data as FileBasedFeatureCoverage;
+            var coverage = data as FeatureCoverage;
             if (coverage != null && IsCoverageLeveeBreachWidth(coverage))
             {
                 // Create feature coverage layer
@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             return data is WaterFlowFMModel
                 // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
-                   || data is FileBasedFeatureCoverage && IsCoverageLeveeBreachWidth((FileBasedFeatureCoverage)data)
+                   || data is FeatureCoverage && IsCoverageLeveeBreachWidth((FeatureCoverage)data)
                    || data is Links1D2DCoverage
                    || data is IEventedList<ILink1D2D> && (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
                    || data is IGrouping<string, IFunction>

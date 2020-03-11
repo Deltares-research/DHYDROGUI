@@ -155,6 +155,7 @@
     <Compile Include="IO\FeatureFile1D2DReader.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\FM1DFileFunctionStore.cs" />
+    <Compile Include="IO\FMHisFileFunctionStoreHelper.cs" />
     <Compile Include="IO\FmMapFile1DOutputFileReader.cs" />
     <Compile Include="IO\Importers\BcFile1DImporter.cs" />
     <Compile Include="IO\Importers\RasterFile.cs" />
@@ -173,7 +174,6 @@
     <Compile Include="EmbankmentGenerator.cs" />
     <Compile Include="EmbankmentMerger.cs" />
     <Compile Include="CoverageDefinition\CoverageDepthLayersList.cs" />
-    <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageExtensions.cs" />
     <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverter.cs" />
     <Compile Include="FeatureData\IModelFeatureCoordinateData.cs" />

@@ -47,6 +47,7 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using Mono.Addins;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -164,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AdditionalDataCheck = o => FlowModels.Any(m => m.BridgePillarsDataModel.Any(d => ReferenceEquals(d.Feature, o)))
             };
 
-            yield return new ViewInfo<FileBasedFeatureCoverage, CoverageView>
+            yield return new ViewInfo<FeatureCoverage, CoverageView>
             {
                 Description = "Map (Separate view)",
                 Image = Properties.Resources.Map,
