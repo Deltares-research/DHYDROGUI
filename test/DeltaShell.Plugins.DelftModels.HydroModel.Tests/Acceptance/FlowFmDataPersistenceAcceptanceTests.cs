@@ -80,13 +80,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         private void ImportFlowFmModelAndAssertPreconditions(
-            string testDataDirectory, 
+            string acceptanceModelName, 
             HydroModel hydroModel,
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
             var importer = new WaterFlowFMFileImporter();
-            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, testDataDirectory, "FlowFM.mdu");
+            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "FlowFM.mdu");
            
             var errorMessages = TestHelper.GetAllRenderedMessages(() => importer.ImportItem(pathToMduFile, hydroModel), Level.Error);
 

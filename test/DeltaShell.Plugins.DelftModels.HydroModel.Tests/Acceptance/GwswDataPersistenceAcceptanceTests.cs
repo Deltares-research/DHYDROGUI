@@ -85,12 +85,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         private void ImportGwswModelAndAssertPreconditions(
-            string testDataDirectory, 
+            string acceptanceModelName, 
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory);
+            var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
 
             var fileImporter = new GwswFileImporter(new DefinitionsProvider())
             {

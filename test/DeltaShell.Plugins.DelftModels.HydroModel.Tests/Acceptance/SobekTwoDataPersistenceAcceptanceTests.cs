@@ -85,13 +85,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         private void ImportSobekTwoModelAndAssertPreconditions(
-            string testDataDirectory,
+            string acceptanceModelName,
             string caseFolder,
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var caseDirectory = Path.Combine(acceptanceModelsDirectory, testDataDirectory, caseFolder);
+            var zipFilePath = Path.Combine(acceptanceModelsDirectory, acceptanceModelName + ".zip");
+            var extractedModelDirectory = Path.Combine(tempDirectory, "Extracted model");
+
+            ZipFileUtils.Extract(zipFilePath, extractedModelDirectory);
+
+            var caseDirectory = Path.Combine(extractedModelDirectory, caseFolder);
             var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
             
             var sobekHydroModelImporter = new SobekHydroModelImporter(true)
