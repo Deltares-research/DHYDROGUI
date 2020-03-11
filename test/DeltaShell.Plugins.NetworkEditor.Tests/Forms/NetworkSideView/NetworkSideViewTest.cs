@@ -373,7 +373,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             NetworkHelper.AddBranchFeatureToBranch(weir, channel, 50);
 
             var weirFeatureCoverage = FeatureCoverage.GetTimeDependentFeatureCoverage<Weir, double>();
-            var waterLevelNetworkCoverage = new NetworkCoverage("water Level", true) { Network = network };
+            var waterLevelNetworkCoverage = new NetworkCoverage(NetworkSideViewDataController.WaterLevelCoverageNameInMapFile, true) { Network = network };
             
             weirFeatureCoverage.Components[0].Unit = new Unit("m AD", "m AD");
             waterLevelNetworkCoverage.Components[0].Unit = new Unit("m AD", "m AD");

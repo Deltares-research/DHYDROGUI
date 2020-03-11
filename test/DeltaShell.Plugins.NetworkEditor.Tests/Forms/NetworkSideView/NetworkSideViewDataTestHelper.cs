@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             waterLevel[new NetworkLocation(network.Branches[1], 50.0)] = 11.0;
             waterLevel.Arguments[0].Name = "x";
             waterLevel.Components[0].Name = "y";
-            waterLevel.Name = "Water level";
+            waterLevel.Name = NetworkSideViewDataController.WaterLevelCoverageNameInMapFile;
 
             return new NetworkSideViewDataController(route, new NetworkSideViewCoverageManager(route, null, new[] { waterLevel }));
         }

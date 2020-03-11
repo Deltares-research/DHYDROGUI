@@ -23,6 +23,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     public class NetworkSideViewDataController : IDisposable, INotifyPropertyChanged
     {
+        public const string WaterLevelCoverageNameInMapFile = "water level (mesh1d_s1)";
+
         public delegate string ModelNameForCoverageDelegate(ICoverage coverage);
         private readonly ModelNameForCoverageDelegate modelNameForCoverageDelegate;
 
@@ -135,7 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     return;
 
                 //special case:
-                if (coverage.Name.ToLower().Equals("water level (mesh1d_s1)") && coverage.IsTimeDependent) 
+                if (coverage.Name.ToLower().Equals(WaterLevelCoverageNameInMapFile) && coverage.IsTimeDependent) 
                 {
                     WaterLevelNetworkCoverage = FilterWithTime((INetworkCoverage)coverage, null);
                 }

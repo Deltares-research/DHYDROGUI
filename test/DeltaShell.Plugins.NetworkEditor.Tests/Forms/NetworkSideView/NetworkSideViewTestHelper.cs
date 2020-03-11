@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             var waterLevel = new NetworkCoverage {Network = network};
             waterLevel.Arguments[0].Name = "x";
             waterLevel.Components[0].Name = "y";
-            waterLevel.Name = "Water level";
+            waterLevel.Name = NetworkSideViewDataController.WaterLevelCoverageNameInMapFile;
 
             var route = new Route { Network = network, SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations };
 
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             waterLevel[new DateTime(2000, 1, 1), new NetworkLocation(hydroNetwork.Branches[1], 50.0)] = 11.0;
             waterLevel.Arguments[1].Name = "x";
             waterLevel.Components[0].Name = "y";
-            waterLevel.Name = "Water level";
+            waterLevel.Name = NetworkSideViewDataController.WaterLevelCoverageNameInMapFile;
             
             return CreateDefaultViewData(hydroNetwork, waterLevel);
         }
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             waterLevel.Arguments[0].Name = "t";
             waterLevel.Arguments[1].Name = "x";
             waterLevel.Components[0].Name = "y";
-            waterLevel.Name = "Water level";
+            waterLevel.Name = NetworkSideViewDataController.WaterLevelCoverageNameInMapFile;
 
             return waterLevel;
         }
