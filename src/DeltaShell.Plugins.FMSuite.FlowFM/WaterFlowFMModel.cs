@@ -1440,6 +1440,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return boundary;
             }
+            foreach (var model1DBoundaryNodeData in BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>())
+            {
+                yield return model1DBoundaryNodeData;
+            }
+            foreach (var model1DLateralSourceData in LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>())
+            {
+                yield return model1DLateralSourceData;
+            }
             foreach (var pipe in Pipes)
             {
                 yield return pipe;
