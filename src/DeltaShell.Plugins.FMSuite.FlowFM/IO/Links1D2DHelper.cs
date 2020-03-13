@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -30,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (networkDiscretization == null || !networkDiscretization.Locations.Values.Any() || grid == null || !grid.Cells.Any()) return;
 
             var handledLinks = new List<ILink1D2D>();
-            var link1D2Ds = listOfLinks as IList<ILink1D2D> ?? listOfLinks.ToList();
+            var link1D2Ds = listOfLinks.ToList();
             foreach (var link in link1D2Ds)
             {
                 var line = link.Geometry as ILineString;
@@ -62,8 +64,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
                 }
-                
-                locationIndex = networkDiscretization.Locations.Values.IndexOf(locations[0]);
+
+
+
+                locationIndex = locations.Length > 0 && networkDiscretization.Locations.Values.Contains(locations[0]) &&
+                                //no links at end points of our network, then use missing_index so link will be deleted...tjiske and arthur van dam knows more about this
+                                !LocationIsOnEndPointOfNetwork(networkDiscretization, locations[0])
+                                    ? networkDiscretization.Locations.Values.IndexOf(locations[0]) : MISSING_INDEX;
             }
             else
             {
@@ -81,6 +88,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             return locationIndex;
+        }
+
+        private static bool LocationIsOnEndPointOfNetwork(IDiscretization networkDiscretization, INetworkLocation location)
+        {
+            var network = networkDiscretization.Network;
+            if (network == null) return true;
+            var branch = NetworkHelper.GetNearestBranch(network.Branches, location.Geometry, 0.0001);
+            // if calculation point is on start or end of the branch and source or target node is connected to another branch then this location is not on an end point of a network
+            if (Math.Abs(location.Chainage) < 0.001 && branch.Source.IsConnectedToMultipleBranches ||
+                Math.Abs(branch.Length - location.Chainage) < 0.001 && branch.Target.IsConnectedToMultipleBranches)
+                return false;
+            // if calculation point is on middle of the branch then never on end of network
+            if (Math.Abs(location.Chainage) > 0.001 && 
+                Math.Abs(branch.Length - location.Chainage) > 0.001) 
+                return false;
+            return true;
         }
 
         public static int FindCalculationPointIndex(IPoint startPointLink, IDiscretization networkDiscretization, double tolerance = 0.0, IList<bool> locationsMask = null)

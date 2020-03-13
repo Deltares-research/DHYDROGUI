@@ -5,6 +5,8 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Extensions.Coverages;
@@ -179,6 +181,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     SectionType = crossSectionSectionType
                 });
             }
+        }
+
+        public static void ConfigureDemoPipeNetwork(IHydroNetwork network)
+        {
+            // add nodes and branches
+            INode node1 = new HydroNode { Name = "Node1", Network = network };
+            INode node2 = new HydroNode { Name = "Node2", Network = network };
+            INode node3 = new HydroNode { Name = "Node3", Network = network };
+            INode node4 = new HydroNode { Name = "Node4", Network = network };
+
+            // create pipe network
+            node1.Geometry = new Point(1, 0.5);
+            node2.Geometry = new Point(3.0, 1.0);
+            node3.Geometry = new Point(1.0, 2.5);
+            node4.Geometry = new Point(2.5, 3.5);
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            network.Nodes.Add(node3);
+            network.Nodes.Add(node4);
+
+
+            var pipe1 = new Pipe
+            {
+                Name = "pipe1",
+                Source = node1,
+                Target = node2,
+                Length = 2.06
+            };
+            var pipe2 = new Pipe {Name = "pipe2", Source = node2, Target = node3, Length = 2.5};
+            var pipe3 = new Pipe {Name = "pipe3", Source = node3, Target = node4, Length = 2.24};
+
+            pipe1.Geometry = new LineString(new[]
+            {
+                new Coordinate(1, 0.5),
+                new Coordinate(3, 1)
+            });
+
+            pipe2.Geometry = new LineString(new[]
+            {
+                new Coordinate(3, 1),
+                new Coordinate(1, 2.5)
+            });
+
+            pipe3.Geometry = new LineString(new[]
+            {
+                new Coordinate(1, 2.5),
+                new Coordinate(2.5, 3.5)
+            });
+
+            SewerFactory.AddDefaultPipeToNetwork(pipe1, network);
+            SewerFactory.AddDefaultPipeToNetwork(pipe2, network);
+            SewerFactory.AddDefaultPipeToNetwork(pipe3, network);
         }
 
         public static void ConfigureDemoNetworkAtGivenCoordinates(IHydroNetwork network)

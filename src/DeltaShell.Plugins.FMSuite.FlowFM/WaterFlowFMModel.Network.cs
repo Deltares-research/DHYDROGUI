@@ -24,6 +24,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -309,6 +310,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else if (removedOrAddedItem is CrossSectionSectionType)
             {
                 UpdateRoughnessSectionsEvent(e);
+            }
+            if (removedOrAddedItem is IBranch && e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                // if discretization point is on branch which is deleted, move this point to a connecting branch
+                var discretizationPointsWhichWereOnTheDeletedBranch =
+                    NetworkDiscretization.Locations.Values.Where(l =>
+                        l.Network.Equals(Network) && l.Branch.Equals(removedOrAddedItem)).ToArray();
+                for (var i = 0; i <discretizationPointsWhichWereOnTheDeletedBranch.Length; i++)
+                {
+                    var l = discretizationPointsWhichWereOnTheDeletedBranch[i];
+                    var newBranch = NetworkHelper.GetNearestBranch(Network.Branches.Except(new[]{(IBranch)removedOrAddedItem}), l.Geometry, 0.1);//0.1 is Peelen empirical tolerance
+                    if (newBranch == null) continue;
+                    l.Branch = newBranch;
+                    l.Chainage = NetworkHelper.GetBranchFeatureChainageFromGeometry(newBranch, l.Geometry);
+                }
             }
 
             if (removedOrAddedItem is IPipe || removedOrAddedItem is IManhole)

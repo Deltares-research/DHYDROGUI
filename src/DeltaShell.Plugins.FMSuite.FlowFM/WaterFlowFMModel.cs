@@ -341,6 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshMappings()
         {
             Links1D2DHelper.SetIndexes1D2DLinks(Links, NetworkDiscretization, Grid);
+            Links.RemoveAllWhere(l => l.FaceIndex == -1 || l.DiscretisationPointIndex == -1);
         }
 
         private void LoadLinks()
