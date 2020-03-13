@@ -112,7 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         [ResourcesDescription(typeof(Resources), "Model1DLateralDataProperties_Compartment_Description")]
         public string Compartment
         {
-            get { return data.Compartment.ToString(); }
+            get
+            {
+                if (data.Compartment != null) return data.Compartment.ToString();
+                return string.Empty;
+            }
         }
 
         [DynamicVisibleValidationMethod]
