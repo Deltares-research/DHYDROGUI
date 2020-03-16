@@ -257,7 +257,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 }).ToArray();
                 TargedNodesIds = targetNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
 
-                BranchLengths = network.Branches.Select(b => b.Length).ToArray();
+                BranchLengths = network.Branches.Select(b => Math.Round(b.Length - 0.0000005, 6)).ToArray();
 
                 NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
                 NumberOfGeometryPointsPerBranch = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
