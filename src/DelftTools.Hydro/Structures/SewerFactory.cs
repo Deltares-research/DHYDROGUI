@@ -73,38 +73,13 @@ namespace DelftTools.Hydro.Structures
         private static void SetTarget(IPipe pipe, HydroNetwork hydroNetwork)
         {
             if (pipe.Target != null) return;
-            var manholeOrHydroNode = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
-            var manhole = manholeOrHydroNode;
-            if (!(manholeOrHydroNode is IManhole))
-            {
-                manhole = new Manhole(manholeOrHydroNode.Name) { Geometry = manholeOrHydroNode.Geometry};
-                ((IManhole)manhole).Compartments.Add(new Compartment(manhole.Name));
-            }
-            pipe.Target = manhole;
+            pipe.Target = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.Last());
         }
 
         private static void SetSource(IPipe pipe, HydroNetwork hydroNetwork)
         {
-            if (pipe.Source == null)
-            {
-                var manhole = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
-                /*var sourceManhole = manhole as IManhole;
-                if (sourceManhole != null)
-                {
-                    var sourceManholeOutletCompartments = sourceManhole.Compartments.OfType<OutletCompartment>().ToList();
-                    var compartments = new List<Compartment>();
-                    foreach (var sourceManholeOutletCompartment in sourceManholeOutletCompartments)
-                    {
-                        compartments.Add((Compartment) sourceManholeOutletCompartment.Clone());
-                        sourceManhole.Compartments.Remove(sourceManholeOutletCompartment);
-                        sourceManhole.Compartments.Add();
-
-                    }
-                    
-                }*/
-
-                pipe.Source = manhole;
-            }
+            if (pipe.Source != null) return;
+            pipe.Source = GetExistingOrNewManholeFromNetwork(hydroNetwork, pipe.Geometry.Coordinates.First());
         }
 
         private static void SetPipeDefaultValues(IPipe pipe)

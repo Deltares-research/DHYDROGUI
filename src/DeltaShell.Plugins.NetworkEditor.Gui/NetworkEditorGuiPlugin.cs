@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 AdditionalDataCheck = pipe =>
                 {
-                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition.Sections.FirstOrDefault()?.SectionType;
+                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition?.Sections?.FirstOrDefault()?.SectionType;
                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 

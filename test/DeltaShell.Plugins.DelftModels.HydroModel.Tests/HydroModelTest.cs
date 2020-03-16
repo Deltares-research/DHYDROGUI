@@ -1,11 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Gui;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.NetworkEditor;
+using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews;
+using DeltaShell.Plugins.ProjectExplorer;
+using DeltaShell.Plugins.SharpMapGis;
+using DeltaShell.Plugins.SharpMapGis.Gui;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -324,6 +344,117 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.AreEqual(hydroModelWorkFlow2.Data, hydroModelWorkFlowData2);
             Assert.AreEqual(hydroModelWorkFlow3.Data, hydroModelWorkFlowData3);
             Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void CreateNewModelWithRuralAndUrbanNetworkConnectedCheckAfterSaveLoadTheyAreStillConnectedAndYouCanOpenPipeViewInTheGui()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Plugins.Add(new HydroModelGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+
+                gui.Run();
+                Action mainWindowShown = delegate
+                {
+                    const string path = "mdu.dsproj";
+                    app.SaveProjectAs(path); // save to initialize file repository..
+                    var builder = new HydroModelBuilder();
+                    var integratedModel = builder.BuildModel(ModelGroup.Empty);
+                    app.Project.RootFolder.Add(integratedModel);
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        model.MoveModelIntoIntegratedModel(app.Project.RootFolder, integratedModel);
+                        HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,
+                            new[] {new Point(0, 0), new Point(1, 1), new Point(2, 4)});
+                        var targetHydroNode1 = model.Network.Nodes[1];
+                        var targetHydroNode2 = model.Network.Nodes[2];
+
+                        var compartment1 = new Compartment("Compartment 1")
+                            {SurfaceLevel = 1, BottomLevel = -3, ManholeWidth = 2.5};
+                        var compartment2 = new Compartment("Compartment 2")
+                            {SurfaceLevel = 1, BottomLevel = -3, ManholeWidth = 2.5};
+                        var manHole1 = new Manhole("MyManhole1")
+                            {Geometry = new Point(1, 0), Compartments = new EventedList<ICompartment>() {compartment1}};
+                        model.Network.Nodes.Add(manHole1);
+
+                        var manHole2 = new Manhole("MyManhole2")
+                            {Geometry = new Point(1, 4), Compartments = new EventedList<ICompartment>() {compartment2}};
+                        model.Network.Nodes.Add(manHole2);
+
+                        var pipe1 = new Pipe
+                        {
+                            Name = "MyPipe1",
+                            Geometry = new LineString(new[] {new Coordinate(1, 0), new Coordinate(1, 1),}),
+                            Source = manHole1,
+                            SourceCompartment = compartment1,
+                            Target = targetHydroNode1
+                        };
+
+                        SewerFactory.AddDefaultPipeToNetwork(pipe1, model.Network);
+                        
+                        var pipe2 = new Pipe
+                        {
+                            Name = "MyPipe2",
+                            Geometry = new LineString(new[] {new Coordinate(1, 4), new Coordinate(2, 4),}),
+                            Source = manHole2,
+                            SourceCompartment = compartment2,
+                            Target = targetHydroNode2,
+                        };
+                        SewerFactory.AddDefaultPipeToNetwork(pipe2, model.Network);
+                        
+                        Assert.That(targetHydroNode1.IncomingBranches, Has.Member(pipe1));
+                        Assert.That(targetHydroNode2.IncomingBranches, Has.Member(pipe2));
+                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+
+                        //Opening view does not crash now. (JIRA: FM1D2D-720)
+                        Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe1), "Could not open PipeView for pipe1");
+                        Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe2), "Could not open PipeView for pipe2");
+                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(2));
+                        app.SaveProject();
+                        app.CloseProject();
+                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+                    }
+                    
+                    app.OpenProject(path);
+
+                    var retrievedModel = app.Project.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>()
+                        .FirstOrDefault();
+                    Assert.That(retrievedModel, Is.Not.Null);
+                    var retrievedTargetHydroNodeOfPipe1 = retrievedModel.Network.Nodes.ElementAtOrDefault(1);
+                    Assert.That(retrievedTargetHydroNodeOfPipe1, Is.Not.Null);
+                    var retrievedPipe1 = retrievedModel.Network.Pipes.FirstOrDefault();
+                    Assert.That(retrievedPipe1, Is.Not.Null);
+                    Assert.That(retrievedTargetHydroNodeOfPipe1.IncomingBranches, Has.Member(retrievedPipe1));
+                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+
+                    //Opening view crashes now. (JIRA: FM1D2D-720)
+                    Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(retrievedPipe1), "Could not open PipeView for pipe1 after save load");
+                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(1));
+                    var retrievedTargetHydroNodeOfPipe2 = retrievedModel.Network.Nodes.ElementAtOrDefault(2);
+                    Assert.That(retrievedTargetHydroNodeOfPipe2, Is.Not.Null);
+                    var retrievedPipe2 = retrievedModel.Network.Pipes.LastOrDefault();
+                    Assert.That(retrievedPipe2, Is.Not.Null);
+                    Assert.That(retrievedTargetHydroNodeOfPipe2.IncomingBranches, Has.Member(retrievedPipe2));
+                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(1));
+                    Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(retrievedPipe2), "Could not open PipeView for pipe2 after save load");
+                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(2));
+                };
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
         }
 
         public class SimpleHydroModel : ModelBase, IHydroModel

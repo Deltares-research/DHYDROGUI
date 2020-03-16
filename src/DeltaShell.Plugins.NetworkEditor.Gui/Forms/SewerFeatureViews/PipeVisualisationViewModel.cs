@@ -95,8 +95,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
             var sourceBottomLevel = Pipe.SourceCompartment.BottomLevel;
             var sourceSurfaceLevel = Pipe.SourceCompartment.SurfaceLevel;
-            var targetBottomLevel = Pipe.TargetCompartment.BottomLevel;
-            var targetSurfaceLevel = Pipe.TargetCompartment.SurfaceLevel;
+            var targetBottomLevel = Pipe.TargetCompartment?.BottomLevel ?? 0d;
+            var targetSurfaceLevel = Pipe.TargetCompartment?.SurfaceLevel ?? 0d;
 
             widthMargin = 0.03 * (targetRight - sourceLeft);
             minX = sourceLeft - widthMargin;
@@ -190,5 +190,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public Func<double> GetActualHeight { get; set; }
 
         public Func<Canvas> DrawingCanvas { get; set; }
+
+        public double TargetCompartmentBottomLevel
+        {
+            get { return Pipe?.TargetCompartment?.BottomLevel ?? 0d; }
+        }
+
+        public double TargetCompartmentSurfaceLevel
+        {
+            get { return Pipe?.TargetCompartment?.BottomLevel ?? 0d; }
+        }
     }
 }
