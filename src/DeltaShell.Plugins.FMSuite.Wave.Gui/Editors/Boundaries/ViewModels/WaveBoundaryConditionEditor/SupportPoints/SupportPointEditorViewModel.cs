@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;

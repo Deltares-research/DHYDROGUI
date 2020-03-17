@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.CoordinateSystems;
