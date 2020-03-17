@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.Feature;
@@ -24,6 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         /// <param name="waveBoundary">The wave boundary.</param>
         /// <param name="geometryFactory">The geometry factory.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
         public GeometryPreviewViewModel(IWaveBoundary waveBoundary,
                                         IWaveBoundaryGeometryFactory geometryFactory)
         {

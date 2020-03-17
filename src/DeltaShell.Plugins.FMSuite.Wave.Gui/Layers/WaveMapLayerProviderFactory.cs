@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 

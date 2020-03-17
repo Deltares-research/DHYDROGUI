@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using SharpMap.Api.Layers;
 

@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
-    <Compile Include="Ensure.cs" />
     <Compile Include="Eventing\PropertyChangedExtendedEventArgs.cs" />
     <Compile Include="EnvironmentConstants.cs" />
     <Compile Include="SystemEnvironment.cs" />

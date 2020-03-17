@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Guards;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.NGHS.Common.Gui.Layers
@@ -36,7 +38,8 @@ namespace DeltaShell.NGHS.Common.Gui.Layers
         /// <param name="layerSubProviders"> The layer sub providers to be registered. </param>
         public void RegisterSubProviders(IList<ILayerSubProvider> layerSubProviders)
         {
-            Ensure.DoesNotContainNullObjects(layerSubProviders, nameof(layerSubProviders));
+            Ensure.NotNull(layerSubProviders, nameof(layerSubProviders));
+            layerSubProviders.ForEach(e => Ensure.NotNull(e, nameof(layerSubProviders)));
             subProviders.AddRange(layerSubProviders);
         }
     }

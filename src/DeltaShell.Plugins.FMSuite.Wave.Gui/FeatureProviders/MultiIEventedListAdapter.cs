@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
 {

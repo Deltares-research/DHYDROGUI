@@ -1,4 +1,4 @@
-﻿using DeltaShell.NGHS.Common;
+﻿using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
 {

@@ -104,7 +104,6 @@
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />
-    <Compile Include="EnsureTest.cs" />
     <Compile Include="Gui\DeltaresColorTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
     <Compile Include="Layers\MapLayerProviderTest.cs" />

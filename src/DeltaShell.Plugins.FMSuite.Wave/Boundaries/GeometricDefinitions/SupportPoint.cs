@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {

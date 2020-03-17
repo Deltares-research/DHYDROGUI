@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using DeltaShell.NGHS.Common;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
@@ -20,9 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Initializes a new instance of the <see cref="SupportPointViewModel" /> class.
         /// </summary>
         /// <param name="supportPoint"> The support point. </param>
+        /// <param name="dataComponentViewModel"> The data component model. </param>
         /// <param name="isEditable"> Whether the view model should be editable.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="supportPoint" /> is <c> null </c>.
+        /// Thrown when <paramref name="supportPoint" /> or <paramref name="dataComponentViewModel"/> is <c>null</c>.
         /// </exception>
         public SupportPointViewModel(SupportPoint supportPoint, 
                                      SupportPointDataComponentViewModel dataComponentViewModel,
