@@ -55,7 +55,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 {
                     Name = locationPropertyValue.name,
                     LongName = locationPropertyValue.longName,
-                    Chainage = locationPropertyValue.chainage,
+                    Chainage = locationPropertyValue.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(locationPropertyValue.chainage),
                 };
                 observationPoint.Geometry = HydroNetworkHelper.GetStructureGeometry(locationPropertyValue.branch, observationPoint.Chainage);
                 locationPropertyValue.branch.BranchFeatures.Add(observationPoint);                
@@ -98,7 +98,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                     Branch = locationPropertyValue.branch,
                     Name = locationPropertyValue.name,
                     LongName = locationPropertyValue.longName,
-                    Chainage = locationPropertyValue.chainage
+                    Chainage = locationPropertyValue.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(locationPropertyValue.chainage)
                 };
                 if (locationPropertyValue.diffuseLength.HasValue)
                     lateralSource.Length = locationPropertyValue.diffuseLength.Value;
@@ -118,7 +118,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                     ? category.ReadProperty<string>(LocationRegion.ObsId.Key)
                     : category.ReadProperty<string>(LocationRegion.Id.Key);
 
-            locationPropertyValues.chainage = category.ReadProperty<double>(LocationRegion.Chainage.Key);
             
             var branchName = category.ReadProperty<string>(LocationRegion.BranchId.Key);
             locationPropertyValues.branch = network.Channels.FirstOrDefault(c => c.Name == branchName);
@@ -128,6 +127,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 throw new FileReadingException(errorMessage);
             }
 
+            locationPropertyValues.chainage = locationPropertyValues.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(LocationRegion.Chainage.Key));
+            
             // Optional Properties (an error will not be generated if these fail) 
             locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;
             locationPropertyValues.diffuseLength = category.ReadProperty<double?>(LateralSourceLocationRegion.Length.Key, true); 

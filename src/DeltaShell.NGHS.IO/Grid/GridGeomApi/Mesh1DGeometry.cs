@@ -46,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 branchIds[i] = branchesIndexLookup[point.Branch];
                 meshXCoords[i] = point.Geometry.Coordinate.X;
                 meshYCoords[i] = point.Geometry.Coordinate.Y;
-                branchOffset[i] = point.Chainage;
+                branchOffset[i] = point.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(point.Chainage); 
             }
         }
 

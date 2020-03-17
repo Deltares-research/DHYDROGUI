@@ -67,9 +67,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
                             for (int i = 0; i < roughnessBranchData.Chainages.Length; i++)
                             {
-                                roughnessSection.RoughnessNetworkCoverage[
-                                    new NetworkLocation(branch, roughnessBranchData.Chainages[i])] = new object[]
-                                    {roughnessBranchData.Values[0][i], roughnessBranchData.RoughnessType};
+                                var offset = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessBranchData.Chainages[i]);
+                                roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, offset)] = new object[] {roughnessBranchData.Values[0][i], roughnessBranchData.RoughnessType};
                             }
                             break;
                         }
@@ -112,7 +111,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                 {
                     var level = levels[levelIndex];
                     for(int chainageIndex =0; chainageIndex < roughnessBranchData.Chainages.Length; chainageIndex++)
-                        function[roughnessBranchData.Chainages[chainageIndex], level] = roughnessBranchData.Values[levelIndex][chainageIndex];
+                    {
+                        var chainage = branchData.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessBranchData.Chainages[chainageIndex]);
+                        function[chainage, level] = roughnessBranchData.Values[levelIndex][chainageIndex];
+                    }
                 }
             
         }
@@ -137,7 +139,12 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     if(!Enum.TryParse(functionTypeString, out functionType))
                         throw new FileReadingException(string.Format("The function type {0} is unknown!", functionTypeString));
                     
-                    var chainage = branchCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key);
+                    var chainages = branchCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
+                    for (int i = 0; i < chainages.Length; i++)
+                    {
+                        chainages[i] = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainages[i]);
+                    }
+                    
                     var numLocations = branchCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
                     var values = branchCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key).ToList();
 
@@ -149,7 +156,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                                 Branch = branch,
                                 RoughnessType = branchRoughnessType,
                                 RoughnessFunctionType = functionType,
-                                Chainages = chainage.ToArray(),
+                                Chainages = chainages,
                                 Values = new double[1][] 
                             };
                             dataDefinition.Values[0] = values.ToArray();

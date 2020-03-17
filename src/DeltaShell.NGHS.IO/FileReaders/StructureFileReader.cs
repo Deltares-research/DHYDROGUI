@@ -83,16 +83,16 @@ namespace DeltaShell.NGHS.IO.FileReaders
         {
             compoundStructures.ForEach(c =>
             {
-                    var compositeBranchStructure = new CompositeBranchStructure
-                    {
-                        Branch = c.Branch,
-                        Network = c.Branch.Network,
-                        Chainage = c.Chainage,
-                    };
-                    compositeBranchStructure.Name = c.Name;
-                    compositeBranchStructure.LongName = c.LongName;
-                    compositeBranchStructure.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, c.Chainage);
-                    c.Branch.BranchFeatures.Add(compositeBranchStructure);
+                var compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Branch = c.Branch,
+                    Network = c.Branch.Network,
+                    Chainage = c.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(c.Chainage),
+                };
+                compositeBranchStructure.Name = c.Name;
+                compositeBranchStructure.LongName = c.LongName;
+                compositeBranchStructure.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, compositeBranchStructure.Chainage);
+                c.Branch.BranchFeatures.Add(compositeBranchStructure);
             });
 
         }

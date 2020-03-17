@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 GeometryType = GetGeometryType(standardCrossSectionDefinition?.ShapeType),
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW ? definition as CrossSectionDefinitionZW : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? new CrossSectionDefinitionZW(),
                 FlowDirection = (FlowDirection) category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),

@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : GetBridgeTypeFromShapeType(standardCrossSectionDefinition?.ShapeType),
                 FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
                 BottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key),

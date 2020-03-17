@@ -57,8 +57,11 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 sewerConnection.LevelTarget = auxDouble;
 
             var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);
-            if( length.TryGetValueAsDouble(out auxDouble))
+            if (length.TryGetValueAsDouble(out auxDouble))
+            {
+                sewerConnection.IsLengthCustom = true;
                 sewerConnection.Length = auxDouble;
+            }
 
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())

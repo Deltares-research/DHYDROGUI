@@ -65,7 +65,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             // grid points
             var discretizationPoints = discretization.Locations.Values.Where(l => l.Branch == branch).OrderBy(l => l.Chainage);
 
-            var gridPointOffsets = discretizationPoints.Select(gridPoint => gridPoint.Chainage).ToList();
+            var gridPointOffsets = discretizationPoints.Select(gridPoint => gridPoint.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(gridPoint.Chainage)).ToList();
             branchDefinition.AddProperty(NetworkDefinitionRegion.GridPointsCount.Key, gridPointOffsets.Count);
 
             var gridPointXCoordinates = discretizationPoints.Select(gridPoint => gridPoint.Geometry.Coordinates[0].X);

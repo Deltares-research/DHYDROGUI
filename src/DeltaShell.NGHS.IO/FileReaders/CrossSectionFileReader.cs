@@ -173,7 +173,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 {
                     Name = crossSectionName,
                     LongName = crossSectionLongName,
-                    Chainage = chainage
+                    Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainage)
                 };
                 branch.BranchFeatures.Add(crossSection);
                 return crossSection;

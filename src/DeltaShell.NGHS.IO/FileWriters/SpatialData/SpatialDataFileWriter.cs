@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.SpatialData
             if(location.Branch == null) throw new FileWritingException("NetworkLocation does not have a valid Branch property");
             var definition = new DelftIniCategory(SpatialDataRegion.DefinitionIniHeader);
             definition.AddProperty(SpatialDataRegion.BranchId.Key, location.Branch.Name, SpatialDataRegion.BranchId.Description);
-            definition.AddProperty(SpatialDataRegion.Chainage.Key, location.Chainage, SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
+            definition.AddProperty(SpatialDataRegion.Chainage.Key, location.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(location.Chainage), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
             definition.AddProperty(SpatialDataRegion.Value.Key, value, SpatialDataRegion.Value.Description, SpatialDataRegion.Value.Format);
             return definition;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
@@ -18,7 +19,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key)?.ToLower() == "positive",
                 ControlDirection = GetControlDirectionFromString(category.ReadProperty<string>(StructureRegion.Direction.Key)),
                 Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key),

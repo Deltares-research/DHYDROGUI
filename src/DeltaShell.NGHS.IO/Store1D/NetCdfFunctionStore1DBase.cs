@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -450,6 +451,7 @@ namespace DeltaShell.NGHS.IO.Store1D
                 var branchId = MetaLocationInfo.Value[location].BranchId - sobekStartIndex; 
                 var chainage = MetaLocationInfo.Value[location].Chainage;
                 var networkLocation = networkLocationTypeConverter.ConvertFromStore(new object[] { branchId, chainage });
+                networkLocation.Chainage = networkLocation.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(networkLocation.Chainage);
                 convertedList.Add(networkLocation);
             }
 
@@ -477,7 +479,14 @@ namespace DeltaShell.NGHS.IO.Store1D
             if (branchFeature is INetworkLocation)
             {
                 var branchIndex = branchFeature.Network.Branches.IndexOf(branchFeature.Branch);
-                location = metaDataLocations.Value.FirstOrDefault(l => l.BranchId - sobekStartIndex == branchIndex && Math.Abs(l.Chainage - branchFeature.Chainage) < double.Epsilon);
+                location = metaDataLocations.Value.FirstOrDefault(l =>
+                {
+                    // euuh klopt dit voor metaLocationChainage?
+                    var metaLocationChainage = branchFeature.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(l.Chainage);
+                    var branchFeatureChainage = branchFeature.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(branchFeature.Chainage);
+                    return l.BranchId - sobekStartIndex == branchIndex &&
+                               Math.Abs(metaLocationChainage - branchFeatureChainage) < double.Epsilon;
+                });
             }
             else if (branchFeature is IStructure1D)
             {

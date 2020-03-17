@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 UpdateRoughnessSectionsEvent(e);
             }
-            if (removedOrAddedItem is IBranch && e.Action == NotifyCollectionChangedAction.Remove)
+            if (removedOrAddedItem is IBranch && e.Action == NotifyCollectionChangedAction.Remove && !isLoading)
             {
                 // if discretization point is on branch which is deleted, move this point to a connecting branch
                 var discretizationPointsWhichWereOnTheDeletedBranch =

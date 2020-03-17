@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true)
             };
 
@@ -58,7 +58,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
-                Chainage = category.ReadProperty<double>(StructureRegion.Chainage.Key),
+                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true)
             };
 

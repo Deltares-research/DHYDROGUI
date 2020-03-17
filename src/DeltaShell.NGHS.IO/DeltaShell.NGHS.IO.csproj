@@ -301,6 +301,7 @@
     <Compile Include="Grid\UnmanagedMemoryRegister.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
     <Compile Include="Grid\WorkAroundNetFile.cs" />
+    <Compile Include="Helpers\BranchChainageExtensions.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
     <Compile Include="Helpers\FileWritingUtils.cs" />

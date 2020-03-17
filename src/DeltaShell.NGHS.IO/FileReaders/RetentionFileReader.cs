@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var branch = network.Branches.FirstOrDefault(b =>b.Name.Equals(branchId, StringComparison.InvariantCultureIgnoreCase));
                     if (branch == null) return;
                     retention.Branch = branch;
-                    retention.Chainage = c.ReadProperty<double>(RetentionRegion.Chainage.Key);
+                    retention.Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(c.ReadProperty<double>(RetentionRegion.Chainage.Key));
                     var retentionType = c.ReadProperty<string>(RetentionRegion.StorageType.Key);
                     RetentionType type;
                     if(Enum.TryParse(retentionType,true, out type))

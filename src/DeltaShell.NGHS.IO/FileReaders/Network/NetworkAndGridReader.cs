@@ -122,7 +122,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Network
                 discretizationForThisBranch.Add(new NetworkLocation()
                 {
                     Branch = branch,
-                    Chainage = gridPointsOffsets[i],
+                    Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(gridPointsOffsets[i]),
                     Geometry = new Point(gridPointsX[i], gridPointsY[i]),
                     Name = gridPointsNames[i]
                 });

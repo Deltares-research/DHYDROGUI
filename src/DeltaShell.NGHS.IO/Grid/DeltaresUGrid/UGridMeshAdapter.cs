@@ -8,6 +8,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -184,10 +185,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             var networkLocations = new NetworkLocation[numberOfNodes];
             for (int i = 0; i < numberOfNodes; i++)
             {
+                var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
+                var meshGeometryBranchChainage = meshGeometry.BranchOffsets[i];
                 networkLocations[i] = new NetworkLocation
                 {
-                    Branch = network.Branches[meshGeometry.BranchIDs[i]],
-                    Chainage = meshGeometry.BranchOffsets[i],
+                    Branch = networkBranch,
+                    Chainage = networkBranch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(meshGeometryBranchChainage),
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
                     Geometry = new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
@@ -237,7 +240,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.NodesX[i] = location.Geometry?.Coordinate.X ?? 0;
                 mesh.NodesY[i] = location.Geometry?.Coordinate.Y ?? 0;
                 mesh.BranchIDs[i] = branchIdLookup[location.Branch];
-                mesh.BranchOffsets[i] = location.Chainage;
+                mesh.BranchOffsets[i] = location.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(location.Chainage);
                 mesh.NodeIds[i] = location.Name;
                 mesh.NodeLongNames[i] = location.LongName;
             }

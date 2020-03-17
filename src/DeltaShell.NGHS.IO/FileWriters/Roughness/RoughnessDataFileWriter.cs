@@ -208,7 +208,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
 
                 branchProperties.AddProperty(RoughnessDataRegion.NumberOfLocations.Key, networkLocations.Count);
 
-                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, networkLocations.Select(nl => nl.Chainage), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
+                branchProperties.AddProperty(SpatialDataRegion.Chainage.Key, networkLocations.Select(nl => nl.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(nl.Chainage)), SpatialDataRegion.Chainage.Description, SpatialDataRegion.Chainage.Format);
                 branchProperties.AddProperty(RoughnessDataRegion.Values.Key, networkLocations.Select(nl => roughnessSection.RoughnessNetworkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations, nl)).FirstOrDefault()), RoughnessDataRegion.Values.Description, RoughnessDataRegion.Values.Format);
             }
             return branchProperties;
@@ -236,10 +236,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             switch (roughnessFunctionType)
             {
                 case RoughnessFunction.FunctionOfQ:
-                    retValues.AddRange(levels.Select(level => roughnessSection.FunctionOfQ(branch).Evaluate<double>(location, level)));
+                    retValues.AddRange(levels.Select(level => branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessSection.FunctionOfQ(branch).Evaluate<double>(location, level))));
                     break;
                 case RoughnessFunction.FunctionOfH:
-                    retValues.AddRange(levels.Select(level => roughnessSection.FunctionOfH(branch).Evaluate<double>(location, level)));
+                    retValues.AddRange(levels.Select(level => branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessSection.FunctionOfH(branch).Evaluate<double>(location, level))));
                     break;
             }
             return retValues;
@@ -280,6 +280,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                         new List<double>(roughnessSection.FunctionOfH(branch).Arguments[0].GetValues<double>());
                     break;
             }
+
+            if (returnLocations != null)
+            {
+                for (int i = 0; i < returnLocations.Count; i++)
+                {
+                    returnLocations[i] = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(returnLocations[i]);
+                }
+            }
+
             return returnLocations;
         }
     }
