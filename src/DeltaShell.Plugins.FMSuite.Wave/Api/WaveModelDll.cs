@@ -1,9 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Api
 {
+    [Obsolete("Running through DIMR now.")]
     public static class WaveModelDll
     {
         private const string WAVE_DLL_NAME = "wave.dll";

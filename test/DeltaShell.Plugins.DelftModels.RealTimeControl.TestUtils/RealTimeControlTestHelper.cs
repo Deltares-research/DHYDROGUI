@@ -35,10 +35,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             RelativeTimeRule rule1 = CreateRelativeTimeRule("rule1", output);
             var condition1 = new StandardCondition { Name = "condition1" };
             condition1.TrueOutputs.Add(rule1);
+            var input1 = new Input();
+            condition1.Input = input1;
 
             RelativeTimeRule rule2 = CreateRelativeTimeRule("rule2", output);
             var condition2 = new StandardCondition { Name = "condition2" };
             condition2.TrueOutputs.Add(rule2);
+            var input2 = new Input();
+            condition2.Input = input2;
 
             controlGroup.Outputs.Add(output);
             controlGroup.Rules.Add(rule1);
@@ -219,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRtcBaseObjects(left, right))
             {
-                if (CompareEqualityOfInput(left.Input, right.Input))
+                if (CompareEqualityOfInput((Input) left.Input, (Input) right.Input))
                 {
                     if (!CompareConditionOutputs(left.FalseOutputs, right.FalseOutputs))
                     {
@@ -289,7 +293,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 }
                 for (var i = 0; i < left.Inputs.Count; i++)
                 {
-                    if (!CompareEqualityOfInput(left.Inputs[i], right.Inputs[i]))
+                    if (!CompareEqualityOfInput((Input) left.Inputs[i], (Input) right.Inputs[i]))
                     {
                         return false;
                     }
@@ -764,11 +768,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             // Set timeseries; this is the series the interval rule will try to satisfy
             pidRule.TimeSeries[new DateTime(2000, 1,  1, 0, 0, 0)] = 100.0;
             pidRule.TimeSeries[new DateTime(2100, 1,  1, 0, 0, 0)] = 200.0;
-            ruleInput = pidRule.Inputs[0];
+            ruleInput = (Input) pidRule.Inputs[0];
 
             if (addCondition)
             {
-                var conditionInput = controlGroup.Conditions[0].Input;
+                var conditionInput = (Input) controlGroup.Conditions[0].Input;
                 ((StandardCondition) controlGroup.Conditions[0]).Operation = Operation.Greater;
                 conditionInput.Value = 2; // Value 
                 controlGroup.Conditions[0].Value = 0; // 2 > 0 -> condition true : rule active
@@ -781,7 +785,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             var controlGroup = new ControlGroup {Name = "Control group"};
             controlGroup.Rules.Add(rule);
-            controlGroup.Inputs.Add(rule.Inputs[0]);
+            controlGroup.Inputs.Add((Input) rule.Inputs[0]);
             controlGroup.Outputs.Add(rule.Outputs[0]);
 
             var condition = new StandardCondition {Name = "Hydro Condition"};

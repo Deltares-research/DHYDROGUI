@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
@@ -274,20 +275,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                    DelftIniCategory delftIniCategory,
                                                    ILogHandler logHandler)
         {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MorphologyFileBackwardsCompatibilityConfigurationValues());
             string categoryName = delftIniCategory.Name;
 
             foreach (DelftIniProperty delftIniProperty in delftIniCategory.Properties)
             {
                 // Backwards Compatibility
-                if (MorphologyFileBackwardsCompatibilityHelper.IsObsoletePropertyName(delftIniProperty.Name))
+                if (backwardsCompatibilityHelper.IsObsoletePropertyName(delftIniProperty.Name))
                 {
-                    logHandler?.ReportWarningFormat(Resources.MorphologyFile_ReadCategoryProperties_Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file_, delftIniProperty.Name);
+                    logHandler?.ReportWarningFormat(Common.Properties.Resources.Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file, delftIniProperty.Name);
                     continue;
                 }
 
                 delftIniProperty.Name = 
-                    MorphologyFileBackwardsCompatibilityHelper.GetUpdatedPropertyName(delftIniProperty.Name,
-                                                                                      logHandler) ??
+                    backwardsCompatibilityHelper.GetUpdatedPropertyName(delftIniProperty.Name,
+                                                                        logHandler) ??
                     delftIniProperty.Name;
 
                 WaterFlowFMProperty existingProperty =

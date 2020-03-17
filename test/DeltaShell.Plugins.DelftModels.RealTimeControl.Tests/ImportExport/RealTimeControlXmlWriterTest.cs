@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
+using NSubstitute;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 {
@@ -26,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
 
         [Test]
-        public void GetDataConfigXmlForRelativeTimeRule()
+        public void GetDataConfigXml_ForRelativeTimeRule()
         {
             var mocks = new MockRepository();
 
@@ -40,7 +42,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             mocks.ReplayAll();
 
-            var result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath, stubTimeDependentModel, new List<ControlGroup> {controlGroup}, null);
+            var result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath, 
+                                                                   stubTimeDependentModel, 
+                                                                   new List<ControlGroup> {controlGroup}, 
+                                                                   null);
 
             mocks.VerifyAll();
 
@@ -72,7 +77,67 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.AreEqual("Undefined", idAttribute.Value, "error in xml: mismatch for first attributes' value.");
         }
 
+        [Test]
+        public void GetDataConfigXml_ForPidRuleUsingMathematicalExpressionWith2ArgumentsAsInput()
+        {
+            // Arrange
+            var substituteTimeDependentModel = Substitute.For<ITimeDependentModel>();
 
+            const string expression = "A+6";
+            ControlGroup controlGroup = CreateControlGroupWithPidRuleAndMathematicalExpression(expression);
+
+            // Act
+            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath, 
+                                                                         substituteTimeDependentModel, 
+                                                                         new List<ControlGroup> { controlGroup }, null);
+            
+            // Assert
+            List<XNode> exportTimeSeriesList = RetrieveExportTimeSeries(result);
+            var exportTimeSeriesNode = exportTimeSeriesList.Last() as XElement;
+            Assert.NotNull(exportTimeSeriesNode, "error in xml: time series element not found");
+            
+            var idAttribute = exportTimeSeriesNode.FirstAttribute;
+            Assert.NotNull(idAttribute, "error in xml: attribute for time series element not found.");
+            
+            Assert.AreEqual("id", idAttribute.Name.LocalName);
+            Assert.AreEqual("f1", idAttribute.Value, "error in xml: mismatch for first attributes' value.");
+        }
+        
+        [Test]
+        public void GetDataConfigXml_ForPidRuleUsingMathematicalExpressionWith3ArgumentsAsInput()
+        {
+            // Arrange
+            var substituteTimeDependentModel = Substitute.For<ITimeDependentModel>();
+
+            const string expression = "A+6+8";
+            ControlGroup controlGroup = CreateControlGroupWithPidRuleAndMathematicalExpression(expression);
+
+            // Act
+            XDocument result = RealTimeControlXmlWriter.GetDataConfigXml(DimrApiDataSet.RtcToolsDllPath, 
+                                                                         substituteTimeDependentModel, 
+                                                                         new List<ControlGroup> {controlGroup},
+                                                                         null);
+
+            // Assert
+            List<XNode> exportTimeSeriesList = RetrieveExportTimeSeries(result);
+
+            int nrOfTimeseries = exportTimeSeriesList.Count;
+            XElement mainMathematicalExpressionYValueReference = exportTimeSeriesList[nrOfTimeseries - 2] as XElement;
+            XElement subMathematicalExpressionYValueReference = exportTimeSeriesList[nrOfTimeseries - 1] as XElement;
+            Assert.NotNull(mainMathematicalExpressionYValueReference, "error in xml: main time series element for mathematical expression not found");
+            Assert.NotNull(subMathematicalExpressionYValueReference, "error in xml: sub time series element for mathematical expression not found");
+
+            XAttribute firstAttribute = mainMathematicalExpressionYValueReference.FirstAttribute;
+            XAttribute secondAttribute = subMathematicalExpressionYValueReference.FirstAttribute;
+            Assert.NotNull(firstAttribute, "error in xml: attribute for first time series element not found.");
+            Assert.NotNull(secondAttribute, "error in xml: attribute for second time series element not found.");
+
+            Assert.AreEqual("id",firstAttribute.Name.LocalName);
+            Assert.AreEqual("f1", firstAttribute.Value, "error in xml: mismatch for first attributes' value.");
+            Assert.AreEqual("id", secondAttribute.Name.LocalName);
+            Assert.AreEqual("f1/([Input]feature1/waterlevel + 6)", secondAttribute.Value, "error in xml: mismatch for first attributes' value.");
+        }
+        
         [Test]
         public void GivenAModelWithUseSaveStateTimeRangeAndWriteRestartFlagsAndAValidXsdPathWhenGetRuntimeXmlIsCalledWithThisModelAndPathThenTheModelContainsValidStateFilesElement()
         {
@@ -87,7 +152,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var xsdPath = DimrApiDataSet.RtcToolsDllPath;
 
             // When
-            var resultDocument = RealTimeControlXmlWriter.GetRuntimeXml(xsdPath, model, false, 0);
+            var resultDocument = RealTimeControlXmlWriter.GetRuntimeConfigXml(xsdPath, model, false, 0);
 
             // Then
             var ns = (XNamespace) "http://www.wldelft.nl/fews";
@@ -205,6 +270,50 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             pidRule.TimeSeries[stop] = 1d;
 
             return pidRule;
+        }
+
+        private static ControlGroup CreateControlGroupWithPidRuleAndMathematicalExpression(string expression)
+        {
+            var inputME = new Input
+            {
+                ParameterName = "waterlevel",
+                Feature = new RtcTestFeature { Name = "feature1" }
+            };
+
+            var inputPidRule = new MathematicalExpression
+            {
+                Name = "f1",
+                Expression = expression
+            };
+
+            inputPidRule.Inputs.Add(inputME);
+
+            var output = new Output();
+            var pidRule = new PIDRule();
+
+            var controlGroup = new ControlGroup
+            {
+                Name = "Control Group",
+                Rules = { pidRule },
+                MathematicalExpressions = { inputPidRule },
+                Inputs = { inputME },
+                Outputs = { output }
+            };
+            return controlGroup;
+        }
+
+        private static List<XNode> RetrieveExportTimeSeries(XDocument result)
+        {
+            var topNode = result.Nodes().OfType<XContainer>().FirstOrDefault();
+            Assert.NotNull(topNode, "error in xml: top node not found.");
+
+            var exportSeriesNode = topNode.LastNode as XContainer;
+            Assert.NotNull(exportSeriesNode, "error in xml: export time series node not found.");
+
+            var exportTimeSeriesList = exportSeriesNode.Nodes().ToList();
+            Assert.NotNull(exportTimeSeriesList, "error in xml: time series list not found");
+
+            return exportTimeSeriesList;
         }
     }
 }

@@ -8,51 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
     [TestFixture]
     public class InputTests
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
-        private const string Element = "InputName";
-        private const string Name = "ParameterName";
-        private const string Point = "Test";
-
-        private Input input;
-       
-        [SetUp]
-        public void SetUp()
-        {
-            input = new Input
-                        {
-                            ParameterName = Name,
-                            Feature = new RtcTestFeature { Name = Element },
-                            SetPoint = Point
-                        };
-        }
-
         [Test]
-        public void CheckXmlGeneration()
+        public void Constructor_InputShouldInheritFromRTCBaseObject()
         {
-            Assert.AreEqual(OriginXml(), input.ToXml(Fns, "x","setpoint").ToString(SaveOptions.DisableFormatting));
-        }
-
-        [Test]
-        public void CheckXmlGenerationWithFilledValuesOnly()
-        {
-            input.SetPoint = string.Empty;
-            Assert.AreEqual(OriginXmlSingleVariableFilled(), input.ToXml(Fns, "x").ToString(SaveOptions.DisableFormatting));
-        }
-
-        private static string OriginXml()
-        {
-            return "<input xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<x>" + RtcXmlTag.Input + Element + "/" + Name + "</x>" +
-                   "<setpoint>" + Point + "</setpoint>" + //Not sure what setpoint means yet ... Set by the pidRule!!
-                   "</input>";
-        }
-
-        private static string OriginXmlSingleVariableFilled()
-        {
-            return "<input xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<x>" + RtcXmlTag.Input + Element + "/" + Name + "</x>" +
-                   "</input>";
+            var input = new Input();
+            Assert.IsInstanceOf<RtcBaseObject>(input);
         }
 
         [Test]

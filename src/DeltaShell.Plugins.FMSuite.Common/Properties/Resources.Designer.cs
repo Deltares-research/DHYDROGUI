@@ -61,11 +61,31 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backwards Compatibility: &apos;{0}&apos; has been updated to &apos;{1}&apos;.
+        /// </summary>
+        public static string DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__ {
+            get {
+                return ResourceManager.GetString("DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0_" +
+                        "__has_been_updated_to___1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stream is not readable..
         /// </summary>
         public static string DiaFileReader_GetAllMessages_Stream_is_not_readable_ {
             get {
                 return ResourceManager.GetString("DiaFileReader_GetAllMessages_Stream_is_not_readable_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter {0} is not supported by our computational core and will be removed from your input file..
+        /// </summary>
+        public static string Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file {
+            get {
+                return ResourceManager.GetString("Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from" +
+                        "_your_input_file", resourceCulture);
             }
         }
         

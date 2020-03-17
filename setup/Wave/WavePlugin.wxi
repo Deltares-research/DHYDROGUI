@@ -6,7 +6,6 @@
       <File Id="DeltaShell.Plugins.FMSuite.Wave.dll" Source='$(var.wave_plugin_bin)DeltaShell.Plugins.FMSuite.Wave.dll' />
       <File Id="DeltaShell.Plugins.FMSuite.Wave.Gui.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.dll' />
       <File Id="dwaveprop.csv" Source='$(var.wave_plugin_bin)dwave-properties.csv' />
-      <File Id="run_wave.bat" Source='$(var.wave_plugin_bin)run_wave.bat' />
     </Component>    
     <?define FMGuiDelft3Dx64SourceDir="$(var.wave_plugin_bin)Delft3D\win64\" ?>
     <?undef FMGuiDelft3Dx64SourceDir ?>

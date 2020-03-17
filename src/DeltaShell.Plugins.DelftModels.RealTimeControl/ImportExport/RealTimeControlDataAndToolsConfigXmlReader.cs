@@ -5,6 +5,7 @@ using System.Linq;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
@@ -52,46 +53,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 return controlGroups;
             }
 
-            var allElements = dataConfigObject.importSeries.timeSeries.Concat(dataConfigObject.exportSeries.timeSeries).ToList();
-            var ruleElements = toolsConfigObject.rules;
-            var conditionElements = toolsConfigObject.triggers;
+            RuleXML[] ruleElements = toolsConfigObject.rules.ToArray();
+            TriggerXML[] triggerElements = toolsConfigObject.triggers.ToArray();
 
-            var dataConfigConverter = new RealTimeControlDataConfigXmlConverter(logHandler);
-            var connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(allElements).ToList();
-            if (connectionPoints.Count == 0)
-            {
-                logHandler.ReportErrorFormat(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_connection_points_from_file___0___, dataConfigFilePath);
-                return controlGroups;
-            }
+            var dataAccessObjects = RealTimeControlToolsConfigXmlConverter.ConvertToDataAccessObjects(ruleElements, triggerElements, logHandler);
 
-            var toolsConfigConverter = new RealTimeControlToolsConfigXmlConverter(logHandler);
-            controlGroups = toolsConfigConverter.CreateControlGroupsFromXmlElementIDs(ruleElements).ToList();
-            if (controlGroups.Count == 0)
+            var controlGroupGroups = dataAccessObjects.GroupBy(o => o.ControlGroupName).ToArray();
+            if (!controlGroupGroups.Any())
             {
                 logHandler.ReportErrorFormat(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___, toolsConfigFilePath);
                 return controlGroups;
             }
 
-            var signalElements = new List<RuleXML>();
+            foreach (IGrouping<string, IRtcDataAccessObject<RtcBaseObject>> group in controlGroupGroups)
+            {
+                var connector = new RealTimeControlToolsConfigComponentConnector(group.Key);
+                IControlGroup controlGroup = connector.AssembleControlGroup(group.ToArray());
 
-            toolsConfigConverter.SeparateSignalsFromRules(ruleElements, signalElements);
+                controlGroups.Add(controlGroup);
+            }
 
-            toolsConfigConverter.CreateRulesFromXmlElementsAndAddToControlGroup(ruleElements, controlGroups);
-            toolsConfigConverter.CreateConditionsFromXmlElementsAndAddToControlGroup(conditionElements, controlGroups);
-            toolsConfigConverter.CreateSignalsFromXmlElementsAndAddToControlGroup(signalElements,
-                controlGroups);
-                
-			var toolsConfigComponentConnector = new RealTimeControlToolsConfigComponentConnector(logHandler);
-            toolsConfigComponentConnector.ConnectRules(ruleElements, controlGroups, connectionPoints);
-            toolsConfigComponentConnector.ConnectConditions(conditionElements, controlGroups, connectionPoints);
-            toolsConfigComponentConnector.ConnectSignals(signalElements, controlGroups, connectionPoints);
-            
-            var timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t.locationId != null).ToList();
-            
+            List<RTCTimeSeriesXML> allElements = dataConfigObject.importSeries.timeSeries.Concat(dataConfigObject.exportSeries.timeSeries).ToList();
+            List<PITimeSeriesXML> timeSeriesElements = allElements.Select(e => e.PITimeSeries).Where(t => t.locationId != null).ToList();
+
             var dataConfigSetter = new RealTimeControlDataConfigXmlSetter(logHandler);
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(timeSeriesElements, controlGroups);
 
-            var hydraulicRules = controlGroups.SelectMany(g => g.Rules.OfType<HydraulicRule>()).Where(r => !(r is FactorRule)).ToList();
+            List<HydraulicRule> hydraulicRules = controlGroups
+                                                 .SelectMany(g => g.Rules.OfType<HydraulicRule>())
+                                                 .Where(r => !(r is FactorRule)).ToList();
             dataConfigSetter.SetTimeLagOnHydraulicRules(allElements, hydraulicRules, modelTimeStep);
 
             return controlGroups;

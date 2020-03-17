@@ -144,4 +144,10 @@
   <data name="SnappedFeatureCollection_Calculating_the_snapped_geometry_for_feature___0___failed___1_" xml:space="preserve">
     <value>Calculating the snapped geometry for feature '{0}' failed: {1}</value>
   </data>
+  <data name="Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file" xml:space="preserve">
+    <value>Parameter {0} is not supported by our computational core and will be removed from your input file.</value>
+  </data>
+  <data name="DelftIniBackwardsCompatibilityHelper_GetUpdatedName_Backwards_Compatibility____0___has_been_updated_to___1__" xml:space="preserve">
+    <value>Backwards Compatibility: '{0}' has been updated to '{1}'</value>
+  </data>
 </root>

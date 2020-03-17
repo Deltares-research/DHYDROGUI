@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -16,6 +18,7 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
@@ -367,10 +370,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             {
                 var menuItem = new MenuItem { Tag = rule };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                Assert.AreEqual(rule.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                AssertCopyXmlToClipboard(rule);
+                
                 menuItem = new MenuItem { Tag = condition };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                Assert.AreEqual(condition.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                AssertCopyXmlToClipboard(condition);
             }
         }
 
@@ -379,8 +383,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
-                controlGroupEditor.CopyRuleXmlToClipboard(rule);
-                Assert.AreEqual(rule.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                controlGroupEditor.CopyXmlToClipboard(rule);
+
+                AssertCopyXmlToClipboard(rule);
             }
         }
 
@@ -389,8 +394,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
-                controlGroupEditor.CopyConditionXmlToClipboard(condition);
-                Assert.AreEqual(condition.ToXml(Fns, "").ToString(), Clipboard.GetText());
+                controlGroupEditor.CopyXmlToClipboard(condition);
+
+                AssertCopyXmlToClipboard(condition);
+            }
+        }
+
+        [Test]
+        public void CopyExpressionToClipBoard()
+        {
+            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            {
+                var input = new Input();
+                var expression = new MathematicalExpression();
+                expression.Inputs.Add(input);
+
+                expression.Expression = "A+6+8";
+
+                controlGroupEditor.CopyXmlToClipboard(expression);
+
+                AssertCopyXmlToClipboard(expression);
             }
         }
 
@@ -404,7 +427,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 gui.Run();
 
                 // setup mock model / control group
-                var controlGroup = new ControlGroup { Rules = new EventedList<RuleBase> { new PIDRule { Name = "testRule" } } };
+                var controlGroup = new ControlGroup();
+                controlGroup.Rules.Add(new PIDRule{Name = "testRule"});
 
                 var model = mocks.StrictMultiMock<IRealTimeControlModel>(typeof(INotifyCollectionChanged), typeof(INotifyPropertyChanged));
 
@@ -557,6 +581,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             }
 
             mocks.VerifyAll();
+        }
+
+        private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject)
+        {
+            RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcBaseObject);
+            IEnumerable<XElement> listXElements = serializer.ToXml(Fns, string.Empty);
+            var stringBuilder = new StringBuilder();
+            foreach (XElement xElement in listXElements)
+            {
+                stringBuilder.Append(xElement + Environment.NewLine);
+            }
+            
+            Assert.AreEqual(stringBuilder.ToString(), Clipboard.GetText());
         }
     }
 }

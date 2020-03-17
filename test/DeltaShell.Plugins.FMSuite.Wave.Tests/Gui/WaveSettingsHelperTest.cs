@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -27,6 +28,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             WpfGuiProperty comFileProperty = wpfGuiCategories.SelectMany(c => c.Properties)
                                                              .Single(p => p.Name == KnownWaveProperties.COMFile);
             Assert.That(comFileProperty.IsEnabled, Is.EqualTo(!coupledToFlow));
+        }
+
+        [Test]
+        public void GetWpfGuiCategories_ReturnsCorrectResult()
+        {
+            // Setup
+            var waveModel = new WaveModel();
+
+            // Call
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Substitute.For<IGui>());
+
+            // Assert
+            Assert.That(wpfGuiCategories, Has.Count.EqualTo(6));
+
+            AssertCategoryExists(wpfGuiCategories, "General");
+            AssertCategoryExists(wpfGuiCategories, "Spectral Domain");
+            AssertCategoryExists(wpfGuiCategories, "Physical Processes");
+            AssertCategoryExists(wpfGuiCategories, "Numerical Parameters");
+            AssertCategoryExists(wpfGuiCategories, "Output");
+            AssertCategoryExists(wpfGuiCategories, "Domain specific settings");
+        }
+
+        private static void AssertCategoryExists(IEnumerable<WpfGuiCategory> wpfGuiCategories, string categoryName)
+        {
+            WpfGuiCategory category = wpfGuiCategories.FirstOrDefault(c => c.CategoryName == categoryName);
+            Assert.That(category, Is.Not.Null, $"Category '{categoryName}' does not exist.");
         }
     }
 }

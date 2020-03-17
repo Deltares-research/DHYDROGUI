@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string Time = "Time";
         public const string TimeStep = "TimeStep";
         public const string StartTime = "StartTime";
-        public const string TimeScale = "TScale";
+        public const string TimeScale = "TimeInterval";
         public const string StopTime = "StopTime";
         public const string MapWriteNetCDF = "MapWriteNetCDF";
         public const string WriteCOM = "WriteCOM";

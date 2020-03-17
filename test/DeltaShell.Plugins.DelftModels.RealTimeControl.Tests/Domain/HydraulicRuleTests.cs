@@ -6,6 +6,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
 using ValidationAspects;
@@ -54,13 +56,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var hydraulicRule = new HydraulicRule
                                    {
                                        Name = RuleName,
-                                       Inputs = new EventedList<Input> {input},
+                                       Inputs = new EventedList<IInput> {input},
                                        Outputs = new EventedList<Output> {output},
                                        Function = tableFunction,
                                        Interpolation = InterpolationType.Linear
                                    };
 
-            Assert.AreEqual(OriginXml(), hydraulicRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
+            var serializer = new HydraulicRuleSerializer(hydraulicRule);
+            Assert.AreEqual(OriginXml(), serializer.ToXml(Fns, "").First().ToString(SaveOptions.DisableFormatting));
         }
 
         private string OriginXml()
@@ -159,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var hydraulicRule = new HydraulicRule
             {
                 Name = RuleName,
-                Inputs = new EventedList<Input> { input },
+                Inputs = new EventedList<IInput> { input },
                 Outputs = new EventedList<Output> { output },
 
                 Function = tableFunction
@@ -168,8 +171,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             hydraulicRule.TimeLag = 2000;
             hydraulicRule.SetTimeLagToTimeSteps(new TimeSpan(0,0,200));
             nTimeSteps = hydraulicRule.TimeLagInTimeSteps;
-
-            Assert.AreEqual(HydraulicRuleWithTimeLagXml(), hydraulicRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
+            var serializer = new HydraulicRuleSerializer(hydraulicRule);
+            Assert.AreEqual(HydraulicRuleWithTimeLagXml(), serializer.ToXml(Fns, "").First().ToString(SaveOptions.DisableFormatting));
         }
 
         [Test]
