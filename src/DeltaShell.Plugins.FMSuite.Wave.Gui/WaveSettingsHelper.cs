@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
                                       Enumerable.Empty<FieldUIDescription>().ToList())
             {
-                CustomControl = new DomainSpecificDataEditor(new MainDomainSpecificDataViewModel(model.OuterDomain))
+                CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))
             };
         }
 

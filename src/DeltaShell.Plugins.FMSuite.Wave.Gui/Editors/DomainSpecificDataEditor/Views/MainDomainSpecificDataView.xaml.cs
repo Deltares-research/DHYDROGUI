@@ -3,12 +3,11 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views
 {
     /// <summary>
-    /// Interaction logic for DomainSpecificDataEditor.xaml
+    /// Interaction logic for MainDomainSpecificDataView.xaml
     /// </summary>
-    public partial class DomainSpecificDataEditor 
+    public partial class MainDomainSpecificDataView 
     {
-
-        public DomainSpecificDataEditor(MainDomainSpecificDataViewModel viewModel)
+        public MainDomainSpecificDataView(MainDomainSpecificDataViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
