@@ -1,7 +1,7 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents a reference to a parameter leaf value
+    /// Represents a reference to a parameter leaf value.
     /// </summary>
     public class ParameterLeafReference : IExpressionReference
     {

@@ -7,7 +7,7 @@ using System.Linq;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 {
     /// <summary>
-    /// Provides a type converter to convert a <see cref="KeyValuePair{TKey,TValue}" /> array to another representation.
+    /// Provides a type converter to convert a <see cref="KeyValuePair{String,TValue}" /> array to another representation.
     /// </summary>
     /// <typeparam name="T"> The type of the key value pair value. </typeparam>
     /// <seealso cref="ArrayConverter" />

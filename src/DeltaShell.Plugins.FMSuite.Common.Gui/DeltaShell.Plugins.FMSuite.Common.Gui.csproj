@@ -295,7 +295,6 @@
     <EmbeddedResource Include="Forms\VerticalProfileDialog.resx">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

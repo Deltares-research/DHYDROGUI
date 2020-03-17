@@ -10,7 +10,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for a <see cref="TimeRule"/>
+    /// Serializer for a <see cref="TimeRule"/>.
     /// </summary>
     /// <seealso cref="RuleSerializerBase" />
     public class TimeRuleSerializer : RuleSerializerBase

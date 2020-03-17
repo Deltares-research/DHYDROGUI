@@ -3,7 +3,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
@@ -18,14 +17,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// Creates a <see cref="SignalDataAccessObject" /> from the specified <paramref name="signalElement" />.
         /// </summary>
         /// <param name="signalElement"> The rule XML. </param>
-        /// <param name="logHandler"> The log handler. </param>
         /// <returns>
         /// A <see cref="SignalDataAccessObject" /> created from the specified <paramref name="signalElement" />.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="signalElement"/> is <c>null</c>.
         /// </exception>
-        public static SignalDataAccessObject Create(RuleXML signalElement, ILogHandler logHandler = null)
+        public static SignalDataAccessObject Create(RuleXML signalElement)
         {
             Ensure.NotNull(signalElement, nameof(signalElement));
 

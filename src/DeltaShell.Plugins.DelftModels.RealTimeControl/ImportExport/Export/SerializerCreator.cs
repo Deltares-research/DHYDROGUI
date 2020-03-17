@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <returns> The serializer with the specified <see cref="rtcObject" />. </returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when there is no serializer available  for the
-        /// type of the specified <paramref name="rtcObject" />
+        /// type of the specified <paramref name="rtcObject" />.
         /// </exception>
         public static T CreateSerializerType<T>(RtcBaseObject rtcObject)
         {
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <returns> The serializer with the specified <see cref="rtcObject" />. </returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when there is no serializer available  for the
-        /// type of the specified <paramref name="rtcObject" />
+        /// type of the specified <paramref name="rtcObject" />.
         /// </exception>
         public static RtcSerializerBase CreateSerializerType(RtcBaseObject rtcObject)
         {
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <returns> The serializer with the specified <see cref="input" />. </returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when there is no serializer available  for the
-        /// type of the specified <paramref name="input" />
+        /// type of the specified <paramref name="input" />.
         /// </exception>
         /// <remarks>
         /// The specified <paramref name="input" /> must derive from <see cref="RtcBaseObject" />.

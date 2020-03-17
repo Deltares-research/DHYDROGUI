@@ -1,7 +1,7 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents a leaf node that has a leaf value such as a value or a parameter.
+    /// Represents a leaf node containing a constant value or a parameter.
     /// </summary>
     public interface ILeafNode : IExpressionNode
     {
@@ -9,6 +9,5 @@
         /// Gets the value of this leaf node.
         /// </summary>
         string Value { get; set; }
-
     }
 }

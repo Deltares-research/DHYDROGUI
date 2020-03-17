@@ -93,22 +93,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         /// <summary>
         /// If the RTC loads a project where the <see cref="FileFormatVersion"/> is 3.5.0.0 or lower it should update the RTC.
-        /// Because of the current database table structure of RTC it is not possible to use the NHibernate LegacyLoader or DataAccessListener to update
-        /// the objects / table to the new format.
-        /// Only solution is to use SQL statements to create tables, moves objects from one table to the other. Because the objects have Foreign Keys
-        /// we need use pragma statements to stop the database from trying to keep the database consistent by monitoring these FK relations.
         /// </summary>
         /// <param name="path">Rooted path to the dsproj file.</param>
-        /// <returns><c>true</c> when the version of the database provided by <see cref="path"/> is 3.5.0.0 or lower</returns>
+        /// <returns><c>true</c> when the version of the database provided by <paramref name="path"/> is 3.5.0.0 or lower</returns>
         private bool ShouldUpgradeDataBaseUsingSqlQueries(string path)
         {
-            var pluginVersions = Application.HybridProjectRepository.GetPluginFileFormatVersions(path);
+            IDictionary<string, Version> pluginVersions = Application.HybridProjectRepository.GetPluginFileFormatVersions(path);
 
             if (pluginVersions.TryGetValue(Name, out Version currentVersion))
             {
                 var needsUpgradingVersion = new Version(3,5,0,0);
+                var maximumVersionThatNeedsUpgrading = new Version(3,6,0,0);
 
-                if (currentVersion <= needsUpgradingVersion)
+                if (currentVersion <= needsUpgradingVersion && currentVersion < maximumVersionThatNeedsUpgrading)
                 {
                     return true;
                 }
@@ -118,7 +115,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         /// <summary>
-        /// Update the RTC tables in the database to support IInput / Mathematical Expressions
+        /// Because of the current database table structure of RTC it is not possible to use the NHibernate LegacyLoader or DataAccessListener to update
+        /// the objects / table to the new format.
+        /// Only solution is to use SQL statements to create tables, moves objects from one table to the other. Because the objects have Foreign Keys
+        /// we need use pragma statements to stop the database from trying to keep the database consistent by monitoring these FK relations.
         /// </summary>
         /// <param name="path">Rooted path to the dsproj file.</param>
         private static void UpdateDataBase(string path)
@@ -131,6 +131,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     using (var sqlCommand = dbConnection.CreateCommand())
                     {
+                        /*
+                         * Disable enforcing correct foreign key relations
+                         * Create the table in which the IInput implementator objects are stored.
+                         * Copy all the Input objects from the rtc_connection_points table to the table created above.
+                         * This will include there foreign key relations. (because of this the pragma is needed.
+                         * Enable enforcing correct foreign key relation
+                         */
                         sqlCommand.CommandText =
                             @"
 PRAGMA foreign_keys = off;
@@ -144,11 +151,11 @@ PRAGMA foreign_keys = on;
                 }
                 catch (SQLiteException exception)
                 {
-                    throw new SQLiteException("Loaded a project that was already upgraded, but not saved. RTC database schema is in corrupted state.", exception);
+                    throw new SQLiteException("Loaded a project that has been migrated, but not saved. RTC database schema is in corrupted state.", exception);
                 }
             }
             
-            log.Info("RTC database schema updated to support mathematical expression.");
+            log.Info("RTC database schema updated to support mathematical expressions.");
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()

@@ -16,7 +16,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
     ///  - RightNode output for true path
     ///  - BottomNode output for false path
     /// </summary>
-    [Serializable]
     [Description("Condition shape")]
     [NetronGraphShape("Condition shape", 
                         "A RTC Shapes",

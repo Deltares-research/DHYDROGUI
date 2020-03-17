@@ -4,7 +4,7 @@ using DelftTools.Utils.Guards;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Contains methods for performing conversions for an <see cref="Operator" />
+    /// Contains the methods for performing conversions of an <see cref="Operator"/>.
     /// </summary>
     public static class OperatorConverter
     {

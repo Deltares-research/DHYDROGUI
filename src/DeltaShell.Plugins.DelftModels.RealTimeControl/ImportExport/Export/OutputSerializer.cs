@@ -4,7 +4,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for an <see cref="Output"/>
+    /// Serializer for an <see cref="Output"/>.
     /// </summary>
     public class OutputSerializer
     {
@@ -22,32 +22,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <summary>
         /// Converts the output to an xml element used as a reference by other xml elements.
         /// </summary>
-        /// <param name="xNamespace"> </param>
-        /// <param name="lableName">
-        /// The name of the label. For most rules this should be y; for relative time rule x
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="labelName">
+        /// The name of the label. For most rules this should be y; for relative time rule x.
         /// </param>
         /// <param name="integralName"> The integral name. </param>
         /// <returns> The reference xml element. </returns>
-        public XElement ToXmlOutputReference(XNamespace xNamespace, string lableName, string integralName)
+        public XElement ToXmlOutputReference(XNamespace xNamespace, string labelName, string integralName)
         {
-            return ToXmlOutputReference(xNamespace, lableName, integralName, null);
+            return ToXmlOutputReference(xNamespace, labelName, integralName, null);
         }
 
         /// <summary>
         /// Converts the output to an xml element used as a reference by other xml elements.
         /// </summary>
-        /// <param name="xNamespace"> </param>
-        /// <param name="lableName">
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="labelName">
         /// The name of the label. For most rules this should be y; for relative time rule x
         /// </param>
         /// <param name="integralName"> The integral name. </param>
         /// <param name="differentialName"> The differential name. </param>
         /// <returns> The reference xml element. </returns>
-        public XElement ToXmlOutputReference(XNamespace xNamespace, string lableName, string integralName,
+        public XElement ToXmlOutputReference(XNamespace xNamespace, string labelName, string integralName,
                                      string differentialName)
         {
             var result = new XElement(xNamespace + "output");
-            result.Add(new XElement(xNamespace + lableName, GetXmlName()));
+            result.Add(new XElement(xNamespace + labelName, GetXmlName()));
             if (!string.IsNullOrEmpty(output.IntegralPart) && !string.IsNullOrEmpty(integralName))
             {
                 result.Add(new XElement(xNamespace + integralName, output.IntegralPart));

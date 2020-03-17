@@ -14,8 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         public void Assemble_ExpressionObjectsNull_ThrowsArgumentNullException()
         {
+            // Call
             void Call() => ExpressionTreeAssembler.Assemble(null, "controlGroupName ").ToList();
 
+            // Assert
             var argumentNullException = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(argumentNullException.ParamName, Is.EqualTo("expressionObjects"),
                         "Expected a different ParamName:");
@@ -24,8 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         public void Assemble_ControlGroupNameNull_ThrowsArgumentNullException()
         {
+            // Call
             void Call() => ExpressionTreeAssembler.Assemble(Enumerable.Empty<ExpressionObject>(), null).ToList();
 
+            // Assert
             var argumentNullException = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(argumentNullException.ParamName, Is.EqualTo("controlGroupName"),
                         "Expected a different ParamName:");
@@ -283,11 +287,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                                              ExpressionObject[] expressionObjects,
                                              ExpressionTree[] expectedResults)
         {
+            // Setup
             var comparer = new ExpressionTreeEqualityComparer();
 
+            // Call
             IList<ExpressionTree> results = 
                 ExpressionTreeAssembler.Assemble(expressionObjects, groupName).ToList();
 
+            // Assert
             Assert.That(results, Is.EquivalentTo(expectedResults).Using(comparer), 
                         "Expected the results to be equal to the expected results:");
         }

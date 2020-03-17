@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Data;
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             Initialize();
             stringAlignment = StringAlignment.Center;
         }
-
+        
         private void InitializeFont()
         {
             Font = new Font("Verdana", 10f);
@@ -189,14 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                     stringAlignment = (StringAlignment)e.Value; Invalidate(); break;
             }
         }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("LeftNode", LeftNode, typeof(Connector));
-            info.AddValue("RightNode", RightNode, typeof(Connector));
-        }
-
+        
         protected virtual void UpdateColor(bool isLinked) { }
     }
 }

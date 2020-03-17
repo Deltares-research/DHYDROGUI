@@ -22,6 +22,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             RtcObject = rtcBaseObject;
         }
 
+        /// <summary>
+        /// Gets the XML tag that is used within the id of the object.
+        /// </summary>
         protected abstract string XmlTag { get; }
 
         /// <summary>

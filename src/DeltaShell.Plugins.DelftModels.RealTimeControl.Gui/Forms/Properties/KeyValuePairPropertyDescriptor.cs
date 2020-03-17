@@ -6,7 +6,7 @@ using System.Linq;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 {
     /// <summary>
-    /// Property descriptor for a <see cref="KeyValuePair{TKey,TValue}" />
+    /// Property descriptor for a <see cref="KeyValuePair{String,TValue}" />
     /// </summary>
     /// <typeparam name="T"> Type of key value pair value </typeparam>
     /// <seealso cref="PropertyDescriptor" />
@@ -36,12 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         /// </exception>
         public override object GetValue(object component)
         {
-            if (component is KeyValuePair<string, T>[] keyValuePairs)
+            if (!(component is KeyValuePair<string, T>[] keyValuePairs))
             {
-                return keyValuePairs.FirstOrDefault(p => p.Key == key).Value;
+                throw new ArgumentException($@"Must be of type {ComponentType}.", nameof(component));
             }
 
-            throw new ArgumentException($@"Must be of type {ComponentType}.", nameof(component));
+            return keyValuePairs.FirstOrDefault(p => p.Key == key).Value;
         }
 
         /// <summary>

@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// output should be set as input exchange item
         /// </summary>
         /// <param name="xNamespace"> </param>
-        /// <returns> </returns>
+        /// <returns> The collection of <see cref="XElement" />. </returns>
         public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
         {
             yield break;
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// Only Name is required for this series.
         /// </summary>
         /// <param name="name"> </param>
-        /// <returns> </returns>
+        /// <returns> The xml time series element. </returns>
         private static IXmlTimeSeries GetExportTimeSeries(string name)
         {
             return new XmlTimeSeries {Name = name};

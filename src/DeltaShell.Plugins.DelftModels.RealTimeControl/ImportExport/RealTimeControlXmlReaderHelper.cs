@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="controlGroups">The control groups.</param>
         /// <param name="id">The id.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added</param>
+        /// <param name="logHandler">The log handler to which log messages can be added.</param>
         /// <returns>The corresponding control group.</returns>
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static IControlGroup GetControlGroupByElementId(this IEnumerable<IControlGroup> controlGroups, string id, ILogHandler logHandler)
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <typeparam name="T">The type of connection point</typeparam>
         /// <param name="connectionPoints">The connection points.</param>
         /// <param name="name">The name of the connection point.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added</param>
+        /// <param name="logHandler">The log handler to which log messages can be added.</param>
         /// <returns>The corresponding connection point.</returns>
         /// <remarks>Parameter name is expected to not be <c>null</c>.</remarks>
         public static T GetByName<T>(this IEnumerable<ConnectionPoint> connectionPoints, string name, ILogHandler logHandler) where T : ConnectionPoint
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <typeparam name="T">The type of rule</typeparam>
         /// <param name="controlGroup">The controlgroup.</param>
         /// <param name="id">The id of the rule element.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added</param>
+        /// <param name="logHandler">The log handler to which log messages can be added. </param>
         /// <returns>The corresponding rule.</returns>
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : RuleBase
@@ -126,10 +126,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <summary>
         /// Gets the corresponding signal by element id and type in a control group.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="controlGroup"></param>
-        /// <param name="id"></param>
-        /// <param name="logHandler"></param>
+        /// <typeparam name="T"> The type of signal. </typeparam>
+        /// <param name="controlGroup"> The control group from which the signal is retrieved. </param>
+        /// <param name="id"> The id of the read signal element. </param>
+        /// <param name="logHandler"> The log handler.</param>
         /// <returns> The corresponding signal. </returns>
         public static SignalBase GetSignalByElementId<T>(this IControlGroup controlGroup, string id,
             ILogHandler logHandler) where T : SignalBase
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="controlGroup">The controlgroup.</param>
         /// <param name="id">The id of the rule element.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added</param>
+        /// <param name="logHandler">The log handler to which log messages can be added.</param>
         /// <returns>The corresponding rule.</returns>
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId(this IControlGroup controlGroup, string id, ILogHandler logHandler)
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <typeparam name="T">The type of rule</typeparam>
         /// <param name="controlGroup">The controlgroup.</param>
         /// <param name="id">The id of the rule element.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added</param>
+        /// <param name="logHandler">The log handler to which log messages can be added/</param>
         /// <returns>The corresponding rule.</returns>
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static T GetConditionByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : ConditionBase

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Netron.GraphLib;
@@ -14,7 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
     ///  - LeftNode input of conditions
     ///  - RightNode output of output entity
     /// </summary>
-    [Serializable]
     [Description("Rule shape")]
     [NetronGraphShape("Rule shape", 
                         "BD485837-D65C-4aa6-B791-C9F208581E4E", 

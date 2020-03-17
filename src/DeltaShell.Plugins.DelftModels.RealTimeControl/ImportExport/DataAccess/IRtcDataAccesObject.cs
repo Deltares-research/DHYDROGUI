@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
     public interface IRtcDataAccessObject<out T> where T : RtcBaseObject
     {
         /// <summary>
-        /// Gets the identifier of the xml element that was read from file
+        /// Gets the identifier of the xml element that was read from file.
         /// </summary>
         /// <value>
         /// The identifier.

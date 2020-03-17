@@ -1,12 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using Netron.GraphLib;
+﻿using System.ComponentModel;
 using System.Drawing;
+using Netron.GraphLib;
 using Netron.GraphLib.Attributes;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 {
-    [Serializable]
     [Description("Math expression shape")]
     [NetronGraphShape(
         "Mathematical expression shape",

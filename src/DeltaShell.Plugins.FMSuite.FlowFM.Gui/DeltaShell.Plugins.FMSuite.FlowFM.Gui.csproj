@@ -465,7 +465,6 @@
     <EmbeddedResource Include="Forms\WindSelectionDialog.resx">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>

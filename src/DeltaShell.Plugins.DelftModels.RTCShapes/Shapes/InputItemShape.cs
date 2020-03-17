@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Netron.GraphLib;
@@ -7,7 +6,6 @@ using Netron.GraphLib.Attributes;
 
 namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 {
-    [Serializable]
     [Description("Input item shape")]
     [NetronGraphShape("Input item shape",
                         "8A70C0A3-DBDD-4a6a-BEFB-5EC933D50622",
