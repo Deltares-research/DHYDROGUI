@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var wpfGuiCategories = new List<WpfGuiCategory>();
             if (data != null)
             {
-                wpfGuiCategories = GetWaveSettings(data)?.FieldDescriptions
+                wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
                                                         .GroupBy(fd => fd.Category)
                                                         .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
                                                         .ToList();
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 ModifyWaveSettings(wpfGuiCategories);
             }
 
-            AddCustomWaveCategory(data, wpfGuiCategories);
+            wpfGuiCategories.Add(GetDomainSpecificSettingsCategory(data));
             AddCustomWaveSettings(data, gui, wpfGuiCategories);
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
@@ -69,21 +69,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             }
         }
 
-        private static void AddCustomWaveCategory(WaveModel model, IList<WpfGuiCategory> wpfCategories)
+        private static WpfGuiCategory GetDomainSpecificSettingsCategory(WaveModel model)
         {
-            Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => true;
-            var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
-            var fieldUiDescriptions = new List<FieldUIDescription>();
-            fieldUiDescriptions.Add(fieldUi);
-
-            var domainSpecificDataCategory = new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings, fieldUiDescriptions)
+            return new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
+                                      Enumerable.Empty<FieldUIDescription>().ToList())
             {
-                CategoryVisibility = () => true,
                 CustomControl = new DomainSpecificDataEditor(new MainDomainSpecificDataViewModel(model.OuterDomain))
             };
-
-            wpfCategories.Add(domainSpecificDataCategory);
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
