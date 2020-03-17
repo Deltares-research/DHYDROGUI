@@ -37,4 +37,16 @@
     <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
   </Target>
 
+  <Target Name="MsiFM_ReleaseOnly_Delft3DFMSuite_NoSourcesBuild">
+    <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM_Without_Waq.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+
+  <Target Name="MsiFM_ReleaseOnly_DHYDROSuite_NoSourcesBuild">
+    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+
+  <Target Name="MsiFM_ReleaseOnly_Delft3DFMOpen_NoSourcesBuild">
+    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
 </Project>
