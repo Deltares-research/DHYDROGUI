@@ -65,11 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         public bool IsCoupledToFlow { get; set; }
 
-        /// <summary>
-        /// Use domain specific data
-        /// </summary>
-        public bool UseDomainSpecific { get; set; }
-
         public int SimulationMode
         {
             get => (int) ModelDefinition

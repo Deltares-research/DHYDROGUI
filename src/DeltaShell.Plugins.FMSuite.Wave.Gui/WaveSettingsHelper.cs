@@ -72,34 +72,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private static void AddCustomWaveCategory(WaveModel model, IList<WpfGuiCategory> wpfCategories)
         {
             Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => (o is WaveModel) && (o as WaveModel).UseDomainSpecific;
+            Func<object, bool> isVisibleFunc = o => true;
             var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
             var fieldUiDescriptions = new List<FieldUIDescription>();
             fieldUiDescriptions.Add(fieldUi);
 
             var domainSpecificDataCategory = new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings, fieldUiDescriptions)
             {
-                CategoryVisibility = () => model.UseDomainSpecific,
+                CategoryVisibility = () => true,
                 CustomControl = new DomainSpecificDataEditor(new MainDomainSpecificDataViewModel(model.OuterDomain))
             };
-            
+
             wpfCategories.Add(domainSpecificDataCategory);
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
         {
             ObjectUIDescription objectDescription = WaveModelUIDescription.Extract(data);
-
-            var useDomainSpecificCheckBox = new FieldUIDescription(o => data.UseDomainSpecific,
-                                                              (d, v) => data.UseDomainSpecific = (bool)v)
-            {
-                Category = KnownWaveCategories.GeneralCategory,
-                SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
-                Name = "UseDomainSpecific",
-                ValueType = typeof(bool),
-                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in
-            };
 
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
                                                               (d, v) => data.IsCoupledToFlow = (bool)v)
@@ -151,8 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             objectDescription.FieldDescriptions =
                 new[]
-                    {                        
-                        useDomainSpecificCheckBox,
+                    {
                         flowCouplingCheckBox,
                         startTime,
                         stopTime,
