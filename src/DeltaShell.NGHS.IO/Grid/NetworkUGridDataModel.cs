@@ -253,7 +253,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 var targetNames = network.Branches.Select(b =>
                 {
                     var sewerConnection = b as SewerConnection;
-                    return sewerConnection != null ? sewerConnection.TargetCompartmentName : b.Target.Name;
+                    return sewerConnection != null && sewerConnection.Target is Manhole ? sewerConnection.TargetCompartmentName : b.Target.Name;
                 }).ToArray();
                 TargedNodesIds = targetNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
 
