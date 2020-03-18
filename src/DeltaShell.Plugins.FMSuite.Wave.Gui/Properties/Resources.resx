@@ -166,20 +166,17 @@
   <data name="WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core" xml:space="preserve">
     <value>When enabled, run coupled to D-Flow FM core</value>
   </data>
-  <data name="WaveSettingsHelper_GetWaveSettings_Start_time" xml:space="preserve">
-    <value>Start time</value>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupling_start_time" xml:space="preserve">
+    <value>Coupling start time</value>
   </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run" xml:space="preserve">
     <value>Start time within the coupled model run</value>
   </data>
-  <data name="WaveSettingsHelper_GetWaveSettings_Stop_time" xml:space="preserve">
-    <value>Stop time</value>
+  <data name="WaveSettingsHelper_GetWaveSettings_Coupling_stop_time" xml:space="preserve">
+    <value>Coupling stop time</value>
   </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run" xml:space="preserve">
     <value>Stop time within the coupled model run</value>
-  </data>
-  <data name="WaveSettingsHelper_GetWaveSettings_Time_step" xml:space="preserve">
-    <value>Time step</value>
   </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Coupling_time_step" xml:space="preserve">
     <value>Coupling time step</value>

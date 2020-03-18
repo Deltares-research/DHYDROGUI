@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Start_time,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_start_time,
                 Name = "StartTime",
                 ValueType = typeof(DateTime),
                 ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time,
                 Name = "StopTime",
                 ValueType = typeof(DateTime),
                 ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run,
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Time_step,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step,
                 Name = "TimeStep",
                 ValueType = typeof(TimeSpan),
                 ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step
