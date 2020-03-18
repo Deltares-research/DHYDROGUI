@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            IWaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
             newExteriorDomain1.SuperDomain = null;
 
             // Act
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            IWaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
             newExteriorDomain1.SuperDomain = null;
 
             // Act
@@ -274,7 +274,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             return rootWaveDomainData;
         }
 
-        private static WaveDomainData AddSubDomainTo(WaveDomainData waveDomainData)
+        private static WaveDomainData AddSubDomainTo(IWaveDomainData waveDomainData)
         {
             var subWaveDomainData = new WaveDomainData("subdomain") { SuperDomain = waveDomainData };
             waveDomainData.SubDomains.Add(subWaveDomainData);

@@ -63,8 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             WaveModel model = getModels()
                 .First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain)
                                             .Any(d => Equals(d.Bathymetry, bathymetry)));
-            WaveDomainData domain = WaveDomainHelper.GetAllDomains(model.OuterDomain)
-                                                    .First(d => Equals(d.Bathymetry, bathymetry));
+            IWaveDomainData domain = WaveDomainHelper.GetAllDomains(model.OuterDomain)
+                                                     .First(d => Equals(d.Bathymetry, bathymetry));
 
             model.BeginEdit(new DefaultEditAction("Importing bed level"));
             try

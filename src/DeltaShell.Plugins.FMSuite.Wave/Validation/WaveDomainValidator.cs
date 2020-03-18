@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private static ValidationReport ValidateAllDomainsShareCoordinateSystem(WaveModel model)
         {
             var issues = new List<ValidationIssue>();
-            WaveDomainData domain = model.OuterDomain;
-            IList<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(domain);
-            List<WaveDomainData> sphericalDomains =
+            IWaveDomainData domain = model.OuterDomain;
+            IList<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(domain);
+            List<IWaveDomainData> sphericalDomains =
                 domains.Where(d => CheckDomainGrid(d, WaveModel.CoordinateSystemType.Spherical)).ToList();
 
             if (sphericalDomains.Any() &&
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport("Model domains", issues);
         }
 
-        private static bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)
+        private static bool CheckDomainGrid(IWaveDomainData domain, string coordinateSystemName)
         {
             if (domain.Grid == null)
             {
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return false;
         }
 
-        private static ValidationReport ValidateDomain(WaveDomainData domain)
+        private static ValidationReport ValidateDomain(IWaveDomainData domain)
         {
             var issues = new List<ValidationIssue>();
 
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport(string.Format("Domain: {0}", domain.Name), issues);
         }
 
-        private static IEnumerable<ValidationIssue> ValidateBathymetry(WaveDomainData domain)
+        private static IEnumerable<ValidationIssue> ValidateBathymetry(IWaveDomainData domain)
         {
             if (domain.Bathymetry.Size1 != domain.Grid.Size1 ||
                 domain.Bathymetry.Size2 != domain.Grid.Size2)
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
         }
 
-        private static IEnumerable<ValidationIssue> ValidateGrid(WaveDomainData domain)
+        private static IEnumerable<ValidationIssue> ValidateGrid(IWaveDomainData domain)
         {
             if (!domain.Grid.X.Values.Any() || !domain.Grid.Y.Values.Any())
             {

@@ -10,13 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
     {
         private ObservableCollection<DomainSpecificSettingsViewModel> domainSpecificDataViewModelsList = new ObservableCollection<DomainSpecificSettingsViewModel>();
         private DomainSpecificSettingsViewModel selectedViewModel;
-        private WaveDomainData rootDomain;
+        private IWaveDomainData rootDomain;
 
         /// <summary>
         /// Constructor for setting the RootDomain
         /// </summary>
         /// <param name="outerDomain"></param>
-        public MainDomainSpecificDataViewModel(WaveDomainData outerDomain)
+        public MainDomainSpecificDataViewModel(IWaveDomainData outerDomain)
         {
             RootDomain = outerDomain;
             SelectedViewModel = DomainSpecificDataViewModelsList.FirstOrDefault();
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
             }
         }
 
-        private WaveDomainData RootDomain
+        private IWaveDomainData RootDomain
         {
             get => rootDomain;
             set
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
         private void DomainsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is WaveDomainData waveDomainData && e.PropertyName == nameof(WaveDomainData.SuperDomain))
+            if (sender is IWaveDomainData waveDomainData && e.PropertyName == nameof(IWaveDomainData.SuperDomain))
             {
                 // Removing exterior domain
                 if (waveDomainData.SuperDomain == null && RootDomain.SubDomains.Contains(waveDomainData))
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Recreates the sub view models list when an event is fired in the root domain data.
         /// </summary>
         /// <param name="superDomain">The super domain.</param>
-        private void Update(WaveDomainData superDomain)
+        private void Update(IWaveDomainData superDomain)
         {
             if (superDomain == null)
             {
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
 
         private List<DomainSpecificSettingsViewModel> CreateNewDomainSpecificSettingsViewModels()
         {
-            IList<WaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(rootDomain);
+            IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(rootDomain);
             return allDomains.Select(domain => new DomainSpecificSettingsViewModel(domain)).ToList();
         }
     }

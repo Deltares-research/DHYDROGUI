@@ -8,9 +8,9 @@ using NetTopologySuite.Extensions.Grids;
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
     [Entity]
-    public class WaveDomainData
+    public class WaveDomainData : IWaveDomainData
     {
-        public IEventedList<WaveDomainData> SubDomains { get; private set; }
+        public IEventedList<IWaveDomainData> SubDomains { get; private set; }
 
         public string GridFileName { get; set; }
         public CurvilinearGrid Grid { get; set; }
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public int NestedInDomain { get; set; }
 
         [Aggregation]
-        public WaveDomainData SuperDomain { get; set; }
+        public IWaveDomainData SuperDomain { get; set; }
 
         public string Name => Path.GetFileNameWithoutExtension(GridFileName);
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             MeteoData = new WaveMeteoData();
             UseGlobalMeteoData = true;
 
-            SubDomains = new EventedList<WaveDomainData>();
+            SubDomains = new EventedList<IWaveDomainData>();
 
             Grid = CurvilinearGrid.CreateDefault();
             Grid.Name = "Grid (" + name + ")";

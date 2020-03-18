@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
             WaveModel model = getModels().First(m => WaveDomainHelper.GetAllDomains(m.OuterDomain)
                                                                      .Any(d => Equals(d.Grid, targetGrid)));
-            WaveDomainData domain =
+            IWaveDomainData domain =
                 WaveDomainHelper.GetAllDomains(model.OuterDomain)
                                 .First(d => Equals(d.Grid, targetGrid));
 

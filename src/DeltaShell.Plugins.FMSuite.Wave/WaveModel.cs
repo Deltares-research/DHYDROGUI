@@ -197,9 +197,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IEventedList<Feature2D> Boundaries { get; }
         public IEventedList<Feature2D> Sp2Boundaries { get; }
 
-        private WaveDomainData outerDomain;
+        private IWaveDomainData outerDomain;
 
-        public WaveDomainData OuterDomain
+        public IWaveDomainData OuterDomain
         {
             get => outerDomain;
             set
@@ -226,9 +226,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         [EditAction]
-        private void RemoveDataItemsForDomain(WaveDomainData domain)
+        private void RemoveDataItemsForDomain(IWaveDomainData domain)
         {
-            foreach (WaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
+            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
             {
                 DataItems.RemoveAllWhere(di => Equals(subdomain.Bathymetry, di.Value));
                 DataItems.RemoveAllWhere(di => di.Tag.Equals(WavmStoreDataItemTag + subdomain.Name));
@@ -236,9 +236,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         [EditAction]
-        private void AddDataItemsForDomain(WaveDomainData domain)
+        private void AddDataItemsForDomain(IWaveDomainData domain)
         {
-            foreach (WaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
+            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(domain))
             {
                 DataItems.Add(new DataItem(subdomain.Bathymetry, DataItemRole.Input));
                 AddDataItem(new WavmFileFunctionStore(""), DataItemRole.Input,
@@ -247,9 +247,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         [EditAction]
-        private void ReplaceDataItemsForDomain(WaveDomainData newDomainData)
+        private void ReplaceDataItemsForDomain(IWaveDomainData newDomainData)
         {
-            foreach (WaveDomainData subdomain in WaveDomainHelper.GetAllDomains(newDomainData))
+            foreach (IWaveDomainData subdomain in WaveDomainHelper.GetAllDomains(newDomainData))
             {
                 foreach (IDataItem dataItem in DataItems)
                 {
@@ -494,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.SyncModelTimesWithBase();
 
             string mdwDir = Path.GetDirectoryName(mdwFilePath);
-            IList<WaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
+            IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
             model.BuildWaveDomains(allDomains, mdwDir, model);
 
@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.ModelDefinition = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
         }
 
-        public void AddSubDomain(WaveDomainData domain, WaveDomainData subDomain)
+        public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
         {
             domain.SubDomains.Add(subDomain);
             subDomain.SuperDomain = domain;
@@ -535,7 +535,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             AfterCoordinateSystemSet();
         }
 
-        public void DeleteSubDomain(WaveDomainData domain, WaveDomainData subDomain)
+        public void DeleteSubDomain(IWaveDomainData domain, WaveDomainData subDomain)
         {
             domain.SubDomains.Remove(subDomain);
             RemoveDataItemsForDomain(subDomain);
@@ -745,16 +745,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return waveBoundaryCondition;
         }
 
-        private void BuildWaveDomains(IEnumerable<WaveDomainData> allDomains, string workingDirectory, WaveModel model)
+        private void BuildWaveDomains(IEnumerable<IWaveDomainData> allDomains, string workingDirectory, WaveModel model)
         {
-            foreach (WaveDomainData domain in allDomains)
+            foreach (IWaveDomainData domain in allDomains)
             {
                 LoadGrid(workingDirectory, domain);
                 LoadBathymetry(model, workingDirectory, domain);
             }
         }
 
-        public void SyncWithModelDefaults(WaveDomainData domain)
+        public void SyncWithModelDefaults(IWaveDomainData domain)
         {
             // only when set to default, we shouldn't overwrite domain-parameters
             SpectralDomainData spectral = domain.SpectralDomainData;
@@ -792,7 +792,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <remarks>
         /// If no file exists, a default grid will be created.
         /// </remarks>
-        public static void LoadGrid(string workingDirectory, WaveDomainData domain)
+        public static void LoadGrid(string workingDirectory, IWaveDomainData domain)
         {
             string grdFilePath = Path.Combine(workingDirectory, domain.GridFileName);
 
@@ -817,7 +817,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// If no file of domain.BedLevelFileName exists in the <paramref name="directory" /> then
         /// an error is logged, and the an empty bathymetry will be loaded on the <paramref name="domain" />.
         /// </remarks>
-        public static void LoadBathymetry(WaveModel model, string directory, WaveDomainData domain)
+        public static void LoadBathymetry(WaveModel model, string directory, IWaveDomainData domain)
         {
             CurvilinearGrid grid = domain.Grid;
             var bathymetry = new CurvilinearCoverage(grid.Size1, grid.Size2, grid.X.Values, grid.Y.Values)
@@ -914,7 +914,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [EditAction]
         private void AfterCoordinateSystemSet()
         {
-            IList<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain);
+            IList<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain);
             domains.ForEach(d =>
             {
                 d.Grid.CoordinateSystem = coordinateSystem;
@@ -1013,9 +1013,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private void SaveBathymetries(IEnumerable<WaveDomainData> allDomains, string projectPath)
+        private void SaveBathymetries(IEnumerable<IWaveDomainData> allDomains, string projectPath)
         {
-            foreach (WaveDomainData domain in allDomains)
+            foreach (IWaveDomainData domain in allDomains)
             {
                 if (!domain.Bathymetry.X.Values.Any())
                 {
@@ -1176,7 +1176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         protected virtual void ReconnectWavmFile(string outputPath)
         {
             ReportProgressText("Reading output (WAVM) file");
-            List<WaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
+            List<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
             if (domains.Count > 1)
             {
                 for (var i = 0; i < domains.Count; ++i)
@@ -1238,7 +1238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.OnProgressChanged();
         }
 
-        private void LoadWaveDomain(WaveDomainData domain)
+        private void LoadWaveDomain(IWaveDomainData domain)
         {
             LoadGrid(Path.GetDirectoryName(MdwFilePath), domain);
 
@@ -1246,12 +1246,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             UpdateBathymetryOperations(domain);
         }
 
-        private static void UpdateBathymetry(WaveDomainData domain)
+        private static void UpdateBathymetry(IWaveDomainData domain)
         {
             domain.Bathymetry.Resize(domain.Grid.Size1, domain.Grid.Size2, domain.Grid.X.Values, domain.Grid.Y.Values);
         }
 
-        private void UpdateBathymetryOperations(WaveDomainData domain)
+        private void UpdateBathymetryOperations(IWaveDomainData domain)
         {
             IDataItem dataItem = GetDataItemByValue(domain.Bathymetry);
             if (dataItem != null)
