@@ -345,35 +345,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             selectPointTool.ClearSelection(); //clear selection, selected points belong to old series anyway
             ChartView.Chart.Series.Clear();
-
-            var profile = crossSectionDefinition.Profile.ToList();
             var flowProfile = crossSectionDefinition.FlowProfile.ToList();
-            
-            var profileSeries = CreateLineSeries("Total profile", profile, Color.DarkBlue, DashStyle.Solid);
             var flowProfileSeries = CreateLineSeries("Flow profile", flowProfile, Color.SteelBlue, DashStyle.Dash);
-
-            editProfileTool.Series = profileSeries;
             editFlowProfileTool.Series = flowProfileSeries;
-            addPointTool.Series = profileSeries;
-
-            ChartView.Chart.Series.Add(profileSeries);
             ChartView.Chart.Series.Add(flowProfileSeries);
 
-            AddStorageToLegend(profile, flowProfile);
 
-            if (storageAreaTool != null)
+            if (viewModel.IsCurrentlyOnChannel)
             {
-                ChartView.Tools.Remove(storageAreaTool);
+                var profile = crossSectionDefinition.Profile.ToList();
+                var profileSeries = CreateLineSeries("Total profile", profile, Color.DarkBlue, DashStyle.Solid);
+                editProfileTool.Series = profileSeries;
+                addPointTool.Series = profileSeries;
+                ChartView.Chart.Series.Add(profileSeries);
+                AddStorageToLegend(profile, flowProfile);
+                if (storageAreaTool != null)
+                {
+                    ChartView.Tools.Remove(storageAreaTool);
+                }
+                storageAreaTool = ChartView.NewSeriesBandTool(profileSeries, flowProfileSeries, Color.LightBlue,
+                    HatchStyle.BackwardDiagonal, Color.WhiteSmoke);
+                ChartView.Tools.Add(storageAreaTool);
+                AddSectionsToChart();
             }
-            storageAreaTool = ChartView.NewSeriesBandTool(profileSeries, flowProfileSeries, Color.LightBlue,
-                                                          HatchStyle.BackwardDiagonal, Color.WhiteSmoke);
-            ChartView.Tools.Add(storageAreaTool);
 
             thalWegMarker.XValue = crossSectionDefinition.Thalweg;
 
             historyController.RefreshHistoryInChart(crossSectionDefinition.Thalweg);
-
-            AddSectionsToChart();
 
             UpdateChartAxis();
         }

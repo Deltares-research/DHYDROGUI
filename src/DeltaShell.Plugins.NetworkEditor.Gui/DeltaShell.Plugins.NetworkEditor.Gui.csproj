@@ -207,7 +207,14 @@
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
+    <Compile Include="Forms\CrossSectionView\CrossSectionPipeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\CrossSectionView\CrossSectionPipeView.Designer.cs">
+      <DependentUpon>CrossSectionPipeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
+    <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionDefinitionStandardViewModel.cs" />
     <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ModelRoughnessProperties.cs" />
@@ -795,6 +802,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionDefinitionView.resx">
       <DependentUpon>CrossSectionDefinitionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionPipeView.resx">
+      <DependentUpon>CrossSectionPipeView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CrossSectionView\CrossSectionView.resx">
       <DependentUpon>CrossSectionView.cs</DependentUpon>

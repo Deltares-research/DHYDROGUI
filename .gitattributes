@@ -2353,6 +2353,9 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionDefi
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionDefinitionViewHistoryController.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionDefinitionViewModel.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionDefinitionViewModelProvider.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionPipeView.Designer.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionPipeView.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionPipeView.resx -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionPresenter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionProfileMutatorProvider.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/CrossSectionStandardShapeViewFactory.cs -text
@@ -2380,6 +2383,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/SectionsTableVie
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/SectionsTableView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/SectionsTableView.resx -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/SimplifiedCoordinate.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/StandardCrossSections/CrossSectionDefinitionStandardViewModel.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/StandardCrossSections/CrossSectionStandardDataView.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/StandardCrossSections/CrossSectionStandardDataView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CrossSectionView/StandardCrossSections/CrossSectionStandardDataView.resx -text

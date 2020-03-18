@@ -166,5 +166,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         }
 
         public event EventHandler SharedDefinitionsChanged;
+
+        public void CreateNewSharedCrossSectionDefinition()
+        {
+            crossSection.MakeDefinitionLocal();
+            crossSection.ShareDefinitionAndChangeToProxy();
+            crossSection.Definition.RefreshGeometry(); /* Refresh the geometry to avoid cached values */
+            FirePropertyChanged(nameof(UseLocalDefinition));
+            FirePropertyChanged(nameof(UseSharedDefinition));
+        }
     }
 }

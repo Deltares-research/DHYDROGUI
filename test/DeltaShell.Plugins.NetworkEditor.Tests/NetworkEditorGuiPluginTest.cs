@@ -8,11 +8,15 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Roughness;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -303,6 +307,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         Assert.AreEqual(propBefore, propAfter, "#event leaks");
                         Assert.AreEqual(toolsBefore, toolsAfter, "#tools leaks");
                     });
+            }
+        }
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ShowPipeViewWithSharedCrossSection()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
+
+                gui.Run();
+
+                app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
+                var mocks = new MockRepository();
+                var model = mocks.DynamicMultiMock<IModelWithRoughnessSections>(typeof(IModelWithNetwork), typeof(IItemContainer));
+                
+                var network = new HydroNetwork() { CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>(new []{new CrossSectionSectionType(){Name = RoughnessDataSet.SewerSectionTypeName }, })};
+                ((IModelWithNetwork) model).Expect(m => m.Network).Return(network).Repeat.Any();
+                Expect.Call(model.GetDirectChildren())
+                    .Return(Enumerable.Range(0, 1).Select(i => network).Cast<object>().AsEnumerable());
+
+                
+                var pipe = new Pipe()
+                {
+                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                };
+                SewerFactory.AddDefaultPipeToNetwork(pipe, network);
+                var RoughnessSections = new EventedList<RoughnessSection>
+                {
+                    new RoughnessSection(new CrossSectionSectionType {Name = RoughnessDataSet.SewerSectionTypeName},
+                        network)
+                };
+                model.Expect(m => m.RoughnessSections).Return(RoughnessSections).Repeat.Any();
+                mocks.ReplayAll();
+                app.Project.RootFolder.Add(model);
+
+                WpfTestHelper.ShowModal(
+                    (Control)gui.MainWindow,
+                    () =>
+                    {
+                        gui.CommandHandler.OpenView(pipe);
+                        
+                    });
+                mocks.VerifyAll();
+
             }
         }
     }

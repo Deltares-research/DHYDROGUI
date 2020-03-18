@@ -11,6 +11,7 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Threading;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
@@ -239,7 +240,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                                                 CrossSectionDefinition).InnerDefinition
                                              : CrossSectionDefinition;
                 
-                crossSectionStandardDataView1.Data = (CrossSectionDefinitionStandard)standardDefinition;
+                crossSectionStandardDataView1.Data = new CrossSectionDefinitionStandardViewModel{ Definition = (CrossSectionDefinitionStandard)standardDefinition, IsOnChannel = ViewModel.IsCurrentlyOnChannel};
+                
             }
             else
             {

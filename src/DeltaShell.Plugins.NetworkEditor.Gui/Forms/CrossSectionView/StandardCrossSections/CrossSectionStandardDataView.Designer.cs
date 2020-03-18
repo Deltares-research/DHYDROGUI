@@ -108,7 +108,7 @@
             // 
             // bindingSourceStandardDefinition
             // 
-            this.bindingSourceStandardDefinition.DataSource = typeof(DelftTools.Hydro.CrossSections.CrossSectionDefinitionStandard);
+            this.bindingSourceStandardDefinition.DataSource = typeof(DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections.CrossSectionDefinitionStandardViewModel);
             // 
             // CrossSectionStandardDataView
             // 

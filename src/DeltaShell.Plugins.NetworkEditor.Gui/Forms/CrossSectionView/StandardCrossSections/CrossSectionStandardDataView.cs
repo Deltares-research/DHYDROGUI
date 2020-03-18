@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
     /// </summary>
     public partial class CrossSectionStandardDataView : UserControl,IView
     {
-        private CrossSectionDefinitionStandard data;
+        private CrossSectionDefinitionStandardViewModel data;
 
         public CrossSectionStandardDataView()
         {
@@ -25,13 +25,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             comboBoxShapeType.ValueMember = "Key";
             
         }
-        
         private void SetStandardCrossSectionDataView()
         {
             panelDataView.Controls.Clear();
             if (Data != null)
             {
-                panelDataView.Controls.Add(CrossSectionStandardShapeViewFactory.GetStandardShapeView(data.Shape));
+                panelDataView.Controls.Add(CrossSectionStandardShapeViewFactory.GetStandardShapeView(data.Definition.Shape));
             }
         }
 
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
         {
             if (Data != null)
             {
-                comboBoxShapeType.SelectedValue = data.ShapeType;
+                comboBoxShapeType.SelectedValue = data.Definition.ShapeType;
             }
         }
 
@@ -48,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             get { return data; }
             set
             {
-                data = (CrossSectionDefinitionStandard) value;
+                data = (CrossSectionDefinitionStandardViewModel) value;
                 
                 RefreshView();
             }
@@ -72,9 +71,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             {
                 var newShape = (CrossSectionStandardShapeType) comboBoxShapeType.SelectedValue;
 
-                if (data.ShapeType != newShape)
+                if (data.Definition.ShapeType != newShape)
                 {
-                    data.ShapeType = newShape;
+                    data.Definition.ShapeType = newShape;
                 }
             }
         }
@@ -89,8 +88,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
                 bindingSourceStandardDefinition.DataSource = data;
             }
 
+            SetVisibilityShiftLevelItems();
             SetComboBoxType();
             SetStandardCrossSectionDataView();
+        }
+
+        private void SetVisibilityShiftLevelItems()
+        {
+            if (Data != null)
+            {
+                textBoxLevelShift.Visible = data.IsOnChannel;
+                labelLevelShift.Visible = data.IsOnChannel;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Forms;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections;
@@ -13,11 +14,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.Standard
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
         public void Show()
         {
-            var data = new CrossSectionDefinitionStandard();
+            var data = new CrossSectionDefinitionStandard() {LevelShift = 8.01};
 
             var view = new CrossSectionStandardDataView
                            {
-                               Data = data
+                               Data = new CrossSectionDefinitionStandardViewModel(){Definition = data, IsOnChannel = true}
                            };
 
             ((INotifyPropertyChanged)data).PropertyChanged += (s,e)=>view.RefreshView();

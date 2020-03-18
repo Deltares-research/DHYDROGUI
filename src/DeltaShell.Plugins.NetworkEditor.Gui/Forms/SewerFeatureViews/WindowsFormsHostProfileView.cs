@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private static void PipePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var windowsFormsHost = sender as WindowsFormsHost;
-            var crossSectionView = windowsFormsHost?.Child as CrossSectionView.CrossSectionView;
+            var crossSectionView = windowsFormsHost?.Child as CrossSectionPipeView;
             if (crossSectionView == null) return;
             if (e.Property != PipeProperty) return;
             var pipe = e.NewValue as IPipe;

@@ -325,6 +325,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             //get the network that has this definition.
                             var network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
                             var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
+                            viewModel.IsCurrentlyOnChannel = network.SharedCrossSectionDefinitions.Contains(o) 
+                                                             && network.CrossSections.Any(cs => cs.Definition.IsProxy && ((CrossSectionDefinitionProxy)cs.Definition).InnerDefinition == o);
                             v.ViewModel = viewModel;
                         }
                 };

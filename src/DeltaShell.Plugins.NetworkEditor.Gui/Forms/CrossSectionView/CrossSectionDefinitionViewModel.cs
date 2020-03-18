@@ -79,5 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         }
 
         public IHydroNetwork HydroNetwork { get; set; }
+        public bool IsCurrentlyOnChannel { get; set; } = true;
     }
 }
