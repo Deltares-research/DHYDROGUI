@@ -132,15 +132,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             FieldUIDescription fieldDescription = objectDescription.FieldDescriptions.Single(fd => fd.Name == KnownWaveProperties.COMFile);
             fieldDescription.SetIsEnabledFunc(d => !data.IsCoupledToFlow);
 
-            objectDescription.FieldDescriptions =
-                new[]
-                    {
-                        flowCouplingCheckBox,
-                        startTime,
-                        stopTime,
-                        timeStep
-                    }.Concat(objectDescription.FieldDescriptions)
-                     .ToList();
+            FieldUIDescription[] couplingFieldDescriptions =
+            {
+                flowCouplingCheckBox,
+                startTime,
+                stopTime,
+                timeStep
+            };
+
+            objectDescription.FieldDescriptions = objectDescription.FieldDescriptions.Concat(couplingFieldDescriptions)
+                                                                   .ToList();
 
             return objectDescription;
         }

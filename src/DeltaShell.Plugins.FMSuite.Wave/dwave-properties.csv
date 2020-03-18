@@ -21,6 +21,11 @@ General,ProjectName,General,General Settings,Project name,String,,,,,,,,,,,
 General,ProjectNr,General,General Settings,Project number,String,,,,,,,,,,,
 General,ReferenceDate,General,General Settings,Reference date,DateTime,2000-01-01,,,,,,,,,, [YYYY-MM-DD HH:MM:SS]
 General,DirConvention,General,General Settings,Directional convention:nautical|cartesian,nautical|cartesian,nautical,,,,,,,,,Direction specification convention,
+Output,COMFile,General,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
+Output,WriteCOM,General,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
+Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
+Output,AppendCOM,General,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
+Output,MassFluxToCOM,General,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
 General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
 General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
@@ -83,11 +88,6 @@ Output,WriteSpec1D,Output,Tables,Write 1D spectra,true|false,false,,,,,,,,,Write
 Output,WriteSpec2D,Output,Tables,Write 2D spectra,true|false,false,,,,,,,,,Write 2D spectra for output locations,
 Output,LocationFile,Output,Tables,Location file,FileName,,,,,,,,,,File name of output locations,
 Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
-Output,COMFile,General,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
-Output,WriteCOM,General,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
-Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
-Output,AppendCOM,General,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
-Output,MassFluxToCOM,General,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
 Output,TestOutputLevel,Output,Miscellaneous,Test output level,Integer,0,,,,,,,,,Test output level,
 Output,TraceCalls,Output,Miscellaneous,Trace subroutine calls,true|false,false,,,,,,,,,Trace subroutine calls,
 Output,MapWriteNetCDF,Output,Miscellaneous,Write NetCDF, true|false,true,,,,,,,,,Write output to NetCDF,
