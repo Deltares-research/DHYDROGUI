@@ -184,9 +184,6 @@
   <data name="WaveSettingsHelper_GetWaveSettings_Coupling_time_step" xml:space="preserve">
     <value>Coupling time step</value>
   </data>
-  <data name="WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM" xml:space="preserve">
-    <value>Data from D-Flow FM</value>
-  </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Domain_specific_settings" xml:space="preserve">
     <value>Domain specific settings</value>
   </data>

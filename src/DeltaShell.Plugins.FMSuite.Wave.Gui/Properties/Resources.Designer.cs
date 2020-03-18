@@ -203,15 +203,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data from D-Flow FM.
-        /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM {
-            get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Domain specific settings.
         /// </summary>
         internal static string WaveSettingsHelper_GetWaveSettings_Domain_specific_settings {
