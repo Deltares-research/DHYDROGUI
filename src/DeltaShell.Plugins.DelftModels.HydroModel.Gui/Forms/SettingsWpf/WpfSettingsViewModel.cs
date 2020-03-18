@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -14,8 +15,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// ViewModel containing the conversion of an ObjectUIDescription (extracted CSV Properties) to a WPF Gui view.
     /// </summary>
     [Entity]
-    public class WpfSettingsViewModel
+    public sealed class WpfSettingsViewModel : IDisposable
     {
+        private bool disposed = false;
         private ObservableCollection<WpfGuiCategory> settingsCategories;
 
         /// <summary>
@@ -114,6 +116,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 SettingsCategories.AddRange(guiCategories);
                 RemovedCategories.RemoveAllWhere(rc => rc.IsVisible);
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                IEnumerable<IDisposable> disposables = SettingsCategories.Select(c => c.CustomControl)
+                                                                         .OfType<IDisposable>();
+                foreach (IDisposable disposable in disposables)
+                {
+                    disposable.Dispose();
+                }
+            }
+
+            disposed = true;
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="WpfSettingsViewModel"/> class.
+        /// </summary>
+        ~WpfSettingsViewModel()
+        {
+            Dispose(false);
         }
     }
 }

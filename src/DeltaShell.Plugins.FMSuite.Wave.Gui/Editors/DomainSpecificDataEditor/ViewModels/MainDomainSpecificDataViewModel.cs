@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -6,8 +7,14 @@ using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels
 {
-    public class MainDomainSpecificDataViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// View model for the main domain specific editor view
+    /// </summary>
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
+    /// <seealso cref="System.IDisposable" />
+    public sealed class MainDomainSpecificDataViewModel : INotifyPropertyChanged, IDisposable
     {
+        private bool disposed = false;
         private ObservableCollection<DomainSpecificSettingsViewModel> domainSpecificDataViewModelsList = new ObservableCollection<DomainSpecificSettingsViewModel>();
         private DomainSpecificSettingsViewModel selectedViewModel;
         private IWaveDomainData rootDomain;
@@ -79,17 +86,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Occurs when [property changed].
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         private void UnSubscribe()
         {
-            ((INotifyPropertyChanged)RootDomain).PropertyChanged -= DomainsPropertyChanged;
-            ((INotifyCollectionChanged)RootDomain.SubDomains).CollectionChanged -= DomainsCollectionChanged;
+            ((INotifyPropertyChanged) RootDomain).PropertyChanged -= DomainsPropertyChanged;
+            RootDomain.SubDomains.CollectionChanged -= DomainsCollectionChanged;
         }
-       
+
         private void Subscribe()
         {
-            ((INotifyPropertyChanged)RootDomain).PropertyChanged += DomainsPropertyChanged;
-            ((INotifyCollectionChanged)RootDomain.SubDomains).CollectionChanged += DomainsCollectionChanged;
+            ((INotifyPropertyChanged) RootDomain).PropertyChanged += DomainsPropertyChanged;
+            RootDomain.SubDomains.CollectionChanged += DomainsCollectionChanged;
         }
 
         private void DomainsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -159,6 +166,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         {
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(rootDomain);
             return allDomains.Select(domain => new DomainSpecificSettingsViewModel(domain)).ToList();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                UnSubscribe();
+            }
+
+            disposed = true;
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="MainDomainSpecificDataViewModel"/> class.
+        /// </summary>
+        ~MainDomainSpecificDataViewModel()
+        {
+            Dispose(false);
         }
     }
 }

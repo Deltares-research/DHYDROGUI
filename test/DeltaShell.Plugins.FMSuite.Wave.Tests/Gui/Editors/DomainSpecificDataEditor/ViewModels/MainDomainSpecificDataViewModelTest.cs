@@ -1,5 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEditor.ViewModels
@@ -263,6 +268,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.AreEqual(2, viewModelsListAfter.Count);
             Assert.AreEqual("exterior2", viewModelsListAfter[0].DomainName);
             Assert.AreEqual("subdomain", viewModelsListAfter[1].DomainName);
+        }
+
+        [Test]
+        public void Dispose_UnsubscribesDomains()
+        {
+            // Setup
+            INotifyPropertyChange domain = Substitute.For<INotifyPropertyChange, IWaveDomainData>();
+            var rootDomain = (IWaveDomainData) domain;
+            var subDomains = Substitute.For<IEventedList<IWaveDomainData>>();
+            rootDomain.SubDomains.Returns(subDomains);
+
+            var viewModel = new MainDomainSpecificDataViewModel(rootDomain);
+
+            // Call
+            viewModel.Dispose();
+
+            // Assert
+            domain.ReceivedWithAnyArgs().PropertyChanged -= Arg.Any<PropertyChangedEventHandler>();
+            subDomains.ReceivedWithAnyArgs().CollectionChanged -= Arg.Any<NotifyCollectionChangedEventHandler>();
         }
 
         private static WaveDomainData CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel)
