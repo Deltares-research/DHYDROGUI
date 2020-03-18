@@ -20,20 +20,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     {
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaveModel data, IGui gui)
         {
-            var wpfGuiCategories = new List<WpfGuiCategory>();
-            if (data != null)
+            if (data == null)
             {
-                wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
-                                                        .GroupBy(fd => fd.Category)
-                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
-                                                        .ToList();
-                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
-
-                ModifyWaveSettings(wpfGuiCategories);
+                return new ObservableCollection<WpfGuiCategory>();
             }
 
+            List<WpfGuiCategory> wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
+                                                                         .GroupBy(fd => fd.Category)
+                                                                         .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
+                                                                         .ToList();
+
+            wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
+
+            ModifyWaveSettings(wpfGuiCategories);
             wpfGuiCategories.Add(GetDomainSpecificSettingsCategory(data));
             AddCustomWaveSettings(data, gui, wpfGuiCategories);
+
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
