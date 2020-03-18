@@ -1,6 +1,5 @@
 ﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
@@ -8,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// <see cref="ConstantParameters{TSpreading}"/> provides the parameters
     /// associated with a <see cref="IWaveBoundaryConditionDefinition"/>
     /// in the case of uniform data, or the parameters associated with a
-    /// <see cref="SupportPoint"/> in the case of a spatially variant
+    /// <see cref="GeometricDefinitions.SupportPoint"/> in the case of a spatially variant
     /// <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
     /// <seealso cref="IBoundaryConditionParameters"/>
