@@ -172,6 +172,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public IBoundaryContainer BoundaryContainer
+        {
+            get => ModelDefinition.BoundaryContainer;
+        }
+
         public WaveModelDefinition ModelDefinition
         {
             get => modelDefinition;
@@ -194,8 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private readonly MdwFile mdwFile = new MdwFile();
         private IWaveModelApi waveApi;
-
-        public IBoundaryContainer BoundaryContainer { get; }
 
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
@@ -441,7 +444,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             InitializeCouplingTime();
 
-            BoundaryContainer = new BoundaryContainer();
             boundaryContainerSyncService = new BoundaryContainerSyncService(this);
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
         }

@@ -7,6 +7,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
         public WaveInputFieldData TimePointData { get; set; }
 
-        // 
+        public IBoundaryContainer BoundaryContainer { get; }
 
         /// <summary>
         /// Create default/empty model definition and set the correct default values depending on other properties.
@@ -87,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             TimePointData = new WaveInputFieldData();
             ObservationPoints = new EventedList<Feature2DPoint>();
             ObservationCrossSections = new EventedList<Feature2D>();
+            BoundaryContainer = new BoundaryContainer();
 
             BoundaryIsDefinedBySpecFile = false;
         }
