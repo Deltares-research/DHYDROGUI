@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+﻿using DelftTools.Functions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
@@ -9,13 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     public interface IBoundaryParametersFactory
     {
         /// <summary>
-        /// Construct a new <see cref="ConstructConstantParameters{TSpreading}"/> instance with default values.
+        /// Construct a new <see cref="ConstantParameters{TSpreading}"/> instance with default values.
         /// </summary>
         ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
-        /// Construct a new <see cref="ConstructConstantParameters{TSpreading}"/> instance.
+        /// Construct a new <see cref="ConstantParameters{TSpreading}"/> instance.
         /// </summary>
         /// <param name="height">The height.</param>
         /// <param name="period">The period.</param>
