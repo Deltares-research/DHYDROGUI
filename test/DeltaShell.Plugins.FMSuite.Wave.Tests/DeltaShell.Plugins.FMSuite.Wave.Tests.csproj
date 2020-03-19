@@ -214,6 +214,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\TimeDependentParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Parameters\WaveParametersConstantsTests.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />
