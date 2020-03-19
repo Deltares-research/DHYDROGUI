@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.Parameters
@@ -104,6 +109,92 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(result.Direction, Is.EqualTo(initialParameters.Direction));
             Assert.That(result.Period, Is.EqualTo(initialParameters.Period));
             Assert.That(result.Height, Is.EqualTo(initialParameters.Height));
+        }
+
+        [Test]
+        public void ConstructTimeDependentParameters_ExpectedResults()
+        {
+            // Setup
+            var factory = new BoundaryParametersFactory();
+            var waveEnergyFunction = Substitute.For<IFunction>();
+
+            // Call
+            TimeDependentParameters parameters = factory.ConstructTimeDependentParameters(waveEnergyFunction);
+
+            // Assert
+            Assert.That(parameters.WaveEnergyFunction, Is.SameAs(waveEnergyFunction),
+                        $"Expected a different {nameof(TimeDependentParameters.WaveEnergyFunction)}:");
+        }
+
+        [Test]
+        public void ConstructTimeDependentParameters_WaveEnergyFunctionNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var factory = new BoundaryParametersFactory();
+
+            // Call
+            TimeDependentParameters parameters = factory.ConstructDefaultTimeDependentParameters<TSpreading>();
+
+            // Assert
+            Assert.That(parameters.WaveEnergyFunction, Has.Property(nameof(IFunction.Name))
+                                                          .EqualTo(WaveParametersConstants.WaveQuantityName),
+                        "Expected a different function name:");
+
+            Assert.That(parameters.WaveEnergyFunction.Arguments, Has.Count.EqualTo(1),
+                        "Expected a different number of Arguments:");
+            IVariable argument = parameters.WaveEnergyFunction.Arguments.First();
+            Assert.That(argument, Has.Property(nameof(Variable<double>.Name))
+                                     .EqualTo(WaveParametersConstants.TimeVariableName));
+
+            Assert.That(parameters.WaveEnergyFunction.Components, Has.Count.EqualTo(4),
+                        "Expected a different number of Components:");
+
+            AssertHasCorrectComponent(parameters.WaveEnergyFunction,
+                                      WaveParametersConstants.HeightVariableName,
+                                      WaveParametersConstants.MeterUnitName,
+                                      WaveParametersConstants.MeterUnitSymbol);
+
+            AssertHasCorrectComponent(parameters.WaveEnergyFunction,
+                                      WaveParametersConstants.PeriodVariableName,
+                                      WaveParametersConstants.SecondUnitName,
+                                      WaveParametersConstants.SecondUnitSymbol,
+                                      1.0);
+
+            AssertHasCorrectComponent(parameters.WaveEnergyFunction,
+                                      WaveParametersConstants.DirectionVariableName,
+                                      WaveParametersConstants.DegreesUnitName,
+                                      WaveParametersConstants.DegreesUnitSymbol);
+            AssertHasCorrectComponent(parameters.WaveEnergyFunction, 
+                                      WaveParametersConstants.SpreadingVariableName,
+                                      SpreadingConversion.GetSpreadingUnit<TSpreading>().Name,
+                                      SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol, 
+                                      SpreadingConversion.GetSpreadingDefaultValue<TSpreading>());
+
+            Assert.That(parameters.WaveEnergyFunction.Attributes[BcwFile.TimeFunctionAttributeName], 
+                        Is.EqualTo(WaveParametersConstants.NonEquidistantTimeFunctionAttributeName));
+            Assert.That(parameters.WaveEnergyFunction.Attributes[BcwFile.RefDateAttributeName], 
+                        Is.EqualTo(new DateTime().ToString(BcwFile.DateFormatString)));
+            Assert.That(parameters.WaveEnergyFunction.Attributes[BcwFile.TimeUnitAttributeName], 
+                        Is.EqualTo(WaveParametersConstants.MinuteUnitName));
+        }
+
+        private static void AssertHasCorrectComponent(IFunction function,
+                                                      string componentName,
+                                                      string expectedUnitName,
+                                                      string expectedUnitSymbol,
+                                                      double? defaultValue = null)
+        {
+            IVariable component = function.Components
+                                          .FirstOrDefault(c => c.Name == componentName);
+            Assert.That(component, Is.Not.Null, $"Expected component with name: {componentName} to exist.");
+            Assert.That(component.Unit.Name, Is.EqualTo(expectedUnitName), "Expected a different unit name:");
+            Assert.That(component.Unit.Symbol, Is.EqualTo(expectedUnitSymbol), "Expected a different unit symbol:");
+
+            if (defaultValue != null)
+            {
+                Assert.That(component.DefaultValue, Is.EqualTo(defaultValue), 
+                            "Expected a different default value");
+            }
         }
     }
 }
