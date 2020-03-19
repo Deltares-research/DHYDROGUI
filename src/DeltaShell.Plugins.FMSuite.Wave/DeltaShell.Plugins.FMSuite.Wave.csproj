@@ -157,6 +157,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\DegreesDefinedSpreading.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\IBoundaryConditionSpreading.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreading.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\SpreadingConversion.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\WaveSpreadingConstants.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinition.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
