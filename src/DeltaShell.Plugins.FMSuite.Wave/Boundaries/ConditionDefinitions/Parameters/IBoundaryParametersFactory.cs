@@ -1,5 +1,6 @@
 ﻿using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
@@ -60,21 +61,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
-        /// Constructs a <see cref="TimeDependentParameters"/> with a default wave energy function.
+        /// Constructs a <see cref="TimeDependentParameters{TSpreading}"/> with a default wave energy function.
         /// </summary>
         /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
         /// <returns>
-        /// <seealso cref="TimeDependentParameters"/> with a default wave energy function.
+        /// <seealso cref="TimeDependentParameters{TSpreading}"/> with a default wave energy function.
         /// </returns>
-        TimeDependentParameters ConstructDefaultTimeDependentParameters<TSpreading>()
+        TimeDependentParameters<TSpreading> ConstructDefaultTimeDependentParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
-        /// Constructs a new <see cref="TimeDependentParameters"/> instance.
+        /// Constructs a new <see cref="TimeDependentParameters{TSpreading}"/> instance.
         /// </summary>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
         /// <param name="waveEnergyFunction">The wave energy function.</param>
         /// <returns>
-        /// <seealso cref="TimeDependentParameters"/> with the provided <paramref name="waveEnergyFunction"/>.
+        /// <seealso cref="TimeDependentParameters{TSpreading}"/> with the provided <paramref name="waveEnergyFunction"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveEnergyFunction"/> is <c>null</c>.
@@ -83,6 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// No additional verification happens on <paramref name="waveEnergyFunction"/>
         /// as such it is expected to be in the correct WaveEnergyFunction form.
         /// </remarks>
-        TimeDependentParameters ConstructTimeDependentParameters(IFunction waveEnergyFunction);
+        TimeDependentParameters<TSpreading> ConstructTimeDependentParameters<TSpreading>(IWaveEnergyFunction<TSpreading> waveEnergyFunction)
+            where TSpreading : class, IBoundaryConditionSpreading, new();
     }
 }

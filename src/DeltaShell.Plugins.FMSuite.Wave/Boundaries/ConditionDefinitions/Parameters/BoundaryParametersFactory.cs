@@ -3,6 +3,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
@@ -37,52 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
                                                               new TNewSpreading());
         }
 
-        public TimeDependentParameters ConstructDefaultTimeDependentParameters<TSpreading>()
-            where TSpreading : class, IBoundaryConditionSpreading, new()
-        {
-            IFunction waveEnergyFunction = ConstructEmptyWaveEnergyFunction<TSpreading>();
-            return ConstructTimeDependentParameters(waveEnergyFunction);
-        }
-
-        public TimeDependentParameters ConstructTimeDependentParameters(IFunction waveEnergyFunction)
-        {
-            return new TimeDependentParameters(waveEnergyFunction);
-        }
-
-        private static IFunction ConstructEmptyWaveEnergyFunction<TSpreading>()
-            where TSpreading : class, IBoundaryConditionSpreading, new()
-        {
-            var function = new Function(WaveParametersConstants.WaveQuantityName);
-
-            function.Arguments.Add(new Variable<DateTime>(WaveParametersConstants.TimeVariableName));
-
-            function.Components.Add(GetHeightVariable());
-            function.Components.Add(GetPeriodVariable());
-            function.Components.Add(GetDirectionVariable());
-            function.Components.Add(GetSpreadingVariable<TSpreading>());
-
-            function.Attributes[BcwFile.TimeFunctionAttributeName] = WaveParametersConstants.NonEquidistantTimeFunctionAttributeName;
-            function.Attributes[BcwFile.RefDateAttributeName] = new DateTime().ToString(BcwFile.DateFormatString);
-            function.Attributes[BcwFile.TimeUnitAttributeName] = WaveParametersConstants.MinuteUnitName;
-
-            return function;
-        }
-
-        private static Variable<double> GetHeightVariable() => 
-            new Variable<double>(WaveParametersConstants.HeightVariableName,
-                                 WaveParametersConstants.ConstructMeterUnit());
-
-        private static Variable<double> GetPeriodVariable() =>
-            new Variable<double>(WaveParametersConstants.PeriodVariableName,
-                                 WaveParametersConstants.ConstructSecondUnit()) {DefaultValue = 1.0};
-
-        private static Variable<double> GetDirectionVariable() =>
-            new Variable<double>(WaveParametersConstants.DirectionVariableName,
-                                 WaveParametersConstants.ConstructDegreesUnit());
-
-        private static Variable<double> GetSpreadingVariable<TSpreading>()
+        public TimeDependentParameters<TSpreading> ConstructDefaultTimeDependentParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
-            new Variable<double>(WaveParametersConstants.SpreadingVariableName,
-                                 SpreadingConversion.GetSpreadingUnit<TSpreading>()) {DefaultValue = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()};
+            ConstructTimeDependentParameters(new WaveEnergyFunction<TSpreading>());
+
+        public TimeDependentParameters<TSpreading> ConstructTimeDependentParameters<TSpreading>(IWaveEnergyFunction<TSpreading> waveEnergyFunction)
+            where TSpreading : class, IBoundaryConditionSpreading, new() =>
+            new TimeDependentParameters<TSpreading>(waveEnergyFunction);
     }
 }
