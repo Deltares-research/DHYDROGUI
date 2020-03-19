@@ -10,6 +10,6 @@
         /// <summary>
         /// Gets or sets the spreading power.
         /// </summary>
-        public double SpreadingPower { get; set; } = 4.0;
+        public double SpreadingPower { get; set; } = WaveSpreadingConstants.PowerDefaultSpreading;
     }
 }

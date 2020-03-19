@@ -10,6 +10,6 @@
         /// <summary>
         /// Gets or sets the degrees of spreading.
         /// </summary>
-        public double DegreesSpreading { get; set; } = 20.0;
+        public double DegreesSpreading { get; set; } = WaveSpreadingConstants.DegreesDefaultSpreading;
     }
 }
