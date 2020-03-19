@@ -177,6 +177,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             get => ModelDefinition.BoundaryContainer;
         }
 
+        public IEventedList<Feature2DPoint> ObservationPoints
+        {
+            get => ModelDefinition.ObservationPoints;
+        }
+
+        public IEventedList<Feature2D> ObservationCrossSections
+        {
+            get => ModelDefinition.ObservationCrossSections;
+        }
+
+        public IEventedList<WaveObstacle> Obstacles
+        {
+            get => ModelDefinition.Obstacles;
+        }
+
+        public IEventedList<WaveBoundaryCondition> BoundaryConditions
+        {
+            get => ModelDefinition.BoundaryConditions;
+        }
+
+        public WaveInputFieldData TimePointData
+        {
+            get => ModelDefinition.TimePointData;
+        }
+
+        /// <summary>
+        /// Only used for bubbling events for updating project tree. Don't remove the setter.
+        /// It should be public.
+        /// </summary>
+        [Obsolete("Use BoundaryContainer.Boundaries")]
+        public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
+
+
         public WaveModelDefinition ModelDefinition
         {
             get => modelDefinition;
@@ -378,20 +411,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
-
-        /// <summary>
-        /// Only used for bubbling events for updating project tree. Don't remove the setter.
-        /// It should be public.
-        /// </summary>
-        [Obsolete("Use BoundaryContainer.Boundaries")]
-        public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
-
-        public WaveInputFieldData TimePointData { get; set; }
-
         public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
         {
             get
@@ -490,13 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
             }
-
-            BoundaryConditions = ModelDefinition.BoundaryConditions;
-            Obstacles = ModelDefinition.Obstacles;
-            TimePointData = ModelDefinition.TimePointData;
-            ObservationPoints = ModelDefinition.ObservationPoints;
-            ObservationCrossSections = ModelDefinition.ObservationCrossSections;
-
+            
             disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(
                                     Boundaries,
                                     BoundaryConditions,

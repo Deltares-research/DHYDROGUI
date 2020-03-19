@@ -46,7 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsGiven()
         {
             var timePoint = new DateTime(2000, 01, 01);
-            waveModel.TimePointData = new WaveInputFieldData();
             var timePoints = new List<DateTime> {timePoint};
             var timePointData = waveModel.TimePointData;
             timePointData.InputFields.Arguments[0].AddValues(timePoints);
@@ -360,7 +359,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         private void SetupModelWithTimePoints(int yearsToAdd)
         {
             var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(yearsToAdd);
-            waveModel.TimePointData = new WaveInputFieldData();
             var timePoints = new List<DateTime> { timePoint };
             var timePointsData = waveModel.TimePointData;
             timePointsData.InputFields.Arguments[0].AddValues(timePoints);
