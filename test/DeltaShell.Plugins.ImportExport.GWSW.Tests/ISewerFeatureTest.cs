@@ -652,6 +652,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [Category("Quarantine")]
         public void AddingGwswConnectionOrificeToNetworkSequence3()
         {
+            /*
+             * This test failed on the build server.
+             * We think this test is supposed to do the following:
+             * 1) Create a SewerConnection with orifice("myOrifice")
+             * 2) Replace the orifice on the SewerConnection with orifice("newOrifice")
+             * 3) Replace the orifice("newOrifice") back to orifice("myOrifice")
+             */
             var network = new HydroNetwork();
             var orificeName = TestSewerNetworkProvider.OrificeName;
 
@@ -666,10 +673,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             AddSewerFeatureToNetwork(sewerConnection, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
+            // check if the expected orifice is present
 
             AddSewerFeatureToNetwork(orifice, network);
             Assert.That(network.SewerConnections.Count(), Is.EqualTo(1));
             Assert.That(network.Orifices.Count(), Is.EqualTo(1));
+            // check if the expected orifice is present
             
         }
 

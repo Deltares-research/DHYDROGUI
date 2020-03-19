@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void PluginGuiUpdatesCoverageViewViewContextsOnNetworkCoverageNetworkPropertyChanged()
         {
             using (var gui = new DeltaShellGui())
@@ -106,7 +105,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void RenamingNetworkCoverageNodesWrappedWithDataItems()
         {
             using (var gui = new DeltaShellGui())
@@ -151,7 +149,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void SelectingSubElementOfNetworkWithNoNetworkViewOpenDoesNotCauseException()
         {
             using (var gui = new DeltaShellGui())
@@ -227,7 +224,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void SelectingAnotherCrossSectionInNetworkTreeCleansViewCorrectly_Tools7425()
         {
             using (var gui = new DeltaShellGui())

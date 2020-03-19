@@ -636,7 +636,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ReadLargeNetwork()
         {
             var t = DateTime.Now;

@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void SimpleSequentialWorkflow()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\demo_01.lit\1\NETWORK.TP";
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 };
             sobekModelImporter.Import();
 
-            Assert.AreEqual("(RR + Flow1D)", hydroModel.CurrentWorkflow.ToString());
+            Assert.AreEqual("(RR + FlowFM)", hydroModel.CurrentWorkflow.ToString());
         }
 
         [Test]
@@ -57,7 +56,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ComplexWorkflow()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\DWAQ_AC1\DWAQ_AC1.lit\37\NETWORK.TP";
@@ -73,13 +71,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             sobekModelImporter.Import();
 
-            Assert.AreEqual("(RR + Flow1D)", hydroModel.CurrentWorkflow.ToString());
+            Assert.AreEqual("(RR + FlowFM)", hydroModel.CurrentWorkflow.ToString());
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportSobekModelWithSalinityThenRemoveWaterFlow1DShouldNotCrash()
         {
             string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\SOBEK3-1015\6\DEFTOP.1";
@@ -106,7 +103,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void TestImportSobekModel_CompositeStructureNamesAreUnique()
         {
             var pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\SOBEK3-1015\6\DEFTOP.1";

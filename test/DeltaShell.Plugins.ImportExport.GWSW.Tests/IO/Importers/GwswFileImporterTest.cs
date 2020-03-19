@@ -1126,7 +1126,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var length = 1000;
             var sewerConnection = new SewerConnection() {Name = replacedConnection, Length = length};
             network.Branches.Add(sewerConnection);
-
+           
             Assert.AreEqual((int) 1, (int) network.Branches.Count(n => n.Name.Equals(replacedConnection)));
             Assert.AreEqual((object) sewerConnection, network.Branches.First(n => n.Name.Equals(replacedConnection)));
 

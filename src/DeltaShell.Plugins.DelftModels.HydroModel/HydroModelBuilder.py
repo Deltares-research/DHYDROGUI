@@ -45,7 +45,7 @@ if rtcPlugin.loaded:
     from DeltaShell.Plugins.DelftModels.RealTimeControl import *
 
 if fmPlugin.loaded:
-    from DeltaShell.Plugins.FMSuite.FlowFM import *  
+    from DeltaShell.Plugins.FMSuite.FlowFM import * 
 
 class ModelGroups:
     Empty = 0
@@ -69,7 +69,7 @@ class HydroModelBuilder(object):
             return True
             
         if modelGroup == ModelGroups.SobekModels:
-            if rrPlugin.loaded or rtcPlugin.loaded:
+            if fmPlugin.loaded and (rrPlugin.loaded or rtcPlugin.loaded):
                 return True
                 
         if modelGroup == ModelGroups.RHUModels:
@@ -130,7 +130,7 @@ class HydroModelBuilder(object):
                 rtc = RealTimeControlModel(Name=self.RTC_MODEL_NAME)
                 model.Activities.Add(rtc)
 
-        if (modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.RHUModels  or modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
+        if (modelGroup == ModelGroups.SobekModels or modelGroup == ModelGroups.FMWaveRtcModels or modelGroup == ModelGroups.RHUModels  or modelGroup == ModelGroups.OverLandFlow1D2D or modelGroup == ModelGroups.All):
 
             if hydroPlugin.loaded and fmPlugin.loaded:
                 # build area

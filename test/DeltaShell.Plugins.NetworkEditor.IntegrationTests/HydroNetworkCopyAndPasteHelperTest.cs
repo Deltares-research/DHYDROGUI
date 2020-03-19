@@ -266,7 +266,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PasteBranchFeatureToBranchInOtherNetwork()
         {
             string errorMessage;
@@ -299,7 +298,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
             HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(sourceNetwork.CrossSections.ElementAt(0));
             Assert.IsFalse(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(targetChannel, 10, out errorMessage));
-            Assert.AreEqual("Cannot paste the cross section with name \"CrossSection1\" in this network because a SectionType with the following name is missing: CrossSectionType1", errorMessage);
+            Assert.AreEqual("Cannot paste the cross section with name \"CrossSection_1D_1\" in this network because a SectionType with the following name is missing: CrossSectionType1", errorMessage);
 
             targetNetwork.CrossSectionSectionTypes[0].Name = "CrossSectionType1";
             Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(targetChannel, 10, out errorMessage));
@@ -448,7 +447,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PasteProxiedCrossSection()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0));
@@ -469,7 +467,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             Assert.AreEqual(2, channel.CrossSections.Count());
             var copy = channel.CrossSections.First(c => c.Name != "kees");
 
-            Assert.AreEqual("CrossSection1", copy.Name);
+            Assert.AreEqual("CrossSection_1D_1", copy.Name);
             
             Assert.IsTrue(copy.Definition.IsProxy);
             var copiedProxy = (CrossSectionDefinitionProxy) copy.Definition;

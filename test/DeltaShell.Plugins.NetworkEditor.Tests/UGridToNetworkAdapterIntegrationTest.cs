@@ -54,7 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void SaveAndLoadNetwork_WithCustomizedLengthBranchTest()
         {
             var networkDiscretisation = TestNetworkAndDiscretisationProvider.CreateSimpleNetworkAndDiscretisation();

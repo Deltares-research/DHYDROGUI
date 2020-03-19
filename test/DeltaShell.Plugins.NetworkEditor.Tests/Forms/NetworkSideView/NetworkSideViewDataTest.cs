@@ -161,7 +161,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         [Test]
         [Category(TestCategory.Performance)]
-        [Category("Quarantine")]
         public void MinMaxZIsFast()
         {
             //not so fast here since the we use mem based store. Netcdf is more quick

@@ -36,16 +36,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void SaveLoadHydroModelWithSeveralSubActivities()
         {
             var hydroModelBuilder = new HydroModelBuilder();
             var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
 
+            int expectedActivitiesCount = hydroModel.Activities.Count;
+            int expectedRegionsCount = hydroModel.Region.AllRegions.Count();
+
             var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
 
-            Assert.AreEqual(5, retrievedHydroModel.Activities.Count);
-            Assert.AreEqual(4, retrievedHydroModel.Region.AllRegions.Count());
+            Assert.AreEqual(expectedActivitiesCount, retrievedHydroModel.Activities.Count);
+            Assert.AreEqual(expectedRegionsCount, retrievedHydroModel.Region.AllRegions.Count());
         }
 
         [Test]
@@ -54,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var hydroModelBuilder = new HydroModelBuilder();
             var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.OverLandFlow1D2D);
-
+            
             var workFlow = hydroModel.CurrentWorkflow as Iterative1D2DCoupler;
             Assert.NotNull(workFlow);
 

@@ -236,7 +236,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
         {
             var mainWindow = (MainWindow)gui.MainWindow;
