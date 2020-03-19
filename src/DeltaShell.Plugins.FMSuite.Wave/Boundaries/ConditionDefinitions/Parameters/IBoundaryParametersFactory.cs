@@ -12,16 +12,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// <summary>
         /// Construct a new <see cref="ConstantParameters{TSpreading}"/> instance with default values.
         /// </summary>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
+        /// <returns>
+        /// Returns a new default <see cref="ConstantParameters{TSpreading}"/> instance with default
+        /// values.
+        /// </returns>
         ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
         /// Construct a new <see cref="ConstantParameters{TSpreading}"/> instance.
         /// </summary>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
         /// <param name="height">The height.</param>
         /// <param name="period">The period.</param>
         /// <param name="direction">The direction.</param>
         /// <param name="spreading">The spreading.</param>
+        /// <returns>
+        /// Returns a new <see cref="ConstantParameters{TSpreading}"/> instance with the provided
+        /// values.
+        /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="spreading"/> is <c>null</c>.
         /// </exception>
