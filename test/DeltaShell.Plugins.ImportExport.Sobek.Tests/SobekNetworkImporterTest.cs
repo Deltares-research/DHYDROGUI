@@ -97,7 +97,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ReadTabulatedCSWithSummerdike()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\40\Deftop.1";
@@ -375,7 +374,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void ReadCrossSectionZW()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -395,7 +393,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test] 
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void AllProfileChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -407,7 +404,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void AllStructureChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
@@ -447,7 +443,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ReadNetworkWithRetentionsRE()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
@@ -481,25 +476,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void ReadingNetworkWithRetentionsAddsCrossSectionToNewBranchWhenTheBranchWasSplitDueToRetentionAndThereWasACrossSectionAtTheSplitNode()
-        {
-            //pretty coarse test...jist import a network with that crossections at retententions locations.
-            //TODO: make this code better UNIT testable by giving it a list of Sobek entities ...read files -> Sobek Entities -> DS Entities
-            //so we can test with predefined sobek entities
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\J_10BANK_v2.sbk\5\DEFTOP.1";
-            var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
-
-            //assert crossections are added to newly generated branches
-            var createdCrossSection = network.CrossSections.FirstOrDefault(c => c.Branch.Name == "008_B" && c.Chainage == 0.0d);
-            Assert.IsNotNull(createdCrossSection);
-            Assert.AreEqual("1154-retcs",createdCrossSection.Name);
-        }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ReadNetworkWithExtraResistanceRe()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
@@ -621,7 +597,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestReadNetworkWithCompoundStructures_CompositeStructureNamesAreUnique()
         {
             // we use this test-data since it contains composite structures with non-unique names

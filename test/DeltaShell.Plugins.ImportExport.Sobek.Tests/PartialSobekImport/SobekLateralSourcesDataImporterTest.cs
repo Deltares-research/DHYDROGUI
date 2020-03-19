@@ -14,7 +14,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ImportLateralSourcesData()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
@@ -31,7 +30,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportLateralSourcesDataOnExistingModel()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";

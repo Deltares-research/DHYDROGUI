@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportSalt()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(),new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter(), new SobekSaltImporter() });
 
             importer.Import();

@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ImportMeasurementStations()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
@@ -26,7 +25,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void UpdateExistingMeasurementStations()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";
@@ -53,7 +51,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void UpdateExistingMeasurementStationOnAnotherBranch()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\J_10BANK.sbk\4\DEFTOP.1";

@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportREModel_NDB()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\deftop.1";
@@ -23,7 +22,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportREModel_Maas()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\deftop.1";
