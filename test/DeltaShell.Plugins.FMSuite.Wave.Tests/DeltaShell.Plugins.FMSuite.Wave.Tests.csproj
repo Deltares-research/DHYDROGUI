@@ -223,6 +223,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreadingTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\SpreadingConversionTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinitionTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\WaveEnergyFunctions\WaveEnergyFunctionTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTestHelper.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\SupportPointTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionTest.cs" />
