@@ -7,6 +7,11 @@
     public static class WaveParametersConstants
     {
         /// <summary>
+        /// The wave quantity name
+        /// </summary>
+        public const string WaveQuantityName = "wave_energy_density";
+
+        /// <summary>
         /// The time variable name.
         /// </summary>
         public const string TimeVariableName = "Time";
