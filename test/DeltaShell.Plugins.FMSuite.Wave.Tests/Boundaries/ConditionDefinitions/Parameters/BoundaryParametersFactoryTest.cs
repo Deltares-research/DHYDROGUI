@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Linq;
-using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
 
