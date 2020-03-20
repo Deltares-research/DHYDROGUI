@@ -33,31 +33,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             /*CHECK FIRST FOR CUSTOM CONTROLS*/
             if (item is WpfGuiCategory category)
             {
-                if (!category.HasCustomControl)
-                {
-                    return fe.FindResource(tabContentTemplateKey) as DataTemplate;
-                }
-
-                return fe.FindResource(tabCustomContentTemplateKey) as DataTemplate;
+                return GetTemplateForCategory(category, fe);
             }
 
             if (item is WpfGuiSubCategory subCategory)
             {
-                if (!subCategory.HasCustomControl)
-                {
-                    return fe.FindResource(subCategoryTemplateKey) as DataTemplate;
-                }
-
-                return fe.FindResource(subCategoryCustomTemplateKey) as DataTemplate;
+                return GetTemplateForSubCategory(subCategory, fe);
             }
 
-            if (!(item is WpfGuiProperty property))
+            if (item is WpfGuiProperty property)
             {
-                return base.SelectTemplate(item, container);
+                return GetTemplateForProperty(item, container, property, fe);
             }
 
             /* There were not any custom controls, so go ahead with the regular templates*/
             /*Todo: make a switch or create a dictionary for this. */
+            return base.SelectTemplate(item, container);
+        }
+
+        private DataTemplate GetTemplateForProperty(object item, DependencyObject container, WpfGuiProperty property,
+                                                    FrameworkElement fe)
+        {
             Type type = property.ValueType;
             if (type == typeof(string)
                 || type == typeof(double)
@@ -99,6 +95,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             return base.SelectTemplate(item, container);
+        }
+
+        private static DataTemplate GetTemplateForSubCategory(WpfGuiSubCategory subCategory, FrameworkElement fe)
+        {
+            if (!subCategory.HasCustomControl)
+            {
+                return fe.FindResource(subCategoryTemplateKey) as DataTemplate;
+            }
+
+            return fe.FindResource(subCategoryCustomTemplateKey) as DataTemplate;
+        }
+
+        private static DataTemplate GetTemplateForCategory(WpfGuiCategory category, FrameworkElement fe)
+        {
+            if (!category.HasCustomControl)
+            {
+                return fe.FindResource(tabContentTemplateKey) as DataTemplate;
+            }
+
+            return fe.FindResource(tabCustomContentTemplateKey) as DataTemplate;
         }
     }
 }
