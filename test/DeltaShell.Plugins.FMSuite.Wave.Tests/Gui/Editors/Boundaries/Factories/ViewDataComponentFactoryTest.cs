@@ -221,6 +221,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
+        public void ConstructBoundaryConditionDataComponent_UniformTimeDependentPower_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+                                                                SpatialDefinitionViewType.Uniform,
+                                                                DirectionalSpreadingViewType.Power);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
+        }
+
+        [Test]
         public void ConstructBoundaryConditionDataComponent_UniformConstantDegrees_ExpectedResults()
         {
             // Setup
@@ -242,6 +266,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory
                 .Received(1)
                 .ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
+        }
+
+        [Test]
+        public void ConstructBoundaryConditionDataComponent_UniformTimeDependentDegrees_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>()));
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+                                                                SpatialDefinitionViewType.Uniform,
+                                                                DirectionalSpreadingViewType.Degrees);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>();
         }
 
         [Test]
@@ -269,6 +317,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
+        public void ConstructBoundaryConditionDataComponent_SpatiallyVariantTimeDependentDegrees_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>();
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+                                                                SpatialDefinitionViewType.SpatiallyVarying,
+                                                                DirectionalSpreadingViewType.Degrees);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>();
+        }
+
+        [Test]
         public void ConstructBoundaryConditionDataComponent_SpatiallyVariantConstantPower_ExpectedResults()
         {
             // Setup
@@ -293,10 +365,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
-        [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Power)]
-        [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Degrees)]
-        [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Power)]
-        [TestCase(ForcingViewType.TimeSeries, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Degrees)]
+        public void ConstructBoundaryConditionDataComponent_SpatiallyVariantTimeDependentPower_ExpectedResults()
+        {
+            // Setup
+            var srcDataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>()
+                                     .Returns(srcDataComponent);
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+                                                                SpatialDefinitionViewType.SpatiallyVarying,
+                                                                DirectionalSpreadingViewType.Power);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
+        }
+
+
+        [Test]
         [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Power)]
         [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Degrees)]
         [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Power)]

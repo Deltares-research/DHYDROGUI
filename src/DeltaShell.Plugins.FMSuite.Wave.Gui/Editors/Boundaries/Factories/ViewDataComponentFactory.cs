@@ -130,7 +130,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
                                                    spreadingType == DirectionalSpreadingViewType.Degrees:
                     return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
-                case ForcingViewType.TimeSeries:
+                case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.Uniform && 
+                                                     spreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
+                case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.Uniform && 
+                                                     spreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>();
+                case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
+                                                     spreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
+                case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
+                                                     spreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>();
                 case ForcingViewType.FileBased:
                 default:
                     throw new NotSupportedException($"The combination of {forcingType} and {spatialDefinition} is currently not supported.");
