@@ -7,6 +7,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
     public class SettingsTemplateSelector : DataTemplateSelector
     {
+        private const string tabContentTemplateKey = "TabContentTemplate";
+        private const string tabCustomContentTemplateKey = "TabCustomContentTemplate";
+        private const string subCategoryTemplateKey = "SubCategoryTemplate";
+        private const string subCategoryCustomTemplateKey = "SubCategoryCustomTemplate";
+        private const string textBoxTemplateKey = "TextBoxTemplate";
+        private const string dateTemplateKey = "DateTemplate";
+        private const string dateTimeTemplateKey = "DateTimeTemplate";
+        private const string checkboxTemplateKey = "CheckboxTemplate";
+        private const string timeSpanTemplateKey = "TimeSpanTemplate";
+        private const string listTemplateKey = "ListTemplate";
+        private const string comboBoxTemplateKey = "ComboBoxTemplate";
+
         /// <summary>
         /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.
         /// </summary>
@@ -23,20 +35,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 if (!category.HasCustomControl)
                 {
-                    return fe.FindResource("TabContentTemplate") as DataTemplate;
+                    return fe.FindResource(tabContentTemplateKey) as DataTemplate;
                 }
 
-                return fe.FindResource("TabCustomContentTemplate") as DataTemplate;
+                return fe.FindResource(tabCustomContentTemplateKey) as DataTemplate;
             }
 
             if (item is WpfGuiSubCategory subCategory)
             {
                 if (!subCategory.HasCustomControl)
                 {
-                    return fe.FindResource("SubCategoryTemplate") as DataTemplate;
+                    return fe.FindResource(subCategoryTemplateKey) as DataTemplate;
                 }
 
-                return fe.FindResource("SubCategoryCustomTemplate") as DataTemplate;
+                return fe.FindResource(subCategoryCustomTemplateKey) as DataTemplate;
             }
 
             if (!(item is WpfGuiProperty property))
@@ -51,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 || type == typeof(double)
                 || type == typeof(int))
             {
-                return fe.FindResource("TextBoxTemplate") as DataTemplate;
+                return fe.FindResource(textBoxTemplateKey) as DataTemplate;
             }
 
             if (type == typeof(DateTime))
@@ -59,31 +71,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 string format = property.UnitSymbol.Trim('[', ']').ToLower();
                 if (format == DateTimeFormats.Date)
                 {
-                    return fe.FindResource("DateTemplate") as DataTemplate;
+                    return fe.FindResource(dateTemplateKey) as DataTemplate;
                 }
 
-                return fe.FindResource("DateTimeTemplate") as DataTemplate;
+                return fe.FindResource(dateTimeTemplateKey) as DataTemplate;
             }
 
             if (type == typeof(bool))
             {
-                return fe.FindResource("CheckboxTemplate") as DataTemplate;
+                return fe.FindResource(checkboxTemplateKey) as DataTemplate;
             }
 
             if (type == typeof(TimeSpan))
             {
-                return fe.FindResource("TimeSpanTemplate") as DataTemplate;
+                return fe.FindResource(timeSpanTemplateKey) as DataTemplate;
             }
 
             if (type == typeof(IList<double>))
             {
-                return fe.FindResource("ListTemplate") as DataTemplate;
+                return fe.FindResource(listTemplateKey) as DataTemplate;
             }
 
             if (type == typeof(Enum)
                 || type?.BaseType == typeof(Enum))
             {
-                return fe.FindResource("ComboBoxTemplate") as DataTemplate;
+                return fe.FindResource(comboBoxTemplateKey) as DataTemplate;
             }
 
             return base.SelectTemplate(item, container);
