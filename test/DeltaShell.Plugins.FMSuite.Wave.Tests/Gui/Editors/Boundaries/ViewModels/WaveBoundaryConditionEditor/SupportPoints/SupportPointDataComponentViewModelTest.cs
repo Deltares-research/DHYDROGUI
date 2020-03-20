@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void AddDefaultParameters_ExpectedResults()
+        public void AddDefaultParameters_ConstantParameters_ExpectedResults()
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
@@ -224,6 +224,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         "The data component should contain the newly added SupportPoint, but did not:");
             Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
             parametersFactory.Received(1).ConstructDefaultConstantParameters<TSpreading>();
+        }
+
+        [Test]
+        public void AddDefaultParameters_TimeDependentParameters_ExpectedResults()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
+            parametersFactory.ConstructDefaultTimeDependentParameters<TSpreading>().Returns(parameters);
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.AddDefaultParameters(supportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), 
+                        "The data component should contain the newly added SupportPoint, but did not:");
+            Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
+            parametersFactory.Received(1).ConstructDefaultTimeDependentParameters<TSpreading>();
         }
 
         [Test]
