@@ -7,33 +7,33 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/> defines the view model for the
+    /// <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/> defines the view model for the
     /// ParametersSettingsView given spatially varying constant data.
     /// </summary>
     /// <seealso cref="ConstantParameters{TSpreading}" />
-    public sealed class SpatiallyVariantConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel
+    public sealed class SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading> : TimeDependentParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
-        private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping;
+        private readonly IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping;
 
         /// <summary>
-        /// Creates a new <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/>.
+        /// Creates a new <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
         /// <param name="supportPointToParametersMapping">
-        /// The mapping of support points to their corresponding <see cref="ConstantParameters{TSpreading}"/>.
+        /// The mapping of support points to their corresponding <see cref="TimeDependentParameters{TSpreading}"/>.
         /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="supportPointToParametersMapping"/> is <c>null</c>.
         /// </exception>
-        public SpatiallyVariantConstantParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping)
+        public SpatiallyVariantTimeDependentParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping)
         {
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
-            GroupBoxTitle = "Spatially Varying Constant Parameters";
+            GroupBoxTitle = "Spatially Varying Time Dependent Parameters";
         }
 
-        public override ConstantParametersViewModel ActiveParametersViewModel
+        public override TimeDependentParametersViewModel ActiveParametersViewModel
         {
             get => activeParametersViewModel;
             protected set
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private ConstantParametersViewModel activeParametersViewModel;
+        private TimeDependentParametersViewModel activeParametersViewModel;
 
         public override string GroupBoxTitle
         {
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
 
         /// <summary>
-        /// Updates the currently selected <see cref="ConstantParameters"/>
+        /// Updates the currently selected <see cref="TimeDependentParameters{TSpreading}"/>
         /// with the newly selected <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
@@ -78,19 +78,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
-            ConstantParameters<TSpreading> correspondingParameters = 
+            TimeDependentParameters<TSpreading> correspondingParameters = 
                 supportPoint != null && 
-                supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters<TSpreading> value) 
+                supportPointToParametersMapping.TryGetValue(supportPoint, out TimeDependentParameters<TSpreading> value) 
                     ? value 
                     : null;
 
-            if (correspondingParameters == (ActiveParametersViewModel as ConstantParametersViewModel<TSpreading>)?.ObservedParameters)
+            if (correspondingParameters == (ActiveParametersViewModel as TimeDependentParametersViewModel<TSpreading>)?.ObservedParameters)
             {
                 return;
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new ConstantParametersViewModel<TSpreading>(correspondingParameters)
+                                            ? new TimeDependentParametersViewModel<TSpreading>(correspondingParameters)
                                             : null;
         }
     }
