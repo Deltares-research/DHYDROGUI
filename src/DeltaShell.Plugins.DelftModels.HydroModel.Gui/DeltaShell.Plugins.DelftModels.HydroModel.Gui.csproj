@@ -175,6 +175,7 @@
     </Compile>
     <Compile Include="Forms\ProjectExplorer\HydroModelTreeViewNodePresenter.cs" />
     <Compile Include="Forms\SettingsWpf\CommandHelper.cs" />
+    <Compile Include="Forms\SettingsWpf\DateTimeFormats.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleToStringConverter.cs" />
     <Compile Include="Forms\SettingsWpf\DoubleWrapper.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelector.cs" />

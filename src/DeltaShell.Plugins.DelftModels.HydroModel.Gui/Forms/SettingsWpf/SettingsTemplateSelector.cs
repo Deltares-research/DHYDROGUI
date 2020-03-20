@@ -48,7 +48,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return fe.FindResource("TextBoxTemplate") as DataTemplate;
 
             if (type == typeof(DateTime))
+            {
+                string format = property.UnitSymbol.Trim('[', ']').ToLower();
+                if (format == DateTimeFormats.Date)
+                {
+                    return fe.FindResource("DateTemplate") as DataTemplate;
+                }
+
                 return fe.FindResource("DateTimeTemplate") as DataTemplate;
+            }
 
             if (type == typeof(bool))
                 return fe.FindResource("CheckboxTemplate") as DataTemplate;
