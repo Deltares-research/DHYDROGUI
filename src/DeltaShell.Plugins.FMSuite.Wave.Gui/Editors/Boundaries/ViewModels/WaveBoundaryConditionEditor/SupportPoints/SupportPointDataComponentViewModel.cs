@@ -166,6 +166,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantDict:
                     constantDict.RemoveSupportPoint(supportPoint);
                     break;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> timeDependentDict:
+                    timeDependentDict.RemoveSupportPoint(supportPoint);
+                    break;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> timeDependentDict:
+                    timeDependentDict.RemoveSupportPoint(supportPoint);
+                    break;
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }

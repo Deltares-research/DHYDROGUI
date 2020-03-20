@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void RemoveParameters_ExpectedResults()
+        public void RemoveParameters_ConstantParameters_ExpectedResults()
         {
             // Setup
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -286,6 +286,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
                         "The data component should not contain the removed SupportPoint:");
         }
+
+        [Test]
+        public void RemoveParameters_TimeDependentParameters_ExpectedResults()
+        {
+            // Setup
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
+            dataComponent.AddParameters(supportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            // Call
+            viewModel.RemoveParameters(supportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
+                        "The data component should not contain the removed SupportPoint:");
+        }
+
 
         [Test]
         public void RemoveParameters_SupportPointNull_ThrowsArgumentNullException()
