@@ -4,6 +4,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
@@ -77,15 +78,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
         private static IEnumerable<TestCaseData> GetIsEnabledData()
         {
-            var waveBoundaryIsEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabled.DataComponent = 
+            var waveBoundaryIsEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledConstant.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabled, true);
+            yield return new TestCaseData(waveBoundaryIsEnabledConstant, true);
 
-            var waveBoundaryIsNotEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabled.DataComponent =
+            var waveBoundaryIsEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledTimeDependent.DataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            yield return new TestCaseData(waveBoundaryIsEnabledTimeDependent, true);
+
+            var waveBoundaryIsNotEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledConstant.DataComponent =
                 new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabled, false);
+            yield return new TestCaseData(waveBoundaryIsNotEnabledConstant, false);
+
+            var waveBoundaryIsNotEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledTimeDependent.DataComponent =
+                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            yield return new TestCaseData(waveBoundaryIsNotEnabledTimeDependent, false);
         }
 
         [Test]

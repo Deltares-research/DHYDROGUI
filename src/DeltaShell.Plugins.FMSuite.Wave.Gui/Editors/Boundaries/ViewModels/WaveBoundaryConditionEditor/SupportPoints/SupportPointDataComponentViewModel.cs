@@ -75,8 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </returns>
         public bool IsEnabled()
         {
-            return ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> || 
-                   ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>;
+            return ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>      || 
+                   ObservedDataComponent is SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>    ||
+                   ObservedDataComponent is SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> ||
+                   ObservedDataComponent is SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>;
         }
 
         /// <summary>
