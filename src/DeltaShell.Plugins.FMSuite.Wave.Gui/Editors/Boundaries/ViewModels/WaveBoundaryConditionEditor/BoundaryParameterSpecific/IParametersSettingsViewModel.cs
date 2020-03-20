@@ -6,7 +6,8 @@
     ///
     /// Currently, the following are defined:
     ///
-    /// * <see cref="IConstantParametersSettingsViewModel"/>
+    /// * <see cref="ConstantParametersSettingsViewModel"/>
+    /// * <see cref="TimeDependentParametersSettingsViewModel"/>
     /// 
     /// </summary>
     /// <remarks>

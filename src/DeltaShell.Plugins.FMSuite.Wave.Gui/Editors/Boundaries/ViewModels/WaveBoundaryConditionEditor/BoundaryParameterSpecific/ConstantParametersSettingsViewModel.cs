@@ -8,11 +8,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// model that wishes to back the ConstantParametersView.
     /// </summary>
     /// <seealso cref="IParametersSettingsViewModel" />
+    /// <seealso cref="INotifyPropertyChanged" />
     public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel,
                                                                 INotifyPropertyChanged
     {
         /// <summary>
-        /// Get the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
+        /// Gets or sets the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
         /// </summary>
         public abstract ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
 
