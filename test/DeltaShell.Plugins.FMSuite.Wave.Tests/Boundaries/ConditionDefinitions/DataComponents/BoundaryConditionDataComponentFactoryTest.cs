@@ -35,37 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(exception.ParamName, Is.EqualTo("parametersFactory"));
         }
 
-        [Test]
-        public void ConstructDefaultDataComponent_UniformDataComponentWithConstantParameters_ExpectedResult()
-        {
-            // Setup
-            var parameterFactory = new BoundaryParametersFactory();
-            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
-
-            // Call
-            var dataComponent = 
-                componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
-
-            // Assert
-            Assert.That(dataComponent, Is.Not.Null);
-            Assert.That(dataComponent.Data, Is.Not.Null);
-        }
-
-        [Test]
-        public void ConstructDefaultDataComponent_SpatiallyVaryingDataComponentWithConstantParameters_ExpectedResult()
-        {
-            // Setup
-            var parameterFactory = new BoundaryParametersFactory();
-            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
-
-            // Call
-            var dataComponent = 
-                componentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
-
-            // Assert
-            Assert.That(dataComponent, Is.Not.Null);
-            Assert.That(dataComponent.Data, Is.Not.Null);
-        }
 
         private class DummyParameters : IBoundaryConditionDataComponent { }
 

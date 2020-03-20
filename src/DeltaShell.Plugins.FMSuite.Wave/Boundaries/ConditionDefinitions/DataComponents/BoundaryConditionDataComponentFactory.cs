@@ -44,6 +44,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
                                 ConstructSpatiallyVaryingConstantDataComponent<PowerDefinedSpreading>);
             constructionMap.Add(typeof(SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>), 
                                 ConstructSpatiallyVaryingConstantDataComponent<DegreesDefinedSpreading>);
+            constructionMap.Add(typeof(UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>), 
+                                ConstructUniformTimeDependentComponent<PowerDefinedSpreading>);
+            constructionMap.Add(typeof(UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>), 
+                                ConstructUniformTimeDependentComponent<DegreesDefinedSpreading>);
+            constructionMap.Add(typeof(SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>), 
+                                ConstructSpatiallyVaryingTimeDependentDataComponent<PowerDefinedSpreading>);
+            constructionMap.Add(typeof(SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>), 
+                                ConstructSpatiallyVaryingTimeDependentDataComponent<DegreesDefinedSpreading>);
         }
 
         public T ConstructDefaultDataComponent<T>() where T : class, IBoundaryConditionDataComponent
@@ -64,6 +72,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         private SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>> ConstructSpatiallyVaryingConstantDataComponent<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+
+        private UniformDataComponent<TimeDependentParameters<TSpreading>> ConstructUniformTimeDependentComponent<TSpreading>()
+            where TSpreading : class, IBoundaryConditionSpreading, new() =>
+            new UniformDataComponent<TimeDependentParameters<TSpreading>>(parametersFactory.ConstructDefaultTimeDependentParameters<TSpreading>());
+
+        private SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>> ConstructSpatiallyVaryingTimeDependentDataComponent<TSpreading>()
+            where TSpreading : class, IBoundaryConditionSpreading, new() =>
+            new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+
 
         public IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(IBoundaryConditionDataComponent oldDataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
