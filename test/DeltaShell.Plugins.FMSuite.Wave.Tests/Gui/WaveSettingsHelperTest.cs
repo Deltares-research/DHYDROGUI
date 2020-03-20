@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Shell.Gui;
@@ -13,6 +14,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
     [TestFixture]
     public class WaveSettingsHelperTest
     {
+        [Test]
+        public void GetWpfGuiCategories_DataNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => WaveSettingsHelper.GetWpfGuiCategories(null, Substitute.For<IGui>());
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("data"));
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public void GetWpfGuiCategories_ComFileWpfGuiPropertyEnabledIsDependentOnCouplingToFmModel(bool coupledToFlow)

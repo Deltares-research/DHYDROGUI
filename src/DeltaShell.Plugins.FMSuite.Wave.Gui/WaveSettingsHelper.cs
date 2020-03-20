@@ -6,6 +6,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
@@ -20,10 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     {
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaveModel data, IGui gui)
         {
-            if (data == null)
-            {
-                return new ObservableCollection<WpfGuiCategory>();
-            }
+            Ensure.NotNull(data, nameof(data));
 
             List<WpfGuiCategory> wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
                                                                          .GroupBy(fd => fd.Category)
