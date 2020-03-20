@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 {
     /// <summary>
     /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/> defines the view model for the
-    /// ConstantParametersSettingsView given spatially varying data.
+    /// ParametersSettingsView given spatially varying constant data.
     /// </summary>
     /// <seealso cref="ConstantParameters{TSpreading}" />
     public sealed class SpatiallyVariantConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel

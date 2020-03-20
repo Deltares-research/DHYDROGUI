@@ -203,8 +203,8 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersView.xaml.cs">
       <DependentUpon>ConstantParametersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersSettingsView.xaml.cs">
-      <DependentUpon>ConstantParametersSettingsView.xaml</DependentUpon>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ParametersSettingsView.xaml.cs">
+      <DependentUpon>ParametersSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentParametersView.xaml.cs">
       <DependentUpon>TimeDependentParametersView.xaml</DependentUpon>
@@ -534,7 +534,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersSettingsView.xaml">
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ParametersSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
