@@ -153,6 +153,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), typeof(UniformConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>));
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
+
+            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
+            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
+            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
         }
 
         [Test]

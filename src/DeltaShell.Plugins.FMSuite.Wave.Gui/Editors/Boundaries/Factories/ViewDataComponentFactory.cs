@@ -102,12 +102,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             {
                 case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformDataComponent:
                     return new UniformConstantParametersSettingsViewModel<PowerDefinedSpreading>(uniformDataComponent.Data);
+
                 case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> uniformDataComponent:
                     return new UniformConstantParametersSettingsViewModel<DegreesDefinedSpreading>(uniformDataComponent.Data);
+
                 case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> spatiallyVaryingDataComponent:
                     return new SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> spatiallyVaryingDataComponent:
                     return new SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+
+                case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> uniformDataComponent:
+                    return new UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(uniformDataComponent.Data);
+
+                case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> uniformDataComponent:
+                    return new UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(uniformDataComponent.Data);
+
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }
