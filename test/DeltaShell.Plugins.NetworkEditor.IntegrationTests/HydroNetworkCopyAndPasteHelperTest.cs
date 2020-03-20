@@ -159,7 +159,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PasteChannelToOtherNetwork()
         {
             string errorMessage;
@@ -197,7 +196,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(channel);
 
             Assert.IsFalse(HydroNetworkCopyAndPasteHelper.PasteChannelToNetwork(network2, out errorMessage));
-            Assert.AreEqual("Cannot paste the channel because one of its features cannot be pasted:\n\nCannot paste the cross section with name \"CrossSection1\" in this network because a SectionType with the following name is missing: CrossSectionType1", errorMessage);
+            Assert.AreEqual("Cannot paste the channel because one of its features cannot be pasted:\n\nCannot paste the cross section with name \"CrossSection_1D_1\" in this network because a SectionType with the following name is missing: CrossSectionType1", errorMessage);
 
             network2.CrossSectionSectionTypes[0].Name = "CrossSectionType1";
             Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteChannelToNetwork(network2, out errorMessage));

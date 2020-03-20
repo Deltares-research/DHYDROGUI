@@ -108,7 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.VerySlow)]
-        [Category("Quarantine")]
         public void ImportMaasModelSaveAndLoadGivesException_Tools4693()
         {
             const string projectPath = "Maas.dsproj";

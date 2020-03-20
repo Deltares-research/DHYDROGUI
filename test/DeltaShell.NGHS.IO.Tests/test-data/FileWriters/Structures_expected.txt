@@ -6,7 +6,7 @@
     id                    = 1                   
     name                  = Pump_1D_1           
     branchId              = branch              
-    chainage              = 0.500               
+    chainage              = 0.500000            
     type                  = pump                
     orientation           = positive            
     controlSide           = deliverySide        
@@ -24,7 +24,7 @@
     id                    = 2                   
     name                  = Weir_1D_1           
     branchId              = branch              
-    chainage              = 1.000               
+    chainage              = 1.000000            
     type                  = weir                
     crestLevel            = 3.000               
     crestWidth            = 5.000               
@@ -35,7 +35,7 @@
     id                    = 3                   
     name                  = Weir_1D_2           
     branchId              = branch              
-    chainage              = 1.500               
+    chainage              = 1.500000            
     type                  = universalWeir       
     allowedFlowDir        = both                
     numLevels             = 4                   
@@ -48,7 +48,7 @@
     id                    = 4                   
     name                  = Weir_1D_3           
     branchId              = branch              
-    chainage              = 2.000               
+    chainage              = 2.000000            
     type                  = riverWeir           
     crestLevel            = 2.000               
     crestWidth            = 5.000               
@@ -67,7 +67,7 @@
     id                    = 5                   
     name                  = Weir_1D_4           
     branchId              = branch              
-    chainage              = 2.500               
+    chainage              = 2.500000            
     type                  = advancedWeir        
     crestLevel            = 3.000               
     crestWidth            = 6.000               
@@ -85,7 +85,7 @@
     id                    = 6                   
     name                  = Weir_1D_5           
     branchId              = branch              
-    chainage              = 3.000               
+    chainage              = 3.000000            
     type                  = orifice             
     crestLevel            = 3.000               
     crestWidth            = 5.000               
@@ -97,7 +97,7 @@
     id                    = 7                   
     name                  = Weir_1D_6           
     branchId              = branch              
-    chainage              = 3.500               
+    chainage              = 3.500000            
     type                  = generalstructure    
     upstream1Width        = 1.000               
     upstream2Width        = 0.500               
@@ -131,7 +131,7 @@
     id                    = 8                   
     name                  = Culvert_1D_1        
     branchId              = branch              
-    chainage              = 0.400               
+    chainage              = 0.400000            
     type                  = culvert             
     allowedFlowDir        = both                
     leftLevel             = 0.500               
@@ -146,7 +146,7 @@
     relOpening            = 0.000 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900 1.000
     lossCoeff             = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
     bedFrictionType       = 1                   
-    bedFriction           = 0.250               
+    bedFriction           = 0.25000             
     groundFrictionType    = 1                   
     groundFriction        = 0.000               
 
@@ -154,7 +154,7 @@
     id                    = 9                   
     name                  = Culvert_1D_2        
     branchId              = branch              
-    chainage              = 4.500               
+    chainage              = 4.500000            
     type                  = invertedSiphon      
     allowedFlowDir        = both                
     leftLevel             = 0.400               
@@ -170,7 +170,7 @@
     lossCoeff             = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
     bendLossCoeff         = 0.600               
     bedFrictionType       = 1                   
-    bedFriction           = 0.350               
+    bedFriction           = 0.35000             
     groundFrictionType    = 1                   
     groundFriction        = 0.350               
 
@@ -178,7 +178,7 @@
     id                    = 10                  
     name                  = Culvert_1D_3        
     branchId              = branch              
-    chainage              = 5.000               
+    chainage              = 5.000000            
     type                  = siphon              
     allowedFlowDir        = positive            
     leftLevel             = 0.500               
@@ -196,7 +196,7 @@
     turnOnLevel           = 0.200               
     turnOffLevel          = 0.800               
     bedFrictionType       = 1                   
-    bedFriction           = 0.650               
+    bedFriction           = 0.65000             
     groundFrictionType    = 1                   
     groundFriction        = 0.650               
 
@@ -204,7 +204,7 @@
     id                    = 11                  
     name                  = Bridge_1D_1         
     branchId              = branch              
-    chainage              = 5.500               
+    chainage              = 5.500000            
     type                  = bridge              
     allowedFlowDir        = both                
     bedLevel              = 0.300               
@@ -213,7 +213,7 @@
     inletLossCoeff        = 0.400               
     outletLossCoeff       = 0.800               
     bedFrictionType       = 1                   
-    bedFriction           = 0.650               
+    bedFriction           = 0.65000             
     groundFrictionType    = 1                   
     groundFriction        = 0.350               
 
@@ -221,7 +221,7 @@
     id                    = 12                  
     name                  = BridgePillar_1D_1   
     branchId              = branch              
-    chainage              = 6.000               
+    chainage              = 6.000000            
     type                  = bridgePillar        
     allowedFlowDir        = both                
     bedLevel              = 0.300               
@@ -232,7 +232,7 @@
     id                    = 13                  
     name                  = ExtraResistance1    
     branchId              = branch              
-    chainage              = 6.000               
+    chainage              = 6.000000            
     type                  = extraresistance     
     numValues             = 9                   
     levels                = 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900

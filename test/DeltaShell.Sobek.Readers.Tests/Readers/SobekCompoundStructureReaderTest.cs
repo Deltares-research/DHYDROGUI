@@ -38,7 +38,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void ReadCompoundFromRe()
         {
             var compoundStructureFile = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"ReModels\RIJN301.SBK\8\defstr.7");

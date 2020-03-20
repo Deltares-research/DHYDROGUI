@@ -14,7 +14,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
     public class StructureFileReaderTest
     {
         [Test, Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void GivenStructureFileReader_ReadingStructureFile_ShouldResultInAddedStructuresInNetwork()
         {
             //Arrange
@@ -27,18 +26,16 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             UGridToNetworkAdapter.LoadNetworkAndDiscretisation(networkFilePath, discretization, network, null, null);
             
             // Act
-            Assert.AreEqual(0, network.BranchFeatures.Count());
-
             StructureFileReader.ReadFile(structureFilePath, crossSectionDefinitionFilePath, network);
 
             // Assert
-            Assert.AreEqual(9, network.BranchFeatures.Count());
-            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
+            Assert.AreEqual(18, network.BranchFeatures.Count());
+            Assert.AreEqual(8, network.CompositeBranchStructures.Count());
             Assert.AreEqual(1, network.Bridges.Count());
             Assert.AreEqual(2, network.Culverts.Count());
-            Assert.AreEqual(5, network.Weirs.Count());
+            Assert.AreEqual(6, network.Weirs.Count());
             Assert.AreEqual(0, network.ExtraResistances.Count());
-            Assert.AreEqual(0, network.Pumps.Count());
+            Assert.AreEqual(1, network.Pumps.Count());
         }
     }
 }

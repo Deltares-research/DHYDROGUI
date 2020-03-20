@@ -44,7 +44,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void ReadFile()
         {
             // see also test ReadThatcherHarlemann; some values modified for test

@@ -175,11 +175,6 @@ class HydroModelBuilder(object):
         if fmPlugin.loaded:
             dflowfm = self.get_first_by_type(model.Activities, WaterFlowFMModel)
 
-        if dflowfm and rtc:
-            w = ParallelActivity(Name="(RTC + FlowFM)")
-            w.Activities.AddRange((ActivityWrapper(rtc), ActivityWrapper(dflowfm)))
-            model.Workflows.Add(w)
-                    
         if rr and dflowfm and rtc:
             w = SequentialActivity(Name="RR + (RTC + FlowFM)")
             w1 = ParallelActivity(Name="Parallel")
@@ -187,6 +182,11 @@ class HydroModelBuilder(object):
             w.Activities.AddRange((ActivityWrapper(rr), w1))
             model.Workflows.Add(w)
 
+        if dflowfm and rtc:
+            w = ParallelActivity(Name="(RTC + FlowFM)")
+            w.Activities.AddRange((ActivityWrapper(rtc), ActivityWrapper(dflowfm)))
+            model.Workflows.Add(w)
+                    
         if rr and dflowfm:
             w = ParallelActivity(Name="(RR + FlowFM)")
             w.Activities.AddRange((ActivityWrapper(rr), ActivityWrapper(dflowfm)))

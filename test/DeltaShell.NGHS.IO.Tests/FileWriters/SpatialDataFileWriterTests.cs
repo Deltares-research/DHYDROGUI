@@ -38,7 +38,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
         
         [Test]
-        [Category("Quarantine")]
         public void TestSpatialDataFileWriterInitialWaterLevelConstantInterPolType()
         {
             var initialFlow = new NetworkCoverage("Initial Water Flow", false, "Water Flow", "m³/s") { Network = network };
@@ -69,7 +68,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual("branch50", branchidProperty.Value);
 
             var chainageProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Chainage.Key);
-            Assert.AreEqual("90.000", chainageProperty.Value);
+            Assert.AreEqual("90.000000", chainageProperty.Value);
 
             var valueProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Value.Key);
             Assert.AreEqual("490.00000", valueProperty.Value);
@@ -77,7 +76,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestSpatialDataFileWriterInitialWaterDepthLinearInterPolType()
         {
             var initialDepth = new NetworkCoverage("Initial Water Depth", false, "Water Depth", "m") { Network = network };
@@ -108,14 +106,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual("branch50", branchidProperty.Value);
 
             var chainageProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Chainage.Key);
-            Assert.AreEqual("90.000", chainageProperty.Value);
+            Assert.AreEqual("90.000000", chainageProperty.Value);
 
             var valueProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Value.Key);
             Assert.AreEqual("490.00000", valueProperty.Value);
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestSpatialDataFileWriterInitialTemperatureLinearInterPolType()
         {
             var initialTemperature = new NetworkCoverage("Initial Temperature", false, "Temperature", "degrees C") { Network = network };
@@ -147,7 +144,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual("branch50", branchidProperty.Value);
 
             var chainageProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Chainage.Key);
-            Assert.AreEqual("90.000", chainageProperty.Value);
+            Assert.AreEqual("90.000000", chainageProperty.Value);
 
             var valueProperty = definition.Properties.First(p => p.Name == SpatialDataRegion.Value.Key);
             Assert.AreEqual("490.00000", valueProperty.Value);

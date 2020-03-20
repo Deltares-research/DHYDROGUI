@@ -95,25 +95,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
-        [Category(TestCategory.Performance)]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void ImportInitialConditionsLandelijkSobekModel()
-        {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\LSM1_0.lit\12\NETWORK.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
-
-            var partialSobekImporters = new IPartialSobekImporter[]
-                                            {
-                                                new SobekBranchesImporter(), // 7,5 sec
-                                                new SobekBoundaryConditionsImporter()
-                                            };
-
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, partialSobekImporters);
-            TestHelper.AssertIsFasterThan(80000, importer.Import);
-        }
-
-        [Test]
         [Category(TestCategory.DataAccess)]
         public void ImportBoundaryConditions_On_Manholes_And_Add_Outlets()
         {

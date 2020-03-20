@@ -35,10 +35,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void SimpleParallelWorkflow()
         {
-            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\ZBOtest.lit\7\NETWORK.TP";
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\164_000.lit\2\NETWORK.TP";
 
             var hydroModel = CreateHydroModel();
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
@@ -50,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 };
             sobekModelImporter.Import();
 
-            Assert.AreEqual("RR + (RTC + Flow1D)", hydroModel.CurrentWorkflow.ToString());
+            Assert.AreEqual("RR + (RTC + FlowFM)", hydroModel.CurrentWorkflow.ToString());
         }
 
         [Test]
