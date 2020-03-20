@@ -350,7 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void ReplaceSupportPoint_ExpectedResults()
+        public void ReplaceSupportPoint_ConstantParameters_ExpectedResults()
         {
             // Setup
             SupportPoint oldSupportPoint = GetDefaultSupportPoint();
@@ -363,6 +363,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = dataComponent;
 
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
+            dataComponent.AddParameters(oldSupportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            SupportPoint newSupportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+            
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False, 
+                        "The data component should not contain the old SupportPoint:");
+            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True, 
+                        "The data component should contain the new SupportPoint:");
+            Assert.That(dataComponent.Data[newSupportPoint], Is.SameAs(parameters));
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_TimeDependentParameters_ExpectedResults()
+        {
+            // Setup
+            SupportPoint oldSupportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
             dataComponent.AddParameters(oldSupportPoint, parameters);
 
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
