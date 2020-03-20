@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step,
                 Name = "TimeStep",
                 ValueType = typeof(TimeSpan),
-                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step_tooltip
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run
             };
 
             FieldUIDescription fieldDescription = objectDescription.FieldDescriptions.Single(fd => fd.Name == KnownWaveProperties.COMFile);

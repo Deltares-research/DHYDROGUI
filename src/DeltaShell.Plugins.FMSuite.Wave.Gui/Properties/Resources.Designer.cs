@@ -221,15 +221,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coupling time step [Dd HH:MM:SS.ZZZ].
-        /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_time_step_tooltip {
-            get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_time_step_tooltip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Domain specific settings.
         /// </summary>
         internal static string WaveSettingsHelper_GetWaveSettings_Domain_specific_settings {
@@ -262,6 +253,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         internal static string WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time step within the coupled model run [Dd HH:MM:SS.ZZZ].
+        /// </summary>
+        internal static string WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run", resourceCulture);
             }
         }
         
