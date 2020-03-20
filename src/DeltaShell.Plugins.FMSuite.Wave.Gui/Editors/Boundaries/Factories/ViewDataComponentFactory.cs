@@ -34,7 +34,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         public ForcingViewType GetForcingType(IBoundaryConditionDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
-            return ForcingViewType.Constant;
+
+            switch (dataComponent)
+            {
+                case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                    return ForcingViewType.Constant;
+                case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
+                case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
+                    return ForcingViewType.TimeSeries;
+                default:
+                    throw new NotSupportedException($"The provided {nameof(dataComponent)} is not supported.");
+            }
         }
 
         public SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent)

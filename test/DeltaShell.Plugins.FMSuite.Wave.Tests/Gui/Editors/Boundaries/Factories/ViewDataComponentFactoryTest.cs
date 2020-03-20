@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
@@ -36,12 +37,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentFactory"));
         }
 
+        private static IEnumerable<TestCaseData> GetForcingTypeData()
+        {
+            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), ForcingViewType.Constant);
+            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), ForcingViewType.Constant);
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), ForcingViewType.Constant);
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), ForcingViewType.Constant);
+
+            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
+            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
+            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), ForcingViewType.TimeSeries);
+            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), ForcingViewType.TimeSeries);
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), ForcingViewType.TimeSeries);
+            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), ForcingViewType.TimeSeries);
+        }
+
         [Test]
-        public void GetForcingType_ReturnsConstant()
+        [TestCaseSource(nameof(GetForcingTypeData))]
+        public void GetForcingType_ReturnsExpectedResult(IBoundaryConditionDataComponent dataComponent, ForcingViewType expectedResult)
         {
             // Setup
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
-
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
             var factory = new ViewDataComponentFactory(modelDataComponentFactory);
 
@@ -49,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             ForcingViewType result = factory.GetForcingType(dataComponent);
 
             // Assert
-            Assert.That(result, Is.EqualTo(ForcingViewType.Constant));
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -62,6 +77,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
+        }
+
+        [Test]
+        public void GetForcingType_UnsupportedDataComponentType_ThrowsNotSupportedException()
+        {
+            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            void Call() => factory.GetForcingType(dataComponent);
+
+            var exception = Assert.Throws<NotSupportedException>(Call);
         }
 
         [Test]
