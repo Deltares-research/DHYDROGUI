@@ -71,11 +71,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             switch(ParametersSettingsViewModel)
             {
-                case SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantConstantParametersSettingsViewModel:
-                    spatiallyVariantConstantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                case SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
+                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
                     break;
-                case SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantConstantParametersSettingsViewModel:
-                    spatiallyVariantConstantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                case SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
+                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                    break;
+                case SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
+                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+                    break;
+                case SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
+                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
                     break;
                 default:
                     throw new InvalidOperationException(
