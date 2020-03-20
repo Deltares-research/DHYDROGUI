@@ -127,23 +127,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             SupportPoint supportPoint = GetDefaultSupportPoint();
 
-            var waveBoundaryIsEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabled.DataComponent = 
+            var waveBoundaryIsEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledConstant.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabled, supportPoint, false);
+            yield return new TestCaseData(waveBoundaryIsEnabledConstant, supportPoint, false);
 
-            var waveBoundaryIsNotEnabled = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabled.DataComponent =
+            var waveBoundaryIsEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledTimeDependent.DataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            yield return new TestCaseData(waveBoundaryIsEnabledTimeDependent, supportPoint, false);
+
+            var waveBoundaryIsNotEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledConstant.DataComponent =
                 new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabled, supportPoint, false);
+            yield return new TestCaseData(waveBoundaryIsNotEnabledConstant, supportPoint, false);
 
-            var waveBoundaryIsEnabledWithSupportPoint = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var waveBoundaryIsNotEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledTimeDependent.DataComponent =
+                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            yield return new TestCaseData(waveBoundaryIsNotEnabledTimeDependent, supportPoint, false);
+
+            var waveBoundaryIsEnabledWithSupportPointConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentConstant = 
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            dataComponent.AddParameters(supportPoint, new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            waveBoundaryIsEnabledWithSupportPoint.DataComponent = dataComponent;
+            dataComponentConstant.AddParameters(supportPoint, new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
+            waveBoundaryIsEnabledWithSupportPointConstant.DataComponent = dataComponentConstant;
 
-            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPoint, supportPoint, true);
+            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPointConstant, supportPoint, true);
+
+            var waveBoundaryIsEnabledWithSupportPointTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentTimeDependent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            dataComponentTimeDependent.AddParameters(supportPoint, new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            waveBoundaryIsEnabledWithSupportPointTimeDependent.DataComponent = dataComponentTimeDependent;
+
+            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPointTimeDependent, supportPoint, true);
         }
 
         [Test]

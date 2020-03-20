@@ -101,6 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return constantParametersDataComponent.Data.ContainsKey(supportPoint);
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> constantParametersDataComponent:
                     return constantParametersDataComponent.Data.ContainsKey(supportPoint);
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> constantParametersDataComponent:
+                    return constantParametersDataComponent.Data.ContainsKey(supportPoint);
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> constantParametersDataComponent:
+                    return constantParametersDataComponent.Data.ContainsKey(supportPoint);
                 default:
                     return false;
             }
