@@ -19,6 +19,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         private const string listTemplateKey = "ListTemplate";
         private const string comboBoxTemplateKey = "ComboBoxTemplate";
 
+        private readonly IDictionary<Type, string> defaultTemplates = new Dictionary<Type, string>()
+        {
+            {typeof(string), textBoxTemplateKey},
+            {typeof(double), textBoxTemplateKey},
+            {typeof(int), textBoxTemplateKey},
+            {typeof(DateTime), dateTimeTemplateKey},
+            {typeof(bool), checkboxTemplateKey},
+            {typeof(TimeSpan), timeSpanTemplateKey},
+            {typeof(IList<double>), listTemplateKey},
+            {typeof(Enum), comboBoxTemplateKey},
+        };
+
         /// <summary>
         /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.
         /// </summary>
@@ -55,13 +67,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                                                     FrameworkElement fe)
         {
             Type type = property.ValueType;
-            if (type == typeof(string)
-                || type == typeof(double)
-                || type == typeof(int))
-            {
-                return fe.FindResource(textBoxTemplateKey) as DataTemplate;
-            }
-
             if (type == typeof(DateTime))
             {
                 string format = property.UnitSymbol.Trim('[', ']').ToLower();
@@ -69,32 +74,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 {
                     return fe.FindResource(dateTemplateKey) as DataTemplate;
                 }
-
-                return fe.FindResource(dateTimeTemplateKey) as DataTemplate;
             }
 
-            if (type == typeof(bool))
-            {
-                return fe.FindResource(checkboxTemplateKey) as DataTemplate;
-            }
-
-            if (type == typeof(TimeSpan))
-            {
-                return fe.FindResource(timeSpanTemplateKey) as DataTemplate;
-            }
-
-            if (type == typeof(IList<double>))
-            {
-                return fe.FindResource(listTemplateKey) as DataTemplate;
-            }
-
-            if (type == typeof(Enum)
-                || type?.BaseType == typeof(Enum))
+            if (type?.BaseType == typeof(Enum))
             {
                 return fe.FindResource(comboBoxTemplateKey) as DataTemplate;
             }
 
-            return base.SelectTemplate(item, container);
+            return defaultTemplates.TryGetValue(type, out string templateKey)
+                       ? fe.FindResource(templateKey) as DataTemplate
+                       : base.SelectTemplate(item, container);
         }
 
         private static DataTemplate GetTemplateForSubCategory(WpfGuiSubCategory subCategory, FrameworkElement fe)
