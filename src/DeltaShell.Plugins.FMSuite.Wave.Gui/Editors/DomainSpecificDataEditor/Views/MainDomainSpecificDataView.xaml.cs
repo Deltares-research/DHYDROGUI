@@ -29,12 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 return;
             }
 
-            if (disposing)
+            if (disposing && DataContext is IDisposable disposable)
             {
-                if (DataContext is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
+                disposable.Dispose();
             }
 
             disposed = true;

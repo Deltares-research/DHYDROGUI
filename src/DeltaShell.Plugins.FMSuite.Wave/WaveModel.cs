@@ -952,7 +952,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             // grid(s) transformed, sync data to disk:
             string modelDir = Path.GetDirectoryName(mdwFile.MdwFilePath);
-            foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
             {
                 string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
                 Delft3DGridFileWriter.Write(domain.Grid, targetGridFileName);
@@ -1405,7 +1405,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             yield return TimePointData;
 
-            foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(ModelDefinition.OuterDomain))
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(ModelDefinition.OuterDomain))
             {
                 yield return domain.Grid;
                 yield return domain.Bathymetry;

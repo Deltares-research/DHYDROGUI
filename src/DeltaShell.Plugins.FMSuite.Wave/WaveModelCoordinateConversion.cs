@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             // convert grid(s)
-            foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
             {
                 CurvilinearGrid grid = domain.Grid;
                 var xCoordinates = new List<double>(grid.X.Values.Count);

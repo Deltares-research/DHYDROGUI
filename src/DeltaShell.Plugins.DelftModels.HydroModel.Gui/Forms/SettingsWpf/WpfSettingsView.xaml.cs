@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="DelftTools.Controls.IView" />
-    public sealed partial class WpfSettingsView : IView, IAdditionalView
+    public sealed partial class WpfSettingsView : IAdditionalView
     {
         private bool disposed = false;
 

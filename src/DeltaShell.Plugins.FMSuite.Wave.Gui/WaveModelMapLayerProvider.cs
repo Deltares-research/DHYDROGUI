@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 yield return model.Obstacles;
                 yield return model.ObservationPoints;
                 yield return model.ObservationCrossSections;
-                foreach (WaveDomainData waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+                foreach (IWaveDomainData waveDomain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
                 {
                     yield return waveDomain;
                 }

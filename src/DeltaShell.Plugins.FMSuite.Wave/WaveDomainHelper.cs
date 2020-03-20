@@ -14,16 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return list;
         }
 
-        public static IList<IWaveDomainData> GetAllInnerDomains(WaveDomainData root)
-        {
-            IList<IWaveDomainData> domains = GetAllDomains(root);
-            domains.Remove(root);
-            return domains;
-        }
-
         private static void AddSubDomains(IWaveDomainData domain, ref List<IWaveDomainData> list)
         {
-            foreach (WaveDomainData subDomain in domain.SubDomains)
+            foreach (IWaveDomainData subDomain in domain.SubDomains)
             {
                 list.Add(subDomain);
                 AddSubDomains(subDomain, ref list); // recursively!!
