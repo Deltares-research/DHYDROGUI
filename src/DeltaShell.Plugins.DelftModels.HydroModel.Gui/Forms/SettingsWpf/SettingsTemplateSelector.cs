@@ -19,9 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             var fe = (FrameworkElement) container;
             /*CHECK FIRST FOR CUSTOM CONTROLS*/
-            if (item is WpfGuiCategory)
+            if (item is WpfGuiCategory category)
             {
-                var category = item as WpfGuiCategory;
                 if (!category.HasCustomControl)
                 {
                     return fe.FindResource("TabContentTemplate") as DataTemplate;
@@ -30,9 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return fe.FindResource("TabCustomContentTemplate") as DataTemplate;
             }
 
-            if (item is WpfGuiSubCategory)
+            if (item is WpfGuiSubCategory subCategory)
             {
-                var subCategory = item as WpfGuiSubCategory;
                 if (!subCategory.HasCustomControl)
                 {
                     return fe.FindResource("SubCategoryTemplate") as DataTemplate;
@@ -41,12 +39,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 return fe.FindResource("SubCategoryCustomTemplate") as DataTemplate;
             }
 
-            if (!(item is WpfGuiProperty))
+            if (!(item is WpfGuiProperty property))
             {
                 return base.SelectTemplate(item, container);
             }
-
-            var property = item as WpfGuiProperty;
 
             /* There were not any custom controls, so go ahead with the regular templates*/
             /*Todo: make a switch or create a dictionary for this. */
