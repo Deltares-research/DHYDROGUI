@@ -10,42 +10,53 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <summary>
         /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.
         /// </summary>
-        /// <param name="item">The data object for which to select the template.</param>
-        /// <param name="container">The data-bound object.</param>
+        /// <param name="item"> The data object for which to select the template. </param>
+        /// <param name="container"> The data-bound object. </param>
         /// <returns>
         /// Returns a <see cref="T:System.Windows.DataTemplate" /> or null. The default value is null.
         /// </returns>
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var fe = (FrameworkElement)container;
+            var fe = (FrameworkElement) container;
             /*CHECK FIRST FOR CUSTOM CONTROLS*/
             if (item is WpfGuiCategory)
             {
                 var category = item as WpfGuiCategory;
-                if(!category.HasCustomControl)
+                if (!category.HasCustomControl)
+                {
                     return fe.FindResource("TabContentTemplate") as DataTemplate;
+                }
+
                 return fe.FindResource("TabCustomContentTemplate") as DataTemplate;
             }
-            
+
             if (item is WpfGuiSubCategory)
             {
                 var subCategory = item as WpfGuiSubCategory;
                 if (!subCategory.HasCustomControl)
+                {
                     return fe.FindResource("SubCategoryTemplate") as DataTemplate;
+                }
+
                 return fe.FindResource("SubCategoryCustomTemplate") as DataTemplate;
             }
 
-            if (!(item is WpfGuiProperty)) return base.SelectTemplate(item, container);
-            
+            if (!(item is WpfGuiProperty))
+            {
+                return base.SelectTemplate(item, container);
+            }
+
             var property = item as WpfGuiProperty;
 
             /* There were not any custom controls, so go ahead with the regular templates*/
             /*Todo: make a switch or create a dictionary for this. */
-            var type = property.ValueType;
+            Type type = property.ValueType;
             if (type == typeof(string)
                 || type == typeof(double)
                 || type == typeof(int))
+            {
                 return fe.FindResource("TextBoxTemplate") as DataTemplate;
+            }
 
             if (type == typeof(DateTime))
             {
@@ -59,7 +70,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             if (type == typeof(bool))
+            {
                 return fe.FindResource("CheckboxTemplate") as DataTemplate;
+            }
 
             if (type == typeof(TimeSpan))
             {
@@ -76,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 return fe.FindResource("ComboBoxTemplate") as DataTemplate;
             }
-            
+
             return base.SelectTemplate(item, container);
         }
     }
