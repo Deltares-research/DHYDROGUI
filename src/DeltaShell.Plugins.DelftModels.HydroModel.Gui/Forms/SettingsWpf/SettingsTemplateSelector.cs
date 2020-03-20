@@ -67,6 +67,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                                                     FrameworkElement fe)
         {
             Type type = property.ValueType;
+            if (type == null)
+            {
+                return base.SelectTemplate(item, container);
+            }
+
             if (type == typeof(DateTime))
             {
                 string format = property.UnitSymbol.Trim('[', ']').ToLower();
@@ -76,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 }
             }
 
-            if (type?.BaseType == typeof(Enum))
+            if (type.BaseType == typeof(Enum))
             {
                 return fe.FindResource(comboBoxTemplateKey) as DataTemplate;
             }
