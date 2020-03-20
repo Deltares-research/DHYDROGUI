@@ -5,6 +5,10 @@ using System.Windows.Controls;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
+    /// <summary>
+    /// Selector for selecting a data template for the Settings view.
+    /// </summary>
+    /// <seealso cref="DataTemplateSelector" />
     public class SettingsTemplateSelector : DataTemplateSelector
     {
         private const string tabContentTemplateKey = "TabContentTemplate";
