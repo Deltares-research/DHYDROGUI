@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -78,6 +79,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                             "Expected a different default value");
             }
         }
-        
+
+        [Test]
+        public void ConvertSpreadingType_FromDegrees_ExpectedResults()
+        {
+            // Setup
+            var oldWaveEnergyFunction = new WaveEnergyFunction<DegreesDefinedSpreading>();
+            // TODO: Add additional values to this function.
+
+            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
+
+            // Call
+            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
+
+            // Assert
+            if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
+            {
+                Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
+            }
+
+            Assert.That(newWaveFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
+            Assert.That(newWaveFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
+
+            if (typeof(TSpreading) != typeof(DegreesDefinedSpreading))
+            {
+                Assert.That(newWaveFunction.SpreadingComponent.AllValues, Has.All.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
+            }
+        }
+
+        [Test]
+        public void ConvertSpreadingType_FromPower_ExpectedResults()
+        {
+            // Setup
+            var oldWaveEnergyFunction = new WaveEnergyFunction<PowerDefinedSpreading>();
+            // TODO: Add additional values to this function.
+
+            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
+
+            // Call
+            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
+
+            // Assert
+            if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
+            {
+                Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
+            }
+
+            Assert.That(newWaveFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
+            Assert.That(newWaveFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
+
+            if (typeof(TSpreading) != typeof(PowerDefinedSpreading))
+            {
+                Assert.That(newWaveFunction.SpreadingComponent.AllValues, Has.All.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
+            }
+        }
     }
 }

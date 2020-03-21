@@ -15,7 +15,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
     public class WaveEnergyFunction<TSpreading> : IWaveEnergyFunction<TSpreading>  
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
-        public IFunction UnderlyingFunction { get; } = ConstructEmptyWaveEnergyFunction();
+        /// <summary>
+        /// Creates a new empty <see cref="WaveEnergyFunction{TSpreading}"/>.
+        /// </summary>
+        public WaveEnergyFunction() : this(ConstructEmptyWaveEnergyFunction()) { }
+
+        private WaveEnergyFunction(IFunction underlyingFunction)
+        {
+            UnderlyingFunction = underlyingFunction;
+        }
+
+        public IFunction UnderlyingFunction { get; }
         public IVariable<DateTime> TimeArgument => (IVariable<DateTime>) UnderlyingFunction.Arguments[0];
         public IVariable<double> HeightComponent => (IVariable<double>) UnderlyingFunction.Components[0];
         public IVariable<double> PeriodComponent => (IVariable<double>) UnderlyingFunction.Components[1];
@@ -55,5 +65,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
         private static Variable<double> GetSpreadingVariable() =>
             new Variable<double>(WaveParametersConstants.SpreadingVariableName,
                                  SpreadingConversion.GetSpreadingUnit<TSpreading>()) {DefaultValue = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()};
+
+        /// <summary>
+        /// Converts the type of the spreading from the provided <paramref name="oldWaveEnergyFunction"/>.
+        /// </summary>
+        /// <typeparam name="TOldSpreading">The type of the old spreading.</typeparam>
+        /// <param name="oldWaveEnergyFunction">The old wave function.</param>
+        /// <returns>
+        /// if <typeparamref name="TOldSpreading"/> != <typeparamref name="TSpreading"/>
+        ///     A new <see cref="IWaveEnergyFunction{TNewSpreading}"/> using the converted <paramref name="oldWaveEnergyFunction"/>'s
+        ///     underlying function.
+        /// else
+        ///     <paramref name="oldWaveEnergyFunction"/>
+        /// </returns>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when <typeparamref name="TOldSpreading"/> is not supported.
+        /// </exception>
+        /// <remarks>
+        /// Note that this logically moves the underlying function from the provided <paramref name="oldWaveEnergyFunction"/>
+        /// to the newly returned <see cref="IWaveEnergyFunction{TSpreading}"/>. The <paramref name="oldWaveEnergyFunction"/>
+        /// should no longer be used.
+        /// </remarks>
+        public static IWaveEnergyFunction<TSpreading> ConvertSpreadingType<TOldSpreading>(IWaveEnergyFunction<TOldSpreading> oldWaveEnergyFunction)
+            where TOldSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            if (typeof(TSpreading) == typeof(TOldSpreading))
+            {
+                return (IWaveEnergyFunction<TSpreading>) oldWaveEnergyFunction;
+            }
+
+            oldWaveEnergyFunction.SpreadingComponent.Unit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
+            // TODO: Extend this to reset the appropriate values of the component
+
+            return new WaveEnergyFunction<TSpreading>(oldWaveEnergyFunction.UnderlyingFunction);
+        }
     }
 }
