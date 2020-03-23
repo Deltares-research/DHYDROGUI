@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections
+﻿using System.Windows.Forms;
+
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections
 {
     partial class CrossSectionStandardShapeWidthHeightView
     {
@@ -32,20 +34,21 @@
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
             this.textBoxWidth = new System.Windows.Forms.TextBox();
-            this.crossSectionStandardShapeWidthHeightBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.textBoxHeight = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).BeginInit();
+            this.checkboxIsClosedProfile = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.crossSectionStandardShapeWidthHeightBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // labelWidth
             // 
             this.labelWidth.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(3, 34);
+            this.labelWidth.Location = new System.Drawing.Point(3, 31);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(35, 13);
             this.labelWidth.TabIndex = 0;
@@ -67,11 +70,7 @@
             this.textBoxWidth.Location = new System.Drawing.Point(95, 28);
             this.textBoxWidth.Name = "textBoxWidth";
             this.textBoxWidth.Size = new System.Drawing.Size(86, 20);
-            this.textBoxWidth.TabIndex = 2;
-            // 
-            // crossSectionStandardShapeWidthHeightBindingSource
-            // 
-            this.crossSectionStandardShapeWidthHeightBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeWidthHeightBase);
+            this.textBoxWidth.TabIndex = 3;
             // 
             // textBoxHeight
             // 
@@ -79,7 +78,7 @@
             this.textBoxHeight.Location = new System.Drawing.Point(95, 3);
             this.textBoxHeight.Name = "textBoxHeight";
             this.textBoxHeight.Size = new System.Drawing.Size(86, 20);
-            this.textBoxHeight.TabIndex = 3;
+            this.textBoxHeight.TabIndex = 4;
             // 
             // tableLayoutPanel1
             // 
@@ -90,17 +89,40 @@
             this.tableLayoutPanel1.Controls.Add(this.label2, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxHeight, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBoxWidth, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.checkboxIsClosedProfile, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.labelHeight, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.labelWidth, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(205, 56);
-            this.tableLayoutPanel1.TabIndex = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(205, 87);
+            this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(187, 31);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(15, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "m";
+            // 
+            // checkboxIsClosedProfile
+            // 
+            this.checkboxIsClosedProfile.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.checkboxIsClosedProfile, 2);
+            this.checkboxIsClosedProfile.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.crossSectionStandardShapeWidthHeightBindingSource, "Closed", true, DataSourceUpdateMode.OnPropertyChanged));
+            this.checkboxIsClosedProfile.Location = new System.Drawing.Point(95, 53);
+            this.checkboxIsClosedProfile.Name = "checkboxIsClosedProfile";
+            this.checkboxIsClosedProfile.Size = new System.Drawing.Size(101, 17);
+            this.checkboxIsClosedProfile.TabIndex = 5;
+            this.checkboxIsClosedProfile.Text = "Is Closed Profile";
             // 
             // label1
             // 
@@ -109,18 +131,12 @@
             this.label1.Location = new System.Drawing.Point(187, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 13);
-            this.label1.TabIndex = 4;
+            this.label1.TabIndex = 6;
             this.label1.Text = "m";
             // 
-            // label2
+            // crossSectionStandardShapeWidthHeightBindingSource
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(187, 34);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "m";
+            this.crossSectionStandardShapeWidthHeightBindingSource.DataSource = typeof(DelftTools.Hydro.CrossSections.StandardShapes.CrossSectionStandardShapeWidthHeightBase);
             // 
             // CrossSectionStandardShapeWidthHeightView
             // 
@@ -128,10 +144,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CrossSectionStandardShapeWidthHeightView";
-            this.Size = new System.Drawing.Size(205, 56);
-            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).EndInit();
+            this.Size = new System.Drawing.Size(205, 87);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.crossSectionStandardShapeWidthHeightBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -146,5 +162,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkboxIsClosedProfile;
     }
 }

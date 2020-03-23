@@ -20,6 +20,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             if (!IsCorrectCrossSectionDefinitionForGenerator(standardDefinition)) return IniCategory;
 
             AddProperties(standardDefinition);
+            if (standardDefinition?.Shape is ICrossSectionStandardShapeOpenClosed shape)
+            {
+                IniCategory.AddProperty(DefinitionPropertySettings.Closed, shape.Closed ? "yes" : "no");
+            }
             return IniCategory;
         }
 

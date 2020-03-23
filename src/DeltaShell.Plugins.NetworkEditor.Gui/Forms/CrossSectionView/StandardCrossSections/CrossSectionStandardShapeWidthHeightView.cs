@@ -21,7 +21,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             set
             {
                 crossSectionStandardShapeWidthHeightBindingSource.DataSource = value;
+                RefreshView();
             }
+        }
+        private void RefreshView()
+        {
+            if (Data is ICrossSectionStandardShapeOpenClosed shape)
+            {
+                tableLayoutPanel1.RowStyles[2].Height = 31F;
+                checkboxIsClosedProfile.Checked = shape.Closed;
+                checkboxIsClosedProfile.Visible = true;
+            }
+            else
+            {
+                tableLayoutPanel1.RowStyles[2].Height = 0;
+                checkboxIsClosedProfile.Visible = false;
+            }
+
         }
 
         public Image Image

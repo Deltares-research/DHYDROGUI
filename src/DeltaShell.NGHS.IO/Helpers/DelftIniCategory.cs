@@ -96,6 +96,11 @@ namespace DeltaShell.NGHS.IO.Helpers
             AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
         }
 
+        public void AddProperty(string name, bool value, string comment = null)
+        {
+            AddProperty(name, value.ToString(CultureInfo.InvariantCulture), comment);
+        }
+
         public void AddProperty(string name, ICoordinate coordinate, string comment = null, string format = "F4")
         {
             var coordinateAsIniValue = coordinate.X.ToString(format, CultureInfo.InvariantCulture) + " " + coordinate.Y.ToString(format, CultureInfo.InvariantCulture);
@@ -108,6 +113,10 @@ namespace DeltaShell.NGHS.IO.Helpers
         }
 
         public void AddProperty(ConfigurationSetting propertyConfiguration, int value)
+        {
+            AddProperty(propertyConfiguration.Key, value, propertyConfiguration.Description);
+        }
+        public void AddProperty(ConfigurationSetting propertyConfiguration, bool value)
         {
             AddProperty(propertyConfiguration.Key, value, propertyConfiguration.Description);
         }

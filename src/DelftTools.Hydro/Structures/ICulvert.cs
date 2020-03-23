@@ -139,6 +139,6 @@ namespace DelftTools.Hydro.Structures
         CrossSectionDefinitionZW CrossSectionDefinitionForCalculation { get; }
         
         CulvertType CulvertType { get; set; }
-
+        bool Closed { get; set; }
     }
 }

@@ -80,9 +80,23 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 
                     break;
                 }
+                case CulvertGeometryType.Rectangle:
+                {
+                    var stdDef = definition as CrossSectionDefinitionStandard;
+                    if (stdDef != null)
+                    {
+                        var heightbase = stdDef.Shape as CrossSectionStandardShapeWidthHeightBase;
+                        if (heightbase != null)
+                        {
+                            culvert.Width = heightbase.Width;
+                            culvert.Height = heightbase.Height;
+                            culvert.Closed = (heightbase as ICrossSectionStandardShapeOpenClosed)?.Closed ?? false;
+                        }
+                    }
+                }
+                    break;
                 case CulvertGeometryType.Egg:
                 case CulvertGeometryType.InvertedEgg:
-                case CulvertGeometryType.Rectangle:
                 case CulvertGeometryType.Cunette:
                 case CulvertGeometryType.Ellipse:
                 {

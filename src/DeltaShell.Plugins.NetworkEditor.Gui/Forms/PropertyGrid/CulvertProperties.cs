@@ -394,6 +394,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Angle1 = value; }
         }
 
+        [Category("Cross section properties")]
+        [PropertyOrder(26)]
+        [DisplayName("Open or Closed profile")]
+        [DynamicVisible]
+        public bool Closed
+        {
+            get { return data.Closed; }
+        }
+
+        [DynamicVisibleValidationMethod]
+        public bool IsVisible(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "Closed":
+                    return data.GeometryType == CulvertGeometryType.Rectangle;
+                default:
+                    return true;
+            }
+        }
+
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {

@@ -266,6 +266,7 @@ src/DelftTools.Hydro/CrossSections/StandardShapes/CrossSectionStandardShapeTrape
 src/DelftTools.Hydro/CrossSections/StandardShapes/CrossSectionStandardShapeUShape.cs -text
 src/DelftTools.Hydro/CrossSections/StandardShapes/CrossSectionStandardShapeWidthHeightBase.cs -text
 src/DelftTools.Hydro/CrossSections/StandardShapes/ICrossSectionStandardShape.cs -text
+src/DelftTools.Hydro/CrossSections/StandardShapes/ICrossSectionStandardShapeOpenClosed.cs -text
 src/DelftTools.Hydro/CrossSections/SummerDike.cs -text
 src/DelftTools.Hydro/CulvertFrictionType.cs -text
 src/DelftTools.Hydro/DelftTools.Hydro.csproj -text

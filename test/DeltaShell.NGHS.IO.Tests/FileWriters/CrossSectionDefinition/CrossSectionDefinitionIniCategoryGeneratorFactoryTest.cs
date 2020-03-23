@@ -1,5 +1,10 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System;
+using System.Linq;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.Location;
+using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
@@ -26,6 +31,32 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
         {
             var generator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
             Assert.IsTrue(generator is DefinitionGeneratorCrossSectionDefinitionRectangle);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GivenRectangleShapeCategoryGenerator_WhenCreatingCategory_ThenIsItOpenOrClosedProfile(bool isClosed)
+        {
+            var categoryGenerator = DefinitionIniCategoryGeneratorFactory.GetCrossSectionDefinitionIniCategoryGenerator(CrossSectionStandardShapeType.Rectangle);
+            var csdStd = (CrossSectionDefinitionStandard)CrossSectionDefinitionStandard.CreateDefault();
+            Assert.That(csdStd.Shape, Is.InstanceOf<ICrossSectionStandardShapeOpenClosed>());
+            var rect = (ICrossSectionStandardShapeOpenClosed) csdStd.Shape;
+            rect.Closed = isClosed;
+            var category = categoryGenerator.CreateDefinitionRegion(csdStd);
+            Assert.IsTrue(category.Properties.Any(p => p.Name.Equals(DefinitionPropertySettings.Closed.Key, StringComparison.InvariantCultureIgnoreCase)));
+            Assert.IsTrue(category.ReadProperty<string>(DefinitionPropertySettings.Closed.Key).Equals(isClosed ? "yes" : "no", StringComparison.CurrentCultureIgnoreCase));
+
+            var csdGenerator = DefinitionGeneratorFactory.GetDefinitionReaderCrossSection(CrossSectionRegion.CrossSectionDefinitionType.Rectangle);
+            var readCsd = csdGenerator.ReadDefinition(category) as CrossSectionDefinitionStandard;
+            Assert.IsNotNull(readCsd);
+            Assert.IsTrue(csdStd.Shape.GetTabulatedDefinition().RawData.ContentEquals(readCsd.Shape.GetTabulatedDefinition().RawData));
+            Assert.That((csdStd.Shape as ICrossSectionStandardShapeOpenClosed).Closed, Is.EqualTo((readCsd.Shape as ICrossSectionStandardShapeOpenClosed).Closed));
+            var stdCsdCoordinates = csdStd.Shape.Profile.ToArray();
+            var readCsdCoordinates = readCsd.Shape.Profile.ToArray();
+            Assert.That(stdCsdCoordinates,Is.EqualTo(readCsdCoordinates));
+            Assert.That(csdStd.Profile.ToArray(),Is.EqualTo(readCsdCoordinates));
+            Assert.That(stdCsdCoordinates.Length, Is.EqualTo(isClosed ? 6 : 4));
+            Assert.That(readCsdCoordinates.Length, Is.EqualTo(isClosed ? 6 : 4));
         }
 
         [Test]

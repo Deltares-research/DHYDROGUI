@@ -300,6 +300,8 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
+        public virtual bool Closed { get; set; }
+
         [DynamicReadOnly]
         [DisplayName("Siphon on level")]
         [FeatureAttribute(Order = 21, ExportName = "SiphOnLvl")]

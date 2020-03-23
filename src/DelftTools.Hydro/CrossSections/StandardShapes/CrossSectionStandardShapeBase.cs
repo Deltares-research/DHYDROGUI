@@ -18,7 +18,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         public virtual string Name { get; set; }
 
         public virtual string MaterialName { get; set; }
-
+        public virtual bool Closed
+        {
+            get { return false; }
+            set { }
+        }
         public abstract CrossSectionStandardShapeType Type { get; }
         
         public virtual IEnumerable<Coordinate> Profile

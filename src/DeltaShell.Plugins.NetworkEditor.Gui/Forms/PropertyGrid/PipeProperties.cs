@@ -178,6 +178,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileMaximumFlowWidth() ?? double.NaN; }
         }
 
+        [Category("Cross section properties")]
+        [PropertyOrder(9)]
+        [DisplayName("Open or Closed profile")]
+        [DynamicVisible]
+        public bool Closed
+        {
+            get { return (data?.CrossSection as ICrossSectionStandardShapeOpenClosed)?.Closed ?? false; }
+        }
+
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
@@ -191,6 +200,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                     return shape is CrossSectionStandardShapeWidthHeightBase || shape is CrossSectionStandardShapeArch;
                 case "ArcHeight":
                     return shape is CrossSectionStandardShapeArch;
+                case "Closed":
+                    return shape is ICrossSectionStandardShapeOpenClosed;
                 case "Slope":
                 case "BottomWidthB":
                 case "MaximumFlowWidth":
