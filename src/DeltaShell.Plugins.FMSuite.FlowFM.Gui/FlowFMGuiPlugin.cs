@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return new ViewInfo<ProjectTemplate, CreateFmModelSettingView>
             {
-                AdditionalDataCheck = t => t.Id == "FMModel"
+                AdditionalDataCheck = t => t.Id.Equals(FlowFMApplicationPlugin.FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID, StringComparison.CurrentCultureIgnoreCase)
             };
 
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>

@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     public class FlowFMApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         public const string FlowFlexibleMeshModelModelInfoName = "Flow Flexible Mesh Model";
+        public const string FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID = "FMModel";
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         public static string PluginVersion; // 1.2
         public static string PluginName; // D-Flow Flexible Mesh Plugin
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             yield return new ProjectTemplate
             {
-                Id = "FMModel",
+                Id = FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID,
                 Category = "FM",
                 Name = "FM model",
                 Description = "Creates a new standalone flexible mesh model",
@@ -104,6 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
 
                     p.RootFolder.Items.Add(model);
+                    
                 }
             };
         }
