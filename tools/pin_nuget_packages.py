@@ -9,7 +9,7 @@ TEAMCITY_URL = "https://build.deltares.nl"
 # Test Server
 # TEAMCITY_URL = "http://tl-ts001.xtr.deltares.nl:8080"
 
-BUILDS_ROOT = "{TEAMCITY_URL}/httpAuth/app/rest/builds/".format(TEAMCITY_URL)
+BUILDS_ROOT = "{}/httpAuth/app/rest/builds/".format(TEAMCITY_URL)
 JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 
 # 0: nuget package id, 1: nuget package build configuration id
