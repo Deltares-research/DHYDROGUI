@@ -14,5 +14,10 @@
         /// The peak enhancement factor.
         /// </value>
         public double PeakEnhancementFactor { get; set; }
+
+        /// <summary>
+        /// Name that should be written as value for "SpShapeType" property in Mdw.
+        /// </summary>
+        public string XmlName { get; } = "Jonswap";
     }
 }

@@ -7,5 +7,11 @@
     /// <remarks>
     /// No data is associated with this <see cref="IBoundaryConditionShape"/>.
     /// </remarks>
-    public class PiersonMoskowitzShape : IBoundaryConditionShape { }
+    public class PiersonMoskowitzShape : IBoundaryConditionShape
+    {
+        /// <summary>
+        /// Name that should be written as value for "SpShapeType" property in Mdw.
+        /// </summary>
+        public string XmlName { get; } = "Pierson-Moskowitz";
+    }
 }

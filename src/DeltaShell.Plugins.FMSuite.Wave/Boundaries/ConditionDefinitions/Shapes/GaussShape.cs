@@ -14,5 +14,10 @@
         /// The Gaussian spread
         /// </value>
         public double GaussianSpread { get; set; }
+
+        /// <summary>
+        /// Name that should be written as value for "SpShapeType" property in Mdw.
+        /// </summary>
+        public string XmlName { get; } = "Gauss";
     }
 }
