@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Windows;
 using DelftTools.Hydro;
@@ -67,7 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         }
 
         [Test]
-        [Ignore("Some strange bug, hangs")]
         [Category(TestCategory.WindowsForms)]
         [Category("ToCheck")]
         public void CheckIfHydroNetworkEditorViewContextIsRestoredAfterViewIsClosed()
@@ -88,10 +88,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 project.RootFolder.Add(network);
 
                 // show gui main window
-                var mainWindow = (Window)gui.MainWindow;
 
                 // wait until gui starts
-                mainWindow.Loaded += delegate
+                Action mainWindowShown = delegate
                     {
                         LogHelper.SetLoggingLevel(Level.Debug);
 
@@ -120,7 +119,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
                     };
 
-                WpfTestHelper.ShowModal(mainWindow);
+                WpfTestHelper.ShowModal((Window)gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -166,10 +165,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 project.RootFolder.Add(network);
 
                 // show gui main window
-                var mainWindow = (Window)gui.MainWindow;
 
                 // wait until gui starts
-                mainWindow.Loaded += delegate
+                Action mainWindowShown = delegate
                                         {
                                             var networkDataItem = project.RootFolder.DataItems.First(di => di.Value is HydroNetwork);
                                             gui.CommandHandler.OpenView(networkDataItem, typeof(ProjectItemMapView));
@@ -184,7 +182,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                                                 channelTableView.TableView.SelectCells(0, 0, 99, 1));
                                         };
 
-                WpfTestHelper.ShowModal(mainWindow);
+                WpfTestHelper.ShowModal((Window)gui.MainWindow, mainWindowShown);
             }
         }
         
