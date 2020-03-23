@@ -35,34 +35,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
-        [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
-        public void ImportSaltWithTatcherHarlemanF1F3F4()
-        {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\030_NDB_zout_grotere_DX.lit\3\Network.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter(), new SobekSaltImporter() });
-
-            importer.Import();
-
-            // Assert.IsTrue(waterFlowFmModel.UseSalt);
-            // Assert.IsTrue(waterFlowFmModel.UseSaltInCalculation);
-            // Assert.IsTrue(waterFlowFmModel.DispersionFormulationType == DispersionFormulationType.Constant);
-            //
-            // var dispersion = waterFlowFmModel.DispersionCoverage;
-            // var dispersionF3 = waterFlowFmModel.DispersionF3Coverage;
-            // Assert.IsNull(dispersionF3);
-            //
-            // var nl1 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_10");
-            // var nl2 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_47");
-            // var nl3 = dispersion.Locations.Values.First(l => l.Branch.Name == "R_87");
-            //
-            // Assert.AreEqual(new[] { 2500.0 }, dispersion.GetAllComponentValues(nl1));
-            // Assert.AreEqual(new[] { 100.0 }, dispersion.GetAllComponentValues(nl2));
-            // Assert.AreEqual(new[] { 50.0 }, dispersion.GetAllComponentValues(nl3));
-        }
-
-        [Test]
         public void ImportModelWithoutSalt()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
