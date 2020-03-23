@@ -9,7 +9,7 @@ TEAMCITY_URL = "https://build.deltares.nl"
 # Test Server
 # TEAMCITY_URL = "http://tl-ts001.xtr.deltares.nl:8080"
 
-BUILDS_ROOT = "{}/httpAuth/app/rest/builds/".format(TEAMCITY_URL)
+BUILDS_ROOT = f"{TEAMCITY_URL}/httpAuth/app/rest/builds/"
 JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 
 # 0: nuget package id, 1: nuget package build configuration id
@@ -37,8 +37,7 @@ def get_previous_build(build_config: str, tag: str, user: str, password: str) ->
     password : str
         The password to authenticate with.
     """
-
-    build_url = "{}buildType:{},tag:{},pinned:true,count:1".format(BUILDS_ROOT, build_config, tag)
+    build_url = f"{BUILDS_ROOT}buildType:{build_config},tag:{tag},pinned:true,count:1"
     previous_build_response = requests.get(build_url,
                                            auth=(user, password),
                                            headers=JSON_RESPONSE_HEADER)
@@ -62,8 +61,7 @@ def unpin_build(build_id: str, user: str, password: str) -> None:
     password : str
         The password to authenticate with.
     """
-
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
     requests.delete(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
 
 
@@ -129,7 +127,7 @@ def untag_build(build_info: dict, tag: str, user: str, password: str) -> None:
         'tag': new_tag_values
     }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info['id'])
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
     requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
 
 
@@ -190,8 +188,8 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str, user: str,
     password : str
         The password to authenticate with.
     """
+    builds_url = f"{BUILDS_ROOT}?locator=buildType:{build_config_id}"
 
-    builds_url = "{}?locator=buildType:{}".format(BUILDS_ROOT, build_config_id)
     new_builds_response = requests.get(builds_url,
                                        auth=(user, password),
                                        headers=JSON_RESPONSE_HEADER)
@@ -201,8 +199,8 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str, user: str,
     builds = new_builds_response.json()
     for build in builds['build']:
 
-        new_build_url = "{}id:{}/".format(BUILDS_ROOT, build['id'])
-        build_artifacts_url = "{}artifacts/".format(new_build_url)
+        new_build_url = f"{BUILDS_ROOT}id:{build['id']}/"
+        build_artifacts_url = f"{new_build_url}artifacts/"
 
         artifacts_response = requests.get(build_artifacts_url,
                                           auth=(user, password),
@@ -240,7 +238,7 @@ def pin_build(build_id: str, user: str, password: str) -> None:
     password : str
         The password to authenticate with.
     """
-    pin_url = "{}id:{}/pin/".format(BUILDS_ROOT, build_id)
+    pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
     requests.put(pin_url, auth=(user, password), headers=JSON_RESPONSE_HEADER)
 
 
@@ -271,7 +269,7 @@ def tag_build(build_info, tag: str, user: str, password: str) -> None:
         'tag': new_tag_values
     }
 
-    tag_url = "{}id:{}/tags/".format(BUILDS_ROOT, build_info['id'])
+    tag_url = f"{BUILDS_ROOT}id:{build_info['id']}/tags/"
     requests.put(tag_url, auth=(user, password), headers=JSON_RESPONSE_HEADER, json=new_tags)
 
 
@@ -324,7 +322,7 @@ def set_pins_and_tags(packages_with_versions: dict, tag: str, user: str, passwor
             clean_up_build(old_build_info, tag,
                            user, password)
 
-        nuget_package_file_name = "{}.{}.nupkg".format(p_id, packages_with_versions[p_id][0])
+        nuget_package_file_name = f"{p_id}.{packages_with_versions[p_id][0]}.nupkg"
         new_build_info = get_new_build(build_config_id, nuget_package_file_name,
                                        user, password)
         if new_build_info:
