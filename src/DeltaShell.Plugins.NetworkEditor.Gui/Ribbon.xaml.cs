@@ -47,19 +47,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewBridgeCommand = new AddNewBridgeCommand();
         private ICommand addNewExtraResistanceCommand = new AddNewExtraResistanceCommand();
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
-        //private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
+        private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
         private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
-        //private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
-        //private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
-        //private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
-        //private ICommand addNewCatchmentOpenWaterCommand = new AddNewCatchmentCommand.AddNewOpenWaterCommand();
-        //private ICommand addNewCatchmentGreenHouseCommand = new AddNewCatchmentCommand.AddNewGreenHouseCommand();
-        //private ICommand addNewCatchmentSacramentoCommand = new AddNewCatchmentCommand.AddNewSacramentoCommand();
-        //private ICommand addNewCatchmentHbvCommand = new AddNewCatchmentCommand.AddNewHbvCommand();
-        //private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewWasteWaterTreatmentPlantCommand();
-        //private ICommand addNewRunoffBoundaryCommand = new AddNewRunoffBoundaryCommand();
+        private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
+        private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
+        private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
+        private ICommand addNewCatchmentOpenWaterCommand = new AddNewCatchmentCommand.AddNewOpenWaterCommand();
+        private ICommand addNewCatchmentGreenHouseCommand = new AddNewCatchmentCommand.AddNewGreenHouseCommand();
+        private ICommand addNewCatchmentSacramentoCommand = new AddNewCatchmentCommand.AddNewSacramentoCommand();
+        private ICommand addNewCatchmentHbvCommand = new AddNewCatchmentCommand.AddNewHbvCommand();
+        private ICommand addNewWasteWaterTreatmentPlantCommand = new AddNewWasteWaterTreatmentPlantCommand();
+        private ICommand addNewRunoffBoundaryCommand = new AddNewRunoffBoundaryCommand();
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
         private ICommand showSideViewCommand = new ShowSideViewCommand();
@@ -109,19 +109,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewBridgeCommand;
                 yield return addNewExtraResistanceCommand;
                 yield return addNewLateralSourceCommand;
-                //yield return addNewRetentionCommand;
+                yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
                 yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
-                //yield return addNewCatchmentPolderCommand;
-                //yield return addNewCatchmentPavedCommand;
-                //yield return addNewCatchmentUnpavedCommand;
-                //yield return addNewCatchmentOpenWaterCommand;
-                //yield return addNewCatchmentGreenHouseCommand;
-                //yield return addNewCatchmentSacramentoCommand;
-                //yield return addNewCatchmentHbvCommand;
-                //yield return addNewWasteWaterTreatmentPlantCommand;
-                //yield return addNewRunoffBoundaryCommand;
+                yield return addNewCatchmentPolderCommand;
+                yield return addNewCatchmentPavedCommand;
+                yield return addNewCatchmentUnpavedCommand;
+                yield return addNewCatchmentOpenWaterCommand;
+                yield return addNewCatchmentGreenHouseCommand;
+                yield return addNewCatchmentSacramentoCommand;
+                yield return addNewCatchmentHbvCommand;
+                yield return addNewWasteWaterTreatmentPlantCommand;
+                yield return addNewRunoffBoundaryCommand;
                 yield return addThinDam2dCommand;
                 yield return addFixedWeir2dCommand;
                 yield return addObs2dCommand;
@@ -182,23 +182,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewBridge.SetState(addNewBridgeCommand, showNetworkTools);
             ButtonAddNewExtraResistance.SetState(addNewExtraResistanceCommand, showNetworkTools);
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
-            //ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
+            ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
             
             ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
             // catchment tools
-            //ButtonAddNewCatchmentPolder.SetState(addNewCatchmentPolderCommand, showBasinTools);
-            //ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
-            //ButtonAddNewCatchmentUnpaved.SetState(addNewCatchmentUnpavedCommand, showBasinTools);
-            //ButtonAddNewCatchmentOpenWater.SetState(addNewCatchmentOpenWaterCommand, showBasinTools);
-            //ButtonAddNewCatchmentGreenHouse.SetState(addNewCatchmentGreenHouseCommand, showBasinTools);
-            //ButtonAddNewCatchmentSacramento.SetState(addNewCatchmentSacramentoCommand, showBasinTools);
-            //ButtonAddNewCatchmentHbv.SetState(addNewCatchmentHbvCommand, showBasinTools);
+            ButtonAddNewCatchmentPolder.SetState(addNewCatchmentPolderCommand, showBasinTools);
+            ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
+            ButtonAddNewCatchmentUnpaved.SetState(addNewCatchmentUnpavedCommand, showBasinTools);
+            ButtonAddNewCatchmentOpenWater.SetState(addNewCatchmentOpenWaterCommand, showBasinTools);
+            ButtonAddNewCatchmentGreenHouse.SetState(addNewCatchmentGreenHouseCommand, showBasinTools);
+            ButtonAddNewCatchmentSacramento.SetState(addNewCatchmentSacramentoCommand, showBasinTools);
+            ButtonAddNewCatchmentHbv.SetState(addNewCatchmentHbvCommand, showBasinTools);
             
-            //ButtonAddNewWasteWaterTreatmentPlant.SetState(addNewWasteWaterTreatmentPlantCommand, showBasinTools);
-            //ButtonAddNewRunoffBoundary.SetState(addNewRunoffBoundaryCommand, showBasinTools);
+            ButtonAddNewWasteWaterTreatmentPlant.SetState(addNewWasteWaterTreatmentPlantCommand, showBasinTools);
+            ButtonAddNewRunoffBoundary.SetState(addNewRunoffBoundaryCommand, showBasinTools);
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);
@@ -431,11 +431,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
-        //private void ButtonAddNewRetention_Click(object sender, RoutedEventArgs e)
-        //{
-        //    addNewRetentionCommand.Execute();
-        //    ValidateItems();
-        //}
+        private void ButtonAddNewRetention_Click(object sender, RoutedEventArgs e)
+        {
+            addNewRetentionCommand.Execute();
+            ValidateItems();
+        }
 
         private void ButtonAddNewObservationPoint_Click(object sender, RoutedEventArgs e)
         {
@@ -455,59 +455,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ValidateItems();
         }
 
-//        private void ButtonAddNewCatchmentPolder_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentPolderCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentPolder_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentPolderCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentPaved_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentPavedCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentPaved_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentPavedCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentUnpaved_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentUnpavedCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentUnpaved_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentUnpavedCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentOpenWater_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentOpenWaterCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentOpenWater_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentOpenWaterCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentGreenHouse_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentGreenHouseCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentGreenHouse_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentGreenHouseCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentSacramento_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentSacramentoCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentSacramento_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentSacramentoCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewCatchmentHbv_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewCatchmentHbvCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewCatchmentHbv_Click(object sender, RoutedEventArgs e)
+        {
+            addNewCatchmentHbvCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewWasteWaterTreatmentPlant_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewWasteWaterTreatmentPlantCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewWasteWaterTreatmentPlant_Click(object sender, RoutedEventArgs e)
+        {
+            addNewWasteWaterTreatmentPlantCommand.Execute();
+            ValidateItems();
+        }
 
-//        private void ButtonAddNewRunoffBoundary_Click(object sender, RoutedEventArgs e)
-//        {
-//            addNewRunoffBoundaryCommand.Execute();
-//            ValidateItems();
-//        }
+        private void ButtonAddNewRunoffBoundary_Click(object sender, RoutedEventArgs e)
+        {
+            addNewRunoffBoundaryCommand.Execute();
+            ValidateItems();
+        }
 
         private void ButtonAddNewThinDam_Click(object sender, RoutedEventArgs e)
         {
