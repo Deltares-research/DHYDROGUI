@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportRunSaveLoadMiniModel2()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\2\NETWORK.TP");
@@ -38,6 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         [Category(TestCategory.Slow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportRunSaveLoadMiniModel4()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP");
@@ -46,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         [Category(TestCategory.Slow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportRunSaveLoadMiniModel6()
         {
             ImportRunSaveLoadRunCompare(@"\RRMiniTestModels\DRRSA.lit\6\NETWORK.TP");

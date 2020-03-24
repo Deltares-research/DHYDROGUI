@@ -389,6 +389,7 @@ namespace DelftTools.Hydro.SewerFeatures
         
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
+            //hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
             //if(helper.SewerConnectionsByName.ContainsKey(Name)) return;
 
             IManhole sourceManhole = null;

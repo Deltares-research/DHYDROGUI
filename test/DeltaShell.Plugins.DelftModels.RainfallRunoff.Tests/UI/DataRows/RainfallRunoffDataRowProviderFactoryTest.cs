@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
     public class RainfallRunoffDataRowProviderFactoryTest
     {
         [Test]
-        [Category("Quarantine")]
         public void CreateAllRows()
         {
             var model = new RainfallRunoffModel();
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
 
             var allProviders = RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] {});
 
-            Assert.GreaterOrEqual(allProviders.Count(), 4); //or 5?
+            Assert.GreaterOrEqual(allProviders.Count(), 7);
 
             foreach(var provider in allProviders)
             {

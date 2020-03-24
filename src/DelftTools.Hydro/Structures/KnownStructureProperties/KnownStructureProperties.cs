@@ -32,8 +32,8 @@
         public const string GateCrestLevel = "crestLevel";
         public const string GateOpeningWidth = "gateOpeningWidth";
         public const string GateLowerEdgeLevel = "gateLowerEdgeLevel";
-        public const string GateDoorHeight = "doorHeight";
-        public const string GateHorizontalOpeningDirection = "horizontal_opening_direction";
+        public const string GateDoorHeight = "gateHeight";
+        public const string GateHorizontalOpeningDirection = "gateOpeningHorizontalDirection";
         public const string GateSillWidth = "sill_width";
         #endregion Gate
 

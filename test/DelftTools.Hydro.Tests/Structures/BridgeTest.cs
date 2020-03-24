@@ -10,7 +10,6 @@ namespace DelftTools.Hydro.Tests.Structures
     public class BridgeTest
     {
         [Test]
-        [NUnit.Framework.Category("Quarantine")]
         public void PropertyChangedForTabulatedCrossection()
         {
             var bridge = new Bridge();
@@ -30,7 +29,7 @@ namespace DelftTools.Hydro.Tests.Structures
             var CrossSectionZWRow = bridge.TabulatedCrossSectionDefinition.ZWDataTable[0];
             CrossSectionZWRow.Width = 22;
 
-            Assert.AreEqual(2, callCount);
+            Assert.AreEqual(4, callCount);
         }
 
         [Test]

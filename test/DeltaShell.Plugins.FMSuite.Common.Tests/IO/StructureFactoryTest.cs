@@ -300,21 +300,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void CreateGateWithTimeSeriesTest()
         {
             var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", "horizontal_opening_direction");
+            var openingDirectionDefinition = schema.GetDefinition("gate", "gateOpeningHorizontalDirection");
 
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
-            structure.AddProperty(KnownStructureProperties.GateSillLevel, typeof(Steerable), "Gate02_lower_edge_level.tim");
+            structure.AddProperty(KnownStructureProperties.GateCrestLevel, typeof(Steerable), "Gate02_lower_edge_level.tim");
             structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "Gate02_lower_edge_level.tim");
             structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "Gate02_opening_width.tim");
             structure.AddProperty(KnownStructureProperties.GateDoorHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "from_right");
+            structure.AddProperty(KnownStructureProperties.GateHorizontalOpeningDirection, openingDirectionDefinition.DataType, "fromRight");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
