@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -31,7 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel, Is.InstanceOf<TimeDependentParametersSettingsViewModel>());
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, 
                         "Expected the ActiveParametersViewModel to not be null:");
-            Assert.That(viewModel.ActiveParametersViewModel.TimeDependentParametersFunction, Is.SameAs(underlyingFunction));
+            Assert.That(viewModel.ActiveParametersViewModel.TimeDependentParametersFunctions.Count(), Is.EqualTo(1));
+            Assert.That(viewModel.ActiveParametersViewModel.TimeDependentParametersFunctions.First, Is.SameAs(underlyingFunction));
 
             Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Time Dependent Parameters"), 
                         "Expected the GroupBoxTitle to be different:");

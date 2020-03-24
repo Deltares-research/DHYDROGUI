@@ -1,4 +1,5 @@
-﻿using DelftTools.Functions;
+﻿using System.Collections.Generic;
+using DelftTools.Functions;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Gets the time dependent parameters function.
         /// </summary>
-        public abstract IFunction TimeDependentParametersFunction { get; }
+        public abstract IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
     }
 
     /// <summary>
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public TimeDependentParameters<TSpreading> ObservedParameters { get; }
 
-        public override IFunction TimeDependentParametersFunction =>
-            ObservedParameters.WaveEnergyFunction.UnderlyingFunction;
+        public override IEnumerable<IFunction> TimeDependentParametersFunctions =>
+            new[] {ObservedParameters.WaveEnergyFunction.UnderlyingFunction};
     }
 }
