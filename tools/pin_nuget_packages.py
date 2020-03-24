@@ -10,6 +10,7 @@ import xml.etree.ElementTree as et
 from pathlib import Path
 import requests
 import json
+import logging
 
 # Production Server
 TEAMCITY_URL = "https://build.deltares.nl"
@@ -193,6 +194,28 @@ def get_packages_files(dir_path: Path):
     return dir_path.glob("**/packages.config")
 
 
+def has_artifact_for_nuget_pkg(build_url: str, nuget_package_file_name: str) -> bool:
+    """
+    Returns whether or not the specified build has the valid
+    artifact for the nuget package
+
+    Parameters
+    ----------
+    build_url : str
+        The build url to check the artifacts for.
+    nuget_package_file_name : str
+        The expected nuget package file name within the build to be retrieved.
+    """
+    build_artifacts_url = f"{build_url}artifacts/"
+    artifacts_response = wrapper.get(build_artifacts_url)
+
+    if artifacts_response.status_code != 200:
+        return false;
+
+    artifact_info = artifacts_response.json()
+    return artifact_info['file'][0]['name'] == nuget_package_file_name
+
+
 def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
     """
     Get the build from build_config with the specified nuget package file.
@@ -215,15 +238,8 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
     for build in builds['build']:
 
         new_build_url = f"{BUILDS_ROOT}id:{build['id']}/"
-        build_artifacts_url = f"{new_build_url}artifacts/"
 
-        artifacts_response = wrapper.get(build_artifacts_url)
-
-        if artifacts_response.status_code != 200:
-            continue
-
-        artifact_info = artifacts_response.json()
-        if artifact_info['file'][0]['name'] != nuget_package_file_name:
+        if not has_artifact_for_nuget_pkg(new_build_url, nuget_package_file_name):
             continue
 
         new_build_info = wrapper.get(new_build_url)
@@ -304,17 +320,21 @@ def set_pins_and_tags(packages_with_versions: dict, tag: str):
     """
     for (p_id, build_config_id) in NUGET_PACKAGES:
 
-        if len(packages_with_versions[p_id]) != 1:
+        versions = packages_with_versions[p_id]
+        if len(versions) != 1:
+            logging.warning(f"Multiple versions of NuGet package '{p_id}' were found in the solution: {versions}")
             continue
 
         old_build_info = get_previous_build(build_config_id, tag)
         if old_build_info:
             clean_up_build(old_build_info, tag)
 
-        nuget_package_file_name = f"{p_id}.{packages_with_versions[p_id].pop()}.nupkg"
+        nuget_package_file_name = f"{p_id}.{versions.pop()}.nupkg"
         new_build_info = get_new_build(build_config_id, nuget_package_file_name)
         if new_build_info:
             bag_new_build(new_build_info, tag)
+        else:
+            logging.warning(f"Could not find a build to tag NuGet package '{nuget_package_file_name}'.")
 
 
 def parse_arguments():
