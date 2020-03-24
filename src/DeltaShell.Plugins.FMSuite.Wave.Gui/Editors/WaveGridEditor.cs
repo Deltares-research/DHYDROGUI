@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public static class WaveGridEditor
     {
-        public static void LaunchGridEditor(WaveModel model, WaveDomainData editDomain = null)
+        public static void LaunchGridEditor(WaveModel model, IWaveDomainData editDomain = null)
         {
             if (model == null)
             {
@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             string mdwDir = Path.GetDirectoryName(model.MdwFilePath);
 
-            List<WaveDomainData> domains = WaveDomainHelper
-                                           .GetAllDomains(model.OuterDomain).Where(d => !d.Equals(editDomain)).ToList();
+            List<IWaveDomainData> domains = WaveDomainHelper
+                                            .GetAllDomains(model.OuterDomain).Where(d => !d.Equals(editDomain)).ToList();
             if (editDomain != null)
             {
                 domains.Insert(0, editDomain);

@@ -47,6 +47,6 @@
   </Target>
 
   <Target Name="MsiFM_ReleaseOnly_Delft3DFMOpen_NoSourcesBuild">
-    <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+    <MSBuild Projects="setup\FM\FM_Open.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
   </Target>
 </Project>

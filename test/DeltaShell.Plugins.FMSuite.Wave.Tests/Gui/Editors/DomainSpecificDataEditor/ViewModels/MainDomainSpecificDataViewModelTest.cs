@@ -1,5 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEditor.ViewModels
@@ -232,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            IWaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
             newExteriorDomain1.SuperDomain = null;
 
             // Act
@@ -249,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            WaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
+            IWaveDomainData newExteriorDomain1 = rootWaveDomainData.SubDomains[0];
             newExteriorDomain1.SuperDomain = null;
 
             // Act
@@ -265,6 +270,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.AreEqual("subdomain", viewModelsListAfter[1].DomainName);
         }
 
+        [Test]
+        public void Dispose_UnsubscribesDomains()
+        {
+            // Setup
+            INotifyPropertyChange domain = Substitute.For<INotifyPropertyChange, IWaveDomainData>();
+            var rootDomain = (IWaveDomainData) domain;
+            var subDomains = Substitute.For<IEventedList<IWaveDomainData>>();
+            rootDomain.SubDomains.Returns(subDomains);
+
+            var viewModel = new MainDomainSpecificDataViewModel(rootDomain);
+
+            // Call
+            viewModel.Dispose();
+
+            // Assert
+            domain.ReceivedWithAnyArgs().PropertyChanged -= Arg.Any<PropertyChangedEventHandler>();
+            subDomains.ReceivedWithAnyArgs().CollectionChanged -= Arg.Any<NotifyCollectionChangedEventHandler>();
+        }
+
         private static WaveDomainData CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel)
         {
             var rootWaveDomainData = new WaveDomainData("test");
@@ -274,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             return rootWaveDomainData;
         }
 
-        private static WaveDomainData AddSubDomainTo(WaveDomainData waveDomainData)
+        private static WaveDomainData AddSubDomainTo(IWaveDomainData waveDomainData)
         {
             var subWaveDomainData = new WaveDomainData("subdomain") { SuperDomain = waveDomainData };
             waveDomainData.SubDomains.Add(subWaveDomainData);

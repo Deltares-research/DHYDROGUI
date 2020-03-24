@@ -6,6 +6,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
@@ -20,20 +21,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     {
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaveModel data, IGui gui)
         {
-            var wpfGuiCategories = new List<WpfGuiCategory>();
-            if (data != null)
-            {
-                wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
-                                                        .GroupBy(fd => fd.Category)
-                                                        .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
-                                                        .ToList();
-                wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
+            Ensure.NotNull(data, nameof(data));
 
-                ModifyWaveSettings(wpfGuiCategories);
-            }
+            List<WpfGuiCategory> wpfGuiCategories = GetWaveSettings(data).FieldDescriptions
+                                                                         .GroupBy(fd => fd.Category)
+                                                                         .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
+                                                                         .ToList();
 
+            wpfGuiCategories.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => data);
+
+            ModifyWaveSettings(wpfGuiCategories);
             wpfGuiCategories.Add(GetDomainSpecificSettingsCategory(data));
             AddCustomWaveSettings(data, gui, wpfGuiCategories);
+
             return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
         }
 
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
                                       Enumerable.Empty<FieldUIDescription>().ToList())
             {
-                CustomControl = new DomainSpecificDataEditor(new MainDomainSpecificDataViewModel(model.OuterDomain))
+                CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))
             };
         }
 
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Start_time,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_start_time,
                 Name = "StartTime",
                 ValueType = typeof(DateTime),
                 ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time,
                 Name = "StopTime",
                 ValueType = typeof(DateTime),
                 ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run,
@@ -121,24 +121,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,
-                Label = Resources.WaveSettingsHelper_GetWaveSettings_Time_step,
+                Label = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step,
                 Name = "TimeStep",
                 ValueType = typeof(TimeSpan),
-                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step
+                ToolTip = Resources.WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run
             };
 
             FieldUIDescription fieldDescription = objectDescription.FieldDescriptions.Single(fd => fd.Name == KnownWaveProperties.COMFile);
             fieldDescription.SetIsEnabledFunc(d => !data.IsCoupledToFlow);
 
-            objectDescription.FieldDescriptions =
-                new[]
-                    {
-                        flowCouplingCheckBox,
-                        startTime,
-                        stopTime,
-                        timeStep
-                    }.Concat(objectDescription.FieldDescriptions)
-                     .ToList();
+            FieldUIDescription[] couplingFieldDescriptions =
+            {
+                flowCouplingCheckBox,
+                startTime,
+                stopTime,
+                timeStep
+            };
+
+            objectDescription.FieldDescriptions = objectDescription.FieldDescriptions.Concat(couplingFieldDescriptions)
+                                                                   .ToList();
 
             return objectDescription;
         }

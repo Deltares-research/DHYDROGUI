@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             {
                 IBoundaryContainer boundaryContainer = model.BoundaryContainer;
 
-                WaveDomainData oldDomain = model.OuterDomain;
+                IWaveDomainData oldDomain = model.OuterDomain;
 
                 // When
                 model.OuterDomain = new WaveDomainData("name");

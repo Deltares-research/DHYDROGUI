@@ -87,6 +87,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.DoesNotThrow(() => selectedTemplate = selector.SelectTemplate(item, frameworkElement));
         }
 
+        [TestCase("yyyy-mm-dd")]
+        [TestCase("[yyyy-mm-dd]")]
+        [TestCase("YYYY-MM-DD")]
+        [TestCase("yyyy-mm-dd hh:mm:ss")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void SelectTemplate_ForWpfGuiProperty_WithDateTimeType_ReturnsTemplate(string unit)
+        {
+            var fieldDescription = new FieldUIDescription(null, null)
+            {
+                ValueType = typeof(DateTime),
+                UnitSymbol = unit
+            };
+            var property = new WpfGuiProperty(fieldDescription);
+            var selector = new SettingsTemplateSelector();
+
+            // Call
+            DataTemplate template = selector.SelectTemplate(property, new WpfSettingsView());
+
+            // Assert
+            Assert.That(template, Is.Not.Null);
+        }
+
         private static void GetAndCheckDataTemplate(object item)
         {
             DataTemplate selectedTemplate = null;

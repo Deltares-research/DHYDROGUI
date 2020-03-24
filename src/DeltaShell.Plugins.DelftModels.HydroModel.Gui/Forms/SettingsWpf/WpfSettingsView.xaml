@@ -208,6 +208,29 @@
                         TextAlignment="Left"/>
                 </Grid>
             </DataTemplate>
+
+            <DataTemplate x:Key="DateTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">
+                <Grid Style="{StaticResource GridStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource LabelLength}" />
+                        <ColumnDefinition Width="{StaticResource ControlLength}" />
+                        <ColumnDefinition Width="{StaticResource UnitLength}" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}" 
+                               Style="{StaticResource LabelTextBlockStyle}"/>
+                    <xctk:DateTimePicker
+                        Grid.Column="1"
+                        Value="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=True}" 
+                        Style="{StaticResource ControlWithErrorStyle}"
+                        AllowTextInput="True" 
+                        TimePickerVisibility="Collapsed"
+                        Format="Custom"
+                        FormatString="yyyy-MM-dd"
+                        UpdateValueOnEnterKey="True"
+                        TextAlignment="Left"/>
+                </Grid>
+            </DataTemplate>
      
             <!-- DataTemplate for TimeSpan -->
             <DataTemplate x:Key="TimeSpanTemplate" DataType="{x:Type settingsWpf:WpfGuiProperty}">

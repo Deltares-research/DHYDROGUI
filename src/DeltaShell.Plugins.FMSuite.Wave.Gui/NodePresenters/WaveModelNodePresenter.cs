@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 yield return dataItem;
             }
 
-            foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
             {
                 IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
                 if (subDataItem == null)

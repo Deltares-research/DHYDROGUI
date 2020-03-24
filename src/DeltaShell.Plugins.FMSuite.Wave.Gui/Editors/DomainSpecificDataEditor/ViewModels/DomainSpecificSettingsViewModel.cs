@@ -13,13 +13,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private HydroDynamicsSettingsViewModel hydroDynamicsSettings;
         private WindSettingsViewModel windSettings;
 
-        private readonly WaveDomainData domainData;
+        private readonly IWaveDomainData domainData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DomainSpecificSettingsViewModel"/> class.
         /// </summary>
         /// <param name="domainData">The domain data.</param>
-        public DomainSpecificSettingsViewModel(WaveDomainData domainData)
+        public DomainSpecificSettingsViewModel(IWaveDomainData domainData)
         {
             this.domainData = domainData;
             
