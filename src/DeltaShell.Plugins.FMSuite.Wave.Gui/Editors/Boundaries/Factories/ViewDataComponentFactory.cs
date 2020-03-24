@@ -187,6 +187,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                     return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
                     return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
+
+                case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dc;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dc;
+                case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(dc);
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dataComponentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(dc);
+                case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dc;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Degrees:
+                    return dc;
+                case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
+                    return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
+
                 default:
                     throw new NotSupportedException("The provided data component and spreading type is not supported.");
             }
