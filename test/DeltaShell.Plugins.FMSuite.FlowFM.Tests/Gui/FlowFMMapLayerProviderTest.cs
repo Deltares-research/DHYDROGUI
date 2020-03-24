@@ -167,6 +167,79 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
+
+        [Test]
+        public void OpenHisFileCheckCulvertFunctions()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
+            var branch = network.Branches[0];
+            branch.Name = "Culvert_1D_1";
+            var culvert = new Culvert("Culvert_1D_1") { Chainage = branch.Length / 4 };
+            var culvert2 = new Culvert("Culvert_1D_2") {Chainage = branch.Length / 4 * 3};
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(culvert, branch);
+            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(culvert2, branch);
+            var area = new HydroArea();
+            var store = new FMHisFileFunctionStore(network, area)
+                {Path = TestHelper.GetTestFilePath("output_hisfiles\\culvert_his.nc")};
+            var featuresByCoverage =  TypeUtils.GetField<FMHisFileFunctionStore, IDictionary<string, IEnumerable<IFeature>>>(store, "FeaturesByCoverage");
+            Assert.That(featuresByCoverage["culvert"].Count(), Is.EqualTo(2));
+            using (var gui = new DeltaShellGui())
+            {
+                var fmModel = new WaterFlowFMModel(){Area = area,Network = network};
+                TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputHisFileStore), store); 
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Application.UserSettings["ShowStartUpScreen"] = false;
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var project = app.Project;
+                    project.RootFolder.Add(fmModel);
+                    gui.CommandHandler.OpenView(fmModel);
+                    var mapView = gui.DocumentViews.GetViewsOfType<MapView>().FirstOrDefault();
+                    mapView.MapControl.SelectTool.Select(culvert);
+
+                    //mapView.MapControl.GetToolByType<QueryTimeSeriesMapTool>().Execute();
+
+                    var timeSeriesList = new List<IFunction>();
+                    var coverages = GetTimeDependentCoverages(new[] {culvert});
+                    foreach (var coverage in coverages)
+                    {
+                        var dictionary = mapView.MapControl.SelectedFeatures.ToDictionary(GetLocationName, sf => coverage.GetTimeSeries(sf));
+                        foreach (var kvp in dictionary)
+                        {
+                            var timeSeries = kvp.Value;
+                            if (timeSeries == null)
+                            {
+                                continue;
+                            }
+                            if (coverage != null)
+                            {
+                                timeSeries.Components[0].Name = string.Format("{0}: {1}, {2}", kvp.Key, timeSeries.Components[0].Name, coverage);
+                            }
+
+                            timeSeries.IsEditable = false;
+                            timeSeriesList.Add(timeSeries);
+                        }
+                    }
+                    if (timeSeriesList.Count > 0)
+                    {
+                        SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(timeSeriesList);
+                    }
+                    //SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(coverages);
+                };
+
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+            }
+        }
         private static string GetLocationName(IFeature feature)
         {
             var networkLocation = feature as INetworkLocation;
@@ -362,10 +435,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category("Quarantine")]
         public void FlowFmMapLayerProviderCanCreateLayerForListOfWaterFlowFm1D2DLinks()
         {
-            var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new EventedList<Link1D2D>(), new WaterFlowFMModel());
+            var canCreateLayerFor = mapLayerProvider.CanCreateLayerFor(new EventedList<ILink1D2D>(), new WaterFlowFMModel());
             Assert.IsTrue(canCreateLayerFor);
         }
 

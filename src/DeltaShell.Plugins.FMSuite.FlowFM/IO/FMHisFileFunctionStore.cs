@@ -223,11 +223,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (Network != null && Area != null)
                 {
                     //baseTypeChecking?
-                    features = Network.AllHydroObjects.OfType<INameable>()
+                    features = Network.BranchFeatures.OfType<INameable>()
                                 .Concat(Area.AllHydroObjects)
                                 .Concat(Area.ObservationPoints)
                                 .Concat(Area.ObservationCrossSections)
-                                    .Where(p => !(p is ISewerConnection) && ids.Contains(p.Name)).OfType<IFeature>().ToArray(); ;
+                                .Except(Network.Branches)
+                                    .Where(p => ids.Contains(p.Name)).OfType<IFeature>().ToArray(); 
                 }
                 else if ((ids != null || xCoordinates != null && yCoordinates != null) && FMHisFileFunctionStoreHelper.OutputStructuresGenerators.ContainsKey(featureName))
                 {

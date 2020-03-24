@@ -10270,6 +10270,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/out
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.dbf -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.shp -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.shx -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/culvert_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/flume_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/generalStructure_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/har_1d2d_his.nc -text
