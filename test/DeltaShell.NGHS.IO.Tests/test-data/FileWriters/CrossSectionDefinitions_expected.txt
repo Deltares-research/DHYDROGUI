@@ -50,6 +50,7 @@
     frictionId            = Main                
     Width                 = 100.000             
     Height                = 80.000              
+    Closed                = yes                 
 
 [Definition]
     Id                    = CrossSection_1D_5   

@@ -14,6 +14,13 @@
       <property name="ArcHeight" />
       <property name="MaterialName" />
     </subclass>
+    <subclass name="CrossSectionStandardShapeUShape" discriminator-value="ushape">
+      <property name="Name" />
+      <property name="Width" />
+      <property name="Height" />
+      <property name="ArcHeight" />
+      <property name="MaterialName" />
+    </subclass>
     <subclass name="CrossSectionStandardShapeCunette" discriminator-value="cunette">
       <property name="Name" />
       <property name="Width" />
@@ -21,6 +28,12 @@
       <property name="MaterialName" />
     </subclass>
     <subclass name="CrossSectionStandardShapeEgg" discriminator-value="egg">
+      <property name="Name" />
+      <property name="Width" />
+      <property name="Height" />
+      <property name="MaterialName" />
+    </subclass>
+    <subclass name="CrossSectionStandardShapeInvertedEgg" discriminator-value="invertedEgg">
       <property name="Name" />
       <property name="Width" />
       <property name="Height" />
@@ -37,6 +50,7 @@
       <property name="Width" />
       <property name="Height" />
       <property name="MaterialName" />
+      <property name="Closed" />
     </subclass>
     <subclass name="CrossSectionStandardShapeCircle" discriminator-value="round">
       <property name="Name" />

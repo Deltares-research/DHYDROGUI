@@ -410,9 +410,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 1, 30.0, 100.0, 80.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 1, 30.0, 100.0, 80.0, false);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 2, 30.0, 200.0, 160.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 2, 30.0, 200.0, 160.0, true);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
@@ -423,7 +423,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.AreEqual(2, categories.Count(op => op.Name == DefinitionPropertySettings.Header));
 
             var content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().First();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(7, content.Properties.Count);
             var idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_1", idValue);
 
@@ -442,10 +442,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var heightValue = content.GetPropertyValue(DefinitionPropertySettings.RectangleHeight.Key);
             Assert.AreEqual("80.000", heightValue);
 
+            var isClosed = content.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
+            Assert.AreEqual("no", isClosed);
+
             CheckCrossSectionStandardPropertyValues(content);
 
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
-            Assert.AreEqual(6, content.Properties.Count);
+            Assert.AreEqual(7, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
             Assert.AreEqual("CrossSection_1D_2", idValue);
 
@@ -460,6 +463,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             heightValue = content.GetPropertyValue(DefinitionPropertySettings.RectangleHeight.Key);
             Assert.AreEqual("160.000", heightValue);
+
+            isClosed = content.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
+            Assert.AreEqual("yes", isClosed);
 
             CheckCrossSectionStandardPropertyValues(content);
         }

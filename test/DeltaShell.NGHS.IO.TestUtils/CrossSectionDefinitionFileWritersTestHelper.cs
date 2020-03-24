@@ -118,7 +118,8 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 FloodPlainLevel = floodPlainLevel
             };
         }
-        public static void AddCrossSectionRectangle(IBranch branch, int csId, double chainage, double width, double height)
+        public static void AddCrossSectionRectangle(IBranch branch, int csId, double chainage, double width,
+            double height, bool isClosed = true)
         {
             var crossSection = FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.Standard, chainage);
             var crossSectionDefinitionStandard = crossSection.Definition as CrossSectionDefinitionStandard;
@@ -128,6 +129,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             if (crossSectionDefinitionRectangleShape == null) return;
             crossSectionDefinitionRectangleShape.Width = width;
             crossSectionDefinitionRectangleShape.Height = height;
+            crossSectionDefinitionRectangleShape.Closed = isClosed;
         }
 
         public static void AddCrossSectionElliptical(IBranch branch, int csId, double chainage, double width, double height)

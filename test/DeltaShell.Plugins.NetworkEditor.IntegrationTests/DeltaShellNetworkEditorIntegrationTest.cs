@@ -79,6 +79,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+
                 gui.Run();
 
                 var project = app.Project;

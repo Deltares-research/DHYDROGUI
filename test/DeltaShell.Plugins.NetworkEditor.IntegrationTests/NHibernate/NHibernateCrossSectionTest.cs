@@ -262,6 +262,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         }
 
         [Test]
+        public void GivenUShapeStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeUShape();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
         public void GivenCunetteStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
         {
             var shape = new CrossSectionStandardShapeCunette();
@@ -272,6 +279,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void GivenEggStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
         {
             var shape = new CrossSectionStandardShapeEgg();
+            TestNHibernateSaveLoadFunctionality(shape);
+        }
+
+        [Test]
+        public void GivenInvertedEggStandardShape_WhenSaveLoadWithNHibernate_ThenPublicPropertiesArePreserved()
+        {
+            var shape = new CrossSectionStandardShapeInvertedEgg();
             TestNHibernateSaveLoadFunctionality(shape);
         }
 
