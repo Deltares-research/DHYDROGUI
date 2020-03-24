@@ -505,6 +505,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             var mduStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
             var mduStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
 
+            GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
             GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(mduStartTime, true);
             GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
 
