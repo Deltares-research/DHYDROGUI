@@ -7,13 +7,16 @@
              xmlns:functionViews="clr-namespace:DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;assembly=DeltaShell.Plugins.CommonTools.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <!--
-        <WindowsFormsHost>
+    <DockPanel>
+        <WindowsFormsHost local:MultipleFunctionViewWindowsFormsHostMap.ChartSeriesType="LineSeries"
+                          local:MultipleFunctionViewWindowsFormsHostMap.ChartViewOption="AllSeries"
+                          local:MultipleFunctionViewWindowsFormsHostMap.Dock="Fill"
+                          local:MultipleFunctionViewWindowsFormsHostMap.Functions="{Binding TimeDependentParametersFunctions}"
+                          x:Name="WindowsFormsHost"
+                          DockPanel.Dock="Top">
             <WindowsFormsHost.Child>
                 <functionViews:MultipleFunctionView/>
             </WindowsFormsHost.Child>
         </WindowsFormsHost>
-        -->
-    </StackPanel>
+    </DockPanel>
 </UserControl>
