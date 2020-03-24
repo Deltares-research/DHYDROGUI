@@ -86,5 +86,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// </remarks>
         TimeDependentParameters<TSpreading> ConstructTimeDependentParameters<TSpreading>(IWaveEnergyFunction<TSpreading> waveEnergyFunction)
             where TSpreading : class, IBoundaryConditionSpreading, new();
+
+        TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters) 
+            where TOldSpreading : class, IBoundaryConditionSpreading, new()
+            where TNewSpreading : class, IBoundaryConditionSpreading, new();
     }
 }

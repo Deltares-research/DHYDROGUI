@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -135,5 +136,53 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Assert
             Assert.That(parameters.WaveEnergyFunction, Is.Not.Null);
         }
+
+        [Test]
+        public void ConvertTimeDependentParameters_ParametersNull_ThrowsArgumentNullException()
+        {
+            var factory = new BoundaryParametersFactory();
+
+            void Call() => factory.ConvertTimeDependentParameters<TSpreading, DegreesDefinedSpreading>(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("parameters"));
+        }
+
+        [Test]
+        public void ConvertTimeDependentParameters_PowerDefined_ExpectedResults()
+        {
+            // Setup
+            var energyFunction = new WaveEnergyFunction<TSpreading>();
+            var initialParameters = new TimeDependentParameters<TSpreading>(energyFunction);
+            var factory = new BoundaryParametersFactory();
+
+            // Call
+            TimeDependentParameters<PowerDefinedSpreading> result = factory.ConvertTimeDependentParameters<TSpreading, PowerDefinedSpreading>(initialParameters);
+
+            // Assert
+            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<PowerDefinedSpreading>();
+
+            Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
+            Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
+        }
+
+
+        [Test]
+        public void ConvertTimeDependentParameters_DegreesDefined_ExpectedResults()
+        {
+            // Setup
+            var energyFunction = new WaveEnergyFunction<TSpreading>();
+            var initialParameters = new TimeDependentParameters<TSpreading>(energyFunction);
+            var factory = new BoundaryParametersFactory();
+
+            // Call
+            TimeDependentParameters<DegreesDefinedSpreading> result = factory.ConvertTimeDependentParameters<TSpreading, DegreesDefinedSpreading>(initialParameters);
+
+            // Assert
+            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<DegreesDefinedSpreading>();
+
+            Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
+            Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
+        }
+
     }
 }
