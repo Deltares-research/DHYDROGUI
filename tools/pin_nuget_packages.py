@@ -1,3 +1,10 @@
+"""
+Pins and tags the third party NuGet packages on TeamCity
+that are used in the solution folder for which this script is run.
+Removes the tag, if found, from a previous build
+and removes the pin when possible.
+"""
+
 import argparse
 import xml.etree.ElementTree as et
 from pathlib import Path
@@ -15,10 +22,10 @@ JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 # 0: nuget package id, 1: nuget package build configuration id
 NUGET_PACKAGES = [
     ("Dimr.Libs", "DeltaShell_3rdPartyNuGetPackages_Dimr"),
-    # ("RGFGRID", "DeltaShell_3rdPartyNuGetPackages_Rgfgrid"),
-    # ("DIDO", "DeltaShell_3rdPartyNuGetPackages_Dido"),
-    # ("PLCT.Libs", "DeltaShell_3rdPartyNuGetPackages_PlctWaq"),
-    # ("Substances.Libs", "DeltaShell_3rdPartyNuGetPackages_SubstancesWaq")
+    ("RGFGRID", "DeltaShell_3rdPartyNuGetPackages_Rgfgrid"),
+    ("DIDO", "DeltaShell_3rdPartyNuGetPackages_Dido"),
+    ("PLCT.Libs", "DeltaShell_3rdPartyNuGetPackages_PlctWaq"),
+    ("Substances.Libs", "DeltaShell_3rdPartyNuGetPackages_SubstancesWaq")
 ]
 
 
@@ -170,9 +177,6 @@ def get_packages(files) -> dict:
             else:
                 packages[p_id] = {version}
 
-    for p in packages:
-        packages[p] = list(packages[p])
-
     return packages
 
 
@@ -191,7 +195,7 @@ def get_packages_files(dir_path: Path):
 
 def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
     """
-    Get the build from build_config with the specified revision number.
+    Get the build from build_config with the specified nuget package file.
 
     Parameters
     ----------
@@ -219,7 +223,7 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
             continue
 
         artifact_info = artifacts_response.json()
-        if not artifact_info['file'][0]['name'] == nuget_package_file_name:
+        if artifact_info['file'][0]['name'] != nuget_package_file_name:
             continue
 
         new_build_info = wrapper.get(new_build_url)
@@ -298,24 +302,25 @@ def set_pins_and_tags(packages_with_versions: dict, tag: str):
     tag : str
         The new tag to be added to the build
     """
-    for p in NUGET_PACKAGES:
-        p_id = p[0]
-        build_config_id = p[1]
+    for (p_id, build_config_id) in NUGET_PACKAGES:
 
-        if not len(packages_with_versions[p_id]) == 1:
+        if len(packages_with_versions[p_id]) != 1:
             continue
 
         old_build_info = get_previous_build(build_config_id, tag)
         if old_build_info:
             clean_up_build(old_build_info, tag)
 
-        nuget_package_file_name = f"{p_id}.{packages_with_versions[p_id][0]}.nupkg"
+        nuget_package_file_name = f"{p_id}.{packages_with_versions[p_id].pop()}.nupkg"
         new_build_info = get_new_build(build_config_id, nuget_package_file_name)
         if new_build_info:
             bag_new_build(new_build_info, tag)
 
 
 def parse_arguments():
+    """
+    Parse the arguments with which this script was called through
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("checkout_dir", help="Path of the checkout directory")
