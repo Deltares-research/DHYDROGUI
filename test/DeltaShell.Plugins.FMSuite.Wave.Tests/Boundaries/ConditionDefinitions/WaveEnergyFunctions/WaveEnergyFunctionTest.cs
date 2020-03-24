@@ -2,6 +2,7 @@
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
+using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
@@ -85,7 +86,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var oldWaveEnergyFunction = new WaveEnergyFunction<DegreesDefinedSpreading>();
-            // TODO: Add additional values to this function.
+            var generator = new TimeSeriesGenerator();
+            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
 
             Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
 
@@ -112,7 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var oldWaveEnergyFunction = new WaveEnergyFunction<PowerDefinedSpreading>();
-            // TODO: Add additional values to this function.
+            var generator = new TimeSeriesGenerator();
+            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
 
             Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
 

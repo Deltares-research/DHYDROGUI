@@ -95,7 +95,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
             }
 
             oldWaveEnergyFunction.SpreadingComponent.Unit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
-            // TODO: Extend this to reset the appropriate values of the component
+
+            for (var i = 0; i < oldWaveEnergyFunction.SpreadingComponent.AllValues.Count; i++)
+            {
+                oldWaveEnergyFunction.SpreadingComponent.AllValues[i] = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>();
+            }
 
             return new WaveEnergyFunction<TSpreading>(oldWaveEnergyFunction.UnderlyingFunction);
         }
