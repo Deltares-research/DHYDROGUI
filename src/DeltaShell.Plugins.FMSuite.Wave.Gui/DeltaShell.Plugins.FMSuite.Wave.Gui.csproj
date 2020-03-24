@@ -211,6 +211,7 @@
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentParametersView.xaml.cs">
       <DependentUpon>TimeDependentParametersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\MultipleFunctionViewWindowsFormsHostMap.cs" />
     <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsView.xaml.cs">
       <DependentUpon>BoundarySpecificParametersSettingsView.xaml</DependentUpon>
     </Compile>
