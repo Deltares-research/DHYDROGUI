@@ -66,7 +66,7 @@ class RequestWrapper:
                      headers=JSON_RESPONSE_HEADER)
 
 
-def get_previous_build(build_config: str, tag: str) -> dict:
+def get_previous_build(build_config: str, tag: str, wrapper: RequestWrapper) -> dict:
     """
     Get the previous build tagged with the specified tag
 
@@ -76,6 +76,8 @@ def get_previous_build(build_config: str, tag: str) -> dict:
         The build configuration id of the build to be retrieved.
     tag : str
         The tag with which the build should be retrieved.
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     build_url = f"{BUILDS_ROOT}buildType:{build_config},tag:{tag},pinned:true,count:1"
     previous_build_response = wrapper.get(build_url)
@@ -86,7 +88,7 @@ def get_previous_build(build_config: str, tag: str) -> dict:
     return json.loads(previous_build_response.text)
 
 
-def unpin_build(build_id: str) -> None:
+def unpin_build(build_id: str, wrapper: RequestWrapper) -> None:
     """
     Unpin the build with build_id.
 
@@ -94,12 +96,14 @@ def unpin_build(build_id: str) -> None:
     ----------
     build_id : str
         The id of the build to be unpinned.
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
     wrapper.delete(pin_url)
 
 
-def clean_up_build(build_info: dict, tag: str) -> None:
+def clean_up_build(build_info: dict, tag: str, wrapper: RequestWrapper) -> None:
     """
     Remove the specified tag from the specified build and unpin if necessary.
 
@@ -109,13 +113,15 @@ def clean_up_build(build_info: dict, tag: str) -> None:
         A dictionary describing the build to be modified.
     tag : str
         The tag to be removed from the build
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     build_id = build_info["id"]
-    untag_build(build_info, tag)
+    untag_build(build_info, tag, wrapper)
 
     tag_info = build_info["tags"]
     if tag in get_tag_values(tag_info) and tag_info["count"] == 1:
-        unpin_build(build_id)
+        unpin_build(build_id, wrapper)
 
 
 def get_tag_values(tags):
@@ -130,7 +136,7 @@ def get_tag_values(tags):
     return list(x["name"] for x in tags["tag"])
 
 
-def untag_build(build_info: dict, tag: str) -> None:
+def untag_build(build_info: dict, tag: str, wrapper: RequestWrapper) -> None:
     """
     Remove the specified tag from the build specified with build_info.
 
@@ -140,6 +146,8 @@ def untag_build(build_info: dict, tag: str) -> None:
         A dictionary describing the build to be modified.
     tag : str
         The tag to be removed from the build
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     build_tags = get_tag_values(build_info["tags"])
     if tag not in build_tags:
@@ -194,7 +202,7 @@ def get_packages_files(dir_path: Path):
     return dir_path.glob("**/packages.config")
 
 
-def has_artifact_for_nuget_pkg(build_url: str, nuget_package_file_name: str) -> bool:
+def has_artifact_for_nuget_pkg(build_url: str, nuget_package_file_name: str, wrapper: RequestWrapper) -> bool:
     """
     Returns whether or not the specified build has the valid
     artifact for the nuget package
@@ -205,18 +213,20 @@ def has_artifact_for_nuget_pkg(build_url: str, nuget_package_file_name: str) -> 
         The build url to check the artifacts for.
     nuget_package_file_name : str
         The expected nuget package file name within the build to be retrieved.
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     build_artifacts_url = f"{build_url}artifacts/"
     artifacts_response = wrapper.get(build_artifacts_url)
 
     if artifacts_response.status_code != 200:
-        return false;
+        return false
 
     artifact_info = artifacts_response.json()
     return artifact_info['file'][0]['name'] == nuget_package_file_name
 
 
-def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
+def get_new_build(build_config_id: str, nuget_package_file_name: str, wrapper: RequestWrapper) -> dict:
     """
     Get the build from build_config with the specified nuget package file.
 
@@ -226,6 +236,8 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
         The id of the build configuration of which the build is part.
     nuget_package_file_name : str
         The expected nuget package file name within the build to be retrieved.
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     builds_url = f"{BUILDS_ROOT}?locator=buildType:{build_config_id}"
 
@@ -239,7 +251,7 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
 
         new_build_url = f"{BUILDS_ROOT}id:{build['id']}/"
 
-        if not has_artifact_for_nuget_pkg(new_build_url, nuget_package_file_name):
+        if not has_artifact_for_nuget_pkg(new_build_url, nuget_package_file_name, wrapper):
             continue
 
         new_build_info = wrapper.get(new_build_url)
@@ -252,7 +264,7 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str) -> dict:
     return None
 
 
-def pin_build(build_id: str) -> None:
+def pin_build(build_id: str, wrapper: RequestWrapper) -> None:
     """
     Pin the build with build_id.
 
@@ -260,12 +272,14 @@ def pin_build(build_id: str) -> None:
     ----------
     build_id : str
         The id of the build to be pinned.
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     pin_url = f"{BUILDS_ROOT}id:{build_id}/pin/"
     wrapper.put(pin_url)
 
 
-def tag_build(build_info, tag: str) -> None:
+def tag_build(build_info, tag: str, wrapper: RequestWrapper) -> None:
     """
     Add a tag with value tag to the build specified with build_info.
 
@@ -275,6 +289,8 @@ def tag_build(build_info, tag: str) -> None:
         A dictionary describing the build to be modified.
     tag : str
         The new tag to be added to the build
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     if 'tags' in build_info:
         new_tag_values = list({"name": x} for x in get_tag_values(build_info['tags']) if x != tag)
@@ -292,7 +308,7 @@ def tag_build(build_info, tag: str) -> None:
     wrapper.put_json(tag_url, new_tags)
 
 
-def bag_new_build(build_info: dict, tag: str) -> None:
+def bag_new_build(build_info: dict, tag: str, wrapper: RequestWrapper) -> None:
     """
     Pin and tag the build specified with build_info.
 
@@ -302,12 +318,14 @@ def bag_new_build(build_info: dict, tag: str) -> None:
         A dictionary describing the build to be modified.
     tag : str
         The new tag to be added to the build
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
-    pin_build(build_info['id'])
-    tag_build(build_info, tag)
+    pin_build(build_info['id'], wrapper)
+    tag_build(build_info, tag, wrapper)
 
 
-def set_pins_and_tags(packages_with_versions: dict, tag: str):
+def set_pins_and_tags(packages_with_versions: dict, tag: str, wrapper: RequestWrapper):
     """
     Pin and tag the build specified with build_info.
 
@@ -317,6 +335,8 @@ def set_pins_and_tags(packages_with_versions: dict, tag: str):
         A dictionary containing the nuget package ids and their current versions in the solution.
     tag : str
         The new tag to be added to the build
+    wrapper : RequestWrapper
+        The request wrapper to make requests calls.
     """
     for (p_id, build_config_id) in NUGET_PACKAGES:
 
@@ -325,14 +345,14 @@ def set_pins_and_tags(packages_with_versions: dict, tag: str):
             logging.warning(f"Multiple versions of NuGet package '{p_id}' were found in the solution: {versions}")
             continue
 
-        old_build_info = get_previous_build(build_config_id, tag)
+        old_build_info = get_previous_build(build_config_id, tag, wrapper)
         if old_build_info:
-            clean_up_build(old_build_info, tag)
+            clean_up_build(old_build_info, tag, wrapper)
 
         nuget_package_file_name = f"{p_id}.{versions.pop()}.nupkg"
-        new_build_info = get_new_build(build_config_id, nuget_package_file_name)
+        new_build_info = get_new_build(build_config_id, nuget_package_file_name, wrapper)
         if new_build_info:
-            bag_new_build(new_build_info, tag)
+            bag_new_build(new_build_info, tag, wrapper)
         else:
             logging.warning(f"Could not find a build to tag NuGet package '{nuget_package_file_name}'.")
 
@@ -353,9 +373,8 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    wrapper = RequestWrapper(args.user, args.password)
 
     package_files = get_packages_files(Path(args.checkout_dir))
     all_packages = get_packages(package_files)
-
-    set_pins_and_tags(all_packages, args.tag_string)
+    set_pins_and_tags(all_packages, args.tag_string,
+                      RequestWrapper(args.user, args.password))
