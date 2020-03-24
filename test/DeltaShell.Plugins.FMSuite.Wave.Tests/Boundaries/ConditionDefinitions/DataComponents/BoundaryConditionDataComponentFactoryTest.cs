@@ -4,6 +4,7 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NSubstitute;
 using NUnit.Framework;
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void ConvertDataComponentSpreading_UniformDataComponentConvertedCorrectly()
+        public void ConvertDataComponentSpreading_UniformConstantDataComponentConvertedCorrectly()
         {
             // Setup
             var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
@@ -110,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void ConvertDataComponentSpreading_SpatiallyVaryingDataComponentConvertedCorrectly()
+        public void ConvertDataComponentSpreading_SpatiallyVaryingConstantDataComponentConvertedCorrectly()
         {
             // Setup
             var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
@@ -152,6 +153,80 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                 Assert.That(componentDegrees.Data[supportPoint], Is.EqualTo(parametersDegrees[supportPoint]));
             }
         }
+
+        [Test]
+        public void ConvertDataComponentSpreading_UniformTimeDependentDataComponentConvertedCorrectly()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+            
+            var parametersDegrees = new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>());
+            var component = new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(parametersDegrees);
+
+            var parametersPower = new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>());
+            parameterFactory.ConvertTimeDependentParameters<DegreesDefinedSpreading, PowerDefinedSpreading>(parametersDegrees)
+                            .Returns(parametersPower);
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                componentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(component);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>());
+            var resultPower = (UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>) result;
+
+            Assert.That(resultPower.Data, Is.SameAs(parametersPower));
+            parameterFactory
+                .Received(1)
+                .ConvertTimeDependentParameters<DegreesDefinedSpreading, PowerDefinedSpreading>(parametersDegrees);
+        }
+
+        [Test]
+        public void ConvertDataComponentSpreading_SpatiallyVaryingTimeDependentDataComponentConvertedCorrectly()
+        {
+            // Setup
+            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var componentFactory = new BoundaryConditionDataComponentFactory(parameterFactory);
+
+            var component = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
+            
+            var supportPoints = new List<SupportPoint>();
+            var parametersDegrees = new Dictionary<SupportPoint, TimeDependentParameters<DegreesDefinedSpreading>>();
+
+            var geomDef = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geomDef.Length.Returns(100.0);
+            for (var i = 0; i < 5; i++)
+            {
+                var supportPoint = new SupportPoint(10.0 * i, geomDef);
+                supportPoints.Add(supportPoint);
+
+                var powerParam = new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>());
+                var degreesParam = new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>());
+                parametersDegrees[supportPoint] = degreesParam;
+
+                component.AddParameters(supportPoint, powerParam);
+                parameterFactory.ConvertTimeDependentParameters<PowerDefinedSpreading, DegreesDefinedSpreading>(powerParam)
+                                .Returns(degreesParam);
+            }
+
+            // Call
+            IBoundaryConditionDataComponent result = 
+                componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(component);
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>());
+            var componentDegrees = (SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>)result;
+
+            Assert.That(componentDegrees.Data.Keys.Count(), Is.EqualTo(supportPoints.Count));
+
+            foreach (SupportPoint supportPoint in supportPoints)
+            {
+                Assert.That(componentDegrees.Data.ContainsKey(supportPoint));
+                Assert.That(componentDegrees.Data[supportPoint], Is.EqualTo(parametersDegrees[supportPoint]));
+            }
+        }
+
 
         [Test]
         public void ConvertDataComponentSpreading_UnsupportedDataComponent_ThrowsNotSupportedException()

@@ -99,6 +99,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
                     return ConvertUniformConstantDataComponent<TOldSpreading, TNewSpreading>(uniformDataComponent);
                 case SpatiallyVaryingDataComponent<ConstantParameters<TOldSpreading>> spatiallyVaryingDataComponent:
                     return ConvertSpatiallyVaryingConstantDataComponent<TOldSpreading, TNewSpreading>(spatiallyVaryingDataComponent);
+                case UniformDataComponent<TimeDependentParameters<TOldSpreading>> uniformDataComponent:
+                    return ConvertUniformTimeDependentDataComponent<TOldSpreading, TNewSpreading>(uniformDataComponent);
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<TOldSpreading>> spatiallyVaryingDataComponent:
+                    return ConvertSpatiallyVaryingTimeDependentDataComponent<TOldSpreading, TNewSpreading>(spatiallyVaryingDataComponent);
                 default:
                     throw new NotSupportedException($"The specified oldDataComponent could not be cast.");
             }
@@ -109,7 +113,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
         {
-            ConstantParameters<TNewSpreading> newParameters = parametersFactory.ConvertConstantParameters<TOldSpreading, TNewSpreading>(dataComponent.Data);
+            ConstantParameters<TNewSpreading> newParameters = 
+                parametersFactory.ConvertConstantParameters<TOldSpreading, TNewSpreading>(dataComponent.Data);
             return new UniformDataComponent<ConstantParameters<TNewSpreading>>(newParameters);
         }
 
@@ -123,6 +128,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             foreach (KeyValuePair<SupportPoint, ConstantParameters<TOldSpreading>> supportPointParameterPair in dataComponent.Data)
             {
                 ConstantParameters<TNewSpreading> convertedParameters = parametersFactory.ConvertConstantParameters<TOldSpreading, TNewSpreading>(supportPointParameterPair.Value);
+                newDataComponent.AddParameters(supportPointParameterPair.Key, convertedParameters);
+            }
+
+            return newDataComponent;
+        }
+
+        private IBoundaryConditionDataComponent ConvertUniformTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
+            UniformDataComponent<TimeDependentParameters<TOldSpreading>> dataComponent)
+            where TOldSpreading : class, IBoundaryConditionSpreading, new() 
+            where TNewSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            TimeDependentParameters<TNewSpreading> newParameters =
+                parametersFactory.ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(dataComponent.Data);
+            return new UniformDataComponent<TimeDependentParameters<TNewSpreading>>(newParameters);
+        }
+
+        private IBoundaryConditionDataComponent ConvertSpatiallyVaryingTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
+            SpatiallyVaryingDataComponent<TimeDependentParameters<TOldSpreading>> dataComponent) 
+            where TOldSpreading : class, IBoundaryConditionSpreading, new() 
+            where TNewSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            var newDataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<TNewSpreading>>();
+
+            foreach (KeyValuePair<SupportPoint, TimeDependentParameters<TOldSpreading>> supportPointParameterPair in dataComponent.Data)
+            {
+                TimeDependentParameters<TNewSpreading> convertedParameters = parametersFactory.ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(supportPointParameterPair.Value);
                 newDataComponent.AddParameters(supportPointParameterPair.Key, convertedParameters);
             }
 
