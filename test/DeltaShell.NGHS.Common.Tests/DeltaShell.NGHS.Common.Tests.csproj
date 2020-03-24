@@ -42,7 +42,6 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Gui.Swf, Version=1.4.0.49392, Culture=neutral, processorArchitecture=MSIL">
     <Reference Include="DelftTools.Shell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49392\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
     </Reference>
