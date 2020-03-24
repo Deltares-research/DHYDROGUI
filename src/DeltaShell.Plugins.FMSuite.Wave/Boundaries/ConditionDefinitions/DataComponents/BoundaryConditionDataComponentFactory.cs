@@ -96,15 +96,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             switch (oldDataComponent)
             {
                 case UniformDataComponent<ConstantParameters<TOldSpreading>> uniformDataComponent:
-                    return ConvertUniformDataComponent<TOldSpreading, TNewSpreading>(uniformDataComponent);
+                    return ConvertUniformConstantDataComponent<TOldSpreading, TNewSpreading>(uniformDataComponent);
                 case SpatiallyVaryingDataComponent<ConstantParameters<TOldSpreading>> spatiallyVaryingDataComponent:
-                    return ConvertSpatiallyVaryingDataComponent<TOldSpreading, TNewSpreading>(spatiallyVaryingDataComponent);
+                    return ConvertSpatiallyVaryingConstantDataComponent<TOldSpreading, TNewSpreading>(spatiallyVaryingDataComponent);
                 default:
                     throw new NotSupportedException($"The specified oldDataComponent could not be cast.");
             }
         }
 
-        private IBoundaryConditionDataComponent ConvertUniformDataComponent<TOldSpreading, TNewSpreading>(
+        private IBoundaryConditionDataComponent ConvertUniformConstantDataComponent<TOldSpreading, TNewSpreading>(
             UniformDataComponent<ConstantParameters<TOldSpreading>> dataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             return new UniformDataComponent<ConstantParameters<TNewSpreading>>(newParameters);
         }
 
-        private IBoundaryConditionDataComponent ConvertSpatiallyVaryingDataComponent<TOldSpreading, TNewSpreading>(
+        private IBoundaryConditionDataComponent ConvertSpatiallyVaryingConstantDataComponent<TOldSpreading, TNewSpreading>(
             SpatiallyVaryingDataComponent<ConstantParameters<TOldSpreading>> dataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
