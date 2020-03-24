@@ -371,10 +371,28 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def run(dir_path: Path, tag_string: str, user: str, password: str):
+    """
+    Runs the script with the specified parameters.
+
+    Parameters
+    ----------
+    dir_path : Path
+        The path to the directory from which the used nuget packages should be retrieved.
+    tag_string : str
+        The tag that is used to tag the build.
+    user : str
+            The user to authenticate with.
+    password : str
+            The password to authenticate with.
+    """
+    package_files = get_packages_files(dir_path)
+    all_packages = get_packages(package_files)
+    set_pins_and_tags(all_packages, tag_string,
+                      RequestWrapper(user, password))
+
+
 if __name__ == "__main__":
     args = parse_arguments()
 
-    package_files = get_packages_files(Path(args.checkout_dir))
-    all_packages = get_packages(package_files)
-    set_pins_and_tags(all_packages, args.tag_string,
-                      RequestWrapper(args.user, args.password))
+    run(Path(args.checkout_dir), args.tag_string, args.user, args.password)
