@@ -412,6 +412,7 @@
     <None Include="Resources\dry_point.png" />
     <None Include="Resources\dry_area.png" />
     <None Include="Resources\gate.png" />
+    <Resource Include="Resources\generate_data.png" />
     <Content Include="Resources\hurricane2.png" />
     <None Include="Resources\thindam.png" />
     <Resource Include="Resources\Observation.png" />
