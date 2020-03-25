@@ -338,9 +338,13 @@
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ShapeTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpectrumTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpreadingTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingTypeTest.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />

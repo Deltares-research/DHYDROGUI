@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49392\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaShell.Core, Version=1.4.0.49392, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49392\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
@@ -77,6 +80,7 @@
     <Compile Include="ApplicationPluginTestHelper.cs" />
     <Compile Include="AssertConstraints\Collection.cs" />
     <Compile Include="AssertConstraints\ContainsOnlyConstraint.cs" />
+    <Compile Include="EnumDescriptionTestFixture.cs" />
     <Compile Include="EnumValuesTestFixture.cs" />
     <Compile Include="NghsTestCategory.cs" />
     <Compile Include="NotifyPropertyChangedTestObserver.cs" />
