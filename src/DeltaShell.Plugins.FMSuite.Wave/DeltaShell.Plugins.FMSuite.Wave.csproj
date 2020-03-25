@@ -184,7 +184,12 @@
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
+    <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodType.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ShapeType.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumType.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpreadingType.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />
