@@ -6339,6 +6339,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/MixedQuantities.e
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/MixedQuantities.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/TwoAstroWaterLevels.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/VelocityAndSalinityLayers.bc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/WaterLevel.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcFiles/WaterLevelAndSalinityLayers.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcmFiles/MorphologyBedLevelChangePrescribed.bcm -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/BcmFiles/MorphologyBedLevelPrescribed.bcm -text

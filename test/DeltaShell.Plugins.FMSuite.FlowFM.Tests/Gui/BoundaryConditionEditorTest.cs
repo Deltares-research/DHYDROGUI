@@ -4,11 +4,13 @@ using System.Windows.Controls;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
+using DeltaShell.Gui.Forms.ViewManager;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
@@ -157,7 +159,77 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             WindowsFormsTestHelper.ShowModal(view);
         }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowInGuiWithImportedDataAndFakeImportActionsAfterActivityRunnedCorrectly()
+        {
+            //JIRA: FM1D2D-567
+            //Problem with the refreshing the 2D boundary condition view upon importing
+            //resolved differently in B&O line...
+            
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
 
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    var project = app.Project;
+                    //step 1: User adds an empty D - FlowFM
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        project.RootFolder.Add(model);
+                        //step 2 : draw a new 2d boundary condition 
+                        var feature2D = new Feature2D
+                        {
+                            Geometry =
+                                new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) }),
+                            Name = "Boundary01"
+                        };
+                        
+                        model.BoundaryConditionSets.Add(new BoundaryConditionSet { Feature = feature2D });
+
+                        //step 3 & 4 : RMB click on boundary01 node within the project tree & import file
+                        var fileName = TestHelper.GetTestFilePath("BcFiles\\WaterLevel.bc");
+                        var importer = new BcFileImporter();
+                        var importedObject = importer.ImportItem(fileName, model.BoundaryConditionSets.FirstOrDefault());
+                        
+                        //step 4b : import is done in activity runner, these steps are run after import is finished
+                        gui.Selection = importedObject;
+                        gui.CommandHandler.OpenViewForSelection();
+                        Assert.DoesNotThrow(()=>((ViewList)gui.DocumentViews).ResumeAllViewUpdates());
+                    }
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+
+
+            
+
+            
+
+            /*
+            var view = new BoundaryConditionEditor
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController(),
+                Data =
+                    boundaryConditionSet
+            };
+
+            WindowsFormsTestHelper.ShowModal(view);*/
+
+        }
 
         [Test]
         [Category(TestCategory.WindowsForms)]

@@ -268,7 +268,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public void ResumeUpdates()
         {
-            Data = cachedBoundaryConditionSet;
+            if(cachedBoundaryConditionSet!=null)
+                Data = cachedBoundaryConditionSet;
 
             var boundaryCondition =
                 boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
