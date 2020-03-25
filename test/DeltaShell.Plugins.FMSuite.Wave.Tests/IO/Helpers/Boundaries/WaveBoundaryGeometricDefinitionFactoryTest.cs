@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Setup
             int startIndex = random.Next(0, 9);
             int endIndex = random.Next(10, 19);
-            int length = random.Next(10);
+            int length = random.Next(1, 10);
             var gridSide = random.NextEnumValue<GridSide>();
 
             var startCoordinate = new Coordinate(0.0, 0.0);
