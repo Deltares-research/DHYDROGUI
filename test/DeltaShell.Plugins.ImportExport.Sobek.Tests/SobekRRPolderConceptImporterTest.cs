@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportMiniModelCheckErnst()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\8\NETWORK.TP";
@@ -87,6 +88,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportMiniModelCheckPaved()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\15\NETWORK.TP";
@@ -124,6 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportMiniModelCheckSewerTypeImproved()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\4\NETWORK.TP";
@@ -146,6 +149,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportMiniModelCheckGreenhouseArea()
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
@@ -162,6 +166,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportMiniModelCheckGreenhouseStorageAndCapacities()         // fix for JIRA issues 6372 and 6373
         {
             string file = TestHelper.GetTestDataDirectory() + @"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP";
@@ -189,6 +194,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Slow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportTholenCheckUnpavedDataCount()
         {
             SetUpTholen();
@@ -273,6 +279,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Test]
         [Category(TestCategory.Slow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportTholenCheckPavedDataCount()
         {
             SetUpTholen();
@@ -346,6 +353,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportZBOtestCheckGreenhouseDataCount()
         {
             SetUpZBOtest();
@@ -354,6 +362,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         
         [Test]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void ImportZBOtestCheckGreenhouseDataOfSeventhItem()
         {
             // GRHS id 'GH3_GFE1224' na 10 ar 0 334051 0 0 0 0 0 0 0 0 sl 0.94 as 0 sd 'STOR1' si '1' ms 'GFE1224' aaf 1 is 50 grhs
