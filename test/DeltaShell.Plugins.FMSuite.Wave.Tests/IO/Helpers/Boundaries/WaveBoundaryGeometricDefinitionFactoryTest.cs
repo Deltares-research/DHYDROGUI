@@ -7,7 +7,7 @@ using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
     [TestFixture]
     public class WaveBoundaryGeometricDefinitionFactoryTest
