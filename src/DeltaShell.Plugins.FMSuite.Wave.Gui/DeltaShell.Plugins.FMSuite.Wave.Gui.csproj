@@ -181,6 +181,7 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantTimeDependentParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\GenerateSeriesDialogHelper.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\IGenerateSeriesDialogHelper.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformConstantParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformTimeDependentParametersSettingsViewModel.cs" />
