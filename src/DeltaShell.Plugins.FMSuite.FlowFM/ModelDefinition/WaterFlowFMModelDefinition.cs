@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using DelftTools.Functions.Generic;
+﻿using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
@@ -32,6 +26,12 @@ using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 {
@@ -189,6 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             };
 
             SetGuiTimePropertiesFromMduProperties();
+            SetInitialReferenceDate();
 
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
@@ -211,7 +212,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-        
+        /// <summary>
+        /// Sets the initial model reference date equal to the date part
+        /// of model start time.
+        /// </summary>
+        private void SetInitialReferenceDate()
+        {
+            var modelStartTime = (DateTime)GetModelProperty(GuiProperties.StartTime).Value;
+            GetModelProperty(KnownProperties.RefDate).Value = modelStartTime.Date;
+        }
+
+
         private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -504,8 +515,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             var mduStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
             var mduStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
+            var refDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
+            refDate = refDate.Date;
 
-            GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
             GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(mduStartTime, true);
             GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
 
