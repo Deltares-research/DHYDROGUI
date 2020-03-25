@@ -172,6 +172,7 @@
     <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\SupportPoint.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinition.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionFactoryHelper.cs" />
     <Compile Include="Boundaries\IBoundaryContainer.cs" />
     <Compile Include="Boundaries\IWaveBoundary.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundaryParameters.cs" />
