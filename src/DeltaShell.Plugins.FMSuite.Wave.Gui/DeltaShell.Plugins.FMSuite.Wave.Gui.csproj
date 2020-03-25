@@ -351,6 +351,13 @@
     <Compile Include="FeatureProviders\Boundaries\SupportPointFeature.cs" />
     <Compile Include="FeatureProviders\MultiIEventedListAdapter.cs" />
     <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
+    <Compile Include="Forms\WaveSupportPointMode.cs" />
+    <Compile Include="Forms\WaveSupportPointSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WaveSupportPointSelectionForm.Designer.cs">
+      <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -500,6 +507,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaveTimePointEditor.resx">
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaveSupportPointSelectionForm.resx">
+      <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaveBoundaryTimeSelectionDialog.resx">
       <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
