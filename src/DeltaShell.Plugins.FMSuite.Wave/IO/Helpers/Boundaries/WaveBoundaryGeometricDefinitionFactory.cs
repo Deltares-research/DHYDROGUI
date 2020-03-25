@@ -4,7 +4,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers
+namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
     /// Provides the method to create a <see cref="IWaveBoundaryGeometricDefinition" />.
