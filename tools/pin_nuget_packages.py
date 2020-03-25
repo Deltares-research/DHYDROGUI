@@ -23,10 +23,10 @@ JSON_RESPONSE_HEADER = {'Accept': 'application/json'}
 # 0: nuget package id, 1: nuget package build configuration id
 NUGET_PACKAGES = [
     ("Dimr.Libs", "DeltaShell_3rdPartyNuGetPackages_Dimr"),
-    #("RGFGRID", "DeltaShell_3rdPartyNuGetPackages_Rgfgrid"),
-    #("DIDO", "DeltaShell_3rdPartyNuGetPackages_Dido"),
-    #("PLCT.Libs", "DeltaShell_3rdPartyNuGetPackages_PlctWaq"),
-    #("Substances.Libs", "DeltaShell_3rdPartyNuGetPackages_SubstancesWaq")
+    ("RGFGRID", "DeltaShell_3rdPartyNuGetPackages_Rgfgrid"),
+    ("DIDO", "DeltaShell_3rdPartyNuGetPackages_Dido"),
+    ("PLCT.Libs", "DeltaShell_3rdPartyNuGetPackages_PlctWaq"),
+    ("Substances.Libs", "DeltaShell_3rdPartyNuGetPackages_SubstancesWaq")
 ]
 
 
