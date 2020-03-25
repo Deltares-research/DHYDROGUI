@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration
 {
@@ -24,9 +24,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             return generateDialog;
         }
 
-        public SupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner)
+        public WaveSupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner)
         {
-            throw new NotImplementedException();
+            var supportPointsDialog = new WaveSupportPointSelectionForm();
+            supportPointsDialog.Show(owner);
+
+            return supportPointsDialog;
         }
     }
 }

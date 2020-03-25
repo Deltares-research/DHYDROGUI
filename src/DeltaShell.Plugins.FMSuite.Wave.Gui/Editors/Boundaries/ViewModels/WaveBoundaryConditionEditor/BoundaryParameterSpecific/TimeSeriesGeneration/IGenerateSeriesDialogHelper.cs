@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration
 {
@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Prompts and returns the user for a support point selection.
         /// </summary>
         /// <returns>
-        /// The <see cref="SupportPointSelectionForm"/> after querying the user.
+        /// The <see cref="WaveSupportPointSelectionForm"/> after querying the user.
         /// </returns>
-        SupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner);
+        WaveSupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner);
     }
 }
