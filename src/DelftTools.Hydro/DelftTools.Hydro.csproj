@@ -242,6 +242,7 @@
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />
     <Compile Include="SewerFeatures\IOrifice.cs" />
+    <Compile Include="Structures\IStructureWithCrossSectionDefinition.cs" />
     <Compile Include="Structures\LeveeBreach.cs" />
     <Compile Include="Structures\LeveeBreachFormula\LeveeBreachGrowthFormula.cs" />
     <Compile Include="Structures\IManhole.cs" />

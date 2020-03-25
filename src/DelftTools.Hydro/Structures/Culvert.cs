@@ -166,11 +166,6 @@ namespace DelftTools.Hydro.Structures
                                 Angle1 = ((CrossSectionStandardShapeSteelCunette) definitionStandard.Shape).AngleA1;
                                 GeometryType = CulvertGeometryType.SteelCunette;
                                 break;
-                            case CrossSectionStandardShapeType.Trapezium:
-                                //?
-                                TabulatedCrossSectionDefinition = ((CrossSectionStandardShapeTrapezium) definitionStandard.Shape).GetTabulatedDefinition();
-                                GeometryType = CulvertGeometryType.Tabulated;
-                                break;
                             case CrossSectionStandardShapeType.Egg:
                                 Width = ((CrossSectionStandardShapeEgg) definitionStandard.Shape).Width;
                                 GeometryType = CulvertGeometryType.Egg;

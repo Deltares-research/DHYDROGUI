@@ -427,6 +427,7 @@ src/DelftTools.Hydro/Structures/IGully.cs -text
 src/DelftTools.Hydro/Structures/IManhole.cs -text
 src/DelftTools.Hydro/Structures/IPump.cs -text
 src/DelftTools.Hydro/Structures/IRetention.cs -text
+src/DelftTools.Hydro/Structures/IStructureWithCrossSectionDefinition.cs -text
 src/DelftTools.Hydro/Structures/IWeir.cs -text
 src/DelftTools.Hydro/Structures/IWeirFormula.cs -text
 src/DelftTools.Hydro/Structures/IWeirFormula.hbm.xml -text

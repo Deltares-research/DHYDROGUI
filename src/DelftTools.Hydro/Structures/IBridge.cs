@@ -104,14 +104,6 @@ namespace DelftTools.Hydro.Structures
         bool IsPillar { get; set; }
     }
 
-    public interface IStructureWithCrossSectionDefinition: IStructure1D
-    {
-        /// <summary>
-        /// Cross Section Definition as used for ini (filewriter).
-        /// </summary>
-        ICrossSectionDefinition CrossSectionDefinition { get; set; }
-    }
-
     public enum BridgeType
     {
         Rectangle,Tabulated, Pillar
