@@ -338,6 +338,7 @@
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
+    <Compile Include="IO\Helpers\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
