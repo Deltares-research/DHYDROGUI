@@ -130,6 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             Assert.That(newWaveFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
             Assert.That(newWaveFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
+            Assert.That(newWaveFunction.SpreadingComponent.DefaultValue, Is.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
 
             if (typeof(TSpreading) != typeof(PowerDefinedSpreading))
             {

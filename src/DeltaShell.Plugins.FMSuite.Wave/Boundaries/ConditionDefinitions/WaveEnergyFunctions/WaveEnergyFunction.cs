@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
 {
     /// <summary>
     /// <see cref="WaveEnergyFunction{TSpreading}"/> implements the WaveEnergyFunction as used within a
-    /// <see cref="TimeDependentParameters"/>.
+    /// <see cref="TimeDependentParameters{TSpreading}"/>.
     /// </summary>
     /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
     public class WaveEnergyFunction<TSpreading> : IWaveEnergyFunction<TSpreading>  
@@ -94,11 +94,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
                 return (IWaveEnergyFunction<TSpreading>) oldWaveEnergyFunction;
             }
 
+            double defaultValue = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>();
             oldWaveEnergyFunction.SpreadingComponent.Unit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
+            oldWaveEnergyFunction.SpreadingComponent.DefaultValue = defaultValue;
 
             for (var i = 0; i < oldWaveEnergyFunction.SpreadingComponent.AllValues.Count; i++)
             {
-                oldWaveEnergyFunction.SpreadingComponent.AllValues[i] = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>();
+                oldWaveEnergyFunction.SpreadingComponent.AllValues[i] = defaultValue;
             }
 
             return new WaveEnergyFunction<TSpreading>(oldWaveEnergyFunction.UnderlyingFunction);
