@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -88,6 +90,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPointToParametersMapping"));
+        }
+
+        [Test]
+        public void GenerateSeriesCommand_ExpectedResult()
+        {
+            // Setup
+            var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+
+            var supportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+
+            var otherFunctions = new List<IWaveEnergyFunction<TSpreading>>();
+
+            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {
+
+                { supportPoint, parameters }
+            };
+
+            for (var i = 0; i < 5; i++)
+            {
+                var otherWaveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+                var otherSupportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+                var otherParameters = new TimeDependentParameters<TSpreading>(otherWaveEnergyFunction);
+
+                allParameters.Add(otherSupportPoint, otherParameters);
+                otherFunctions.Add(otherWaveEnergyFunction);
+            }
+
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var viewModel = new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(generateSeries,
+                                                                                             parameters, 
+                                                                                             allParameters);
+
+            var window = Substitute.For<IWin32Window>();
+
+            // Call
+            viewModel.GenerateTimeSeriesCommand.Execute(window);
+            
+            // Assert
+            generateSeries.Received(1).Execute(Arg.Is(window), 
+                                               Arg.Is(waveEnergyFunction), 
+                                               Arg.Is<IEnumerable<IWaveEnergyFunction<TSpreading>>>(x => x.SequenceEqual(otherFunctions)));
         }
     }
 }

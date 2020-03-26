@@ -55,6 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         protected override void GenerateSeries(IWin32Window owner) => 
             generateSeries.Execute(owner, 
                                    ObservedParameters.WaveEnergyFunction, 
-                                   supportPointToParametersMapping.Values.Select(p => p.WaveEnergyFunction));
+                                   supportPointToParametersMapping.Values
+                                                                  .Where(p => p != ObservedParameters)
+                                                                  .Select(p => p.WaveEnergyFunction));
     }
 }
