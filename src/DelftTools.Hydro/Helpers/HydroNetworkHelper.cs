@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
@@ -63,6 +64,27 @@ namespace DelftTools.Hydro.Helpers
 
                 channel.Network.EndEdit();
                 return (IHydroNode) result.NewNode;
+            }
+            return null;
+        }
+        public static IManhole SplitPipeAtNode(IPipe pipe, double geometryOffset)
+        {
+            if (geometryOffset != pipe.Geometry.Length && geometryOffset != 0)
+            {
+                var channelSplitAction = new BranchSplitAction();
+                pipe.Network.BeginEdit(channelSplitAction);
+
+                var result = NetworkHelper.SplitBranchAtNode(pipe, geometryOffset);
+                result.NewBranch.Name = pipe.Name + "_A";
+                pipe.Name = pipe.Name + "_B";
+
+                (result.NewBranch as IPipe)?.SetPipeProperties(pipe.Network as HydroNetwork);
+                //update the action before calling endedit..other entities might use the data.
+                channelSplitAction.SplittedBranch = pipe;
+                channelSplitAction.NewBranch = result.NewBranch;
+
+                pipe.Network.EndEdit();
+                return (IManhole) result.NewNode;
             }
             return null;
         }
@@ -737,6 +759,14 @@ namespace DelftTools.Hydro.Helpers
             branchFeature.Name = "cross_section";
             NetworkHelper.AddBranchFeatureToBranch(branchFeature,branch, offset);
             return branchFeature;
+        }
+
+        public static IFeature SplitPipeAtCoordinate(IPipe pipe, Coordinate geometryCoordinate)
+        {
+            var lengthIndexedLine = new LengthIndexedLine(pipe.Geometry);
+            double offset = lengthIndexedLine.Project(geometryCoordinate);
+            return SplitPipeAtNode(pipe, offset);
+
         }
     }
 }

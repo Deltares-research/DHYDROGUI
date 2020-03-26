@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -73,9 +74,9 @@ namespace DelftTools.Hydro.SewerFeatures
             BeforeSetSource();
             if (value is HydroNode)
                 source = value;
-            else
+            else if (value is Manhole manhole)
             {
-                var manhole = value as Manhole;
+                
                 if (manhole?.Compartments != null && manhole.Compartments.Any())
                 {
                     source = value;
@@ -105,7 +106,25 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
                 else
                 {
-                    source = null;
+                    if (network is IHydroNetwork hydroNetwork && manhole.Compartments != null)
+                    {
+                        var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
+                            hydroNetwork.Manholes.SelectMany(m => m.Compartments), "Compartment");
+                        var newCompartment = new Compartment(uniqueCompartmentName)
+                        {
+                            SurfaceLevel = 0.0,
+                            BottomLevel = -2.0,
+                            FloodableArea = 100.0,
+                            ManholeLength = 0.64,
+                            ManholeWidth = 0.64
+                        };
+                        manhole.Compartments.Add(newCompartment);
+                        SourceCompartment = newCompartment;
+                    }
+                    else
+                    {
+                        source = null;
+                    }
                 }
             }
 
@@ -137,9 +156,8 @@ namespace DelftTools.Hydro.SewerFeatures
             BeforeTargetSet();
             if (value is HydroNode)
                 target = value;
-            else
+            else if (value is Manhole manhole)
             {
-                var manhole = value as IManhole;
                 if (manhole?.Compartments != null && manhole.Compartments.Any())
                 {
                     target = value;
@@ -168,7 +186,25 @@ namespace DelftTools.Hydro.SewerFeatures
                 }
                 else
                 {
-                    target = null;
+                    if (network is IHydroNetwork hydroNetwork && manhole.Compartments != null)
+                    {
+                        var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
+                            hydroNetwork.Manholes.SelectMany(m => m.Compartments), "Compartment");
+                        var newCompartment = new Compartment(uniqueCompartmentName)
+                        {
+                            SurfaceLevel = 0.0,
+                            BottomLevel = -2.0,
+                            FloodableArea = 100.0,
+                            ManholeLength = 0.64,
+                            ManholeWidth = 0.64
+                        };
+                        manhole.Compartments.Add(newCompartment);
+                        TargetCompartment = newCompartment;
+                    }
+                    else
+                    {
+                        target = null;
+                    }
                 }
             }
 

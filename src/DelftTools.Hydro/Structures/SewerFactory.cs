@@ -58,7 +58,7 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        private static void SetPipeProperties(IPipe pipe, HydroNetwork hydroNetwork)
+        public static void SetPipeProperties(this IPipe pipe, HydroNetwork hydroNetwork)
         {
             SetPipePhysicalProperties(pipe, hydroNetwork);
             SetPipeDefaultValues(pipe);

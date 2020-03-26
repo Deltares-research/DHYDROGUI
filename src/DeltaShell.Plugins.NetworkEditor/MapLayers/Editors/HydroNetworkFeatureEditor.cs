@@ -44,9 +44,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             var hydroNetwork = Network as HydroNetwork;
             if (hydroNetwork != null && layer.DataSource.FeatureType == typeof(Manhole))
             {
-                return null;
-                //var pipe = (IPipe) NetworkHelper.GetNearestBranch(hydroNetwork.Pipes, geometry, 0.1);
-                //return HydroNetworkHelper.SplitPipeAtCoordinate(pipe, geometry.Coordinate);
+                var pipe = (IPipe) NetworkHelper.GetNearestBranch(hydroNetwork.Pipes, geometry, 0.1);
+                return HydroNetworkHelper.SplitPipeAtCoordinate(pipe, geometry.Coordinate);
             }
 
             var newFeature = layer.FeatureEditor.CreateNewFeature != null
