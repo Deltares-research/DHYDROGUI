@@ -128,7 +128,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (locations != null)
             {
                 NetworkDiscretization.BeginEdit(new DefaultEditAction("Adding point at begin and end of branch"));
-                NetworkDiscretization.Locations.AddValues(locations.Except(NetworkDiscretization.Locations.GetValues()));
+                var networkLocations = locations.Except(NetworkDiscretization.Locations.GetValues()).ToList();
+                networkLocations.RemoveAll(nwl => NetworkDiscretization.Locations.GetValues().Select(l=>l.Geometry.Coordinate).Contains(nwl.Geometry.Coordinate));
+                NetworkDiscretization.Locations.AddValues(networkLocations);
                 NetworkDiscretization.EndEdit();
             }
         }
