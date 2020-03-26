@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
@@ -89,6 +90,8 @@ namespace DelftTools.Hydro.Structures
             pipe.WaterType = SewerConnectionWaterType.Combined;
             pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
             var pipeCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
+            if(pipe.Network is IHydroNetwork hydroNetwork)
+                pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
             pipeCrossSection.UseSharedDefinition(DefaultSewerProfile);
             pipe.CrossSection = pipeCrossSection;
             

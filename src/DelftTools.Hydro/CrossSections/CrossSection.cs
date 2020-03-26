@@ -157,7 +157,7 @@ namespace DelftTools.Hydro.CrossSections
             }
             if (e.Item is INameable item && HydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
-                item.Name = NamingHelper.GetUniqueName("SCSD_{0}", HydroNetwork.SharedCrossSectionDefinitions,typeof(ICrossSectionDefinition), true);
+                item.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", HydroNetwork.SharedCrossSectionDefinitions,typeof(ICrossSectionDefinition), true);
             }
             Definition = e.Item as CrossSectionDefinitionProxy ?? new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
         }
