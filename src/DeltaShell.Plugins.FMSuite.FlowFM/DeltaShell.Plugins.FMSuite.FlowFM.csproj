@@ -278,6 +278,7 @@
     <Compile Include="IO\SedMorDelftIniReader.cs" />
     <Compile Include="IO\SedMorDelftIniWriter.cs" />
     <Compile Include="SedimentModelDataItem.cs" />
+    <Compile Include="Validation\FmValidationShortcut.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\WaterFlowFMArea2DValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />

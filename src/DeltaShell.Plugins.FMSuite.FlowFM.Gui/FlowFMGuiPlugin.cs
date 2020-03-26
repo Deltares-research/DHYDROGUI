@@ -39,6 +39,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                    v.GetChangedPropertyName = (sender, prop)  =>  (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
                 }
             };
 
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
-                    v.GetChangedPropertyName = sender => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                    v.GetChangedPropertyName = (sender, prop) => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
                 }
             };
 
@@ -184,7 +185,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport;
                 }
             };
+            Func<object, string, string> FmSettingsPropertyChanged = (object sender, string propertyName) =>
+            {
+                var property = sender as WaterFlowFMProperty;
+                if (property != null)
+                {
+                    return property.PropertyDefinition.MduPropertyName;
+                }
 
+                var model = sender as WaterFlowFMModel;
+                if (model != null)
+                {
+                    if (propertyName == nameof(model.CoordinateSystem))
+                    {
+                        return "CoordinateSystem";
+                    }
+                }
+
+                return null;
+            };
+            yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, WpfSettingsView>
+            {
+                Description = "FM Settings",
+                GetViewData = o => o.FlowFmModel,
+                GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
+                OnActivateView = (v, o) =>
+                {
+                    var shortcut = o as FmValidationShortcut;
+                    if (shortcut == null) return;
+                    v.EnsureVisible(shortcut.TabName);
+                },
+                AfterCreate = (v, o) =>
+                {
+                    //Set the properties.
+                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
+                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
+                }
+            };
             yield return new ViewInfo<IEnumerable<ICrossSection>, RefreshMainSectionWidthsDialog>
             {
                 Description = "Refresh Main Section Width View (Cross sections in Flow1D)"

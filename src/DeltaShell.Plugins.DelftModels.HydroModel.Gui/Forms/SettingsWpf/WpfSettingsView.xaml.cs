@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
         public ViewInfo ViewInfo { get; set; }
 
-        public Func<object, string> GetChangedPropertyName { get; set; }
+        public Func<object, string, string> GetChangedPropertyName { get; set; }
 
         /// <summary>
         /// Makes object visible in the view if possible
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            var propertyName = GetChangedPropertyName(sender);
+            var propertyName = GetChangedPropertyName(sender, null);
             if (string.IsNullOrEmpty(propertyName)) return;
 
             ViewModel.UpdatePropertyValue(propertyName);

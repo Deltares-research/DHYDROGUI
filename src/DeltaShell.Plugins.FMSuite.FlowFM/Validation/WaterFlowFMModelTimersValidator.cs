@@ -87,8 +87,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             var category = waterFlowFmProperty.PropertyDefinition.Category;
             var errorMessage = string.Format("{0} interval must be a multiple of the output timestep.", outputName);
-
-            return new ValidationIssue(category, ValidationSeverity.Error, errorMessage,waterFlowFmModel);
+            var validationShortcut = new FmValidationShortcut
+            {
+                FlowFmModel = (WaterFlowFMModel)waterFlowFmModel,
+                TabName = "Time Frame"
+            };
+            return new ValidationIssue(category, ValidationSeverity.Error, errorMessage,validationShortcut);
         }
     }
 }
