@@ -264,9 +264,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(initialDataComponentViewModel.ActiveParametersViewModel, 
-                        Is.InstanceOf<TimeDependentParametersViewModel<PowerDefinedSpreading>>());
+                        Is.InstanceOf<TimeDependentSpatiallyVaryingParametersViewModel<PowerDefinedSpreading>>());
             TimeDependentParameters<PowerDefinedSpreading> observedParameters =
-                ((TimeDependentParametersViewModel<PowerDefinedSpreading>) initialDataComponentViewModel
+                ((TimeDependentSpatiallyVaryingParametersViewModel<PowerDefinedSpreading>) initialDataComponentViewModel
                         .ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, 
                         Is.SameAs(parametersDictionary[supportPoint]));
@@ -302,9 +302,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(initialDataComponentViewModel.ActiveParametersViewModel, 
-                        Is.InstanceOf<TimeDependentParametersViewModel<DegreesDefinedSpreading>>());
+                        Is.InstanceOf<TimeDependentSpatiallyVaryingParametersViewModel<DegreesDefinedSpreading>>());
             TimeDependentParameters<DegreesDefinedSpreading> observedParameters =
-                ((TimeDependentParametersViewModel<DegreesDefinedSpreading>) initialDataComponentViewModel
+                ((TimeDependentSpatiallyVaryingParametersViewModel<DegreesDefinedSpreading>) initialDataComponentViewModel
                         .ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, 
                         Is.SameAs(parametersDictionary[supportPoint]));

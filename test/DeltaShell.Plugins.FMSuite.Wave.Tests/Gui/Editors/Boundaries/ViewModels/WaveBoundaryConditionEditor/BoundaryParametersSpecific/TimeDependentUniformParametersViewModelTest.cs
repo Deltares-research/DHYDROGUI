@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 {
     [TestFixture(typeof(PowerDefinedSpreading))]
     [TestFixture(typeof(DegreesDefinedSpreading))]
-    public class TimeDependentParametersViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
+    public class TimeDependentUniformParametersViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         [Test]
         public void Constructor_ExpectedValues()
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
 
             // Call
-            var viewModel = new TimeDependentParametersViewModel<TSpreading>(parameters);
+            var viewModel = new TimeDependentUniformParametersViewModel<TSpreading>(parameters);
 
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_ParametersNull_ThrowsArgumentNullException()
         {
-            void Call() => new TimeDependentParametersViewModel<TSpreading>(null);
+            void Call() => new TimeDependentUniformParametersViewModel<TSpreading>(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("parameters"));

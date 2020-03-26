@@ -84,13 +84,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     ? value 
                     : null;
 
-            if (correspondingParameters == (ActiveParametersViewModel as TimeDependentParametersViewModel<TSpreading>)?.ObservedParameters)
+            if (correspondingParameters == (ActiveParametersViewModel as TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>)?.ObservedParameters)
             {
                 return;
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new TimeDependentParametersViewModel<TSpreading>(correspondingParameters)
+                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(correspondingParameters, supportPointToParametersMapping)
                                             : null;
         }
     }

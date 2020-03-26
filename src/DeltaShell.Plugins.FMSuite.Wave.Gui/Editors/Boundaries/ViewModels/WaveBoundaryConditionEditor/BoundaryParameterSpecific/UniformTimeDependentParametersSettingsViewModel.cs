@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            ActiveParametersViewModel = new TimeDependentParametersViewModel<TSpreading>(parameters);
+            ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(parameters);
         }
 
         public override TimeDependentParametersViewModel ActiveParametersViewModel { get; protected set; }
