@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     case WaveSupportPointMode.NoSupportPoints:
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(GetSupportPointMode));
                 }
             }
         }
