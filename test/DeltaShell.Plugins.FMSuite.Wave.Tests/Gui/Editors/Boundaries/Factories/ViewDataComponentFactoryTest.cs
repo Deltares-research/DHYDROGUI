@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -20,9 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup 
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             // Call
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Assert
             Assert.That(factory, Is.InstanceOf<IViewDataComponentFactory>());
@@ -31,10 +33,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         [Test]
         public void Constructor_DataComponentFactoryNull_ThrowsArgumentNullException()
         {
-            void Call() => new ViewDataComponentFactory(null);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            void Call() => new ViewDataComponentFactory(null, referenceDateProvider);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentFactory"));
+        }
+
+        [Test]
+        public void Constructor_ReferenceDateTimeProviderNull_ThrowsArgumentNullException()
+        {
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            void Call() => new ViewDataComponentFactory(modelDataComponentFactory, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
         }
 
         private static IEnumerable<TestCaseData> GetForcingTypeData()
@@ -58,7 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             ForcingViewType result = factory.GetForcingType(dataComponent);
@@ -71,7 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         public void GetForcingType_DataComponentNull_ThrowsArgumentNullException()
         {
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.GetForcingType(null);
 
@@ -84,7 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.GetForcingType(dataComponent);
 
@@ -114,7 +132,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             SpatialDefinitionViewType result = factory.GetSpatialDefinition(dataComponent);
@@ -127,7 +147,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         public void GetSpatialDefinition_InvalidDataComponent_ThrowsNotSupportedException()
         { 
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
             var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
 
             void Call() => factory.GetSpatialDefinition(dataComponent);
@@ -138,8 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         [Test]
         public void GetSpatialDefinition_DataComponentNull_ThrowsArgumentNullException()
         {
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.GetSpatialDefinition(null);
 
@@ -169,7 +192,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IParametersSettingsViewModel viewModel = factory.ConstructParametersSettingsViewModel(dataComponent);
@@ -182,7 +207,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         public void ConstructParametersSettingsViewModel_DataComponentNull_ThrowsArgumentNullException()
         {
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.ConstructParametersSettingsViewModel(null);
 
@@ -196,7 +223,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         public void ConstructParametersSettingsViewModel_UnsupportedType_ThrowsNotSupportedException()
         {
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.ConstructParametersSettingsViewModel(new DummyDataComponent());
 
@@ -211,8 +240,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
             modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -236,7 +266,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -260,7 +292,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -284,7 +317,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -308,7 +342,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -332,7 +367,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -356,7 +392,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -380,7 +417,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>()
                                      .Returns(srcDataComponent);
 
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent dataComponent = 
@@ -406,7 +444,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                                                                                         DirectionalSpreadingViewType spreadingType)
         {
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.ConstructBoundaryConditionDataComponent(viewType, 
                                                                            spatialDefinition, 
@@ -444,7 +484,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             DirectionalSpreadingViewType result = factory.GetDirectionalSpreadingViewType(dataComponent);
@@ -458,7 +499,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call | Assert
             void Call() => factory.GetDirectionalSpreadingViewType(new DummyDataComponent());
@@ -470,7 +512,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call | Assert
             void Call() => factory.GetDirectionalSpreadingViewType(null);
@@ -509,7 +552,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
             IBoundaryConditionDataComponent result = 
@@ -607,7 +651,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             convertDataComponentSpreadingCall(modelDataComponentFactory).Returns(outputDataComponent);
 
@@ -625,7 +670,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call | Assert
             void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(new DummyDataComponent(), 
@@ -638,7 +685,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         {
             // Setup
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call | Assert
             void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(null, DirectionalSpreadingViewType.Degrees);

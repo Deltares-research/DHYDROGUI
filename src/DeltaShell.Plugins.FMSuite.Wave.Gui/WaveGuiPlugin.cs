@@ -201,13 +201,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
                 GetViewData = data =>
                 {
-                    IBoundaryContainer boundaryContainer =
-                        WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data)).BoundaryContainer;
+                    WaveModel model =
+                        WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data));
 
-                    var geometryFactory = new WaveBoundaryGeometryFactory(boundaryContainer,
-                                                                          boundaryContainer);
+                    var geometryFactory = new WaveBoundaryGeometryFactory(model.BoundaryContainer,
+                                                                          model.BoundaryContainer);
+                    var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
 
-                    return new WaveBoundaryConditionEditorViewModel(data, geometryFactory);
+                    return new WaveBoundaryConditionEditorViewModel(data, 
+                                                                    geometryFactory, 
+                                                                    referenceDateTimeProvider);
                 },
                 CloseForData = (v, o) => v.Data.Equals(o)
             };

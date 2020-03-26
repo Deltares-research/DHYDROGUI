@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -248,7 +249,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 { supportPoint, new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()) }
             };
 
-            var initialDataComponentViewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(parametersDictionary);
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var initialDataComponentViewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(parametersDictionary, 
+                                                                                                                                    generateSeries);
 
             var factory = Substitute.For<IViewDataComponentFactory>();
             factory.ConstructParametersSettingsViewModel(initialDataComponent)
@@ -286,7 +289,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 { supportPoint, new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>()) }
             };
 
-            var initialDataComponentViewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(parametersDictionary);
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var initialDataComponentViewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(parametersDictionary, 
+                                                                                                                                      generateSeries);
 
             var factory = Substitute.For<IViewDataComponentFactory>();
             factory.ConstructParametersSettingsViewModel(initialDataComponent)

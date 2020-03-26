@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -24,9 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             energyFunction.UnderlyingFunction.Returns(underlyingFunction);
 
             var parameters = new TimeDependentParameters<TSpreading>(energyFunction);
+            var generateSeries = Substitute.For<IGenerateSeries>();
 
             // Call
-            var viewModel = new UniformTimeDependentParametersSettingsViewModel<TSpreading>(parameters);
+            var viewModel = new UniformTimeDependentParametersSettingsViewModel<TSpreading>(parameters, generateSeries);
 
             // Assert
             Assert.That(viewModel, Is.InstanceOf<TimeDependentParametersSettingsViewModel>());
@@ -42,10 +44,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_ActiveParametersViewModelNull_ThrowsArgumentNullException()
         {
-            void Call() => new UniformTimeDependentParametersSettingsViewModel<TSpreading>(null);
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            void Call() => new UniformTimeDependentParametersSettingsViewModel<TSpreading>(null, generateSeries);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("parameters"));
+        }
+
+        [Test]
+        public void Constructor_GenerateSeriesNull_ThrowsArgumentNullException()
+        {
+            var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
+            void Call() => new UniformTimeDependentParametersSettingsViewModel<TSpreading>(parameters, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("generateSeries"));
         }
         
     }

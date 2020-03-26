@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -19,8 +20,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_ExpectedResults()
         {
+            // Setup
+            var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
+            var referenceDateTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+
             // Call
-            var generatorSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>());
+            var generatorSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);
 
             // Assert
             Assert.That(generatorSeries, Is.InstanceOf<IGenerateSeries>());
@@ -29,17 +34,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_DialogHelperNull_ThrowsArgumentNullException()
         {
-            void Call() => new GenerateSeries(null);
+            var referenceDateTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+            void Call() => new GenerateSeries(null, referenceDateTimeProvider);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dialogHelper"));
         }
 
         [Test]
+        public void Constructor_ReferenceDateTimeProviderNull_ThrowsArgumentNullException()
+        {
+            var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
+            void Call() => new GenerateSeries(dialogHelper, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
+        }
+
+        [Test]
         public void Execute_OwnerNull_ThrowsArgumentNullException()
         {
             // Setup
-            var generateSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>());
+            var generateSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>(),
+                                                    Substitute.For<IReferenceDateTimeProvider>());
             
             // Call | Assert
             void Call() => generateSeries.Execute(null, Substitute.For<IWaveEnergyFunction<TSpreading>>());
@@ -51,7 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Execute_SelectedFunctionNull_ThrowsArgumentNullException()
         {
             // Setup
-            var generateSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>());
+            var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
+            var referenceDateTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+            var generateSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);
             
             // Call | Assert
             void Call() => generateSeries.Execute<TSpreading>(Substitute.For<IWin32Window>(), null);
@@ -65,17 +85,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             using (var timeSeriesDialog = new TimeSeriesGeneratorDialog())
             {
+                var referenceDateTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+                DateTime expectedDateTime = DateTime.Today - TimeSpan.FromDays(3);
+
+                referenceDateTimeProvider.ModelReferenceDateTime.Returns(expectedDateTime);
+
                 var windowOwner = Substitute.For<IWin32Window>();
                 timeSeriesDialog.DialogResult = DialogResult.Cancel;
 
                 var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
-                dialogHelper.GetTimeSeriesGeneratorResponse(Arg.Is(windowOwner), 
-                                                            Arg.Any<DateTime>(),
-                                                            Arg.Any<DateTime>(),
-                                                            Arg.Any<TimeSpan>())
+                dialogHelper.GetTimeSeriesGeneratorResponse(windowOwner, 
+                                                            expectedDateTime,
+                                                            expectedDateTime + TimeSpan.FromDays(1),
+                                                            TimeSpan.FromHours(1))
                             .Returns(timeSeriesDialog);
 
-                var generateSeries = new GenerateSeries(dialogHelper);
+                var generateSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);
 
                 var selectedFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
 
@@ -176,6 +201,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             using (var timeSeriesDialog = new TimeSeriesGeneratorDialog() { ApplyOnAccept = false})
             {
+                var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+
                 timeSeriesDialog.SetData(null, 
                                          DateTime.Today, 
                                          DateTime.Today + TimeSpan.FromDays(1), 
@@ -193,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 dialogHelper.GetSupportPointSelectionMode(windowOwner)
                             .Returns(mode);
 
-                var generateSeries = new GenerateSeries(dialogHelper);
+                var generateSeries = new GenerateSeries(dialogHelper, referenceTimeProvider);
 
 
                 // Call

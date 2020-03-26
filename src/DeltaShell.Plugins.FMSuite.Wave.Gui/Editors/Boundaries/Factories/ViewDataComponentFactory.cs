@@ -5,6 +5,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 {
@@ -17,18 +19,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     public class ViewDataComponentFactory : IViewDataComponentFactory
     {
         private readonly IBoundaryConditionDataComponentFactory dataComponentFactory;
+        private readonly IGenerateSeries generateSeries;
 
         /// <summary>
         /// Creates a new <see cref="ViewDataComponentFactory"/>.
         /// </summary>
         /// <param name="dataComponentFactory">The <see cref="IBoundaryConditionDataComponentFactory"/>.</param>
+        /// <param name="referenceDateTimeProvider">The reference date time provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="dataComponentFactory"/> is <c>null</c>.
         /// </exception>
-        public ViewDataComponentFactory(IBoundaryConditionDataComponentFactory dataComponentFactory)
+        public ViewDataComponentFactory(IBoundaryConditionDataComponentFactory dataComponentFactory,
+                                        IReferenceDateTimeProvider referenceDateTimeProvider)
         {
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+            Ensure.NotNull(referenceDateTimeProvider, nameof(referenceDateTimeProvider));
+
             this.dataComponentFactory = dataComponentFactory;
+            generateSeries = new GenerateSeries(new GenerateSeriesDialogHelper(), 
+                                                referenceDateTimeProvider);
         }
 
         public ForcingViewType GetForcingType(IBoundaryConditionDataComponent dataComponent)
@@ -113,16 +122,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                     return new SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data);
 
                 case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> uniformDataComponent:
-                    return new UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(uniformDataComponent.Data);
+                    return new UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(uniformDataComponent.Data, 
+                                                                                                      generateSeries);
 
                 case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> uniformDataComponent:
-                    return new UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(uniformDataComponent.Data);
+                    return new UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(uniformDataComponent.Data, 
+                                                                                                        generateSeries);
 
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> spatiallyVaryingDataComponent:
-                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>(spatiallyVaryingDataComponent.Data, 
+                                                                                                               generateSeries);
 
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> spatiallyVaryingDataComponent:
-                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data);
+                    return new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data, 
+                                                                                                                 generateSeries);
 
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");

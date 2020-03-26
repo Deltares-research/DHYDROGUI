@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -41,11 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             boundary.Name = "A Boundary Name";
 
             // Call
-            var viewModel = new WaveBoundaryConditionEditorViewModel(boundary, factory);
+            var viewModel = new WaveBoundaryConditionEditorViewModel(boundary, factory, referenceTimeProvider);
 
             // Assert
             Assert.That(viewModel.Name, Is.EqualTo(boundary.Name), 
@@ -65,9 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             // Call
-            void Call() => new WaveBoundaryConditionEditorViewModel(null, factory);
+            void Call() => new WaveBoundaryConditionEditorViewModel(null, factory, referenceTimeProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -82,13 +85,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
+            var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             // Call
-            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, null);
+            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, null, referenceTimeProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
+        }
+
+        [Test]
+        public void Constructor_ReferenceDateTimeProviderNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
+            
+            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, factory, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
         }
     }
 }

@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 {
@@ -25,14 +26,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
         /// </summary>
         /// <param name="observedBoundary"> The observed boundary. </param>
         /// <param name="geometryFactory"> The geometry factory required for the geometry preview. </param>
+        /// <param name="referenceDateTimeProvider">Reference date time provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="observedBoundary"/> or <paramref name="geometryFactory"/> is <c>null</c>.
         /// </exception>
         public WaveBoundaryConditionEditorViewModel(IWaveBoundary observedBoundary,
-                                                    IWaveBoundaryGeometryFactory geometryFactory)
+                                                    IWaveBoundaryGeometryFactory geometryFactory,
+                                                    IReferenceDateTimeProvider referenceDateTimeProvider)
         {
             Ensure.NotNull(observedBoundary, nameof(observedBoundary));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
+            Ensure.NotNull(referenceDateTimeProvider, nameof(referenceDateTimeProvider));
 
             this.observedBoundary = observedBoundary;
 
@@ -40,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var modelDataComponentFactory =
                 new BoundaryConditionDataComponentFactory(parametersFactory);
-            var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory);
+            var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory, 
+                                                                    referenceDateTimeProvider);
 
             BoundarySpecificParametersSettingsViewModel =
                 new BoundarySpecificParametersSettingsViewModel(observedBoundary.ConditionDefinition,

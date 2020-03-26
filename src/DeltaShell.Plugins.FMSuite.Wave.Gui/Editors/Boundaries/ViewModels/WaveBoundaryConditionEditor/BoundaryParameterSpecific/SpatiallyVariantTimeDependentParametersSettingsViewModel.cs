@@ -23,12 +23,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="supportPointToParametersMapping">
         /// The mapping of support points to their corresponding <see cref="TimeDependentParameters{TSpreading}"/>.
         /// </param>
+        /// <param name="generateSeries">The <see cref="IGenerateSeries"/>. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="supportPointToParametersMapping"/> is <c>null</c>.
+        /// Thrown when <paramref name="supportPointToParametersMapping"/> or
+        /// <paramref name="generateSeries"/> is <c>null</c>.
         /// </exception>
-        public SpatiallyVariantTimeDependentParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping)
+        public SpatiallyVariantTimeDependentParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping,
+                                                                        IGenerateSeries generateSeries) : base(generateSeries)
         {
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
+
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
             GroupBoxTitle = "Spatially Varying Time Dependent Parameters";
@@ -91,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(new GenerateSeries(new GenerateSeriesDialogHelper()),  
+                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(generateSeries,  
                                                                                                                correspondingParameters, 
                                                                                                                supportPointToParametersMapping)
                                             : null;
