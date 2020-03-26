@@ -136,13 +136,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties,
-        bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true)
+        public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true, string workNetFilePath = null)
         {
             var targetDir = VerifyTargetDirectory(targetMduFilePath);
             var substitutedPaths = new Dictionary<string, System.Tuple<string, string>>();
 
-            if (Path != null)
+            if (workNetFilePath != null)
+            {
+                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+                CopyNetFile(modelDefinition, workNetFilePath, targetFile, substitutedPaths, targetDir);
+            }
+            else if (Path != null)
             {
                 CopyNetFile(targetMduFilePath, modelDefinition, substitutedPaths, targetDir);
             }
@@ -238,13 +243,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void CopyNetFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
             Dictionary<string, System.Tuple<string, string>> substitutedPaths, string targetDir)
+        {
+            var sourceFile = MduFileHelper.GetSubfilePath(Path,
+                modelDefinition.GetModelProperty(KnownProperties.NetFile));
+
+            var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
+                modelDefinition.GetModelProperty(KnownProperties.NetFile));
+            CopyNetFile(modelDefinition, sourceFile, targetFile, substitutedPaths, targetDir);
+        }
+        private void CopyNetFile(WaterFlowFMModelDefinition modelDefinition, string sourceFile, string targetFile,
+            Dictionary<string, System.Tuple<string, string>> substitutedPaths, string targetDir)
             {
-                var sourceFile = MduFileHelper.GetSubfilePath(Path,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
-                var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
-                    modelDefinition.GetModelProperty(KnownProperties.NetFile));
-
                 if (sourceFile != null)
                 {
                     if (File.Exists(sourceFile) && targetFile != null)

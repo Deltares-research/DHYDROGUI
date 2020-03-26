@@ -2423,11 +2423,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (!IsEditing)
                 InitializeAreaDataColumns();
-            ReloadGrid(); 
+            if (switchTo)
+            {
+                ReloadGrid();
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+            }
+            else
+            {
+                var workNetFile =
+                    MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
+                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name,
+                    FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation,
+                    BedLevelZValues);
+                var newGrid = UnstructuredGridFileHelper.LoadFromFile(workNetFile); //may throw...
+                if (newGrid != null)
+                {
+                    UnstructuredGridFileHelper.DoIfUgrid(workNetFile, uGridAdaptor =>
+                    {
+                        if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
+                        {
+                            bathymetryNoDataValue = -999.0d;
+                            return;
+                        }
+                        var mesh2DId = uGridAdaptor.GetMesh2DId();
+                        if (mesh2DId != null)
+                        {
+                            uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(mesh2DId.Value);
+                        }
 
-            
-            mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
-            
+                        bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
+                    });
+                }
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null, workNetFilePath: workNetFile);
+            }
+
+
+
             if (!IsEditing)
                 RestoreAreaDataColumns();
 
