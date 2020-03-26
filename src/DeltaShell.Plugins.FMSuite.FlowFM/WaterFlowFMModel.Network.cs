@@ -750,7 +750,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource };
                     if (lateralSource.Branch is IPipe pipe)
                     {
-                        model1DLateralSourceData.Compartment = pipe.SourceCompartmentName.Equals(lateralSource.Name)
+                        model1DLateralSourceData.Compartment = pipe.SourceCompartmentName != null && pipe.SourceCompartmentName.Equals(lateralSource.Name)
                             ? pipe.SourceCompartment
                             : pipe.TargetCompartment;
                     }
