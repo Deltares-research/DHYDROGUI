@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// Creates a new <see cref="WaveBoundaryFactoryHelper"/>.
         /// </summary>
         /// <param name="componentFactory">The component factory.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="componentFactory"/> is <c>null</c>.
         /// </exception>
         public WaveBoundaryFactoryHelper(IBoundaryConditionDataComponentFactory componentFactory)
