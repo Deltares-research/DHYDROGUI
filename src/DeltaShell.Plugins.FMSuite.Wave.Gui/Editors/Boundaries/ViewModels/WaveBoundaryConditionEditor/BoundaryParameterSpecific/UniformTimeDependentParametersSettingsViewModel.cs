@@ -1,6 +1,7 @@
 ﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -16,7 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(parameters);
+            ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(
+                new GenerateSeries(new GenerateSeriesDialogHelper()), 
+                parameters);
         }
 
         public override TimeDependentParametersViewModel ActiveParametersViewModel { get; protected set; }

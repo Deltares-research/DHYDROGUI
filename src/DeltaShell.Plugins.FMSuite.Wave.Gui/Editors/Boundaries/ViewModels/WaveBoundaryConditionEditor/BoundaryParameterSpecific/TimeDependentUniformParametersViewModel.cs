@@ -16,12 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public class TimeDependentUniformParametersViewModel<TSpreading> : TimeDependentParametersViewModel
         where TSpreading : IBoundaryConditionSpreading, new()
     {
-        private readonly GenerateSeries generateSeries = 
-            new GenerateSeries(new GenerateSeriesDialogHelper());
+        private readonly IGenerateSeries generateSeries;
 
-        public TimeDependentUniformParametersViewModel(TimeDependentParameters<TSpreading> parameters)
+        public TimeDependentUniformParametersViewModel(IGenerateSeries generateSeries,
+                                                       TimeDependentParameters<TSpreading> parameters)
         {
+            Ensure.NotNull(generateSeries, nameof(generateSeries));
             Ensure.NotNull(parameters, nameof(parameters));
+
+            this.generateSeries = generateSeries;
             ObservedParameters = parameters;
         }
 

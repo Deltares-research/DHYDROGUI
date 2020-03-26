@@ -18,17 +18,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public class TimeDependentSpatiallyVaryingParametersViewModel<TSpreading> : TimeDependentParametersViewModel
         where TSpreading : IBoundaryConditionSpreading, new()
     {
-        private readonly GenerateSeries generateSeries = 
-            new GenerateSeries(new GenerateSeriesDialogHelper());
+        private readonly IGenerateSeries generateSeries;
         private readonly IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping;
 
-        public TimeDependentSpatiallyVaryingParametersViewModel(TimeDependentParameters<TSpreading> parameters, 
+        public TimeDependentSpatiallyVaryingParametersViewModel(IGenerateSeries generateSeries,
+                                                                TimeDependentParameters<TSpreading> parameters, 
                                                                 IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping)
                                                                 
         {
+            Ensure.NotNull(generateSeries, nameof(generateSeries));
             Ensure.NotNull(parameters, nameof(parameters));
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
 
+            this.generateSeries = generateSeries;
             ObservedParameters = parameters;
             this.supportPointToParametersMapping = supportPointToParametersMapping;
         }

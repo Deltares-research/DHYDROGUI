@@ -3,6 +3,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -90,7 +91,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(correspondingParameters, supportPointToParametersMapping)
+                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(new GenerateSeries(new GenerateSeriesDialogHelper()),  
+                                                                                                               correspondingParameters, 
+                                                                                                               supportPointToParametersMapping)
                                             : null;
         }
     }
