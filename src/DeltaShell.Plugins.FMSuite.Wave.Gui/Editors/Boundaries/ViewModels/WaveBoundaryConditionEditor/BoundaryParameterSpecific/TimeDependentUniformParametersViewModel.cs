@@ -18,6 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IGenerateSeries generateSeries;
 
+        /// <summary>
+        /// Creates a new <see cref="TimeDependentUniformParametersViewModel{TSpreading}"/>.
+        /// </summary>
+        /// <param name="generateSeries">The generate series.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
         public TimeDependentUniformParametersViewModel(IGenerateSeries generateSeries,
                                                        TimeDependentParameters<TSpreading> parameters)
         {

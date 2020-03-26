@@ -21,6 +21,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private readonly IGenerateSeries generateSeries;
         private readonly IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping;
 
+        /// <summary>
+        /// Creates a new <see cref="TimeDependentSpatiallyVaryingParametersViewModel{TSpreading}"/>.
+        /// </summary>
+        /// <param name="generateSeries">The generate series.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="supportPointToParametersMapping">The support point to parameters mapping.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
         public TimeDependentSpatiallyVaryingParametersViewModel(IGenerateSeries generateSeries,
                                                                 TimeDependentParameters<TSpreading> parameters, 
                                                                 IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping)
