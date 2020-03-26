@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             using (var supportPointsDialog = new WaveSupportPointSelectionForm())
             {
-                supportPointsDialog.Show(owner);
+                supportPointsDialog.ShowDialog(owner);
 
                 return supportPointsDialog.SupportPointOperationMode;
             }
