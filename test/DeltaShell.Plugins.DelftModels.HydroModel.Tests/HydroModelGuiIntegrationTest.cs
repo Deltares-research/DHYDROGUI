@@ -235,14 +235,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAnIntegratedModelWithFMModelInItWhenOpeningGridInRGFGridAndClosingItThenItShouldNotThowAnException()
         {
-            var mainWindow = (MainWindow)gui.MainWindow;
-
             Action mainWindowShown = delegate
             {
-                var hydroModelBuilder = new HydroModelBuilder();
-                using (var integratedModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels))
+                using (var integratedModel = new HydroModelBuilder().BuildModel(ModelGroup.FMWaveRtcModels))
                 {
                     gui.CommandHandler.AddItemToProject(integratedModel);
                     gui.Selection = integratedModel;
@@ -254,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     PerformActionWithCancellationThread(60000, () => gui.CommandHandler.OpenViewForSelection());
                 }
             };
-            WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
+            WpfTestHelper.ShowModal((MainWindow)gui.MainWindow, mainWindowShown);
         }
 
         private static void PerformActionWithCancellationThread(int timeout, Action action)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
@@ -152,6 +154,10 @@ namespace DelftTools.Hydro.CrossSections
             if (e.Action != NotifyCollectionChangeAction.Add)
             {
                 throw new InvalidOperationException("Not expected");
+            }
+            if (e.Item is INameable item && HydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name.Equals(item.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                item.Name = NamingHelper.GetUniqueName("SCSD_{0}", HydroNetwork.SharedCrossSectionDefinitions,typeof(ICrossSectionDefinition), true);
             }
             Definition = e.Item as CrossSectionDefinitionProxy ?? new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
         }
