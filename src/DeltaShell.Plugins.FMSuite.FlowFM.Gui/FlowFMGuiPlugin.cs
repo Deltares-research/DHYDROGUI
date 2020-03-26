@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Gui = Gui;
-                    v.OnValidate = d => (d as WaterFlowFMModel)?.Validate();
+                    v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport;
                 }
             };
 

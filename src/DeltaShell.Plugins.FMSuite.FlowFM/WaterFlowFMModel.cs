@@ -1506,6 +1506,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Output1DFileStore != null)
                 foreach (var function in Output1DFileStore.Functions)
                     yield return function;
+            yield return ValidationReport;
         }
 
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
@@ -2670,6 +2671,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private FM1DFileFunctionStore output1DFileStore;
         private HeatFluxModelType heatFluxModelType;
         private IHydroRegion fmRegion;
+        private ValidationReport report;
 
         private const int TotalImportSteps = 10;
 
@@ -3579,6 +3581,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public virtual ValidationReport Validate()
         {
             return ValidateBeforeRun ? WaterFlowFmModelValidationExtensions.Validate(this) : null;
+        }
+
+        public virtual ValidationReport ValidationReport
+        {
+            get { return report == null ? (report = Validate()) : report.Equals(Validate()) ? report : (report = Validate()); }
         }
         public new virtual ActivityStatus Status
         {
