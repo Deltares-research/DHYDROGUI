@@ -24,12 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             return generateDialog;
         }
 
-        public WaveSupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner)
+        public WaveSupportPointMode GetSupportPointSelectionMode(IWin32Window owner)
         {
-            var supportPointsDialog = new WaveSupportPointSelectionForm();
-            supportPointsDialog.Show(owner);
+            using (var supportPointsDialog = new WaveSupportPointSelectionForm())
+            {
+                supportPointsDialog.Show(owner);
 
-            return supportPointsDialog;
+                return supportPointsDialog.SupportPointOperationMode;
+            }
         }
     }
 }

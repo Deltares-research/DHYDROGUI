@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Prompts and returns the user for a support point selection.
         /// </summary>
         /// <returns>
-        /// The <see cref="WaveSupportPointSelectionForm"/> after querying the user.
+        /// The <see cref="WaveSupportPointMode"/> after querying the user.
         /// </returns>
-        WaveSupportPointSelectionForm GetSupportPointSelectionResponse(IWin32Window owner);
+        WaveSupportPointMode GetSupportPointSelectionMode(IWin32Window owner);
     }
 }
