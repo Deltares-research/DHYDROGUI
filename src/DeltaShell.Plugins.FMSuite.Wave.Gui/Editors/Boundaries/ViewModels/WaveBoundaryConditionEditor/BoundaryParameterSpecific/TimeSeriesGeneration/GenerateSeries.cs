@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="IWaveEnergyFunction{TSpreading}"/> with new data through the
     /// <see cref="Execute{TSpreading}"/> method.
     /// </summary>
-    public class GenerateSeries
+    public class GenerateSeries : IGenerateSeries
     {
         private readonly IGenerateSeriesDialogHelper dialogHelper;
 
@@ -33,19 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.dialogHelper = dialogHelper;
         }
 
-        /// <summary>
-        /// Executes the generation of a series given user input.
-        /// </summary>
-        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
-        /// <param name="owner">The owning window required for user prompts.</param>
-        /// <param name="selectedFunction">The currently selected and active function.</param>
-        /// <param name="otherFunctions">The other functions if any.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// Thrown when <paramref name="owner"/> or
-        /// <paramref name="selectedFunction"/> are <c>null</c>.
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when the selected <see cref="WaveSupportPointMode"/> is out of range.
-        /// </exception>
         public void Execute<TSpreading>(IWin32Window owner,
                                         IWaveEnergyFunction<TSpreading> selectedFunction,
                                         IEnumerable<IWaveEnergyFunction<TSpreading>> otherFunctions = null)

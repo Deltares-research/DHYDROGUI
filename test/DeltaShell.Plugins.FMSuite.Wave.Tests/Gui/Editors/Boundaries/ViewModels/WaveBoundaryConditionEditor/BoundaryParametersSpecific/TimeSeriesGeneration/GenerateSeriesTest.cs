@@ -17,6 +17,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     public class GenerateSeriesTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         [Test]
+        public void Constructor_ExpectedResults()
+        {
+            // Call
+            var generatorSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>());
+
+            // Assert
+            Assert.That(generatorSeries, Is.InstanceOf<IGenerateSeries>());
+        }
+
+        [Test]
         public void Constructor_DialogHelperNull_ThrowsArgumentNullException()
         {
             void Call() => new GenerateSeries(null);
