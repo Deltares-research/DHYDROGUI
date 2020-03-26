@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -52,6 +53,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("parameters"));
+        }
+
+        [Test]
+        public void GenerateSeriesCommand_ExpectedResult()
+        {
+            // Setup
+            var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
+
+            var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+
+            var generateSeries = Substitute.For<IGenerateSeries>();
+            var viewModel = new TimeDependentUniformParametersViewModel<TSpreading>(generateSeries,
+                                                                                    parameters);
+
+            var window = Substitute.For<IWin32Window>();
+
+            // Call
+            viewModel.GenerateTimeSeriesCommand.Execute(window);
+            
+            // Assert
+            generateSeries.Received(1).Execute(window, waveEnergyFunction, null);
         }
     }
 }
