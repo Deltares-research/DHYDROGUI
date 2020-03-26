@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration
 {
@@ -21,11 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="owner">The owning window required for user prompts.</param>
         /// <param name="selectedFunction">The currently selected and active function.</param>
         /// <param name="otherFunctions">The other functions if any.</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
         /// Thrown when <paramref name="owner"/> or
         /// <paramref name="selectedFunction"/> are <c>null</c>.
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown when the selected <see cref="WaveSupportPointMode"/> is out of range.
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// Thrown when the selected <see cref="Forms.WaveSupportPointMode"/> is out of range.
         /// </exception>
         void Execute<TSpreading>(IWin32Window owner,
                                  IWaveEnergyFunction<TSpreading> selectedFunction,
