@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             fmRegion?.SubRegions?.Add(network);
             network.Parent = hydroNetworkParent;
             if (NetworkDiscretization != null) NetworkDiscretization.Network = network;
-            RoughnessSections?.ForEach(rs => rs.Network = network);
+            UpdateRoughnessSections();
         }
 
         public virtual void UnSubscribeFromNetwork(IHydroNetwork network)
@@ -674,7 +674,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void AddSewerRoughnessIfNecessary()
         {
-            var roughnessSection = RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase) && ReferenceEquals(rs.Network, Network));
+            var roughnessSection = RoughnessSections.FirstOrDefault(rs => string.Equals(rs.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             if (roughnessSection != null)
             {
                 if (roughnessSection.GetDefaultRoughnessType() != RoughnessType.WhiteColebrook)
