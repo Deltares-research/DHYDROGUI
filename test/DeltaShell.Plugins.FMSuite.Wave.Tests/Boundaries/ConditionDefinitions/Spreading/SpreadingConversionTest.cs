@@ -2,6 +2,7 @@
 using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.Spreading
@@ -9,7 +10,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture]
     public class SpreadingConversionTest
     {
-        private class DummyConditionSpreading : IBoundaryConditionSpreading { }
+        private class DummyConditionSpreading : IBoundaryConditionSpreading {
+            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
+            {
+            }
+        }
 
         [Test]
         public void GetSpreadingUnit_DegreesDefinedSpreading_ExpectedResults()

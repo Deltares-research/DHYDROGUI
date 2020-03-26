@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
@@ -45,5 +46,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         }
 
         private T data;
+
+        /// <summary>
+        /// Method for accepting visitors of the visitor design pattern,
+        /// used for the export.
+        /// Order is important for the corresponding actions.
+        /// </summary>
+        /// <param name="visitor"></param>
+        public void AcceptVisitor(IDataComponentVisitor visitor)
+        {
+            visitor.Visit(this);
+            data.AcceptVisitor(visitor);
+        }
     }
 }

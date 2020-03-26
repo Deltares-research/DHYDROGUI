@@ -8,10 +8,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
     /// </summary>
     public enum BoundaryConditionPeriodType
     {
-        [Description("Peak")]
+        [Description("peak")]
         Peak = 1,
         
-        [Description("Mean")]
+        [Description("mean")]
         Mean = 2,
     }
 }

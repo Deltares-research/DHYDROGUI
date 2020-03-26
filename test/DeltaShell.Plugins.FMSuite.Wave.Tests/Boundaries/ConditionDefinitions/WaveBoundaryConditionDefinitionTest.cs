@@ -4,6 +4,7 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -150,6 +151,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("value"), 
                         "Expected a different value for ParamName:");
+        }
+
+        [Test]
+        public void AcceptVisitorTest()
+        {
+            // Setup
+            var shape = Substitute.For<IBoundaryConditionShape>();
+            var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
+            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var visitor = Substitute.For<IBoundaryConditionVisitor>();
+
+            var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
+                                                                          periodType,
+                                                                          dataComponent);
+            
+            // Call
+            conditionDefinition.AcceptVisitor(visitor);
+
+            // Assert
+            visitor.Received().Visit(conditionDefinition);
+            shape.Received().AcceptVisitor(visitor);
+            dataComponent.Received().AcceptVisitor(visitor);
         }
     }
 }

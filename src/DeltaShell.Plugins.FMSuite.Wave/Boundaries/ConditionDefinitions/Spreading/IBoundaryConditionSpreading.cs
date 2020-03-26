@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
+﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
 {
     /// <summary>
     /// <see cref="IBoundaryConditionSpreading"/> defines the different shapes used
@@ -9,5 +11,12 @@
     /// As such, this interface is empty, and other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    public interface IBoundaryConditionSpreading { }
+    public interface IBoundaryConditionSpreading
+    {
+        /// <summary>
+        /// Method needed for visitor design pattern.
+        /// </summary>
+        /// <param name="visitor"></param>
+        void AcceptVisitor(IDataComponentVisitor visitor);
+    }
 }

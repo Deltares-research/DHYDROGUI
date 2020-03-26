@@ -1,5 +1,6 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
@@ -41,5 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
         IBoundaryConditionDataComponent DataComponent { get; set; }
+
+        /// <summary>
+        /// Method needed for visitor design pattern.
+        /// </summary>
+        /// <param name="visitor"></param>
+        void AcceptVisitor(IBoundaryConditionVisitor visitor);
     }
 }

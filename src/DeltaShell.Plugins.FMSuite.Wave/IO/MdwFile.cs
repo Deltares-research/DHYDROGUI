@@ -17,6 +17,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -74,17 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             SetConstantWindProperties(modelDefinition);
             SetConstantHydrodynamicsProperties(modelDefinition);
-
-            // save boundary data
-            string tSeriesFile = modelName + ".bcw";
-            modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
-                           .SetValueAsString(modelDefinition.BoundaryConditions.Any(bc =>
-                                                                                        bc.DataType ==
-                                                                                        BoundaryConditionDataType
-                                                                                            .ParameterizedSpectrumTimeseries)
-                                                 ? tSeriesFile
-                                                 : string.Empty);
-
+            
             string locationFileName = modelDefinition
                                       .GetModelProperty(KnownWaveCategories.OutputCategory,
                                                         KnownWaveProperties.LocationFile)
@@ -113,11 +104,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
-            IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
-                                                                        .Select(WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory);
+            IEnumerable<DelftIniCategory> boundaryConditionCategories = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategories(modelDefinition.BoundaryContainer);
             mdwCategories.AddRange(boundaryConditionCategories);
-            SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
-                                   modelDefinition.ModelReferenceDateTime);
+            
+            WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir, modelDefinition.ModelReferenceDateTime);
 
             if (MdwFilePath != null)
             {
@@ -362,31 +352,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void SaveBoundaryConditions(WaveModelDefinition modelDefinition, string targetFile, DateTime refDate)
+        private void WriteTimeSeriesFileForBoundaries(string modelName, WaveModelDefinition modelDefinition, string targetFile, DateTime refDate)
         {
-            IEventedList<WaveBoundaryCondition> boundaryConditions = modelDefinition.BoundaryConditions;
+            IEventedList<IWaveBoundary> boundaries = modelDefinition.BoundaryContainer.Boundaries;
 
-            // update refdate before writing
-            foreach (WaveBoundaryCondition bc in boundaryConditions)
+            Dictionary<string, List<IFunction>> bcwConditions = new Dictionary<string, List<IFunction>>();
+
+            foreach (IWaveBoundary boundary in boundaries)
             {
-                bc.PointData.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
-                                              refDate.ToString(BcwFile.DateFormatString));
+                var visitor = new CollectFunctionsOfBoundariesDataComponentVisitor();
+                boundary.ConditionDefinition.DataComponent.AcceptVisitor(visitor);
+
+                // update refdate before writing
+                visitor.listOfFunctions.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
+                                                         refDate.ToString(BcwFile.DateFormatString));
+
+                bcwConditions.Add(boundary.Name, visitor.listOfFunctions);
             }
-
-            // get the bcwconditions with parameterizedspectrumtimeseries.
-            // Make it a dictionary, but make sure to order the datapointindices while writing, because rekenhart demands it.
-            Dictionary<string, List<IFunction>> bcwConditions = boundaryConditions
-                                                                .Where(bc => bc.DataType == BoundaryConditionDataType
-                                                                                 .ParameterizedSpectrumTimeseries)
-                                                                .ToDictionary(
-                                                                    b => b.Name,
-                                                                    b => b.DataPointIndices.OrderBy(di => di)
-                                                                          .Select(b.GetDataAtPoint).ToList());
-
+            
             // write bcw file                                    
             if (bcwConditions.Any())
             {
-                new BcwFile().Write(bcwConditions, targetFile);
+                string tSeriesFile = modelName + ".bcw";
+                modelDefinition
+                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
+                    .SetValueAsString(tSeriesFile);
+                                                     
+                new BcwFile().Write(bcwConditions, Path.Combine(targetFile, tSeriesFile));
+            }
+            else
+            {
+                modelDefinition
+                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
+                    .SetValueAsString(string.Empty);
             }
         }
 

@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -37,7 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
 
-        private class DummyParameters : IBoundaryConditionDataComponent { }
+        private class DummyParameters : IBoundaryConditionDataComponent {
+            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         [Test]
         public void ConstructDefaultDataComponent_NotValidType_ThrowsNotSupportedException()

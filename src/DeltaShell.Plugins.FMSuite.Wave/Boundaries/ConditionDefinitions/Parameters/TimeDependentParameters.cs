@@ -1,6 +1,7 @@
 ﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 {
@@ -27,10 +28,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             Ensure.NotNull(waveEnergyFunction, nameof(waveEnergyFunction));
             WaveEnergyFunction = waveEnergyFunction;
         }
-
+        
         /// <summary>
         /// Gets the wave energy function.
         /// </summary>
         public IWaveEnergyFunction<TSpreading> WaveEnergyFunction { get; }
+
+        /// <summary>
+        /// Method for accepting visitors of the visitor design pattern,
+        /// used for the export.
+        /// Order is important for the corresponding actions.
+        /// </summary>
+        /// <param name="visitor"></param>
+        public void AcceptVisitor(IDataComponentVisitor visitor)
+        {
+            visitor.Visit(this);
+            new TSpreading().AcceptVisitor(visitor);
+        }
     }
 }

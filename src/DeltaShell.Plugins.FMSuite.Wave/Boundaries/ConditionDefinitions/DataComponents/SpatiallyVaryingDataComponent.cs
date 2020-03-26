@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
@@ -82,6 +84,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
 
             AddParameters(newSupportPoint, Data[oldSupportPoint]);
             RemoveSupportPoint(oldSupportPoint);
+        }
+
+        /// <summary>
+        /// Method for accepting visitors of the visitor design pattern,
+        /// used for the export.
+        /// Order is important for the corresponding actions.
+        /// </summary>
+        /// <param name="visitor"></param>
+        public void AcceptVisitor(IDataComponentVisitor visitor)
+        {
+            visitor.Visit(this);
+            IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = Data.OrderBy(kvp => kvp.Key.Distance);
+            
+            foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
+            {
+                supportPointKeyValuePair.Value.AcceptVisitor(visitor);
+            }
         }
     }
 }

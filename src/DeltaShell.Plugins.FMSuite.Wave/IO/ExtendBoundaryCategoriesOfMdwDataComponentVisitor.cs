@@ -1,0 +1,135 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.IO
+{
+    /// <summary>
+    /// Visitor used for retrieving the boundary condition properties needed for writing the Mdw file.
+    /// </summary>
+    public class ExtendBoundaryCategoriesOfMdwDataComponentVisitor : BaseDataComponentVisitor, IBoundaryConditionVisitor
+    {
+        private bool hasConstantValues;
+        
+        private bool isUniform;
+
+        public ExtendBoundaryCategoriesOfMdwDataComponentVisitor(DelftIniCategory boundaryCategory)
+        {
+            BoundaryCategory = boundaryCategory;
+        }
+
+        private DelftIniCategory BoundaryCategory { get; }
+
+        private IList<SupportPoint> SupportPoints { get; set; }
+
+        private int supportPointCounter;
+
+        public override void Visit<T>(UniformDataComponent<T> uniformDataComponent) 
+        {
+            isUniform = true;
+        }
+
+        public override void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) 
+        {
+            isUniform = false;
+            SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
+        }
+
+        public override void Visit<T>(ConstantParameters<T> constantParameters)
+        { 
+            hasConstantValues = true;
+            if (isUniform)
+            {
+                BoundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, constantParameters.Height);
+                BoundaryCategory.AddProperty(KnownWaveProperties.Period, constantParameters.Period);
+                BoundaryCategory.AddProperty(KnownWaveProperties.Direction, constantParameters.Direction);
+            }
+            else
+            {
+                BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
+                                             SupportPoints[supportPointCounter].Distance);
+                BoundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, constantParameters.Height);
+                BoundaryCategory.AddProperty(KnownWaveProperties.Period, constantParameters.Period);
+                BoundaryCategory.AddProperty(KnownWaveProperties.Direction, constantParameters.Direction);
+                
+                supportPointCounter++;
+            }
+        }
+
+        public override void Visit<T>(TimeDependentParameters<T> timeDependentParameters) 
+        {
+            hasConstantValues = false;
+            if (isUniform)
+            {
+                return;
+            }
+
+            foreach (SupportPoint supportPoint in SupportPoints.OrderBy(di => di))
+            {
+                BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
+                                             supportPoint.Distance);
+            }
+        }
+        
+        public override void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
+        {
+            BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
+                                         "Degrees");
+
+            if (hasConstantValues)
+            {
+                BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
+                                             degreesDefinedSpreading.DegreesSpreading);
+            }
+        }
+
+        public override void Visit(PowerDefinedSpreading powerDefinedSpreading)
+        {
+            BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
+                                         "Power");
+
+            if (hasConstantValues)
+            {
+                BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingValue,
+                                             powerDefinedSpreading.SpreadingPower);
+            }
+        }
+
+        public void Visit(GaussShape gaussShape)
+        {
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Gauss");
+            BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
+        }
+
+        public void Visit(JonswapShape jonswapShape)
+        {
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Jonswap");
+            BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
+        }
+
+        public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
+        {
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Pierson-Moskowitz");
+        }
+
+        public void Visit(WaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
+        {
+            //place holder
+            BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, String.Empty);
+            
+            BoundaryCategory.AddProperty(KnownWaveProperties.PeriodType, waveBoundaryConditionDefinition.PeriodType.GetDescription());
+            
+            //place holder
+            BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
+        }
+    }
+}

@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
+﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
 {
     /// <summary>
     /// <see cref="PiersonMoskowitzShape"/> defines the Pierson-Moskowitz <see cref="IBoundaryConditionShape"/>.
@@ -10,8 +12,13 @@
     public class PiersonMoskowitzShape : IBoundaryConditionShape
     {
         /// <summary>
-        /// Name that should be written as value for "SpShapeType" property in Mdw.
-        /// </summary>
-        public string XmlName { get; } = "Pierson-Moskowitz";
+        /// Method for accepting visitors of the visitor design pattern,
+        /// used for the export.
+       /// </summary>
+        /// <param name="visitor"></param>
+        public void AcceptVisitor(IBoundaryConditionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

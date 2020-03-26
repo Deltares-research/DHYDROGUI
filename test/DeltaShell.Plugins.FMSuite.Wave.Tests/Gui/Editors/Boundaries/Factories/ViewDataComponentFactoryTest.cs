@@ -7,6 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
@@ -217,7 +218,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
         }
 
-        private class DummyDataComponent : IBoundaryConditionDataComponent { }
+        private class DummyDataComponent : IBoundaryConditionDataComponent {
+            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
+            {
+            }
+        }
 
         [Test]
         public void ConstructParametersSettingsViewModel_UnsupportedType_ThrowsNotSupportedException()

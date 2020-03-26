@@ -183,6 +183,8 @@
     <Compile Include="Boundaries\WaveBoundary.cs" />
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
+    <Compile Include="IO\BaseDataComponentVisitor.cs" />
+    <Compile Include="IO\CollectFunctionsOfBoundariesDataComponentVisitor.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
@@ -200,6 +202,9 @@
     <Compile Include="IO\Importers\WaveModelFileImporter.cs" />
     <Compile Include="IO\Importers\WaveSpectralFileImporter.cs" />
     <Compile Include="IO\Importers\WavmFileImporter.cs" />
+    <Compile Include="IO\IDataComponentVisitor.cs" />
+    <Compile Include="IO\IBoundaryConditionVisitor.cs" />
+    <Compile Include="IO\ExtendBoundaryCategoriesOfMdwDataComponentVisitor.cs" />
     <Compile Include="IO\MdwFile.cs" />
     <Compile Include="IO\WaveDelftIniCategoryCreator.cs" />
     <Compile Include="IO\Sp2File.cs" />

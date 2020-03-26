@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
+﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
 {
     /// <summary>
     /// <see cref="GaussShape"/> defines the Gaussian type of
@@ -16,8 +18,13 @@
         public double GaussianSpread { get; set; }
 
         /// <summary>
-        /// Name that should be written as value for "SpShapeType" property in Mdw.
+        /// Method for accepting visitors of the visitor design pattern,
+        /// used for the export.
         /// </summary>
-        public string XmlName { get; } = "Gauss";
+        /// <param name="visitor"></param>
+        public void AcceptVisitor(IBoundaryConditionVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }
