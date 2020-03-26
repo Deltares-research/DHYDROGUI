@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Functions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -28,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         /// <summary>
         /// Gets the<see cref="ICommand"/> to generate the series for this
-        /// <see cref="TimeDependentParameters{TSpreading}"/>.
+        /// <see cref="Wave.Boundaries.ConditionDefinitions.Parameters.TimeDependentParameters{TSpreading}"/>.
         /// </summary>
         public ICommand GenerateTimeSeriesCommand { get; }
 
