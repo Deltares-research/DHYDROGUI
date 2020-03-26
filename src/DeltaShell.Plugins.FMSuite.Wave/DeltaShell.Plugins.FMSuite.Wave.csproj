@@ -187,6 +187,7 @@
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ParametersBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodType.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeType.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpectrumType.cs" />
