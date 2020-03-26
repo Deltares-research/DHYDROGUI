@@ -319,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
             var attributeTableLateralSourcesData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
-            attributeTableLateralSourcesData.AfterCreate = (view, datas) =>
+            attributeTableLateralSourcesData.OnActivateView = (view, datas) =>
             {
                 SetLateralSourceCompartmentComboBoxTypeEditor(view);
 
