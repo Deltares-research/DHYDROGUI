@@ -267,6 +267,7 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantConstantParametersSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantTimeDependentParametersSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeSeriesGeneration\GenerateSeriesTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformConstantParametersSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformTimeDependentParametersSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsViewModelTest.cs" />
