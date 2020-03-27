@@ -81,6 +81,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
             }
             else if (e.Property == FunctionsProperty)
             {
+                // Reset the current content of the MultipleFunctionView, such that is cleared, 
+                // otherwise the e.NewValue is just added to the existing functions.
+                multipleFunctionView.Functions = null;
                 multipleFunctionView.Functions = (IEnumerable<IFunction>) e.NewValue;
             }
         }
