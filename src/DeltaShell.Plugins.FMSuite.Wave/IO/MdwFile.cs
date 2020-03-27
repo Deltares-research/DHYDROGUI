@@ -602,6 +602,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     superDomain.SubDomains.Add(domain);
                     domain.SuperDomain = superDomain;
                 }
+
+                WaveModel.LoadGrid(mdwDir, domain);
             }
 
             // time frame

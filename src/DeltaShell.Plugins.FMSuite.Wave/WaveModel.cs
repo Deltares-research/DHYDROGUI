@@ -780,7 +780,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (IWaveDomainData domain in allDomains)
             {
-                LoadGrid(workingDirectory, domain);
                 LoadBathymetry(model, workingDirectory, domain);
             }
         }

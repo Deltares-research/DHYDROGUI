@@ -57,6 +57,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void Load_GridsAreImportedOnDomains()
+        {
+            // Setup
+            var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
+
+            // Call
+            var modelDef = new MdwFile().Load(mdwPath);
+
+            // Assert
+            Assert.That(modelDef.OuterDomain.Grid.IsEmpty, Is.False);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadObstacles()
         {
             var mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tst.mdw");
