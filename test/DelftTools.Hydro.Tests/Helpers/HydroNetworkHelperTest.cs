@@ -512,11 +512,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             var network = new HydroNetwork();
             var channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                Name = "Channel1", Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
             };
             var channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(200, 0) })
+                Name = "Channel2", Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(200, 0) })
             };
             var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
             var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 0)) };
@@ -540,16 +540,16 @@ namespace DelftTools.Hydro.Tests.Helpers
             };
 
             HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, true, 20.0, null);
-            // 6 + 6
-            Assert.AreEqual(12, discretization.Locations.Values.Count);
+            // 6 + 6 - 1 double point 
+            Assert.AreEqual(11, discretization.Locations.Values.Count);
             HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, 
                                                       true, 10.0, new List<IChannel> { channel2 });
-            // 11 + 6
-            Assert.AreEqual(17, discretization.Locations.Values.Count);
+            // 11 + 6 - 1 double point 
+            Assert.AreEqual(16, discretization.Locations.Values.Count);
             HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, 
                                                       true, 10.0, new List<IChannel> { channel1 });
-            // 11 + 11
-            Assert.AreEqual(22, discretization.Locations.Values.Count);
+            // 11 + 11 - 1 double point 
+            Assert.AreEqual(21, discretization.Locations.Values.Count);
         }
 
         /// <summary>

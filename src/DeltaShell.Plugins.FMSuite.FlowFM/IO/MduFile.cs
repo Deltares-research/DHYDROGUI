@@ -144,8 +144,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (workNetFilePath != null)
             {
                 var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
+                var sourceDir = VerifyTargetDirectory(workNetFilePath);
 
-                CopyNetFile(modelDefinition, workNetFilePath, targetFile, substitutedPaths, targetDir);
+                CopyNetFile(modelDefinition, workNetFilePath, targetFile, substitutedPaths, sourceDir, targetDir);
             }
             else if (Path != null)
             {
@@ -249,10 +250,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var targetFile = MduFileHelper.GetSubfilePath(targetMduFilePath,
                 modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            CopyNetFile(modelDefinition, sourceFile, targetFile, substitutedPaths, targetDir);
+
+            CopyNetFile(modelDefinition, sourceFile, targetFile, substitutedPaths, Path, targetDir);
+
         }
         private void CopyNetFile(WaterFlowFMModelDefinition modelDefinition, string sourceFile, string targetFile,
-            Dictionary<string, System.Tuple<string, string>> substitutedPaths, string targetDir)
+            Dictionary<string, System.Tuple<string, string>> substitutedPaths, string sourceDir, string targetDir)
             {
                 if (sourceFile != null)
                 {
@@ -316,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                 relativeTargetPath);
                     }
 
-                    var absoluteSourcePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path), relativeSourcePath);
+                    var absoluteSourcePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(sourceDir), relativeSourcePath);
                     var absoluteTargetPath = System.IO.Path.Combine(targetDir, relativeTargetPath);
 
                     if (File.Exists(absoluteSourcePath))
