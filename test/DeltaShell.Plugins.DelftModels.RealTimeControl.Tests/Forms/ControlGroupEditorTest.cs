@@ -391,7 +391,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var controlGroup = new ControlGroup();
 
             var xmlConditionElement = new XElement("ConditionElement");
-            var controlCondition = Substitute.For<ConditionBase>();
+            var controlCondition = Substitute.ForPartsOf<ConditionBase>();
             controlCondition.ToXml(Fns, controlGroup.Name).Returns(xmlConditionElement);
 
             Clipboard.Clear();
@@ -423,7 +423,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var controlGroup = new ControlGroup();
 
             var xmlRuleElement = new XElement("RuleElement");
-            var controlRule = Substitute.For<RuleBase>();
+            var controlRule = Substitute.ForPartsOf<RuleBase>();
             controlRule.ToXml(Fns, controlGroup.Name).Returns(xmlRuleElement);
 
             Clipboard.Clear();
