@@ -1506,7 +1506,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Output1DFileStore != null)
                 foreach (var function in Output1DFileStore.Functions)
                     yield return function;
-            yield return ValidationReport;
+            //yield return ValidationReport;
         }
 
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
