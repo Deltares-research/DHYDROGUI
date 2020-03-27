@@ -42,6 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.generateSeries = generateSeries;
             ObservedParameters = parameters;
             this.supportPointToParametersMapping = supportPointToParametersMapping;
+
+            TimeDependentParametersFunctions = new[] {ObservedParameters.WaveEnergyFunction.UnderlyingFunction};
         }
 
         /// <summary>
@@ -49,8 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public TimeDependentParameters<TSpreading> ObservedParameters { get; }
 
-        public override IEnumerable<IFunction> TimeDependentParametersFunctions =>
-            new[] {ObservedParameters.WaveEnergyFunction.UnderlyingFunction};
+        public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
 
         protected override void GenerateSeries(IWin32Window owner) => 
             generateSeries.Execute(owner, 
