@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -68,26 +69,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             category.AddProperty(KnownWaveProperties.Name, name);
             category.AddProperty(KnownWaveProperties.Definition, definition);
-            category.AddProperty(KnownWaveProperties.StartCoordinateX, startX.ToString());
-            category.AddProperty(KnownWaveProperties.StartCoordinateY, startY.ToString());
-            category.AddProperty(KnownWaveProperties.EndCoordinateX, endX.ToString());
-            category.AddProperty(KnownWaveProperties.EndCoordinateY, endY.ToString());
+            category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
+            category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
+            category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
+            category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
             category.AddProperty(KnownWaveProperties.SpectrumSpec, spectrumTypeStr);
             category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
             category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
-            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, peakEnhancementFactor.ToString());
-            category.AddProperty(KnownWaveProperties.GaussianSpreading, gaussianSpread.ToString());
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, distance1.ToString());
-            category.AddProperty(KnownWaveProperties.WaveHeight, waveHeight1.ToString());
-            category.AddProperty(KnownWaveProperties.Period, period1.ToString());
-            category.AddProperty(KnownWaveProperties.Direction, direction1.ToString());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, spreading1.ToString());
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, distance2.ToString());
-            category.AddProperty(KnownWaveProperties.WaveHeight, waveHeight2.ToString());
-            category.AddProperty(KnownWaveProperties.Period, period2.ToString());
-            category.AddProperty(KnownWaveProperties.Direction, direction2.ToString());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, spreading2.ToString());
+            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight1));
+            category.AddProperty(KnownWaveProperties.Period, ToString(period1));
+            category.AddProperty(KnownWaveProperties.Direction, ToString(direction1));
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading1));
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            category.AddProperty(KnownWaveProperties.WaveHeight, ToString(waveHeight2));
+            category.AddProperty(KnownWaveProperties.Period, ToString(period2));
+            category.AddProperty(KnownWaveProperties.Direction, ToString(direction2));
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
 
             // Call
             BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
@@ -164,6 +165,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 a,
                 b
             };
+        }
+
+        private static string ToString(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
         }
     }
 }
