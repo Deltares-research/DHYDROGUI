@@ -5,6 +5,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -164,8 +165,10 @@ namespace DelftTools.Hydro.SewerFeatures
                 var crossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
                 if (crossSectionDefinition != null)
                 {
-                    CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
-                    crossSection.UseSharedDefinition(crossSectionDefinition);
+                    var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+                    pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
+                    pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
+                    CrossSection = pipeCrossSection;
                     CrossSectionDefinitionName = crossSection.Definition.Name;
                     
                     Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)crossSectionDefinition).Shape.MaterialName);
