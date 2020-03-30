@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
@@ -16,13 +17,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     /// <summary>
     /// Visitor used for retrieving the boundary condition properties needed for writing the Mdw file.
     /// </summary>
-    public class ExtendBoundaryCategoriesOfMdwDataComponentVisitor : BaseDataComponentVisitor, IBoundaryConditionVisitor
+    public class MdwBoundaryConditionPropertiesCreator : BaseDataComponentVisitor, IBoundaryConditionVisitor
     {
         private bool hasConstantValues;
-        
         private bool isUniform;
+        private int supportPointCounter;
 
-        public ExtendBoundaryCategoriesOfMdwDataComponentVisitor(DelftIniCategory boundaryCategory)
+        private MdwBoundaryConditionPropertiesCreator(DelftIniCategory boundaryCategory)
         {
             BoundaryCategory = boundaryCategory;
         }
@@ -30,9 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private DelftIniCategory BoundaryCategory { get; }
 
         private IList<SupportPoint> SupportPoints { get; set; }
-
-        private int supportPointCounter;
-
+        
         public override void Visit<T>(UniformDataComponent<T> uniformDataComponent) 
         {
             isUniform = true;
@@ -68,15 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         public override void Visit<T>(TimeDependentParameters<T> timeDependentParameters) 
         {
             hasConstantValues = false;
-            if (isUniform)
-            {
-                return;
-            }
-
-            foreach (SupportPoint supportPoint in SupportPoints.OrderBy(di => di))
+            if (!isUniform)
             {
                 BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
-                                             supportPoint.Distance);
+                                             SupportPoints[supportPointCounter].Distance);
+                supportPointCounter++;
             }
         }
         
@@ -130,6 +125,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             
             //place holder
             BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
+        }
+
+        public static void AddNewProperties(DelftIniCategory boundaryCategory,
+                                                                       IWaveBoundary boundary)
+        {
+            var visitor = new MdwBoundaryConditionPropertiesCreator(boundaryCategory);
+            boundary.ConditionDefinition.AcceptVisitor(visitor);
         }
     }
 }

@@ -104,8 +104,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
-            IEnumerable<DelftIniCategory> boundaryConditionCategories = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategories(modelDefinition.BoundaryContainer);
-            mdwCategories.AddRange(boundaryConditionCategories);
+            IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer);
+            mdwCategories.AddRange(boundaryCategories);
             
             WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir, modelDefinition.ModelReferenceDateTime);
 
@@ -356,29 +356,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             IEventedList<IWaveBoundary> boundaries = modelDefinition.BoundaryContainer.Boundaries;
 
-            Dictionary<string, List<IFunction>> bcwConditions = new Dictionary<string, List<IFunction>>();
+            Dictionary<string, List<IFunction>> allTimeSeriesPerBoundary = new Dictionary<string, List<IFunction>>();
 
             foreach (IWaveBoundary boundary in boundaries)
             {
-                var visitor = new CollectFunctionsOfBoundariesDataComponentVisitor();
-                boundary.ConditionDefinition.DataComponent.AcceptVisitor(visitor);
+                List<IFunction> timeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(boundary);
 
                 // update refdate before writing
-                visitor.listOfFunctions.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
+                timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
                                                          refDate.ToString(BcwFile.DateFormatString));
 
-                bcwConditions.Add(boundary.Name, visitor.listOfFunctions);
+                allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
             }
             
             // write bcw file                                    
-            if (bcwConditions.Any())
+            if (allTimeSeriesPerBoundary.Any())
             {
                 string tSeriesFile = modelName + ".bcw";
                 modelDefinition
                     .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
                     .SetValueAsString(tSeriesFile);
                                                      
-                new BcwFile().Write(bcwConditions, Path.Combine(targetFile, tSeriesFile));
+                new BcwFile().Write(allTimeSeriesPerBoundary, Path.Combine(targetFile, tSeriesFile));
             }
             else
             {
