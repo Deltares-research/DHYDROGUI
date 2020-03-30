@@ -10,6 +10,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
     public static class SpreadingConversion
     {
         /// <summary>
+        /// Gets the spreading unit corresponding with the <typeparamref name="TSpreading" />
+        /// with the spreading value specified by <paramref name="value" />.
+        /// </summary>
+        /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
+        /// <param name="value"> The spreading value. </param>
+        /// <returns> The spreading unit. </returns>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when the <typeparamref name="TSpreading" /> is not a <see cref="PowerDefinedSpreading" />
+        /// or a <see cref="DegreesDefinedSpreading" />.
+        /// </exception>
+        public static TSpreading FromDouble<TSpreading>(double value)
+            where TSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            var spreading = new TSpreading();
+
+            // Awkward cast due to behaviour of C# 7, required to make type
+            // matching on generics work (Roslyn will create a compilation error otherwise).
+            // This could be removed if we ever decide to switch C# 7.1 or higher.
+            switch ((object) spreading)
+            {
+                case PowerDefinedSpreading s:
+                    s.SpreadingPower = value;
+                    break;
+
+                case DegreesDefinedSpreading s:
+                    s.DegreesSpreading = value;
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return spreading;
+        }
+
+        /// <summary>
         /// Gets the spreading unit corresponding with the <typeparamref name="TSpreading"/>.
         /// </summary>
         /// <typeparam name="TSpreading">The type of the spreading.</typeparam>

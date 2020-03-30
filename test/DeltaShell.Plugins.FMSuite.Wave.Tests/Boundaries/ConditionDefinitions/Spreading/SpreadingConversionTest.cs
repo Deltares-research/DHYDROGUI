@@ -10,10 +10,51 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture]
     public class SpreadingConversionTest
     {
+        private readonly Random random = new Random();
+
         private class DummyConditionSpreading : IBoundaryConditionSpreading {
             public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
             {
             }
+        }
+
+        [Test]
+        public void FromDouble_UnsupportedSpreading_ThrowsNotSupportedException()
+        {
+            // Setup
+            double spreadingValue = random.NextDouble();
+
+            // Call
+            void Call() => SpreadingConversion.FromDouble<DummyConditionSpreading>(spreadingValue);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
+        }
+
+        [Test]
+        public void FromDouble_DegreesDefinedSpreading_ReturnsCorrectResult()
+        {
+            // Setup
+            double spreadingValue = random.NextDouble();
+
+            // Call
+            var result = SpreadingConversion.FromDouble<DegreesDefinedSpreading>(spreadingValue);
+
+            // Assert
+            Assert.That(result.DegreesSpreading, Is.EqualTo(spreadingValue));
+        }
+
+        [Test]
+        public void FromDouble_PowerDefinedSpreading_ReturnsCorrectResult()
+        {
+            // Setup
+            double spreadingValue = random.NextDouble();
+
+            // Call
+            var result = SpreadingConversion.FromDouble<PowerDefinedSpreading>(spreadingValue);
+
+            // Assert
+            Assert.That(result.SpreadingPower, Is.EqualTo(spreadingValue));
         }
 
         [Test]
