@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
+using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using NUnit.Framework;
 
@@ -90,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         }
 
         [Test]
-        public void GivenViewModelWithSettings_WhenSettingNewGuiCategoriesAndOldSettingsRaisePropertyChangedEvent_ThenNothingHappens()
+        public void GivenViewModelWithCategories_WhenSettingNewGuiCategoriesAndOldSettingsRaisePropertyChangedEvent_ThenNothingHappens()
         {
             // Given
             var oldCategory = new WpfGuiCategory("oldCategory", new[]
@@ -128,6 +130,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 // to add visible or remove invisible items.
                 Assert.That(isCollectionChanged, Is.False);
                 CollectionAssert.AreEqual(newCategories, viewModel.SettingsCategories);
+            }
+        }
+
+        [Test]
+        public void GivenViewModel_WhenAddingCategoriesAndPropertyChangedEventTriggered_ThenCollectionUpdated()
+        {
+            // Given
+            var category = new WpfGuiCategory("category", new[]
+            {
+                new FieldUIDescription(null, (o, v) => {})
+                {
+                    ValueType = typeof(object)
+                }
+            });
+            IEnumerable<WpfGuiCategory> categories = new []
+            {
+                category
+            };
+
+            using (var viewModel = new WpfSettingsViewModel())
+            {
+                // Precondition
+                Assert.That(category.IsVisible, Is.True); // Ensure that the category is visible when test starts
+
+                // When
+                viewModel.SettingsCategories.AddRange(categories);
+                CollectionAssert.AreEqual(categories, viewModel.SettingsCategories);
+
+                var isCollectionChanged = false;
+                viewModel.SettingsCategories.CollectionChanged += (sender, args) => isCollectionChanged = true;
+
+                category.CategoryVisibility = () => false;              // Make the category invisible
+                WpfGuiProperty property = category.Properties.Single(); // Trigger PropertyChangedEvent
+                property.Value = new object();
+
+                // Then
+                // The property changed event of a category triggers a collection changed event
+                // to add visible or remove invisible items.
+                Assert.That(isCollectionChanged, Is.True);
+                CollectionAssert.IsEmpty(viewModel.SettingsCategories);
             }
         }
     }
