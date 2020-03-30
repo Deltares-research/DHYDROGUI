@@ -130,6 +130,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var factory = new BoundaryParametersFactory();
 
+            // Call | Assert
+            void Call() => factory.ConstructTimeDependentParameters<TSpreading>(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("waveEnergyFunction"));
+        }
+
+        [Test]
+        public void ConstructDefaultTimeDependentParameters_WaveEnergyFunctionNotNull()
+        {
+            // Setup
+            var factory = new BoundaryParametersFactory();
+
             // Call
             TimeDependentParameters<TSpreading> parameters = factory.ConstructDefaultTimeDependentParameters<TSpreading>();
 

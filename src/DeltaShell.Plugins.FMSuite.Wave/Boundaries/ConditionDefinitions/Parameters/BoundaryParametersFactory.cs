@@ -39,8 +39,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             ConstructTimeDependentParameters(new WaveEnergyFunction<TSpreading>());
 
         public TimeDependentParameters<TSpreading> ConstructTimeDependentParameters<TSpreading>(IWaveEnergyFunction<TSpreading> waveEnergyFunction)
-            where TSpreading : class, IBoundaryConditionSpreading, new() =>
-            new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+            where TSpreading : class, IBoundaryConditionSpreading, new()
+        {
+            Ensure.NotNull(waveEnergyFunction, nameof(waveEnergyFunction));
+            return new TimeDependentParameters<TSpreading>(waveEnergyFunction);
+        }
 
         public TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
