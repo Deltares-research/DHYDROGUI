@@ -845,7 +845,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.Area = hydroArea;
                 hydroArea.FixedWeirs.Add(fixedWeir);
                 model.FixedWeirsProperties[0].DataColumns[0].ValueList[0] = 0.9876;
-                app.SaveProjectAs(path);
+                app.SaveProject();
 
                 app.CloseProject();
 

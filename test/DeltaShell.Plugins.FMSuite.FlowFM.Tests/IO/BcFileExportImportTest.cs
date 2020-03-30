@@ -14,6 +14,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -22,6 +24,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.Slow)]
     public class BcFileExportImportTest
     {
+        [SetUp]
+        public void Setup()
+        {
+            if (Map.CoordinateSystemFactory == null) Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+        }
+
         [Test]
         [Category("Quarantine")]
         public void ExportImportSalinityToSingleFile()
