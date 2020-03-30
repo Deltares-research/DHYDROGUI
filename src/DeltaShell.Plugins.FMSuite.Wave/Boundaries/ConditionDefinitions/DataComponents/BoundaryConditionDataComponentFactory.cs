@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new UniformDataComponent<ConstantParameters<TSpreading>>(parametersFactory.ConstructDefaultConstantParameters<TSpreading>());
 
-        private SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>> ConstructSpatiallyVaryingConstantDataComponent<TSpreading>()
+        private static SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>> ConstructSpatiallyVaryingConstantDataComponent<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
 
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new UniformDataComponent<TimeDependentParameters<TSpreading>>(parametersFactory.ConstructDefaultTimeDependentParameters<TSpreading>());
 
-        private SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>> ConstructSpatiallyVaryingTimeDependentDataComponent<TSpreading>()
+        private static SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>> ConstructSpatiallyVaryingTimeDependentDataComponent<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
 
