@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
@@ -80,6 +81,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void Dispose()
         {
+            IModel model = ViewModel.DataModel;
+            if (model != null)
+            {
+                ((INotifyPropertyChanged)model).PropertyChanged -= OnDataPropertyChanged;
+            }
+
+            ViewModel.Dispose();
         }
 
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

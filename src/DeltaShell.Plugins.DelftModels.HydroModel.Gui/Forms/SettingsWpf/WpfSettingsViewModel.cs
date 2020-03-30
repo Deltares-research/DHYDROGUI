@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -14,9 +16,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// ViewModel containing the conversion of an ObjectUIDescription (extracted CSV Properties) to a WPF Gui view.
     /// </summary>
     [Entity]
-    public class WpfSettingsViewModel
+    public class WpfSettingsViewModel : IDisposable
     {
-        private ObservableCollection<WpfGuiCategory> settingsCategories;
+        private readonly ObservableCollection<WpfGuiCategory> settingsCategories;
 
         /// <summary>
         /// Gets or sets the data model.
@@ -39,9 +41,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             {
                 if (value != null)
                 {
-                    settingsCategories = new ObservableCollection<WpfGuiCategory>(value.Where(cat => cat.IsVisible));
+                    IEnumerable<WpfGuiCategory> visibleCategories = value.Where(cat => cat.IsVisible);
+                    settingsCategories.ForEach(gp => gp.PropertyChanged -= OnPropertyChanged);
+                    settingsCategories.Clear();
+                    settingsCategories.AddRange(visibleCategories);
+
                     RemovedCategories = value.Where(cat => !cat.IsVisible).ToList();
-                    settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
                     settingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
                 }
             }
@@ -66,16 +71,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </summary>
         public WpfSettingsViewModel()
         {
-            SettingsCategories = new ObservableCollection<WpfGuiCategory>(new List<WpfGuiCategory>());
+            settingsCategories = new ObservableCollection<WpfGuiCategory>();
+            settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
+
             RemovedCategories = new List<WpfGuiCategory>();
         }
 
         private void SettingsCategoriesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            if (SettingsCategories != null && !UpdatingProperties)
+            if (settingsCategories != null && !UpdatingProperties)
             {
                 UpdatingProperties = true;
-                SettingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
+                settingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
                 UpdateVisibleCategories();
                 UpdatingProperties = false;
             }
@@ -114,6 +121,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 SettingsCategories.AddRange(guiCategories);
                 RemovedCategories.RemoveAllWhere(rc => rc.IsVisible);
             }
+        }
+
+        public void Dispose()
+        {
+            DataModel = null;
+
+            RemovedCategories.ForEach(gp => gp.PropertyChanged -= OnPropertyChanged);
+            RemovedCategories.ForEach(gp => gp.Dispose());
+
+            settingsCategories.ForEach(gp => gp.PropertyChanged -= OnPropertyChanged);
+            settingsCategories.ForEach(gp => gp.Dispose());
+            settingsCategories.Clear();
         }
     }
 }

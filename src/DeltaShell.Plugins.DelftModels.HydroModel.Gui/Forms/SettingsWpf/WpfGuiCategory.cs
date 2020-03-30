@@ -9,11 +9,11 @@ using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
-    public class WpfGuiCategory : INotifyPropertyChanged
+    public class WpfGuiCategory : INotifyPropertyChanged, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiCategory"/> class. 
-        /// Creates all SubCategories <seealso cref="WpfGuiSubcategory"/> and Properties <seealso cref="WpfGuiProperty"/>.
+        /// Creates all SubCategories <seealso cref="WpfGuiSubCategory"/> and Properties <seealso cref="WpfGuiProperty"/>.
         /// </summary>
         /// <param name="category">The category.</param>
         /// <param name="properties">The properties.</param>
@@ -28,7 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             SubCategories = new ObservableCollection<WpfGuiSubCategory>(
                 properties.GroupBy(fd => fd.SubCategory)
-                    .Select(gp => new WpfGuiSubCategory(gp.Key, gp.ToList())));
+                          .Select(gp => new WpfGuiSubCategory(gp.Key, gp.ToList())));
+
+            Properties = new ObservableCollection<WpfGuiProperty>(SubCategories.SelectMany(sc => sc.Properties));
             Properties.ForEach(p => p.PropertyChanged += OnPropertyChanged);
 
             UpdatingProperties = false; /*Flag to avoid overflow*/
@@ -48,7 +50,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
         /// </value>
-        public bool HasCustomControl { get { return CustomControl != null; } }
+        public bool HasCustomControl
+        {
+            get
+            {
+                return CustomControl != null;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is visible.
@@ -88,13 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <value>
         /// The properties.
         /// </value>
-        public ObservableCollection<WpfGuiProperty> Properties
-        {
-            get
-            {
-                return new ObservableCollection<WpfGuiProperty>(SubCategories.SelectMany(sc => sc.Properties));
-            }
-        }
+        public ObservableCollection<WpfGuiProperty> Properties { get; }
 
         /// <summary>
         /// Converts a field UI description into a WpfGuiProperty <seealso cref="WpfGuiProperty"/>.
@@ -124,12 +126,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 subCategory = new WpfGuiSubCategory(subCategoryName, new List<FieldUIDescription>());
                 SubCategories.Add(subCategory);
             }
+
             subCategory.Properties.Add(property);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /* Flag to avoid Overflow exception while propagting the event PropertyChanged. */
+        /* Flag to avoid Overflow exception while propagating the event PropertyChanged. */
         private bool UpdatingProperties { get; set; }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -143,6 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsVisible"));
             UpdatingProperties = false;
         }
-    }
 
+        public void Dispose()
+        {
+            SubCategories.Clear();
+
+            Properties.ForEach(p => p.PropertyChanged -= OnPropertyChanged);
+            Properties.Clear();
+        }
+    }
 }
