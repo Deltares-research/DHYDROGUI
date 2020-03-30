@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -78,6 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
         /// else
         ///     <paramref name="oldWaveEnergyFunction"/>
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="oldWaveEnergyFunction"/> is <c>null</c>.
+        /// </exception>
         /// <exception cref="NotSupportedException">
         /// Thrown when <typeparamref name="TOldSpreading"/> is not supported.
         /// </exception>
@@ -89,6 +93,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
         public static IWaveEnergyFunction<TSpreading> ConvertSpreadingType<TOldSpreading>(IWaveEnergyFunction<TOldSpreading> oldWaveEnergyFunction)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
         {
+            Ensure.NotNull(oldWaveEnergyFunction, nameof(oldWaveEnergyFunction));
+
             if (typeof(TSpreading) == typeof(TOldSpreading))
             {
                 return (IWaveEnergyFunction<TSpreading>) oldWaveEnergyFunction;

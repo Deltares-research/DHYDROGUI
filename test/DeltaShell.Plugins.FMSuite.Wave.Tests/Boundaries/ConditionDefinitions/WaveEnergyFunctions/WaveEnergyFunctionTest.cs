@@ -137,5 +137,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                 Assert.That(newWaveFunction.SpreadingComponent.AllValues, Has.All.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
             }
         }
+
+        [Test]
+        public void ConvertSpreading_OldWaveEnergyFunctionNull_ThrowsArgumentNullException()
+        {
+            void Call() => WaveEnergyFunction<TSpreading>.ConvertSpreadingType((IWaveEnergyFunction<TSpreading>)null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("oldWaveEnergyFunction"));
+        }
     }
 }
