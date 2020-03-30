@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -118,7 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (RemovedCategories.Any(rc => rc.IsVisible))
             {
                 var guiCategories = RemovedCategories.Where(rc => rc.IsVisible);
-                SettingsCategories.AddRange(guiCategories);
+                settingsCategories.AddRange(guiCategories);
                 RemovedCategories.RemoveAllWhere(rc => rc.IsVisible);
             }
         }
