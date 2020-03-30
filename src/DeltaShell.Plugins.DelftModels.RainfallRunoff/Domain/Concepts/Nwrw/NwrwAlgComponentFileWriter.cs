@@ -27,171 +27,83 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             StringBuilder line = new StringBuilder();
 
-            AppendOpeningTagToAlgLine(line);
-            AppendIdToAlgLine(line);
-            AppendRunoffDelayFactorToAlgLine(line, nwrwDefinitions);
-            AppendMaximumStorageToAlgLine(line, nwrwDefinitions);
-            AppendMaximumInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
-            AppendMinimumInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
-            AppendDecreaseInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
-            AppendIncreaseInfiltrationCapacityToAlgLine(line, nwrwDefinitions);
-            AppendInfiltrationFromDepressionToAlgLine(line, nwrwDefinitions);
-            AppendInfiltrationFromRunoffToAlgLine(line, nwrwDefinitions);
-            AppendClosingTagToAlgLine(line);
+            line.Append($"{NwrwKeywords.Pluv_alg_PLVG} ");
+            line.Append($"{NwrwKeywords.Pluv_id} '{DFEAULT_GENERAL_ID}' ");
+
+            AppendRunoffDelayFactor(line, nwrwDefinitions);
+            AppendMaximumStorage(line, nwrwDefinitions);
+            AppendMaximumInfiltrationCapacity(line, nwrwDefinitions);
+            AppendMinimumInfiltrationCapacity(line, nwrwDefinitions);
+            AppendDecreaseInfiltrationCapacity(line, nwrwDefinitions);
+            AppendIncreaseInfiltrationCapacity(line, nwrwDefinitions);
+
+            line.Append($"{NwrwKeywords.Pluv_alg_od} {DEFAULT_INFILTRATION_FROM_DEPRESSIONS} ");
+            line.Append($"{NwrwKeywords.Pluv_alg_or} {DEFAULT_INFILTRATION_FROM_RUNOFF} ");
+            line.Append($"{NwrwKeywords.Pluv_alg_plvg}");
 
             return line.ToString();
         }
 
-        private void AppendOpeningTagToAlgLine(StringBuilder line)
+        private void AppendRunoffDelayFactor(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
         {
-            // opening tag
-            line.Append("PLVG");
-            line.Append(" ");
-        }
+            line.Append($"{NwrwKeywords.Pluv_alg_rf} ");
 
-        private void AppendIdToAlgLine(StringBuilder line)
-        {
-            // id
-            line.Append(NwrwKeywords.IdKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(DFEAULT_GENERAL_ID);
-            line.Append("'");
-            line.Append(" ");
-        }
-
-        private void AppendRunoffDelayFactorToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
-        {
-            // runoff-delay factor
-            line.Append(NwrwKeywords.RunoffDelayFactor);
-            line.Append(" ");
             foreach (NwrwDefinition nwrwDefinition in nwrwDefinitions)
             {
-                line.Append(nwrwDefinition.RunoffDelay);
-                line.Append(" ");
+                line.Append($"{nwrwDefinition.RunoffDelay} ");
             }
         }
 
-        private void AppendMaximumStorageToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
+        private void AppendMaximumStorage(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
         {
-            // maximum storage for 12 types
-            line.Append(NwrwKeywords.MaximumStorage);
-            line.Append(" ");
-            foreach (NwrwSurfaceType nwrwSurfaceType in SurfaceTypesInCorrectOrder)
+            line.Append($"{NwrwKeywords.Pluv_alg_ms} ");
+            foreach (NwrwSurfaceType nwrwSurfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
             {
-                line.Append(
-                    nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(nwrwSurfaceType))?.SurfaceStorage);
-                line.Append(" ");
+                line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(nwrwSurfaceType))?.SurfaceStorage} ");
             }
         }
 
-        private void AppendMaximumInfiltrationCapacityToAlgLine(StringBuilder line,
+        private void AppendMaximumInfiltrationCapacity(StringBuilder line,
             IList<NwrwDefinition> nwrwDefinitions)
         {
-            // maximum infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
-            line.Append(NwrwKeywords.MaximumInfiltrationCapacity);
-            line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))
-                ?.InfiltrationCapacityMax);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))
-                ?.InfiltrationCapacityMax);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))
-                ?.InfiltrationCapacityMax);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))
-                ?.InfiltrationCapacityMax);
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_alg_ix} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityMax} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityMax} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityMax} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityMax} ");
         }
 
-        private void AppendMinimumInfiltrationCapacityToAlgLine(StringBuilder line,
+        private void AppendMinimumInfiltrationCapacity(StringBuilder line,
             IList<NwrwDefinition> nwrwDefinitions)
         {
             // minimum infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
-            line.Append(NwrwKeywords.MinimumInfiltrationCapacity);
-            line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))
-                ?.InfiltrationCapacityMin);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))
-                ?.InfiltrationCapacityMin);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))
-                ?.InfiltrationCapacityMin);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))
-                ?.InfiltrationCapacityMin);
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_alg_im} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityMin} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityMin} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityMin} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityMin} ");
         }
 
-        private void AppendDecreaseInfiltrationCapacityToAlgLine(StringBuilder line,
+        private void AppendDecreaseInfiltrationCapacity(StringBuilder line,
             IList<NwrwDefinition> nwrwDefinitions)
         {
             // decrease in infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
-            line.Append(NwrwKeywords.DecreaseInInfiltrationCapacity);
-            line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))
-                ?.InfiltrationCapacityReduction);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))
-                ?.InfiltrationCapacityReduction);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))
-                ?.InfiltrationCapacityReduction);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))
-                ?.InfiltrationCapacityReduction);
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_alg_ic} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityReduction} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityReduction} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityReduction} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityReduction} ");
         }
 
-        private void AppendIncreaseInfiltrationCapacityToAlgLine(StringBuilder line,
+        private void AppendIncreaseInfiltrationCapacity(StringBuilder line,
             IList<NwrwDefinition> nwrwDefinitions)
         {
             // increase in infiltration capacity for 4 types of surface (closed paved, open paved, roofs, unpaved)
-            line.Append(NwrwKeywords.IncreaseInInfiltrationCapacity);
-            line.Append(" ");
-            line.Append(nwrwDefinitions
-                .FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))
-                ?.InfiltrationCapacityRecovery);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))
-                ?.InfiltrationCapacityRecovery);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))
-                ?.InfiltrationCapacityRecovery);
-            line.Append(" ");
-            line.Append(nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))
-                ?.InfiltrationCapacityRecovery);
-            line.Append(" ");
-        }
-
-        private void AppendInfiltrationFromDepressionToAlgLine(StringBuilder line,
-            IList<NwrwDefinition> nwrwDefinitions)
-        {
-            // option for infiltration from depressions
-            line.Append(NwrwKeywords.InfiltrationFromDepressions);
-            line.Append(" ");
-            line.Append(DEFAULT_INFILTRATION_FROM_DEPRESSIONS);
-            line.Append(" ");
-        }
-
-        private void AppendInfiltrationFromRunoffToAlgLine(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
-        {
-            // option for infiltration from runoff
-            line.Append(NwrwKeywords.InfiltrationFromRunoff);
-            line.Append(" ");
-            line.Append(DEFAULT_INFILTRATION_FROM_RUNOFF);
-            line.Append(" ");
-        }
-
-        private void AppendClosingTagToAlgLine(StringBuilder line)
-        {
-            // closing tag
-            line.Append("plvg");
+            line.Append($"{NwrwKeywords.Pluv_alg_dc} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.ClosedPavedWithSlope))?.InfiltrationCapacityRecovery} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.OpenPavedWithSlope))?.InfiltrationCapacityRecovery} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.RoofWithSlope))?.InfiltrationCapacityRecovery} ");
+            line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(NwrwSurfaceType.UnpavedWithSlope))?.InfiltrationCapacityRecovery} ");
         }
     }
 }

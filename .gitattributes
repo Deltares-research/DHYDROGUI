@@ -1068,6 +1068,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWe
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileHelper.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
@@ -5261,6 +5262,8 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/CatchmentCoverageMainta
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.csproj -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Hbv/HbvDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/Nwrw3BComponentFileWriterTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwFileWriterIntegrationTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwFileWriterIntegrationTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwModelFileWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewTest.cs -text
@@ -5690,6 +5693,10 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/landgebruik.s
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/landgebruik.shp -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/landgebruik.shp.xml -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/landgebruik.shx -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/nwrw/3BRUNOFF.TP -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/nwrw/pluvius.3b -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/nwrw/pluvius.alg -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/nwrw/pluvius.dwa -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/valid_state_RR.zip -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/test-data/valid_state_without_meta_RR.zip -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils/App.config -text

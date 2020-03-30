@@ -28,54 +28,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             StringBuilder line = new StringBuilder();
 
-            AppendOpeningTagToDwaLine(line); // 'DWA'
-            AppendIdToDwaLine(line, dryWeatherFlowDefinition.Name); // 'id'
-            AppendNameToDwaLine(line, dryWeatherFlowDefinition.Name); // 'nm' (same as 'id')
-            AppendDwfComputationOptionToDwaLine(line, dryWeatherFlowDefinition.DistributionType); // 'do'
-            AppendWaterUsePerCapitaAsConstantToDwaLine(line, dryWeatherFlowDefinition.DailyVolumeConstant); // 'wc'
-            AppendWaterUsePerCapitaPerDayToDwaLine(line, dryWeatherFlowDefinition.DailyVolumeVariable); // 'wd'
-            AppendWaterUsePerHour(line, dryWeatherFlowDefinition.HourlyPercentageDailyVolume); // 'wh'
-            AppendClosingTagToDwaLine(line); // 'dwa'
+            line.Append($"{NwrwKeywords.Pluv_dwa_DWA} ");
+
+            var name = dryWeatherFlowDefinition.Name;
+            line.Append($"{NwrwKeywords.Pluv_id} '{name}' ");
+            line.Append($"{NwrwKeywords.Pluv_nm} '{name}' ");
+
+            AppendDwfComputationOption(line, dryWeatherFlowDefinition.DistributionType);
+
+            line.Append($"{NwrwKeywords.Pluv_dwa_wc} {dryWeatherFlowDefinition.DailyVolumeConstant} ");
+            line.Append($"{NwrwKeywords.Pluv_dwa_wd} {dryWeatherFlowDefinition.DailyVolumeVariable.ToString()} ");
+
+            AppendWaterUsePerHour(line, dryWeatherFlowDefinition.HourlyPercentageDailyVolume);
+
+            line.Append(NwrwKeywords.Pluv_dwa_dwa);
 
             return line.ToString();
         }
-        
-        private void AppendOpeningTagToDwaLine(StringBuilder line)
+
+        private void AppendDwfComputationOption(StringBuilder line, DwfDistributionType dwfDistributionType)
         {
-            line.Append(NwrwKeywords.DwaOpeningKey);
-            line.Append(" ");
-        }
-        private void AppendIdToDwaLine(StringBuilder line, string name)
-        {
-            line.Append(NwrwKeywords.IdKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(name);
-            line.Append("'");
-            line.Append(" ");
-        }
-        private void AppendNameToDwaLine(StringBuilder line, string name)
-        {
-            line.Append(NwrwKeywords.NameKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(name); // same as id
-            line.Append("'");
-            line.Append(" ");
-        }
-        private void AppendDwfComputationOptionToDwaLine(StringBuilder line, DwfDistributionType dwfDistributionType)
-        {
-            line.Append(NwrwKeywords.DwaComputationOptionKey); // do
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_dwa_do} ");
             switch (dwfDistributionType)
             {
                 case DwfDistributionType.Constant:
-                    line.Append(NUMBER_OF_PEOPLE_TIMES_CONSTANT_DWA_PER_CAPITA_PER_HOUR);
-                    line.Append(" ");
+                    line.Append($"{NUMBER_OF_PEOPLE_TIMES_CONSTANT_DWA_PER_CAPITA_PER_HOUR} ");
                     break;
                 case DwfDistributionType.Daily:
-                    line.Append(NUMBER_OF_PEOPLE_TIMES_VARIABLE_DWA_PER_CAPITA_PER_HOUR);
-                    line.Append(" ");
+                    line.Append($"{NUMBER_OF_PEOPLE_TIMES_VARIABLE_DWA_PER_CAPITA_PER_HOUR} ");
                     break;
                 case DwfDistributionType.Variable:
                     throw new ArgumentException($"'{nameof(DwfDistributionType.Variable)}' is not yet supported.");
@@ -83,34 +63,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                     throw new ArgumentException($"Invalid distribution type was provided.");
             }
         }
-        private void AppendWaterUsePerCapitaAsConstantToDwaLine(StringBuilder line, double waterUseConstant)
-        {
-            line.Append(NwrwKeywords.DwaWaterUsePerCapitaConstantValuePerHourKey);
-            line.Append(" ");
-            line.Append(waterUseConstant);
-            line.Append(" ");
 
-        }
-        private void AppendWaterUsePerCapitaPerDayToDwaLine(StringBuilder line, double waterUseDaily)
-        {
-            line.Append(NwrwKeywords.DwaWaterUsePerCapitaPerDayKey);
-            line.Append(" ");
-            line.Append(waterUseDaily.ToString());
-            line.Append(" ");
-        }
         private void AppendWaterUsePerHour(StringBuilder line, double[] hourlyPercentageDailyVolume)
         {
-            line.Append(NwrwKeywords.DwaWaterUsePerCapitaPerHourKey);
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_dwa_wh} ");
             for (int i = 0; i <= 23; i++)
             {
-                line.Append(hourlyPercentageDailyVolume[i]);
-                line.Append(" ");
+                line.Append($"{hourlyPercentageDailyVolume[i]} ");
             }
-        }
-        private void AppendClosingTagToDwaLine(StringBuilder line)
-        {
-            line.Append(NwrwKeywords.DwaClosingKey);
         }
     }
 }

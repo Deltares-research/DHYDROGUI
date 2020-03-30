@@ -8,23 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     public abstract class NwrwComponentFileWriterBase : NGHSFileBase, INwrwComponentFileWriterBase
     {
         private readonly string fileName;
-
-        protected readonly IEnumerable<NwrwSurfaceType> SurfaceTypesInCorrectOrder = new[]
-        {
-            NwrwSurfaceType.ClosedPavedWithSlope, // a1
-            NwrwSurfaceType.ClosedPavedFlat, // a2
-            NwrwSurfaceType.ClosedPavedFlatStretch, // a3
-            NwrwSurfaceType.OpenPavedWithSlope, // a4
-            NwrwSurfaceType.OpenPavedFlat, // a5
-            NwrwSurfaceType.OpenPavedFlatStretched, // a6
-            NwrwSurfaceType.RoofWithSlope, // a7
-            NwrwSurfaceType.RoofFlat, // a8
-            NwrwSurfaceType.RoofFlatStretched, // a9
-            NwrwSurfaceType.UnpavedWithSlope, // a10
-            NwrwSurfaceType.UnpavedFlat, // a11
-            NwrwSurfaceType.UnpavedFlatStretched // a12
-        };
-
+        
         private RainfallRunoffModel model;
 
         protected NwrwComponentFileWriterBase(RainfallRunoffModel model, string fileName)

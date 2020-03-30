@@ -19,56 +19,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             var line = new StringBuilder();
 
-            AppendOpeningTagTo3bLine(line); // 'NWRW'
-            AppendIdTo3bLine(line, nwrwData.NodeOrBranchId); // 'id'
-            AppendSurfaceLevelTo3bLine(line, nwrwData.LateralSurface); // 'sl'
-            AppendAreaTo3bLine(line, nwrwData.SurfaceLevelDict); // 'ar'
-            AppendDryWeatherFlowsTo3bLine(line, nwrwData.DryWeatherFlows); // 'np' 'dw' 'np2' 'dw2'
-            AppendMeteoStationIdTo3bLine(line, nwrwData.MeteoStationId); // 'ms'
-            AppendSpecialAreasTo3bLine(line, nwrwData.NumberOfSpecialAreas, nwrwData.SpecialAreas); // 'na'
-            AppendClosingTagTo3bLine(line); // 'nwrw'
+            line.Append($"{NwrwKeywords.Pluv_3b_NWRW} ");
+            line.Append($"{NwrwKeywords.Pluv_id} '{nwrwData.NodeOrBranchId}' ");
+
+            var surfaceLevel = nwrwData.LateralSurface;
+            if (Math.Abs(surfaceLevel) > 0.001)
+            {
+                line.Append($"{NwrwKeywords.Pluv_3b_sl} {surfaceLevel} ");
+            }
+
+            AppendArea(line, nwrwData.SurfaceLevelDict);
+            AppendDryWeatherFlows(line, nwrwData.DryWeatherFlows);
+
+            line.Append($"{NwrwKeywords.Pluv_3b_ms} '{nwrwData.MeteoStationId}' ");
+
+            AppendSpecialAreas(line, nwrwData.NumberOfSpecialAreas, nwrwData.SpecialAreas);
+
+            line.Append($"{NwrwKeywords.Pluv_3b_nwrw}");
 
             return line.ToString();
         }
 
-        private void AppendOpeningTagTo3bLine(StringBuilder line)
-        {
-            // 'NWRW' opening keyword
-            line.Append(NwrwKeywords.NwrwOpeningKey);
-            line.Append(" ");
-        }
 
-        private void AppendIdTo3bLine(StringBuilder line, string id)
-        {
-            // 'id' + node identification
-            line.Append(NwrwKeywords.IdKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(id);
-            line.Append("'");
-            line.Append(" ");
-        }
-
-        private void AppendSurfaceLevelTo3bLine(StringBuilder line, double surfaceLevel)
-        {
-            // 'sl' + surface level (in m) (optional input data)
-            if (Math.Abs(surfaceLevel) > 0.001)
-            {
-                line.Append(NwrwKeywords.SurfaceLevelKey);
-                line.Append(" ");
-                line.Append(surfaceLevel);
-                line.Append(" ");
-            }
-        }
-
-        private void AppendAreaTo3bLine(StringBuilder line, IDictionary<NwrwSurfaceType, double> surfaceLevelDict)
+        private void AppendArea(StringBuilder line, IDictionary<NwrwSurfaceType, double> surfaceLevelDict)
         {
             // 'ar' + area (12 types) as combination of 3 kind of slopes and 4 types of surfaces
-            line.Append(NwrwKeywords.AreaKey);
-            line.Append(" ");
+            line.Append($"{NwrwKeywords.Pluv_3b_ar} ");
 
-
-            foreach (var surfaceType in SurfaceTypesInCorrectOrder)
+            foreach (var surfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
             {
                 if (surfaceLevelDict.ContainsKey(surfaceType))
                     line.Append(surfaceLevelDict[surfaceType]);
@@ -79,86 +57,37 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        private void AppendDryWeatherFlowsTo3bLine(StringBuilder line,
+        private void AppendDryWeatherFlows(StringBuilder line,
             IList<DryWeatherFlow> nwrwDataDryWeatherFlows)
         {
-            var numberOfDryWeatherFlows = nwrwDataDryWeatherFlows.Count;
-            if (numberOfDryWeatherFlows >= 1)
+            var dryWeatherFlowCount = nwrwDataDryWeatherFlows.Count;
+            if (dryWeatherFlowCount >= 1)
             {
-                line.Append(NwrwKeywords.FirstNumberOfUnitsKey);
-                line.Append(" ");
-                line.Append(nwrwDataDryWeatherFlows[0].NumberOfUnits);
-                line.Append(" ");
-                line.Append(NwrwKeywords.FirstDryWeatherFlowIdKey);
-                line.Append(" ");
-                line.Append("'");
-                line.Append(nwrwDataDryWeatherFlows[0].DryWeatherFlowId);
-                line.Append("'");
-                line.Append(" ");
+                line.Append($"{NwrwKeywords.Pluv_3b_np} {nwrwDataDryWeatherFlows[0].NumberOfUnits} ");
+                line.Append($"{NwrwKeywords.Pluv_3b_dw} '{nwrwDataDryWeatherFlows[0].DryWeatherFlowId}' ");
             }
 
-            if (numberOfDryWeatherFlows >= 2)
+            if (dryWeatherFlowCount >= 2)
             {
-                line.Append(NwrwKeywords.SecondNumberOfUnitsKey);
-                line.Append(" ");
-                line.Append(nwrwDataDryWeatherFlows[1].NumberOfUnits);
-                line.Append(" ");
-                line.Append(NwrwKeywords.SecondDryWeatherFlowIdKey);
-                line.Append(" ");
-                line.Append("'");
-                line.Append(nwrwDataDryWeatherFlows[1].DryWeatherFlowId);
-                line.Append("'");
-                line.Append(" ");
+                line.Append($"{NwrwKeywords.Pluv_3b_np2} {nwrwDataDryWeatherFlows[1].NumberOfUnits} ");
+                line.Append($"{NwrwKeywords.Pluv_3b_dw2} '{nwrwDataDryWeatherFlows[1].DryWeatherFlowId}' ");
             }
         }
-
-        private void AppendMeteoStationIdTo3bLine(StringBuilder line, string meteostationId)
-        {
-            // 'ms' + identification of the meteostation
-            line.Append(NwrwKeywords.MeteostationIdKey);
-            line.Append(" ");
-            line.Append("'");
-            line.Append(meteostationId);
-            line.Append("'");
-            line.Append(" ");
-        }
-
-        private void AppendSpecialAreasTo3bLine(StringBuilder line, int numberOfSpecialAreas,
+        
+        private void AppendSpecialAreas(StringBuilder line, int numberOfSpecialAreas,
             IList<NwrwSpecialArea> specialAreas)
         {
             if (numberOfSpecialAreas > 0)
             {
-                AppendNumberOfSpecialAreasTo3bLine(line, numberOfSpecialAreas);
-                AppendAllSpecialAreasTo3bLine(line, specialAreas);
+                line.Append($"{NwrwKeywords.Pluv_3b_na} {numberOfSpecialAreas} ");
+                line.Append($"{NwrwKeywords.Pluv_3b_aa} ");
+                foreach (var specialArea in specialAreas)
+                {
+                    line.Append($"{specialArea.Area} ");
+                }
             }
         }
-
-        private void AppendNumberOfSpecialAreasTo3bLine(StringBuilder line, int numberOfSpecialAreas)
-        {
-            // 'na' + number of special areas with special inflow characteristics
-            line.Append(NwrwKeywords.NumberOfSpecialAreasKey);
-            line.Append(" ");
-            line.Append(numberOfSpecialAreas);
-            line.Append(" ");
-        }
-
-        private void AppendAllSpecialAreasTo3bLine(StringBuilder line, IList<NwrwSpecialArea> specialAreas)
-        {
-            // 'aa' + special area in m2 (for number of areas as specified after the 'na' keyword
-            line.Append(NwrwKeywords.SpecialAreaKey);
-            line.Append(" ");
-            foreach (var specialArea in specialAreas)
-            {
-                line.Append(specialArea.Area);
-                line.Append(" ");
-            }
-        }
-
-        private void AppendClosingTagTo3bLine(StringBuilder line)
-        {
-            line.Append("nwrw");
-        }
-
+        
         protected override IEnumerable<string> CreateContentLine(RainfallRunoffModel model)
         {
             var nwrwData = model.GetAllModelData().OfType<NwrwData>();

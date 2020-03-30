@@ -54,39 +54,31 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             {
                 switch (values[i].ToLower())
                 {
-                    case NwrwKeywords.NwrwOpeningKey:
-                    case NwrwKeywords.NwrwClosingKey:
+                    case NwrwKeywords.Pluv_3b_NWRW:
+                    case NwrwKeywords.Pluv_3b_nwrw:
                         break;
-                    case NwrwKeywords.IdKey:
+                    case NwrwKeywords.Pluv_id:
                         nwrwData.Name = ParseString(values[++i], LineNumber);
                         break;
-                    case NwrwKeywords.SurfaceLevelKey:
+                    case NwrwKeywords.Pluv_3b_sl:
                         nwrwData.LateralSurface = ParseDouble(values[++i], LineNumber, parseErrors);
                         break;
-                    case NwrwKeywords.AreaKey:
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedWithSlope] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlat] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedFlatStretch] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.OpenPavedWithSlope] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlat] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.OpenPavedFlatStretched] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.RoofWithSlope] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.RoofFlat] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.RoofFlatStretched] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.UnpavedWithSlope] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlat] = ParseDouble(values[++i], LineNumber, parseErrors);
-                        nwrwData.SurfaceLevelDict[NwrwSurfaceType.UnpavedFlatStretched] = ParseDouble(values[++i], LineNumber, parseErrors);
+                    case NwrwKeywords.Pluv_3b_ar:
+                        foreach (NwrwSurfaceType nwrwSurfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
+                        {
+                            nwrwData.SurfaceLevelDict[nwrwSurfaceType] = ParseDouble(values[++i], LineNumber, parseErrors);
+                        }
                         break;
-                    case NwrwKeywords.FirstNumberOfUnitsKey:
+                    case NwrwKeywords.Pluv_3b_np:
                         //nwrwData.NumberOfInhabitants = ParseInt(values[++i], LineNumber, parseErrors);
                         break;
-                    case NwrwKeywords.FirstDryWeatherFlowIdKey:
+                    case NwrwKeywords.Pluv_3b_dw:
                         //nwrwData.DryWeatherFlowIdInhabitant = ParseString(values[++i], LineNumber);
                         break;
-                    case NwrwKeywords.MeteostationIdKey:
+                    case NwrwKeywords.Pluv_3b_ms:
                         nwrwData.MeteoStationName = ParseString(values[++i], LineNumber);
                         break;
-                    case NwrwKeywords.NumberOfSpecialAreasKey:
+                    case NwrwKeywords.Pluv_3b_na:
                         nwrwData.NumberOfSpecialAreas = ParseInt(values[++i], LineNumber, parseErrors);
                         nwrwData.SpecialAreas = new List<NwrwSpecialArea>();
                         for (int j = 0; j < nwrwData.NumberOfSpecialAreas; j++)
@@ -94,19 +86,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                             nwrwData.SpecialAreas.Add(new NwrwSpecialArea());
                         }
                         break;
-                    case NwrwKeywords.SpecialAreaKey:
+                    case NwrwKeywords.Pluv_3b_aa:
                         for (int j = 0; j < nwrwData.NumberOfSpecialAreas; j++)
                         {
                             nwrwData.SpecialAreas[j].Area = ParseInt(values[++i], LineNumber, parseErrors);
                         }
                         break;
-                    case NwrwKeywords.SpecialInflowReferenceKey:
+                    case NwrwKeywords.Pluv_3b_nw:
                         for (int j = 0; j < nwrwData.NumberOfSpecialAreas; j++)
                         {
                             nwrwData.SpecialAreas[j].SpecialInflowReference = ParseString(values[++i], LineNumber);
                         }
                         break;
-                    case NwrwKeywords.AreaAdjustmentFactorKey:
+                    case NwrwKeywords.Pluv_3b_aaf:
                         nwrwData.AreaAdjustmentFactor = ParseInt(values[++i], LineNumber, parseErrors);
                         i++;
                         break;
