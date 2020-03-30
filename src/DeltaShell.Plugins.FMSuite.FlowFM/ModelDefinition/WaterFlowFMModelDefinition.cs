@@ -188,8 +188,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
             };
 
+            SetDefaultReferenceDate();
             SetGuiTimePropertiesFromMduProperties();
-            SetInitialReferenceDate();
 
             Boundaries = new EventedList<Feature2D>();
             BoundaryConditionSets = new EventedList<BoundaryConditionSet>();
@@ -213,13 +213,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         /// <summary>
-        /// Sets the initial model reference date equal to the date part
-        /// of model start time.
+        /// Sets the initial model reference date equal to today's date.
         /// </summary>
-        private void SetInitialReferenceDate()
+        private void SetDefaultReferenceDate()
         {
-            var modelStartTime = (DateTime)GetModelProperty(GuiProperties.StartTime).Value;
-            GetModelProperty(KnownProperties.RefDate).Value = modelStartTime.Date;
+            GetModelProperty(KnownProperties.RefDate).Value = DateTime.Today;
         }
 
 
@@ -515,9 +513,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             var mduStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
             var mduStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
-            var refDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
-            refDate = refDate.Date;
-
+            
             GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(mduStartTime, true);
             GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(mduStopTime, true);
 
