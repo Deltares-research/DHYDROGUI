@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         public void Test_WpfGuiCategory_With_Null_Attributes_DoesNot_Throw()
         {
             WpfGuiCategory category = null;
-            Assert.DoesNotThrow( () => category = new WpfGuiCategory(null, null));
+            Assert.DoesNotThrow(() => category = new WpfGuiCategory(null, null));
             Assert.IsNotNull(category);
             Assert.IsNotNull(category.IsVisible);
             Assert.IsNotNull(category.SubCategories);
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             WpfGuiCategory category = null;
             var dummyCategoryName = "dummyCategory";
-            Assert.DoesNotThrow( () => category = new WpfGuiCategory(dummyCategoryName, null));
+            Assert.DoesNotThrow(() => category = new WpfGuiCategory(dummyCategoryName, null));
             Assert.IsNotNull(category);
             Assert.AreEqual(dummyCategoryName, category.CategoryName);
             Assert.IsNotNull(category.IsVisible);
@@ -54,14 +54,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var category = new WpfGuiCategory(dummyCategoryName, null);
             Assert.IsNotNull(category);
 
-            var fieldUiDescription = new FieldUIDescription(null, null, o => true, o=> propertyVisible);
+            var fieldUiDescription = new FieldUIDescription(null, null, o => true, o => propertyVisible);
             category.AddFieldUiDescription(fieldUiDescription);
 
             Assert.IsTrue(category.Properties.Any());
 
-            var property = category.Properties.FirstOrDefault();
+            WpfGuiProperty property = category.Properties.FirstOrDefault();
             Assert.IsNotNull(property);
-            
+
             Assert.AreEqual(expectedResult, category.IsVisible);
         }
 
@@ -70,17 +70,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var dummyCategoryName = "dummyCategory";
             var dummySubCategoryName = "dummySubCategory";
-            var propertyList = new List<FieldUIDescription>()
-            {
-                new FieldUIDescription(null, null)
-                {
-                    SubCategory = dummySubCategoryName
-                }
-            };
+            var propertyList = new List<FieldUIDescription>() {new FieldUIDescription(null, null) {SubCategory = dummySubCategoryName}};
 
             var category = new WpfGuiCategory(dummyCategoryName, propertyList);
             Assert.IsNotNull(category);
-            
+
             Assert.IsNotNull(category.SubCategories);
             Assert.IsTrue(category.SubCategories.Any());
             Assert.IsTrue(category.SubCategories.Count == 1);
@@ -103,13 +97,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 SubCategory = dummySubCategoryName,
                 Label = dummyPropertyName
             };
-            
+
             //Check the fields are empty.
             Assert.IsFalse(dummyCategory.SubCategories.Any());
             Assert.IsFalse(dummyCategory.Properties.Any());
 
             dummyCategory.AddFieldUiDescription(dummyFieldUi);
-            
+
             //Check the fields have now the property and subCategory.
             Assert.IsTrue(dummyCategory.SubCategories.Any());
             Assert.IsTrue(dummyCategory.Properties.Any());
@@ -147,6 +141,65 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             Assert.IsTrue(dummyCategory.Properties.Any());
             Assert.AreEqual(dummyPropertyName, dummyCategory.Properties.FirstOrDefault()?.Label);
+        }
+
+        [Test]
+        public void GivenCategory_WhenAddingWpfGuiPropertyAndPropertyFiresEvent_ThenCategoryRaisesPropertyChangedEvent()
+        {
+            // Given
+            var property = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => {}));
+            using (var category = new WpfGuiCategory(string.Empty, null))
+            {
+                var isPropertyChangedEventRaised = false;
+                category.PropertyChanged += (sender, args) => isPropertyChangedEventRaised = true;
+
+                // When
+                category.AddWpfGuiProperty(property);
+                property.Value = new object(); // Trigger PropertyChangedEvent
+
+                // Then
+                Assert.That(isPropertyChangedEventRaised, Is.True);
+            }
+        }
+
+        [Test]
+        public void GivenCategory_WhenAddingFieldUIDescriptionAndPropertyFiresEvent_ThenCategoryRaisesPropertyChangedEvent()
+        {
+            // Given
+            var property = new FieldUIDescription(null, (o, v) => {});
+            using (var category = new WpfGuiCategory(string.Empty, null))
+            {
+                var isPropertyChangedEventRaised = false;
+                category.PropertyChanged += (sender, args) => isPropertyChangedEventRaised = true;
+
+                // When
+                category.AddFieldUiDescription(property);
+                WpfGuiProperty guiProperty = category.Properties.Single();
+                guiProperty.Value = new object(); // Trigger PropertyChangedEvent
+
+                // Then
+                Assert.That(isPropertyChangedEventRaised, Is.True);
+            }
+        }
+
+        [Test]
+        public void GivenCategoryWithProperties_WhenPropertyRaisesPropertyChangedEvent_ThenCategoryRaisesPropertyChangedEvent()
+        {
+            // Given
+            var properties = new List<FieldUIDescription> {new FieldUIDescription(null, (o, v) => {})};
+
+            using (var category = new WpfGuiCategory(string.Empty, properties))
+            {
+                var isPropertyChangedEventRaised = false;
+                category.PropertyChanged += (sender, args) => isPropertyChangedEventRaised = true;
+
+                // When
+                WpfGuiProperty property = category.Properties.Single();
+                property.Value = new object(); // Trigger PropertyChangedEvent
+
+                // Then
+                Assert.That(isPropertyChangedEventRaised, Is.True);
+            }
         }
     }
 }

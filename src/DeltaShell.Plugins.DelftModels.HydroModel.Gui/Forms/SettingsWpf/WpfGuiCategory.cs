@@ -127,7 +127,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 SubCategories.Add(subCategory);
             }
 
+            property.PropertyChanged += OnPropertyChanged;
             subCategory.Properties.Add(property);
+            Properties.Add(property);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
