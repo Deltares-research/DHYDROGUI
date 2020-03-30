@@ -75,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Assert.AreEqual(category, validationIssue.Subject);
                 Assert.AreEqual(ValidationSeverity.Error, validationIssue.Severity);
                 Assert.AreEqual("Waq output interval must be a multiple of the output timestep.", validationIssue.Message);
-                Assert.AreSame(model, validationIssue.ViewData);
+                var actualModel = ((FmValidationShortcut)validationIssue.ViewData).FlowFmModel;
+                Assert.AreSame(model, actualModel);
             }
         }
 
@@ -123,7 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Assert.AreEqual(category, validationIssue.Subject);
                 Assert.AreEqual(ValidationSeverity.Error, validationIssue.Severity);
                 Assert.AreEqual("Waq output interval must be a multiple of the output timestep.", validationIssue.Message);
-                Assert.AreSame(model, validationIssue.ViewData);
+                var actualModel = ((FmValidationShortcut)validationIssue.ViewData).FlowFmModel;
+                Assert.AreSame(model, actualModel);
             }
 
         }
