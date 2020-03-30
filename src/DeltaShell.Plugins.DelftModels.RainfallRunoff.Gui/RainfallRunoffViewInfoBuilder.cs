@@ -27,6 +27,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
     public static class RainfallRunoffViewInfoBuilder
     {
+        private static System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>> multipleDataEditorData = new System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>>(null, null);//Enumerable.Empty<IDataRowProvider>();
+
         public static IEnumerable<ViewInfo> BuildViewInfoObjects(RainfallRunoffGuiPlugin rainfallRunoffGuiPlugin)
         {
             yield return new ViewInfo<UnpavedData, UnpavedDataView>
@@ -211,10 +213,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                                 : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
                                     .OfType<RainfallRunoffModel>()
                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);;
+                            if (multipleDataEditorData.Item1 != model)
+                            {
+                                multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
+                            }
 
-                            return RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { });
+                            return multipleDataEditorData.Item2;
                         },
-                    AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
+                    AfterCreate = (v, o) =>
+                    {
+                        var model = o.Any()
+                            ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
+                            : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
+                                .OfType<RainfallRunoffModel>()
+                                .FirstOrDefault(rrm => rrm.Basin.Catchments == o); ;
+                        if (model != null)
+                            model.GetRainfallRunoffMDEData = () => Enumerable.Repeat(multipleDataEditorData.Item2, 1);
+                        DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
+                    }
                 };
             yield return new ViewInfo<TreeFolder, IEnumerable<IDataRowProvider>, MultipleDataEditor>
                 {
@@ -222,8 +238,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",
                     AdditionalDataCheck = o => (o.Parent is RainfallRunoffModel &&
                                                 o.Text == RainfallRunoffModelProjectNodePresenter.CatchmentDataFolderName),
-                    GetViewData = o => RainfallRunoffDataRowProviderFactory.GetDataRowProviders((RainfallRunoffModel)o.Parent, new Catchment[] { }),
-                    AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
+                    GetViewData = o =>
+                    {
+                        var model = (RainfallRunoffModel) o.Parent;
+                        if (multipleDataEditorData.Item1 != model)
+                        {
+                            multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
+                        }
+
+                        return multipleDataEditorData.Item2;
+                    },
+                    AfterCreate = (v, o) =>
+                    {
+                        ((RainfallRunoffModel) o.Parent).GetRainfallRunoffMDEData = () => Enumerable.Repeat(multipleDataEditorData.Item2, 1);
+                        DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
+                    }
                 };
             yield return new ViewInfo<RainfallRunoffModel, ValidationView>
             {

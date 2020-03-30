@@ -767,6 +767,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return ChildDataItemProvider.GetChildDataItems(location);
         }
 
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            return base.GetDirectChildren().Concat(GetRainfallRunoffMDEData());
+        }
+
+        public Func<IEnumerable<object>> GetRainfallRunoffMDEData { get; set; } = Enumerable.Empty<object>;
+
         public override bool CanCopy(IDataItem item)
         {
             if (item.Value is FileBasedRestartState)

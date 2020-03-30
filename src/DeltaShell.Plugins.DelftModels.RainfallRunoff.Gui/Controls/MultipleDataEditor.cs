@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
+using DelftTools.Shell.Gui;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
+using GeoAPI.Extensions.Feature;
+using SharpMap.Api.Layers;
+using PropertyInfo = System.Reflection.PropertyInfo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 {
-    public partial class MultipleDataEditor : UserControl, IView, IReusableView
+    public partial class MultipleDataEditor : UserControl, IView, IReusableView, ILayerEditorView
     {
         private IEnumerable<IDataRowProvider> data;
         private bool locked;
@@ -215,5 +218,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             }
             ShowDataForSelectedTab();
         }
+
+        public void OnActivated()
+        {
+            
+        }
+
+        public void OnDeactivated()
+        {
+            
+        }
+
+        public IEnumerable<IFeature> SelectedFeatures { get; set; }
+        public ILayer Layer { get; set; }
+        public event EventHandler SelectedFeaturesChanged;
     }
 }
