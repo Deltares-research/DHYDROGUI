@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         }
         
         [PropertyOrder(2)]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DBoundaryNodeDataProperties_Type_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DBoundaryNodeDataProperties_Type_Description")]
@@ -113,6 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         }
         
         [PropertyOrder(7)]
+        [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "Model1DBoundaryNodeDataProperties_NodeName_DisplayName")]
         [ResourcesDescription(typeof(Resources), "Model1DBoundaryNodeDataProperties_NodeName_Description")]
@@ -164,6 +166,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             if (propertyName == "ExtrapolationTypeT")
             {
                 return !(Type == Model1DBoundaryNodeDataType.FlowTimeSeries || Type == Model1DBoundaryNodeDataType.WaterLevelTimeSeries);
+            }
+
+            if (propertyName == nameof(NodeName) || propertyName == nameof(Type))
+            {
+                return data.OutletCompartment != null;
             }
 
             return true;
