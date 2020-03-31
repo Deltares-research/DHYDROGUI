@@ -196,6 +196,7 @@
     <Compile Include="IO\Helpers\Boundaries\ShapeType.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpectrumType.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingType.cs" />
+    <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverter.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporter.cs" />

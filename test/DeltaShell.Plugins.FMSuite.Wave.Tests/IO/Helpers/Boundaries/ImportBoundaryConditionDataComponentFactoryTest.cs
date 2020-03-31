@@ -19,8 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         [Test]
         public void Constructor_ParametersFactoryNull_ThrowsArgumentNullException()
         {
-            // Setup
-
             // Call
             void Call() => new ImportBoundaryConditionDataComponentFactory(null);
 
