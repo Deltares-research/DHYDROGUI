@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             foreach (IWaveBoundary boundary in boundaries)
             {
-                List<IFunction> timeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(boundary);
+                List<IFunction> timeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(boundary.ConditionDefinition.DataComponent);
 
                 // update refdate before writing
                 timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =

@@ -338,6 +338,7 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindInputTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModelTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
+    <Compile Include="IO\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />

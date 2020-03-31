@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Functions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
@@ -13,7 +13,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private List<IFunction> TimeSeries { get; } = new List<IFunction>();
         
         /// <summary>
-        /// Visit method useful for retrieving all time series functions inside a boundary.
+        /// Visit method for adding time series. Will be called for every support point
+        /// of spatially varying boundaries. For uniform boundaries, this method will be
+        /// called once.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="timeDependentParameters"></param>
@@ -22,10 +24,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             TimeSeries.Add(timeDependentParameters.WaveEnergyFunction.UnderlyingFunction);
         }
 
-        public static List<IFunction> Collect(IWaveBoundary boundary)
+        /// <summary>
+        /// Collect all time series functions inside a data component.
+        /// </summary>
+        /// <param name="dataComponent"></param>
+        /// <returns></returns>
+        public static List<IFunction> Collect(IBoundaryConditionDataComponent dataComponent)
         {
             var visitor = new BcwTimeSeriesOfBoundaryCollector();
-            boundary.ConditionDefinition.DataComponent.AcceptVisitor(visitor);
+            dataComponent.AcceptVisitor(visitor);
 
             return visitor.TimeSeries;
         }
