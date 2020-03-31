@@ -37,7 +37,7 @@ namespace DelftTools.Hydro.Structures
 
         public static IEnumerable<OutletCompartment> OutletCompartments(this IManhole manhole)
         {
-            var outletCompartments = manhole.Compartments.OfType<OutletCompartment>();
+            var outletCompartments = manhole?.Compartments?.OfType<OutletCompartment>();
             return outletCompartments;
         }
 

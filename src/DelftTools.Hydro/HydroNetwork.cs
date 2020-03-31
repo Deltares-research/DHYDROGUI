@@ -258,6 +258,7 @@ namespace DelftTools.Hydro
                 
                 Manholes = Nodes.OfType<IManhole>();
                 OutletCompartments = Manholes.SelectMany(m => m.OutletCompartments());
+                Compartments = Manholes.SelectMany(m => m.Compartments.OfType<Compartment>());
                 HydroNodes = Nodes.OfType<IHydroNode>();
             }
         }
@@ -273,6 +274,7 @@ namespace DelftTools.Hydro
         
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
         public virtual IEnumerable<OutletCompartment> OutletCompartments { get; protected set; }
+        public virtual IEnumerable<Compartment> Compartments { get; protected set; }
         public virtual IEnumerable<Orifice> Orifices { get; protected set; }
         public virtual IEnumerable<IStructure1D> Structures { get; protected set; }
         public virtual IEnumerable<ICompositeBranchStructure> CompositeBranchStructures { get; protected set; }

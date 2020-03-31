@@ -117,11 +117,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.ExtraResistances;
                     yield return network.Gates;
                     yield return network.LateralSources;
+                    yield return network.Compartments;
                     yield return network.Manholes;
                     yield return network.ObservationPoints;
                     yield return network.Orifices;
                     yield return network.OutletCompartments;
-                    //yield return network.Manholes.SelectMany(m => m.Compartments).Except(network.Manholes.SelectMany(m=>m.OutletCompartments()));
                     yield return network.Pipes;
                     yield return network.Pumps;
                     yield return network.Retentions;
@@ -1017,15 +1017,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
                 type == typeof(Bridge) || type == typeof(ExtraResistance) 
-                || type == typeof(OutletCompartment) || type == typeof(Compartment) || type == typeof(Orifice))
+                || type == typeof(OutletCompartment) || type == typeof(Orifice))
             {
                 return new List<IFeatureRenderer> { new StructureRenderer() };
             }
-
-//            if (type == typeof(Manhole))
-//            {
-//                return new List<IFeatureRenderer> { new CompositeStructureRenderer(new StructureRenderer())};
-//            }
 
             if (type == typeof(CrossSection))
             {

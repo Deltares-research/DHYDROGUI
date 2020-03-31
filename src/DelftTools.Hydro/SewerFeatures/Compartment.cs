@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -24,8 +25,6 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             Name = name;
         }
-
-        
 
         [FeatureAttribute]
         public string Name
@@ -62,31 +61,37 @@ namespace DelftTools.Hydro.SewerFeatures
         /// <summary>
         /// The shape of the manhole (either square or rectangular).
         /// </summary>
+        [FeatureAttribute]
         public CompartmentShape Shape { get; set; }
 
         /// <summary>
         /// Length of manhole (m).
         /// </summary>
+        [FeatureAttribute]
         public double ManholeLength { get; set; }
 
         /// <summary>
         /// Width of manhole (m).
         /// </summary>
+        [FeatureAttribute]
         public double ManholeWidth { get; set; }
 
         /// <summary>
         /// The area at surface level that this manhole can flood (m2).
         /// </summary>
+        [FeatureAttribute]
         public double FloodableArea { get; set; }
 
         /// <summary>
         /// The bottom level of the manhole compared to Dutch NAP (m).
         /// </summary>
+        [FeatureAttribute]
         public double BottomLevel { get; set; }
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).
         /// </summary>
+        [FeatureAttribute]
         public double SurfaceLevel { get; set; }
         
         /// <summary>
