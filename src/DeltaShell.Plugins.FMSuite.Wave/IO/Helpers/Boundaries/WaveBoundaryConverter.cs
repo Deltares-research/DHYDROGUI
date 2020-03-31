@@ -148,16 +148,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             if (IsSpatiallyVariant(boundaryBlock))
             {
+                IEnumerable<SupportPoint> supportPoints = boundaryBlock.Distances
+                                                                       .Select(d => GetByDistance(geometricDefinition, d));
+
                 if (IsTimeDependent(functions))
                 {
                     IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<TSpreading>>> data =
-                        geometricDefinition.SupportPoints.Zip(functions.Select(FromFunction<TSpreading>), Tuple.Create);
+                        supportPoints.Zip(functions.Select(FromFunction<TSpreading>), Tuple.Create);
                     return importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent(data);
                 }
                 else
                 {
                     IEnumerable<Tuple<SupportPoint, ParametersBlock>> data =
-                        geometricDefinition.SupportPoints.Zip(GetParametersBlocks(boundaryBlock), Tuple.Create);
+                        supportPoints.Zip(GetParametersBlocks(boundaryBlock), Tuple.Create);
                     return importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<TSpreading>(data);
                 }
             }
@@ -217,9 +220,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         private static void CreateSupportPoints(BoundaryMdwBlock boundaryBlock,
                                                 IWaveBoundaryGeometricDefinition geometricDefinition)
         {
-            geometricDefinition.SupportPoints.AddRange(boundaryBlock
-                                                       .Distances.Select(d => new SupportPoint(d, geometricDefinition))
-                                                       .ToArray());
+            IEnumerable<double> existingDistances = geometricDefinition.SupportPoints.Select(s => s.Distance);
+
+            IEnumerable<SupportPoint> newSupportPoints = boundaryBlock
+                                                         .Distances.Where(d => !Exists(existingDistances, d))
+                                                         .Select(d => new SupportPoint(d, geometricDefinition));
+
+            geometricDefinition.SupportPoints.AddRange(newSupportPoints);
         }
 
         private static bool IsSpatiallyVariant(BoundaryMdwBlock boundaryBlock)
@@ -258,6 +265,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static SupportPoint GetByDistance(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
+        {
+            return geometricDefinition.SupportPoints.FirstOrDefault(s => DoubleEquals(s.Distance, d));
+        }
+
+        private static bool DoubleEquals(double valueA, double valueB)
+        {
+            return Math.Abs(valueA - valueB) < 0.00001;
+        }
+
+        private static bool Exists(IEnumerable<double> values, double value)
+        {
+            return values.Any(d => DoubleEquals(d, value));
         }
     }
 }

@@ -179,6 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+            geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[0], geometricDefinition));
+            geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[1], geometricDefinition));
 
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
             var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<T>>();
@@ -201,9 +203,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
 
             IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
-            Assert.That(supportPoints, Has.Count.EqualTo(2));
+            Assert.That(supportPoints, Has.Count.EqualTo(3));
             Assert.That(supportPoints[0].Distance, Is.EqualTo(mdwValues.Distances[0]));
             Assert.That(supportPoints[1].Distance, Is.EqualTo(mdwValues.Distances[1]));
+            Assert.That(supportPoints[2].Distance, Is.EqualTo(mdwValues.Distances[2]));
 
             IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
             Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
@@ -222,6 +225,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+            geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[0], geometricDefinition));
+            geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[1], geometricDefinition));
 
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
             var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<T>>();
@@ -245,9 +250,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
 
             IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
-            Assert.That(supportPoints, Has.Count.EqualTo(2));
+            Assert.That(supportPoints, Has.Count.EqualTo(3));
             Assert.That(supportPoints[0].Distance, Is.EqualTo(mdwValues.Distances[0]));
             Assert.That(supportPoints[1].Distance, Is.EqualTo(mdwValues.Distances[1]));
+            Assert.That(supportPoints[2].Distance, Is.EqualTo(mdwValues.Distances[2]));
 
             IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
             Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
@@ -279,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                     .ToList();
 
             // Assert
-            var exception = Assert.Throws<NotImplementedException>(Call);
+            Assert.Throws<NotImplementedException>(Call);
         }
 
         private static IEnumerable<TestCaseData> ShapePeriodTestCases()
@@ -341,11 +347,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         {
             Tuple<SupportPoint, ParametersBlock> firstPair = p.ElementAt(0);
             Tuple<SupportPoint, ParametersBlock> secondPair = p.ElementAt(1);
+            Tuple<SupportPoint, ParametersBlock> thirdPair = p.ElementAt(2);
 
             return DoubleEquals(firstPair.Item1.Distance, mdw.Distances[0]) &&
                    MatchesParameters(firstPair.Item2, mdw, 0) &&
                    DoubleEquals(secondPair.Item1.Distance, mdw.Distances[1]) &&
-                   MatchesParameters(secondPair.Item2, mdw, 1);
+                   MatchesParameters(secondPair.Item2, mdw, 1) &&
+                   DoubleEquals(thirdPair.Item1.Distance, mdw.Distances[2]) &&
+                   MatchesParameters(thirdPair.Item2, mdw, 2);
         }
 
         private static bool MatchesWaveEnergyFunction(IWaveEnergyFunction<T> f, BcwTestValues t, int i)
@@ -360,11 +369,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         {
             Tuple<SupportPoint, IWaveEnergyFunction<T>> firstPair = p.ElementAt(0);
             Tuple<SupportPoint, IWaveEnergyFunction<T>> secondPair = p.ElementAt(1);
+            Tuple<SupportPoint, IWaveEnergyFunction<T>> thirdPair = p.ElementAt(2);
 
             return DoubleEquals(firstPair.Item1.Distance, mdw.Distances[0]) &&
                    MatchesWaveEnergyFunction(firstPair.Item2, bcw, 0) &&
                    DoubleEquals(secondPair.Item1.Distance, mdw.Distances[1]) &&
-                   MatchesWaveEnergyFunction(secondPair.Item2, bcw, 1);
+                   MatchesWaveEnergyFunction(secondPair.Item2, bcw, 1) &&
+                   DoubleEquals(thirdPair.Item1.Distance, mdw.Distances[2]) &&
+                   MatchesWaveEnergyFunction(thirdPair.Item2, bcw, 2);
         }
 
         private static bool DoubleEquals(double valueA, double valueB)
@@ -444,6 +456,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
             AddParametersToCategory(values, category, 1);
 
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
+            AddParametersToCategory(values, category, 2);
+
             return category;
         }
 
@@ -453,6 +468,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[0]));
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[1]));
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(values.Distances[2]));
 
             return category;
         }
@@ -487,6 +503,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                     {
                         CreateTimeSeriesFunction(bcwValues, 0),
                         CreateTimeSeriesFunction(bcwValues, 1),
+                        CreateTimeSeriesFunction(bcwValues, 2),
                     }
                 }
             };
@@ -496,61 +513,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private class BcwTestValues
         {
-            public readonly double[][] WaveHeights =
-            { 
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                },
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                }
-            };
+            public readonly double[][] WaveHeights = GetDataForThreeLocations();
 
-            public readonly double[][] Periods =
-            {
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                },
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                }
-            };
+            public readonly double[][] Periods = GetDataForThreeLocations();
 
-            public readonly double[][] Directions =
-            {
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                },
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                }
-            };
+            public readonly double[][] Directions = GetDataForThreeLocations();
 
-            public readonly double[][] DirSpreadings =
+            public readonly double[][] DirSpreadings = GetDataForThreeLocations();
+
+            private static double[][] GetDataForThreeLocations()
             {
-                new[]
+                return new[]
                 {
-                    RandomDouble,
-                    RandomDouble
-                },
-                new[]
-                {
-                    RandomDouble,
-                    RandomDouble
-                }
-            };
+                    new[]
+                    {
+                        RandomDouble,
+                        RandomDouble
+                    },
+                    new[]
+                    {
+                        RandomDouble,
+                        RandomDouble
+                    },
+                    new[]
+                    {
+                        RandomDouble,
+                        RandomDouble
+                    }
+                };
+            }
         }
 
         private class MdwTestValues
@@ -568,35 +559,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             public readonly double PeakEnhancementFactor;
             public readonly double GaussianSpreading;
 
-            public readonly double[] Distances =
-            {
-                RandomDouble,
-                RandomDouble,
-            };
+            public readonly double[] Distances = GetDataForThreeLocations();
 
-            public readonly double[] WaveHeights =
-            {
-                RandomDouble,
-                RandomDouble,
-            };
+            public readonly double[] WaveHeights = GetDataForThreeLocations();
 
-            public readonly double[] Periods =
-            {
-                RandomDouble,
-                RandomDouble,
-            };
+            public readonly double[] Periods = GetDataForThreeLocations();
 
-            public readonly double[] Directions =
-            {
-                RandomDouble,
-                RandomDouble,
-            };
+            public readonly double[] Directions = GetDataForThreeLocations();
 
-            public readonly double[] DirSpreadings =
+            public readonly double[] DirSpreadings = GetDataForThreeLocations();
+
+            private static double[] GetDataForThreeLocations()
             {
-                RandomDouble,
-                RandomDouble,
-            };
+                return new[]
+                {
+                    RandomDouble,
+                    RandomDouble,
+                    RandomDouble,
+                };
+            }
         }
 
         private class ShapeEqualityComparer : IEqualityComparer<IBoundaryConditionShape>
