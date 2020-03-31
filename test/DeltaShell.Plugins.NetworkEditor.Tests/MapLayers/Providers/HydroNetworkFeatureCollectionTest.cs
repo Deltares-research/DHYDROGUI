@@ -1,9 +1,12 @@
-using System;
-using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.Linq;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
 {
@@ -21,8 +24,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
                                               };
             
         }
+        [Test]
+        public void AssertThatCompartmentsOnNetworkAreEquivalentButNotSameAsCompartmentsFromManholeOfTypeCompartment()
+        {
+            var network = new HydroNetwork();
+            IPipe pipe = new Pipe()
+            {
+                Geometry = new LineString(new []{new Coordinate(0,0),new Coordinate(0,100),  })
+            };
+            SewerFactory.AddDefaultPipeToNetwork(pipe, network);
 
-
+            Assert.That(network.Compartments, Is.EquivalentTo(network.Manholes.SelectMany(m=>m.Compartments).OfType<Compartment>()));
+            Assert.That(network.Compartments, Is.Not.SameAs(network.Manholes.SelectMany(m => m.Compartments).OfType<Compartment>()));
+        }
+        
         /// <summary>
         /// Test the featurecollections for all network types. featurecollections are used as DataSource for layers 
         /// in the maptool.

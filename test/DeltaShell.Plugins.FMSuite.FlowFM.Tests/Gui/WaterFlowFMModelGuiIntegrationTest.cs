@@ -6,13 +6,17 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using BasicModelInterface;
+using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -1124,6 +1128,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsNotNull(importerGrid);
             var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
             Assert.IsNotNull(gridImported);
+        }
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void DrawingPipeCorrectlyAddsCompartmentsToCompartmentLayer()
+        {
+            using (var gui = new DeltaShellGui())
+            {
+                var app = gui.Application;
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
+                Action formVisibleChangedAction = () =>
+                {
+                    using (var model = new WaterFlowFMModel())
+                    {
+                        app.Project.RootFolder.Add(model);
+                        gui.CommandHandler.OpenView(model);
+                        var network = model.Network;
+
+                        network.BeginEdit(new DefaultEditAction("Adding pipe..."));
+                        IPipe pipe = new Pipe()
+                        {
+                            Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100),})
+                        };
+                        SewerFactory.AddDefaultPipeToNetwork(pipe, network);
+                        Assert.That(() => network.EndEdit(), Throws.Nothing);
+
+                        var mapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
+                        Assert.That(mapView, Is.Not.Null);
+
+                        var compartmentLayer = mapView.MapControl.Map.GetAllLayers(true).FirstOrDefault(l => l.DataSource?.FeatureType == typeof(Compartment));
+                        Assert.That(compartmentLayer, Is.Not.Null);
+
+                        Assert.That(compartmentLayer.DataSource.Features, Has.Member(pipe.SourceCompartment as Compartment));
+                        Assert.That(compartmentLayer.DataSource.Features, Has.Member(pipe.TargetCompartment as Compartment));
+                    }
+                };
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, formVisibleChangedAction);
+            }
         }
     }
 }
