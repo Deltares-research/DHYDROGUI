@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
                 
                 boundaryCategory.AddProperty(KnownWaveProperties.Name, boundary.Name);
-                MdwBoundaryGeometryPropertiesCreator.AddNewProperties(boundaryContainer, boundaryCategory, boundary);
+                MdwBoundaryGeometryPropertiesCreator.AddNewProperties(boundaryCategory, boundaryContainer, boundary.GeometricDefinition.SupportPoints);
                 boundaryCategory.AddProperty(KnownWaveProperties.SpectrumSpec, "parametric");
                 MdwBoundaryConditionPropertiesCreator.AddNewProperties(boundaryCategory, boundary);
 
