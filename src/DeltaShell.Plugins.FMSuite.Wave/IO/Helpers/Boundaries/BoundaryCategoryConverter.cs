@@ -47,8 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 SpectrumType = boundaryCategory.GetEnumValue<SpectrumType>(KnownWaveProperties.SpectrumSpec),
                 ShapeType = boundaryCategory.GetEnumValue<ShapeType>(KnownWaveProperties.ShapeType),
                 PeriodType = boundaryCategory.GetEnumValue<PeriodType>(KnownWaveProperties.PeriodType),
-                SpreadingType =
-                    boundaryCategory.GetEnumValue<SpreadingType>(KnownWaveProperties.DirectionalSpreadingType),
+                SpreadingType = boundaryCategory.GetEnumValue<SpreadingType>(KnownWaveProperties.DirectionalSpreadingType),
                 PeakEnhancementFactor = boundaryCategory.GetDoubleValue(KnownWaveProperties.PeakEnhancementFactor),
                 Spreading = boundaryCategory.GetDoubleValue(KnownWaveProperties.GaussianSpreading),
                 Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist),
@@ -66,12 +65,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static T GetEnumValue<T>(this DelftIniCategory category, string propertyName)
         {
-            return EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName));
+            return EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName).ToLower());
         }
 
         private static double GetDoubleValue(this DelftIniCategory category, string propertyName)
         {
-            return category.GetPropertyValue(propertyName).ToDouble();
+            return category.GetPropertyValue(propertyName, double.NaN.ToString(CultureInfo.InvariantCulture)).ToDouble();
         }
 
         private static double[] GetDoubleValues(this DelftIniCategory category, string propertyName)

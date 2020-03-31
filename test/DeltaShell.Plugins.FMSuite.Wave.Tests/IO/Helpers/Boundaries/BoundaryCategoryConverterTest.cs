@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
@@ -109,6 +110,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)));
             Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)));
             Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)));
+        }
+
+        [Test]
+        public void Convert_PropertyWithDoubleValueNotFound_ReturnsCorrectResult()
+        {
+            // Setup
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            category.AddProperty(KnownWaveProperties.Definition, "boundary_definition");
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumType>().ToString());
+            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeType>().ToString());
+            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodType>().ToString());
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingType>().ToString());
+
+            // Call
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+
+            // Assert
+            Assert.That(result.XStartCoordinate, Is.NaN);
+            Assert.That(result.YStartCoordinate, Is.NaN);
+            Assert.That(result.XEndCoordinate, Is.NaN);
+            Assert.That(result.YEndCoordinate, Is.NaN);
+            Assert.That(result.Spreading, Is.NaN);
+            Assert.That(result.PeakEnhancementFactor, Is.NaN);
         }
 
         private static IEnumerable<TestCaseData> GetTestCases()
