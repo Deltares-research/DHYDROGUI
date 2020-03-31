@@ -100,14 +100,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
-            List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
-
-            CreateTimePointCategories(modelDefinition, ref mdwCategories);
-
             IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer);
+            WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir);
+
+            List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
+            CreateTimePointCategories(modelDefinition, ref mdwCategories);
             mdwCategories.AddRange(boundaryCategories);
-            
-            WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir, modelDefinition.ModelReferenceDateTime);
 
             if (MdwFilePath != null)
             {
@@ -352,7 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void WriteTimeSeriesFileForBoundaries(string modelName, WaveModelDefinition modelDefinition, string targetFile, DateTime refDate)
+        private static void WriteTimeSeriesFileForBoundaries(string modelName, WaveModelDefinition modelDefinition, string targetFile)
         {
             IEventedList<IWaveBoundary> boundaries = modelDefinition.BoundaryContainer.Boundaries;
 
@@ -364,7 +362,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 // update refdate before writing
                 timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
-                                                         refDate.ToString(BcwFile.DateFormatString));
+                                            modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
 
                 allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
             }
