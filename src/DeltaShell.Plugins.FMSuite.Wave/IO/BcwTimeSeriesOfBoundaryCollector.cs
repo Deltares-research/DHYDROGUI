@@ -6,11 +6,11 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     /// <summary>
-    /// Visitor used for writing the timeSeries.bcw file.
+    /// Visitor used for writing the TimeSeries.bcw file.
     /// </summary>
     public class BcwTimeSeriesOfBoundaryCollector : BaseDataComponentVisitor
     {
-        private List<IFunction> timeSeries= new List<IFunction>();
+        private List<IFunction> TimeSeries { get; } = new List<IFunction>();
         
         /// <summary>
         /// Visit method useful for retrieving all time series functions inside a boundary.
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <param name="timeDependentParameters"></param>
         public override void Visit<T>(TimeDependentParameters<T> timeDependentParameters) 
         {
-            timeSeries.Add(timeDependentParameters.WaveEnergyFunction.UnderlyingFunction);
+            TimeSeries.Add(timeDependentParameters.WaveEnergyFunction.UnderlyingFunction);
         }
 
         public static List<IFunction> Collect(IWaveBoundary boundary)
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var visitor = new BcwTimeSeriesOfBoundaryCollector();
             boundary.ConditionDefinition.DataComponent.AcceptVisitor(visitor);
 
-            return visitor.timeSeries;
+            return visitor.TimeSeries;
         }
     }
 }

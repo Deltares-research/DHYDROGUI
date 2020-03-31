@@ -2,7 +2,6 @@
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
@@ -11,8 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     /// </summary>
     public static class MdwBoundaryCategoriesCreator
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(MdwBoundaryCategoriesCreator));
-
         /// <summary>
         /// Creates and returns a <see cref="DelftIniCategory"/> from the data of a wave spatiallyVaryingDataComponent condition.
         /// </summary>
