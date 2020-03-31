@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private bool isUniform;
         private int supportPointCounter;
 
-        private MdwBoundaryConditionPropertiesCreator(DelftIniCategory boundaryCategory)
+        public MdwBoundaryConditionPropertiesCreator(DelftIniCategory boundaryCategory)
         {
             BoundaryCategory = boundaryCategory;
         }
@@ -116,10 +116,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Pierson-Moskowitz");
         }
 
-        public void Visit(WaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
+        public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
         {
             //place holder
-            BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, String.Empty);
+            BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
             
             BoundaryCategory.AddProperty(KnownWaveProperties.PeriodType, waveBoundaryConditionDefinition.PeriodType.GetDescription());
             
@@ -127,6 +127,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
         }
 
+        /// <summary>
+        /// Static method for retrieving boundary condition properties of each boundary.
+        /// </summary>
+        /// <param name="boundaryCategory"></param>
+        /// <param name="boundary"></param>
         public static void AddNewProperties(DelftIniCategory boundaryCategory,
                                                                        IWaveBoundary boundary)
         {

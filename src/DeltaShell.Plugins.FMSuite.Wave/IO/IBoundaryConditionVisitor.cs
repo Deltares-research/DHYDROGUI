@@ -10,6 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         void Visit(JonswapShape jonswapShape);
         
         void Visit(PiersonMoskowitzShape piersonMoskowitzShape);
-        void Visit(WaveBoundaryConditionDefinition waveBoundaryConditionDefinition);
+        void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition);
     }
 }
