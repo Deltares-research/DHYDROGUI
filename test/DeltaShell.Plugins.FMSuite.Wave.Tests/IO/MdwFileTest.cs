@@ -1032,5 +1032,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             return supportPoint;
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WhenOuterGridIsNotImported_ThenWarningMessageIsLogged()
+        {
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = CreateMinimalMdwFile(tempDirectory.Path);
+
+                // Call
+                void Call() => new MdwFile().Load(filePath);
+
+                // Assert
+                List<string> warningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+                Assert.That(warningMessages, Has.Count.EqualTo(1));
+                Assert.That(warningMessages[0], Is.EqualTo("Boundaries cannot be imported, because the outer grid is empty."));
+            }
+        }
+
+        private static string CreateMinimalMdwFile(string tempDirPath)
+        {
+            string filePath = Path.Combine(tempDirPath, "file.mdw");
+
+            string[] content =
+            {
+                "[Domain]",
+                "[Output]",
+                "[General]"
+            };
+
+            File.WriteAllLines(filePath, content);
+
+            return filePath;
+        }
     }
 }

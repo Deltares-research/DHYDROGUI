@@ -25,6 +25,7 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
@@ -641,7 +642,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                                string mdwDirPath)
         {
             IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
-            boundaryContainer.UpdateGridBoundary(new GridBoundary(modelDefinition.OuterDomain.Grid));
+            CurvilinearGrid grid = modelDefinition.OuterDomain.Grid;
+            if (grid.IsEmpty)
+            {
+                Log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_the_outer_grid_is_empty_);
+                return;
+            }
+
+            boundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
 
             var boundariesConverter = new WaveBoundaryConverter(
                 new ImportBoundaryConditionDataComponentFactory(new BoundaryParametersFactory()),

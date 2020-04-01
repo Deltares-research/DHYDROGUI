@@ -247,4 +247,7 @@
   <data name="MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file" xml:space="preserve">
     <value>reading the mdw file</value>
   </data>
+  <data name="MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_the_outer_grid_is_empty_" xml:space="preserve">
+    <value>Boundaries cannot be imported, because the outer grid is empty.</value>
+  </data>
 </root>

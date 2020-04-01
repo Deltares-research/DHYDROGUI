@@ -70,6 +70,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundaries cannot be imported, because the outer grid is empty..
+        /// </summary>
+        public static string MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_the_outer_grid_is_empty_ {
+            get {
+                return ResourceManager.GetString("MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_the_outer_grid_" +
+                        "is_empty_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap wave {
