@@ -21,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.NetworkEditor;
@@ -31,7 +30,6 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Rhino.Mocks.Constraints;
 using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
@@ -162,76 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadConstantXyBoundaries()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
-
-            var bc = modelDef.BoundaryConditions[0];
-            Assert.AreEqual("Boundary 1", bc.Feature.Name);
-            Assert.AreEqual("Boundary 1", bc.Name);
-
-            Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
-            Assert.AreEqual(WaveSpectrumShapeType.Jonswap, bc.ShapeType);
-            Assert.AreEqual(WavePeriodType.Peak, bc.PeriodType);
-            Assert.AreEqual(WaveDirectionalSpreadingType.Power, bc.DirectionalSpreadingType);
-            Assert.AreEqual(3.3, bc.PeakEnhancementFactor);
-            Assert.AreEqual(0.01, bc.GaussianSpreadingValue, 1e-06);
-
-            var waveheight = bc.SpectrumParameters[0].Height;
-            var period = bc.SpectrumParameters[0].Period;
-            var dir = bc.SpectrumParameters[0].Direction;
-            var spread = bc.SpectrumParameters[0].Spreading;
-            Assert.AreEqual(2.82, waveheight, 1e-06);
-            Assert.AreEqual(6.67, period, 1e-06);
-            Assert.AreEqual(250.0, dir, 1e-06);
-            Assert.AreEqual(4.0, spread, 1e-06);
-
-            bc = modelDef.BoundaryConditions[1];
-            Assert.AreEqual("Boundary 2", bc.Feature.Name);
-            Assert.AreEqual("Boundary 2", bc.Name);
-
-            Assert.AreEqual(BoundaryConditionDataType.ParameterizedSpectrumConstant, bc.DataType);
-            Assert.AreEqual(WaveSpectrumShapeType.PiersonMoskowitz, bc.ShapeType);
-            Assert.AreEqual(WavePeriodType.Mean, bc.PeriodType);
-            Assert.AreEqual(WaveDirectionalSpreadingType.Degrees, bc.DirectionalSpreadingType);
-            Assert.AreEqual(3.3, bc.PeakEnhancementFactor);
-            Assert.AreEqual(0.01, bc.GaussianSpreadingValue, 1e-06);
-
-            waveheight = bc.SpectrumParameters[1].Height;
-            period = bc.SpectrumParameters[1].Period;
-            dir = bc.SpectrumParameters[1].Direction;
-            spread = bc.SpectrumParameters[1].Spreading;
-            Assert.AreEqual(4.0, waveheight, 1e-06);
-            Assert.AreEqual(10.0, period, 1e-06);
-            Assert.AreEqual(30.0, dir, 1e-06);
-            Assert.AreEqual(4.0, spread, 1e-06);
-
-            waveheight = bc.SpectrumParameters[2].Height;
-            period = bc.SpectrumParameters[2].Period;
-            dir = bc.SpectrumParameters[2].Direction;
-            spread = bc.SpectrumParameters[2].Spreading;
-            Assert.AreEqual(10.0, waveheight, 1e-06);
-            Assert.AreEqual(20.0, period, 1e-06);
-            Assert.AreEqual(30.0, dir, 1e-06);
-            Assert.AreEqual(4.0, spread, 1e-06);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ReadModelWithBcwFile()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"bcwTimeseries\bcw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
-
-            var hs = modelDef.BoundaryConditions[1].GetDataAtPoint(1).Components[0].GetValues<double>();
-            Assert.AreEqual(new []{2.0,2.1,1.7},hs);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void SaveLoadBoundaries()
         {
             var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
@@ -351,22 +279,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             const int factor = 10000000;
             return Math.Floor(random.NextDouble() * factor) / factor;
-        }
-
-        /// <summary>
-        /// Load a boundary condition that has a uniform boundary with a timeseries.
-        /// The support points don't contain data, so the data will be set in the first data point.
-        /// </summary>
-        [Test]// TOOLS-20998
-        public void LoadUniformBoundaryWithTimeseries()
-        {
-            string mdwfilepath = TestHelper.GetTestFilePath(@"uniformBoundaryWithTimeseries\bcw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = LoadUniformBoundaryWithTimeseriesFileMdwFile(mdwFile, mdwfilepath);
-
-            // get the data of the first point and check that there is data
-            var uniformFunc = modelDef.BoundaryConditions[1].GetDataAtPoint(0);
-            Assert.IsNotNull(uniformFunc);
         }
 
         /// <summary>
