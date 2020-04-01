@@ -160,34 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SaveLoadBoundaries()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
-
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
-            mdwFile.SaveTo(targetPath, modelDef, true);
-
-            var savedModelDef = mdwFile.Load(targetPath);
-
-            Assert.AreEqual(modelDef.BoundaryConditions.Count, savedModelDef.BoundaryConditions.Count);
-            Assert.AreEqual(modelDef.BoundaryConditions[0].Feature.Geometry, savedModelDef.BoundaryConditions[0].Feature.Geometry);
-            Assert.AreEqual(modelDef.BoundaryConditions[0].PointData.Count, savedModelDef.BoundaryConditions[0].PointData.Count);
-            for (int i = 0; i < modelDef.BoundaryConditions[0].PointData[0].Components.Count; ++i)
-                Assert.AreEqual(modelDef.BoundaryConditions[0].PointData[0].Components[i].Values,
-                                savedModelDef.BoundaryConditions[0].PointData[0].Components[i].Values);
-
-            Assert.AreEqual(modelDef.BoundaryConditions[1].Feature.Geometry, savedModelDef.BoundaryConditions[1].Feature.Geometry);
-            Assert.AreEqual(modelDef.BoundaryConditions[1].PointData.Count, savedModelDef.BoundaryConditions[1].PointData.Count);
-            for (int i = 0; i < modelDef.BoundaryConditions[1].PointData[0].Components.Count; ++i)
-                Assert.AreEqual(modelDef.BoundaryConditions[1].PointData[0].Components[i].Values,
-                                savedModelDef.BoundaryConditions[1].PointData[0].Components[i].Values);
-
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void SaveLoadSpectralSpacePerDomain()
         {
             var mdwPath = TestHelper.GetTestFilePath(@"domainWithSpectralData\te0.mdw");
