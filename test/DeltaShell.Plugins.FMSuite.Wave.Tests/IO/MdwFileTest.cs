@@ -4,10 +4,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
-using DeltaShell.NGHS.IO;
-using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -28,7 +27,9 @@ using DeltaShell.Plugins.SharpMapGis;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Is = NUnit.Framework.Is;
 
@@ -254,31 +255,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         /// <summary>
-        /// Save a boundary condition that has a uniform boundary with a timeseries.
-        /// </summary>
-        [Test]
-        public void SaveUniformBoundaryWithTimeseries()
-        {
-            string mdwfilepath = TestHelper.GetTestFilePath(@"uniformBoundaryWithTimeseries\bcw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = LoadUniformBoundaryWithTimeseriesFileMdwFile(mdwFile, mdwfilepath);
-
-            // get the data of the first point and check that there is data
-            var uniformFunc = modelDef.BoundaryConditions[1].GetDataAtPoint(0);
-            Assert.IsNotNull(uniformFunc);
-
-            // save the model definition back to a file
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
-            mdwFile.SaveTo(targetPath, modelDef, true);
-
-            // load it back in
-            var savedModelDef = LoadUniformBoundaryWithTimeseriesFileMdwFile(mdwFile, targetPath);
-
-            // test that 
-            Assert.AreEqual(uniformFunc.GetValues(), savedModelDef.BoundaryConditions[1].GetDataAtPoint(0).GetValues());
-        }
-
-        /// <summary>
         /// Helper function for test <see cref="SaveUniformBoundaryWithTimeseries"/> and 
         /// <see cref="LoadUniformBoundaryWithTimeseries"/>.
         /// </summary>
@@ -298,72 +274,138 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(modelDef.BoundaryConditions[1].DataType, BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
             return modelDef;
         }
+
         
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenAModelWithABoundaryCondition_WhenSaved_ThenBcwFileIsReferencedInMdwFile()
+        public void SaveTo_ForAnUniformConstantBoundary()
         {
-            var tempDirPath = FileUtils.CreateTempDirectory();
-            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
+            // Arrange
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
 
-            try
+            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
+            UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformConstantDataComponent();
+            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak, uniformComponent);
+
+            IWaveBoundary boundary = BuildWaveBoundary(geometricDefinition, conditionDefinition);
+
+            modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                using (var app = GetConfiguredApplication(tempProjectFilePath))
-                {
-                    using (var model = new WaveModel())
-                    {
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
+                string targetPath = Path.Combine(tempDirectory.Path, "output.mdw");
 
-                        var boundary = new Feature2D
-                        {
-                            Geometry =
-                                new LineString(new[]
-                                    {new Coordinate(0, 0), new Coordinate(1, 0)}),
-                            Name = "boundary"
-                        };
+                // Act
+                new MdwFile().SaveTo(targetPath, modelDefinition, true);
 
-                        var boundaryConditionFactory = new WaveBoundaryConditionFactory();
-                        var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
-                            BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
+                // Assert
+                Assert.IsTrue(File.Exists(targetPath));
+                Assert.IsFalse(File.Exists(Path.Combine(tempDirectory.Path, "output.bcw")));
 
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
-                        boundaryCondition.DataPointIndices.Add(1);
-                        boundaryCondition.PointData[0].Arguments[0]
-                            .SetValues(new[] { refTime, refTime.AddDays(1) });
+                string[] lines = File.ReadAllLines(targetPath);
 
-                        model.Boundaries.Add(boundary);
-                        model.BoundaryConditions.Add((WaveBoundaryCondition)boundaryCondition);
-
-                        Assert.AreEqual(string.Empty, model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,KnownWaveProperties.TimeSeriesFile).GetValueAsString());
-
-                        //During a save modeldefinition properties are also updated
-                        app.SaveProject();
-
-                        Assert.AreEqual("Waves.bcw", model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile).GetValueAsString());
-
-                        var mdwFilePath = model.MdwFilePath;
-                        IList<DelftIniCategory> categories;
-                        using (var fileStream = new FileStream(mdwFilePath, FileMode.Open, FileAccess.Read))
-                        {
-                            categories = new DelftIniReader().ReadDelftIniFile(fileStream, mdwFilePath);
-                        }
-
-                        var tSeriesFilePropValue = categories
-                            .FirstOrDefault(c => c.Name == KnownWaveCategories.GeneralCategory)
-                            .GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
-
-                        Assert.AreEqual(model.Name + ".bcw", tSeriesFilePropValue);
-
-                        app.CloseProject();
-
-                    }
-                }
+                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveCategories.BoundaryCategory)));
+                Assert.IsFalse(lines.Any(line => line.Contains(KnownWaveProperties.TimeSeriesFile)));
             }
-            finally
+        }
+
+        [Test]
+        public void SaveTo_ForAnUniformTimeDependentBoundary()
+        {
+            // Arrange
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
+            UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformTimeDependentDataComponent();
+            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak, uniformComponent);
+
+            IWaveBoundary boundary = BuildWaveBoundary(geometricDefinition, conditionDefinition);
+
+            modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+            
+            using (var tempDirectory = new TemporaryDirectory())
             {
-                FileUtils.DeleteIfExists(tempDirPath);
+                string targetPath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Act
+                new MdwFile().SaveTo(targetPath, modelDefinition, false);
+
+                // Assert
+                Assert.IsTrue(File.Exists(targetPath));
+                Assert.IsTrue(File.Exists(Path.Combine(tempDirectory.Path, "output.bcw")));
+
+                string[] lines = File.ReadAllLines(targetPath);
+
+                Assert.IsTrue(lines.Any(line => line.Contains(KnownWaveCategories.BoundaryCategory)));
+
+                string timeSeriesFileNameLine = lines.Single(line => line.Contains(KnownWaveProperties.TimeSeriesFile));
+                string timeSeriesFileNameMentioned = timeSeriesFileNameLine.Split('=').Last().Trim();
+                Assert.AreEqual("output.bcw", timeSeriesFileNameMentioned);
             }
+        }
+
+        private static WaveModelDefinition CreateWaveModelDefinition()
+        {
+            var modelDefinition = new WaveModelDefinition();
+            CurvilinearGrid grid = CreateCurvilinearGrid(10, 10);
+            modelDefinition.OuterDomain = new WaveDomainData("Outer") { Grid = grid };
+            modelDefinition.BoundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
+            return modelDefinition;
+        }
+
+        private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)
+        {
+            int size = length * width;
+
+            var x = new double[size];
+            var y = new double[size];
+            for (var i = 0; i < size; i++)
+            {
+                x[i] = i;
+                y[i] = i;
+            }
+            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Spherical);
+            return grid;
+        }
+
+        private static IWaveBoundary BuildWaveBoundary(IWaveBoundaryGeometricDefinition geometricDefinition,
+                                                       WaveBoundaryConditionDefinition conditionDefinition)
+        {
+            var boundary = Substitute.For<IWaveBoundary>();
+            boundary.Name = "boundary_name";
+            boundary.GeometricDefinition.Returns(geometricDefinition);
+            boundary.ConditionDefinition.Returns(conditionDefinition);
+            return boundary;
+        }
+
+        private static UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> CreateUniformConstantDataComponent()
+        {
+            return new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                new ConstantParameters<PowerDefinedSpreading>(1, 2, 3, new PowerDefinedSpreading { SpreadingPower = 10 }));
+        }
+
+        private static UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> CreateUniformTimeDependentDataComponent()
+        {
+            return new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
+                new TimeDependentParameters<PowerDefinedSpreading>(
+                    Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
+        }
+
+        private static IWaveBoundaryGeometricDefinition CreateGeometricDefinition()
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            geometricDefinition.EndingIndex.Returns(10);
+            geometricDefinition.StartingIndex.Returns(0);
+            geometricDefinition.Length.Returns(10);
+            geometricDefinition.GridSide.Returns(GridSide.East);
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(10, geometricDefinition)
+            });
+
+            return geometricDefinition;
         }
 
         [Test]
