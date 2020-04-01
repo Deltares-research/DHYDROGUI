@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;
+using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
@@ -25,10 +27,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void WhenWritingRetentionFile_ThenRetentionFileIsExisting()
         {
-            NodeFile.Write(filePath, new List<Compartment>(),null);
+            var branch = new Branch
+            {
+                Source = new Node()
+            };
+            NodeFile.Write(filePath, new List<Compartment>(),new List<IRetention>{ new Retention{ Branch = branch }});
             Assert.IsTrue(File.Exists(filePath));
         }
 

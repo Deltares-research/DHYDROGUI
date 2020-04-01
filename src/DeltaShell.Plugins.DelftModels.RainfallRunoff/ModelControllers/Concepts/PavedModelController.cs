@@ -19,14 +19,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
 
             double[] waterUse24HoursPerCapita = CalculateWaterUseFor24Hours(pavedData);
 
-            var capacityMixedAndOrRainfallInM3 = GetFixedCapacityInMm(pavedData, () => pavedData.CapacityMixedAndOrRainfall);
-            var capacityDryWeatherFlowInM3 = GetFixedCapacityInMm(pavedData, () => pavedData.CapacityDryWeatherFlow);
-            var initialStreetStorageMm = GetStorageInMm(pavedData, ()=>pavedData.InitialStreetStorage);
-            var maximumStreetStorageMm = GetStorageInMm(pavedData, () => pavedData.MaximumStreetStorage);
-            var initialSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, () => pavedData.InitialSewerMixedAndOrRainfallStorage);
-            var maximumSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, () => pavedData.MaximumSewerMixedAndOrRainfallStorage);
-            var initialSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, () => pavedData.InitialSewerDryWeatherFlowStorage);
-            var maximumSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, () => pavedData.MaximumSewerDryWeatherFlowStorage);
+            var capacityMixedAndOrRainfallInM3 = GetFixedCapacityInMm(pavedData, nameof(pavedData.CapacityMixedAndOrRainfall));
+            var capacityDryWeatherFlowInM3 = GetFixedCapacityInMm(pavedData, nameof(pavedData.CapacityDryWeatherFlow));
+            var initialStreetStorageMm = GetStorageInMm(pavedData, nameof(pavedData.InitialStreetStorage));
+            var maximumStreetStorageMm = GetStorageInMm(pavedData, nameof(pavedData.MaximumStreetStorage));
+            var initialSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, nameof(pavedData.InitialSewerMixedAndOrRainfallStorage));
+            var maximumSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, nameof(pavedData.MaximumSewerMixedAndOrRainfallStorage));
+            var initialSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, nameof(pavedData.InitialSewerDryWeatherFlowStorage));
+            var maximumSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, nameof(pavedData.MaximumSewerDryWeatherFlowStorage));
             
             int inhabitants = pavedData.NumberOfInhabitants;
 
@@ -80,9 +80,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             return true;
         }
 
-        private static double GetFixedCapacityInMm(PavedData pavedData, Expression<Func<double>> propertyExpression)
+        private static double GetFixedCapacityInMm(PavedData pavedData, string propName)
         {
-            var propName = nameof(propertyExpression);
             var capacityInNativeUnit = (double) TypeUtils.GetPropertyValue(pavedData, propName);
 
             return pavedData.IsSewerPumpCapacityFixed
@@ -94,9 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                        : 0.0;
         }
 
-        private static double GetStorageInMm(PavedData pavedData, Expression<Func<double>> propertyExpression)
+        private static double GetStorageInMm(PavedData pavedData, string propName)
         {
-            var propName = nameof(propertyExpression);
             var storageInNativeUnit = (double) TypeUtils.GetPropertyValue(pavedData, propName);
 
             return RainfallRunoffUnitConverter.ConvertStorage(pavedData.StorageUnit,
