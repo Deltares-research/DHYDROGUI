@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -228,6 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         {
             yield return new ViewInfo<Model1DBoundaryNodeData, Model1DBoundaryNodeDataViewWpf>
             {
+                AdditionalDataCheck = data => (data.Node is IHydroNode && data.OutletCompartment == null) || (data.Node is IManhole manhole && manhole.OutletCompartments().Any()),
                 Description = "Boundary Node Data View (Flow 1D)"
             };
             yield return new ViewInfo<Model1DLateralSourceData, Model1DLateralSourceDataViewWpf>

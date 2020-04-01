@@ -1,6 +1,7 @@
 ﻿using System;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -170,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
 
             if (propertyName == nameof(NodeName) || propertyName == nameof(Type))
             {
-                return data.OutletCompartment != null;
+                return data.Node is IManhole;
             }
 
             return true;
