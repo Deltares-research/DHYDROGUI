@@ -359,12 +359,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             foreach (IWaveBoundary boundary in boundaries)
             {
                 List<IFunction> timeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(boundary.ConditionDefinition.DataComponent);
-
-                // update refdate before writing
-                timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
-                                            modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
-
-                allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
+                
+                if (timeSeries.Any())
+                {
+                    // update refdate before writing
+                    timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
+                                                modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
+                    allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
+                }
             }
             
             // write bcw file                                    
