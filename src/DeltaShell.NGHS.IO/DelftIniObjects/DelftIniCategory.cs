@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 
 namespace DeltaShell.NGHS.IO.DelftIniObjects
@@ -9,7 +10,7 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
     /// <summary>
     /// Representation of a category in a .ini file.
     /// </summary>
-    public class DelftIniCategory
+    public class DelftIniCategory : INameable
     {
         private readonly List<DelftIniProperty> delftIniProperties;
 
