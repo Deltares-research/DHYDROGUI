@@ -13,6 +13,14 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -813,6 +821,216 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                     "TScale", "TimeInterval");
                 Assert.That(logMessages.Any(x => x.Contains(expectedMsg)), Is.True, "Expected a warning messages logged.");
             }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_ConstantUniformBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\constant-uniform.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(2));
+            AssertCorrectSupportPoint(geometricDefinition, 0);
+            AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Peak));
+            var shape = conditionDefinition.Shape as GaussShape;
+            Assert.That(shape, Is.Not.Null);
+            Assert.That(shape.GaussianSpread, Is.EqualTo(5));
+
+            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            AssertCorrectConstantParameters(dataComponent.Data, 1, 2, 3, 4);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_ConstantSpatiallyVaryingBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\constant-spatially_varying.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(3));
+            SupportPoint supportPoint1 = AssertCorrectSupportPoint(geometricDefinition, 0);
+            SupportPoint supportPoint2 = AssertCorrectSupportPoint(geometricDefinition, 50);
+            SupportPoint supportPoint3 = AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Mean));
+
+            var shape = conditionDefinition.Shape as JonswapShape;
+            Assert.That(shape, Is.Not.Null);
+            Assert.That(shape.PeakEnhancementFactor, Is.EqualTo(13));
+
+            var dataComponent = conditionDefinition.DataComponent as
+                                    SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            IReadOnlyDictionary<SupportPoint, ConstantParameters<PowerDefinedSpreading>> data = dataComponent.Data;
+            Assert.That(data, Has.Count.EqualTo(3));
+
+            AssertCorrectConstantParameters(data[supportPoint1], 1, 2, 3, 4);
+            AssertCorrectConstantParameters(data[supportPoint2], 5, 6, 7, 8);
+            AssertCorrectConstantParameters(data[supportPoint3], 9, 10, 11, 12);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_TimeDependentUniformBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-uniform.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(2));
+            AssertCorrectSupportPoint(geometricDefinition, 0);
+            AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Peak));
+
+            var shape = conditionDefinition.Shape as PiersonMoskowitzShape;
+            Assert.That(shape, Is.Not.Null);
+
+            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction = dataComponent.Data.WaveEnergyFunction;
+
+            AssertCorrectWaveEnergyFunction(waveEnergyFunction, 0, new DateTime(2020, 4, 1), 1, 3, 5, 7);
+            AssertCorrectWaveEnergyFunction(waveEnergyFunction, 1, new DateTime(2020, 4, 2), 2, 4, 6, 8);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_TimeDependentSpatiallyVaryingBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-spatially_varying.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(3));
+            SupportPoint supportPoint1 = AssertCorrectSupportPoint(geometricDefinition, 0);
+            SupportPoint supportPoint2 = AssertCorrectSupportPoint(geometricDefinition, 50);
+            SupportPoint supportPoint3 = AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Mean));
+
+            var shape = conditionDefinition.Shape as GaussShape;
+            Assert.That(shape, Is.Not.Null);
+            Assert.That(shape.GaussianSpread, Is.EqualTo(25));
+
+            var dataComponent = conditionDefinition.DataComponent as
+                                    SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            IReadOnlyDictionary<SupportPoint, TimeDependentParameters<DegreesDefinedSpreading>> data = dataComponent.Data;
+            Assert.That(dataComponent.Data, Has.Count.EqualTo(3));
+
+            var startDate = new DateTime(2020, 4, 1);
+            var endDate = new DateTime(2020, 4, 2);
+
+            AssertCorrectWaveEnergyFunction(data[supportPoint1].WaveEnergyFunction, 0,
+                                            startDate, 1, 3, 5, 7);
+            AssertCorrectWaveEnergyFunction(data[supportPoint1].WaveEnergyFunction, 1,
+                                            endDate, 2, 4, 6, 8);
+            AssertCorrectWaveEnergyFunction(data[supportPoint2].WaveEnergyFunction, 0,
+                                            startDate, 9, 11, 13, 15);
+            AssertCorrectWaveEnergyFunction(data[supportPoint2].WaveEnergyFunction, 1,
+                                            endDate, 10, 12, 14, 16);
+            AssertCorrectWaveEnergyFunction(data[supportPoint3].WaveEnergyFunction, 0,
+                                            startDate, 17, 19, 21, 23);
+            AssertCorrectWaveEnergyFunction(data[supportPoint3].WaveEnergyFunction, 1,
+                                            endDate, 18, 20, 22, 24);
+        }
+
+        private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,
+                                                            double height, double period, double direction, double spreading)
+        {
+            Assert.That(supportPointData.Height, Is.EqualTo(height));
+            Assert.That(supportPointData.Period, Is.EqualTo(period));
+            Assert.That(supportPointData.Direction, Is.EqualTo(direction));
+            Assert.That(supportPointData.Spreading.SpreadingPower, Is.EqualTo(spreading));
+        }
+
+        private static void AssertCorrectWaveEnergyFunction(
+            IWaveEnergyFunction<DegreesDefinedSpreading> waveEnergyFunction, int i, DateTime date,
+            double height, double period, double direction, double spreading)
+        {
+            Assert.That(waveEnergyFunction.TimeArgument.Values[i], Is.EqualTo(date));
+            Assert.That(waveEnergyFunction.HeightComponent.Values[i], Is.EqualTo(height));
+            Assert.That(waveEnergyFunction.PeriodComponent.Values[i], Is.EqualTo(period));
+            Assert.That(waveEnergyFunction.DirectionComponent.Values[i], Is.EqualTo(direction));
+            Assert.That(waveEnergyFunction.SpreadingComponent.Values[i], Is.EqualTo(spreading));
+        }
+
+        private static void AssertCorrectGeometricDefinition(IWaveBoundaryGeometricDefinition geometricDefinition)
+        {
+            Assert.That(geometricDefinition.StartingIndex, Is.EqualTo(0));
+            Assert.That(geometricDefinition.EndingIndex, Is.EqualTo(10));
+            Assert.That(geometricDefinition.Length, Is.EqualTo(100));
+            Assert.That(geometricDefinition.GridSide, Is.EqualTo(GridSide.West));
+        }
+
+        private static SupportPoint AssertCorrectSupportPoint(IWaveBoundaryGeometricDefinition geometricDefinition, double distance)
+        {
+            SupportPoint supportPoint = geometricDefinition.SupportPoints
+                                                           .FirstOrDefault(s => s.Distance.Equals(distance));
+
+            Assert.That(supportPoint, Is.Not.Null);
+            Assert.That(supportPoint.GeometricDefinition, Is.SameAs(geometricDefinition));
+
+            return supportPoint;
         }
     }
 }
