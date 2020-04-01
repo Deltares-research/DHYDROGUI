@@ -131,12 +131,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// Static method for retrieving boundary condition properties of each boundary.
         /// </summary>
         /// <param name="boundaryCategory"></param>
-        /// <param name="boundary"></param>
+        /// <param name="conditionDefinition"> </param>
         public static void AddNewProperties(DelftIniCategory boundaryCategory,
-                                                                       IWaveBoundary boundary)
+                                            IWaveBoundaryConditionDefinition conditionDefinition)
         {
             var visitor = new MdwBoundaryConditionPropertiesCreator(boundaryCategory);
-            boundary.ConditionDefinition.AcceptVisitor(visitor);
+            conditionDefinition.AcceptVisitor(visitor);
         }
     }
 }

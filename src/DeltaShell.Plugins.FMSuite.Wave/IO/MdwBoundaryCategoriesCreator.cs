@@ -24,14 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 boundaryCategory.AddProperty(KnownWaveProperties.Name, boundary.Name);
                 MdwBoundaryGeometryPropertiesCreator.AddNewProperties(boundaryCategory, boundaryContainer, boundary.GeometricDefinition.SupportPoints);
                 boundaryCategory.AddProperty(KnownWaveProperties.SpectrumSpec, "parametric");
-                MdwBoundaryConditionPropertiesCreator.AddNewProperties(boundaryCategory, boundary);
+                MdwBoundaryConditionPropertiesCreator.AddNewProperties(boundaryCategory, boundary.ConditionDefinition);
 
                 yield return boundaryCategory;
             }
         }
-
-        
-
-        
     }
 }

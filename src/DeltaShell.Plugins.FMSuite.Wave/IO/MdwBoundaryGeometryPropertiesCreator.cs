@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -10,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     public static class MdwBoundaryGeometryPropertiesCreator
     {
         public static void AddNewProperties(DelftIniCategory boundaryCategory, IBoundaryContainer boundaryContainer,
-                                            IEventedList<SupportPoint> supportPoints)
+                                            IEnumerable<SupportPoint> supportPoints)
         {
             boundaryCategory.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
 

@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
@@ -131,17 +130,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Arrange
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-
-            var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             
             var dataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
                 new ConstantParameters<PowerDefinedSpreading>(height1, period1, direction1, new PowerDefinedSpreading()));
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
-            
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
+           
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -171,17 +166,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Arrange
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-
-            var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             
             var dataComponent = new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(
                 new ConstantParameters<DegreesDefinedSpreading>(height1, period1, direction1, new DegreesDefinedSpreading()));
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
-
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
+            
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -211,17 +202,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Arrange
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
-            var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            
             var dataComponent = new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
                 new TimeDependentParameters<PowerDefinedSpreading>(
                     Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -242,18 +229,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Arrange
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-
-            var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             
             var dataComponent = new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(
                 new TimeDependentParameters<DegreesDefinedSpreading>(
                     Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>()));
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
 
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -288,10 +271,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             dataComponent.AddParameters(supportPoint2, constantParameters2);
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -347,11 +328,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             dataComponent.AddParameters(supportPoint1, timeDependentParameters1);
             dataComponent.AddParameters(supportPoint2, timeDependentParameters2);
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
-
-            var boundary = new WaveBoundary("boundary1", geometryDefinition, conditionDefinition);
-
+            
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, boundary);
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();

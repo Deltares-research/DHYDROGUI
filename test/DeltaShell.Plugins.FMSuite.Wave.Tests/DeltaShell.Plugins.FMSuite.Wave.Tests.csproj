@@ -360,6 +360,7 @@
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
+    <Compile Include="IO\MdwBoundaryCategoriesCreatorTest.cs" />
     <Compile Include="IO\MdwBoundaryConditionPropertiesCreatorTest.cs" />
     <Compile Include="IO\MdwBoundaryGeometryPropertiesCreatorTest.cs" />
     <Compile Include="IO\MdwFileTest.cs" />
