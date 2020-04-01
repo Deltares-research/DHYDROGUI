@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
         [Description("Number of units (inhabitant)")]
-        public int NumberOfUnitsFirstDwf
+        public double NumberOfUnitsFirstDwf
         {
             get
             {
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
         [Description("Number of units (company)")]
-        public int NumberOfUnitsLastDwf
+        public double NumberOfUnitsLastDwf
         {
             get
             {

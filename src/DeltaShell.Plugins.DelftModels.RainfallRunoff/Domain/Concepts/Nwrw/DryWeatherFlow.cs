@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             }
         }
 
-        public virtual int NumberOfUnits { get; set; } // AVV_ENH (debiet.csv)
+        public virtual double NumberOfUnits { get; set; } // AVV_ENH (debiet.csv)
 
         
     }
