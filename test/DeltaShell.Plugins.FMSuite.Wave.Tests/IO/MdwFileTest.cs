@@ -224,21 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadOrientedBoundaries()
-        {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
-
-            Assert.AreEqual(2, modelDef.OrientedBoundaryConditions.Count);
-            Assert.AreEqual("south", modelDef.OrientedBoundaryConditions[0].Feature.Attributes["orientation"]);
-            Assert.AreEqual("west", modelDef.OrientedBoundaryConditions[1].Feature.Attributes["orientation"]);
-            Assert.AreEqual(2, modelDef.OrientedBoundaryConditions.Count);
-            Assert.AreEqual(0, modelDef.BoundaryConditions.Count);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void SaveLoadBoundaries()
         {
             var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
