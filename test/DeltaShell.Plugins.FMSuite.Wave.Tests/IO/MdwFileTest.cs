@@ -407,44 +407,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             return modelDef;
         }
         
-        /// <summary>
-        /// Test added for jira issue: DELFT3DFM-33
-        /// </summary>
-        [Test]
-        public void SaveMdwFile_SpatiallyVaryingBoundaryConditionWithNoDataDefaultsToUniform()
-        {
-            var outputPath = WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"wave_spacevarbnd\DELFT3DFM-33.mdw"));
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tst.mdw");
-            var mdwFile = new MdwFile();
-            var modelDefOut = mdwFile.Load(mdwPath);
-
-            modelDefOut.BoundaryConditions.Clear();
-            modelDefOut.BoundaryConditions.Add(new WaveBoundaryCondition(BoundaryConditionDataType.Constant)
-            {
-                Name = "BoundaryCondition01",
-                SpatialDefinitionType = WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying,
-                Feature = new Feature2D()
-                {
-                    Name = "BoundaryCondition01",
-                    Id = 0,
-                    Geometry = new LineString(new []
-                    {
-                        new Coordinate(100.0, 100.0), 
-                        new Coordinate(500.0, 100.0)
-                    })
-                }
-            });
-
-            if (File.Exists(outputPath)) File.Delete(outputPath);
-            mdwFile.SaveTo(outputPath, modelDefOut, false);
-            var modelDefIn = mdwFile.Load(outputPath);
-
-            Assert.AreEqual(1, modelDefIn.BoundaryConditions.Count);
-            Assert.AreEqual(WaveBoundaryConditionSpatialDefinitionType.Uniform,
-                modelDefIn.BoundaryConditions[0].SpatialDefinitionType, 
-                "WaveBoundaryCondition of Spatially Varying DefinitionType with no data should default to Uniform on MdwFile save");
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAModelWithABoundaryCondition_WhenSaved_ThenBcwFileIsReferencedInMdwFile()
