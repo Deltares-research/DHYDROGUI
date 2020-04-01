@@ -74,6 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-1825
         public void ImportItemTest_WhenBoundaryConditionModelDoesNotExist_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
@@ -123,6 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-1825
         public void ImportItemTest_WhenBoundaryConditionModelIsNotTimeseries_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
@@ -180,6 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-1825
         public void ImportItemTest_WhenBoundaryConditionModelNumberOfSupportPointsDoNotMatchWithFile_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
@@ -239,6 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Category(TestCategory.Jira)] // D3DFMIQ-1825
         public void ImportItemTest_CorrectDataIsSetOnImportedBoundaryCondition()
         {
             importer = new WaveBoundaryFileImporter();
