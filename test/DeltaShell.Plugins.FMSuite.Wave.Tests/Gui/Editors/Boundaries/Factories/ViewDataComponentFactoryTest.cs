@@ -53,17 +53,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
         private static IEnumerable<TestCaseData> GetForcingTypeData()
         {
-            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), ForcingViewType.Constant);
-            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), ForcingViewType.Constant);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), ForcingViewType.Constant);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), ForcingViewType.Constant);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), ForcingViewType.Constant);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), ForcingViewType.Constant);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), ForcingViewType.Constant);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), ForcingViewType.Constant);
 
             var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), ForcingViewType.TimeSeries);
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), ForcingViewType.TimeSeries);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), ForcingViewType.TimeSeries);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), ForcingViewType.TimeSeries);
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), ForcingViewType.TimeSeries);
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), ForcingViewType.TimeSeries);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), ForcingViewType.TimeSeries);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), ForcingViewType.TimeSeries);
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), ForcingViewType.FileBased);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), ForcingViewType.FileBased);
         }
 
         [Test]
@@ -106,23 +109,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             void Call() => factory.GetForcingType(dataComponent);
-
-            var exception = Assert.Throws<NotSupportedException>(Call);
+            
+            Assert.Throws<NotSupportedException>(Call);
         }
 
         private static IEnumerable<TestCaseData> GetSpatialDefinitionData()
         {
-            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), SpatialDefinitionViewType.Uniform);
-            yield return  new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), SpatialDefinitionViewType.Uniform);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), SpatialDefinitionViewType.Uniform);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), SpatialDefinitionViewType.Uniform);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
 
             var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), SpatialDefinitionViewType.Uniform);
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), SpatialDefinitionViewType.Uniform);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), SpatialDefinitionViewType.Uniform);
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), SpatialDefinitionViewType.Uniform);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
         }
 
 
@@ -180,10 +183,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return  new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
         }
 
         [Test]
@@ -339,6 +342,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
+        [TestCase(DirectionalSpreadingViewType.Degrees)]
+        [TestCase(DirectionalSpreadingViewType.Power)]
+        public void ConstructBoundaryConditionDataComponent_UniformFileBased_ExpectedResults(DirectionalSpreadingViewType directionalSpreading)
+        {
+            // Setup
+            var srcDataComponent = new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path"));
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<FileBasedParameters>>()
+                                     .Returns(srcDataComponent);
+
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
+
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased, 
+                                                                SpatialDefinitionViewType.Uniform,
+                                                                directionalSpreading);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<UniformDataComponent<FileBasedParameters>>();
+        }
+
+        [Test]
         public void ConstructBoundaryConditionDataComponent_SpatiallyVariantConstantDegrees_ExpectedResults()
         {
             // Setup
@@ -438,26 +468,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                 .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
         }
 
-
         [Test]
-        [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Power)]
-        [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.Uniform, DirectionalSpreadingViewType.Degrees)]
-        [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Power)]
-        [TestCase(ForcingViewType.FileBased, SpatialDefinitionViewType.SpatiallyVarying, DirectionalSpreadingViewType.Degrees)]
-        public void ConstructBoundaryConditionDataComponent_UnsupportedType_ThrowsNotSupportedException(ForcingViewType viewType,
-                                                                                                        SpatialDefinitionViewType spatialDefinition, 
-                                                                                                        DirectionalSpreadingViewType spreadingType)
+        [TestCase(DirectionalSpreadingViewType.Degrees)]
+        [TestCase(DirectionalSpreadingViewType.Power)]
+        public void ConstructBoundaryConditionDataComponent_SpatiallyVaryingFileBased_ExpectedResults(DirectionalSpreadingViewType directionalSpreading)
         {
+            // Setup
+            var srcDataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
             var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
-            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<FileBasedParameters>>()
+                                     .Returns(srcDataComponent);
 
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
-            void Call() => factory.ConstructBoundaryConditionDataComponent(viewType, 
-                                                                           spatialDefinition, 
-                                                                           spreadingType);
-            Assert.Throws<NotSupportedException>(Call);
+            // Call
+            IBoundaryConditionDataComponent dataComponent = 
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased, 
+                                                                SpatialDefinitionViewType.SpatiallyVarying,
+                                                                directionalSpreading);
+
+            // Assert
+            Assert.That(dataComponent, Is.SameAs(srcDataComponent));
+            modelDataComponentFactory
+                .Received(1)
+                .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<FileBasedParameters>>();
         }
+
 
         private static IEnumerable<TestCaseData> GetDirectionalSpreadingViewTypeData()
         {
@@ -480,6 +517,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                            DirectionalSpreadingViewType.Power);
             yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), 
                                            DirectionalSpreadingViewType.Degrees);
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(),
+                                          DirectionalSpreadingViewType.Power);
         }
 
         [Test]

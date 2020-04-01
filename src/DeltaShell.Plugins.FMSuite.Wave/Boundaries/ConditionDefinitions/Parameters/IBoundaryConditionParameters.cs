@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// Currently, the following are defined:
     ///
     /// * <see cref="ConstantParameters{TSpreading}"/>
-    /// * <see cref="TimeDependentParameters"/>
+    /// * <see cref="TimeDependentParameters{TSpreading}"/>
     /// 
     /// </summary>
     /// <remarks>

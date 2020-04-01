@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// </summary>
     /// <typeparam name="TSpreading">The type of spreading.</typeparam>
     /// <seealso cref="IBoundaryConditionParameters"/>
-    public class TimeDependentParameters<TSpreading> : IBoundaryConditionParameters 
+    public class TimeDependentParameters<TSpreading> : IBoundaryConditionParameters
         where TSpreading : IBoundaryConditionSpreading, new()
     {
         /// <summary>
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             Ensure.NotNull(waveEnergyFunction, nameof(waveEnergyFunction));
             WaveEnergyFunction = waveEnergyFunction;
         }
-        
+
         /// <summary>
         /// Gets the wave energy function.
         /// </summary>

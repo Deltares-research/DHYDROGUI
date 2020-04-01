@@ -56,6 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
                     return ForcingViewType.TimeSeries;
+                case UniformDataComponent<FileBasedParameters> _:
+                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
+                    return ForcingViewType.FileBased;
                 default:
                     throw new NotSupportedException($"The provided {nameof(dataComponent)} is not supported.");
             }
@@ -159,6 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case ForcingViewType.Constant when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
                                                    spreadingType == DirectionalSpreadingViewType.Degrees:
                     return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
+                
                 case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.Uniform && 
                                                      spreadingType == DirectionalSpreadingViewType.Power:
                     return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>>();
@@ -171,7 +175,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case ForcingViewType.TimeSeries when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying &&
                                                      spreadingType == DirectionalSpreadingViewType.Degrees:
                     return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>();
-                case ForcingViewType.FileBased:
+                
+                case ForcingViewType.FileBased when spatialDefinition == SpatialDefinitionViewType.Uniform:
+                    return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<FileBasedParameters>>();
+                case ForcingViewType.FileBased when spatialDefinition == SpatialDefinitionViewType.SpatiallyVarying:
+                    return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<FileBasedParameters>>();
                 default:
                     throw new NotSupportedException($"The combination of {forcingType} and {spatialDefinition} is currently not supported.");
             }

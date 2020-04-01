@@ -10,12 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// </summary>
     public sealed class BoundaryParametersFactory : IBoundaryParametersFactory
     {
-        public ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>() 
+        public ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             ConstructConstantParameters(0.0, 1.0, 0.0, new TSpreading());
 
-        public ConstantParameters<TSpreading> ConstructConstantParameters<TSpreading>(double height, 
-                                                                                      double period, 
+        public ConstantParameters<TSpreading> ConstructConstantParameters<TSpreading>(double height,
+                                                                                      double period,
                                                                                       double direction,
                                                                                       TSpreading spreading)
             where TSpreading : class, IBoundaryConditionSpreading, new()
@@ -23,15 +23,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             return new ConstantParameters<TSpreading>(height, period, direction, spreading);
         }
 
-        public ConstantParameters<TNewSpreading> ConvertConstantParameters<TOldSpreading, TNewSpreading>(ConstantParameters<TOldSpreading> parameters) 
-            where TOldSpreading : class, IBoundaryConditionSpreading, new() 
+        public ConstantParameters<TNewSpreading> ConvertConstantParameters<TOldSpreading, TNewSpreading>(ConstantParameters<TOldSpreading> parameters)
+            where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            return ConstructConstantParameters<TNewSpreading>(parameters.Height, 
-                                                              parameters.Period,
-                                                              parameters.Direction,
-                                                              new TNewSpreading());
+            return ConstructConstantParameters(parameters.Height,
+                                               parameters.Period,
+                                               parameters.Direction,
+                                               new TNewSpreading());
         }
 
         public TimeDependentParameters<TSpreading> ConstructDefaultTimeDependentParameters<TSpreading>()
@@ -51,6 +51,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         {
             Ensure.NotNull(parameters, nameof(parameters));
             return ConstructTimeDependentParameters(WaveEnergyFunction<TNewSpreading>.ConvertSpreadingType(parameters.WaveEnergyFunction));
+        }
+
+        public FileBasedParameters ConstructDefaultFileBasedParameters()
+        {
+            return new FileBasedParameters(string.Empty);
         }
     }
 }

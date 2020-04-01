@@ -144,6 +144,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParameters.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodType.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\IWaveBoundaryConditionDefinition.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Parameters\FileBasedParameters.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\IBoundaryConditionParameters.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\IBoundaryParametersFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\TimeDependentParameters.cs" />

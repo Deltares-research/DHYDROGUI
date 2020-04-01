@@ -14,8 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
     /// <seealso cref="IBoundaryConditionParameters"/>
     public class ConstantParameters<TSpreading> : IBoundaryConditionParameters
         where TSpreading : IBoundaryConditionSpreading, new()
-        
+
     {
+        private TSpreading spreading;
+
         /// <summary>
         /// Creates a new <see cref="ConstantParameters{TSpreading}"/>.
         /// </summary>
@@ -28,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
                                   double direction,
                                   TSpreading spreading)
         {
-            Ensure.NotNull((IBoundaryConditionSpreading)spreading, nameof(spreading));
+            Ensure.NotNull((IBoundaryConditionSpreading) spreading, nameof(spreading));
 
             Height = height;
             Period = period;
@@ -59,12 +61,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
             get => spreading;
             set
             {
-                Ensure.NotNull((IBoundaryConditionSpreading)value, nameof(value));
+                Ensure.NotNull((IBoundaryConditionSpreading) value, nameof(value));
                 spreading = value;
             }
         }
-
-        private TSpreading spreading;
 
         /// <summary>
         /// Method for accepting visitors of the visitor design pattern,

@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture(typeof(ConstantParameters<DegreesDefinedSpreading>))]
     [TestFixture(typeof(TimeDependentParameters<PowerDefinedSpreading>))]
     [TestFixture(typeof(TimeDependentParameters<DegreesDefinedSpreading>))]
+    [TestFixture(typeof(FileBasedParameters))]
     public class BoundaryConditionDataComponentFactoryConstructTest<TParameters>
         where TParameters : class, IBoundaryConditionParameters
     {

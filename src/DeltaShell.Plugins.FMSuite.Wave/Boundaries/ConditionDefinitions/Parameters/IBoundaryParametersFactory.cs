@@ -90,5 +90,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
+
+        /// <summary>
+        /// Construct a new <see cref="FileBasedParameters"/> instance with default values.
+        /// </summary>
+        /// <returns>
+        /// A new default <see cref="FileBasedParameters"/> instance with default values.
+        /// </returns>
+        FileBasedParameters ConstructDefaultFileBasedParameters();
     }
 }

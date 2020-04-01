@@ -50,8 +50,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
                                 ConstructUniformTimeDependentComponent<DegreesDefinedSpreading>);
             constructionMap.Add(typeof(SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>), 
                                 ConstructSpatiallyVaryingTimeDependentDataComponent<PowerDefinedSpreading>);
-            constructionMap.Add(typeof(SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>), 
+            constructionMap.Add(typeof(SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>),
                                 ConstructSpatiallyVaryingTimeDependentDataComponent<DegreesDefinedSpreading>);
+            constructionMap.Add(typeof(UniformDataComponent<FileBasedParameters>),
+                                ConstructUniformFileBasedComponent);
+            constructionMap.Add(typeof(SpatiallyVaryingDataComponent<FileBasedParameters>),
+                                ConstructSpatiallyVaryingFileBasedDataComponent);
         }
 
         public T ConstructDefaultDataComponent<T>() where T : class, IBoundaryConditionDataComponent
@@ -81,6 +85,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             where TSpreading : class, IBoundaryConditionSpreading, new() =>
             new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
 
+        private UniformDataComponent<FileBasedParameters> ConstructUniformFileBasedComponent() =>
+            new UniformDataComponent<FileBasedParameters>(parametersFactory.ConstructDefaultFileBasedParameters());
+
+        private static SpatiallyVaryingDataComponent<FileBasedParameters> ConstructSpatiallyVaryingFileBasedDataComponent() =>
+            new SpatiallyVaryingDataComponent<FileBasedParameters>();
 
         public IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(IBoundaryConditionDataComponent oldDataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
