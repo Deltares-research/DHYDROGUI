@@ -110,19 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return new WaveBoundaryConditionDefinition(shape, periodType, dataComponent);
         }
 
-        private IBoundaryConditionDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
-                                                                    IList<IFunction> timeSeriesData,
-                                                                    IWaveBoundaryGeometricDefinition
-                                                                        geometricDefinition)
-        {
-            if (boundaryBlock.SpectrumType == SpectrumType.Parametrized)
-            {
-                return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
-            }
-
-            throw new NotImplementedException();
-        }
-
         private IBoundaryConditionDataComponent CreateParametrizedDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                                 IList<IFunction> timeSeriesData,
                                                                                 IWaveBoundaryGeometricDefinition
@@ -137,8 +124,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                     return CreateDataComponent<DegreesDefinedSpreading>(boundaryBlock, timeSeriesData,
                                                                         geometricDefinition);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Value is not a valid spreading type.",
+                                                          nameof(boundaryBlock.SpreadingType));
             }
+        }
+
+        private IBoundaryConditionDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
+                                                                    IList<IFunction> timeSeriesData,
+                                                                    IWaveBoundaryGeometricDefinition
+                                                                        geometricDefinition)
+        {
+            if (boundaryBlock.SpectrumType == SpectrumType.Parametrized)
+            {
+                return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
+            }
+
+            throw new NotImplementedException();
         }
 
         private IBoundaryConditionDataComponent CreateDataComponent<TSpreading>(BoundaryMdwBlock boundaryBlock,
@@ -248,7 +249,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 case PeriodType.Peak:
                     return BoundaryConditionPeriodType.Peak;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Value is not a valid period type.",
+                                                          nameof(boundaryBlock.PeriodType));
             }
         }
 
@@ -263,7 +265,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 case ShapeType.PiersonMoskowitz:
                     return new PiersonMoskowitzShape();
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Value is not a valid shape type.",
+                                                          nameof(boundaryBlock.ShapeType));
             }
         }
 
