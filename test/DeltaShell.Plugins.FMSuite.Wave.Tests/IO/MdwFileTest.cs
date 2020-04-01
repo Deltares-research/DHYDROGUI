@@ -406,43 +406,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(modelDef.BoundaryConditions[1].DataType, BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
             return modelDef;
         }
-
-        /// <summary>
-        /// Load a boundary condition that doesn't contain information at the first point.
-        /// Add a function to that point.
-        /// Save it and check that the values are written in sorted order.
-        /// </summary>
-        [Test]
-        public void CreateBoundaryInWrongOrderAndSave()
-        {
-            var mdwfilepath = TestHelper.GetTestFilePath(@"bcwTimeseriesNotOnFirstAndLast\bcw.mdw");
-            var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwfilepath);
-
-            // check that the data doesn't contain information at datapoint 0
-            Assert.IsNull(modelDef.BoundaryConditions[0].GetDataAtPoint(0));
-
-            // check that there is other data in the boundarycondition
-            Assert.IsNotNull(modelDef.BoundaryConditions[0].GetDataAtPoint(1));
-
-
-            modelDef.BoundaryConditions[0].AddPoint(0);
-            var f = modelDef.BoundaryConditions[0].GetDataAtPoint(0);
-            f[new DateTime()] = new[] {1, 1, 1, 1};
-
-            // save the model
-            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
-            mdwFile.SaveTo(targetPath, modelDef, true);
-
-            // load the model back from disk
-            WaveModelDefinition savedModelDef = mdwFile.Load(targetPath);
-
-            // TODO: Check if I can do equality check in func
-            Assert.AreEqual(f.GetValues<double>(), savedModelDef.BoundaryConditions[0].GetDataAtPoint(0).GetValues<double>());
-
-            // TODO: somehow assert that the lines are ok. You cannot check that here in code, but we really have to check the file.
-        }
-
+        
         /// <summary>
         /// Test added for jira issue: DELFT3DFM-33
         /// </summary>
