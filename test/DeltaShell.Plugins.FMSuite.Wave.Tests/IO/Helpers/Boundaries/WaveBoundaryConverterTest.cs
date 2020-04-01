@@ -288,6 +288,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.Throws<NotImplementedException>(Call);
         }
 
+        [Test]
+        public void Convert_BoundaryDataWithoutCoordinatesDefinition_IsSkipped()
+        {
+            // Setup
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+
+            DelftIniCategory[] categories =
+            {
+                GetBoundaryCategory(random.NextEnumValue<ShapeType>(),
+                                    random.NextEnumValue<PeriodType>(),
+                                    mdwValues, "parametrized", "orientation")
+            };
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            var result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+                                  .ToList();
+
+            // Assert
+            Assert.That(result, Is.Empty);
+        }
+
         private static IEnumerable<TestCaseData> ShapePeriodTestCases()
         {
             double peakEnhancementFactor = RandomDouble;
@@ -414,11 +440,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         private DelftIniCategory GetBoundaryCategory(ShapeType shapeType, PeriodType periodType, MdwTestValues values,
-                                                     string spectrumSpec = "parametric")
+                                                     string spectrumSpec = "parametric",
+                                                     string definition = "xy-coordinates")
         {
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, "xy-coordinates");
+            category.AddProperty(KnownWaveProperties.Definition, definition);
 
             category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(values.StartX));
             category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(values.StartY));

@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             return new BoundaryMdwBlock(boundaryCategory.GetPropertyValue(KnownWaveProperties.Name))
             {
-                Definition = boundaryCategory.GetPropertyValue(KnownWaveProperties.Definition),
+                DefinitionType = boundaryCategory.GetEnumValue<DefinitionType>(KnownWaveProperties.Definition),
                 XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX),
                 YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY),
                 XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX),

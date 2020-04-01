@@ -30,9 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the definition.
+        /// Gets or sets the definition type.
         /// </summary>
-        public string Definition { get; set; }
+        public DefinitionType DefinitionType { get; set; }
 
         /// <summary>
         /// Gets or sets the x of the start coordinate.

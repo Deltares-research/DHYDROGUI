@@ -73,6 +73,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             foreach (DelftIniCategory category in boundaryCategories)
             {
                 BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category);
+                if (boundaryBlock.DefinitionType != DefinitionType.Coordinates)
+                {
+                    continue;
+                }
+
                 timeSeriesData.TryGetValue(boundaryBlock.Name, out List<IFunction> timeSeries);
 
                 IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock);

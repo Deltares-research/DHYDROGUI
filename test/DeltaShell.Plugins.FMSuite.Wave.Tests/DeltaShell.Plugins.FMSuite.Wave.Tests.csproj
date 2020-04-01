@@ -342,6 +342,8 @@
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DefinitionTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DefinitionTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodTypeDescriptionTest.cs" />

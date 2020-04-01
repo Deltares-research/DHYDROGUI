@@ -41,7 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
-            Assert.That(result.Definition, Is.Null);
             Assert.That(result.XStartCoordinate, Is.EqualTo(0));
             Assert.That(result.YStartCoordinate, Is.EqualTo(0));
             Assert.That(result.XEndCoordinate, Is.EqualTo(0));

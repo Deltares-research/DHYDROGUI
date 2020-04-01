@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
@@ -41,16 +42,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetTestCases))]
-        public void Convert_ReturnsCorrectResult(string spectrumTypeStr, string shapeTypeStr,
-                                                 string periodTypeStr, string spreadingTypeStr,
-                                                 SpectrumType expectedSpectrumType, ShapeType expectedShapeType,
-                                                 PeriodType expectedPeriodType, SpreadingType expectedSpreadingType)
+        public void Convert_ReturnsCorrectResult(string spectrumTypeStr, SpectrumType expectedSpectrumType,
+                                                 string shapeTypeStr, ShapeType expectedShapeType,
+                                                 string periodTypeStr, PeriodType expectedPeriodType,
+                                                 string spreadingTypeStr, SpreadingType expectedSpreadingType,
+                                                 string definitionTypeStr, DefinitionType expectedDefinitionType)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             const string name = "boundary_name";
-            const string definition = "boundary_definition";
             double startX = RandomDouble;
             double startY = RandomDouble;
             double endX = RandomDouble;
@@ -69,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             double gaussianSpread = RandomDouble;
 
             category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, definition);
+            category.AddProperty(KnownWaveProperties.Definition, definitionTypeStr);
             category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
             category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
             category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
-            Assert.That(result.Definition, Is.EqualTo(definition));
+            Assert.That(result.DefinitionType, Is.EqualTo(expectedDefinitionType));
             Assert.That(result.XStartCoordinate, Is.EqualTo(startX));
             Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
             Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
@@ -119,11 +120,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, "boundary_definition");
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumType>().ToString());
-            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeType>().ToString());
-            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodType>().ToString());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingType>().ToString());
+            category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingType>().GetDescription());
 
             // Call
             BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
@@ -143,10 +144,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             foreach (object[] shapeTypeCase in ShapeTypeTestCases())
             foreach (object[] periodTypeCase in PeriodTypeTestCases())
             foreach (object[] spreadingTypeCase in SpreadingTypeTestCases())
+            foreach (object[] definitionTypeCase in DefinitionTypeTestCases())
             {
                 yield return new TestCaseData(
-                    spectrumTypeCase[0], shapeTypeCase[0], periodTypeCase[0], spreadingTypeCase[0],
-                    spectrumTypeCase[1], shapeTypeCase[1], periodTypeCase[1], spreadingTypeCase[1]);
+                    spectrumTypeCase[0], spectrumTypeCase[1],
+                    shapeTypeCase[0], shapeTypeCase[1],
+                    periodTypeCase[0], periodTypeCase[1],
+                    spreadingTypeCase[0], spreadingTypeCase[1],
+                    definitionTypeCase[0], definitionTypeCase[1]);
             }
         }
 
@@ -173,6 +178,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         {
             yield return SubTestCase("degrees", SpreadingType.Degrees);
             yield return SubTestCase("power", SpreadingType.Power);
+        }
+
+        private static IEnumerable<object[]> DefinitionTypeTestCases()
+        {
+            yield return SubTestCase("xy-coordinates", DefinitionType.Coordinates);
+            yield return SubTestCase("orientation", DefinitionType.Oriented);
         }
 
         private static object[] SubTestCase(string value, object expected)
