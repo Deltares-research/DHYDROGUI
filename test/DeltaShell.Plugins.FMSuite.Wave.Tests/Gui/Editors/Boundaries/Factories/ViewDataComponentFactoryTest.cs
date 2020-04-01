@@ -517,11 +517,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                            DirectionalSpreadingViewType.Power);
             yield return  new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), 
                                            DirectionalSpreadingViewType.Degrees);
-
-            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")),
-                                          DirectionalSpreadingViewType.Power);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(),
-                                          DirectionalSpreadingViewType.Power);
         }
 
         [Test]
