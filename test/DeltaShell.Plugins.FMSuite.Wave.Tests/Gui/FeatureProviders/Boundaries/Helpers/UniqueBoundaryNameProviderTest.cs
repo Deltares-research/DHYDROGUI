@@ -53,11 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         private static IEnumerable<TestCaseData> GetUniqueBoundaryNameTestData()
         {
 
-            yield return new TestCaseData(EmptyContainer, UniqueBoundaryNameProvider.defaultBoundaryName);
-            yield return new TestCaseData(NoDefaultContainer, UniqueBoundaryNameProvider.defaultBoundaryName);
-            yield return new TestCaseData(GetContainerWithNElements(5),  "Boundary (5)");
-            yield return new TestCaseData(GetContainerWithNElements(12), "Boundary (12)");
-            yield return new TestCaseData(GetContainerWithNElements(53), "Boundary (53)");
+            yield return new TestCaseData(EmptyContainer, UniqueBoundaryNameProvider.DefaultBoundaryName);
+            yield return new TestCaseData(NoDefaultContainer,            "Boundary(1)");
+            yield return new TestCaseData(GetContainerWithNElements(5),  "Boundary(5)");
+            yield return new TestCaseData(GetContainerWithNElements(12), "Boundary(12)");
+            yield return new TestCaseData(GetContainerWithNElements(53), "Boundary(53)");
         }
 
         private static IBoundaryContainer EmptyContainer
@@ -93,10 +93,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var container= Substitute.For<IBoundaryContainer>();
             var boundaries = new EventedList<IWaveBoundary>
             {
-                GetBoundaryMockWithName(UniqueBoundaryNameProvider.defaultBoundaryName),
+                GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName),
             };
 
-            const string template = UniqueBoundaryNameProvider.defaultBoundaryName + " ({0})";
+            const string template = UniqueBoundaryNameProvider.DefaultBoundaryName + "({0})";
 
             for (var i = 1; i < nElements; i++)
             {
