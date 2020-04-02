@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         /// <param name="waveBoundary"> The observed <see cref="IWaveBoundary"/>.</param>
         /// <param name="geometryFactory"> The geometry factory. </param>
+        /// <param name="supportPointDataComponentViewModel">The <see cref="SupportPointEditorViewModel"/> to view.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="waveBoundary"/> or
         /// <paramref name="geometryFactory"/> is <c> null </c>.
