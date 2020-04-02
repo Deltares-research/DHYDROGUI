@@ -7,6 +7,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     public class BoundaryConditionShapeFactoryTest
     {
         [Test]
+        public void Constructor_ExpectedResults()
+        {
+            // Call
+            var factory = new BoundaryConditionShapeFactory();
+
+            // Assert
+            Assert.That(factory, Is.InstanceOf<IBoundaryConditionShapeFactory>());
+        }
+
+        [Test]
         public void ConstructDefaultGaussShape_ReturnsExpectedValue()
         {
             // Setup
