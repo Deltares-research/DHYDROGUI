@@ -20,7 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
         /// <param name="parametersBlock"> The parameters block. </param>
         /// <returns>
-        /// The constructed uniform constant data component.
+        /// The constructed uniform constant data component, if <paramref name="parametersBlock"/>
+        /// is specified; otherwise the data component with default constant parameters.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="parametersBlock"/> is <c>null</c>.

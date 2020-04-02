@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
             else
             {
-                ParametersBlock data = GetParametersBlocks(boundaryBlock).First();
+                ParametersBlock data = GetParametersBlocks(boundaryBlock).FirstOrDefault();
                 return importDataComponentFactory.CreateUniformConstantComponent<TSpreading>(data);
             }
         }

@@ -34,9 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         public UniformDataComponent<ConstantParameters<TSpreading>> CreateUniformConstantComponent<TSpreading>(
             ParametersBlock parametersBlock) where TSpreading : class, IBoundaryConditionSpreading, new()
         {
-            Ensure.NotNull(parametersBlock, nameof(parametersBlock));
-
-            ConstantParameters<TSpreading> parameters = CreateConstantParameters<TSpreading>(parametersBlock);
+            ConstantParameters<TSpreading> parameters = parametersBlock != null
+                                                            ? CreateConstantParameters<TSpreading>(parametersBlock)
+                                                            : parametersFactory.ConstructDefaultConstantParameters<TSpreading>();
 
             return new UniformDataComponent<ConstantParameters<TSpreading>>(parameters);
         }

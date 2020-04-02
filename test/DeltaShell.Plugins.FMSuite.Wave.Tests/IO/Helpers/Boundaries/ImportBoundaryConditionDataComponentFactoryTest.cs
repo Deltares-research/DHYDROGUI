@@ -41,18 +41,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void CreateUniformConstantComponent_ParametersBlockNull_ThrowsArgumentNullException()
+        public void CreateUniformConstantComponent_ParametersBlockNull_ReturnsCorrectResult()
         {
             // Setup
             var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var constantParameters = new ConstantParameters<T>(random.NextDouble(),
+                                                               random.NextDouble(),
+                                                               random.NextDouble(),
+                                                               new T());
+            parametersFactory.ConstructDefaultConstantParameters<T>().Returns(constantParameters);
+
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
 
             // Call
-            void Call() => factory.CreateUniformConstantComponent<T>(null);
+            UniformDataComponent<ConstantParameters<T>> result = factory.CreateUniformConstantComponent<T>(null);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("parametersBlock"));
+            Assert.That(result.Data, Is.SameAs(constantParameters));
         }
 
         [Test]
