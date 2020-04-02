@@ -445,7 +445,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
 
-            AddCrossSectionDefinition(hydroNetwork);
+            AddCrossSectionDefinition(hydroNetwork, helper);
             hydroNetwork.Branches.Add(this);
             //if (helper != null) helper.SewerConnectionsByName[Name] = this;
         }
@@ -468,7 +468,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
+        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
         }
         
