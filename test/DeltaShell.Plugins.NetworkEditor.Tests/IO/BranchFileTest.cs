@@ -61,8 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
                 new Pipe { Name = "pipe_1", WaterType = SewerConnectionWaterType.Combined },
                 new SewerConnection { Name = "sc_1", WaterType = SewerConnectionWaterType.DryWater },
                 new Pipe { Name = "pipe_2", WaterType = SewerConnectionWaterType.None },
-                new SewerConnection { Name = "sc_2", WaterType = SewerConnectionWaterType.StormWater },
-                new Channel { Name = "channel_1" }
+                new SewerConnection { Name = "sc_2", WaterType = SewerConnectionWaterType.StormWater }
             };
             
             WriteAndCheckBranchTypeFileContent(pipes);
@@ -94,12 +93,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenDifferentTypesOfBranches_WhenWritingBranchTypeFile_ThenBranchTypesAreCorretlyWritten()
         {
             var branches = new List<IBranch>
             {
-                new Channel { Name = "myChannel" }, new Pipe { Name = "myPipe" }, new SewerConnection("mySewerConnection")
+                new Pipe { Name = "myPipe" }, new SewerConnection("mySewerConnection")
             };
             
             WriteAndCheckBranchTypeFileContent(branches);
@@ -113,15 +111,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             {
                 Assert.That(propertiesPerBranch[n].Name, Is.EqualTo(branches[n].Name));
                 Assert.That(propertiesPerBranch[n].BranchType, Is.EqualTo(GetBranchType(branches[n])));
-                Assert.That(propertiesPerBranch[n].WaterType, Is.EqualTo(GetWaterType(branches[n])));
                 Assert.That(propertiesPerBranch[n].Material, Is.EqualTo(GetMaterial(branches[n])));
             }
-        }
-
-        private static SewerConnectionWaterType GetWaterType(IBranch branch)
-        {
-            var sewerConnection = branch as ISewerConnection;
-            return sewerConnection?.WaterType ?? SewerConnectionWaterType.None;
         }
 
         private static SewerProfileMapping.SewerProfileMaterial GetMaterial(IBranch branch)

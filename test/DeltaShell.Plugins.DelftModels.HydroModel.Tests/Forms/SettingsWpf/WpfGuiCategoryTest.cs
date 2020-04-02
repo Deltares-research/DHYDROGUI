@@ -47,9 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
         [Test]
         [TestCase(false, false, true)]
-        [TestCase(true, false, false)]
+        [TestCase(true, false, true)]
         [TestCase(true, true, true)]
-        [Category("Quarantine")]
         public void Test_WpfGuiCategory_IsVisible_When_AtLeast_One_Property_Without_CustomControl(bool withCustomControl, bool propertyVisible, bool expectedResult)
         {
             var dummyCategoryName = "dummyCategory";
