@@ -81,19 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
                 };
             }
-
-            if (networkObjects is IEnumerable<Compartment>)
-            {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPoint),
-                    Shape = ShapeType.Ellipse,
-                    ShapeSize = 6,
-                    Fill = new SolidBrush(Color.LightSlateGray),
-                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
-                };
-            }
-
+            
             if (networkObjects is IEnumerable<IRetention>)
             {
                 return CreatePointStyle(Properties.Resources.Retention);
@@ -193,6 +181,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         }
                     },
                     EnableOutline = false
+                };
+            }
+
+            if (networkObjects is IEnumerable<Compartment>)
+            {
+                return new VectorStyle
+                {
+                    GeometryType = typeof(IPoint),
+                    Shape = ShapeType.Ellipse,
+                    ShapeSize = 6,
+                    Fill = new SolidBrush(Color.LightSlateGray),
+                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f),
                 };
             }
 
