@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -135,6 +136,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             var visitor = new MdwBoundaryConditionPropertiesCreator(boundaryCategory);
             conditionDefinition.AcceptVisitor(visitor);
+
+            SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(boundaryCategory, conditionDefinition);
+        }
+
+        private static void SetSpreadingTypeOfSpatiallyVaryingBoundaryWithoutActiveSupportPoints(
+            DelftIniCategory boundaryCategory, IWaveBoundaryConditionDefinition conditionDefinition)
+        {
+            if (boundaryCategory.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType) == string.Empty)
+            {
+                string retrievedValue;
+                switch (conditionDefinition.DataComponent)
+                {
+                    case UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                    case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
+                    case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
+                    case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
+                        retrievedValue = "Power";
+                        break;
+                    case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                    case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
+                    case UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
+                    case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
+                        retrievedValue = "Degrees";
+                        break;
+                    default:
+                        throw new NotSupportedException(
+                            "The type of the specified dataComponent does not correspond with a supported type");
+                }
+
+                boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, retrievedValue);
+            }
         }
     }
 }

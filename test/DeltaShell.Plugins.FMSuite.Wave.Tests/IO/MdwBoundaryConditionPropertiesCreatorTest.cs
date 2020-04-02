@@ -350,6 +350,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(GetStringValue(distance2), properties[5].Value);
         }
 
+        [Test]
+        public void AddNewProperties_ForSpatiallyVaryingConstantPowerBoundaryWithoutActiveSupportPoints()
+        {
+            // Arrange
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            var dataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+            
+            var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
+
+            // Act
+            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+
+            // Assert
+            List<DelftIniProperty> properties = category.Properties.ToList();
+
+            Assert.AreEqual(4, properties.Count);
+            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
+            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
+            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
+            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
+            Assert.AreEqual(GetStringValue(factor), properties[3].Value);
+        }
+
         private static MdwBoundaryConditionPropertiesCreator CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category)
         {
             category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
