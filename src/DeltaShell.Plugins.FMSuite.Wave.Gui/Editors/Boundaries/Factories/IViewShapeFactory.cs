@@ -1,5 +1,5 @@
-﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
@@ -17,10 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <param name="type"> The <see cref="IViewShape"/> to construct. </param>
         /// <returns>
         /// An <see cref="IViewShape"/> corresponding with the provided
-        /// <paramref name="type"/>. If <paramref name="type"/> is not a child
-        /// of <see cref="IViewShape"/> then <c>null</c> will be returned.
+        /// <paramref name="type"/>. If <paramref name="type"/> is not a
+        /// defined <see cref="ViewShapeType"/>, then null will be returned.
         /// </returns>
-        IViewShape ConstructFromType(Type type);
+        IViewShape ConstructFromType(ViewShapeType type);
 
         /// <summary>
         /// Constructs the <see cref="IViewShape"/> corresponding with the
@@ -28,9 +28,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// </summary>
         /// <param name="shape"> The shape for which to construct a <see cref="IViewShape"/>. </param>
         /// <returns>
-        /// The <see cref="IViewShape"/> corresponding with <paramref name="shape"/>, if no
-        /// corresponding <see cref="IViewShape"/> exists, null is returned.
+        /// The <see cref="IViewShape"/> corresponding with <paramref name="shape"/>.
         /// </returns>
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
+        /// Thrown when <paramref name="shape"/> is not defined.
+        /// </exception>
         IViewShape ConstructFromShape(IBoundaryConditionShape shape);
 
     }

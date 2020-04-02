@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
@@ -11,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     /// </summary>
     public class ViewShapeFactory : IViewShapeFactory
     {
-        private readonly Dictionary<Type, Func<IViewShape>> mappingDefault =
-         new Dictionary<Type, Func<IViewShape>>();
+        private readonly Dictionary<ViewShapeType, Func<IViewShape>> mappingDefault =
+         new Dictionary<ViewShapeType, Func<IViewShape>>();
 
         private readonly IBoundaryConditionShapeFactory factory;
 
@@ -33,13 +35,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
         private void InitialiseDefaultMapping()
         {
-            mappingDefault.Add(typeof(GaussViewShape), ConstructDefaultGaussViewShape);
-            mappingDefault.Add(typeof(JonswapViewShape), ConstructDefaultJonswapViewShape);
-            mappingDefault.Add(typeof(PiersonMoskowitzViewShape), ConstructDefaultPiersonMoskowitzViewShape);
+            mappingDefault.Add(ViewShapeType.Gauss, ConstructDefaultGaussViewShape);
+            mappingDefault.Add(ViewShapeType.Jonswap, ConstructDefaultJonswapViewShape);
+            mappingDefault.Add(ViewShapeType.PiersonMoskowitz, ConstructDefaultPiersonMoskowitzViewShape);
         }
 
-        public IViewShape ConstructFromType(Type type) =>
-            mappingDefault.ContainsKey(type) ? mappingDefault[type]() : null;
+        public IViewShape ConstructFromType(ViewShapeType type)
+        {
+            Ensure.IsDefined(type, nameof(type));
+            return mappingDefault[type]();
+        }
 
         public IViewShape ConstructFromShape(IBoundaryConditionShape shape)
         {

@@ -46,12 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 return this;
             }
 
-            public ParametersTestConfig WithBoundaryConditionAction(Action<IWaveBoundaryConditionDefinition> action)
-            {
-                action(BoundaryCondition);
-                return this;
-            }
-
             public ParametersTestConfig WithDefaultDataComponentFactory()
             {
                 DataComponentFactory = Substitute.For<IViewDataComponentFactory>();
@@ -156,14 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Degrees));
         }
 
-        private static void ConfigureBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition,
-                                                       IBoundaryConditionShape shape,
-                                                       BoundaryConditionPeriodType periodType)
-        {
-            boundaryCondition.Shape = shape;
-            boundaryCondition.PeriodType = periodType;
-        }
-
         [Test]
         public void Constructor_ObservedBoundaryConditionNull_ThrowsArgumentNullException()
         {
@@ -231,16 +217,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(shapeTypes, Is.EquivalentTo(expectedTypes));
         }
 
+        private static IEnumerable<TestCaseData> GetShapeTypeSetValueData()
+        {
+            yield return new TestCaseData(typeof(GaussViewShape), ViewShapeType.Gauss, new GaussViewShape(new GaussShape()));
+            yield return new TestCaseData(typeof(JonswapViewShape), ViewShapeType.Jonswap, new JonswapViewShape(new JonswapShape()));
+            yield return new TestCaseData(typeof(PiersonMoskowitzViewShape), ViewShapeType.PiersonMoskowitz, new PiersonMoskowitzViewShape(new PiersonMoskowitzShape()));
+        }
+
         [Test]
-        public void ShapeType_SetValue_NotEqual()
+        [TestCaseSource(nameof(GetShapeTypeSetValueData))]
+        public void ShapeType_SetValue_NotEqual(Type expectedType, ViewShapeType expectedViewShapeType, IViewShape expectedShape)
         {
             // Setup
-            Type expectedType = typeof(PiersonMoskowitzViewShape);
-            var expectedShape = new PiersonMoskowitzViewShape(new PiersonMoskowitzShape());
-
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
                                                                         .WithDefaultShapeFactory()
-                                                                        .WithShapeFactoryAction(f => f.ConstructFromType(expectedType).Returns(expectedShape))
+                                                                        .WithShapeFactoryAction(f => f.ConstructFromType(expectedViewShapeType).Returns(expectedShape))
                                                                         .WithDefaultDataComponentFactory()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
@@ -253,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.ShapeType, Is.EqualTo(expectedType));
 
-            testConfig.ShapeFactory.Received(1).ConstructFromType(expectedType);
+            testConfig.ShapeFactory.Received(1).ConstructFromType(expectedViewShapeType);
             Assert.That(viewModel.Shape, Is.SameAs(expectedShape));
 
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(2));
@@ -267,6 +258,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(testConfig.Senders, Is.EquivalentTo(expectedSenders));
             Assert.That(testConfig.EventArgses.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.ShapeType)));
             Assert.That(testConfig.EventArgses.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.Shape)));
+        }
+
+        [Test]
+        public void ShapeType_SetValueUnsupportedType_ThrowsNotSupportedException()
+        {
+            // Setup
+            ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
+                                                                        .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
+                                                                        .ConstructViewModel();
+
+            BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
+
+            // Call | Assert
+            void Call() => viewModel.ShapeType = typeof(object);
+            Assert.Throws<NotSupportedException>(Call);
         }
 
         [Test]
@@ -285,6 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             shapeFactory.ConstructFromShape(modelShape).Returns(viewShape);
 
             Type expectedType = typeof(GaussViewShape);
+            const ViewShapeType expectedViewShapeType = ViewShapeType.Gauss;
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithShapeFactory(shapeFactory)
                                                                         .WithDefaultDataComponentFactory()
@@ -299,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.ShapeType, Is.EqualTo(expectedType));
 
-            testConfig.ShapeFactory.DidNotReceiveWithAnyArgs().ConstructFromType(expectedType);
+            testConfig.ShapeFactory.DidNotReceiveWithAnyArgs().ConstructFromType(expectedViewShapeType);
             Assert.That(viewModel.Shape, Is.SameAs(viewShape));
 
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(0));

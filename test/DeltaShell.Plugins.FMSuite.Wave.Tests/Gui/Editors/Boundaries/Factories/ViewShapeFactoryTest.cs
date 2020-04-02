@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 using NSubstitute;
@@ -57,10 +59,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         [Test]
-        [TestCase(typeof(GaussViewShape),            typeof(GaussShape))]
-        [TestCase(typeof(JonswapViewShape),          typeof(JonswapShape))]
-        [TestCase(typeof(PiersonMoskowitzViewShape), typeof(PiersonMoskowitzShape))]
-        public void ConstructFromType_ReturnsExpectedResult(Type inputType, Type expectedObservedShapeType)
+        [TestCase(ViewShapeType.Gauss, typeof(GaussViewShape), typeof(GaussShape))]
+        [TestCase(ViewShapeType.Jonswap, typeof(JonswapViewShape),typeof(JonswapShape))]
+        [TestCase(ViewShapeType.PiersonMoskowitz, typeof(PiersonMoskowitzViewShape),typeof(PiersonMoskowitzShape))]
+        public void ConstructFromType_ReturnsExpectedResult(ViewShapeType inputType, 
+                                                            Type expectedViewType,
+                                                            Type expectedObservedShapeType)
         {
             // Setup
             var modelFactory = new BoundaryConditionShapeFactory();
@@ -71,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.InstanceOf(inputType));
+            Assert.That(result, Is.InstanceOf(expectedViewType));
 
             Assert.That(result.ObservedShape, Is.Not.Null);
             Assert.That(result.ObservedShape, Is.InstanceOf(expectedObservedShapeType));
@@ -83,11 +87,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var modelFactory = Substitute.For<IBoundaryConditionShapeFactory>();
             var viewFactory = new ViewShapeFactory(modelFactory);
 
-            // Call
-            IViewShape result = viewFactory.ConstructFromType(typeof(IViewShape));
+            const ViewShapeType t = (ViewShapeType) (-1);
 
-            // Assert
-            Assert.That(result, Is.Null);
+            // Call | Assert
+            void Call() => viewFactory.ConstructFromType(t);
+            Assert.Throws<InvalidEnumArgumentException>(Call);
         }
     }
 }

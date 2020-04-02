@@ -74,9 +74,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                Shape = shapeFactory.ConstructFromType(value);
+                Shape = shapeFactory.ConstructFromType(ToViewShapeType(value));
                 OnPropertyChanged();
             }
+        }
+
+        private static ViewShapeType ToViewShapeType(Type t)
+        {
+            if (t == typeof(GaussViewShape))
+            {
+                return ViewShapeType.Gauss;
+            }
+            if (t == typeof(JonswapViewShape))
+            {
+                return ViewShapeType.Jonswap;
+            }
+            if (t == typeof(PiersonMoskowitzViewShape))
+            {
+                return ViewShapeType.PiersonMoskowitz;
+            }
+
+            throw new NotSupportedException($"The conversion of Type {t.FullName} is not supported.");
         }
 
         /// <summary>

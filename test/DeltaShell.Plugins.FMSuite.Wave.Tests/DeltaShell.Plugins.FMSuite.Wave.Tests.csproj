@@ -277,6 +277,7 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\GaussViewShapeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\JonswapViewShapeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShapeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\ViewShapeTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModelTest.cs" />
