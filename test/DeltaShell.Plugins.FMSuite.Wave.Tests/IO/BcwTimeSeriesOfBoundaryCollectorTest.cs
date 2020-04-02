@@ -12,6 +12,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
+    [TestFixture]
     public class BcwTimeSeriesOfBoundaryCollectorTest
     {
         [Test]
