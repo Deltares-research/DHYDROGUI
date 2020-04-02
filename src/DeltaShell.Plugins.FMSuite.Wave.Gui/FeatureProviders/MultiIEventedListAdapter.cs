@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
     /// overhead to figure this out for the different lists.
     /// </remarks>
     /// <invariant>
-    /// | There are no null values within the <see cref="MultiIEventedListAdapter" />.
+    /// | There are no null values within the <see cref="MultiIEventedListAdapter{TObserved, TDisplayed}" />.
     /// </invariant>
     public class MultiIEventedListAdapter<TObserved, TDisplayed> : IEventedList<TDisplayed>, IList
     {
