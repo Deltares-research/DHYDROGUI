@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// </exception>
         public FileBasedParameters(string filePath)
         {
-            Ensure.NotNull((string) filePath, nameof(filePath));
+            Ensure.NotNull(filePath, nameof(filePath));
 
             FilePath = filePath;
         }
@@ -33,6 +33,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// </summary>
         public string FilePath { get; set; }
 
-        public void AcceptVisitor(IDataComponentVisitor visitor) {}
+        public void AcceptVisitor(IDataComponentVisitor visitor)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

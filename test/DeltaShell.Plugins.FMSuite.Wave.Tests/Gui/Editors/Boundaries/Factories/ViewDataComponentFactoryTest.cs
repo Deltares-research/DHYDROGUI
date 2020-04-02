@@ -187,6 +187,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+           
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), typeof(UniformFileBasedParametersSettingsViewModel));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), typeof(SpatiallyVariantFileBasedParametersSettingsViewModel));
         }
 
         [Test]

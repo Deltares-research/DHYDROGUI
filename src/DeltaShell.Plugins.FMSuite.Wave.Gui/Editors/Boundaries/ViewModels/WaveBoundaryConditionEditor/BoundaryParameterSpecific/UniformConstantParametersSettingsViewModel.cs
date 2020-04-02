@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Creates a new <see cref="UniformConstantParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
-        /// <param name="parameters"> The vie data to be displayed.</param>
+        /// <param name="parameters">The view data to be displayed.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="parameters"/> is <c>null</c>.
         /// </exception>

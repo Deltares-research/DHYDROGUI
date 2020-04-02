@@ -140,6 +140,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                     return new SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>(spatiallyVaryingDataComponent.Data, 
                                                                                                                  generateSeries);
 
+                case UniformDataComponent<FileBasedParameters> uniformDataComponent:
+                    return new UniformFileBasedParametersSettingsViewModel(uniformDataComponent.Data);
+
+                case SpatiallyVaryingDataComponent<FileBasedParameters> spatiallyVaryingDataComponent:
+                    return new SpatiallyVariantFileBasedParametersSettingsViewModel(spatiallyVaryingDataComponent.Data);
+
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }

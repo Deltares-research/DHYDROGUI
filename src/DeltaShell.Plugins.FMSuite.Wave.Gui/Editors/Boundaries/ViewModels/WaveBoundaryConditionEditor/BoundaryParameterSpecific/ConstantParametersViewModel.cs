@@ -45,11 +45,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         where TSpreading : IBoundaryConditionSpreading, new()
     {
         /// <summary>
-        /// Creates a new <see cref="ConstantParameters{TSpreading}"/>.
+        /// Creates a new <see cref="ConstantParametersViewModel"/>.
         /// </summary>
-        /// <param name="parameters"> The observed constant parameters. </param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="parameters"/> is <c>null</c>;
+        /// <param name="parameters">The observed constant parameters.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="parameters"/> is <c>null</c>.
         /// </exception>
         public ConstantParametersViewModel(ConstantParameters<TSpreading> parameters)
         {
