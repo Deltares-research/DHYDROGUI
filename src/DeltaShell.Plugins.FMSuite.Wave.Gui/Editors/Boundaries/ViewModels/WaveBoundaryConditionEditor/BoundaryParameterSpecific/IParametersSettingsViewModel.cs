@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
+﻿using System.ComponentModel;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
     /// <see cref="IParametersSettingsViewModel"/> defines the different parameter
@@ -15,5 +17,6 @@
     /// As such, this interface is empty. Other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    public interface IParametersSettingsViewModel { }
+    /// <seealso cref="INotifyPropertyChanged" />
+    public interface IParametersSettingsViewModel : INotifyPropertyChanged { }
 }

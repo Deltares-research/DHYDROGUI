@@ -27,6 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         /// <param name="observedBoundaryCondition"> The observed boundary condition. </param>
         /// <param name="shapeFactory"> The shape view factory. </param>
+        /// <param name="dataComponentFactory">
+        /// <see cref="IViewDataComponentFactory"/> to construct data components with.
+        /// </param>
+        /// <param name="announceDataComponentChanged">
+        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>

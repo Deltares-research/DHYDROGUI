@@ -10,11 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// model that wishes to back the TimeDependentParametersView.
     /// </summary>
     /// <seealso cref="IParametersSettingsViewModel" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class TimeDependentParametersSettingsViewModel : IParametersSettingsViewModel,
-                                                                     INotifyPropertyChanged
+    public abstract class TimeDependentParametersSettingsViewModel : IParametersSettingsViewModel
     {
-        protected readonly IGenerateSeries generateSeries;
+        protected readonly IGenerateSeries GenerateSeries;
 
         /// <summary>
         /// Creates a new <see cref="TimeDependentParametersSettingsViewModel"/>.
@@ -26,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         protected TimeDependentParametersSettingsViewModel(IGenerateSeries generateSeries)
         {
             Ensure.NotNull(generateSeries, nameof(generateSeries));
-            this.generateSeries = generateSeries;
+            GenerateSeries = generateSeries;
         }
 
         /// <summary>

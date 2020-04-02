@@ -28,8 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(parameters, nameof(parameters));
 
-            ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(this.generateSeries, 
-                                                                                                parameters);
+            ActiveParametersViewModel = 
+                new TimeDependentUniformParametersViewModel<TSpreading>(GenerateSeries, parameters);
         }
 
         public override TimeDependentParametersViewModel ActiveParametersViewModel { get; protected set; }

@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(generateSeries,  
+                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(GenerateSeries,  
                                                                                                                correspondingParameters, 
                                                                                                                supportPointToParametersMapping)
                                             : null;

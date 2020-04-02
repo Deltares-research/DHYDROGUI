@@ -9,8 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// </summary>
     /// <seealso cref="IParametersSettingsViewModel" />
     /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel,
-                                                                INotifyPropertyChanged
+    public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel
     {
         /// <summary>
         /// Gets or sets the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
