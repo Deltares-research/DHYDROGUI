@@ -129,8 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                     return CreateDataComponent<DegreesDefinedSpreading>(boundaryBlock, timeSeriesData,
                                                                         geometricDefinition);
                 default:
-                    throw new ArgumentOutOfRangeException("Value is not a valid spreading type.",
-                                                          nameof(boundaryBlock.SpreadingType));
+                    throw new NotSupportedException($"Value '{boundaryBlock.SpreadingType}' is not a valid spreading type.");
             }
         }
 
@@ -254,8 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 case PeriodType.Peak:
                     return BoundaryConditionPeriodType.Peak;
                 default:
-                    throw new ArgumentOutOfRangeException("Value is not a valid period type.",
-                                                          nameof(boundaryBlock.PeriodType));
+                    throw new NotSupportedException($"Value '{boundaryBlock.PeriodType}' is not a valid period type.");
             }
         }
 
@@ -270,8 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 case ShapeType.PiersonMoskowitz:
                     return new PiersonMoskowitzShape();
                 default:
-                    throw new ArgumentOutOfRangeException("Value is not a valid shape type.",
-                                                          nameof(boundaryBlock.ShapeType));
+                    throw new NotSupportedException($"Value '{boundaryBlock.ShapeType}' is not a valid shape type.");
             }
         }
 
