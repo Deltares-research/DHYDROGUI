@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             {
                 yield return typeof (IHydroNetwork);
                 yield return typeof (HydroRegion);
-                yield return typeof (DrainageBasin);
+                yield return typeof (IDrainageBasin);
             }
         }
 
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 availableFeatureFromGisImporters.Add("Pump", typeof (PumpFromGisImporter));
                 availableFeatureFromGisImporters.Add("Weir (simple weir)", typeof (SimpleWeirFromGisImporter));
             }
-            if (HydroRegion is DrainageBasin || HydroRegion is HydroRegion)
+            if (HydroRegion is IDrainageBasin || HydroRegion is HydroRegion)
             {
                 availableFeatureFromGisImporters.Add("Catchments", typeof (CatchmentFromGisImporter));
             }

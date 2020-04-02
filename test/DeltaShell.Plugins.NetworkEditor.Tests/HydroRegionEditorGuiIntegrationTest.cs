@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         protected DeltaShellGui gui;
         protected Project project;
         protected IHydroRegion region;
-        protected DrainageBasin basin;
+        protected IDrainageBasin basin;
         protected IHydroNetwork network;
         protected Window mainWindow;
         protected Action onMainWindowShown;

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 var mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
                 return mapView != null &&
                     mapView.Map != null && // Can be null when closing GUI, with HydroNetworkEditor opened next to other View
-                    mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is DrainageBasin) != null;
+                    mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IDrainageBasin) != null;
             }
         }
 

@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             yield return new SubCatchmentRelationInteractor();
         }
 
-        public CatchmentFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, DrainageBasin basin) : base(layer, feature, vectorStyle, basin)
+        public CatchmentFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IDrainageBasin basin) : base(layer, feature, vectorStyle, basin)
         {
             DrainageBasin = basin;
         }
@@ -138,6 +138,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             return new Polygon(new LinearRing(boundaryCoordinates));
         }
 
-        public DrainageBasin DrainageBasin { get; set; }
+        public IDrainageBasin DrainageBasin { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using SharpMap.UI.Forms;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     [ResourcesDisplayName(typeof(Resources), "DrainageBasinProperties_DisplayName")]
-    public class DrainageBasinProperties : ObjectProperties<DrainageBasin>
+    public class DrainageBasinProperties : ObjectProperties<IDrainageBasin>
     {
         [Description("Name of basin")]
         [Category("General")]

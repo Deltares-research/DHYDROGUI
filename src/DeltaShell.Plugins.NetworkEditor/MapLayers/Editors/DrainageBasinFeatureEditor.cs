@@ -5,6 +5,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 {
     public abstract class DrainageBasinFeatureEditor : FeatureEditor
     {
-        public DrainageBasin DrainageBasin { get; set; }
+        public IDrainageBasin DrainageBasin { get; set; }
     }
 }

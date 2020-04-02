@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 };
             rrDrainageBasinImporter.Import();
 
-            var basin = (DrainageBasin) rrDrainageBasinImporter.TargetObject;
+            var basin = (IDrainageBasin) rrDrainageBasinImporter.TargetObject;
             Assert.AreEqual(9, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Hbv)));
         }
 

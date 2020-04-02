@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var sacr = new Catchment { CatchmentType = CatchmentType.Sacramento };
             var hbv = new Catchment { CatchmentType = CatchmentType.Hbv };
 
-            hydroModel.Region.SubRegions.OfType<DrainageBasin>()
+            hydroModel.Region.SubRegions.OfType<IDrainageBasin>()
                       .First()
                       .Catchments.AddRange(new[] {paved, unpaved, green, water, sacr, hbv});
 

@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
             var retrievedRegion = SaveLoadObject(region, path);
             var retrievedNetwork = retrievedRegion.SubRegions.First() as HydroNetwork;
-            var retrievedBasin = retrievedRegion.SubRegions.Last() as DrainageBasin;
+            var retrievedBasin = retrievedRegion.SubRegions.Last() as IDrainageBasin;
 
             Assert.AreEqual(retrievedRegion, retrievedNetwork.Parent);
             Assert.AreEqual(2, retrievedRegion.Links.Count);

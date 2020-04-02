@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                     return Enumerable.Empty<CatchmentFeatureEditor>();
                 }
 
-                var regionMapLayers = mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is DrainageBasin);
+                var regionMapLayers = mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is IDrainageBasin);
                 var selectMany = regionMapLayers.SelectMany(GetSubLayersRecursive);
                 var catchmentFeatureEditors = selectMany.Select(l => l.FeatureEditor)
                                                         .Where(e => e != null)

@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             propertyMapping = catchmentImporterSettings.PropertiesMapping.First(property => property.PropertyName == "CatchmentType");
             propertyMapping.MappingColumn.ColumnName = "CatchmentTy";
             
-            var basin = (DrainageBasin) catchmentImporter.ImportItem(null);
+            var basin = (IDrainageBasin) catchmentImporter.ImportItem(null);
 
             Assert.AreEqual(basin.Catchments.Count, 7);
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Unpaved)));

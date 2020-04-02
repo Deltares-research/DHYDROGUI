@@ -121,13 +121,13 @@ namespace DeltaShell.Plugins.NetworkEditor
                     AddExampleData = data => AddExampleHydroNetworkData(data)
                 };
 
-            yield return new DataItemInfo<DrainageBasin>
+            yield return new DataItemInfo<IDrainageBasin>
                 {
                     Name = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin,
                     Category = Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Hydro,
                     Image = Properties.Resources.DrainageBasin,
                     AdditionalOwnerCheck = owner => !(owner is HydroRegion)
-                                                    || !((HydroRegion) owner).SubRegions.OfType<DrainageBasin>().Any(), // Support only a single basin per region for now
+                                                    || !((HydroRegion) owner).SubRegions.OfType<IDrainageBasin>().Any(), // Support only a single basin per region for now
                     CreateData = owner =>
                         {
                             var drainageBasin = new DrainageBasin();

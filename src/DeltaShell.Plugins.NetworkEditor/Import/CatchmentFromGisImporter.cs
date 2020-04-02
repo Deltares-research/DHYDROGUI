@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public override object ImportItem(string path, object target = null)
         {
             var features = GetFeatures();
-            var drainageBasin = target as DrainageBasin ?? DrainageBasin;
+            var drainageBasin = target as IDrainageBasin ?? DrainageBasin;
 
             ICoordinateTransformation coordinateTransformation = null;
             var sourceCoordinateSystem = GetCoordinateSystem();
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public readonly IDictionary<Catchment, IFeature> CatchmentToGisFeatureMapping = new Dictionary<Catchment, IFeature>();
 
-        private void ImportCatchment(IFeature feature, DrainageBasin drainageBasin, string catchmentName, string columnNameLongName, string columnNameDescription, string columnNameCatchmentType)
+        private void ImportCatchment(IFeature feature, IDrainageBasin drainageBasin, string catchmentName, string columnNameLongName, string columnNameDescription, string columnNameCatchmentType)
         {
             var catchment = drainageBasin.Catchments.FirstOrDefault(c => c.Name == catchmentName);
 

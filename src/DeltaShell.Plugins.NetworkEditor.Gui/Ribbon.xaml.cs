@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 : Enumerable.Empty<IHydroRegion>()).ToList();
 
             var showNetworkTools = regions.OfType<IHydroNetwork>().Any();
-            var showBasinTools = regions.OfType<DrainageBasin>().Any();
+            var showBasinTools = regions.OfType<IDrainageBasin>().Any();
             var showArea2DTools = true;  // regions.OfType<Area>().Any();  TODO. 
 
             ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);

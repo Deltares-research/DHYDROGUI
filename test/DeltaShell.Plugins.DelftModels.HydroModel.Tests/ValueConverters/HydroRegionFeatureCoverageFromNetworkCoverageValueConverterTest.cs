@@ -129,11 +129,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
-        [Category("ToCheck")]
         public void FeatureCoverageUpdateWithoutLinksDoesNotCrash()
         {
             // Remove links:
-            region.SubRegions.OfType<DrainageBasin>()
+            region.SubRegions.OfType<IDrainageBasin>()
                   .First()
                   .AllCatchments.ForEach(c => c.UnlinkFrom(c.Links.First().Target));
 

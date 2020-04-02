@@ -86,10 +86,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var applicationPlugin = new NetworkEditorApplicationPlugin();
 
             // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
+            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(IDrainageBasin));
 
             var folder = new Folder();
-            var basin = (DrainageBasin)dataItemInfo.CreateData(folder);
+            var basin = (IDrainageBasin)dataItemInfo.CreateData(folder);
             Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
         }
 
@@ -100,10 +100,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var applicationPlugin = new NetworkEditorApplicationPlugin();
 
             // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
+            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(IDrainageBasin));
 
             var hydroRegion = new HydroRegion();
-            var basin = (DrainageBasin)dataItemInfo.CreateData(hydroRegion);
+            var basin = (IDrainageBasin)dataItemInfo.CreateData(hydroRegion);
             Assert.That(basin.Name, Is.StringStarting(Properties.Resources.NetworkEditorApplicationPlugin_GetDataItemInfos_Basin));
             Assert.That(hydroRegion.SubRegions[0], Is.EqualTo(basin));
         }
@@ -115,10 +115,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var applicationPlugin = new NetworkEditorApplicationPlugin();
 
             // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
+            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(IDrainageBasin));
 
             var region = new HydroRegion();
-            var drainageBasin = (DrainageBasin)dataItemInfo.CreateData(region);
+            var drainageBasin = (IDrainageBasin)dataItemInfo.CreateData(region);
             Assert.IsTrue(dataItemInfo.AdditionalOwnerCheck(drainageBasin));
 
         }
@@ -130,10 +130,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var applicationPlugin = new NetworkEditorApplicationPlugin();
 
             // Obtain the data item info for creating hydro networks
-            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(DrainageBasin));
+            var dataItemInfo = applicationPlugin.GetDataItemInfos().First(dii => dii.ValueType == typeof(IDrainageBasin));
 
             var region = new HydroRegion();
-            var drainageBasin = (DrainageBasin)dataItemInfo.CreateData(region);
+            var drainageBasin = (IDrainageBasin)dataItemInfo.CreateData(region);
             dataItemInfo.AddExampleData(drainageBasin);
             Assert.That(drainageBasin.Catchments.Count(), Is.EqualTo(1));
         }

@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             rrDrainageBasinImporter.Import();
             
-            var basin = (DrainageBasin)rrDrainageBasinImporter.TargetObject;
+            var basin = (IDrainageBasin)rrDrainageBasinImporter.TargetObject;
             Assert.AreEqual(2, basin.WasteWaterTreatmentPlants.Count);
 
             var nCatchments = basin.Catchments.Count;
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             rrDrainageBasinImporter.Import();
 
-            var basin = (DrainageBasin)rrDrainageBasinImporter.TargetObject;
+            var basin = (IDrainageBasin)rrDrainageBasinImporter.TargetObject;
             Assert.AreEqual(1, basin.WasteWaterTreatmentPlants.Count);
             Assert.AreEqual(2, basin.Boundaries.Count);
             Assert.AreEqual(3, basin.Catchments.Count);
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             rrDrainageBasinImporter.PathSobek = pathToSobekNetwork;
             rrDrainageBasinImporter.Import();
 
-            var basin = (DrainageBasin)rrDrainageBasinImporter.TargetObject;
+            var basin = (IDrainageBasin)rrDrainageBasinImporter.TargetObject;
             Assert.AreEqual(2, basin.WasteWaterTreatmentPlants.Count);
 
             var nCatchments = basin.Catchments.Count;
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             rrNetworkImporter.TargetObject = new DrainageBasin();
             rrNetworkImporter.PathSobek = pathToSobekNetwork;
             rrNetworkImporter.Import();
-            var basin = (DrainageBasin)rrNetworkImporter.TargetObject;
+            var basin = (IDrainageBasin)rrNetworkImporter.TargetObject;
 
             var firstCatchment = basin.Catchments.First();
             var hundredthCatchment = basin.Catchments[100];
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             importer.Import();
             var region = (HydroRegion)importer.TargetObject;
 
-            var basin = region.SubRegions.OfType<DrainageBasin>().First();
+            var basin = region.SubRegions.OfType<IDrainageBasin>().First();
             var firstCatchment = basin.Catchments.First(c => c.Name == "ZRO652");
 
             Assert.AreEqual(2, firstCatchment.Links.Count);

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(Equals(rrModel, imRrModel));
 
             // Test whether the basin has been imported as a SubRegion in the HydroRegion. 
-            var imBasin = integratedModel.Region.SubRegions.OfType<DrainageBasin>().First();
+            var imBasin = integratedModel.Region.SubRegions.OfType<IDrainageBasin>().First();
             Assert.AreEqual(rrModel.Basin, imBasin);
 
             // Test whether there is a link from the RR model's basin to the basin that is part of the HydroRegion. 
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var imRrModel = integratedModel.Activities.OfType<RainfallRunoffModel>().First();
             Assert.That(Equals(rrModel, imRrModel));
 
-            var imBasin = integratedModel.Region.SubRegions.OfType<DrainageBasin>().First();
+            var imBasin = integratedModel.Region.SubRegions.OfType<IDrainageBasin>().First();
             Assert.AreEqual(rrModel.Basin, imBasin);
 
             var imBasinDataItem = imRrModel.AllDataItems.First(di => di.ValueType == typeof(DrainageBasin));

@@ -10,6 +10,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Store1D;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -46,14 +47,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public override object Clone()
         {
-            var clonedStore = new FM1DFileFunctionStore((IHydroNetwork)inputNetwork.Clone()) { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader() };
+            var clonedStore = new FM1DFileFunctionStore((IHydroNetwork)inputNetwork.Clone()) { Path = this.Path, OutputFileReader = new FmMapFile1DOutputFileReader(), CoordinateSystem = CoordinateSystem};
 
             foreach (var existingNetworkCoverage in Functions.OfType<INetworkCoverage>())
             {
                 var newNetworkCoverage = new NetworkCoverage(existingNetworkCoverage.Name, true)
                 {
                     Network = existingNetworkCoverage.Network,
-                    Store = clonedStore
+                    Store = clonedStore,
+                    CoordinateSystem = CoordinateSystem
                 };
 
                 clonedStore.Functions.AddRange(newNetworkCoverage.Arguments);
@@ -66,7 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var newFeatureCoverage = new FeatureCoverage(existingFeatureCoverage.Name)
                 {
                     Features = existingFeatureCoverage.Features,
-                    Store = clonedStore
+                    Store = clonedStore,
+                    CoordinateSystem = CoordinateSystem
                 };
 
                 clonedStore.Functions.AddRange(newFeatureCoverage.Arguments);
@@ -177,6 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected virtual void UpdateFunctionsAfterPathSet()
         {
+            if(CoordinateSystem == null) CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(Path);
             Functions.Clear();
             if (File.Exists(Path))
             {
@@ -303,11 +307,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (times.Count != 0) networkCoverage.Time.SetValues(times);
             if (networkLocations.Length != 0) networkCoverage.SetLocations(networkLocations);
         }
+        public ICoordinateSystem CoordinateSystem { get; set; }
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol, int number = -1)
         {
             var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             var coverageName = coverageLongName + suffix;
-            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork };
+            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = inputNetwork, CoordinateSystem = CoordinateSystem };
             networkCoverage.Components[0].NoDataValue = double.NaN;
             
             networkCoverage.Locations.FixedSize = 0;

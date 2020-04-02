@@ -175,9 +175,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
         {
-            if (target.Value is DrainageBasin)
+            if (target.Value is IDrainageBasin)
             {
-                return source.Value is DrainageBasin;
+                return source.Value is IDrainageBasin;
             }
 
             return base.IsLinkAllowed(source, target);
@@ -595,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return Basin; }
         }
 
-        public virtual Type SupportedRegionType { get { return typeof (DrainageBasin); } }
+        public virtual Type SupportedRegionType { get { return typeof (IDrainageBasin); } }
 
         public IEnumerable<CatchmentModelData> GetAllModelData()
         {

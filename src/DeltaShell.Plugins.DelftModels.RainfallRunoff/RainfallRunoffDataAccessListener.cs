@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 ProjectRepository.PreLoad<CatchmentModelData>(cmd => cmd.SubCatchmentModelData);
                 firstRRModel = false;
             }
-            else if (firstBasin && entity is DrainageBasin)
+            else if (firstBasin && entity is DrainageBasin || entity is IDrainageBasin)
             {
                 ProjectRepository.PreLoad<Catchment>(c => c.SubCatchments);
                 ProjectRepository.PreLoad<Catchment>(c => c.Links);

@@ -247,6 +247,7 @@
     <Compile Include="ImportExportCsv\CrossSectionImportSettings.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZFromCsvFileImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionYZToCsvFileExporter.cs" />
+    <Compile Include="MapLayers\Providers\ComplexFeatureCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

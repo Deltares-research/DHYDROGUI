@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 return BuildHydroNetworkImporter(networkFilePath, network);
             }
 
-            var basin = obj as DrainageBasin;
+            var basin = obj as IDrainageBasin;
             if (basin != null)
             {
                 return BuildDrainageBasinImporter(networkFilePath, basin);
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             throw new NotImplementedException(String.Format("No partial sobekimporter has been found for object type {0}.", obj.GetType()));
         }
-        private static IPartialSobekImporter BuildDrainageBasinImporter(string sobekPath, DrainageBasin basin)
+        private static IPartialSobekImporter BuildDrainageBasinImporter(string sobekPath, IDrainageBasin basin)
         {
             var importers = new List<IPartialSobekImporter>
             {

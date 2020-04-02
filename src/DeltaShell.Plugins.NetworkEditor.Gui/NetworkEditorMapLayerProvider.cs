@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public bool CanCreateLayerFor(object data, object parentObject)
         {
-            return data is DrainageBasin
+            return data is IDrainageBasin
                    || data is HydroNetwork
                    || data is HydroArea
                    || data is HydroRegion
@@ -130,8 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return network.Weirs;
                 }
 
-                var drainageBasin = hydroRegion as DrainageBasin;
-                if (drainageBasin != null)
+                if (hydroRegion is IDrainageBasin drainageBasin)
                 {
                     yield return drainageBasin.Boundaries;
                     yield return drainageBasin.Catchments;
@@ -200,557 +199,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new AreaLayer { HydroArea = area2D, NameIsReadOnly = true };
             }
 
-            var hydroRegion = data as IHydroRegion;
-            if (hydroRegion != null)
+            if (data is IHydroRegion region)
             {
-                return new HydroRegionMapLayer { Name = hydroRegion.Name, Region = hydroRegion, LayersReadOnly = true };
+                return new HydroRegionMapLayer { Name = region.Name, Region = region, LayersReadOnly = true };
             }
 
-            var drainageBasin = parentData as DrainageBasin;
-            var hydroNetwork = parentData as IHydroNetwork;
-
-            var manholeNodes = data as IEnumerable<IManhole>;
-            if (hydroNetwork != null && manholeNodes != null)
+            if (parentData is IHydroNetwork hydroNetwork)
             {
-                return CreateNetworkVisibilityVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork, MaxVisibilityLayerValue); ;
+                return GenerateHydroNetworkLayer(hydroNetwork, data);
             }
 
-            var outletCompartments = data as IEnumerable<OutletCompartment>;
-            if (hydroNetwork != null && outletCompartments != null)
+            if (parentData is IHydroRegion hydroRegion 
+                && parentData is IDrainageBasin drainageBasin
+                && parentData as HydroArea == null)
             {
-                return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets", hydroNetwork, MaxVisibilityLayerValue);
+                return GenerateDrainageBasinLayer(hydroRegion, drainageBasin, data);
             }
 
-            var compartments = data as IEnumerable<Compartment>;
-            if (hydroNetwork != null && compartments != null)
+            if (data is IEnumerable<Route> routes)
             {
-                return CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork, MaxVisibilityLayerValue);
-            }
-
-            var orifices = data as IEnumerable<Orifice>;
-            if (orifices != null && hydroNetwork != null)
-            {
-                return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork, MaxVisibilityLayerValue);
-            }
-
-            var pipes = data as IEnumerable<IPipe>;
-            if (hydroNetwork != null && pipes != null)
-            {
-                return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
-            }
-
-            var sewerConnections = data as IEnumerable<ISewerConnection>;
-            if (hydroNetwork != null && sewerConnections != null)
-            {
-                return CreateNetworkVectorLayer<SewerConnection>(sewerConnections, "Sewer Connections", hydroNetwork);
-            }
-
-            var links = data as IEventedList<HydroLink>;
-            if (links != null && parentData is IHydroRegion)
-            {
-                var region = (IHydroRegion) parentData;
-
-                return new VectorLayer("Links " + region.Name)
-                           {
-                               Visible = true,
-                               Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin!=null),
-                               NameIsReadOnly = true,
-                               DataSource = new FeatureCollection { Features = (IList)region.Links, FeatureType = typeof(HydroLink), CoordinateSystem = region.CoordinateSystem },
-                               FeatureEditor = new HydroLinkFeatureEditor
-                                                   {
-                                                       SnapRules = {new HydroLinkSnapRule {Obligatory = true, PixelGravity = 40}},
-                                                       Region = region
-                                                   }
-                           };
-            }
-
-            if (parentData is IHydroRegion && parentData as HydroArea == null)
-            {
-                var wasteWaterTreatmentPlants = data as IEventedList<WasteWaterTreatmentPlant>;
-                if (wasteWaterTreatmentPlants != null && parentData is DrainageBasin)
+                return new GroupLayer("Routes")
                 {
-                    return new VectorLayer("Wastewater Treatment Plants")
-                        {
-                            Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
-                            NameIsReadOnly = true,
-                            DataSource =
-                                new FeatureCollection((IList) wasteWaterTreatmentPlants,
-                                                      typeof (WasteWaterTreatmentPlant))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
-                        };
-                }
-
-                var runoffBoundaries = data as IEventedList<RunoffBoundary>;
-                if (runoffBoundaries != null && parentData is DrainageBasin)
-                {
-                    return new VectorLayer("Runoff Boundaries")
-                        {
-                            Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
-                            NameIsReadOnly = true,
-                            DataSource =
-                                new FeatureCollection((IList) runoffBoundaries, typeof (RunoffBoundary))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
-                        };
-                }
-
-                var catchments = data as IEventedList<Catchment>;
-                if (catchments != null)
-                {
-                    var flattenedCatchments = catchments.SelectMany(c => new[] {c}.Concat(c.SubCatchments));
-
-                    var centerLayers = new VectorLayer
-                        {
-                            Name = "Catchments (centers)",
-                            DataSource =
-                                new FeatureCollection(
-                                    new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
-                                    typeof (Catchment)) {CoordinateSystem = drainageBasin.CoordinateSystem},
-                            FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
-                            CustomRenderers = {new CatchmentAnchorPointRenderer()},
-                            NameIsReadOnly = true,
-                            Selectable = false
-                        };
-                    var catchmentLayer = new VectorLayer
-                        {
-                            Name = "Catchments (Polygons)",
-                            Style = NetworkLayerStyleFactory.CreateStyle(catchments),
-                            DataSource =
-                                new FeatureCollection((IList) catchments, typeof (Catchment))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
-                            NameIsReadOnly = true
-                        };
-
-                    var groupLayer = new GroupLayer("Catchments") {NameIsReadOnly = true};
-                    groupLayer.Layers.AddRange(new[] {centerLayers, catchmentLayer});
-                    groupLayer.LayersReadOnly = true;
-
-                    return groupLayer;
-                }
-
-                var hydroNodes = data as IEnumerable<IHydroNode>;
-                if (hydroNodes != null)
-                {
-                    return CreateNetworkVectorLayer<HydroNode>(hydroNodes, "Nodes", hydroNetwork);
-                }
-
-                var channels = data as IEnumerable<IChannel>;
-                if (channels != null)
-                {
-                    return CreateNetworkVectorLayer<Channel>(channels, "Branches", hydroNetwork);
-                }
-
-                var pumps = data as IEnumerable<IPump>;
-                if (pumps != null)
-                {
-                    return CreateNetworkVectorLayer<Pump>(pumps, "Pumps", hydroNetwork,
-                                                          o => o is Channel && ((Channel) o).Pumps.Any());
-                }
-
-                var lateralSources = data as IEnumerable<ILateralSource>;
-                if (lateralSources != null)
-                {
-                    return CreateNetworkVectorLayer<LateralSource>(lateralSources, "Lateral Sources", hydroNetwork,
-                                                                   o =>
-                                                                   o is Channel &&
-                                                                   ((Channel) o).BranchFeatures.OfType<LateralSource>()
-                                                                                .Any());
-                }
-
-                var retentions = data as IEnumerable<IRetention>;
-                if (retentions != null)
-                {
-                    return CreateNetworkVectorLayer<Retention>(retentions, "Retentions", hydroNetwork,
-                                                               o =>
-                                                               o is Channel &&
-                                                               ((Channel) o).BranchFeatures.OfType<Retention>().Any());
-                }
-
-                var observationPoints = data as IEnumerable<IObservationPoint>;
-                if (observationPoints != null)
-                {
-                    return CreateNetworkVectorLayer<ObservationPoint>(observationPoints, "Observation Points",
-                                                                      hydroNetwork,
-                                                                      o =>
-                                                                      o is Channel &&
-                                                                      ((Channel) o).ObservationPoints.Any());
-                }
-
-                var weirs = data as IEnumerable<IWeir>;
-                if (weirs != null)
-                {
-                    return CreateNetworkVisibilityVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
-                                                          o => o is Channel && ((Channel) o).Weirs.Any());
-                }
-
-                var gates = data as IEnumerable<IGate>;
-                if (gates != null)
-                {
-                    return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
-                                                          o => o is Channel && ((Channel) o).Gates.Any());
-                }
-
-                var culverts = data as IEnumerable<ICulvert>;
-                if (culverts != null)
-                {
-                    return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork,
-                                                             o => o is Channel && ((Channel) o).Culverts.Any());
-                }
-
-                var bridges = data as IEnumerable<IBridge>;
-                if (bridges != null)
-                {
-                    return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork,
-                                                            o => o is Channel && ((Channel) o).Bridges.Any());
-                }
-
-                var extraResistances = data as IEnumerable<IExtraResistance>;
-                if (extraResistances != null)
-                {
-                    return CreateNetworkVectorLayer<ExtraResistance>(extraResistances, "Extra Resistances", hydroNetwork,
-                                                                     o =>
-                                                                     o is Channel &&
-                                                                     ((Channel) o).BranchFeatures
-                                                                                  .OfType<ExtraResistance>().Any());
-                }
-
-                var compositeBranchStructures = data as IEnumerable<ICompositeBranchStructure>;
-                if (compositeBranchStructures != null)
-                {
-                    return CreateNetworkVectorLayer<CompositeBranchStructure>(compositeBranchStructures,
-                                                                              "Composite Structure",
-                                                                              hydroNetwork,
-                                                                              o =>
-                                                                              o is Channel &&
-                                                                              ((Channel) o).CrossSections.Any());
-                }
-
-                var crossSections = data as IEnumerable<ICrossSection>;
-                if (crossSections != null)
-                {
-                    return CreateNetworkVectorLayer<CrossSection>(crossSections, "Cross Sections", hydroNetwork,
-                                                                  o => o is Channel && ((Channel) o).CrossSections.Any());
-                }
-
-                var routes = data as IEnumerable<Route>;
-                if (routes != null)
-                {
-                    return new GroupLayer("Routes")
-                        {
-                            Selectable = false,
-                            NameIsReadOnly = true,
-                            LayersReadOnly = true
-                        };
-                }
-            }
-
-            const string modelName = "NetworkEditorModelName";
-            var features = data as IEnumerable<IFeature>;
-            var area2DParent = parentData as HydroArea; 
-            if (features != null && area2DParent != null)
-            {
-                if (Equals(features, area2DParent.ObservationPoints))
-                {
-                    return new VectorLayer(HydroArea.ObservationPointsPluralName)
-                    {
-                        NameIsReadOnly = true,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.ObservationPointStyle,
-                        DataSource = new HydroAreaFeature2DCollection (area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint_2D_", modelName, area2DParent.CoordinateSystem)
-                    };
-                }
-
-                if (Equals(features, area2DParent.DryPoints))
-                {
-                    return new VectorLayer(HydroArea.DryPointsPluralName)
-                    {
-                        NameIsReadOnly = true,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.DryPointStyle,
-                        DataSource =
-                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryPoints, "DryPoint", modelName, area2DParent.CoordinateSystem)
-                    };
-                }
-                if (Equals(features, area2DParent.DryAreas))
-                {
-                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryAreas, "DryArea", modelName, area2DParent.CoordinateSystem);
-                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                    {
-                        if (!(geometry is IPolygon))
-                        {
-                            if (geometry.Coordinates.Count() < 4) return null;
-                            geometry = new Polygon(new LinearRing(geometry.Coordinates));
-                        }
-                        var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
-                        ds.Features.Add(newFeature);
-
-                        return newFeature;
-                    };
-
-                    return new VectorLayer(HydroArea.DryAreasPluralName)
-                    {
-                        NameIsReadOnly = true,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        Style = AreaLayerStyles.DryAreaStyle,
-                        DataSource = ds
-                    };
-                }
-
-                if (Equals(features, area2DParent.Enclosures))
-                {
-                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
-                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                    {
-                        if (!(geometry is IPolygon))
-                        {
-                            if (geometry.Coordinates.Count() < 4) return null;
-                            geometry = new Polygon(new LinearRing(geometry.Coordinates));
-                        }
-                        var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
-                        ds.Features.Add(newFeature);
-
-                        return newFeature;
-                    };
-
-                    return new VectorLayer(HydroArea.EnclosureName)
-                    {
-                        NameIsReadOnly = true,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        Opacity = (float)0.25,
-                        Style = AreaLayerStyles.EnclosureStyle,
-                        DataSource = ds,
-                        CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
-                    };
-                }
-                if (Equals(features, area2DParent.RoofAreas))
-                {
-                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas, "RoofAreas", modelName, area2DParent.CoordinateSystem);
-                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                    {
-                        if (!(geometry is IPolygon))
-                        {
-                            var coordinates = geometry.Coordinates.ToList();
-                            if (coordinates.Count < 3) return null;
-                            if (!coordinates.First().Equals(coordinates.Last()))
-                            {
-                                coordinates.Add(coordinates.First());
-                            }
-                            geometry = new Polygon(new LinearRing(coordinates.ToArray()));
-                        }
-                        var newFeature = new RoofArea { Geometry = geometry };
-                        ds.Features.Add(newFeature);
-
-                        return newFeature;
-                    };
-
-                    return new VectorLayer(HydroArea.RoofAreaName)
-                    {
-                        NameIsReadOnly = true,
-                        Style = AreaLayerStyles.RoofAreaStyle,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        DataSource = ds,
-                        CanBeRemovedByUser = true,
-                        Selectable = true
-                    };
-                }
-
-                if (Equals(features, area2DParent.Gullies))
-                {
-                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies", modelName, area2DParent.CoordinateSystem);
-                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                    {
-                        var newFeature = new Gully() { Geometry = geometry };
-                        ds.Features.Add(newFeature);
-
-                        return newFeature;
-                    };
-                    return new VisibilityVectorLayer(HydroArea.GullyName)
-                    {
-                        Style = AreaLayerStyles.Gulliestyle,
-                        NameIsReadOnly = true,
-                        DataSource = ds,
-                        FeatureEditor = new Feature2DEditor(area2DParent),
-                        CanBeRemovedByUser = true,
-                        Selectable = true,
-                        MaxVisible = MaxVisibilityLayerValue
-                    }; ; 
-                }
-            }
-
-            var obsCrossSections2d = data as IEventedList<ObservationCrossSection2D>;
-            if (obsCrossSections2d != null && area2DParent != null && Equals(obsCrossSections2d, area2DParent.ObservationCrossSections))
-            {
-                return new VectorLayer(HydroArea.ObservationCrossSectionsPluralName)
-                {
+                    Selectable = false,
                     NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.ObsCrossSectionStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationCrossSections, "ObservationCrossSection_2D_",
-                                                       modelName, area2DParent.CoordinateSystem),
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
-                };
-            }
-
-            var pumps2d = data as IEventedList<Pump2D>;
-            if (pumps2d != null && area2DParent != null && Equals(pumps2d, area2DParent.Pumps))
-            {
-                var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "Pump_2D_", modelName,
-                    area2DParent.CoordinateSystem);
-                areaFeature2DCollection.FeatureType = typeof(Pump2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.PumpsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.PumpStyle,
-                    DataSource = areaFeature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
-                    {
-                        CreateNewFeature = layer => new Pump2D(true)
-                    },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() },
-                    MaxVisible = MaxVisibilityLayerValue
-                };
-            }
-
-            var weirs2d = data as IEventedList<Weir2D>;
-            if (weirs2d != null && area2DParent != null && Equals(weirs2d, area2DParent.Weirs))
-            {
-                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "Weir_2D_", modelName,
-                                                                         area2DParent.CoordinateSystem);
-                feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
-                return new VisibilityVectorLayer(HydroArea.WeirsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.WeirStyle,
-                    DataSource = feature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
-                    {
-                        CreateNewFeature = layer =>
-                        {
-                            var weir = new Weir2D(true);
-                            weir.CrestWidth = 0.0;
-                            return weir;
-                        }
-                    },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() },
-                    MaxVisible = MaxVisibilityLayerValue
-                };
-            }
-
-            var gates2d = data as IEventedList<Gate2D>;
-            if (gates2d != null && area2DParent != null && Equals(gates2d, area2DParent.Gates))
-            {
-                var feature2DCollection = new HydroAreaFeature2DCollection (area2DParent).Init(gates2d, "Gate_2D_", modelName,
-                    area2DParent.CoordinateSystem);
-                feature2DCollection.FeatureType = typeof(Gate2D); // Override so we can use FeatureAttributes!
-                return new VectorLayer(HydroArea.GatesPluralName)
-                {
-                    NameIsReadOnly = true,
-                    Style = AreaLayerStyles.GateStyle,
-                    DataSource = feature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
-                    {
-                        CreateNewFeature = layer => new Gate2D()
-                    },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
-                };
-            }
-
-
-            var thinDams = data as IEventedList<ThinDam2D>;
-            if (thinDams != null && area2DParent != null && Equals(thinDams, area2DParent.ThinDams))
-            {
-                return new VectorLayer(HydroArea.ThinDamsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.ThinDamStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams, "ThinDam_2D_", modelName,
-                                                       area2DParent.CoordinateSystem)
-                };
-            }
-
-            var landBoundaries = data as IEventedList<LandBoundary2D>;
-            if (landBoundaries != null && area2DParent != null && Equals(landBoundaries, area2DParent.LandBoundaries))
-            {
-                return new VectorLayer(HydroArea.LandBoundariesPluralName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.LandBoundaryStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries, "LandBoundary_2D_", modelName,
-                            area2DParent.CoordinateSystem)
-                };
-            }
-            var embankments = data as IEventedList<Embankment>;
-            if (embankments != null && area2DParent != null && Equals(embankments, area2DParent.Embankments))
-            {
-                return new VectorLayer(HydroArea.EmbankmentsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor =
-                        new HydroAreaFeatureEditor(area2DParent) {CreateNewFeature = l => new Embankment {Region = area2DParent}},
-                    Style = AreaLayerStyles.EmbankmentStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment_2D_", modelName,
-                            area2DParent.CoordinateSystem),
-                    CustomRenderers = new List<IFeatureRenderer>(new [] {new EmbankmentRenderer()})
+                    LayersReadOnly = true
                 };
             }
 
             
-            var fixedWeirs2D = data as IEventedList<FixedWeir>;
-            if (fixedWeirs2D != null && area2DParent != null && Equals(fixedWeirs2D, area2DParent.FixedWeirs))
+            if (parentData is HydroArea area2DParent)
             {
-                return new VisibilityVectorLayer(HydroArea.FixedWeirsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.FixedWeirStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir_2D_", modelName,
-                            area2DParent.CoordinateSystem),
-                    MaxVisible = MaxVisibilityLayerValue
-                };
-            }
-
-            var bridgePillars = data as IEventedList<BridgePillar>;
-            if (bridgePillars != null && area2DParent != null && Equals(bridgePillars, area2DParent.BridgePillars))
-            {
-                return new VectorLayer(HydroArea.BridgePillarsPluralName)
-                {
-                    NameIsReadOnly = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    Style = AreaLayerStyles.BridgePillarStyle,
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar_2D_", modelName,
-                            area2DParent.CoordinateSystem)
-                };
-            }
-
-            var damBreaks = data as IEventedList<LeveeBreach>;
-            if (damBreaks != null && area2DParent != null && Equals(damBreaks, area2DParent.LeveeBreaches))
-            {
-                return new VectorLayer(HydroArea.LeveeBreachName)
-                {
-                    NameIsReadOnly = true,
-                    CanBeRemovedByUser = true,
-                    FeatureEditor = new Feature2DEditor(area2DParent),
-                    DataSource =
-                        new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches, "LeveeBreach_2D_", modelName,
-                                                       area2DParent.CoordinateSystem),
-                    CustomRenderers = new List<IFeatureRenderer>(new[] { new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle) })
-                };
+                return GenerateArea2DLayer(area2DParent, data);
             }
 
             var roughnessSection = data as RoughnessSection;
@@ -771,6 +250,479 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
             return null;
+        }
+
+        private static ILayer GenerateArea2DLayer(HydroArea area2DParent, object data)
+        {
+            const string modelName = "NetworkEditorModelName";
+            switch (data)
+            {
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.ObservationPoints):
+                    return new VectorLayer(HydroArea.ObservationPointsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.ObservationPointStyle,
+                        DataSource = new HydroAreaFeature2DCollection(area2DParent).Init(
+                            area2DParent.ObservationPoints, "ObservationPoint_2D_", modelName,
+                            area2DParent.CoordinateSystem)
+                    };
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.DryPoints):
+                    return new VectorLayer(HydroArea.DryPointsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.DryPointStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryPoints, "DryPoint",
+                                modelName, area2DParent.CoordinateSystem)
+                    };
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.DryAreas):
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryAreas, "DryArea",
+                        modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        if (!(geometry is IPolygon))
+                        {
+                            if (geometry.Coordinates.Count() < 4) return null;
+                            geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                        }
+
+                        var newFeature = new GroupableFeature2DPolygon {Geometry = geometry};
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.DryAreasPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.DryAreaStyle,
+                        DataSource = ds
+                    };
+                }
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.Enclosures):
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures,
+                        "Enclosure", modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        if (!(geometry is IPolygon))
+                        {
+                            if (geometry.Coordinates.Count() < 4) return null;
+                            geometry = new Polygon(new LinearRing(geometry.Coordinates));
+                        }
+
+                        var newFeature = new GroupableFeature2DPolygon() {Geometry = geometry};
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.EnclosureName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Opacity = (float) 0.25,
+                        Style = AreaLayerStyles.EnclosureStyle,
+                        DataSource = ds,
+                        CustomRenderers = new List<IFeatureRenderer>(new[] {new EnclosureRenderer()})
+                    };
+                }
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.RoofAreas):
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas,
+                        "RoofAreas", modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        if (!(geometry is IPolygon))
+                        {
+                            var coordinates = geometry.Coordinates.ToList();
+                            if (coordinates.Count < 3) return null;
+                            if (!coordinates.First().Equals(coordinates.Last()))
+                            {
+                                coordinates.Add(coordinates.First());
+                            }
+
+                            geometry = new Polygon(new LinearRing(coordinates.ToArray()));
+                        }
+
+                        var newFeature = new RoofArea {Geometry = geometry};
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+
+                    return new VectorLayer(HydroArea.RoofAreaName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.RoofAreaStyle,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        DataSource = ds,
+                        CanBeRemovedByUser = true,
+                        Selectable = true
+                    };
+                }
+                case IEnumerable<IFeature> features
+                    when Equals(features, area2DParent.Gullies):
+                {
+                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies",
+                        modelName, area2DParent.CoordinateSystem);
+                    ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                    {
+                        var newFeature = new Gully() {Geometry = geometry};
+                        ds.Features.Add(newFeature);
+
+                        return newFeature;
+                    };
+                    return new VisibilityVectorLayer(HydroArea.GullyName)
+                    {
+                        Style = AreaLayerStyles.Gulliestyle,
+                        NameIsReadOnly = true,
+                        DataSource = ds,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        CanBeRemovedByUser = true,
+                        Selectable = true,
+                        MaxVisible = MaxVisibilityLayerValue
+                    };
+                    ;
+                }
+
+                case IEventedList<ObservationCrossSection2D> obsCrossSections2d
+                    when Equals(obsCrossSections2d, area2DParent.ObservationCrossSections):
+                    return new VectorLayer(HydroArea.ObservationCrossSectionsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.ObsCrossSectionStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(
+                                area2DParent.ObservationCrossSections,
+                                "ObservationCrossSection_2D_",
+                                modelName, area2DParent.CoordinateSystem),
+                        CustomRenderers = new[] {new ArrowLineStringAdornerRenderer()}
+                    };
+                case IEventedList<Pump2D> pumps2d
+                    when Equals(pumps2d, area2DParent.Pumps):
+                {
+                    var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d,
+                        "Pump_2D_", modelName,
+                        area2DParent.CoordinateSystem);
+                    areaFeature2DCollection.FeatureType =
+                        typeof(Pump2D); // Override so we can use FeatureAttributes!
+                    return new VectorLayer(HydroArea.PumpsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.PumpStyle,
+                        DataSource = areaFeature2DCollection,
+                        FeatureEditor = new Feature2DEditor(area2DParent)
+                        {
+                            CreateNewFeature = layer => new Pump2D(true)
+                        },
+                        CustomRenderers = new[] {new ArrowLineStringAdornerRenderer()},
+                        MaxVisible = MaxVisibilityLayerValue
+                    };
+                }
+                case IEventedList<Weir2D> weirs2d
+                    when Equals(weirs2d, area2DParent.Weirs):
+                {
+                    var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d,
+                        "Weir_2D_",
+                        modelName,
+                        area2DParent.CoordinateSystem);
+                    feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
+                    return new VisibilityVectorLayer(HydroArea.WeirsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.WeirStyle,
+                        DataSource = feature2DCollection,
+                        FeatureEditor = new Feature2DEditor(area2DParent)
+                        {
+                            CreateNewFeature = layer =>
+                            {
+                                var weir = new Weir2D(true);
+                                weir.CrestWidth = 0.0;
+                                return weir;
+                            }
+                        },
+                        CustomRenderers = new[] {new ArrowLineStringAdornerRenderer()},
+                        MaxVisible = MaxVisibilityLayerValue
+                    };
+                }
+                case IEventedList<Gate2D> gates2d
+                    when Equals(gates2d, area2DParent.Gates):
+                {
+                    var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(gates2d,
+                        "Gate_2D_",
+                        modelName,
+                        area2DParent.CoordinateSystem);
+                    feature2DCollection.FeatureType = typeof(Gate2D); // Override so we can use FeatureAttributes!
+                    return new VectorLayer(HydroArea.GatesPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        Style = AreaLayerStyles.GateStyle,
+                        DataSource = feature2DCollection,
+                        FeatureEditor = new Feature2DEditor(area2DParent)
+                        {
+                            CreateNewFeature = layer => new Gate2D()
+                        },
+                        CustomRenderers = new[] {new ArrowLineStringAdornerRenderer()}
+                    };
+                }
+                case IEventedList<ThinDam2D> thinDams
+                    when Equals(thinDams, area2DParent.ThinDams):
+                    return new VectorLayer(HydroArea.ThinDamsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.ThinDamStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams,
+                                "ThinDam_2D_",
+                                modelName,
+                                area2DParent.CoordinateSystem)
+                    };
+                case IEventedList<LandBoundary2D> landBoundaries
+                    when Equals(landBoundaries, area2DParent.LandBoundaries):
+                    return new VectorLayer(HydroArea.LandBoundariesPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.LandBoundaryStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries,
+                                "LandBoundary_2D_", modelName,
+                                area2DParent.CoordinateSystem)
+                    };
+                case IEventedList<Embankment> embankments
+                    when Equals(embankments, area2DParent.Embankments):
+                    return new VectorLayer(HydroArea.EmbankmentsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor =
+                            new HydroAreaFeatureEditor(area2DParent)
+                                {CreateNewFeature = l => new Embankment {Region = area2DParent}},
+                        Style = AreaLayerStyles.EmbankmentStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments,
+                                "Embankment_2D_", modelName,
+                                area2DParent.CoordinateSystem),
+                        CustomRenderers = new List<IFeatureRenderer>(new[] {new EmbankmentRenderer()})
+                    };
+                case IEventedList<FixedWeir> fixedWeirs2D
+                    when Equals(fixedWeirs2D, area2DParent.FixedWeirs):
+                    return new VisibilityVectorLayer(HydroArea.FixedWeirsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.FixedWeirStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs,
+                                "FixedWeir_2D_", modelName,
+                                area2DParent.CoordinateSystem),
+                        MaxVisible = MaxVisibilityLayerValue
+                    };
+                case IEventedList<BridgePillar> bridgePillars
+                    when Equals(bridgePillars, area2DParent.BridgePillars):
+                    return new VectorLayer(HydroArea.BridgePillarsPluralName)
+                    {
+                        NameIsReadOnly = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        Style = AreaLayerStyles.BridgePillarStyle,
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars,
+                                "BridgePillar_2D_", modelName,
+                                area2DParent.CoordinateSystem)
+                    };
+                case IEventedList<LeveeBreach> damBreaks
+                    when Equals(damBreaks, area2DParent.LeveeBreaches):
+                    return new VectorLayer(HydroArea.LeveeBreachName)
+                    {
+                        NameIsReadOnly = true,
+                        CanBeRemovedByUser = true,
+                        FeatureEditor = new Feature2DEditor(area2DParent),
+                        DataSource =
+                            new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LeveeBreaches,
+                                "LeveeBreach_2D_", modelName,
+                                area2DParent.CoordinateSystem),
+                        CustomRenderers = new List<IFeatureRenderer>(new[]
+                            {new LeveeBreachRenderer(AreaLayerStyles.LeveeStyle, AreaLayerStyles.BreachStyle)})
+                    };
+                default:
+                    return null;
+                    //throw new Exception($"Can not create layer for hydro area object {data.GetType()}");
+            }
+        }
+
+        private static ILayer GenerateDrainageBasinLayer(IHydroRegion hydroRegion, IDrainageBasin drainageBasin, object data)
+        {
+            switch (data)
+            {
+                case IEventedList<HydroLink> links:
+                    return new VectorLayer("Links " + hydroRegion.Name)
+                    {
+                        Visible = true,
+                        Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin != null),
+                        NameIsReadOnly = true,
+                        DataSource = new ComplexFeatureCollection(drainageBasin, 
+                            (IList)hydroRegion.Links, typeof(HydroLink))
+                        ,
+                        FeatureEditor = new HydroLinkFeatureEditor
+                        {
+                            SnapRules = {new HydroLinkSnapRule {Obligatory = true, PixelGravity = 40}},
+                            Region = hydroRegion
+                        }
+                    };
+                case IEventedList<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants:
+                    return new VectorLayer("Wastewater Treatment Plants")
+                    {
+                        Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
+                        NameIsReadOnly = true,
+                        DataSource =
+                            new ComplexFeatureCollection(drainageBasin,
+                                (IList) wasteWaterTreatmentPlants,
+                                typeof(WasteWaterTreatmentPlant))
+                            {
+                                CoordinateSystem = drainageBasin.CoordinateSystem
+                            },
+                        FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
+                    };
+                case IEventedList<RunoffBoundary> runoffBoundaries:
+                    return new VectorLayer("Runoff Boundaries")
+                    {
+                        Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
+                        NameIsReadOnly = true,
+                        DataSource =
+                            new ComplexFeatureCollection(drainageBasin,
+                                (IList) runoffBoundaries, typeof(RunoffBoundary))
+                            ,
+                        FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
+                    };
+                case IEventedList<Catchment> catchments:
+                {
+                    var flattenedCatchments = catchments.SelectMany(c => new[] {c}.Concat(c.SubCatchments));
+
+                    var centerLayers = new VectorLayer
+                    {
+                        Name = "Catchments (centers)",
+                        DataSource =
+                            new ComplexFeatureCollection(drainageBasin,
+                                new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
+                                typeof(Catchment))
+                        ,
+                        FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
+                        CustomRenderers = {new CatchmentAnchorPointRenderer()},
+                        NameIsReadOnly = true,
+                        Selectable = false
+                    };
+                    var catchmentLayer = new VectorLayer
+                    {
+                        Name = "Catchments (Polygons)",
+                        Style = NetworkLayerStyleFactory.CreateStyle(catchments),
+                        DataSource =
+                            new ComplexFeatureCollection(drainageBasin,
+                                (IList) catchments, typeof(Catchment))
+                            ,
+                        FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
+                        NameIsReadOnly = true
+                    };
+
+                    var groupLayer = new GroupLayer("Catchments") {NameIsReadOnly = true};
+                    groupLayer.Layers.AddRange(new[] {centerLayers, catchmentLayer});
+                    groupLayer.LayersReadOnly = true;
+
+                    return groupLayer;
+                }
+                default:
+                    return null;
+                    //throw new Exception($"Cannot generate Hydro region / basin layer for data of type : {data.GetType()}");
+            }
+        }
+
+        private static ILayer GenerateHydroNetworkLayer(IHydroNetwork hydroNetwork, object data)
+        {
+            switch (data)
+            {
+                case IEnumerable<IManhole> manholeNodes:
+                    return CreateNetworkVisibilityVectorLayer<Manhole>(manholeNodes, "Manholes", hydroNetwork,
+                        MaxVisibilityLayerValue);
+                case IEnumerable<OutletCompartment> outletCompartments:
+                    return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets",
+                        hydroNetwork, MaxVisibilityLayerValue);
+                case IEnumerable<Compartment> compartments:
+                    return CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
+                        MaxVisibilityLayerValue);
+                case IEnumerable<Orifice> orifices:
+                    return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
+                        MaxVisibilityLayerValue);
+                case IEnumerable<IPipe> pipes:
+                    return CreateNetworkVectorLayer<Pipe>(pipes, "Pipes", hydroNetwork);
+                case IEnumerable<ISewerConnection> sewerConnections:
+                    return CreateNetworkVectorLayer<SewerConnection>(sewerConnections, "Sewer Connections",
+                        hydroNetwork);
+                case IEnumerable<IHydroNode> hydroNodes:
+                    return CreateNetworkVectorLayer<HydroNode>(hydroNodes, "Nodes", hydroNetwork);
+                case IEnumerable<IChannel> channels:
+                    return CreateNetworkVectorLayer<Channel>(channels, "Branches", hydroNetwork);
+                case IEnumerable<IPump> pumps:
+                    return CreateNetworkVectorLayer<Pump>(pumps, "Pumps", hydroNetwork,
+                        o => o is Channel && ((Channel) o).Pumps.Any());
+                case IEnumerable<ILateralSource> lateralSources:
+                    return CreateNetworkVectorLayer<LateralSource>(lateralSources, "Lateral Sources", hydroNetwork,
+                        o =>
+                            o is Channel &&
+                            ((Channel) o).BranchFeatures.OfType<LateralSource>()
+                            .Any());
+                case IEnumerable<IRetention> retentions:
+                    return CreateNetworkVectorLayer<Retention>(retentions, "Retentions", hydroNetwork,
+                        o =>
+                            o is Channel &&
+                            ((Channel) o).BranchFeatures.OfType<Retention>().Any());
+                case IEnumerable<IObservationPoint> observationPoints:
+                    return CreateNetworkVectorLayer<ObservationPoint>(observationPoints, "Observation Points",
+                        hydroNetwork,
+                        o =>
+                            o is Channel &&
+                            ((Channel) o).ObservationPoints.Any());
+                case IEnumerable<IWeir> weirs:
+                    return CreateNetworkVisibilityVectorLayer<Weir>(weirs, "Weirs", hydroNetwork, MaxVisibilityLayerValue,
+                        o => o is Channel && ((Channel) o).Weirs.Any());
+                case IEnumerable<IGate> gates:
+                    return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
+                        o => o is Channel && ((Channel) o).Gates.Any());
+                case IEnumerable<ICulvert> culverts:
+                    return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork,
+                        o => o is Channel && ((Channel) o).Culverts.Any());
+                case IEnumerable<IBridge> bridges:
+                    return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork,
+                        o => o is Channel && ((Channel) o).Bridges.Any());
+                case IEnumerable<IExtraResistance> extraResistances:
+                    return CreateNetworkVectorLayer<ExtraResistance>(extraResistances, "Extra Resistances", hydroNetwork,
+                        o =>
+                            o is Channel &&
+                            ((Channel) o).BranchFeatures
+                            .OfType<ExtraResistance>().Any());
+                case IEnumerable<ICompositeBranchStructure> compositeBranchStructures:
+                    return CreateNetworkVectorLayer<CompositeBranchStructure>(compositeBranchStructures,
+                        "Composite Structure",
+                        hydroNetwork,
+                        o =>
+                            o is Channel &&
+                            ((Channel) o).CrossSections.Any());
+                case IEnumerable<ICrossSection> crossSections:
+                    return CreateNetworkVectorLayer<CrossSection>(crossSections, "Cross Sections", hydroNetwork,
+                        o => o is Channel && ((Channel) o).CrossSections.Any());
+                default:
+                    return null;
+                    //throw new Exception($"Cannot generate Hydro network layer for data of type : {data.GetType()}");
+            }
         }
 
         private static VectorLayer CreateNetworkVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, Func<object, bool> refreshForChangedItem = null)

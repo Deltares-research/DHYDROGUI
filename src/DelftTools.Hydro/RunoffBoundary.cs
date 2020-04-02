@@ -22,7 +22,7 @@ namespace DelftTools.Hydro
         public virtual string Name { get; set; }
 
         [Aggregation]
-        public virtual DrainageBasin Basin { get; set; }
+        public virtual IDrainageBasin Basin { get; set; }
 
         public virtual IHydroRegion Region { get { return Basin; } }
         

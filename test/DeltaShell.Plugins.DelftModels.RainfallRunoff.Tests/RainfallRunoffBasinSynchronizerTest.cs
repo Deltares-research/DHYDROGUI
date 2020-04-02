@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             Assert.AreEqual(1, rrModel.GetAllModelData().Count());
 
-            var dataItemWithBasin = rrModel.DataItems.FirstOrDefault(di => di.Value is DrainageBasin);
+            var dataItemWithBasin = rrModel.DataItems.FirstOrDefault(di => di.Value is IDrainageBasin);
 
             Assert.IsNotNull(dataItemWithBasin);
 
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var basin = new DrainageBasin();
             var rrModel = new RainfallRunoffModel { Name = "Test" };
             var externalDataItem = new DataItem(basin, DataItemRole.Input);
-            var rrBasinDataItem = rrModel.DataItems.First(di => di.Value is DrainageBasin);
+            var rrBasinDataItem = rrModel.DataItems.First(di => di.Value is IDrainageBasin);
 
             // link to external
             rrBasinDataItem.LinkTo(externalDataItem);
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             pavedData.NumberOfInhabitants = 123456;
             
             // create clone of external basin + dataitem
-            var clonedBasin = (DrainageBasin) rrModel.Basin.Clone();
+            var clonedBasin = (IDrainageBasin) rrModel.Basin.Clone();
             var clonedDataItem = new DataItem(clonedBasin, DataItemRole.Input);
             
             // relink basin data item

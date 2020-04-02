@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<IChannel, ChannelProperties>();
             yield return new PropertyInfo<Pipe, PipeProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
-            yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
+            yield return new PropertyInfo<IDrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
             yield return new PropertyInfo<Discretization, DiscretizationProperties>();
             yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();

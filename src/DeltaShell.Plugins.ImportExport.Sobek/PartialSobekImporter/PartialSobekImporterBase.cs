@@ -336,19 +336,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     throw new ArgumentException("To object has not been set.");
                 }
 
-                if (TargetObject is DrainageBasin)
+                if (TargetObject is IDrainageBasin drainageBasin)
                 {
-                    return (DrainageBasin)TargetObject;
+                    return drainageBasin;
                 }
 
-                var hydroRegion = TargetObject as HydroRegion;
-                if (hydroRegion != null)
+                var hydroRegion = TargetObject as IHydroRegion;
+                var basin = hydroRegion?.SubRegions.OfType<IDrainageBasin>().FirstOrDefault();
+                if (basin != null)
                 {
-                    var basin = hydroRegion.SubRegions.OfType<DrainageBasin>().FirstOrDefault();
-                    if (basin != null)
-                    {
-                        return basin;
-                    }
+                    return basin;
                 }
 
                 return GetDrainageBasinFromModels();

@@ -13,12 +13,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     public class WasteWaterTreatmentPlantFeatureInteractor : PointInteractor, INetworkFeatureInteractor
     {
-        public WasteWaterTreatmentPlantFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, DrainageBasin basin) : base(layer, feature, vectorStyle, basin)
+        public WasteWaterTreatmentPlantFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IDrainageBasin basin) : base(layer, feature, vectorStyle, basin)
         {
             DrainageBasin = basin;
         }
 
-        private DrainageBasin DrainageBasin { get; set; }
+        private IDrainageBasin DrainageBasin { get; set; }
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {

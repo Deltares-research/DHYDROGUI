@@ -313,6 +313,8 @@ src/DelftTools.Hydro/HydroRegion.cs -text
 src/DelftTools.Hydro/HydroRegion.hbm.xml -text
 src/DelftTools.Hydro/HydroTimeSeriesFactory.cs -text
 src/DelftTools.Hydro/IChannel.cs -text
+src/DelftTools.Hydro/IDrainageBasin.cs -text
+src/DelftTools.Hydro/IDrainageBasin.hbm.xml -text
 src/DelftTools.Hydro/IGroupableFeature.cs -text
 src/DelftTools.Hydro/IHasCoordinateSystem.cs -text
 src/DelftTools.Hydro/IHydFileModel.cs -text
@@ -2891,6 +2893,7 @@ src/DeltaShell.Plugins.NetworkEditor/MapLayers/HydroLinkFeatureEditor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/HydroNetworkRoutesLayerController.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/HydroRegionMapLayer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/HydroRegionMapLayer.hbm.xml -text
+src/DeltaShell.Plugins.NetworkEditor/MapLayers/Providers/ComplexFeatureCollection.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Providers/HydroAreaFeature2DCollection.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Providers/HydroNetworkFeatureCollection.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Providers/HydroNetworkFeatureCollection.hbm.xml -text

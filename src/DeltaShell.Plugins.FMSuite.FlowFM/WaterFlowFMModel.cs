@@ -1858,7 +1858,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (Output1DFileStore != null)
                 {
-                    //Output1DFileStore.CoordinateSystem = value;
+                    Output1DFileStore.CoordinateSystem = value;
                 }
                 
                 if (Network != null)
@@ -2905,11 +2905,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
 
                     OutputHisFileStore.Path = hisFilePath;
+                    OutputHisFileStore.CoordinateSystem = CoordinateSystem;
                 }
                 else
                 {
                     OutputHisFileStore = new FMHisFileFunctionStore(Network, Area);
-                    OutputHisFileStore.Path = hisFilePath;                    
+                    OutputHisFileStore.Path = hisFilePath;
+                    OutputHisFileStore.CoordinateSystem = CoordinateSystem;
                 }
             }
 

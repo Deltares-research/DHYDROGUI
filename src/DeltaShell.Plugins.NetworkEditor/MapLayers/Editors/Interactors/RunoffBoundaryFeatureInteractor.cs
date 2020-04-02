@@ -13,13 +13,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     public class RunoffBoundaryFeatureInteractor : PointInteractor, INetworkFeatureInteractor
     {
-        public RunoffBoundaryFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, DrainageBasin basin)
+        public RunoffBoundaryFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IDrainageBasin basin)
             : base(layer, feature, vectorStyle, basin)
         {
             DrainageBasin = basin;
         }
 
-        private DrainageBasin DrainageBasin { get; set; }
+        private IDrainageBasin DrainageBasin { get; set; }
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {

@@ -21,17 +21,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
     {
         private static readonly WKTReader wktReader = new WKTReader();
 
-        private HydroRegion region;
-        private FeatureCoverage featureCoverageTarget;
-        private FeatureCoverage featureCoverageSource;
+        private IHydroRegion region;
+        private IFeatureCoverage featureCoverageTarget;
+        private IFeatureCoverage featureCoverageSource;
         private readonly DateTime time0 = new DateTime(2000, 1, 1);
         private readonly DateTime time1 = new DateTime(2000, 1, 2);
 
-        private HydroNode node1;
-        private HydroNode node2;
-        private DrainageBasin basin;
-        private HydroNetwork network;
-        private Channel branch1;
+        private IHydroNode node1;
+        private IHydroNode node2;
+        private IDrainageBasin basin;
+        private IHydroNetwork network;
+        private IChannel branch1;
 
         [SetUp]
         public void SetUp()

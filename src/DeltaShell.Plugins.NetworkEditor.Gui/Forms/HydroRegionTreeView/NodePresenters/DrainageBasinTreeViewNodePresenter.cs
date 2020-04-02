@@ -7,13 +7,13 @@ using DelftTools.Shell.Gui.Swf;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    public class DrainageBasinTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<DrainageBasin>
+    public class DrainageBasinTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<IDrainageBasin>
     {
         private static readonly Image BasinImage = Properties.Resources.DrainageBasin;
 
         public DrainageBasinTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) { }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, DrainageBasin basin)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IDrainageBasin basin)
         {
             node.Text = basin.Name;
             node.Image = BasinImage;
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             return true;
         }
         
-        public override void OnNodeRenamed(DrainageBasin basin, string newName)
+        public override void OnNodeRenamed(IDrainageBasin basin, string newName)
         {
             if (basin.Name != newName)
             {
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             }
         }
 
-        public override IEnumerable GetChildNodeObjects(DrainageBasin basin, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(IDrainageBasin basin, ITreeNode node)
         {
             yield return basin.CatchmentTypes;
             yield return basin.Catchments;

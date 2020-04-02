@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 
         private static IGeometry GetCustomRenderGeometryForSubCatchments(Catchment catchment)
         {
-            var basin = (DrainageBasin) catchment.Region;
+            var basin = (IDrainageBasin) catchment.Region;
             
             foreach (var parentCatchment in basin.Catchments)
             {
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             var rainfallRunoffModel = data as RainfallRunoffModel;
             if (rainfallRunoffModel != null)
             {
-                var basinDataItem = rainfallRunoffModel.DataItems.FirstOrDefault(di => di.Role == DataItemRole.Input && di.Value is DrainageBasin);
+                var basinDataItem = rainfallRunoffModel.DataItems.FirstOrDefault(di => di.Role == DataItemRole.Input && di.Value is IDrainageBasin);
                 if (basinDataItem != null && basinDataItem.LinkedTo == null)
                 {
                     yield return new ModelFolder { Model = rainfallRunoffModel, Role = DataItemRole.Input };

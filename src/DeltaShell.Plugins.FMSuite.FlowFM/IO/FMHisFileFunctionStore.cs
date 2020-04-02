@@ -9,6 +9,7 @@ using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -57,6 +58,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public ICoordinateSystem CoordinateSystem { get; set; }
 
+        protected override void UpdateFunctionsAfterPathSet()
+        {
+            if(CoordinateSystem == null)
+                CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(Path);
+            base.UpdateFunctionsAfterPathSet();
+        }
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             // add special velocity timeseries?
