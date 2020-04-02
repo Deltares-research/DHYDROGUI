@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// </exception>
         public ViewShapeFactory(IBoundaryConditionShapeFactory factory)
         {
-            this.factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            Ensure.NotNull(factory, nameof(factory));
+            this.factory = factory;
             InitialiseDefaultMapping();
         }
 
