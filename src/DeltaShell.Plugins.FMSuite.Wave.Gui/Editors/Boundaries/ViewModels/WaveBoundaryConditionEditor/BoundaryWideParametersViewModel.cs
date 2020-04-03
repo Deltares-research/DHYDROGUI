@@ -14,13 +14,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="BoundaryWideParametersViewModel"/> defines the view model for the boundary wide parameters view.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged"/>
     public class BoundaryWideParametersViewModel : INotifyPropertyChanged
     {
         private readonly IWaveBoundaryConditionDefinition observedBoundaryCondition;
         private readonly IViewShapeFactory shapeFactory;
         private readonly IViewDataComponentFactory dataComponentFactory;
         private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
+
+        private IViewShape shape;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryWideParametersViewModel"/>.
@@ -37,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public BoundaryWideParametersViewModel(IWaveBoundaryConditionDefinition observedBoundaryCondition,
-                                               IViewShapeFactory shapeFactory, 
-                                               IViewDataComponentFactory dataComponentFactory, 
+                                               IViewShapeFactory shapeFactory,
+                                               IViewDataComponentFactory dataComponentFactory,
                                                IAnnounceDataComponentChanged announceDataComponentChanged)
         {
             Ensure.NotNull(observedBoundaryCondition, nameof(observedBoundaryCondition));
@@ -85,24 +89,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private static ViewShapeType ToViewShapeType(Type t)
-        {
-            if (t == typeof(GaussViewShape))
-            {
-                return ViewShapeType.Gauss;
-            }
-            if (t == typeof(JonswapViewShape))
-            {
-                return ViewShapeType.Jonswap;
-            }
-            if (t == typeof(PiersonMoskowitzViewShape))
-            {
-                return ViewShapeType.PiersonMoskowitz;
-            }
-
-            throw new NotSupportedException($"The conversion of Type {t.FullName} is not supported.");
-        }
-
         /// <summary>
         /// Gets the shape.
         /// </summary>
@@ -116,8 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 OnPropertyChanged();
             }
         }
-
-        private IViewShape shape;
 
         /// <summary>
         /// Gets or sets the <see cref="PeriodViewType"/>.
@@ -152,25 +136,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                observedBoundaryCondition.DataComponent = 
-                    dataComponentFactory.ConvertBoundaryConditionDataComponentSpreadingType(observedBoundaryCondition.DataComponent, 
+                observedBoundaryCondition.DataComponent =
+                    dataComponentFactory.ConvertBoundaryConditionDataComponentSpreadingType(observedBoundaryCondition.DataComponent,
                                                                                             value);
                 OnPropertyChanged();
                 AnnounceDataComponentChanged();
             }
         }
 
-        private void AnnounceDataComponentChanged() =>
-            announceDataComponentChanged.AnnounceDataComponentChanged();
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        internal void RaisePropertyChanged()
+        {
+            OnPropertyChanged(string.Empty);
+        }
+
+        private static ViewShapeType ToViewShapeType(Type t)
+        {
+            if (t == typeof(GaussViewShape))
+            {
+                return ViewShapeType.Gauss;
+            }
+
+            if (t == typeof(JonswapViewShape))
+            {
+                return ViewShapeType.Jonswap;
+            }
+
+            if (t == typeof(PiersonMoskowitzViewShape))
+            {
+                return ViewShapeType.PiersonMoskowitz;
+            }
+
+            throw new NotSupportedException($"The conversion of Type {t.FullName} is not supported.");
+        }
+
+        private void AnnounceDataComponentChanged() =>
+            announceDataComponentChanged.AnnounceDataComponentChanged();
     }
 }

@@ -18,10 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping;
 
-        private TimeDependentParametersViewModel activeParametersViewModel;
-
-        private string groupBoxTitle;
-
         /// <summary>
         /// Creates a new <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
@@ -41,36 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
             GroupBoxTitle = "Spatially Varying Time Dependent Parameters";
-        }
-
-        public override TimeDependentParametersViewModel ActiveParametersViewModel
-        {
-            get => activeParametersViewModel;
-            protected set
-            {
-                if (value == ActiveParametersViewModel)
-                {
-                    return;
-                }
-
-                activeParametersViewModel = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public override string GroupBoxTitle
-        {
-            get => groupBoxTitle;
-            protected set
-            {
-                if (value == GroupBoxTitle)
-                {
-                    return;
-                }
-
-                groupBoxTitle = value;
-                OnPropertyChanged();
-            }
         }
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)

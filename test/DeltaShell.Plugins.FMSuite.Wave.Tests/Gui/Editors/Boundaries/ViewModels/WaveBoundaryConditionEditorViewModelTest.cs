@@ -22,25 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_ObservedBoundaryValid_SetsCorrectValues()
         {
             // Setup
-            var shape = new GaussShape();
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
-            {
-                new SupportPoint(0, geometricDefinition),
-                new SupportPoint(1, geometricDefinition)
-            });
-
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            conditionDefinition.DataComponent = 
-                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
-                    new ConstantParameters<PowerDefinedSpreading>(0.0, 
-                                                                  0.0, 
-                                                                  0.0, 
-                                                                  new PowerDefinedSpreading()));
-
-            conditionDefinition.Shape = shape;
-
-            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
+            WaveBoundary boundary = CreateBoundary();
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
@@ -50,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new WaveBoundaryConditionEditorViewModel(boundary, factory, referenceTimeProvider);
 
             // Assert
-            Assert.That(viewModel.Name, Is.EqualTo(boundary.Name), 
+            Assert.That(viewModel.Name, Is.EqualTo(boundary.Name),
                         "Expected a different Name:");
             Assert.That(viewModel.DescriptionViewModel, Is.Not.Null,
                         "Expected DescriptionViewModel to be set.");
@@ -105,12 +87,51 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
-            
+
             void Call() => new WaveBoundaryConditionEditorViewModel(boundary, factory, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
+        }
+
+        [Test]
+        public void GivenWaveBoundaryConditionEditorViewModel_WhenViewModelRaisesPropertyChanged_ThenBoundaryWideParameterPropertyChangedEventRaised()
+        {
+            // Given
+            var viewModel = new WaveBoundaryConditionEditorViewModel(CreateBoundary(), Substitute.For<IWaveBoundaryGeometryFactory>(), Substitute.For<IReferenceDateTimeProvider>());
+            var propertyChangedRaised = false;
+            viewModel.BoundaryWideParametersViewModel.PropertyChanged += (sender, args) => propertyChangedRaised = true;
+
+            // When
+            viewModel.DescriptionViewModel.Name = "new name";
+
+            // Then
+            Assert.That(propertyChangedRaised, Is.True);
+        }
+
+        private static WaveBoundary CreateBoundary()
+        {
+            var shape = new GaussShape();
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(1, geometricDefinition)
+            });
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent =
+                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                    new ConstantParameters<PowerDefinedSpreading>(0.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  new PowerDefinedSpreading()));
+
+            conditionDefinition.Shape = shape;
+
+            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
+            return boundary;
         }
     }
 }

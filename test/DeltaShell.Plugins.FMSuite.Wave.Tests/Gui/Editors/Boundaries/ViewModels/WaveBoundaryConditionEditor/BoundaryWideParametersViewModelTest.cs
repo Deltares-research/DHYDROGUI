@@ -1,117 +1,23 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
     [TestFixture]
     public class BoundaryWideParametersViewModelTest
     {
-        /// <summary>
-        /// Helper class to ease setup and verification of <see cref="BoundaryWideParametersViewModel"/>.
-        /// </summary>
-        private class ParametersTestConfig
-        {
-            public IWaveBoundaryConditionDefinition BoundaryCondition { get; private set; } = null;
-            public IViewDataComponentFactory DataComponentFactory { get; private set; } = null;
-            public IAnnounceDataComponentChanged AnnounceDataComponentChanged { get; private set; } = null;
-            public IViewShapeFactory ShapeFactory { get; private set; } = null;
-            public BoundaryWideParametersViewModel ViewModel { get; private set; } = null;
-
-            public ParametersTestConfig WithBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition)
-            {
-                BoundaryCondition = boundaryCondition;
-                return this;
-            }
-
-            public ParametersTestConfig WithDefaultBoundaryCondition()
-            {
-                var modelShape = Substitute.For<IBoundaryConditionShape>();
-                BoundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-
-                BoundaryCondition.Shape = modelShape;
-                BoundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
-
-                return this;
-            }
-
-            public ParametersTestConfig WithDefaultDataComponentFactory()
-            {
-                DataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-                return this;
-            }
-
-            public ParametersTestConfig WithDefaultAnnounceDataComponentChanged()
-            {
-                AnnounceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
-                return this;
-            }
-
-            public ParametersTestConfig WithShapeFactory(IViewShapeFactory shapeFactory)
-            {
-                ShapeFactory = shapeFactory;
-                return this;
-            }
-
-            public ParametersTestConfig WithShapeFactoryAction(Action<IViewShapeFactory> action)
-            {
-                action(ShapeFactory);
-                return this;
-            }
-
-            public ParametersTestConfig WithDefaultShapeFactory()
-            {
-                Assert.That(BoundaryCondition, Is.Not.Null, "Create BoundaryCondition before ShapeFactory.");
-
-                var viewShape = Substitute.For<IViewShape>();
-
-                ShapeFactory = Substitute.For<IViewShapeFactory>();
-                ShapeFactory.ConstructFromShape(BoundaryCondition.Shape).Returns(viewShape);
-
-                return this;
-            }
-
-            public ParametersTestConfig ConstructViewModel()
-            {
-                Assert.That(BoundaryCondition, Is.Not.Null);
-                Assert.That(ShapeFactory, Is.Not.Null);
-                Assert.That(DataComponentFactory, Is.Not.Null);
-                Assert.That(AnnounceDataComponentChanged, Is.Not.Null);
-
-                ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition, 
-                                                                ShapeFactory,
-                                                                DataComponentFactory, 
-                                                                AnnounceDataComponentChanged);
-                ViewModel.PropertyChanged += OnPropertyChanged;
-
-                return this;
-            }
-
-            public int NPropertyChangedCalls { get; private set; } = 0;
-
-            public IList<object> Senders { get; } = new List<object>();
-
-            public IList<PropertyChangedEventArgs> EventArgses { get; } = new List<PropertyChangedEventArgs>();
-
-            private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                NPropertyChangedCalls += 1;
-                Senders.Add(sender);
-                EventArgses.Add(e);
-            }
-        }
-
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -136,9 +42,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            var viewModel = new BoundaryWideParametersViewModel(boundaryCondition, 
-                                                                shapeFactory, 
-                                                                dataComponentFactory, 
+            var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
+                                                                shapeFactory,
+                                                                dataComponentFactory,
                                                                 announceDataComponentChanged);
 
             // Assert
@@ -159,10 +65,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryWideParametersViewModel(null, 
-                                                               shapeFactory, 
-                                                               dataComponentFactory, 
+            void Call() => new BoundaryWideParametersViewModel(null,
+                                                               shapeFactory,
+                                                               dataComponentFactory,
                                                                announceDataComponentChanged);
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
@@ -179,10 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryWideParametersViewModel(boundaryCondition, 
+            void Call() => new BoundaryWideParametersViewModel(boundaryCondition,
                                                                null,
-                                                               dataComponentFactory, 
+                                                               dataComponentFactory,
                                                                announceDataComponentChanged);
+
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
@@ -211,17 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             {
                 typeof(GaussViewShape),
                 typeof(JonswapViewShape),
-                typeof(PiersonMoskowitzViewShape),
+                typeof(PiersonMoskowitzViewShape)
             };
 
             Assert.That(shapeTypes, Is.EquivalentTo(expectedTypes));
-        }
-
-        private static IEnumerable<TestCaseData> GetShapeTypeSetValueData()
-        {
-            yield return new TestCaseData(typeof(GaussViewShape), ViewShapeType.Gauss, new GaussViewShape(new GaussShape()));
-            yield return new TestCaseData(typeof(JonswapViewShape), ViewShapeType.Jonswap, new JonswapViewShape(new JonswapShape()));
-            yield return new TestCaseData(typeof(PiersonMoskowitzViewShape), ViewShapeType.PiersonMoskowitz, new PiersonMoskowitzViewShape(new PiersonMoskowitzShape()));
         }
 
         [Test]
@@ -252,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var expectedSenders = new List<object>
             {
                 viewModel,
-                viewModel,
+                viewModel
             };
 
             Assert.That(testConfig.Senders, Is.EquivalentTo(expectedSenders));
@@ -439,6 +340,134 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Degrees));
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RaisePropertyChanged_PropertyChangedEventRaised()
+        {
+            // Setup
+            ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(Substitute.For<IWaveBoundaryConditionDefinition>())
+                                                                        .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
+                                                                        .ConstructViewModel();
+            BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
+
+            var propertyChangedRaised = false;
+            string propertyNameChanged = null;
+            viewModel.PropertyChanged += (sender, args) =>
+            {
+                propertyChangedRaised = true;
+                propertyNameChanged = args.PropertyName;
+            };
+
+            // Call
+            viewModel.RaisePropertyChanged();
+
+            // Assert
+            Assert.That(propertyChangedRaised, Is.True);
+            Assert.That(propertyNameChanged, Is.EqualTo(string.Empty));
+        }
+
+        /// <summary>
+        /// Helper class to ease setup and verification of <see cref="BoundaryWideParametersViewModel"/>.
+        /// </summary>
+        private class ParametersTestConfig
+        {
+            public IWaveBoundaryConditionDefinition BoundaryCondition { get; private set; }
+            public IViewDataComponentFactory DataComponentFactory { get; private set; }
+            public IAnnounceDataComponentChanged AnnounceDataComponentChanged { get; private set; }
+            public IViewShapeFactory ShapeFactory { get; private set; }
+            public BoundaryWideParametersViewModel ViewModel { get; private set; }
+
+            public int NPropertyChangedCalls { get; private set; }
+
+            public IList<object> Senders { get; } = new List<object>();
+
+            public IList<PropertyChangedEventArgs> EventArgses { get; } = new List<PropertyChangedEventArgs>();
+
+            public ParametersTestConfig WithBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition)
+            {
+                BoundaryCondition = boundaryCondition;
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultBoundaryCondition()
+            {
+                var modelShape = Substitute.For<IBoundaryConditionShape>();
+                BoundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+                BoundaryCondition.Shape = modelShape;
+                BoundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
+
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultDataComponentFactory()
+            {
+                DataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultAnnounceDataComponentChanged()
+            {
+                AnnounceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
+                return this;
+            }
+
+            public ParametersTestConfig WithShapeFactory(IViewShapeFactory shapeFactory)
+            {
+                ShapeFactory = shapeFactory;
+                return this;
+            }
+
+            public ParametersTestConfig WithShapeFactoryAction(Action<IViewShapeFactory> action)
+            {
+                action(ShapeFactory);
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultShapeFactory()
+            {
+                Assert.That(BoundaryCondition, Is.Not.Null, "Create BoundaryCondition before ShapeFactory.");
+
+                var viewShape = Substitute.For<IViewShape>();
+
+                ShapeFactory = Substitute.For<IViewShapeFactory>();
+                ShapeFactory.ConstructFromShape(BoundaryCondition.Shape).Returns(viewShape);
+
+                return this;
+            }
+
+            public ParametersTestConfig ConstructViewModel()
+            {
+                Assert.That(BoundaryCondition, Is.Not.Null);
+                Assert.That(ShapeFactory, Is.Not.Null);
+                Assert.That(DataComponentFactory, Is.Not.Null);
+                Assert.That(AnnounceDataComponentChanged, Is.Not.Null);
+
+                ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition,
+                                                                ShapeFactory,
+                                                                DataComponentFactory,
+                                                                AnnounceDataComponentChanged);
+                ViewModel.PropertyChanged += OnPropertyChanged;
+
+                return this;
+            }
+
+            private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                NPropertyChangedCalls += 1;
+                Senders.Add(sender);
+                EventArgses.Add(e);
+            }
+        }
+
+        private static IEnumerable<TestCaseData> GetShapeTypeSetValueData()
+        {
+            yield return new TestCaseData(typeof(GaussViewShape), ViewShapeType.Gauss, new GaussViewShape(new GaussShape()));
+            yield return new TestCaseData(typeof(JonswapViewShape), ViewShapeType.Jonswap, new JonswapViewShape(new JonswapShape()));
+            yield return new TestCaseData(typeof(PiersonMoskowitzViewShape), ViewShapeType.PiersonMoskowitz, new PiersonMoskowitzViewShape(new PiersonMoskowitzShape()));
         }
     }
 }

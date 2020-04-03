@@ -49,9 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.FilePath, Is.EqualTo(expectedFilePath));
         }
 
-        private FileBasedParameters GetRandomFileBasedParameters()
-        {
-            return new FileBasedParameters("file path " + random.Next());
-        }
+        private FileBasedParameters GetRandomFileBasedParameters() => new FileBasedParameters("file path " + random.Next());
     }
 }

@@ -17,10 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping;
 
-        private ConstantParametersViewModel activeParametersViewModel;
-
-        private string groupBoxTitle;
-
         /// <summary>
         /// Creates a new <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
@@ -36,36 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
             GroupBoxTitle = "Spatially Varying Constant Parameters";
-        }
-
-        public override ConstantParametersViewModel ActiveParametersViewModel
-        {
-            get => activeParametersViewModel;
-            protected set
-            {
-                if (value == ActiveParametersViewModel)
-                {
-                    return;
-                }
-
-                activeParametersViewModel = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public override string GroupBoxTitle
-        {
-            get => groupBoxTitle;
-            protected set
-            {
-                if (value == GroupBoxTitle)
-                {
-                    return;
-                }
-
-                groupBoxTitle = value;
-                OnPropertyChanged();
-            }
         }
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)

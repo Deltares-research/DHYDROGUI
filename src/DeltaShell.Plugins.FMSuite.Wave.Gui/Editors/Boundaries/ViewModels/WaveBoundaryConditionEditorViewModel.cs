@@ -41,39 +41,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
             this.observedBoundary = observedBoundary;
 
             var parametersFactory = new BoundaryParametersFactory();
-
-            var modelDataComponentFactory =
-                new BoundaryConditionDataComponentFactory(parametersFactory);
-            var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory, 
+            var modelDataComponentFactory = new BoundaryConditionDataComponentFactory(parametersFactory);
+            var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory,
                                                                     referenceDateTimeProvider);
 
-            BoundarySpecificParametersSettingsViewModel =
-                new BoundarySpecificParametersSettingsViewModel(observedBoundary.ConditionDefinition,
-                                                                dataComponentFactory);
+            BoundarySpecificParametersSettingsViewModel = new BoundarySpecificParametersSettingsViewModel(observedBoundary.ConditionDefinition,
+                                                                                                          dataComponentFactory);
 
             var dataComponentModelMediator = new DataComponentChangeMediator(BoundarySpecificParametersSettingsViewModel);
 
-
-            var dataComponentModel = new SupportPointDataComponentViewModel(observedBoundary.ConditionDefinition, 
-                                                                            parametersFactory, 
+            var dataComponentModel = new SupportPointDataComponentViewModel(observedBoundary.ConditionDefinition,
+                                                                            parametersFactory,
                                                                             dataComponentModelMediator);
 
-            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary, 
-                                                              geometryFactory, 
+            GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary,
+                                                              geometryFactory,
                                                               dataComponentModel);
 
             var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
                                                                    BoundarySpecificParametersSettingsViewModel);
 
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
-                                                                    dataComponentFactory, 
+                                                                    dataComponentFactory,
                                                                     mediator);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
-            BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition, 
-                                                                                  viewShapeFactory, 
-                                                                                  dataComponentFactory, 
+            BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition,
+                                                                                  viewShapeFactory,
+                                                                                  dataComponentFactory,
                                                                                   mediator);
+
+            DescriptionViewModel.PropertyChanged += (sender, args) => BoundaryWideParametersViewModel.RaisePropertyChanged();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="UniformConstantParametersSettingsViewModel{TSpreading}"/> defines the view model for the
     /// ParametersSettingsView given uniform constant data.
     /// </summary>
-    /// <seealso cref="ConstantParametersSettingsViewModel" />
+    /// <seealso cref="ConstantParametersSettingsViewModel"/>
     public sealed class UniformConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
@@ -23,10 +23,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(parameters, nameof(parameters));
             ActiveParametersViewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
+
+            GroupBoxTitle = "Uniform Constant Parameters";
         }
-
-        public override ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
-
-        public override string GroupBoxTitle { get; protected set; } = "Uniform Constant Parameters";
     }
 }

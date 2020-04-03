@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// ParametersSettingsView given uniform time dependent data.
     /// </summary>
     /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
-    /// <seealso cref="TimeDependentParametersSettingsViewModel" />
+    /// <seealso cref="TimeDependentParametersSettingsViewModel"/>
     public sealed class UniformTimeDependentParametersSettingsViewModel<TSpreading> : TimeDependentParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
@@ -18,22 +18,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Creates a new <see cref="UniformTimeDependentParametersSettingsViewModel{TSpreading}"/>.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        /// <param name="generateSeries">The <see cref="IGenerateSeries"/>. </param>
+        /// <param name="generateSeries">The <see cref="IGenerateSeries"/>.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="parameters"/> or <paramref name="generateSeries"/>
         /// is <c>null</c>.
         /// </exception>
-        public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters,
-                                                               IGenerateSeries generateSeries) : base(generateSeries)
+        public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters, IGenerateSeries generateSeries) : base(generateSeries)
         {
             Ensure.NotNull(parameters, nameof(parameters));
 
-            ActiveParametersViewModel = 
-                new TimeDependentUniformParametersViewModel<TSpreading>(GenerateSeries, parameters);
+            ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(GenerateSeries, parameters);
+            GroupBoxTitle = "Uniform Time Dependent Parameters";
         }
-
-        public override TimeDependentParametersViewModel ActiveParametersViewModel { get; protected set; }
-
-        public override string GroupBoxTitle { get; protected set; } = "Uniform Time Dependent Parameters";
     }
 }

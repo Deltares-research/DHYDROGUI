@@ -12,32 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     {
         private readonly Random random = new Random();
 
-        private ConstantParameters<TSpreading> GetRandomConstantParameters()
-        {
-            return new ConstantParameters<TSpreading>(random.NextDouble() * 100.0,
-                                                      random.NextDouble() * 100.0,
-                                                      
-                                                      random.NextDouble() * 100.0,
-                                                      new TSpreading());
-        }
-
-        private static double GetSpreadingValue(ConstantParameters<TSpreading> param)
-        {
-            object spreading = param.Spreading;
-            if (spreading is PowerDefinedSpreading pds)
-            {
-                return pds.SpreadingPower;
-            }
-
-            if (spreading is DegreesDefinedSpreading dds)
-            {
-                return dds.DegreesSpreading;
-            }
-
-            Assert.Fail("Unsupported Spreading type.");
-            return double.NaN;
-        }
-
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -49,8 +23,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
-            Assert.That(viewModel.Height,    Is.EqualTo(parameters.Height));
-            Assert.That(viewModel.Period,    Is.EqualTo(parameters.Period));
+            Assert.That(viewModel.Height, Is.EqualTo(parameters.Height));
+            Assert.That(viewModel.Period, Is.EqualTo(parameters.Period));
             Assert.That(viewModel.Direction, Is.EqualTo(parameters.Direction));
             Assert.That(viewModel.Spreading, Is.EqualTo(GetSpreadingValue(parameters)));
         }
@@ -76,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.Height = expectedHeight;
 
             // Assert
-            Assert.That(viewModel.Height,    Is.EqualTo(expectedHeight));
+            Assert.That(viewModel.Height, Is.EqualTo(expectedHeight));
         }
 
         [Test]
@@ -91,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.Period = expectedPeriod;
 
             // Assert
-            Assert.That(viewModel.Period,    Is.EqualTo(expectedPeriod));
+            Assert.That(viewModel.Period, Is.EqualTo(expectedPeriod));
         }
 
         [Test]
@@ -106,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.Direction = expectedDirection;
 
             // Assert
-            Assert.That(viewModel.Direction,    Is.EqualTo(expectedDirection));
+            Assert.That(viewModel.Direction, Is.EqualTo(expectedDirection));
         }
 
         [Test]
@@ -121,7 +95,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.Spreading = expectedSpreading;
 
             // Assert
-            Assert.That(viewModel.Spreading,    Is.EqualTo(expectedSpreading));
+            Assert.That(viewModel.Spreading, Is.EqualTo(expectedSpreading));
+        }
+
+        private ConstantParameters<TSpreading> GetRandomConstantParameters() => new ConstantParameters<TSpreading>(random.NextDouble() * 100.0,
+                                                                                                                   random.NextDouble() * 100.0,
+                                                                                                                   random.NextDouble() * 100.0,
+                                                                                                                   new TSpreading());
+
+        private static double GetSpreadingValue(ConstantParameters<TSpreading> param)
+        {
+            object spreading = param.Spreading;
+            if (spreading is PowerDefinedSpreading pds)
+            {
+                return pds.SpreadingPower;
+            }
+
+            if (spreading is DegreesDefinedSpreading dds)
+            {
+                return dds.DegreesSpreading;
+            }
+
+            Assert.Fail("Unsupported Spreading type.");
+            return double.NaN;
         }
     }
 }

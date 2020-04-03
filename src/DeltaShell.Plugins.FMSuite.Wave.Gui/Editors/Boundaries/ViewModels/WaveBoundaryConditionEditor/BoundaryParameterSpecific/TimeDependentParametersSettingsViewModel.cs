@@ -9,10 +9,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="TimeDependentParametersSettingsViewModel"/> defines the interface of any view
     /// model that wishes to back the TimeDependentParametersView.
     /// </summary>
-    /// <seealso cref="IParametersSettingsViewModel" />
+    /// <seealso cref="IParametersSettingsViewModel"/>
     public abstract class TimeDependentParametersSettingsViewModel : IParametersSettingsViewModel
     {
         protected readonly IGenerateSeries GenerateSeries;
+        private TimeDependentParametersViewModel activeParametersViewModel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Creates a new <see cref="TimeDependentParametersSettingsViewModel"/>.
@@ -33,16 +36,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <value>
         /// The active parameters view model.
         /// </value>
-        public abstract TimeDependentParametersViewModel ActiveParametersViewModel { get; protected set; }
+        public TimeDependentParametersViewModel ActiveParametersViewModel
+        {
+            get => activeParametersViewModel;
+            protected set
+            {
+                if (value == ActiveParametersViewModel)
+                {
+                    return;
+                }
 
-        /// <summary>
-        /// Gets or sets the group box title.
-        /// </summary>
-        public abstract string GroupBoxTitle { get; protected set; }
+                activeParametersViewModel = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public string GroupBoxTitle { get; protected set; }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

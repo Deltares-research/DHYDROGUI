@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -81,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundarySpecificParametersSettingsViewModel(conditionDefinition, factory);
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
-            
+
             var newDataComponentViewModel = Substitute.For<IParametersSettingsViewModel>();
 
             // Call
@@ -109,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundarySpecificParametersSettingsViewModel(conditionDefinition, factory);
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
-                
+
             // Call
             viewModel.ParametersSettingsViewModel = dataComponentViewModel;
 
@@ -142,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
-            
+
             conditionDefinition.DataComponent = newDataComponent;
 
             // Call
@@ -155,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
             Assert.That(propertyChangedObserver.EventArgses.First().PropertyName, Is.SameAs("ParametersSettingsViewModel"));
-            
+
             factory.Received(1).ConstructParametersSettingsViewModel(newDataComponent);
         }
 

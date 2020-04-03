@@ -7,22 +7,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="ConstantParametersSettingsViewModel"/> defines the interface of any view
     /// model that wishes to back the ConstantParametersView.
     /// </summary>
-    /// <seealso cref="IParametersSettingsViewModel" />
+    /// <seealso cref="IParametersSettingsViewModel"/>
     public abstract class ConstantParametersSettingsViewModel : IParametersSettingsViewModel
     {
-        /// <summary>
-        /// Gets or sets the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
-        /// </summary>
-        public abstract ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the group box title.
-        /// </summary>
-        public abstract string GroupBoxTitle { get; protected set; }
+        private ConstantParametersViewModel activeParametersViewModel;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        /// <summary>
+        /// Gets or sets the currently displayed <see cref="ConstantParametersSettingsViewModel"/>.
+        /// </summary>
+        public ConstantParametersViewModel ActiveParametersViewModel
+        {
+            get => activeParametersViewModel;
+            protected set
+            {
+                if (value == ActiveParametersViewModel)
+                {
+                    return;
+                }
+
+                activeParametersViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string GroupBoxTitle { get; protected set; }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

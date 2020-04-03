@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel, Is.InstanceOf<ConstantParametersSettingsViewModel>());
             Assert.That(viewModel, Is.InstanceOf<ISpatiallyVariantParametersSettingsViewModel>());
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null, 
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null,
                         "Expected ActiveParametersViewModel to be null upon construction.");
             Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Spatially Varying Constant Parameters"),
                         "Expected a different GroupBoxTitle:");
@@ -44,16 +44,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(exception.ParamName, Is.EqualTo("supportPointToParametersMapping"));
         }
 
-
         [Test]
         public void UpdateActiveSupportPoint_ObservedParameters_ValueInDictionary()
         {
             // Setup
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>>()
-            {
-                {supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}
-            };
+            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>> {{supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}};
 
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>(dictionary);
 
@@ -68,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
-            ConstantParameters<TSpreading> observedParameters = 
+            ConstantParameters<TSpreading> observedParameters =
                 ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, Is.SameAs(dictionary[supportPoint]));
 
@@ -76,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
 
             PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
+            Assert.That(relevantEventArgs.PropertyName,
                         Is.EqualTo(nameof(SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
         }
 
@@ -85,10 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>>()
-            {
-                {supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}
-            };
+            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>> {{supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}};
 
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>(dictionary);
 
@@ -110,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
 
             PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
+            Assert.That(relevantEventArgs.PropertyName,
                         Is.EqualTo(nameof(SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
         }
 
@@ -119,10 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>>()
-            {
-                {supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}
-            };
+            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>> {{supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}};
 
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>(dictionary);
 
@@ -142,20 +132,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
 
             PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
+            Assert.That(relevantEventArgs.PropertyName,
                         Is.EqualTo(nameof(SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
         }
-
 
         [Test]
         public void UpdateActiveSupportPoint_ObservedParameters_ValueAlreadySet()
         {
             // Setup
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>>()
-            {
-                {supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}
-            };
+            var dictionary = new Dictionary<SupportPoint, ConstantParameters<TSpreading>> {{supportPoint, new ConstantParameters<TSpreading>(0.0, 0.0, 0.0, new TSpreading())}};
 
             var viewModel = new SpatiallyVariantConstantParametersSettingsViewModel<TSpreading>(dictionary);
 
@@ -164,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
             ConstantParameters<TSpreading> initialObservedParameters =
                 ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
-            Assert.That(initialObservedParameters, 
+            Assert.That(initialObservedParameters,
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -178,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
             ConstantParameters<TSpreading> currentObservedParameters =
                 ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
-            Assert.That(currentObservedParameters, 
+            Assert.That(currentObservedParameters,
                         Is.SameAs(dictionary[supportPoint]));
 
             Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
@@ -217,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.UpdateActiveSupportPoint(null);
 
             // Assert
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null); 
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null);
         }
     }
 }

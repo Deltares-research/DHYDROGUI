@@ -7,24 +7,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="FileBasedParametersSettingsViewModel"/> defines the interface of any view
     /// model that wishes to back the FileBasedParametersView.
     /// </summary>
-    /// <seealso cref="IParametersSettingsViewModel" />
-    /// <seealso cref="INotifyPropertyChanged" />
-    public abstract class FileBasedParametersSettingsViewModel : IParametersSettingsViewModel,
-                                                                 INotifyPropertyChanged
+    /// <seealso cref="IParametersSettingsViewModel"/>
+    public abstract class FileBasedParametersSettingsViewModel : IParametersSettingsViewModel
     {
+        private FileBasedParametersViewModel activeParametersViewModel;
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Gets or sets the currently displayed <see cref="FileBasedParametersViewModel"/>.
         /// </summary>
-        public abstract FileBasedParametersViewModel ActiveParametersViewModel { get; protected set; }
+        public FileBasedParametersViewModel ActiveParametersViewModel
+        {
+            get => activeParametersViewModel;
+            protected set
+            {
+                if (value == ActiveParametersViewModel)
+                {
+                    return;
+                }
 
-        /// <summary>
-        /// Gets or sets the group box title.
-        /// </summary>
-        public abstract string GroupBoxTitle { get; protected set; }
+                activeParametersViewModel = value;
+                OnPropertyChanged();
+            }
+        }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public string GroupBoxTitle { get; protected set; }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
