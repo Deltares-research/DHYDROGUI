@@ -84,13 +84,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     ? value 
                     : null;
 
-            if (correspondingParameters == (ActiveParametersViewModel as ConstantParametersViewModel<TSpreading>)?.ObservedParameters)
+            if (correspondingParameters == (ActiveParametersViewModel as ConstantParametersViewModelGeneric<TSpreading>)?.ObservedParameters)
             {
                 return;
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new ConstantParametersViewModel<TSpreading>(correspondingParameters)
+                                            ? new ConstantParametersViewModelGeneric<TSpreading>(correspondingParameters)
                                             : null;
         }
     }

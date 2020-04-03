@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public UniformConstantParametersSettingsViewModel(ConstantParameters<TSpreading> parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            ActiveParametersViewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            ActiveParametersViewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
         }
 
         public override ConstantParametersViewModel ActiveParametersViewModel { get; protected set; }

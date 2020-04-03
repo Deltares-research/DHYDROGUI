@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
 
             // Call
-            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            var viewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
 
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_ParametersNull_ThrowsArgumentNullException()
         {
-            void Call() => new ConstantParametersViewModel<TSpreading>(null);
+            void Call() => new ConstantParametersViewModelGeneric<TSpreading>(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("parameters"));
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            var viewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
             const double expectedHeight = 50.0;
 
             // Call
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            var viewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
             const double expectedPeriod = 50.0;
 
             // Call
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            var viewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
             const double expectedDirection = 50.0;
 
             // Call
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             ConstantParameters<TSpreading> parameters = GetRandomConstantParameters();
-            var viewModel = new ConstantParametersViewModel<TSpreading>(parameters);
+            var viewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
             const double expectedSpreading = 50.0;
 
             // Call

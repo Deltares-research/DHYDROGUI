@@ -264,7 +264,7 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersViewModelGenericTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantConstantParametersSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantFileBasedParametersSettingsViewModelTest.cs" />

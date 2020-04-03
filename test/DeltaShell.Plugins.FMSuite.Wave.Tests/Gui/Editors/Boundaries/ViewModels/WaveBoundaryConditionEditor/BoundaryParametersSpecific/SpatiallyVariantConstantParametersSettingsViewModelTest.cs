@@ -66,9 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
-            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModel<TSpreading>>());
+            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
             ConstantParameters<TSpreading> observedParameters = 
-                ((ConstantParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
+                ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, Is.SameAs(dictionary[supportPoint]));
 
             Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
@@ -160,9 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             viewModel.UpdateActiveSupportPoint(supportPoint);
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
-            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModel<TSpreading>>());
+            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
             ConstantParameters<TSpreading> initialObservedParameters =
-                ((ConstantParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
+                ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
             Assert.That(initialObservedParameters, 
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
@@ -174,9 +174,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
-            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModel<TSpreading>>());
+            Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<ConstantParametersViewModelGeneric<TSpreading>>());
             ConstantParameters<TSpreading> currentObservedParameters =
-                ((ConstantParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
+                ((ConstantParametersViewModelGeneric<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
             Assert.That(currentObservedParameters, 
                         Is.SameAs(dictionary[supportPoint]));
 
