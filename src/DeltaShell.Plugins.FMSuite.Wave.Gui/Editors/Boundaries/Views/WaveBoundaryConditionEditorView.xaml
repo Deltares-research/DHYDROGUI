@@ -12,8 +12,8 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <components:BoundaryDescriptionView Grid.Column="0" Grid.Row="0" DataContext="{Binding Path=DescriptionViewModel}" />
