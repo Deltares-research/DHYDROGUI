@@ -145,12 +145,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             if (disposing)
             {
-                IEnumerable<IDisposable> disposables = SettingsCategories.Select(c => c.CustomControl)
-                                                                         .OfType<IDisposable>();
-                foreach (IDisposable disposable in disposables)
-                {
-                    disposable.Dispose();
-                }
+                SettingsCategories.ForEach(c => c.PropertyChanged -= OnPropertyChanged);
+                SettingsCategories.ForEach(c => c.Dispose());
+                SettingsCategories.Clear();
+
+                RemovedCategories.Clear();
             }
 
             disposed = true;

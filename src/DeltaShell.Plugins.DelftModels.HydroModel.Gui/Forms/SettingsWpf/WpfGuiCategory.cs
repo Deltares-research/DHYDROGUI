@@ -151,8 +151,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void Dispose()
         {
-            SubCategories.Clear();
+            var disposableCustomControl = CustomControl as IDisposable;
+            disposableCustomControl?.Dispose();
 
+            SubCategories.Clear();
             Properties.ForEach(p => p.PropertyChanged -= OnPropertyChanged);
             Properties.Clear();
         }

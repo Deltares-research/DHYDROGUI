@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
@@ -141,6 +144,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             Assert.IsTrue(dummyCategory.Properties.Any());
             Assert.AreEqual(dummyPropertyName, dummyCategory.Properties.FirstOrDefault()?.Label);
+        }
+
+        [Test]
+        public void GivenCategoryWithCustomControl_WhenDisposingCategory_ThenCustomControlDisposed()
+        {
+            // Setup
+            IDisposable customControl = Substitute.For<IDisposable, FrameworkElement>();
+            var category = new WpfGuiCategory("category_name", new List<FieldUIDescription>())
+            {
+                CustomControl = (FrameworkElement) customControl
+            };
+
+            // Call
+            category.Dispose();
+
+            // Assert
+            customControl.Received(1).Dispose();
         }
 
         [Test]
