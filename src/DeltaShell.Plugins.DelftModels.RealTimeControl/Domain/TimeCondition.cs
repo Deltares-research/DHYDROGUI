@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -29,7 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public TimeCondition() : base(false)
         {
             Reference = ReferenceType.Implicit; // = IMPLICIT -> timeseries
-            XmlTag = RtcXmlTag.TimeCondition;
         }
 
         private TimeSeries timeSeries;
@@ -65,11 +60,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return ""; //todo: show compact notion of time range?
         }
 
-        public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            yield return GetTimeSeries(prefix, start, stop, step);
-        }
-
         [NoNotifyPropertyChange]
         public InterpolationType InterpolationOptionsTime
         {
@@ -82,86 +72,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             get { return TimeSeries.Time.ExtrapolationType; }
             set { TimeSeries.Time.ExtrapolationType = value; }
-        }
-
-        private IXmlTimeSeries GetTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            var startTime = start;
-            var endTime = stop;
-            var timeStep = step;
-
-            if (TimeSeries.Time.Values.Count > 0)
-            {
-                startTime = TimeSeries.Time.Values.First();
-                endTime = TimeSeries.Time.Values.Last();
-                timeStep = endTime - startTime;
-            }
-
-            var periodSpan = TimeSeries.Time.Attributes.ContainsKey("PeriodSpan")
-                    ? TimeSpan.ParseExact(TimeSeries.Time.Attributes["PeriodSpan"], "c", null)
-                    : new TimeSpan(0, 0, 0);
-
-            var xmlTimeSeries = new XmlTimeSeries
-            {
-                StartTime = startTime,
-                EndTime = endTime,
-                Name = GetXmlNameWithoutTag(prefix),
-                LocationId = GetXmlNameWithTag(prefix),
-                ParameterId = QuantityId,
-                TimeStep = timeStep,
-                TimeSeries = (TimeSeries) TimeSeries.Clone(),
-                InterpolationType = TimeSeries.Time.InterpolationType,
-                ExtrapolationType = (ExtrapolationTimeSeriesType) TimeSeries.Time.ExtrapolationType,
-                PeriodSpan = periodSpan
-            };
-
-            return xmlTimeSeries;
-        }
-
-        private string QuantityId = "TimeSeries";
-
-        // Example of ToXml:
-        //       <standard id="[TimeCondition]control_group_1/time_condition">
-        //         <condition>
-        //             <x1Series ref="IMPLICIT">control_group_1/time_condition</x1Series>
-        //             <relationalOperator>Equal</relationalOperator>
-        //             <x2Value>0</x2Value>
-        //         </condition>
-        //         <true>
-        //             <trigger>
-        //                 <ruleReference>[HydraulicRule]control_group_1/lookup_table_rule</ruleReference>
-        //             </trigger>
-        //         </true>
-        //         <output>
-        //             <status>[Status]control_group_1/time_condition</status>
-        //         </output>
-        //     </standard>
-
-        /// <summary>
-        /// Converts the information of the time condition needed for writing the tools config file to an xml element.
-        /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return ToXml(xNamespace, prefix, GetXmlNameWithoutTag(prefix));
-        }
-
-        public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
-        {
-            foreach (var export in base.ToDataConfigImportSeries(prefix, xNamespace))
-            {
-                yield return export;
-            }
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", GetXmlNameWithoutTag(prefix)),
-                new XElement(xNamespace + "PITimeSeries",
-                    new XElement(xNamespace + "locationId", GetXmlNameWithTag(prefix)),
-                    new XElement(xNamespace + "parameterId",QuantityId),
-                    new XElement(xNamespace + "interpolationOption",InterpolationOptionsTime == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
-                    new XElement(xNamespace + "extrapolationOption", TimeSeries.Time.ExtrapolationType == ExtrapolationType.Periodic ? "PERIODIC" : "BLOCK")
-                ));
-
         }
 
         [ValidationMethod]
@@ -182,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     
         public override object Clone()
         {
-            var timeCondition = (TimeCondition)Activator.CreateInstance(GetType());
+            var timeCondition = new TimeCondition();
             timeCondition.CopyFrom(this);
             return timeCondition;
         }
@@ -198,7 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 InterpolationOptionsTime = timeCondition.InterpolationOptionsTime;
                 Extrapolation = timeCondition.Extrapolation;
             }
-
         }
 
         public IEnumerable<object> GetDirectChildren()

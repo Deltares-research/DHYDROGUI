@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlGroupEditor));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbInput = new System.Windows.Forms.ToolStripButton();
+            this.tsbMathExpression = new System.Windows.Forms.ToolStripButton();
             this.tsbCondition = new System.Windows.Forms.ToolStripButton();
             this.tsbRule = new System.Windows.Forms.ToolStripButton();
             this.tsbOutput = new System.Windows.Forms.ToolStripButton();
@@ -51,6 +52,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbInput,
+            this.tsbMathExpression,
             this.tsbCondition,
             this.tsbRule,
             this.tsbOutput,
@@ -77,8 +79,18 @@
             this.tsbInput.Size = new System.Drawing.Size(23, 22);
             this.tsbInput.Text = "toolStripButton1";
             this.tsbInput.ToolTipText = "Adds an input location to the diagram";
-            this.tsbInput.Click += new System.EventHandler(this.tsbInput_Click);
             this.tsbInput.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnTsbInputClick);
+
+            // Tool strip button Mathematical Expression
+            this.tsbMathExpression.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbMathExpression.Image = ((System.Drawing.Image)(resources.GetObject("tsbMathExpression.Image")));
+            this.tsbMathExpression.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbMathExpression.Name = "tsbMathExpression";
+            this.tsbMathExpression.Size = new System.Drawing.Size(23, 22);
+            this.tsbMathExpression.Text = "toolStripButton1";
+            this.tsbMathExpression.ToolTipText = "Adds a mathematical expression to the diagram";
+            this.tsbMathExpression.Click += new System.EventHandler(this.OnTsbMathExpressionSignalClick);
+
             // 
             // tsbCondition
             // 
@@ -199,7 +211,7 @@
             this.graphControl.ScrollBars = true;
             this.graphControl.Size = new System.Drawing.Size(620, 539);
             this.graphControl.TabIndex = 2;
-            this.graphControl.Load += new System.EventHandler(this.graphControl_Load);
+
             // 
             // ControlGroupEditor
             // 
@@ -220,6 +232,7 @@
 
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbInput;
+        private System.Windows.Forms.ToolStripButton tsbMathExpression;
         private System.Windows.Forms.ToolStripButton tsbCondition;
         private System.Windows.Forms.ToolStripButton tsbRule;
         private System.Windows.Forms.ToolStripButton tsbOutput;

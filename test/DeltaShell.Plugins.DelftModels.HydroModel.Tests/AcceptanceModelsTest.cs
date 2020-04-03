@@ -110,14 +110,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 return Enumerable.Empty<TestCaseData>();
             }
 
-            IEnumerable<DirectoryInfo> modelDirectories = acceptanceModelDirectory.EnumerateDirectories();
+            // The following directory structure is expected: <root>/AcceptanceModels/Delft3DFM/<TestSuiteFolders>/<ModelFolders>/**/*.zip
+            IEnumerable<DirectoryInfo> testSuiteDirectories = acceptanceModelDirectory.EnumerateDirectories();
+            IEnumerable<DirectoryInfo> modelDirectories = testSuiteDirectories.SelectMany(x => x.EnumerateDirectories());
             return modelDirectories.SelectMany(GetZipFilesInModelDirectory)
                                    .SelectMany(GetTestCaseDataInZip);
         }
 
         private static IEnumerable<Tuple<FileInfo, bool, DirectoryInfo>> GetZipFilesInModelDirectory(DirectoryInfo modelDirectoryInfo)
         {
-                FileInfo[] candidateZipFiles = modelDirectoryInfo.EnumerateFiles("*.zip").ToArray();
+                FileInfo[] candidateZipFiles = modelDirectoryInfo.EnumerateFiles("*.zip", 
+                                                                                 SearchOption.AllDirectories)
+                                                                 .ToArray();
                 bool hasMultipleZipFiles = candidateZipFiles.Length > 1;
 
                 return candidateZipFiles.Select(fi => new Tuple<FileInfo, bool, DirectoryInfo>(fi, hasMultipleZipFiles, modelDirectoryInfo));
@@ -129,39 +133,47 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
 
-        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(FileInfo candidateZipFile, DirectoryInfo modelDirectory,
-                                                 bool hasMultipleZipFiles)
+        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(FileInfo candidateZipFile, 
+                                                                      DirectoryInfo modelDirectory, 
+                                                                      bool hasMultipleZipFiles)
         {
-            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName, null);
+            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName, 
+                                                                      null);
 
-            string[] relevantMduFilesInZip =
-                filesInZip.Where(p => p.EndsWith(".mdu") && !p.Contains("dimr_expected")).ToArray();
+            string[] relevantMduFilesInZip = 
+                filesInZip.Where(p => p.EndsWith(".mdu") && !IsIgnored(p))
+                          .ToArray();
 
             bool hasMultipleMduFiles = relevantMduFilesInZip.Length> 1;
 
             foreach (string candidateMduFile in relevantMduFilesInZip)
             {
-                string baseTestName = modelDirectory.Name;
-                string testName = GetTestName(baseTestName,
+                string testName = GetTestName(modelDirectory,
                                               hasMultipleZipFiles,
                                               hasMultipleMduFiles,
                                               candidateZipFile.Name,
                                               candidateMduFile);
 
-                string relativeZipFilePath = Path.Combine(modelDirectory.Name, candidateZipFile.Name);
-                var testCase = new TestCaseData(relativeZipFilePath, candidateMduFile);
+                var testCase = new TestCaseData(candidateZipFile.FullName, candidateMduFile);
                 testCase.SetName(testName);
 
                 yield return testCase;
             }
         }
 
-        private static string GetTestName(string testName, 
+        private static bool IsIgnored(string path)
+        {
+            string lowerCase = path.ToLowerInvariant();
+            return lowerCase.Contains("dimr_expected") || lowerCase.Contains("_output");
+        }
+
+        private static string GetTestName(DirectoryInfo testModel, 
                                           bool hasMultipleZipFiles, 
                                           bool hasMultipleMduFiles,
                                           string candidateZipFileName, 
                                           string candidateMduFileName)
         {
+            string testName = $"{testModel.Parent.Name}.{testModel.Name}";
 
             if (hasMultipleZipFiles && hasMultipleMduFiles)
             {

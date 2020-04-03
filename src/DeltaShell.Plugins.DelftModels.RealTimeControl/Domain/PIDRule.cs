@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -15,7 +10,7 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public class PIDRule : RuleBase, IItemContainer, ITimeDependentRtcObject
+    public class PIDRule : RuleBase, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(PIDRule));
 
@@ -30,8 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (name != null) Name = name;
 
             Setting = new Setting {MaxSpeed = 0};
-
-            XmlTag = RtcXmlTag.PIDRule;
         }
 
         public PIDRuleSetpointType PidRuleSetpointType { get; set; }
@@ -81,159 +74,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
 
             set { timeSeries = value; }
-        }
-
-        /// <summary>
-        /// Gets the content of the time series that should be added to the timeseries_import.xml file.
-        /// </summary>
-        /// <param name="prefix">The control group name with a separator ('/')</param>
-        /// <param name="start">Start time of the model</param>
-        /// <param name="stop">Stop time of the model</param>
-        /// <param name="step">Time step of the model</param>
-        /// <returns>Objects with the values to write the time series element</returns>
-        /// <remarks>Will only return an element when the <see cref="PidRuleSetpointType"/> is <see cref="PIDRuleSetpointType.TimeSeries"/> /></remarks>
-        public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            if (PidRuleSetpointType == PIDRuleSetpointType.TimeSeries)
-            {
-                yield return GetImportTimeSeries(prefix, start, stop, step);
-            }
-        }
-
-        public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
-        {
-            yield return GetExportTimeSeries(GetIntegralPartId(prefix));
-            yield return GetExportTimeSeries(GetDifferentialPartId(prefix));
-        }
-
-        private string GetIntegralPartId(string prefix)
-        {
-            return RtcXmlTag.IP + GetXmlNameWithoutTag(prefix);
-        }
-
-        private string GetDifferentialPartId(string prefix)
-        {
-            return RtcXmlTag.DP + GetXmlNameWithoutTag(prefix);
-        }
-
-        // Example of ToXml:
-        //  <pid id ="[PID]control_group_1/pid_rule">
-        //      <mode>PIDVEL</mode>
-        //      <settingMin>4</settingMin>
-        //      <settingMax>5</settingMax>
-        //      <settingMaxSpeed>6</settingMaxSpeed>
-        //      <kp>1</kp>
-        //      <ki>2</ki>
-        //      <kd>3</kd>
-        //      <input>
-        //          <x>[Input]ObservationPoint1/Water level(op)</x>
-        //          <setpointSeries>[SP]control_group_1/pid_rule</setpointSeries>
-        //      </input>
-        //      <output>
-        //          <y>[Output]Weir1/Crest level(s)</y>
-        //          <integralPart>[IP]control_group_1/pid_rule</integralPart>
-        //          <differentialPart>[DP]control_group_1/pid_rule</differentialPart>
-        //      </output>
-        //  </pid>
-
-        /// <summary>
-        /// Converts the information of the PID rule needed for writing the tools config file to an xml element.
-        /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            var result = base.ToXml(xNamespace, prefix);
-
-            foreach (var output in Outputs)
-            {
-                output.IntegralPart = GetIntegralPartId(prefix);
-                output.DifferentialPart = GetDifferentialPartId(prefix);
-            }
-            result.Add(new XElement(xNamespace + "pid",
-                                    new XAttribute("id", GetXmlNameWithTag(prefix)),
-                                    new XElement(xNamespace + "mode", "PIDVEL"),
-                                    new XElement(xNamespace + "settingMin", Setting.Min),
-                                    new XElement(xNamespace + "settingMax", Setting.Max),
-                                    new XElement(xNamespace + "settingMaxSpeed", Math.Abs(Setting.MaxSpeed)),
-                                    new XElement(xNamespace + "kp", Kp),
-                                    new XElement(xNamespace + "ki", Ki),
-                                    new XElement(xNamespace + "kd", Kd),
-                                    Inputs.Select(input => PidRuleSetpointType == PIDRuleSetpointType.Constant ?
-                                        GenerateConstantValueSetPointXml(xNamespace, input.XmlName) :
-                                        input.ToXml(xNamespace, "x", "setpointSeries")),
-                                    Outputs.Select(output => output.ToXml(xNamespace, "y", "integralPart", "differentialPart"))));
-            return result;
-        }
-
-        private XElement GenerateConstantValueSetPointXml(XNamespace xNamespace, string name)
-        {
-            var result = new XElement(xNamespace + "input");
-            result.Add(new XElement(xNamespace + "x", name));
-            result.Add(new XElement(xNamespace + "setpointValue", ConstantValue));
-            return result;
-        }
-
-
-        /// <summary>
-        /// The PID rule requires the input as parameter to calculate the output value. The 
-        /// output should be set as input exchange item
-        /// </summary>
-        /// <param name="xNamespace"></param>
-        /// <returns></returns>
-        public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        private IXmlTimeSeries GetImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            var startTime = start;
-            var endTime = stop;
-            var timeStep = step;
-            var periodSpan = TimeSeries.Time.Attributes.ContainsKey("PeriodSpan")
-                    ? TimeSpan.ParseExact(TimeSeries.Time.Attributes["PeriodSpan"], "c", null)
-                    : new TimeSpan(0, 0, 0);
-
-            var xmlTimeSeries = new XmlTimeSeries
-                                    {
-                                        StartTime = startTime,
-                                        EndTime = endTime,
-                                        Name = RtcXmlTag.SP + GetXmlNameWithoutTag(prefix),
-                                        LocationId = GetXmlNameWithTag(prefix),
-                                        ParameterId = "SP",
-                                        TimeStep = timeStep,
-                                        TimeSeries = (TimeSeries) TimeSeries.Clone(),
-                                        InterpolationType = TimeSeries.Time.InterpolationType,
-                                        ExtrapolationType = (ExtrapolationTimeSeriesType) TimeSeries.Time.ExtrapolationType,
-                                        PeriodSpan = periodSpan
-                                    };
-
-            if (TimeSeries.Time.Values.Count > 0)
-            {
-                XmlTimeSeriesTruncater.Truncate(xmlTimeSeries, startTime, endTime);
-            }
-            else
-            {
-                xmlTimeSeries.StartTime = startTime;
-                xmlTimeSeries.EndTime = endTime;
-                xmlTimeSeries.TimeStep = timeStep;
-                xmlTimeSeries.TimeSeries.Time.AddValues(new[] { start, stop });
-            }
-
-            return xmlTimeSeries;
-        }
-
-        /// <summary>
-        /// Returns a IXmlTimeSeries that is written to rtcDataConfig.xml and only used internally by RTCTools.
-        /// Only Name is required for this series.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static IXmlTimeSeries GetExportTimeSeries(string name)
-        {
-            return new XmlTimeSeries {Name = name };
         }
 
         [NoNotifyPropertyChange]
@@ -288,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override object Clone()
         {
-            var pidRule = (PIDRule)Activator.CreateInstance(GetType());
+            var pidRule = new PIDRule();
             pidRule.CopyFrom(this);
             return pidRule;
         }
@@ -315,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             TimeSeries = 2
         }
 
-        public IEnumerable<object> GetDirectChildren()
+        public override IEnumerable<object> GetDirectChildren()
         {
             if (timeSeries != null)
                 yield return timeSeries;

@@ -157,5 +157,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             Assert.AreEqual(5, count);
         }
+
+        [Test]
+        public void Constructor_InitializesInstanceCorrectly()
+        {
+            // Call
+            var controlGroup = new ControlGroup();
+
+            // Assert
+            Assert.That(controlGroup.Name, Is.EqualTo(string.Empty));
+            Assert.That(controlGroup.Conditions, Is.Empty);
+            Assert.That(controlGroup.Rules, Is.Empty);
+            Assert.That(controlGroup.Inputs, Is.Empty);
+            Assert.That(controlGroup.Outputs, Is.Empty);
+            Assert.That(controlGroup.Signals, Is.Empty);
+            Assert.That(controlGroup.MathematicalExpressions, Is.Empty);
+        }
     }
 }

@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private void SetInterpolationAndExtrapolationOnTimeCondition(IControlGroup controlGroup,
             PITimeSeriesXML conditionItem)
         {
-            var condition = (TimeCondition) controlGroup.GetConditionByElementId<TimeCondition>(conditionItem.locationId, logHandler);
+            var condition = controlGroup.GetConditionByElementId<TimeCondition>(conditionItem.locationId, logHandler);
             condition.InterpolationOptionsTime = GetInterpolationType(conditionItem.interpolationOption);
             condition.Extrapolation = GetExtrapolationType(conditionItem.extrapolationOption);
         }

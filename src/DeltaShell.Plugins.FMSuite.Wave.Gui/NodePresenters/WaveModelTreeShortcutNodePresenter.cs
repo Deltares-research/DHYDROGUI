@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 return;
             }
 
-            WaveDomainData waveDomainData =
+            IWaveDomainData waveDomainData =
                 WaveDomainHelper.GetAllDomains(waveModel.OuterDomain).First(d => Equals(d.Grid, o));
 
             WaveGridEditor.LaunchGridEditor(waveModel, waveDomainData);

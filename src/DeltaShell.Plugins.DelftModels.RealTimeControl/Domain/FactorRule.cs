@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Functions.Generic;
+﻿using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
@@ -14,7 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public FactorRule()
         {
             Factor = -1.0; // default an invertor
-            XmlTag = RtcXmlTag.FactorRule;
         }
 
         private double factor;
@@ -41,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override object Clone()
         {
-            var factorRule = (FactorRule)Activator.CreateInstance(GetType());
+            var factorRule = new FactorRule();
             factorRule.CopyFrom(this);
             return factorRule;
         }
@@ -49,12 +47,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public override void CopyFrom(object source)
         {
             var factorRule = source as FactorRule;
-            if (factorRule == null)
+            if (factorRule != null)
             {
-                return;
+                base.CopyFrom(source);
+                Factor = factorRule.Factor;
             }
-            base.CopyFrom(source);
-            Factor = factorRule.Factor;
         }
     }
 }

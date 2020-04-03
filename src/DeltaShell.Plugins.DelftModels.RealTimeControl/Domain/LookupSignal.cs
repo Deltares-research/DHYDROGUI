@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 
@@ -17,8 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class LookupSignal : SignalBase, IItemContainer
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(LookupSignal));
-        private const string LookupTable = "lookupTable";
+        private const string lookupTable = "lookupTable";
 
         public LookupSignal() : this(null)
         {
@@ -28,7 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             if (name != null) Name = name;
             Function = DefineFunction();
-            XmlTag = RtcXmlTag.LookupSignal;
         }
 
         /// <summary>
@@ -47,49 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                                            ExtrapolationType = ExtrapolationType.Constant
                                        });
             function.Components.Add(new Variable<double>("f"));
-            function.Name = LookupTable; 
+            function.Name = lookupTable; 
             return function;
-        }
-
-        /// <summary>
-        /// Returns a IXmlTimeSeries that is written to rtcDataConfig.xml and only used internally by RTCTools.
-        /// Only Name is required for this series.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private static IXmlTimeSeries GetExportTimeSeries(string name)
-        {
-            return new XmlTimeSeries { Name = name };
-        }
-
-        public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
-        {
-            yield return GetExportTimeSeries(RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix));
-        }
-
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            var result = base.ToXml(xNamespace, prefix);
-            IEventedList<Record> table = new EventedList<Record>();
-            foreach (var x in Function.Arguments[0].Values)
-            {
-                table.Add(new Record{X = (double) x, Y = (double) Function[x]});
-            }
-
-            var xElementsInput = Inputs.Select(input => input.ToXml(xNamespace, "x")).ToList();
-            foreach (var xElementInput in xElementsInput)
-            {
-                var xElement = xElementInput.Elements().First();
-                xElement.Add(new XAttribute("ref", "IMPLICIT"));
-            }
-
-            result.Add(new XElement(xNamespace + "lookupTable", new XAttribute("id", GetXmlNameWithTag(prefix)),
-                       new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
-                       new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
-                       new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),
-                       xElementsInput,
-                       new XElement(xNamespace + "output", new XElement(xNamespace + "y", RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix)))));
-            return result;
         }
 
         [NoNotifyPropertyChange]
@@ -145,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override object Clone()
         {
-            var lookupSignal = (LookupSignal)Activator.CreateInstance(GetType());
+            var lookupSignal = new LookupSignal();
             lookupSignal.CopyFrom(this);
             return lookupSignal;
         }

@@ -17,8 +17,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="DelftTools.Controls.IView" />
-    public partial class WpfSettingsView : IView, IAdditionalView
+    public sealed partial class WpfSettingsView : IAdditionalView
     {
+        private bool disposed = false;
+
         public WpfSettingsView()
         {
             InitializeComponent();
@@ -80,6 +82,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                ViewModel.Dispose();
+            }
+
+            disposed = true;
         }
 
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -96,6 +115,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             // https://stackoverflow.com/questions/10208861/wpf-data-bound-tabcontrol-doesnt-commit-changes-when-new-tab-is-selected
 
             Keyboard.FocusedElement?.RaiseEvent(new RoutedEventArgs(LostFocusEvent));
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="WpfSettingsView"/> class.
+        /// </summary>
+        ~WpfSettingsView()
+        {
+            Dispose(false);
         }
     }
 }

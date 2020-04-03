@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
@@ -20,13 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             using (var gui = new DeltaShellGui())
             {
                 gui.Run();
-                var controlGroup = new ControlGroup
-                                       {
-                                           Rules = new EventedList<RuleBase>
-                                                   {
-                                                       new PIDRule {Name = "testRule"}
-                                                   }
-                                       };
+                var controlGroup = new ControlGroup();
+                controlGroup.Rules.Add(new PIDRule{Name ="testRule"});
 
                 // ControlGroupEditor is composed in CompositeView (ControlGroupGraphView)
                 // :: ControlGroupEditorViewContext.ViewType should return type of View, not CompositeParent, but this doesn't work yet.

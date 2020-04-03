@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
@@ -149,57 +148,48 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private static void PlaceShapesAndConnections(List<object> cloned, ControlGroupEditorController controller, Point mea)
         {
-            var clonedRules = cloned.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
-            var nonIdenticallyNamedRules = controller.ControlGroup.Rules.ToList();
-            foreach (var clonedRule in clonedRules)
-            {
-                if (nonIdenticallyNamedRules.Count != 0)
-                {
-                    var identicalName = nonIdenticallyNamedRules.FirstOrDefault(r => r.Name == ((INameable)clonedRule).Name);
-                    if (identicalName != null)
-                    {
-                        ((INameable)clonedRule).Name = RealTimeControlModelHelper.GetUniqueName("Rule - Copy {0}", nonIdenticallyNamedRules, "Copy");
-                        nonIdenticallyNamedRules.Add(clonedRule);
-                    }
-                }
-            }
+            ControlGroup controlGroup = controller.ControlGroup;
+            IList<RuleBase> clonedRules = GetUniquelyNamedClones(cloned, controlGroup.Rules, "Rule");
+            IList<SignalBase> clonedSignals = GetUniquelyNamedClones(cloned, controlGroup.Signals, "Signal");
+            IList<ConditionBase> clonedConditions = GetUniquelyNamedClones(cloned, controlGroup.Conditions, "Condition");
+            IList<MathematicalExpression> clonedMathExpressions = GetUniquelyNamedClones(cloned, controlGroup.MathematicalExpressions,
+                                                                                         "Expression");
 
-            var clonedSignals = cloned.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-            var nonIdenticallyNamedSignals = controller.ControlGroup.Signals.ToList();
-            foreach (var clonedSignal in clonedSignals)
-            {
-                if (nonIdenticallyNamedSignals.Count != 0)
-                {
-                    var identicalName = nonIdenticallyNamedSignals.FirstOrDefault(r => r.Name == ((INameable)clonedSignal).Name);
-                    if (identicalName != null)
-                    {
-                        ((INameable)clonedSignal).Name = RealTimeControlModelHelper.GetUniqueName("Signal - Copy {0}", nonIdenticallyNamedSignals, "Copy");
-                        nonIdenticallyNamedSignals.Add(clonedSignal);
-                    }
-                }
-            }
-
-            var clonedConditions = cloned.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
-            var nonIdenticallyNamedConditions = controller.ControlGroup.Conditions.ToList();
-            foreach (var clonedCondition in clonedConditions)
-            {
-                if (nonIdenticallyNamedConditions.Count != 0)
-                {
-                    var identicalName = nonIdenticallyNamedConditions.FirstOrDefault(r => r.Name == ((INameable)clonedCondition).Name);
-                    if (identicalName != null)
-                    {
-                        ((INameable)clonedCondition).Name = RealTimeControlModelHelper.GetUniqueName("Condition - Copy {0}", nonIdenticallyNamedConditions, "Copy");
-                        nonIdenticallyNamedConditions.Add(clonedCondition);
-                    }
-                }
-            }
             controller.AddShapesToControlGroupAndPlace(clonedRules,
                                  clonedConditions,
                                  cloned.Where(c => c is Input).Cast<Input>().ToList(),
                                  cloned.Where(c => c is Output).Cast<Output>().ToList(),
-                                 clonedSignals, mea);
+                                 clonedSignals, clonedMathExpressions, mea);
 
-            controller.AddConnections(clonedRules, clonedConditions, clonedSignals, true);
+            controller.AddConnections(clonedRules, clonedConditions, clonedSignals, clonedMathExpressions, true);
+        }
+
+        private static IList<T> GetUniquelyNamedClones<T>(List<object> clonedObjects, IEnumerable<T> existingObjects, string objName)
+            where T : RtcBaseObject
+        {
+            List<T> newObjects = clonedObjects.OfType<T>().ToList();
+            List<T> copyExistingObjects = existingObjects.ToList();
+
+            foreach (T newObject in newObjects)
+            {
+                if (!copyExistingObjects.Any())
+                {
+                    continue;
+                }
+
+                T identicalName = copyExistingObjects.FirstOrDefault(o => o.Name == newObject.Name);
+                if (identicalName == null)
+                {
+                    continue;
+                }
+
+                newObject.Name = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
+                                                                          copyExistingObjects, "Copy");
+
+                copyExistingObjects.Add(newObject);
+            }
+
+            return newObjects;
         }
     }
 }

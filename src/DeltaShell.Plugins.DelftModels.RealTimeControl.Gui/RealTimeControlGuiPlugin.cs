@@ -15,7 +15,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
@@ -117,6 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new PropertyInfo<TimeCondition, TimeConditionProperties>();
             yield return new PropertyInfo<StandardCondition, StandardConditionProperties>();
             yield return new PropertyInfo<ControlGroup, ControlGroupProperties>();
+            yield return new PropertyInfo<MathematicalExpression, MathematicalExpressionProperties>();
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -228,8 +229,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             yield return new RealTimeControlModelNodePresenter(this);
             yield return new RtcObjectNodePresenter { GuiPlugin = this };
-            yield return new InputNodePresenter { GuiPlugin = this };
-            yield return new OutputNodePresenter {GuiPlugin = this};
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);

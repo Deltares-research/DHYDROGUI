@@ -1229,7 +1229,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             new TestCompositeActivity { Activities = { realTimeControlModel, controlledModel } };
 
-            var conditionInput = controlGroup.Conditions[0].Input;
+            var conditionInput = (Input) controlGroup.Conditions[0].Input;
             var intervalRule = (IntervalRule)controlGroup.Rules[0];
             var ruleInput = intervalRule.Inputs[0];
 
@@ -1763,7 +1763,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             pidRule.TimeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
             pidRule.TimeSeries.Components[0].DefaultValue = 150.0;
 
-            var ruleInput = pidRule.Inputs[0];
+            var ruleInput = (Input) pidRule.Inputs[0];
 
             // Initialize
             realTimeControlModel.Initialize();

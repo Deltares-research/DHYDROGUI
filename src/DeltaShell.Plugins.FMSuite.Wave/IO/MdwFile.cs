@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 #endregion
 
                 // domain(s)
-                IList<WaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(modelDefinition.OuterDomain);
+                IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(modelDefinition.OuterDomain);
                 AddDomainCategories(allDomains, ref mdwCategories);
                 allDomains.ForEach(d => CopyMeteoFilesTo(d.MeteoData, targetDir, switchTo));
 
@@ -457,9 +457,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void AddDomainCategories(IList<WaveDomainData> allDomains, ref List<DelftIniCategory> mdwCategories)
+        private void AddDomainCategories(IList<IWaveDomainData> allDomains, ref List<DelftIniCategory> mdwCategories)
         {
-            foreach (WaveDomainData domain in allDomains)
+            foreach (IWaveDomainData domain in allDomains)
             {
                 var domainCategory = new DelftIniCategory(KnownWaveCategories.DomainCategory);
                 domainCategory.AddProperty("Grid", domain.GridFileName);

@@ -194,20 +194,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coupling start time.
+        /// </summary>
+        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_start_time {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_start_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coupling stop time.
+        /// </summary>
+        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_stop_time {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_stop_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coupling time step.
         /// </summary>
         internal static string WaveSettingsHelper_GetWaveSettings_Coupling_time_step {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_time_step", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data from D-Flow FM.
-        /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM {
-            get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Data_from_D_Flow_FM", resourceCulture);
             }
         }
         
@@ -230,16 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start time.
-        /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Start_time {
-            get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Start_time", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Start time within the coupled model run.
+        ///   Looks up a localized string similar to Start time within the coupled model run [YYYY-MM-DD HH:MM:SS].
         /// </summary>
         internal static string WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run {
             get {
@@ -248,16 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop time.
-        /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Stop_time {
-            get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Stop_time", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stop time within the coupled model run.
+        ///   Looks up a localized string similar to Stop time within the coupled model run [YYYY-MM-DD HH:MM:SS].
         /// </summary>
         internal static string WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run {
             get {
@@ -266,11 +257,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time step.
+        ///   Looks up a localized string similar to Time step within the coupled model run [Dd HH:MM:SS.ZZZ].
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Time_step {
+        internal static string WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run {
             get {
-                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Time_step", resourceCulture);
+                return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run", resourceCulture);
             }
         }
         

@@ -19,18 +19,23 @@ MdwGroup,MdwName,GUIGroup,Subcategory,Caption,Type,Default,Min,Max,MdwOnly,Enabl
 WaveFileInformation,FileVersion,,,,String,02.00,,,True,,,,,,,
 General,ProjectName,General,General Settings,Project name,String,,,,,,,,,,,
 General,ProjectNr,General,General Settings,Project number,String,,,,,,,,,,,
-General,ReferenceDate,General,General Settings,Reference date,DateTime,2000-01-01,,,,,,,,,, [YYYY-MM-DD HH:MM:SS]
+General,ReferenceDate,General,General Settings,Reference date,DateTime,2000-01-01,,,,,,,,,, [YYYY-MM-DD]
 General,DirConvention,General,General Settings,Directional convention:nautical|cartesian,nautical|cartesian,nautical,,,,,,,,,Direction specification convention,
+Output,COMFile,General,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
+Output,WriteCOM,General,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
+Output,COMWriteInterval,General,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
+Output,AppendCOM,General,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
+Output,MassFluxToCOM,General,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
 General,TSeriesFile,,,Timeseries File,FileName,,,,True,,,,,,,
 General,SimMode,General,Simulation mode,Simulation mode:stationary|non-stationary,stationary|non-stationary,stationary,,,,,,,,,,
 General,TimeStep,General,Simulation mode,D-Waves time step,Double,10,1,,,SimMode=1,,,,,Time step in case of non-stationary simulation, min
 General,TimeInterval,General,Simulation mode,D-Waves time interval,Double,60,,,,SimMode=1,,,,,Time interval in case of non-stationary simulation, min
 General,OnlyInputVerify,General,Simulation mode,Verify input,true|false,false,,,,,,,,,Switch for input validation or simulation run: false = simulation run; true = input validation only,
-General,FlowBedLevel,General,Data from D-Flow FM,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
-General,FlowWaterLevel,General,Data from D-Flow FM,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
-General,FlowVelocity,General,Data from D-Flow FM,Velocity:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of velocity from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
-General,FlowVelocityType,General,Data from D-Flow FM,Velocity type:depth-averaged|surface-level|wave-dependent,depth-averaged|surface-level|wave-dependent,depth-averaged,,,,,,,,,Method of velocity computation,
-General,FlowWind,General,Data from D-Flow FM,Wind:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of wind from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowBedLevel,General,Default domain data,Bed level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of bed level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowWaterLevel,General,Default domain data,Water level:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of water level from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowVelocity,General,Default domain data,Velocity:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of velocity from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
+General,FlowVelocityType,General,Default domain data,Velocity type:depth-averaged|surface-level|wave-dependent,depth-averaged|surface-level|wave-dependent,depth-averaged,,,,,,,,,Method of velocity computation,
+General,FlowWind,General,Default domain data,Wind:none|use|use-extend,0|1|2,0,,,,,,,,,Default usage of wind from hydrodynamic computation by all domains. May be overruled by same keyword in group ”domain”. Not relevant when FlowFile is empty.,
 General,DirSpace,spectral,Defaults,Directional space:circle|sector,circle|sector,circle,,,,,,,,,Default directional space,
 General,NDir,spectral,Defaults,Nr. of directions,Integer,36,1,,,,,,,,Default number of directional bins,
 General,StartDir,spectral,Defaults,Start direction,Double,0.0,,,,DirSpace=1,,,,,Default start direction (in case of sector), deg
@@ -83,11 +88,6 @@ Output,WriteSpec1D,Output,Tables,Write 1D spectra,true|false,false,,,,,,,,,Write
 Output,WriteSpec2D,Output,Tables,Write 2D spectra,true|false,false,,,,,,,,,Write 2D spectra for output locations,
 Output,LocationFile,Output,Tables,Location file,FileName,,,,,,,,,,File name of output locations,
 Output,UseHotFile,Output,Hotstart,Write/read hotstart,true|false,false,,,,,,,,,Write and read hotstart files,
-Output,COMFile,Output,Communication,Communication file,FileName,,,,,,,,,,Wave communication file (*_com.nc) for coupling,
-Output,WriteCOM,Output,Communication,Write communication files,true|false,false,,,,,,,,,Write results to communication file(s),
-Output,COMWriteInterval,Output,Communication,Communication interval,Double,60.0,,,,WriteCOM,,,,,Interval for writing data to communication file(s) in minutes, min
-Output,AppendCOM,Output,Communication,Append to com file,true|false,false,,,,WriteCOM,,,,,Upon writing to communication file(s) overwrite the previous data (false) or append to the data series (true),
-Output,MassFluxToCOM,Output,Communication,Mass flux to com,true|false,true,,,,WriteCOM,,,,,write mass fluxes due to wave to communication file(s),
 Output,TestOutputLevel,Output,Miscellaneous,Test output level,Integer,0,,,,,,,,,Test output level,
 Output,TraceCalls,Output,Miscellaneous,Trace subroutine calls,true|false,false,,,,,,,,,Trace subroutine calls,
 Output,MapWriteNetCDF,Output,Miscellaneous,Write NetCDF, true|false,true,,,,,,,,,Write output to NetCDF,

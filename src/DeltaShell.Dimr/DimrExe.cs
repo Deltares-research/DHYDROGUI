@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using BasicModelInterface;
+using DeltaShell.NGHS.Common;
 using log4net;
 
 namespace DeltaShell.Dimr
@@ -44,11 +45,12 @@ namespace DeltaShell.Dimr
                         Arguments = Path.GetFileName(xmlFile)
                     };
 
-                dimrProcInfo.EnvironmentVariables["PATH"] = KernelDirs + ";" +
-                                                            Path.GetDirectoryName(DimrApiDataSet.DimrExePath) + ";" +
-                                                            dimrProcInfo.EnvironmentVariables["PATH"];
+                dimrProcInfo.EnvironmentVariables[EnvironmentConstants.PathKey] = 
+                    KernelDirs + ";" +
+                    Path.GetDirectoryName(DimrApiDataSet.DimrExePath) + ";" +
+                    dimrProcInfo.EnvironmentVariables[EnvironmentConstants.PathKey];
 
-                Log.Info(string.Format("Path used: {0}", dimrProcInfo.EnvironmentVariables["PATH"]));
+                Log.Info(string.Format("Path used: {0}", dimrProcInfo.EnvironmentVariables[EnvironmentConstants.PathKey]));
                 
                 Log.Info(string.Format("Running dimr as : {0} {1}", dimrProcInfo.FileName, dimrProcInfo.Arguments));
 
