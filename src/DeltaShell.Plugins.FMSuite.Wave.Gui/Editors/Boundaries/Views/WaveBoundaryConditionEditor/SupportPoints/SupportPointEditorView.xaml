@@ -81,8 +81,8 @@
                 <Image Source="{StaticResource AddImg}" />
             </Button>
 
-            <ListView ItemsSource="{Binding Path=ViewModels}" 
-                      SelectedItem="{Binding Path= SelectedViewModel}" 
+            <ListView ItemsSource="{Binding Path=SupportPointViewModels}" 
+                      SelectedItem="{Binding Path= SelectedSupportPointViewModel}" 
                       Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                       Style="{StaticResource ListViewStyle}">
                 <ListView.ItemContainerStyle>
