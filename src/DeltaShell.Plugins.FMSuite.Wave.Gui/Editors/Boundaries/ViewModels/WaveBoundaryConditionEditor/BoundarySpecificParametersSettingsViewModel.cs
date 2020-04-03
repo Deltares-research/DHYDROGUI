@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
@@ -12,14 +11,18 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoun
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
     /// <summary>
-    /// <see cref="BoundarySpecificParametersSettingsViewModel" /> defines the
+    /// <see cref="BoundarySpecificParametersSettingsViewModel"/> defines the
     /// view model for the boundary-specific parameters settings view.
     /// </summary>
-    public sealed class BoundarySpecificParametersSettingsViewModel : IRefreshDataComponentViewModel, 
+    public sealed class BoundarySpecificParametersSettingsViewModel : IRefreshDataComponentViewModel,
                                                                       INotifyPropertyChanged
     {
         private readonly IWaveBoundaryConditionDefinition conditionDefinition;
         private readonly IViewDataComponentFactory dataComponentFactory;
+
+        private IParametersSettingsViewModel parametersSettingsViewModel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Creates a new <see cref="BoundarySpecificParametersSettingsViewModel"/>.
@@ -59,8 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private IParametersSettingsViewModel parametersSettingsViewModel;
-
         public void RefreshDataComponentViewModel()
         {
             ParametersSettingsViewModel =
@@ -69,30 +70,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         public void UpdateSelectedActiveParameters(SupportPoint supportPoint)
         {
-            switch(ParametersSettingsViewModel)
+            if (ParametersSettingsViewModel is ISpatiallyVariantParametersSettingsViewModel spatiallyVariantParametersSettingsViewModel)
             {
-                case SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
-                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
-                    break;
-                case SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
-                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
-                    break;
-                case SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
-                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
-                    break;
-                case SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading> spatiallyVariantParametersSettingsViewModel:
-                    spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
-                    break;
-                default:
-                    throw new InvalidOperationException(
-                        "Cannot set the selected view point when the data is not spatially variant.");
+                spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "Cannot set the selected view point when the data is not spatially variant.");
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

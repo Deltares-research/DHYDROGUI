@@ -11,12 +11,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="BoundaryDescriptionViewModel"/> defines the view model for the boundary description view.
     /// </summary>
-    /// <seealso cref="INotifyPropertyChanged" />
+    /// <seealso cref="INotifyPropertyChanged"/>
     public sealed class BoundaryDescriptionViewModel : INotifyPropertyChanged
     {
         private readonly IWaveBoundary observedBoundary;
         private readonly IViewDataComponentFactory dataComponentFactory;
         private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
+
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Creates a new instance of the <see cref="BoundaryDescriptionViewModel"/>.
@@ -31,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any of the parameters is <c>null</c>.
         /// </exception>
-        public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary, 
+        public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary,
                                             IViewDataComponentFactory dataComponentFactory,
                                             IAnnounceDataComponentChanged announceDataComponentChanged)
         {
@@ -67,8 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public ForcingViewType ForcingType
         {
-            get => dataComponentFactory.GetForcingType(observedBoundary.ConditionDefinition
-                                                                       .DataComponent);
+            get => dataComponentFactory.GetForcingType(observedBoundary.ConditionDefinition.DataComponent);
             set
             {
                 if (value == ForcingType)
@@ -77,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 }
 
                 observedBoundary.ConditionDefinition.DataComponent =
-                    dataComponentFactory.ConstructBoundaryConditionDataComponent(value, 
+                    dataComponentFactory.ConstructBoundaryConditionDataComponent(value,
                                                                                  SpatialDefinition,
                                                                                  GetSpreadingViewType());
                 OnPropertyChanged();
@@ -90,8 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public SpatialDefinitionViewType SpatialDefinition
         {
-            get => dataComponentFactory.GetSpatialDefinition(observedBoundary.ConditionDefinition
-                                                                             .DataComponent);
+            get => dataComponentFactory.GetSpatialDefinition(observedBoundary.ConditionDefinition.DataComponent);
             set
             {
                 if (value == SpatialDefinition)
@@ -100,23 +103,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 }
 
                 observedBoundary.ConditionDefinition.DataComponent =
-                    dataComponentFactory.ConstructBoundaryConditionDataComponent(ForcingType, 
-                                                                                 value, 
+                    dataComponentFactory.ConstructBoundaryConditionDataComponent(ForcingType,
+                                                                                 value,
                                                                                  GetSpreadingViewType());
                 OnPropertyChanged();
                 announceDataComponentChanged.AnnounceDataComponentChanged();
             }
         }
 
-        private DirectionalSpreadingViewType GetSpreadingViewType() => 
-            dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition
-                                                                                 .DataComponent);
-
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        private DirectionalSpreadingViewType GetSpreadingViewType() => dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition.DataComponent);
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

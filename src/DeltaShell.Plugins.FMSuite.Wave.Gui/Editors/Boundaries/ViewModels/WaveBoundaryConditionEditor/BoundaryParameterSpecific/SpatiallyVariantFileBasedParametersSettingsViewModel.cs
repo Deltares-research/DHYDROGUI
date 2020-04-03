@@ -11,7 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// ParametersSettingsView given spatially varying file based data.
     /// </summary>
     /// <seealso cref="FileBasedParametersSettingsViewModel" />
-    public sealed class SpatiallyVariantFileBasedParametersSettingsViewModel : FileBasedParametersSettingsViewModel
+    /// <seealso cref="ISpatiallyVariantParametersSettingsViewModel" />
+    public sealed class SpatiallyVariantFileBasedParametersSettingsViewModel : FileBasedParametersSettingsViewModel, ISpatiallyVariantParametersSettingsViewModel
     {
         private readonly IReadOnlyDictionary<SupportPoint, FileBasedParameters> supportPointToParametersMapping;
 

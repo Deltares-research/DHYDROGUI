@@ -11,11 +11,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/> defines the view model for the
     /// ParametersSettingsView given spatially varying constant data.
     /// </summary>
-    /// <seealso cref="ConstantParameters{TSpreading}" />
-    public sealed class SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading> : TimeDependentParametersSettingsViewModel
+    /// <seealso cref="ConstantParameters{TSpreading}"/>
+    /// <seealso cref="ISpatiallyVariantParametersSettingsViewModel"/>
+    public sealed class SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading> : TimeDependentParametersSettingsViewModel, ISpatiallyVariantParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping;
+
+        private TimeDependentParametersViewModel activeParametersViewModel;
+
+        private string groupBoxTitle;
 
         /// <summary>
         /// Creates a new <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/>.
@@ -53,8 +58,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private TimeDependentParametersViewModel activeParametersViewModel;
-
         public override string GroupBoxTitle
         {
             get => groupBoxTitle;
@@ -70,23 +73,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private string groupBoxTitle;
-
-
-        /// <summary>
-        /// Updates the currently selected <see cref="TimeDependentParameters{TSpreading}"/>
-        /// with the newly selected <paramref name="supportPoint"/>.
-        /// </summary>
-        /// <param name="supportPoint">The support point.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="supportPoint"/> is null.
-        /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
-            TimeDependentParameters<TSpreading> correspondingParameters = 
-                supportPoint != null && 
-                supportPointToParametersMapping.TryGetValue(supportPoint, out TimeDependentParameters<TSpreading> value) 
-                    ? value 
+            TimeDependentParameters<TSpreading> correspondingParameters =
+                supportPoint != null &&
+                supportPointToParametersMapping.TryGetValue(supportPoint, out TimeDependentParameters<TSpreading> value)
+                    ? value
                     : null;
 
             if (correspondingParameters == (ActiveParametersViewModel as TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>)?.ObservedParameters)
@@ -95,8 +87,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
 
             ActiveParametersViewModel = correspondingParameters != null
-                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(GenerateSeries,  
-                                                                                                               correspondingParameters, 
+                                            ? new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(GenerateSeries,
+                                                                                                               correspondingParameters,
                                                                                                                supportPointToParametersMapping)
                                             : null;
         }

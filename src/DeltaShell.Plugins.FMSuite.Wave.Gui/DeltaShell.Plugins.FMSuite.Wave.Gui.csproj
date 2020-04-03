@@ -180,6 +180,7 @@
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\FileBasedParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\FileBasedParametersViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\IParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ISpatiallyVariantParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantConstantParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantFileBasedParametersSettingsViewModel.cs" />
     <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantTimeDependentParametersSettingsViewModel.cs" />

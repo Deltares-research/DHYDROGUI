@@ -96,6 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
                 case UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
+                case UniformDataComponent<FileBasedParameters> _:
+                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
                     return DirectionalSpreadingViewType.Power;
                 case UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:

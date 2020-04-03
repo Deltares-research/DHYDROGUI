@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Call | Assert
             void Call() => new SupportPointDataComponentViewModel(null, parametersFactory, mediator);
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            
+
             Assert.That(exception.ParamName, Is.EqualTo("conditionDefinition"));
         }
 
@@ -54,11 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
-            
+
             // Call | Assert
             void Call() => new SupportPointDataComponentViewModel(conditionDefinition, null, mediator);
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            
+
             Assert.That(exception.ParamName, Is.EqualTo("parametersFactory"));
         }
 
@@ -68,35 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            
+
             // Call | Assert
             void Call() => new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            
+
             Assert.That(exception.ParamName, Is.EqualTo("announceSelectedSupportPointDataChanged"));
-        }
-
-        private static IEnumerable<TestCaseData> GetIsEnabledData()
-        {
-            var waveBoundaryIsEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabledConstant.DataComponent = 
-                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabledConstant, true);
-
-            var waveBoundaryIsEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabledTimeDependent.DataComponent = 
-                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabledTimeDependent, true);
-
-            var waveBoundaryIsNotEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabledConstant.DataComponent =
-                new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabledConstant, false);
-
-            var waveBoundaryIsNotEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabledTimeDependent.DataComponent =
-                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabledTimeDependent, false);
         }
 
         [Test]
@@ -107,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
-            
+
             // Call
             bool result = viewModel.IsEnabled();
 
@@ -115,71 +92,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(result, Is.EqualTo(expectedResults));
         }
 
-        private static SupportPoint GetDefaultSupportPoint()
-        {
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            geometricDefinition.Length.Returns(10.0);
-
-            return new SupportPoint(0.0, geometricDefinition);
-        }
-
-        private static IEnumerable<TestCaseData> GetIsEnabledSupportPointData()
-        {
-            SupportPoint supportPoint = GetDefaultSupportPoint();
-
-            var waveBoundaryIsEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabledConstant.DataComponent = 
-                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabledConstant, supportPoint, false);
-
-            var waveBoundaryIsEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsEnabledTimeDependent.DataComponent = 
-                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
-            yield return new TestCaseData(waveBoundaryIsEnabledTimeDependent, supportPoint, false);
-
-            var waveBoundaryIsNotEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabledConstant.DataComponent =
-                new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabledConstant, supportPoint, false);
-
-            var waveBoundaryIsNotEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryIsNotEnabledTimeDependent.DataComponent =
-                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
-            yield return new TestCaseData(waveBoundaryIsNotEnabledTimeDependent, supportPoint, false);
-
-            var waveBoundaryIsEnabledWithSupportPointConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponentConstant = 
-                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
-            dataComponentConstant.AddParameters(supportPoint, new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
-            waveBoundaryIsEnabledWithSupportPointConstant.DataComponent = dataComponentConstant;
-
-            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPointConstant, supportPoint, true);
-
-            var waveBoundaryIsEnabledWithSupportPointTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponentTimeDependent = 
-                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
-            dataComponentTimeDependent.AddParameters(supportPoint, new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
-            waveBoundaryIsEnabledWithSupportPointTimeDependent.DataComponent = dataComponentTimeDependent;
-
-            yield return new TestCaseData(waveBoundaryIsEnabledWithSupportPointTimeDependent, supportPoint, true);
-        }
-
         [Test]
         [TestCaseSource(nameof(GetIsEnabledSupportPointData))]
-        public void IsEnabledSupportPoint_ExpectedResults(IWaveBoundaryConditionDefinition conditionDefinition, 
-                                                          SupportPoint supportPoint, 
-                                                          bool expectedResults)
+        public void IsEnabledSupportPoint_ExpectedResults(IWaveBoundaryConditionDefinition conditionDefinition,
+                                                          SupportPoint supportPoint,
+                                                          bool expectedIsEnabled)
         {
             // Setup
             var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
-            
+
             // Call
             bool result = viewModel.IsEnabledSupportPoint(supportPoint);
 
             // Assert
-            Assert.That(result, Is.EqualTo(expectedResults));
+            Assert.That(result, Is.EqualTo(expectedIsEnabled));
         }
 
         [Test]
@@ -203,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -218,9 +146,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.AddDefaultParameters(supportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(supportPoint), 
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint),
                         "The data component should contain the newly added SupportPoint, but did not:");
             Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
             parametersFactory.Received(1).ConstructDefaultConstantParameters<TSpreading>();
@@ -231,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -246,12 +174,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.AddDefaultParameters(supportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(supportPoint), 
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint),
                         "The data component should contain the newly added SupportPoint, but did not:");
             Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
             parametersFactory.Received(1).ConstructDefaultTimeDependentParameters<TSpreading>();
+        }
+
+        [Test]
+        public void AddDefaultParameters_FileBasedParameters_ExpectedResults()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent =
+                new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var parameters = new FileBasedParameters("path");
+            parametersFactory.ConstructDefaultFileBasedParameters().Returns(parameters);
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.AddDefaultParameters(supportPoint);
+
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint),
+                        "The data component should contain the newly added SupportPoint, but did not:");
+            Assert.That(dataComponent.Data[supportPoint], Is.SameAs(parameters));
+            parametersFactory.Received(1).ConstructDefaultFileBasedParameters();
         }
 
         [Test]
@@ -297,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -309,9 +265,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.RemoveParameters(supportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False,
                         "The data component should not contain the removed SupportPoint:");
         }
 
@@ -324,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -336,12 +292,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.RemoveParameters(supportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False, 
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False,
                         "The data component should not contain the removed SupportPoint:");
         }
 
+        [Test]
+        public void RemoveParameters_FileBasedParameters_ExpectedResults()
+        {
+            // Setup
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new FileBasedParameters("path");
+            dataComponent.AddParameters(supportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            // Call
+            viewModel.RemoveParameters(supportPoint);
+
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(supportPoint), Is.False,
+                        "The data component should not contain the removed SupportPoint:");
+        }
 
         [Test]
         public void RemoveParameters_SupportPointNull_ThrowsArgumentNullException()
@@ -386,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -400,11 +381,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False, 
+            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False,
                         "The data component should not contain the old SupportPoint:");
-            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True, 
+            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True,
                         "The data component should contain the new SupportPoint:");
             Assert.That(dataComponent.Data[newSupportPoint], Is.SameAs(parameters));
         }
@@ -418,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -432,11 +413,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
-            
+
             // Assert
-            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False, 
+            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False,
                         "The data component should not contain the old SupportPoint:");
-            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True, 
+            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True,
+                        "The data component should contain the new SupportPoint:");
+            Assert.That(dataComponent.Data[newSupportPoint], Is.SameAs(parameters));
+        }
+
+        [Test]
+        public void ReplaceSupportPoint_FileBasedParameters_ExpectedResults()
+        {
+            // Setup
+            SupportPoint oldSupportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent =
+                new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new FileBasedParameters("path");
+            dataComponent.AddParameters(oldSupportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            SupportPoint newSupportPoint = GetDefaultSupportPoint();
+
+            // Call
+            viewModel.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
+
+            // Assert
+            Assert.That(dataComponent.Data.ContainsKey(oldSupportPoint), Is.False,
+                        "The data component should not contain the old SupportPoint:");
+            Assert.That(dataComponent.Data.ContainsKey(newSupportPoint), Is.True,
                         "The data component should contain the new SupportPoint:");
             Assert.That(dataComponent.Data[newSupportPoint], Is.SameAs(parameters));
         }
@@ -482,7 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -505,7 +518,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -514,8 +527,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
-            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(), 
+            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(),
                                                          GetDefaultSupportPoint());
+
             Assert.Throws<InvalidOperationException>(Call);
         }
 
@@ -533,8 +547,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             SupportPoint supportPoint = GetDefaultSupportPoint();
 
             // Call | Assert
-            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(), 
+            void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(),
                                                          GetDefaultSupportPoint());
+
             Assert.Throws<InvalidOperationException>(Call);
         }
 
@@ -566,7 +581,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -584,7 +599,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Call
             viewModel.AddDefaultParameters(supportPoint);
-            
+
             // Assert
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
         }
@@ -598,7 +613,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
-            var dataComponent = 
+            var dataComponent =
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
@@ -612,9 +627,101 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             mediator.ClearReceivedCalls();
             // Call
             viewModel.RemoveParameters(supportPoint);
-            
+
             // Assert
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
+        }
+
+        private static IEnumerable<TestCaseData> GetIsEnabledData()
+        {
+            var waveBoundaryIsEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledConstant.DataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            yield return new TestCaseData(waveBoundaryIsEnabledConstant, true);
+
+            var waveBoundaryIsEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledTimeDependent.DataComponent =
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            yield return new TestCaseData(waveBoundaryIsEnabledTimeDependent, true);
+
+            var waveBoundaryIsEnabledFileBased = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsEnabledFileBased.DataComponent =
+                new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            yield return new TestCaseData(waveBoundaryIsEnabledFileBased, true);
+
+            var waveBoundaryIsNotEnabledConstant = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledConstant.DataComponent =
+                new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
+            yield return new TestCaseData(waveBoundaryIsNotEnabledConstant, false);
+
+            var waveBoundaryIsNotEnabledTimeDependent = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledTimeDependent.DataComponent =
+                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            yield return new TestCaseData(waveBoundaryIsNotEnabledTimeDependent, false);
+
+            var waveBoundaryIsNotEnabledFileBased = Substitute.For<IWaveBoundaryConditionDefinition>();
+            waveBoundaryIsNotEnabledFileBased.DataComponent =
+                new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path"));
+            yield return new TestCaseData(waveBoundaryIsNotEnabledFileBased, false);
+        }
+
+        private static SupportPoint GetDefaultSupportPoint()
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+
+            return new SupportPoint(0.0, geometricDefinition);
+        }
+
+        private static IEnumerable<TestCaseData> GetIsEnabledSupportPointData()
+        {
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            var disabledSpatiallyVaryingConstantDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            disabledSpatiallyVaryingConstantDefinition.DataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            yield return new TestCaseData(disabledSpatiallyVaryingConstantDefinition, supportPoint, false);
+
+            var disabledSpatiallyVaryingTimeDependentDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            disabledSpatiallyVaryingTimeDependentDefinition.DataComponent =
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            yield return new TestCaseData(disabledSpatiallyVaryingTimeDependentDefinition, supportPoint, false);
+
+            var disabledUniformConstantDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            disabledUniformConstantDefinition.DataComponent =
+                new UniformDataComponent<ConstantParameters<TSpreading>>(new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
+            yield return new TestCaseData(disabledUniformConstantDefinition, supportPoint, false);
+
+            var disabledUniformTimeDependentDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            disabledUniformTimeDependentDefinition.DataComponent =
+                new UniformDataComponent<TimeDependentParameters<TSpreading>>(new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            yield return new TestCaseData(disabledUniformTimeDependentDefinition, supportPoint, false);
+
+            var disabledUniformFileBasedDependentDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            disabledUniformFileBasedDependentDefinition.DataComponent =
+                new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path"));
+            yield return new TestCaseData(disabledUniformFileBasedDependentDefinition, supportPoint, false);
+
+            var enabledSpatiallyVaryingConstantDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentConstant =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            dataComponentConstant.AddParameters(supportPoint, new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading()));
+            enabledSpatiallyVaryingConstantDefinition.DataComponent = dataComponentConstant;
+            yield return new TestCaseData(enabledSpatiallyVaryingConstantDefinition, supportPoint, true);
+
+            var enabledSpatiallyVaryingTimeDependentDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentTimeDependent =
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
+            dataComponentTimeDependent.AddParameters(supportPoint, new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>()));
+            enabledSpatiallyVaryingTimeDependentDefinition.DataComponent = dataComponentTimeDependent;
+            yield return new TestCaseData(enabledSpatiallyVaryingTimeDependentDefinition, supportPoint, true);
+
+            var enabledSpatiallyVaryingFileBasedDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentFileBased =
+                new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            dataComponentFileBased.AddParameters(supportPoint, new FileBasedParameters("path"));
+            enabledSpatiallyVaryingFileBasedDefinition.DataComponent = dataComponentTimeDependent;
+            yield return new TestCaseData(enabledSpatiallyVaryingFileBasedDefinition, supportPoint, true);
         }
     }
 }

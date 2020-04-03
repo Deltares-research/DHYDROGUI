@@ -10,11 +10,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/> defines the view model for the
     /// ParametersSettingsView given spatially varying constant data.
     /// </summary>
-    /// <seealso cref="ConstantParameters{TSpreading}" />
-    public sealed class SpatiallyVariantConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel
+    /// <seealso cref="ConstantParameters{TSpreading}"/>
+    /// <seealso cref="ISpatiallyVariantParametersSettingsViewModel"/>
+    public sealed class SpatiallyVariantConstantParametersSettingsViewModel<TSpreading> : ConstantParametersSettingsViewModel, ISpatiallyVariantParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly IReadOnlyDictionary<SupportPoint, ConstantParameters<TSpreading>> supportPointToParametersMapping;
+
+        private ConstantParametersViewModel activeParametersViewModel;
+
+        private string groupBoxTitle;
 
         /// <summary>
         /// Creates a new <see cref="SpatiallyVariantConstantParametersSettingsViewModel{TSpreading}"/>.
@@ -48,8 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private ConstantParametersViewModel activeParametersViewModel;
-
         public override string GroupBoxTitle
         {
             get => groupBoxTitle;
@@ -65,23 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private string groupBoxTitle;
-
-
-        /// <summary>
-        /// Updates the currently selected <see cref="ConstantParameters"/>
-        /// with the newly selected <paramref name="supportPoint"/>.
-        /// </summary>
-        /// <param name="supportPoint">The support point.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="supportPoint"/> is null.
-        /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
-            ConstantParameters<TSpreading> correspondingParameters = 
-                supportPoint != null && 
-                supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters<TSpreading> value) 
-                    ? value 
+            ConstantParameters<TSpreading> correspondingParameters =
+                supportPoint != null &&
+                supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters<TSpreading> value)
+                    ? value
                     : null;
 
             if (correspondingParameters == (ActiveParametersViewModel as ConstantParametersViewModelGeneric<TSpreading>)?.ObservedParameters)
