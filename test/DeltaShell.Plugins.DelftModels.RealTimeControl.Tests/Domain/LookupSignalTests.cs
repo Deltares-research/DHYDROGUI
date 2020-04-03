@@ -1,12 +1,8 @@
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
 using ValidationAspects;
 
@@ -15,15 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
     [TestFixture]
     public class LookupSignalTests
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
-        private const string SignalName = "lookup signal name";
-        private const string InputName = "Lobith";
-        private const string InputParameterName = "H-Lobith";
-        private int nTimeSteps;
-
         private Function tableFunction;
-        private Input input;
 
         [SetUp]
         public void SetUp()
@@ -33,54 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             tableFunction[9.10] = 8.05;
             tableFunction[9.60] = 7.60;
             tableFunction[10.0] = 7.40;
-            input = new Input
-            {
-                ParameterName = InputParameterName,
-                Feature = new RtcTestFeature { Name = InputName }
-            };
-        }
-
-        [Test]
-        public void CheckXmlGeneration()
-        {
-            var lookupSignal = new LookupSignal()
-                                   {
-                                       Name = SignalName,
-                                       Inputs = new EventedList<Input> {input},
-                                       Function = tableFunction,
-                                       Interpolation = InterpolationType.Linear
-                                   };
-
-            Assert.AreEqual(OriginXml(), lookupSignal.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-
-        private string OriginXml()
-        {
-            return "<signal xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<lookupTable id=\"[LookupSignal]" + SignalName + "\">" +
-                   "<table>" +
-                   "<record x=\"" +
-                   ((double) tableFunction.Arguments[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
-                   ((double) tableFunction.Components[0].Values[0]).ToString(CultureInfo.InvariantCulture) + "\" />" +
-                   "<record x=\"" +
-                   ((double) tableFunction.Arguments[0].Values[1]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
-                   ((double) tableFunction.Components[0].Values[1]).ToString(CultureInfo.InvariantCulture) + "\" />" +
-                   "<record x=\"" +
-                   ((double) tableFunction.Arguments[0].Values[2]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
-                   ((double) tableFunction.Components[0].Values[2]).ToString(CultureInfo.InvariantCulture) + "\" />" +
-                   "<record x=\"" +
-                   ((double) tableFunction.Arguments[0].Values[3]).ToString(CultureInfo.InvariantCulture) + "\" y=\"" +
-                   ((double) tableFunction.Components[0].Values[3]).ToString(CultureInfo.InvariantCulture) + "\" />" +
-                   "</table>" +
-                   "<interpolationOption>LINEAR</interpolationOption>" +
-                   "<extrapolationOption>BLOCK</extrapolationOption>" +
-                   "<input>" +
-                   "<x ref=\"IMPLICIT\">" + RtcXmlTag.Input + InputName + "/" + InputParameterName + "</x>" +
-                   "</input>" +
-                   "<output><y>" + RtcXmlTag.Signal + SignalName + "</y></output>" +
-                   "</lookupTable>" +
-                   "</signal>";
         }
 
         [Test]

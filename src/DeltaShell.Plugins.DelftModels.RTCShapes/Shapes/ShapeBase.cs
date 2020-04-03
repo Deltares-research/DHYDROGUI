@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Windows.Forms;
 using DelftTools.Utils;
 using DelftTools.Utils.Data;
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
             Initialize();
             stringAlignment = StringAlignment.Center;
         }
-
+        
         private void InitializeFont()
         {
             Font = new Font("Verdana", 10f);
@@ -120,10 +119,10 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
         public override PointF ConnectionPoint(Connector c)
         {
-            if (c == TopNode) return new PointF(Rectangle.Left + (Rectangle.Width * 1 / 2), Rectangle.Top);
-            if (c == BottomNode) return new PointF(Rectangle.Left + (Rectangle.Width * 1 / 2), Rectangle.Bottom);
-            if (c == LeftNode) return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height * 1 / 2));
-            if (c == RightNode) return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height * 1 / 2));
+            if (c == TopNode) return new PointF(Rectangle.Left + (Rectangle.Width / 2), Rectangle.Top);
+            if (c == BottomNode) return new PointF(Rectangle.Left + (Rectangle.Width / 2), Rectangle.Bottom);
+            if (c == LeftNode) return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height / 2));
+            if (c == RightNode) return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height / 2));
             return new PointF(0, 0);
         }
 
@@ -189,14 +188,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                     stringAlignment = (StringAlignment)e.Value; Invalidate(); break;
             }
         }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("LeftNode", LeftNode, typeof(Connector));
-            info.AddValue("RightNode", RightNode, typeof(Connector));
-        }
-
+        
         protected virtual void UpdateColor(bool isLinked) { }
     }
 }

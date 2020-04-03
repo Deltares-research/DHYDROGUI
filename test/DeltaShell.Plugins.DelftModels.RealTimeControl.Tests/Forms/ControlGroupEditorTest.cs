@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DelftTools.Shell.Core.Workflow;
@@ -16,13 +18,13 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
-using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -362,148 +364,60 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         }
 
         [Test]
-        public void CopyXMLToClipBoard_MenuItemTagUnsupportedNull_ReturnsEmptyClipboardText()
+        public void CopyToClipboard()
         {
-            // Setup
-            Clipboard.Clear();
-            using (var controlGroupEditor = new ControlGroupEditor())
+            var controlGroup = new ControlGroup();
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
-                var menuItem = new MenuItem
-                {
-                    Tag = new object()
-                };
-
-                // Precondition
-                Assert.IsEmpty(Clipboard.GetText());
-
-                // Call
+                var menuItem = new MenuItem { Tag = rule };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+                AssertCopyXmlToClipboard(rule, controlGroup.Name);
 
-                // Assert
-                Assert.IsEmpty(Clipboard.GetText());
+                menuItem = new MenuItem { Tag = condition };
+                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+                AssertCopyXmlToClipboard(condition, controlGroup.Name);
             }
         }
 
         [Test]
-        public void CopyXMLToClipboard_CopyConditionFromMenuItem_ReturnsExpectedClipboardText()
+        public void CopyRuleToClipBoard()
         {
-            // Setup
             var controlGroup = new ControlGroup();
-
-            var xmlConditionElement = new XElement("ConditionElement");
-            var controlCondition = Substitute.ForPartsOf<ConditionBase>();
-            controlCondition.ToXml(Fns, controlGroup.Name).Returns(xmlConditionElement);
-
-            Clipboard.Clear();
-            using (var controlGroupEditor = new ControlGroupEditor
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
-                Data = controlGroup
-            })
-            {
-                var menuItem = new MenuItem
-                {
-                    Tag = controlCondition
-                };
+                controlGroupEditor.CopyXmlToClipboard(rule);
 
-                // Precondition
-                Assert.IsEmpty(Clipboard.GetText());
-
-                // Call
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-
-                // Assert
-                Assert.AreEqual(xmlConditionElement.ToString(), Clipboard.GetText());
+                AssertCopyXmlToClipboard(rule, controlGroup.Name);
             }
         }
 
         [Test]
-        public void CopyXMLToClipboard_CopyRuleFromMenuItem_ReturnsExpectedClipboardText()
+        public void CopyConditionToClipBoard()
         {
-            // Setup
             var controlGroup = new ControlGroup();
-
-            var xmlRuleElement = new XElement("RuleElement");
-            var controlRule = Substitute.ForPartsOf<RuleBase>();
-            controlRule.ToXml(Fns, controlGroup.Name).Returns(xmlRuleElement);
-
-            Clipboard.Clear();
-            using (var controlGroupEditor = new ControlGroupEditor
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
-                Data = controlGroup
-            })
-            {
-                var menuItem = new MenuItem
-                {
-                    Tag = controlRule
-                };
+                controlGroupEditor.CopyXmlToClipboard(condition);
 
-                // Precondition
-                Assert.IsEmpty(Clipboard.GetText());
-
-                // Call
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-
-                // Assert
-                Assert.AreEqual(xmlRuleElement.ToString(), Clipboard.GetText());
+                AssertCopyXmlToClipboard(condition, controlGroup.Name);
             }
         }
 
         [Test]
-        public void CopyXMLToClipboard_CopySignalFromMenuItem_ReturnsExpectedClipboardText()
+        public void CopyExpressionToClipBoard()
         {
-            // Setup
             var controlGroup = new ControlGroup();
-            var controlSignal = new LookupSignal(); //Only a LookupSignal is supported by the controller. Therefore, mocking is not supported
-
-            using (var controlGroupEditor = new ControlGroupEditor
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
-                Data = controlGroup
-            })
-            {
-                var menuItem = new MenuItem
-                {
-                    Tag = controlSignal
-                };
+                var input = new Input();
+                var expression = new MathematicalExpression();
+                expression.Inputs.Add(input);
 
-                // Call
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
+                expression.Expression = "A+6+8";
 
-                // Assert
-                Assert.AreEqual(controlSignal.ToXml(Fns, controlGroup.Name).ToString(), Clipboard.GetText());
-            }
-        }
+                controlGroupEditor.CopyXmlToClipboard(expression);
 
-        [Test]
-        public void GivenControlGroupEditorCopyXmlToClipboard_WhenCopyingXmlToClipboardFromOtherItem_ThenNewValueCopied()
-        {
-            // Given
-            var controlGroup = new ControlGroup();
-
-            var xmlRuleElement = new XElement("RuleElement");
-            var controlRule = Substitute.For<RuleBase>();
-            controlRule.ToXml(Fns, controlGroup.Name).Returns(xmlRuleElement);
-
-            var xmlConditionElement = new XElement("ConditionElement");
-            var controlCondition = Substitute.For<ConditionBase>();
-            controlCondition.ToXml(Fns, controlGroup.Name).Returns(xmlConditionElement);
-            
-            Clipboard.Clear();
-            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
-            {
-                var menuItem = new MenuItem {Tag = controlRule};
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                string clippedText = Clipboard.GetText();
-
-                // Precondition
-                Assert.AreEqual(xmlRuleElement.ToString(), clippedText);
-
-                // When
-                menuItem.Tag = controlCondition;
-                controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-
-                // Then
-                string newClippedText = Clipboard.GetText();
-                Assert.AreEqual(xmlConditionElement.ToString(), newClippedText);
+                AssertCopyXmlToClipboard(expression, controlGroup.Name);
             }
         }
 
@@ -517,7 +431,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 gui.Run();
 
                 // setup mock model / control group
-                var controlGroup = new ControlGroup { Rules = new EventedList<RuleBase> { new PIDRule { Name = "testRule" } } };
+                var controlGroup = new ControlGroup();
+                controlGroup.Rules.Add(new PIDRule{Name = "testRule"});
 
                 var model = mocks.StrictMultiMock<IRealTimeControlModel>(typeof(INotifyCollectionChanged), typeof(INotifyPropertyChanged));
 
@@ -670,6 +585,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             }
 
             mocks.VerifyAll();
+        }
+
+        private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject, string controlGroupName)
+        {
+            RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcBaseObject);
+            IEnumerable<XElement> listXElements = serializer.ToXml(Fns, controlGroupName);
+            var stringBuilder = new StringBuilder();
+            foreach (XElement xElement in listXElements)
+            {
+                stringBuilder.Append(xElement + Environment.NewLine);
+            }
+            
+            Assert.AreEqual(stringBuilder.ToString(), Clipboard.GetText());
         }
     }
 }

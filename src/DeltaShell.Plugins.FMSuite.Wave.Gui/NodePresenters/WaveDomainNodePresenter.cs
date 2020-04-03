@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(parentNodeData.Bathymetry.Name, BathymetryImage, model,
                                                    parentNodeData.Bathymetry, ShortCutType.SpatialCoverageWithView);
 
-            foreach (WaveDomainData domain in parentNodeData.SubDomains)
+            foreach (IWaveDomainData domain in parentNodeData.SubDomains)
             {
                 yield return domain;
             }
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             {
                 // here we know what to do
                 model.BeginEdit("Delete outer domain ...");
-                WaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
+                IWaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
                 newOuterDomain.SuperDomain = null; // First set this to update domain specific view if open before removing subdomains otherwise view will not be updated
                 model.OuterDomain.SubDomains.Clear(); // disconnect
                 model.OuterDomain = newOuterDomain;

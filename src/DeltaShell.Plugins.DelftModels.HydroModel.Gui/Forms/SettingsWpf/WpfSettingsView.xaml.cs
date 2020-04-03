@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DelftTools.Controls;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
@@ -18,8 +17,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="DelftTools.Controls.IView" />
-    public partial class WpfSettingsView : IView, IAdditionalView
+    public sealed partial class WpfSettingsView : IAdditionalView
     {
+        private bool disposed = false;
+
         public WpfSettingsView()
         {
             InitializeComponent();
@@ -81,13 +82,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void Dispose()
         {
-            IModel model = ViewModel.DataModel;
-            if (model != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
             {
-                ((INotifyPropertyChanged)model).PropertyChanged -= OnDataPropertyChanged;
+                return;
             }
 
-            ViewModel.Dispose();
+            if (disposing)
+            {
+                ViewModel.Dispose();
+            }
+
+            disposed = true;
         }
 
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -104,6 +115,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             // https://stackoverflow.com/questions/10208861/wpf-data-bound-tabcontrol-doesnt-commit-changes-when-new-tab-is-selected
 
             Keyboard.FocusedElement?.RaiseEvent(new RoutedEventArgs(LostFocusEvent));
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="WpfSettingsView"/> class.
+        /// </summary>
+        ~WpfSettingsView()
+        {
+            Dispose(false);
         }
     }
 }

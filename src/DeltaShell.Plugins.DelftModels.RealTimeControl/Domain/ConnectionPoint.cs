@@ -2,14 +2,13 @@
 using System.ComponentModel;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity(FireOnCollectionChange=false)]
-    public abstract class ConnectionPoint : Unique<long>, INameable, ICopyFrom, IFeature
+    public abstract class ConnectionPoint :RtcBaseObject, IFeature
     {
         private IFeature feature;
 
@@ -55,11 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public string LocationName { get { return Feature == null ? string.Empty : Feature.ToString(); } }
 
         public bool IsConnected { get { return Feature != null; } }
-
-        public string Name { get; set; }
-
-        public virtual string XmlName { get; }
-
+        
         [NoNotifyPropertyChange]
         public double Value { get; set; }
 
@@ -105,13 +100,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             UnitName = "";
         }
 
-        public virtual object Clone()
+        public override object Clone()
         {
-            var connectionPoint = (ConnectionPoint) Activator.CreateInstance(GetType());
+            var connectionPoint = (ConnectionPoint)Activator.CreateInstance(GetType());
             connectionPoint.CopyFrom(this);
             return connectionPoint;
         }
-
         public virtual void CopyFrom(object source)
         {
             var connectionPoint = source as ConnectionPoint;

@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static void WriteEngineXmlFiles(RealTimeControlModel model, string path)
         {
             RealTimeControlXmlWriter
-                .GetRuntimeXml(path, model, model.LimitMemory, model.LogLevel)
+                .GetRuntimeConfigXml(path, model, model.LimitMemory, model.LogLevel)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlRuntime));
 
             RealTimeControlXmlWriter

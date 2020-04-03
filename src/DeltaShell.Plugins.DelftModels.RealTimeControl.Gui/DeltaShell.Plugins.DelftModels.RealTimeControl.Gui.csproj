@@ -41,6 +41,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -74,20 +75,23 @@
     <Compile Include="Forms\InputSelectionDialog.Designer.cs">
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PropertyGrid\ControlGroupProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\DirectionalConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\FactorRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydraulicRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\InputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\IntervalRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\LookupSignalProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\OutputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PIDRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RelativeTimeRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\StandardConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\ControlGroupProperties.cs" />
+    <Compile Include="Forms\Properties\DirectionalConditionProperties.cs" />
+    <Compile Include="Forms\Properties\FactorRuleProperties.cs" />
+    <Compile Include="Forms\Properties\HydraulicRuleProperties.cs" />
+    <Compile Include="Forms\Properties\InputProperties.cs" />
+    <Compile Include="Forms\Properties\IntervalRuleProperties.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairArrayConverter.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairPropertyDescriptor.cs" />
+    <Compile Include="Forms\Properties\LookupSignalProperties.cs" />
+    <Compile Include="Forms\Properties\MathematicalExpressionProperties.cs" />
+    <Compile Include="Forms\Properties\OutputProperties.cs" />
+    <Compile Include="Forms\Properties\PIDRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RelativeTimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RuleProperties.cs" />
+    <Compile Include="Forms\Properties\StandardConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeRuleProperties.cs" />
     <Compile Include="Forms\Connection.cs" />
     <Compile Include="Forms\RtcExporterDialog.cs">
       <SubType>Form</SubType>
@@ -95,8 +99,6 @@
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
-    <Compile Include="NodePresenters\InputNodePresenter.cs" />
-    <Compile Include="NodePresenters\OutputNodePresenter.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenter.cs" />
     <Compile Include="NodePresenters\RtcObjectNodePresenter.cs">
       <SubType>Code</SubType>
@@ -116,52 +118,52 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.48721, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+    <Reference Include="DelftTools.Shell.Core, Version=1.4.0.49615, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -173,11 +175,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetronGraphLib">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\NetronGraphLib.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\NetronGraphLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -185,19 +187,19 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.UI">
-      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.48721\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49615\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -225,7 +227,6 @@
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -328,10 +329,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\propertieshs1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\region.png" />
+    <None Include="Resources\mathexpression.png" />
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -346,8 +345,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.48721\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.48721\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.4.0.49615\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.4.0.49615\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.48721\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.48721\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.1.4.0.49615\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.4.0.49615\build\net461\DeltaShell.Framework.targets')" />
 </Project>

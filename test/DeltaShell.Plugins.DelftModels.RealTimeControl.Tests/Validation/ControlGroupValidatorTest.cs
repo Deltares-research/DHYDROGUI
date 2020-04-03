@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var validHydraulicRule = new HydraulicRule
             {
                 Name = "Rule 1",
-                Inputs = new EventedList<Input> {input},
+                Inputs = new EventedList<IInput> {input},
                 Outputs = new EventedList<Output> {output},
                 Function = tableFunction,
                 Interpolation = InterpolationType.Linear
@@ -460,22 +460,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             // If we reach this statement validation did not throw errors
             Assert.GreaterOrEqual(result.ErrorCount, 0);
-        }
-
-        [Test]
-        public void Validate_WhenControlGroupHasTwoRulesAndTwoConditionsThatShareOuptut_ThenReportContainsExpectedValidationIssue()
-        {
-            // Set-up
-            ControlGroup controlGroup = RealTimeControlTestHelper.CreateControlGroupWithTwoRulesOnOneOutput();
-
-            // Call
-            ValidationReport report = new ControlGroupValidator().Validate(null, controlGroup);
-
-            // Assert
-            const string expectedMessage = "Output item output has multiple Active Condition Paths: condition1, condition2.";
-            ValidationIssue validationIssue = report.GetAllIssuesRecursive().Single(i => i.Message == expectedMessage);
-            Assert.That(validationIssue.Severity, Is.EqualTo(ValidationSeverity.Warning));
-            Assert.That(validationIssue.Subject, Is.SameAs(controlGroup));
         }
     }
 }

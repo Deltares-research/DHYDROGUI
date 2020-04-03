@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.That(viewData.TabName, Is.EqualTo("Physical Processes"));
         }
 
-        private bool CheckDomainGrid(WaveDomainData domain, string coordinateSystemName)
+        private bool CheckDomainGrid(IWaveDomainData domain, string coordinateSystemName)
         {
             if (domain.Grid == null) return false;
 

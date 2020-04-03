@@ -1,116 +1,147 @@
 using System;
 using System.IO;
+using System.Linq;
 using BasicModelInterface;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Dimr
 {
+    /// <summary>
+    /// <see cref="DimrApiDataSet"/> defines the different paths used within DIMR,
+    /// as well as the option to set the shared dll path.
+    /// </summary>
     public static class DimrApiDataSet
     {
-        public const string DIMR_DLL_NAME = "dimr_dll.dll";
-        public const string DIMR_EXE_NAME = "dimr.exe";
+        /// <summary>
+        /// The DIMR DLL name
+        /// </summary>
+        public const string DimrDllName = "dimr_dll.dll";
 
-        private const string STANDARD_BINFOLDER_NAME = "bin";
-        private const string STANDARD_SCRIPTFOLDER_NAME = "scripts";
-        private const string SHARE_FOLDER_NAME = "share";
+        [Obsolete("No longer used, use the Dll instead.")]
+        public const string DimrExeName = "dimr.exe";
 
-        private const string DIMR_FOLDER_NAME = "dimr";
-        private const string WAVE_FOLDER_NAME = "dwaves";
-        private const string SWAN_FOLDER_NAME = "swan";
-        private const string ESMF_FOLDER_NAME = "esmf";
-        private const string DFLOWFM_FOLDER_NAME = "dflowfm";
-        private const string CF_FOLDER_NAME = "dflow1d";
-        private const string RTCTOOLS_FOLDER_NAME = "drtc";
-        private const string RR_FOLDER_NAME = "drr";
+        private const string standardBinFolderName = "bin";
+        private const string standardScriptFolderName = "scripts";
+        private const string shareFolderName = "share";
 
-        public static string KernelsDirectory
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(typeof(DimrApi).Assembly.Location), "kernels");
-            }
-        }
+        private const string dimrFolderName = "dimr";
+        private const string waveFolderName = "dwaves";
+        private const string swanFolderName = "swan";
+        private const string esmfFolderName = "esmf";
+        private const string dflowfmFolderName = "dflowfm";
+        private const string rtcToolsFolderName = "drtc";
 
-        public static string SharedDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", SHARE_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        private const string ARCH = "x64";
 
-        public static string DimrDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", DIMR_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the kernels directory.
+        /// </summary>
+        public static string KernelsDirectory => Path.Combine(Path.GetDirectoryName(typeof(DimrApi).Assembly.Location), "kernels");
 
-        public static string DimrExePath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", DIMR_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the shared DLL path.
+        /// </summary>
+        public static string SharedDllPath => Path.Combine(KernelsDirectory, ARCH, shareFolderName, standardBinFolderName);
 
-        public static string WaveDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", WAVE_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the DIMR DLL path.
+        /// </summary>
+        public static string DimrDllPath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
 
-        public static string WaveExePath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", WAVE_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the dimr executable path.
+        /// </summary>
+        public static string DimrExePath => Path.Combine(KernelsDirectory, ARCH, dimrFolderName, standardBinFolderName);
 
-        public static string SwanExePath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", SWAN_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the wave DLL path.
+        /// </summary>
+        public static string WaveDllPath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
 
-        public static string SwanScriptPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", SWAN_FOLDER_NAME, STANDARD_SCRIPTFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the wave executable path.
+        /// </summary>
+        public static string WaveExePath => Path.Combine(KernelsDirectory, ARCH, waveFolderName, standardBinFolderName);
 
-        public static string EsmfExePath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", ESMF_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the swan executable path.
+        /// </summary>
+        public static string SwanExePath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardBinFolderName);
 
-        public static string EsmfScriptPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", ESMF_FOLDER_NAME, STANDARD_SCRIPTFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the swan script path.
+        /// </summary>
+        public static string SwanScriptPath => Path.Combine(KernelsDirectory, ARCH, swanFolderName, standardScriptFolderName);
 
-        public static string DFlowFmDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", DFLOWFM_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the esmf executable path.
+        /// </summary>
+        public static string EsmfExePath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardBinFolderName);
 
-        public static string CfDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", CF_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the esmf script path.
+        /// </summary>
+        public static string EsmfScriptPath => Path.Combine(KernelsDirectory, ARCH, esmfFolderName, standardScriptFolderName);
 
-        public static string RtcToolsDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", RTCTOOLS_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the D-FLOW FM DLL path.
+        /// </summary>
+        public static string DFlowFmDllPath => Path.Combine(KernelsDirectory, ARCH, dflowfmFolderName, standardBinFolderName);
 
-        public static string RrDllPath
-        {
-            get { return Path.Combine(KernelsDirectory, "x64", RR_FOLDER_NAME, STANDARD_BINFOLDER_NAME); }
-        }
+        /// <summary>
+        /// Gets the RTC tools DLL path.
+        /// </summary>
+        public static string RtcToolsDllPath => Path.Combine(KernelsDirectory, ARCH, rtcToolsFolderName, standardBinFolderName);
 
-
+        /// <summary>
+        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet.
+        /// </summary>
         public static void SetSharedPath()
         {
-            var path = Environment.GetEnvironmentVariable("PATH");
-            if (path != null && path.Contains(SharedDllPath)) return;
+            SetSharedPath(new SystemEnvironment());
+        }
+        
+        /// <summary>
+        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
+        /// using the specified environment.
+        /// </summary>
+        /// <param name="environment">The environment to interact with.</param>
+        internal static void SetSharedPath(IEnvironment environment)
+        {
+            string path = environment.GetVariable(EnvironmentConstants.PathKey) ?? "";
 
-            path = SharedDllPath + ";" + path;
-            Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
+            if (path.Contains(SharedDllPath)) 
+                return;
+
+            path = path.Any() ? string.Join(";", SharedDllPath, path) 
+                              : SharedDllPath;
+
+            environment.SetVariable(EnvironmentConstants.PathKey, path);
         }
 
-        public const string FEEDBACKLEVELKEY = "feedbackLevel";
-        public const string LOGFILELEVELKEY = "debugLevel";
+        /// <summary>
+        /// The feedback level key
+        /// </summary>
+        public const string FeedbackLevelKey = "feedbackLevel";
 
-        public static Level LogFileLevel = Level.None;
-        public static Level FeedbackLevel = Level.None;
-        
-        public const double DIMR_FILL_VALUE = -999000.0d;
+        /// <summary>
+        /// The logfile level key
+        /// </summary>
+        public const string LogFileLevelKey = "debugLevel";
+
+        /// <summary>
+        /// The log file level
+        /// </summary>
+        public static Level LogFileLevel { get; set; } = Level.None;
+
+        /// <summary>
+        /// The feedback level
+        /// </summary>
+        public static Level FeedbackLevel { get; set; } = Level.None;
+
+        /// <summary>
+        /// The DIMR fill value
+        /// </summary>
+        public const double DimrFillValue = -999000.0d;
     }
 }

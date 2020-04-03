@@ -7,9 +7,9 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
-    public class ControlGroupNodePresenter : TreeViewNodePresenterBaseForPluginGui<ControlGroup>
+    public sealed class ControlGroupNodePresenter : TreeViewNodePresenterBaseForPluginGui<ControlGroup>
     {
-        private static readonly Bitmap ControlGroupIcon = RealTimeControl.Properties.Resources.controlgroup;
+        private static readonly Bitmap controlGroupIcon = RealTimeControl.Properties.Resources.controlgroup;
 
         public ControlGroupNodePresenter(GuiPlugin guiPlugin)
             : base(guiPlugin)
@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, ControlGroup nodeData)
         {
             node.Text = nodeData.Name;
-            node.Image = ControlGroupIcon;
+            node.Image = controlGroupIcon;
         }
 
         protected override bool CanRemove(ControlGroup nodeData)
@@ -59,6 +59,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             foreach (var signalBase in parentNodeData.Signals)
             {
                 yield return signalBase;
+            }
+            foreach (var mathematicalExpression in parentNodeData.MathematicalExpressions)
+            {
+                yield return mathematicalExpression;
             }
         }
     }

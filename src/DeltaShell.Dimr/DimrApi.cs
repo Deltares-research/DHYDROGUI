@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using BasicModelInterface;
 using DelftTools.Utils.Interop;
+using DeltaShell.NGHS.Common;
 using log4net;
 
 namespace DeltaShell.Dimr
@@ -29,7 +30,7 @@ namespace DeltaShell.Dimr
         static DimrApi()
         {
             DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DimrApiDataSet.DIMR_DLL_NAME, DimrApiDataSet.DimrDllPath);
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
         }
         public DimrApi():this(true){}
 
@@ -39,8 +40,8 @@ namespace DeltaShell.Dimr
             dimrRefDate = DateTime.MinValue;
             this.useMessagesBuffering = useMessagesBuffering;
             messages = new List<string>();
-            SetLoggingLevel(DimrApiDataSet.FEEDBACKLEVELKEY, DimrApiDataSet.FeedbackLevel);
-            SetLoggingLevel(DimrApiDataSet.LOGFILELEVELKEY, DimrApiDataSet.LogFileLevel);
+            SetLoggingLevel(DimrApiDataSet.FeedbackLevelKey, DimrApiDataSet.FeedbackLevel);
+            SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
             cMessageCallback = FeedbackLog;
             set_feedback_logger();
             Logger = BMI_Logger_function;
@@ -156,14 +157,14 @@ namespace DeltaShell.Dimr
                 Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
                 LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
                 
-                var path = Environment.GetEnvironmentVariable("PATH");
+                var path = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
                 path = KernelDirs + ";" +
                        DimrApiDataSet.DimrDllPath + ";" +
                        path;
-                Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
+                Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, path, EnvironmentVariableTarget.Process);
                 
-                LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable("PATH")));
+                LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey)));
 
                 
                 byte useMpi = 0;
@@ -211,7 +212,6 @@ namespace DeltaShell.Dimr
                 int returnCode = DimrApiWrapper.initialize(xmlFile);
                 if (returnCode != 0)
                 {
-                    //throw new Exception("dimr returned error code " + returnCode);
                     return returnCode;
                 }
                 DimrApiWrapper.get_start_time(ref tStart);

@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
@@ -276,11 +277,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             return hydraulicRule;
         }
 
-        private string DataResultXml(ConnectionPoint testInput, ConnectionPoint testOutput, bool addLookupSignal)
+        private string DataResultXml(Input testInput, Output testOutput, bool addLookupSignal)
         {
+            var inputSerializer = new InputSerializer(input);
+            var outputSerializer = new OutputSerializer(testOutput);
             string result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
             result += "<importSeries>";
-            result += "<timeSeries id=\"" + testInput.XmlName + "\">" +
+            result += "<timeSeries id=\"" + inputSerializer.GetXmlName() + "\">" +
                       "<OpenMIExchangeItem>" +
                       "<elementId>" + testInput.LocationName + "</elementId>" +
                       "<quantityId>" + input.ParameterName + "</quantityId>" +
@@ -304,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                       "<timeSeriesFile>timeseries_export.xml</timeSeriesFile>" +
                       "<useBinFile>false</useBinFile>" +
                       "</PITimeSeriesFile>";
-            result += "<timeSeries id=\"" + output.XmlName + "\">" +
+            result += "<timeSeries id=\"" + outputSerializer.GetXmlName() + "\">" +
                       "<OpenMIExchangeItem>" +
                       "<elementId>" + testOutput.LocationName + "</elementId>" +
                       "<quantityId>" + output.ParameterName + "</quantityId>" +
@@ -478,6 +481,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition4.TrueOutputs.Add(intervalRule);
 
             controlGroup.Conditions.Add(condition4);
+            controlGroup.Conditions.Remove(condition);
 
             // Call
             XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath, new List<ControlGroup> {controlGroup});
@@ -698,7 +702,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                   "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                                                            {
-                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 1);
+                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeConfigXml(XsdPath, realTimeControlModel, false, 1);
                                                                Assert.IsNotNull(xDocument);
                                                                Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
                                                            },
@@ -736,7 +740,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                                   "</rtcRuntimeConfig>";
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
                                                            {
-                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeXml(XsdPath, realTimeControlModel, false, 4);
+                                                               XDocument xDocument = RealTimeControlXmlWriter.GetRuntimeConfigXml(XsdPath, realTimeControlModel, false, 4);
                                                                Assert.IsNotNull(xDocument);
                                                                Assert.AreEqual(strOutputXml, xDocument.ToString(SaveOptions.DisableFormatting));
                                                            },
@@ -784,7 +788,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             string expectedLocalName = $"{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/{pidrule02TestName}";
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value); // only the PidRule from the second control group
 
-            pidRule.GetXmlNameWithTag("");
             /*Set both to time series, there should be two nodes now*/
             pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
             descendantsWithLocalName =

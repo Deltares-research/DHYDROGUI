@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public bool BoundaryIsDefinedBySpecFile { get; set; }
         public string OverallSpecFile { get; set; }
 
-        public WaveDomainData OuterDomain { get; set; }
+        public IWaveDomainData OuterDomain { get; set; }
         public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
         public IEventedList<WaveObstacle> Obstacles { get; set; }
         public IEventedList<Feature2DPoint> ObservationPoints { get; set; }

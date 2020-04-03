@@ -211,7 +211,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             condition.Input = input;
             controlGroup.Conditions.Add(condition);
             controlGroup.Inputs.Add(input);
-            controller.AddConnections(controller.ControlGroup.Rules, controller.ControlGroup.Conditions, controller.ControlGroup.Signals);
+
+            ControlGroup controllerControlGroup = controller.ControlGroup;
+            controller.AddConnections(controllerControlGroup.Rules, controllerControlGroup.Conditions, controllerControlGroup.Signals, controllerControlGroup.MathematicalExpressions);
             Assert.AreEqual(1,graphControl.Connections.Count);
             controller.ConvertConditionTypeTo(condition, typeof(TimeCondition));
             Assert.AreEqual(0, graphControl.Connections.Count);
@@ -253,7 +255,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var input = objecten.Where(c => c is Input).Cast<Input>().ToList();
             var output = objecten.Where(c => c is Output).Cast<Output>().ToList();
             var signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-            controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, new Point(10, 11));
+            var mathExpression = objecten.Where(c => c is MathematicalExpression).Cast<MathematicalExpression>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, mathExpression, new Point(10, 11));
                     
             Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
             Assert.AreEqual(10, graphControl.Shapes[0].X);
@@ -265,7 +268,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var input2 = new List<Input>();
             var output2 = objecten.Where(c => c is Output).Cast<Output>().ToList();
             var signal2 = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-            controller.AddShapesToControlGroupAndPlace(rule2, condition2, input2, output2, signal2, new Point(100, 110));
+            var mathExpression2 = objecten.Where(c => c is MathematicalExpression).Cast<MathematicalExpression>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule2, condition2, input2, output2, signal2, mathExpression2, new Point(100, 110));
             
             Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
             Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());

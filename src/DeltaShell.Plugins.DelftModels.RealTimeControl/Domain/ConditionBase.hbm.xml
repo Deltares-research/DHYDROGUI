@@ -27,7 +27,7 @@
     <many-to-one access="property"
                  name="Input"
                  cascade="save-update"
-                 class="Input"
+                 class="IInput"
                  column="rtc_input_id" />
   </subclass>
 </hibernate-mapping>

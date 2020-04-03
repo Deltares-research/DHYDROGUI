@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
-using ValidationAspects;
 using ValidationAspects.Exceptions;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
@@ -14,8 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
     [TestFixture]
     public class IntervalRuleTests
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
         private const string RuleName = "INTERVAL RULE";
         private const string parameterName = "parameter name";
         private const string inputFeatureName = "element name";
@@ -44,76 +41,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 ParameterName = parameterName,
                 Feature = new RtcTestFeature { Name = outputFeatureName }
             };
-        }
-
-        [Test]
-        public void CheckXmlGenerationIntervalTypeFixedDeadbandTypeAbsolute()
-        {
-            var intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Fixed;
-            intervalRule.DeadBandType = IntervalRule.IntervalRuleDeadBandType.Fixed;
-           Assert.AreEqual(OriginXmlIntervalTypeFixedDeadbandTypeAbsolute(), intervalRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-        [Test]
-        public void CheckXmlGenerationIntervalTypeVariableDeadbandTypeRelative()
-        {
-            var intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Variable;
-            intervalRule.DeadBandType = IntervalRule.IntervalRuleDeadBandType.PercentageDischarge;
-
-            Assert.AreEqual(OriginXmlIntervalTypeVariableDeadbandTypeRelative(), intervalRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-        [Test]
-        public void CheckXmlGenerationIntervalTypeVariableDeadbandTypeRelativeWithNegativeMaxVelocityShouldBeAbsoluteInXml()
-        {
-            setting.MaxSpeed = -setting.MaxSpeed;
-            var intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Variable;
-            intervalRule.DeadBandType = IntervalRule.IntervalRuleDeadBandType.PercentageDischarge;
-
-            Assert.AreEqual(OriginXmlIntervalTypeVariableDeadbandTypeRelative(), intervalRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-        private static string OriginXmlIntervalTypeFixedDeadbandTypeAbsolute()
-        {
-            return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                "<interval id=\"[IntervalRule]INTERVAL RULE\">" +
-                "<settingBelow>0</settingBelow>" +
-                "<settingAbove>1</settingAbove>" +
-                "<settingMaxStep>0.1</settingMaxStep>" +
-                "<deadbandSetpointAbsolute>0.4</deadbandSetpointAbsolute>" +
-                "<input>" +
-                "<x>" + RtcXmlTag.Input+ "element name/parameter name</x>" +
-                "<setpoint>" + RtcXmlTag.SP + "INTERVAL RULE</setpoint>" +
-                "</input>" +
-                "<output>" +
-                "<y>" + RtcXmlTag.Output + "output/parameter name</y>" +
-                "<status>[Status]INTERVAL RULE</status>" +
-                "</output>" +
-                "</interval>" +
-                "</rule>";
-        }
-
-        private static string OriginXmlIntervalTypeVariableDeadbandTypeRelative()
-        {
-            return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                "<interval id=\"[IntervalRule]INTERVAL RULE\">" +
-                "<settingBelow>0</settingBelow>" +
-                "<settingAbove>1</settingAbove>" +
-                "<settingMaxSpeed>0.1</settingMaxSpeed>" +
-                "<deadbandSetpointRelative>0.4</deadbandSetpointRelative>" +
-                "<input>" +
-                   "<x>" + RtcXmlTag.Input + "element name/parameter name</x>" +
-                "<setpoint>" + RtcXmlTag.SP + "INTERVAL RULE</setpoint>" +
-                "</input>" +
-                "<output>" +
-                "<y>" + RtcXmlTag.Output + "output/parameter name</y>" +
-                "<status>[Status]INTERVAL RULE</status>" +
-                "</output>" +
-                "</interval>" +
-                "</rule>";
         }
 
         [Test]
@@ -146,69 +73,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        public void XmlTimeSeriesIntervalRuleWithConstantSetpoint()
-        {
-            var intervalRule = CreateIntervalRule();
-
-            //Set constant value
-            Assert.AreEqual(OriginXmlIntervalTypeFixedDeadbandTypeAbsolute(), intervalRule.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
-
-            var start = DateTime.Now;
-            var stop = start.Add(new TimeSpan(3, 0, 0));
-            var step = new TimeSpan(1, 0, 0);
-
-            var constantValueTimeSeries = intervalRule.XmlImportTimeSeries("prefix", start, stop, step).FirstOrDefault();
-            Assert.IsNotNull(constantValueTimeSeries);
-            Assert.AreEqual(2, constantValueTimeSeries.TimeSeries.Time.Values.Count);
-            Assert.AreEqual(1.23, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.StartTime]);
-
-            //Validate
-            Assert.IsTrue(intervalRule.Validate().IsValid);
-        }
-
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 1.23)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 5.0)]
-        public void GivenAnIntervalRuleWithAFixedOrVariableSetPoint_WhenCallingTheTimeSeries_ThenTheseShouldBeGenerated(
-            IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, double expectedValue)
-        {
-            var intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = intervalRuleIntervalType;
-
-            var start = DateTime.Now;
-            var stop = start.Add(new TimeSpan(3, 0, 0));
-            var step = new TimeSpan(1, 0, 0);
-
-            var constantValueTimeSeries =
-                intervalRule.XmlImportTimeSeries("prefix", start, stop, step).FirstOrDefault();
-            Assert.IsNotNull(constantValueTimeSeries);
-            Assert.AreEqual(2, constantValueTimeSeries.TimeSeries.Time.Values.Count);
-            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.StartTime]);
-            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.EndTime]);
-        }
-
-        [Test]
-        public void GivenAnIntervalRuleWithSignalAsSetPoint_WhenCallingTheTimeSeries_ThenAnExceptionShouldBeThrown()
-        {
-            var intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
-
-            var start = DateTime.Now;
-            var stop = start.Add(new TimeSpan(3, 0, 0));
-            var step = new TimeSpan(1, 0, 0);
-            
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                intervalRule.XmlImportTimeSeries("prefix", start, stop, step).ToList();
-            });
-
-        }
-
-        [Test]
         public void GivenAnIntervalRuleWithVariableAsSetPointAndNoTimeSeries_WhenCallingValidate_ThenAnExceptionShouldBeThrown()
         {
             var intervalRule = new IntervalRule
             {
-                Inputs = new EventedList<Input> {input},
+                Inputs = new EventedList<IInput> {input},
                 IntervalType = IntervalRule.IntervalRuleIntervalType.Variable
             };
 
@@ -249,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             {
                 Name = RuleName,
                 Setting = setting,
-                Inputs = new EventedList<Input> {input},
+                Inputs = new EventedList<IInput> {input},
                 Outputs = new EventedList<Output> {output},
                 DeadbandAroundSetpoint = DeadbandAroundSetpoint,
                 FixedInterval = 0.1,

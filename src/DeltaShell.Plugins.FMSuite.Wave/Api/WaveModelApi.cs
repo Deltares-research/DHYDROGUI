@@ -8,6 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
     /// <summary>
     /// Warning: This API should currently be used through the RemoteWaveModelApi only.
     /// </summary>
+    [Obsolete("Running through DIMR now.")]
     public class WaveModelApi : IWaveModelApi
     {
         private string workingDirectory;
@@ -107,6 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
 
         public void Dispose() {}
 
+        [Obsolete("Use WaveEnvironmentHelper")]
         public class WaveDllHelper : IDisposable
         {
             private readonly string oldPath;

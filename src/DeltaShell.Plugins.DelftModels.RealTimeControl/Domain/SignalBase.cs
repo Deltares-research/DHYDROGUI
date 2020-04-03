@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using ValidationAspects;
@@ -11,6 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public abstract class SignalBase : RtcBaseObject
     {
+        private const string defaultSignalName = "Lookup Table";
+
         [Aggregation]
         public IEventedList<Input> Inputs { get; set; }
 
@@ -21,32 +21,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         protected SignalBase()
         {
-            Name = SignalProvider.GetTitle(GetType());
+            Name = defaultSignalName;
             Inputs = new EventedList<Input>();
             RuleBases = new EventedList<RuleBase>();
-        }
-
-        /// <summary>
-        /// Converts the information the signal needed for writing the tools config file to an xml element.
-        /// </summary>
-        /// <param name="xNamespace">The x namespace.</param>
-        /// <param name="prefix">The control group name.</param>
-        /// <returns>The Xml Element.</returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return StoreAsRule ? new XElement(xNamespace + "rule") : new XElement(xNamespace + "signal");
-        }
-
-        /// <summary>
-        /// <returns></returns>
-        public virtual IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        {
-            yield break;
         }
 
         [ValidationMethod]
@@ -68,22 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);
-            }
-        }
-
-        public override object Clone()
-        {
-            var signalBase = (SignalBase)Activator.CreateInstance(GetType());
-            signalBase.CopyFrom(this);
-            return signalBase;
-        }
-
-        public override void CopyFrom(object source)
-        {
-            var signalBase = source as SignalBase;
-            if (signalBase != null)
-            {
-                base.CopyFrom(source);
             }
         }
     }

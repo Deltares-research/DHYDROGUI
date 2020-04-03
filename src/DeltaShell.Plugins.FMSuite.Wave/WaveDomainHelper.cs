@@ -7,23 +7,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 {
     public static class WaveDomainHelper
     {
-        public static IList<WaveDomainData> GetAllDomains(WaveDomainData root)
+        public static IList<IWaveDomainData> GetAllDomains(IWaveDomainData root)
         {
-            var list = new List<WaveDomainData> {root};
+            var list = new List<IWaveDomainData> {root};
             AddSubDomains(root, ref list);
             return list;
         }
 
-        public static IList<WaveDomainData> GetAllInnerDomains(WaveDomainData root)
+        private static void AddSubDomains(IWaveDomainData domain, ref List<IWaveDomainData> list)
         {
-            IList<WaveDomainData> domains = GetAllDomains(root);
-            domains.Remove(root);
-            return domains;
-        }
-
-        private static void AddSubDomains(WaveDomainData domain, ref List<WaveDomainData> list)
-        {
-            foreach (WaveDomainData subDomain in domain.SubDomains)
+            foreach (IWaveDomainData subDomain in domain.SubDomains)
             {
                 list.Add(subDomain);
                 AddSubDomains(subDomain, ref list); // recursively!!
@@ -32,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public static bool IsValidDomainName(string name, WaveModel model)
         {
-            IList<WaveDomainData> allDomains = GetAllDomains(model.OuterDomain);
+            IList<IWaveDomainData> allDomains = GetAllDomains(model.OuterDomain);
             List<string> currentNames = allDomains.SelectMany(d => new[]
             {
                 Path.GetFileNameWithoutExtension(d.GridFileName),

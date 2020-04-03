@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             var model = entity as WaveModel;
             if (model != null)
             {
-                foreach (WaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+                foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
                 {
                     IDataItem bathyDataItem = model.DataItems.FirstOrDefault(di => Equals(di.Value, domain.Bathymetry));
                     if (bathyDataItem != null)

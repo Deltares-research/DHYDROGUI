@@ -5,9 +5,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using log4net;
 using Netron.GraphLib;
@@ -18,18 +19,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
     public enum ConnectorType
     {
-        Left, Top, Right, Bottom
+        Left,
+        Top,
+        Right,
+        Bottom
     }
 
     public class ControlGroupEditorController
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroupEditorController));
+        private static readonly ILog log = LogManager.GetLogger(typeof(ControlGroupEditorController));
 
         private ControlGroup controlGroup;
-       
+
         public ControlGroup ControlGroup
         {
-            get { return controlGroup; }
+            get => controlGroup;
             set
             {
                 DesubscribeControlGroupEvents();
@@ -45,17 +49,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             CleanGraphControl();
             if (controlGroup != null)
             {
-                PlaceShapes(controlGroup.Rules, controlGroup.Conditions, controlGroup.Inputs, controlGroup.Outputs, controlGroup.Signals);
-                AddConnections(controlGroup.Rules, controlGroup.Conditions, controlGroup.Signals);    
+                var point = new Point()
+                {
+                    X = 0,
+                    Y = 0
+                };
+                PlaceShapes(controlGroup.Rules, controlGroup.Conditions, controlGroup.Inputs, controlGroup.Outputs,
+                            controlGroup.Signals, controlGroup.MathematicalExpressions, point);
+                AddConnections(controlGroup.Rules, controlGroup.Conditions, controlGroup.Signals, controlGroup.MathematicalExpressions);
             }
-            SubscribeGraphControlEvents();
-        }
 
-        private void PlaceShapes(IEventedList<RuleBase> rules, IEventedList<ConditionBase> conditions, IEventedList<Input> inputs, 
-                                 IEventedList<Output> outputs, IEventedList<SignalBase> signals)
-        {
-            Point point = new Point() {X = 0, Y = 0};
-            PlaceShapes(rules, conditions, inputs, outputs, signals, point);
+            SubscribeGraphControlEvents();
         }
 
         private void CleanGraphControl()
@@ -67,64 +71,55 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        public void PlaceShapes(IList<RuleBase> rules, IList<ConditionBase> conditions, IList<Input> inputs, IList<Output> outputs, IList<SignalBase> signals, Point mea)
+        public void PlaceShapes(IList<RuleBase> rules, IList<ConditionBase> conditions, IList<Input> inputs,
+                                IList<Output> outputs, IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
+                                Point mea)
         {
-            int x = mea.X;
-            int y = mea.Y;
-            var useOffset = (rules.Count + conditions.Count + inputs.Count + outputs.Count) > 1;
-            if ((controlGroup != null) && (graphControl != null))
+            bool useOffset = rules.Count + conditions.Count + inputs.Count + outputs.Count > 1;
+            if (controlGroup == null || graphControl == null)
             {
-                for (var i = 0; i < inputs.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(inputs[i], useOffset     ? (x + 10) : x, useOffset ? (y + 10 + (50 * i)) : y);
-                }
-                for (var i = 0; i < outputs.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(outputs[i], useOffset    ? (x + 410) : x, useOffset ? (y + 10 + (50 * i)) : y);
-                }
-                for (var i = 0; i < rules.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(rules[i],useOffset       ? (x + 250) : x,useOffset ?  (y + 10 + (50 * i)) : y);
-                }
-                for (var i = 0; i < conditions.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(conditions[i], useOffset ? (x + 110) : x, useOffset ? (y + 10 + (50 * i)) : y);
-                }
-                for (var i = 0; i < signals.Count; i++)
-                {
-                    PlaceShapeOnGraphControl(signals[i], useOffset    ? (x + 250) : x, useOffset ? (y + 110 + (50 * i)) : y);
-                }
+                return;
+            }
+
+            PlaceShapes(inputs, useOffset, mea, 10);
+            PlaceShapes(mathExpressions, useOffset, mea, 110);
+            PlaceShapes(conditions, useOffset, mea, 210);
+            PlaceShapes(signals, useOffset, mea, 310);
+            PlaceShapes(rules, useOffset, mea, 410);
+            PlaceShapes(outputs, useOffset, mea, 510);
+        }
+
+        private void PlaceShapes<T>(ICollection<T> objects, bool useOffset, Point startPoint, int xOffset)
+        {
+            int x = startPoint.X;
+            int y = startPoint.Y;
+
+            for (var i = 0; i < objects.Count; i++)
+            {
+                int yOffset = 10 + (50 * i);
+                PlaceShapeOnGraphControl(objects.ElementAt(i),
+                                         useOffset ? x + xOffset : x,
+                                         useOffset ? y + yOffset : y);
             }
         }
 
-        public void AddShapesToControlGroupAndPlace(IList<RuleBase> rules, IList<ConditionBase> conditions, IList<Input> inputs, 
-                                                    IList<Output> outputs, IList<SignalBase> signals, Point mea)
+        public void AddShapesToControlGroupAndPlace(IList<RuleBase> rules, IList<ConditionBase> conditions,
+                                                    IList<Input> inputs, IList<Output> outputs,
+                                                    IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
+                                                    Point mea)
         {
             DesubscribeControlGroupEvents();
             DesubscribeGraphControlEvents();
-            if ((controlGroup != null) && (graphControl != null))
+            if (controlGroup != null && graphControl != null)
             {
-                for (var i = 0; i < inputs.Count; i++)
-                {
-                    controlGroup.Inputs.Add(inputs[i]);
-                }
-                for (var i = 0; i < outputs.Count; i++)
-                {
-                    controlGroup.Outputs.Add(outputs[i]);
-                }
-                for (var i = 0; i < rules.Count; i++)
-                {
-                    controlGroup.Rules.Add(rules[i]);
-                }
-                for (var i = 0; i < conditions.Count; i++)
-                {
-                    controlGroup.Conditions.Add(conditions[i]);
-                }
-                for (var i = 0; i < signals.Count; i++)
-                {
-                    controlGroup.Signals.Add(signals[i]);
-                }
-                PlaceShapes(rules, conditions, inputs, outputs, signals, mea);
+                controlGroup.Inputs.AddRange(inputs);
+                controlGroup.Outputs.AddRange(outputs);
+                controlGroup.Rules.AddRange(rules);
+                controlGroup.Conditions.AddRange(conditions);
+                controlGroup.Signals.AddRange(signals);
+                controlGroup.MathematicalExpressions.AddRange(mathExpressions);
+
+                PlaceShapes(rules, conditions, inputs, outputs, signals, mathExpressions, mea);
 
                 SubscribeControlGroupEvents();
                 SubscribeGraphControlEvents();
@@ -133,52 +128,71 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         internal void PlaceShapeOnGraphControl(object obj, double x, double y)
         {
-            var shape = ObjectToShape(obj);
+            ShapeBase shape = ObjectToShape(obj);
             graphControl.AddShape(shape);
             MoveShape(shape, x, y);
         }
 
-        public void AddConnections(IList<RuleBase> rules, IList<ConditionBase> conditions, IList<SignalBase> signals, bool skipValidation = false)
+        public void AddConnections(IList<RuleBase> rules, IList<ConditionBase> conditions, 
+                                   IList<SignalBase> signals, IList<MathematicalExpression> mathExpressions,
+                                   bool skipValidation = false)
         {
-            if (skipValidation) DesubscribeGraphControlEvents(); // Bypass OnGraphControlConnectionAdded event
-            if ((controlGroup != null) && (graphControl != null))
+            if (skipValidation)
+            {
+                DesubscribeGraphControlEvents(); // Bypass OnGraphControlConnectionAdded event
+            }
+
+            if (controlGroup != null && graphControl != null)
             {
                 // ToList for local copy (eventedlist causes invalid modification of source)
-                foreach (var condition in conditions.ToList())
+                foreach (ConditionBase condition in conditions.ToList())
                 {
                     SetUiConditionConnections(condition);
                 }
-                foreach (var ruleBase in rules.ToList())
+
+                foreach (RuleBase ruleBase in rules.ToList())
                 {
                     SetUiRuleConnections(ruleBase);
                 }
-                foreach (var signalBase in signals.ToList())
+
+                foreach (SignalBase signalBase in signals.ToList())
                 {
                     SetUiSignalConnections(signalBase);
                 }
+
+                foreach (MathematicalExpression mathExpression in mathExpressions.ToList())
+                {
+                    SetUiMathematicalExpressionConnections(mathExpression);
+                }
             }
-            if (skipValidation) SubscribeGraphControlEvents();
+
+            if (skipValidation)
+            {
+                SubscribeGraphControlEvents();
+            }
         }
 
-        internal void SetUiRuleConnections(RuleBase ruleBase)
+        private void SetUiRuleConnections(RuleBase ruleBase)
         {
-            foreach (var input in ruleBase.Inputs.ToList())
+            foreach (IInput input in ruleBase.Inputs.ToList())
             {
                 UiConnect(input, "Bottom", ruleBase, "Top");
             }
-            foreach (var output in ruleBase.Outputs.ToList())
+
+            foreach (Output output in ruleBase.Outputs.ToList())
             {
                 UiConnect(ruleBase, "Right", output, "Left");
             }
         }
 
-        internal void SetUiSignalConnections(SignalBase signalBase)
+        private void SetUiSignalConnections(SignalBase signalBase)
         {
-            foreach (var input in signalBase.Inputs.ToList())
+            foreach (Input input in signalBase.Inputs.ToList())
             {
                 UiConnect(input, "Bottom", signalBase, "Top");
             }
-            foreach (var rulebase in signalBase.RuleBases.ToList())
+
+            foreach (RuleBase rulebase in signalBase.RuleBases.ToList())
             {
                 if (rulebase.CanBeLinkedFromSignal())
                 {
@@ -187,23 +201,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        internal void SetUiConditionConnections(ConditionBase condition)
+        private void SetUiConditionConnections(ConditionBase condition)
         {
-            if (condition.Input != null)
+            IInput input = condition.Input;
+            if (input != null)
             {
-                UiConnect(condition.Input, "Bottom", condition, "Top");
+                UiConnect(input, "Bottom", condition, "Top");
             }
-            foreach (var output in condition.FalseOutputs.ToList())
+
+            foreach (RtcBaseObject output in condition.FalseOutputs.ToList())
             {
                 UiConnect(condition, "Bottom", output, "Left");
             }
-            foreach (var output in condition.TrueOutputs.ToList())
+
+            foreach (RtcBaseObject output in condition.TrueOutputs.ToList())
             {
                 UiConnect(condition, "Right", output, "Left");
             }
         }
 
-       
+        private void SetUiMathematicalExpressionConnections(MathematicalExpression mathematicalExpression)
+        {
+            foreach (IInput input in mathematicalExpression.Inputs.ToList())
+            {
+                UiConnect(input, "Bottom", mathematicalExpression, "Top");
+            }
+        }
+
         /// <summary>
         /// Connects 2 shapes.
         /// </summary>
@@ -221,9 +245,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// </param>
         private void UiConnect(object source, string sourceConnector, object target, string targetConnector)
         {
-            var leftShape = FindShapeByObject(source);
-            var rightShape = FindShapeByObject(target);
-            var connection = graphControl.AddConnection(leftShape.Connectors[sourceConnector], rightShape.Connectors[targetConnector]);
+            ShapeBase leftShape = FindShapeByObject(source);
+            ShapeBase rightShape = FindShapeByObject(target);
+            Netron.GraphLib.Connection connection =
+                graphControl.AddConnection(leftShape.Connectors[sourceConnector],
+                                           rightShape.Connectors[targetConnector]);
             SetConnectionStyle(connection);
         }
 
@@ -231,19 +257,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (controlGroup != null)
             {
-                ((INotifyCollectionChanged)controlGroup).CollectionChanged += ControlGroupCollectionChanged;
-                ((INotifyCollectionChanging)controlGroup).CollectionChanging += ControlGroupCollectionChanging;
-                ((INotifyPropertyChanged)controlGroup).PropertyChanged += ControlGroupPropertyChanged;
+                ((INotifyCollectionChanged) controlGroup).CollectionChanged += ControlGroupCollectionChanged;
+                ((INotifyCollectionChanging) controlGroup).CollectionChanging += ControlGroupCollectionChanging;
+                ((INotifyPropertyChanged) controlGroup).PropertyChanged += ControlGroupPropertyChanged;
             }
         }
-        
+
         private void DesubscribeControlGroupEvents()
         {
             if (controlGroup != null)
             {
-                ((INotifyCollectionChanged)controlGroup).CollectionChanged -= ControlGroupCollectionChanged;
-                ((INotifyCollectionChanging)controlGroup).CollectionChanging -= ControlGroupCollectionChanging;
-                ((INotifyPropertyChanged)controlGroup).PropertyChanged -= ControlGroupPropertyChanged;
+                ((INotifyCollectionChanged) controlGroup).CollectionChanged -= ControlGroupCollectionChanged;
+                ((INotifyCollectionChanging) controlGroup).CollectionChanging -= ControlGroupCollectionChanging;
+                ((INotifyPropertyChanged) controlGroup).PropertyChanged -= ControlGroupPropertyChanged;
             }
         }
 
@@ -273,7 +299,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
 
             // force redrawing to fix rendering bug in netron (TOOLS-7748, point 5).
-            if(sender is ConnectionPoint && e.PropertyName == "Name")
+            if (sender is ConnectionPoint && e.PropertyName == "Name")
             {
                 graphControl.Invalidate();
             }
@@ -283,42 +309,50 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (graphControl != null)
             {
-                if (sender != controlGroup.Inputs && 
-                    sender != controlGroup.Outputs && 
+                if (sender != controlGroup.Inputs &&
+                    sender != controlGroup.Outputs &&
                     sender != controlGroup.Rules &&
                     sender != controlGroup.Conditions &&
-                    sender != controlGroup.Signals)
+                    sender != controlGroup.Signals &&
+                    sender != controlGroup.MathematicalExpressions)
                 {
                     if (controlGroup.IsEditing)
+                    {
                         return;
+                    }
+
                     RefreshConnections();
                     return;
                 }
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+
+                object removedOrAddedItem = e.GetRemovedOrAddedItem();
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
                     DesubscribeGraphControlEvents();
-                    
-                    var shape = ObjectToShape(removedOrAddedItem);
+
+                    ShapeBase shape = ObjectToShape(removedOrAddedItem);
                     graphControl.AddShape(shape);
                     SubscribeGraphControlEvents();
                 }
+
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
                     DesubscribeGraphControlEvents();
-                    var shape = FindShapeByObject(removedOrAddedItem);
+                    ShapeBase shape = FindShapeByObject(removedOrAddedItem);
                     graphControl.Shapes.Remove(shape);
                     SubscribeGraphControlEvents();
                 }
+
                 if (e.Action == NotifyCollectionChangedAction.Replace)
                 {
                     if (replaceable != null)
                     {
-                        var shape = FindShapeByObject(replaceable);
+                        ShapeBase shape = FindShapeByObject(replaceable);
                         shape.Tag = removedOrAddedItem;
                         replaceable = null;
                     }
                 }
+
                 graphControl.Invalidate();
             }
         }
@@ -326,20 +360,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void RefreshConnections()
         {
             if (adjustingConnectionInDomain)
+            {
                 return;
+            }
 
             refreshingConnections = true;
 
             RemoveAllConnections(graphControl.Connections);
             foreach (Shape shape in graphControl.Shapes)
             {
-                foreach(Connector connector in shape.Connectors)
+                foreach (Connector connector in shape.Connectors)
                 {
                     RemoveAllConnections(connector.Connections);
                 }
             }
 
-            AddConnections(controlGroup.Rules, controlGroup.Conditions, controlGroup.Signals);
+            AddConnections(controlGroup.Rules, controlGroup.Conditions, controlGroup.Signals, controlGroup.MathematicalExpressions);
 
             graphControl.Invalidate();
 
@@ -349,8 +385,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void RemoveAllConnections(ConnectionCollection connectionCollection)
         {
             //make copy of list, and then remove each individual item.
-            var connections = connectionCollection.OfType<Netron.GraphLib.Connection>().ToList();
-            foreach (var connection in connections)
+            List<Netron.GraphLib.Connection> connections =
+                connectionCollection.OfType<Netron.GraphLib.Connection>().ToList();
+            foreach (Netron.GraphLib.Connection connection in connections)
             {
                 connectionCollection.Remove(connection); //Clear doesn't raise events, bleh
             }
@@ -359,19 +396,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private GraphControl graphControl;
         private static bool adjustingConnectionInDomain;
         private static bool refreshingConnections;
-        private static readonly Bitmap TimeConditionIcon = RealTimeControl.Properties.Resources.timecondition;
-        private static readonly Bitmap DirectionalConditionIcon = RealTimeControl.Properties.Resources.directionalcondition;
-        private static readonly Bitmap StandardConditionIcon = RealTimeControl.Properties.Resources.standardcondition;
+        private static readonly Bitmap TimeConditionIcon = Resources.timecondition;
+        private static readonly Bitmap DirectionalConditionIcon = Resources.directionalcondition;
+        private static readonly Bitmap StandardConditionIcon = Resources.standardcondition;
 
         public GraphControl GraphControl
         {
-            get { return graphControl; }
+            get => graphControl;
             set
             {
                 if (graphControl != null)
                 {
                     DesubscribeGraphControlEvents();
                 }
+
                 graphControl = value;
                 if (graphControl != null)
                 {
@@ -405,57 +443,60 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void GraphControlShapesOnShapeRemoved(object sender, Shape shape)
         {
-            if (shape != null)
+            if (shape == null)
             {
-                DesubscribeControlGroupEvents();
-                if (shape.Tag is RuleBase)
-                {
-                    controlGroup.Rules.Remove((RuleBase)shape.Tag);
-                }
-                if (shape.Tag is SignalBase)
-                {
-                    controlGroup.Signals.Remove((SignalBase)shape.Tag);
-                }
-                if (shape.Tag is ConditionBase)
-                {
-                    controlGroup.Conditions.Remove((ConditionBase)shape.Tag);
-                }
-                if (shape.Tag is Input)
-                {
-                    controlGroup.Inputs.Remove((Input)shape.Tag);
-                }
-                if (shape.Tag is Output)
-                {
-                    controlGroup.Outputs.Remove((Output)shape.Tag);
-                }
-                SubscribeControlGroupEvents();
+                return;
             }
+
+            DesubscribeControlGroupEvents();
+
+            object tag = shape.Tag;
+            switch (tag)
+            {
+                case RuleBase rule:
+                    controlGroup.Rules.Remove(rule);
+                    break;
+                case SignalBase signal:
+                    controlGroup.Signals.Remove(signal);
+                    break;
+                case ConditionBase condition:
+                    controlGroup.Conditions.Remove(condition);
+                    break;
+                case MathematicalExpression mathematicalExpression:
+                    controlGroup.MathematicalExpressions.Remove(mathematicalExpression);
+                    break;
+                case Input input:
+                    controlGroup.Inputs.Remove(input);
+                    break;
+                case Output output:
+                    controlGroup.Outputs.Remove(output);
+                    break;
+            }
+
+            SubscribeControlGroupEvents();
         }
 
         private ShapeBase FindShapeByObject(object obj)
         {
-            if (graphControl == null)
-            {
-                return null;
-            }
-            return graphControl.Shapes.Cast<object>().Where(shape => ((Shape) shape).Tag == obj).Cast<ShapeBase>().FirstOrDefault();
+            return graphControl?.Shapes.OfType<ShapeBase>().FirstOrDefault(s => s.Tag == obj);
         }
 
         public RuleBase ConvertRuleTypeTo(RuleBase oldRule, Type toType)
         {
             DesubscribeControlGroupEvents();
 
-            var shape = FindShapeByObject(oldRule);
+            ShapeBase shape = FindShapeByObject(oldRule);
 
-            var newRule = (RuleBase)Activator.CreateInstance(toType);
+            var newRule = (RuleBase) Activator.CreateInstance(toType);
             newRule.Name = CopyOldNameOrGenerateNameForRule(oldRule.GetType(), toType, oldRule.Name);
             newRule.LongName = oldRule.LongName;
             //for nhibernate's sake the inputs and outputs must be mapped this way 
-            foreach (var rul in oldRule.Inputs)
+            foreach (IInput rul in oldRule.Inputs)
             {
                 newRule.Inputs.Add(rul);
             }
-            foreach (var rul in oldRule.Outputs)
+
+            foreach (Output rul in oldRule.Outputs)
             {
                 newRule.Outputs.Add(rul);
             }
@@ -476,64 +517,60 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static string CopyOldNameOrGenerateNameForRule(Type oldType, Type newType, string oldName)
         {
-            var oldTypeTitle = RuleProvider.GetTitle(oldType);
+            string oldTypeTitle = RuleProvider.GetTitle(oldType);
 
             if (oldTypeTitle == oldName)
             {
                 return RuleProvider.GetTitle(newType);
             }
+
             return oldName;
         }
 
         private static string CopyOldNameOrGenerateNameForCondition(Type oldType, Type newType, string oldName)
         {
-            var oldTypeTitle = ConditionProvider.GetTitle(oldType);
+            string oldTypeTitle = ConditionProvider.GetTitle(oldType);
 
             if (oldTypeTitle == oldName)
             {
                 return ConditionProvider.GetTitle(newType);
             }
+
             return oldName;
         }
-
-        private static string CopyOldNameOrGenerateNameForSignal(Type oldType, Type newType, string oldName)
-        {
-            var oldTypeTitle = SignalProvider.GetTitle(oldType);
-
-            if (oldTypeTitle == oldName)
-            {
-                return SignalProvider.GetTitle(newType);
-            }
-            return oldName;
-        }
-
+        
         public ConditionBase ConvertConditionTypeTo(ConditionBase oldCondition, Type toType)
         {
             DesubscribeControlGroupEvents();
-            var shape = FindShapeByObject(oldCondition);
+            ShapeBase shape = FindShapeByObject(oldCondition);
 
-            var newCondition = (ConditionBase)Activator.CreateInstance(toType);
-            newCondition.Name = CopyOldNameOrGenerateNameForCondition(oldCondition.GetType(), toType, oldCondition.Name);
+            var newCondition = (ConditionBase) Activator.CreateInstance(toType);
+            newCondition.Name =
+                CopyOldNameOrGenerateNameForCondition(oldCondition.GetType(), toType, oldCondition.Name);
             newCondition.LongName = oldCondition.LongName;
             //for nhibernate's sake the inputs and outputs must be mapped this way 
-            foreach (var trueOutput in oldCondition.TrueOutputs)
+            foreach (RtcBaseObject trueOutput in oldCondition.TrueOutputs)
             {
                 newCondition.TrueOutputs.Add(trueOutput);
             }
-            foreach (var falseOutput in oldCondition.FalseOutputs)
+
+            foreach (RtcBaseObject falseOutput in oldCondition.FalseOutputs)
             {
                 newCondition.FalseOutputs.Add(falseOutput);
             }
+
             if (oldCondition.Input != null && newCondition.GetType() == typeof(TimeCondition))
             {
-                for (int i = 0; i < graphControl.Connections.Count; i++)
+                for (var i = 0; i < graphControl.Connections.Count; i++)
                 {
-                    if (graphControl.Connections[i].To.BelongsTo is ConditionShape && graphControl.Connections[i].From.BelongsTo is InputItemShape)
+                    if (graphControl.Connections[i].To.BelongsTo is ConditionShape &&
+                        graphControl.Connections[i].From.BelongsTo is InputItemShape)
                     {
                         graphControl.Connections.Remove(graphControl.Connections[i]);
                     }
                 }
             }
+
             controlGroup.Conditions.Remove(oldCondition);
             ReconnectRtcBaseObject(oldCondition, newCondition);
             controlGroup.Conditions.Add(newCondition);
@@ -543,6 +580,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 shape.Tag = newCondition;
                 FillConditionDescription(shape, newCondition);
             }
+
             SubscribeControlGroupEvents();
 
             return newCondition;
@@ -550,23 +588,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ReconnectRtcBaseObject(RtcBaseObject oldRtcObject, RtcBaseObject newRtcObject)
         {
-            var falseOutputs = controlGroup.Conditions.Where(c => c.FalseOutputs.Contains(oldRtcObject));
-            foreach (var conditionBase in falseOutputs)
+            IEnumerable<ConditionBase> falseOutputs =
+                controlGroup.Conditions.Where(c => c.FalseOutputs.Contains(oldRtcObject));
+            foreach (ConditionBase conditionBase in falseOutputs)
             {
                 conditionBase.FalseOutputs.Remove(oldRtcObject);
                 conditionBase.FalseOutputs.Add(newRtcObject);
             }
-            var trueOutputs = controlGroup.Conditions.Where(c => c.TrueOutputs.Contains(oldRtcObject));
-            foreach (var conditionBase in trueOutputs)
+
+            IEnumerable<ConditionBase> trueOutputs =
+                controlGroup.Conditions.Where(c => c.TrueOutputs.Contains(oldRtcObject));
+            foreach (ConditionBase conditionBase in trueOutputs)
             {
                 conditionBase.TrueOutputs.Remove(oldRtcObject);
                 conditionBase.TrueOutputs.Add(newRtcObject);
             }
-            var signalRuleBases = controlGroup.Signals.Where(s => s.RuleBases.Contains(oldRtcObject));
-            foreach (var signalBase in signalRuleBases)
+
+            IEnumerable<SignalBase> signalRuleBases =
+                controlGroup.Signals.Where(s => s.RuleBases.Contains(oldRtcObject));
+            foreach (SignalBase signalBase in signalRuleBases)
             {
-                signalBase.RuleBases.Remove((RuleBase)oldRtcObject);
-                signalBase.RuleBases.Add((RuleBase)newRtcObject);
+                signalBase.RuleBases.Remove((RuleBase) oldRtcObject);
+                signalBase.RuleBases.Add((RuleBase) newRtcObject);
             }
         }
 
@@ -574,38 +617,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (shape != null)
             {
-                shape.Location = new PointF((float)x, (float)y);
+                shape.Location = new PointF((float) x, (float) y);
             }
+        }
+
+        private static T CreateShapeFromObject<T>(INameable obj) where T : ShapeBase
+        {
+            var shape = Activator.CreateInstance<T>();
+            shape.Text = obj.Name;
+            shape.Tag = obj;
+
+            return shape;
         }
 
         public ShapeBase ObjectToShape(object obj)
         {
             ShapeBase shape = null;
-            if (obj is RuleBase)
+
+            switch (obj)
             {
-                shape = new RuleShape { Text = ((RuleBase)obj).Name, Tag = obj };
-            }
-            if (obj is ConditionBase)
-            {
-                var conditionBase = (ConditionBase)obj;
-                shape = new ConditionShape
-                            {
-                                Text = conditionBase.Name,
-                                Tag = obj
-                            };
-                FillConditionDescription(shape, conditionBase);
-            }
-            if (obj is Input)
-            {
-                shape = new InputItemShape { Text = ((Input)obj).Name, Tag = obj };
-            }
-            if (obj is Output)
-            {
-                shape = new OutputItemShape { Text = ((Output)obj).Name, Tag = obj };
-            }
-            if (obj is SignalBase)
-            {
-                shape = new SignalShape { Text = ((SignalBase)obj).Name, Tag = obj };
+                case RuleBase rule:
+                    shape = CreateShapeFromObject<RuleShape>(rule);
+                    break;
+                case ConditionBase condition:
+                    shape = CreateShapeFromObject<ConditionShape>(condition);
+                    FillConditionDescription(shape, condition);
+                    break;
+                case Input input:
+                    shape = CreateShapeFromObject<InputItemShape>(input);
+                    break;
+                case Output output:
+                    shape = CreateShapeFromObject<OutputItemShape>(output);
+                    break;
+                case SignalBase signal:
+                    shape = CreateShapeFromObject<SignalShape>(signal);
+                    break;
+                case MathematicalExpression mathExpression:
+                    shape = CreateShapeFromObject<MathematicalExpressionShape>(mathExpression);
+                    break;
             }
 
             if (shape != null && GetAutoResizeState != null)
@@ -623,7 +672,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 var conditionShape = shape as ConditionShape;
                 conditionShape.Image = GetIconForCondition(condition);
                 conditionShape.GetDescriptionDelegate = condition.GetDescription;
-                if(condition is TimeCondition)
+                if (condition is TimeCondition)
                 {
                     conditionShape.DisableInputConnections();
                 }
@@ -636,26 +685,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private static Bitmap GetIconForCondition(ConditionBase conditionBase)
         {
-            if (conditionBase is TimeCondition)
+            switch (conditionBase)
             {
-                return TimeConditionIcon;
+                case TimeCondition _:
+                    return TimeConditionIcon;
+                case DirectionalCondition _:
+                    return DirectionalConditionIcon;
+                case StandardCondition _:
+                    return StandardConditionIcon;
+                default:
+                    return null;
             }
-            if (conditionBase is DirectionalCondition)
-            {
-                return DirectionalConditionIcon;
-            }
-            if (conditionBase is StandardCondition)
-            {
-                return StandardConditionIcon;
-            }
-            return null;
         }
 
         private bool OnGraphControlConnectionRemoved(object sender, ConnectionEventArgs e)
         {
-            var connection = e.Connection;
-            var from = connection.From.BelongsTo.Tag;
-            var to = connection.To.BelongsTo.Tag;
+            Netron.GraphLib.Connection connection = e.Connection;
+            object from = connection.From.BelongsTo.Tag;
+            object to = connection.To.BelongsTo.Tag;
             Disconnect(from, to);
             return true;
         }
@@ -665,21 +712,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// Some options like a connection starts from an ouotput item are prevented in the Connectors in
         /// the shape.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <returns></returns>
+        /// <param name="sender"> </param>
+        /// <param name="e"> </param>
+        /// <returns> </returns>
         private bool OnGraphControlConnectionAdded(object sender, ConnectionEventArgs e)
         {
-            var connection = e.Connection;
-            var from = connection.From.BelongsTo.Tag;
-            var to = connection.To.BelongsTo.Tag;
-            var fromConnector = (ConnectorType)Enum.Parse(typeof(ConnectorType), connection.From.Name);
-            var toConnector = (ConnectorType)Enum.Parse(typeof(ConnectorType), connection.To.Name);
+            Netron.GraphLib.Connection connection = e.Connection;
+            object from = connection.From.BelongsTo.Tag;
+            object to = connection.To.BelongsTo.Tag;
+            var fromConnector = (ConnectorType) Enum.Parse(typeof(ConnectorType), connection.From.Name);
+            var toConnector = (ConnectorType) Enum.Parse(typeof(ConnectorType), connection.To.Name);
             // no loop
             if (!IsConnectionAllowed(from, fromConnector, to, toConnector))
             {
                 return false;
             }
+
             Connect(from, fromConnector, to, toConnector);
             SetConnectionStyle(e.Connection);
             return true;
@@ -688,13 +736,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         /// <summary>
         /// Test if new connection meets the constraints set fow RTC.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="from"></param>
-        /// <param name="fromConnector"></param>
-        /// <param name="to"></param>
-        /// <param name="toConnector"></param>
-        /// <returns></returns>
-        public static bool IsConnectionAllowed(object from, ConnectorType fromConnector, object to, ConnectorType toConnector)
+        /// <param name="connection"> </param>
+        /// <param name="from"> </param>
+        /// <param name="fromConnector"> </param>
+        /// <param name="to"> </param>
+        /// <param name="toConnector"> </param>
+        /// <returns> </returns>
+        public static bool IsConnectionAllowed(object from, ConnectorType fromConnector, object to,
+                                               ConnectorType toConnector)
         {
             if (refreshingConnections)
             {
@@ -703,63 +752,65 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             if (to is Input)
             {
-                Log.Error("Input can only be connected from.");
+                log.Error("Input can only be connected from.");
                 return false;
             }
+
             if (from is Output)
             {
-                Log.Error("Output can only be connected to.");
+                log.Error("Output can only be connected to.");
                 return false;
             }
+
             if (from is Input)
             {
                 if (fromConnector != ConnectorType.Bottom)
                 {
-                    Log.Error("Input can only be connected at the lowest connection point.");
+                    log.Error("Input can only be connected at the lowest connection point.");
                     return false;
                 }
+
                 if (to is Output)
                 {
-                    Log.Error("Input can only be connected to a rule, condition or signal.");
+                    log.Error("Input can only be connected to a rule, condition or signal.");
                     return false;
-                }
-                if (to is RuleBase)
-                {
-                    var ruleBase = (RuleBase)to;
-                    if (ruleBase.Inputs.Count > 0)
-                    {
-                        Log.Error("Rule can only have 1 input.");
-                        return false;
-                    }
                 }
 
                 if (to is LookupSignal)
                 {
-                    var lookupSignal = (LookupSignal)to;
-                    if (lookupSignal.Inputs.Count > 0)
+                    var lookupSignal = (LookupSignal) to;
+                    if (lookupSignal.Inputs.Any())
                     {
-                        Log.Error("Lookup signal can only have 1 input.");
+                        log.Error("Lookup signal can only have 1 input.");
                         return false;
                     }
                 }
 
-                if (to is ConditionBase)
+                if (to is SignalBase && toConnector != ConnectorType.Top && toConnector != ConnectorType.Left)
                 {
-                    var conditionBase = (ConditionBase)to;
-                    if (conditionBase.Input != null)
-                    {
-                        Log.Error("Condition can only have 1 input.");
-                        return false;
-                    }
+                    log.Error("Input can only be connected to the left or top connection point.");
+                    return false;
                 }
 
-                if (to is SignalBase)
+                if (to is ConditionBase conditionBase && conditionBase.Input != null)
                 {
-                    if ((toConnector != ConnectorType.Top) && (toConnector != ConnectorType.Left))
-                    {
-                        Log.Error("Input can only be connected to the left or top connection point.");
-                        return false;
-                    }
+                    log.Error("Condition can only have 1 input.");
+                    return false;
+                }
+            }
+
+            if (from is IInput)
+            {
+                if (to is RuleBase ruleBase && ruleBase.Inputs.Any())
+                {
+                    log.Error("Rule can only have 1 input.");
+                    return false;
+                }
+
+                if (to is ConditionBase conditionBase && conditionBase.Input is Input)
+                {
+                    log.Error("Condition can only have 1 input.");
+                    return false;
                 }
             }
 
@@ -767,74 +818,81 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 if (fromConnector != ConnectorType.Right)
                 {
-                    Log.Error("Signal can only be connected at the right connection point.");
+                    log.Error("Signal can only be connected at the right connection point.");
                     return false;
                 }
             }
 
-            
             // Multiple connections to 1 output are allowed. During runtime only 1 can be active!
             if (from is RuleBase)
             {
                 if (fromConnector != ConnectorType.Right)
                 {
-                    Log.Error("Rule can only be connected at the right connection point.");
+                    log.Error("Rule can only be connected at the right connection point.");
                     return false;
                 }
-                var ruleBase = (RuleBase)from;
+
+                var ruleBase = (RuleBase) from;
                 if (ruleBase.Outputs.Count > 0)
                 {
-                    Log.Error("Can only connect to 1 output.");
+                    log.Error("Can only connect to 1 output.");
                     return false;
                 }
             }
 
             if (from is ConditionBase)
             {
-                if ((fromConnector == ConnectorType.Left) || (fromConnector == ConnectorType.Top))
+                if (fromConnector == ConnectorType.Left || fromConnector == ConnectorType.Top)
                 {
-                    Log.Error("Condition can only be connected at the right or bottom connection point.");
+                    log.Error("Condition can only be connected at the right or bottom connection point.");
                     return false;
                 }
+
                 if (to is Output)
                 {
-                    Log.Error("Can not connect condition to output; Output can only be set by rule.");
+                    log.Error("Can not connect condition to output; Output can only be set by rule.");
                     return false;
                 }
-                var conditionBase = (ConditionBase)from;
-                if ((fromConnector == ConnectorType.Right) && (conditionBase.TrueOutputs.Count > 0))
+
+                var conditionBase = (ConditionBase) from;
+                if (fromConnector == ConnectorType.Right && conditionBase.TrueOutputs.Count > 0)
                 {
-                    Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
                     return false;
                 }
-                if ((fromConnector == ConnectorType.Right) && (conditionBase.FalseOutputs.Contains((RtcBaseObject)to)))
+
+                if (fromConnector == ConnectorType.Right && conditionBase.FalseOutputs.Contains((RtcBaseObject) to))
                 {
-                    Log.Error("Condition is already connected to false of same condition.");
+                    log.Error("Condition is already connected to false of same condition.");
                     return false;
                 }
-                if ((fromConnector == ConnectorType.Bottom) && (conditionBase.FalseOutputs.Count > 0))
+
+                if (fromConnector == ConnectorType.Bottom && conditionBase.FalseOutputs.Count > 0)
                 {
-                    Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                    log.Error("True output of a condition can only connect to 1 other condition or a rule.");
                     return false;
                 }
-                if ((fromConnector == ConnectorType.Bottom) && (conditionBase.TrueOutputs.Contains((RtcBaseObject)to)))
+
+                if (fromConnector == ConnectorType.Bottom && conditionBase.TrueOutputs.Contains((RtcBaseObject) to))
                 {
-                    Log.Error("Condition is already connected to true of same condition.");
+                    log.Error("Condition is already connected to true of same condition.");
                     return false;
                 }
+
                 if (to is ConditionBase)
                 {
                     if (toConnector == ConnectorType.Top)
                     {
-                        Log.Error("Can only connect a condition to the left of another condition; top is for input.");
+                        log.Error("Can only connect a condition to the left of another condition; top is for input.");
                         return false;
                     }
                 }
+
                 if (to is RuleBase)
                 {
                     if (toConnector == ConnectorType.Top)
                     {
-                        Log.Error("Can only connect a condition to the left of a rule; top is for input.");
+                        log.Error("Can only connect a condition to the left of a rule; top is for input.");
                         return false;
                     }
                 }
@@ -842,34 +900,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
             if (to is ConditionBase)
             {
-                if ((from is Input) && (toConnector != ConnectorType.Top))
+                if (from is Input && toConnector != ConnectorType.Top)
                 {
-                    Log.Error("Can only connect an input to the top of a condition; left is for another condition.");
+                    log.Error("Can only connect an input to the top of a condition; left is for another condition.");
                     return false;
                 }
-                if ((from is ConditionBase) && (toConnector != ConnectorType.Left))
+
+                if (from is ConditionBase && toConnector != ConnectorType.Left)
                 {
-                    Log.Error("Can only connect a condition to the left of a condition; top is for input.");
+                    log.Error("Can only connect a condition to the left of a condition; top is for input.");
                     return false;
                 }
             }
 
             if (to is RuleBase)
             {
-                if ((from is Input) && (toConnector != ConnectorType.Top))
+                if (from is Input && toConnector != ConnectorType.Top)
                 {
-                    Log.Error("Can only connect an input to the top of a rule; left is for condition.");
+                    log.Error("Can only connect an input to the top of a rule; left is for condition.");
                     return false;
                 }
-                if ((from is ConditionBase) && (toConnector != ConnectorType.Left))
+
+                if (from is ConditionBase && toConnector != ConnectorType.Left)
                 {
-                    Log.Error("Can only connect a condition to the left of a rule; top is for input.");
+                    log.Error("Can only connect a condition to the left of a rule; top is for input.");
                     return false;
                 }
             }
+
             if (from == to)
             {
-                Log.Error("Can not connect entity to itself.");
+                log.Error("Can not connect entity to itself.");
                 return false;
             }
 
@@ -877,40 +938,70 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 if (toConnector != ConnectorType.Left)
                 {
-                    Log.Error("Can only connect to the left of output.");
+                    log.Error("Can only connect to the left of output.");
                     return false;
                 }
             }
-            if ((from is RuleBase) && (to is ConditionBase))
+
+            if (from is RuleBase && to is ConditionBase)
             {
-                Log.Error("Can not connect rule to condition; rule can only connect to output.");
+                log.Error("Can not connect rule to condition; rule can only connect to output.");
                 return false;
             }
-            if ((from is RuleBase) && (to is SignalBase))
+
+            if (from is RuleBase && to is SignalBase)
             {
-                Log.Error("Can not connect rule to signal; rule can only connect to output.");
+                log.Error("Can not connect rule to signal; rule can only connect to output.");
                 return false;
             }
-            if ((from is RuleBase) && (to is RuleBase))
+
+            if (from is RuleBase && to is RuleBase)
             {
-                Log.Error("Can not connect rule to rule; rule can only connect to output.");
+                log.Error("Can not connect rule to rule; rule can only connect to output.");
                 return false;
             }
-            if ((to is SignalBase) && !(from is Input))
+
+            if (to is SignalBase && !(from is Input))
             {
-                Log.Error("Only input allowed to connect to signal.");
+                log.Error("Only input allowed to connect to signal.");
                 return false;
             }
-            if ((from is SignalBase) && !(to is RuleBase))
+
+            if (from is SignalBase && !(to is RuleBase))
             {
-                Log.Error("Signal can only be connected to PIDrule or IntervalRule.");
+                log.Error("Signal can only be connected to PIDrule or IntervalRule.");
                 return false;
             }
-            if ((from is SignalBase) && (to is RuleBase) && !((RuleBase)to).CanBeLinkedFromSignal())
+
+            if (from is SignalBase && to is RuleBase && !((RuleBase)to).CanBeLinkedFromSignal())
             {
-                Log.Error("Signal can only be connected to PIDrule or IntervalRule.");
+                log.Error("Signal can only be connected to PIDrule or IntervalRule.");
                 return false;
             }
+
+            if (from is MathematicalExpression && !(to is MathematicalExpression ||
+                                                    to is ConditionBase ||
+                                                    to is RuleBase))
+            {
+                log.Error("Expression can only connect to conditions, rules and other expressions.");
+                return false;
+            }
+
+            if (to is MathematicalExpression)
+            {
+                if (toConnector == ConnectorType.Top && !(from is IInput))
+                {
+                    log.Error("Only inputs and other expressions can connect to the top an expression.");
+                    return false;
+                }
+
+                if (toConnector == ConnectorType.Left && !(from is ConditionBase))
+                {
+                    log.Error("Only conditions can connect to the left of an expression.");
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -920,7 +1011,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             connection.LineEnd = ConnectionEnd.RightFilledArrow;
             connection.LineWeight = ConnectionWeight.Fat;
 
-            if ((connection.From.BelongsTo.Tag is Input) || ((connection.To.BelongsTo.Tag is Output)))
+            if (connection.From.BelongsTo.Tag is Input || connection.To.BelongsTo.Tag is Output)
             {
                 //  extend : NetronGraph expose pattern for DashStyle.Custom
                 //           make connection.LineWeight = ConnectionWeight.Fat work or expose pen.Width
@@ -946,67 +1037,80 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 }
             }
         }
-        
+
         public static bool ConnectionIs(IConnection connection)
         {
-            ConditionBase condition  = connection.From.BelongsTo.Tag as ConditionBase;
+            var condition = connection.From.BelongsTo.Tag as ConditionBase;
             if (condition != null)
             {
-                if (condition.FalseOutputs.Contains<RtcBaseObject>((RtcBaseObject)connection.To.BelongsTo.Tag))
+                var belongsTo = (RtcBaseObject) connection.To.BelongsTo.Tag;
+                if (condition.FalseOutputs.Contains<RtcBaseObject>(belongsTo))
                 {
                     return false;
                 }
-                if (condition.TrueOutputs.Contains<RtcBaseObject>((RtcBaseObject)connection.To.BelongsTo.Tag))
+
+                if (condition.TrueOutputs.Contains<RtcBaseObject>(belongsTo))
                 {
                     return true;
                 }
             }
-           throw new ArgumentException("Connection does not contain True or False outputs");
+
+            throw new ArgumentException("Connection does not contain True or False outputs");
         }
 
         public static void Connect(object from, ConnectorType fromConnector, object to, ConnectorType toConnector)
         {
             if (refreshingConnections)
+            {
                 return;
+            }
 
             adjustingConnectionInDomain = true;
 
-            if ((from is Input) && (to is RuleBase))
+            if (from is Input fromInput && to is SignalBase toSignal)
             {
-                ((RuleBase)to).Inputs.Add((Input)from);
+                toSignal.Inputs.Add(fromInput);
             }
-            else if ((from is Input) && (to is SignalBase))
+
+            if (from is IInput fromIInput)
             {
-                ((SignalBase)to).Inputs.Add((Input)from);
+                if (to is RuleBase toRule)
+                {
+                    toRule.Inputs.Add(fromIInput);
+                }
+
+                if (to is ConditionBase toCondition)
+                {
+                    toCondition.Input = fromIInput;
+                }
+
+                if (to is MathematicalExpression toMathematicalExpression)
+                {
+                    toMathematicalExpression.Inputs.Add(fromIInput);
+                }
             }
-            else if ((from is Input) && (to is ConditionBase))
+
+            else if (from is ConditionBase fromCondition && (to is RuleBase || to is ConditionBase || to is MathematicalExpression))
             {
-                ((ConditionBase)to).Input = (Input)from;
-            }
-            else if ((from is ConditionBase) && ((to is RuleBase) || (to is ConditionBase)))
-            {
+                var obj = (RtcBaseObject) to;
                 if (fromConnector == ConnectorType.Right)
                 {
-                    ((ConditionBase)from).TrueOutputs.Add((RtcBaseObject) to);
+                    fromCondition.TrueOutputs.Add(obj);
                 }
                 else
                 {
-                    ((ConditionBase)from).FalseOutputs.Add((RtcBaseObject) to);
+                    fromCondition.FalseOutputs.Add(obj);
                 }
             }
-            else if ((from is ConditionBase) && (to is ConditionBase))
+            else if (from is RuleBase fromRule && to is Output toOutput)
             {
-                ((ConditionBase)from).TrueOutputs.Add((RuleBase)to);
+                fromRule.Outputs.Add(toOutput);
             }
-            else if ((from is RuleBase) && (to is Output))
+            else if (from is SignalBase fromSignal && to is RuleBase toRule)
             {
-                ((RuleBase)from).Outputs.Add((Output)to);
+                fromSignal.RuleBases.Add(toRule);
             }
-            else if ((from is SignalBase) && (to is RuleBase))
-            {
-                ((SignalBase)from).RuleBases.Add((RuleBase)to);
-            }
-
+            
             adjustingConnectionInDomain = false;
         }
 
@@ -1014,37 +1118,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             adjustingConnectionInDomain = true;
 
-            if ((from is Input) && (to is RuleBase))
+            if (from is Input fromInput)
             {
-                ((RuleBase)to).Inputs.Remove((Input)from);
-            }
-            else if ((from is Input) && (to is SignalBase))
-            {
-                ((SignalBase)to).Inputs.Remove((Input)from);
-            }
-            else if ((from is Input) && (to is ConditionBase))
-            {
-                ((ConditionBase)to).Input = null;
-            }
-            else if ((from is ConditionBase) && ((to is RuleBase) || (to is ConditionBase)))
-            {
-                if (((ConditionBase)from).TrueOutputs.Contains<RtcBaseObject>((RtcBaseObject) to))
+                if (to is RuleBase toRule)
                 {
-                    ((ConditionBase)from).TrueOutputs.Remove((RtcBaseObject) to);
+                    toRule.Inputs.Remove(fromInput);
                 }
-                if (((ConditionBase)from).FalseOutputs.Contains<RtcBaseObject>((RtcBaseObject) to))
+
+                if (to is SignalBase toSignal)
                 {
-                    ((ConditionBase)from).FalseOutputs.Remove((RtcBaseObject) to);
+                    toSignal.Inputs.Remove(fromInput);
+                }
+
+                if (to is ConditionBase toCondition)
+                {
+                    toCondition.Input = null;
                 }
             }
-            else if ((from is RuleBase) && (to is Output))
+
+            if (to is MathematicalExpression toMathExpression)
             {
-                ((RuleBase)from).Outputs.Remove((Output)to);
+                switch (from)
+                {
+                    case IInput fromExpressionInput:
+                        toMathExpression.Inputs.Remove(fromExpressionInput);
+                        break;
+                    case ConditionBase condition:
+                        condition.FalseOutputs.Remove(toMathExpression);
+                        condition.TrueOutputs.Remove(toMathExpression);
+                        break;
+                }
             }
-            else if ((from is SignalBase) && (to is RuleBase))
+
+            if (from is MathematicalExpression fromMathExpression)
             {
-                ((SignalBase)from).RuleBases.Remove((RuleBase)to);
+                switch (to)
+                {
+                    case RuleBase toRule:
+                        toRule.Inputs.Remove(fromMathExpression);
+                        break;
+                    case ConditionBase toCondition:
+                        toCondition.Input = null;
+                        break;
+                    case MathematicalExpression toMathematicalExpression:
+                        toMathematicalExpression.Inputs.Remove(fromMathExpression);
+                        break;
+                }
             }
+
             adjustingConnectionInDomain = false;
         }
     }
