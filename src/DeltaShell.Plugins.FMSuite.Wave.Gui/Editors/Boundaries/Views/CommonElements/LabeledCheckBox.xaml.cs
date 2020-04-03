@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
                                                                       FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
-        /// Gets or sets the label of this <see cref="LabeledComboBoxControl"/>.
+        /// Gets or sets the label of this <see cref="LabeledCheckBoxControl"/>.
         /// </summary>
         public string Label
         {
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.CommonEle
         }
 
         /// <summary>
-        /// The is checked property
+        /// The IsChecked property
         /// </summary>
         public static readonly DependencyProperty IsCheckedProperty = 
             DependencyProperty.Register(nameof(IsChecked), 
