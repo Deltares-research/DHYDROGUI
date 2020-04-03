@@ -9,8 +9,10 @@ using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
-    public class WpfGuiCategory : INotifyPropertyChanged, IDisposable
+    public sealed class WpfGuiCategory : INotifyPropertyChanged, IDisposable
     {
+        private bool disposed;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiCategory"/> class. 
         /// Creates all SubCategories <seealso cref="WpfGuiSubCategory"/> and Properties <seealso cref="WpfGuiProperty"/>.
@@ -151,12 +153,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void Dispose()
         {
-            var disposableCustomControl = CustomControl as IDisposable;
-            disposableCustomControl?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            SubCategories.Clear();
-            Properties.ForEach(p => p.PropertyChanged -= OnPropertyChanged);
-            Properties.Clear();
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                var disposableCustomControl = CustomControl as IDisposable;
+                disposableCustomControl?.Dispose();
+
+                SubCategories.Clear();
+                Properties.ForEach(p => p.PropertyChanged -= OnPropertyChanged);
+                Properties.Clear();
+            }
+
+            disposed = true;
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="WpfGuiProperty"/> class.
+        /// </summary>
+        ~WpfGuiCategory()
+        {
+            Dispose(false);
         }
     }
 }
