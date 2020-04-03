@@ -4,6 +4,7 @@ using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using Microsoft.Win32;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
@@ -53,14 +54,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public ICommand SelectFileCommand { get; }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void SelectFile(object obj)
         {
-            var openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = Resources.Spectrum_Files_Filter,
+                Title = Resources.Select_spectrum_file
+            };
             if (openFileDialog.ShowDialog() == true)
             {
                 FilePath = openFileDialog.FileName;

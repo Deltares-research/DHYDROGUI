@@ -190,4 +190,16 @@
   <data name="WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run" xml:space="preserve">
     <value>Time step within the coupled model run [Dd HH:MM:SS.ZZZ]</value>
   </data>
+  <data name="Spectrum_Files_Filter" xml:space="preserve">
+    <value>Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2</value>
+  </data>
+  <data name="Select_spectrum_file" xml:space="preserve">
+    <value>Select spectrum file ...</value>
+  </data>
+  <data name="FileBasedParametersView_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
 </root>
