@@ -332,7 +332,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
-        [Category("Quarantine")]
         public void RunModelWithWWTPAndGetOutputCoverage()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())

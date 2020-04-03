@@ -195,7 +195,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void ValidateWithSpaciallyVariantFullCoverage()
         {
             //Arrange
@@ -212,7 +211,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void ValidateWithSpaciallyVariantPartialCoverage()
         {
             //Arrange

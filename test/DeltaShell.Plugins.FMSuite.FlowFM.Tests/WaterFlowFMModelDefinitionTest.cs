@@ -808,7 +808,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void IrregularlyNamedMduSubfilesShouldKeepNames()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -879,7 +878,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void SelectSpatialOperationsOnlySelectsCompletedOperationsTest()
         {
             // Issue#: DELFT3DFM-508
@@ -943,7 +941,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportSpatialOperationsTest()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

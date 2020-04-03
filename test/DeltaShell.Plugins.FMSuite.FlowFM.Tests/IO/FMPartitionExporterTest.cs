@@ -90,7 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PartitionHarlingenGrid3Domains()
         {
             const string relativePath = "partition";
@@ -128,7 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PartitionHarlingenGridWithInvalidSolverShouldNotCrash()
         {
             const string relativePath = "partition";
@@ -167,7 +165,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PartitionHarlingenGrid3DomainsWithPolFile()
         {
             const string relativePath = "partition";
@@ -208,7 +205,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.VerySlow)]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void PartitionHarlingen3Domains()
         {
             const string relativePath = "partition";
@@ -249,7 +245,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PartitionHarlingenWithIncorrectSolverShouldNotCrash()
         {
             const string relativePath = "partition";
@@ -291,7 +286,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void PartitionHarlingen3DomainsWithPolFile()
         {
             const string relativePath = "partition";

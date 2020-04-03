@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestDimrRunLogIsRetrieved()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
@@ -251,7 +250,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetObservationPointWaterLevel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -272,7 +270,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestWriteNetGeomFileHarlingen()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -350,7 +347,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -407,7 +403,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedThinDamFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -430,7 +425,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedFixedWeirFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -453,7 +447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedLeveeBreachkFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -485,7 +478,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedCrossSectionFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -508,7 +500,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedWeirFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -531,7 +522,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedGateFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -554,7 +544,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedPumpFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -600,7 +589,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedObservationPointFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -621,7 +609,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedWaterLevelBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -643,7 +630,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedVelocityBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -665,7 +651,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedDischargeBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -687,7 +672,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestGetSnappedSourceSinkFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

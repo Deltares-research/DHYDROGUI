@@ -114,20 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadStructuresWithKeysNotInSchema()
         {
-            // [structure]
-            // type             = weir
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // Im_a_nonexistent_property = hax      # This property is not in the schema!
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
             var path = TestHelper.GetTestFilePath(@"structures\keyNotInSchema.imp");
             var schema =
                 new StructureSchemaCsvFile().ReadStructureSchema(
@@ -138,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             TestHelper.AssertLogMessageIsGenerated(
                 () => structures = structuresFile.ReadStructures2D(path).ToList(),
                 String.Format(
-                    "Property 'Im_a_nonexistent_property' not supported for structures of type 'weir' and is skipped. (Line 8 of file {0})",
+                    "Property 'Im_a_nonexistent_property' not supported for structures of type 'weir' and is skipped. (Line 12 of file {0})",
                     path));
             Assert.AreEqual(1, structures.Count, "Only one structure category in file.");
 
@@ -149,18 +137,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadStructuresWithMissingTypeProperty()
         {
-            // [structure]
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
             var path = TestHelper.GetTestFilePath(@"structures\missingTypeProperty.imp");
 
             IList<Structure2D> structures = null;
@@ -413,7 +391,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadAsSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures-sobek.imp");
@@ -431,7 +408,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
             Assert.IsNaN(pump.Chainage);
-            Assert.AreEqual(new Point(500, 360), pump.Geometry);
+            //Assert.AreEqual(new Point(500, 360), pump.Geometry);
+            Assert.That(new LineString(new[] { new Coordinate(1, 3), new Coordinate(2, 4) }), Is.EqualTo(pump.Geometry));
             Assert.AreEqual(3.0, pump.Capacity);
         }
 

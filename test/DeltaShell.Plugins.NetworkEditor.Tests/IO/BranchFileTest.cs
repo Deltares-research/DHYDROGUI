@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenSewerConnections_WhenWritingBranchTypeFile_ThenWaterTypeIsWrittenToBranchFile()
         {
             var pipes = new List<IBranch>

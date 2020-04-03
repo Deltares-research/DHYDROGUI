@@ -1,58 +1,82 @@
-[structure]
-type             = weir
-id               = Weir_down
-x                = 680
-y                = 360
-crest_level      = 2
-lat_contr_coeff  = 1
+[General]
+    fileVersion           = 2.00                
+    fileType              = structure           
 
-[structure]
-type             = pump
-id               = pump01
-x                = 500
-y                = 360
-capacity         = 3
+[Structure]
+    id                    = Pump_2D_01          
+    type                  = pump                
+    numCoordinates        = 3                   
+    xCoordinates          = 705.9721 270.4929 982.5173
+    yCoordinates          = 1478.3913 992.0533 1335.3507
+    capacity              = 1.000               
 
-[structure]
-type             = weir
-id               = Weir_up
-x                = 290
-y                = 360
-crest_level      = 2.8
-crest_width      = 26.8
-lat_contr_coeff  = 1
+[Structure]
+    id                    = Weir_2D_01          
+    type                  = weir                
+    numCoordinates        = 2                   
+    xCoordinates          = 47.9853 -260.3466   
+    yCoordinates          = 1700.8989 1119.2005 
+    crestLevel            = 2.000               
+    corrCoeff             = 1.000               
+    useVelocityHeight     = true                
 
-[structure]
-type             = pump
-id               = pump01
-x                = 200
-y                = 360
-capacity         = 5
+[Structure]
+    id                    = Weir_2D_02          
+    type                  = weir                
+    numCoordinates        = 2                   
+    xCoordinates          = 47.9853 -260.3466   
+    yCoordinates          = 1700.8989 1119.2005 
+    crestLevel            = 2.800
+    crestWidth            = 26.800               
+    corrCoeff             = 1.000               
+    useVelocityHeight     = true                
 
-[structure]
-type             = pump
-id               = pump03
-x                = 600
-y                = 360
-capacity         = 6
+[Structure]
+    id                    = Pump_2D_02          
+    type                  = pump                
+    numCoordinates        = 3                   
+    xCoordinates          = 705.9721 270.4929 982.5173
+    yCoordinates          = 1478.3913 992.0533 1335.3507
+    capacity              = 5.000
 
-[structure]
-type             = gate  
-id               = Orifice01
-x                = 500
-y                = 360
-sill_level       = 2
-sill_width       = 33
-opening_width    = 1
-lower_edge_level = 2.8
-door_height      = 5
-horizontal_opening_direction= symmetric
+[Structure]
+    id                    = Pump_2D_03          
+    type                  = pump                
+    numCoordinates        = 3                   
+    xCoordinates          = 705.9721 270.4929 982.5173
+    yCoordinates          = 1478.3913 992.0533 1335.3507
+    capacity              = 6.00
 
-[structure]
-type             = generalstructure
-id               = gs_01
-polylinefile     = gs_01.pli
-widthcenter      = 2.3
+[Structure]
+    id                    = Gate_2D_01          
+    type                  = gate                
+    numCoordinates        = 2                   
+    xCoordinates          = 1141.4513 1208.2035 
+    yCoordinates          = 1821.6888 1478.3913 
+    crestLevel            = 2.000               
+    gateLowerEdgeLevel    = 2.800               
+    gateOpeningWidth      = 1.000               
+    gateOpeningHorizontalDirection= symmetric           
+    gateHeight            = 5.000               
+
+[Structure]
+    id                    = LeveeBreach_2D_01   
+    type                  = dambreak            
+    numCoordinates        = 2                   
+    xCoordinates          = 2231.7385 2123.6634 
+    yCoordinates          = 1783.5446 1541.9649 
+    StartLocationX        = 2177.701            
+    StartLocationY        = 1662.755            
+    T0                    = -607388400          
+    State                 = 1                   
+    Algorithm             = 2                   
+    CrestLevelIni         = 2.000               
+    CrestLevelMin         = 5.000               
+    BreachWidthIni        = 10.000              
+    TimeToBreachToMaximumDepth= 4271                
+    F1                    = 3.000               
+    F2                    = 4.000               
+    Ucrit                 = 6.000               
 
 [structure]
 type                  = dambreak

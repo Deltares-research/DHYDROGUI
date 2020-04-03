@@ -73,7 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void OpenMapFileCheckMinMax()
         {
             var zmDfmMapFile = "zm_dfm_map.nc";
@@ -179,7 +178,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ReadMapFileBoundaryLinkValues()
         {
             var path = TestHelper.GetTestFilePath("flow1d2dMapFile\\dflow-fm_map.nc");

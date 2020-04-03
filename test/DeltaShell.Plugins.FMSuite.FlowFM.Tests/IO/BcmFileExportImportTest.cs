@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
         
         [Test]
-        [Category("Quarantine")]
         public void ExportImportSedimentBedLoadToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
