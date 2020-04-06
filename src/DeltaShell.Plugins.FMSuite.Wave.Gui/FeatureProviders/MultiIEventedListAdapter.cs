@@ -184,6 +184,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders
                     HandleCollectionChangedRemove(observedList, e);
                     break;
                 case NotifyCollectionChangedAction.Move:
+                    // The MultiEventedListAdapter ordering is explicitly not dependent on the underlying lists.
+                    // As such, we only need to handle collection changed events that modify the contents of the
+                    // underlying lists, and thus the MultiEventedListAdapter. Since the underlying lists' content
+                    // does not change with a move action, we do not need to do anything. And thus there is no action
+                    // associated with a NotifyCollectionChangedAction.Move.
                 default:
                     break;
             }
