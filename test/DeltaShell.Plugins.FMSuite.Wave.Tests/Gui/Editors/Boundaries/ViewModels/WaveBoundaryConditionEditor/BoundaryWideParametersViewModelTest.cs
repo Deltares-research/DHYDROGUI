@@ -102,8 +102,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void ShapeTypeList_ExpectedValues()
         {
             // Setup
-            ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
-                                                                        .WithShapeFactory(new ViewShapeFactory(Substitute.For<IBoundaryConditionShapeFactory>()))
+            var shapeFactory = Substitute.For<IBoundaryConditionShapeFactory>();
+            var viewShapeFactory = new ViewShapeFactory(shapeFactory);
+            
+            var modelShape = new GaussShape();
+
+            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            boundaryCondition.Shape = modelShape;
+            boundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
+
+            ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
+                                                                        .WithShapeFactory(viewShapeFactory)
                                                                         .WithDefaultDataComponentFactory()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
