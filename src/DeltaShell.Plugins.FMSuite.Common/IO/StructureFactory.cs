@@ -298,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var simpleWeirFormula = new SimpleWeirFormula();
 
-            var property = structure2D.GetProperty(KnownStructureProperties.LateralContractionCoefficient);
+            var property = structure2D.GetProperty(StructureRegion.LatContrCoeff.Key);
             if (property != null)
             {
                 simpleWeirFormula.LateralContraction = DataTypeValueParser.FromString<double>(property.GetValueAsString());
@@ -353,14 +353,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         private static Weir2D CreateWeirCore(Structure2D structure2D, string path, DateTime refDate)
         {
             var weir = new Weir2D(true);
-            var crestWidthProperty = structure2D.GetProperty(KnownStructureProperties.CrestWidth);
+            var crestWidthProperty = structure2D.GetProperty(StructureRegion.CrestWidth.Key);
             var crestWidthString = crestWidthProperty == null ? null : crestWidthProperty.GetValueAsString();
             weir.CrestWidth = string.IsNullOrEmpty(crestWidthString)
                 ? 0.0
                 : DataTypeValueParser.FromString<double>(crestWidthString);
-            SetTimeSeriesProperty(structure2D, KnownStructureProperties.CrestLevel, path, refDate, weir,
+            SetTimeSeriesProperty(structure2D, StructureRegion.CrestLevel.Key, path, refDate, weir,
                 nameof(weir.UseCrestLevelTimeSeries),
                 nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
+            weir.UseVelocityHeight = (bool)structure2D.GetProperty(StructureRegion.UseVelocityHeight.Key).Value;
 
             return weir;
         }
