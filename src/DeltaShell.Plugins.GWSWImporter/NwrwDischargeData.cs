@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             else
             {
-                LateralSurface = dwf.DailyVolumeConstant / 1000 / 86400; // from dm³/day to m³/s 
+                LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/h (LateralSurface is in dm³/h) to m³/s 
             }
         }
     }
