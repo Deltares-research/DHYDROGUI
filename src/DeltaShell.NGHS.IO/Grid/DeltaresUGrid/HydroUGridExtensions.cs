@@ -18,7 +18,11 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 {
-    public static class UGridMeshAdapter
+    /// <summary>
+    /// Class containing extensions for converting hydro objects (like HydroNetwork, UnstructuredGrid etc.)
+    /// to/from Deltares.UGrid objects
+    /// </summary>
+    public static class HydroUGridExtensions
     {
         #region Mesh2d
 
@@ -94,7 +98,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             var numberOfEdges = mesh.EdgeNodes.Length / 2.0;
             for (int blockIndex = 0; blockIndex < numberOfEdges; ++blockIndex)
             {
-                int[] blockFromArray = GetBlockFromArray<int>(mesh.EdgeNodes, 2, blockIndex);
+                int[] blockFromArray = GetBlockFromArray(mesh.EdgeNodes, 2, blockIndex);
                 edgeList.Add(new Edge(blockFromArray[0], blockFromArray[1]));
             }
             return edgeList;
@@ -109,8 +113,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         {
             var cellList = new List<Cell>();
             if (mesh?.FaceNodes == null || 
-                mesh?.FaceX == null || 
-                mesh?.FaceY== null || 
+                mesh.FaceX == null || 
+                mesh.FaceY== null || 
                 mesh.MaxNumberOfFaceNodes == 0)
             {
                 return cellList;
@@ -266,6 +270,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// Creates a <see cref="IHydroNetwork"/> from the provided <paramref name="networkGeometry"/>
         /// </summary>
         /// <param name="networkGeometry">Network geometry to use</param>
+        /// <param name="branchProperties">Additional properties for the branches (see: <see cref="BranchFile.BranchProperties"/>)</param>
+        /// <param name="compartmentProperties">Additional properties for the compartments (see: <see cref="NodeFile.CompartmentProperties"/>)</param>
         /// <returns>A newly created network based on the provided <paramref name="networkGeometry"/></returns>
         public static IHydroNetwork CreateNetwork(this DisposableNetworkGeometry networkGeometry, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
         {
@@ -273,7 +279,14 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
             return network;
         }
-
+        
+        /// <summary>
+        /// Sets the nodes and branches of the <paramref name="network"/> with the values of the <paramref name="networkGeometry"/>
+        /// </summary>
+        /// <param name="network">Network to set</param>
+        /// <param name="networkGeometry"><see cref="DisposableNetworkGeometry"/> containing the network data</param>
+        /// <param name="branchProperties">Additional branch properties</param>
+        /// <param name="compartmentProperties">Additional compartment properties</param>
         public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
         {
             var nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
@@ -283,6 +296,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             network.Branches.AddRange(branches);
         }
 
+        /// <summary>
+        /// Creates a <see cref="DisposableNetworkGeometry"/> based on the provided <paramref name="network"/>
+        /// </summary>
+        /// <param name="network">Network containing the data</param>
+        /// <returns>A <see cref="DisposableNetworkGeometry"/> containing the network data</returns>
         public static DisposableNetworkGeometry CreateDisposableNetworkGeometry(this IHydroNetwork network)
         {
             var mesh = new DisposableNetworkGeometry
@@ -489,7 +507,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 }
 
                 var type = networkGeometry.BranchTypes[i];
-                var branch = GetBranch(type, propertiesLookup, networkGeometry.BranchIds[i]);
+
+                // todo: find out what to do with branch type from file.
+                // Currently the branch type from the properties is used
+                var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i]);
                 
                 branch.Source = nodeFrom;
                 branch.Target = nodeTo;
@@ -527,7 +548,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             yield return node.Name;
         }
 
-        private static IBranch GetBranch(int branchTypeNumber, IReadOnlyDictionary<string, BranchFile.BranchProperties> propertiesLookup, string branchName)
+        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchFile.BranchProperties> propertiesLookup, string branchName)
         {
             if (propertiesLookup == null || !propertiesLookup.ContainsKey(branchName))
             {
@@ -628,6 +649,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         #region Links
 
+        /// <summary>
+        /// Creates a list of <see cref="ILink1D2D"/> from the provided <paramref name="linksGeometry"/>
+        /// </summary>
+        /// <param name="linksGeometry"><see cref="DisposableLinksGeometry"/> containing the link data</param>
+        /// <returns>A list of <see cref="ILink1D2D"/> objects based on the provided <see cref="DisposableLinksGeometry"/></returns>
         public static IList<ILink1D2D> CreateLinks(this DisposableLinksGeometry linksGeometry)
         {
             var link1D2Ds = new List<ILink1D2D>();
@@ -635,6 +661,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return link1D2Ds;
         }
 
+        /// <summary>
+        /// Sets a list of <see cref="ILink1D2D"/> from the provided <paramref name="linksGeometry"/> onto the <paramref name="link1D2Ds"/>
+        /// </summary>
+        /// <param name="link1D2Ds">A list of <see cref="ILink1D2D"/> to add the new links to</param>
+        /// <param name="linksGeometry"><see cref="DisposableLinksGeometry"/> containing the link data</param>
+        /// <returns>A list of <see cref="ILink1D2D"/> objects based on the provided <see cref="DisposableLinksGeometry"/></returns>
         public static void SetLinks(this IList<ILink1D2D> link1D2Ds, DisposableLinksGeometry linksGeometry)
         {
             link1D2Ds.Clear();
@@ -650,9 +682,14 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             }
         }
 
-        public static DisposableLinksGeometry CreateDisposableLinksGeometry(this IList<ILink1D2D> link1D2Ds)
+        /// <summary>
+        /// Creates a <see cref="DisposableLinksGeometry"/> based on the set of <paramref name="links1D2D"/>
+        /// </summary>
+        /// <param name="links1D2D">Set of links to base the <see cref="DisposableLinksGeometry"/> on</param>
+        /// <returns>A <see cref="DisposableLinksGeometry"/> based on the set of <paramref name="links1D2D"/></returns>
+        public static DisposableLinksGeometry CreateDisposableLinksGeometry(this IList<ILink1D2D> links1D2D)
         {
-            var numberOfLinks = link1D2Ds.Count;
+            var numberOfLinks = links1D2D.Count;
 
             var linksGeometry = new DisposableLinksGeometry
             {
@@ -665,7 +702,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             for (int i = 0; i < numberOfLinks; i++)
             {
-                var link1D2D = link1D2Ds[i];
+                var link1D2D = links1D2D[i];
                 linksGeometry.LinkId[i] = link1D2D.Name;
                 linksGeometry.LinkLongName[i] = link1D2D.LongName;
                 linksGeometry.LinkType[i] = (int) link1D2D.TypeOfLink;

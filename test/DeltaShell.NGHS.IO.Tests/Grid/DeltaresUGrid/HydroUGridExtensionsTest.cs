@@ -18,7 +18,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 {
     [TestFixture]
-    public class UGridMeshAdapterTest
+    public class HydroUGridExtensionsTest
     {
         [Test]
         public void GivenUGridMeshAdapter_DoingCreateUnstructuredGrid_ShouldCreateValidGrid()

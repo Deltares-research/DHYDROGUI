@@ -24,19 +24,19 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return api.IsUGridFile();
         }
 
-        public bool CreateFile(string filePath, FileMetaData fileMetaData)
+        public void CreateFile(string filePath, FileMetaData fileMetaData)
         {
-            return api.CreateFile(filePath, fileMetaData);
+            api.CreateFile(filePath, fileMetaData);
         }
 
-        public bool Open(string filePath)
+        public void Open(string filePath)
         {
-            return api.Open(filePath);
+            api.Open(filePath);
         }
 
-        public bool Close()
+        public void Close()
         {
-            return api.Close();
+            api.Close();
         }
 
         public double GetVersion()

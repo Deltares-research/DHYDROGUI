@@ -681,8 +681,8 @@ src/DeltaShell.NGHS.IO/FunctionStores/MapHisFileReader.cs -text
 src/DeltaShell.NGHS.IO/FunctionStores/ReadOnlyMapHisFileFunctionStore.cs -text
 src/DeltaShell.NGHS.IO/FunctionStores/ReadOnlyMapHisFileFunctionStore.hbm.xml -text
 src/DeltaShell.NGHS.IO/Grid/AGrid.cs -text
+src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/HydroUGridExtensions.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/RemoteUGridApi.cs -text
-src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/UGridMeshAdapter.cs -text
 src/DeltaShell.NGHS.IO/Grid/Grid.cd -text
 src/DeltaShell.NGHS.IO/Grid/GridApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridApiDataSet.cs -text
@@ -3273,7 +3273,7 @@ test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructuresFileWriterTest.cs
 test/DeltaShell.NGHS.IO.Tests/FunctionStores/MapHisFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FunctionStores/ReadOnlyMapHisFileFunctionStoreTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/AGridTests.cs -text
-test/DeltaShell.NGHS.IO.Tests/Grid/DeltaresUGrid/UGridMeshAdapterTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/Grid/DeltaresUGrid/HydroUGridExtensionsTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/GridApiTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/LUCAGridTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/NewUGridTests.cs -text
