@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
         /// </summary>
         /// <param name="geometricDefinition">The observed <see cref="IWaveBoundaryGeometricDefinition"/>.</param>
+        /// <param name="supportPointDataComponentViewModel">The observed <see cref="supportPointDataComponentViewModel"/>.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="geometricDefinition"/> is <c>null</c>.
         /// </exception>
@@ -127,12 +128,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             if (IsEnabled)
             {
                 supportPointDataComponentViewModel.SelectedSupportPoint = SelectedSupportPointViewModel.SupportPoint;
+                SupportPointViewModels.ForEach(RefreshIsEnabledSupportPoint);
             }
             else
             {
                 SupportPointViewModels.ForEach(x => x.IsEnabled = false);
             }
         }
+
+        private void RefreshIsEnabledSupportPoint(SupportPointViewModel vm) =>
+            vm.IsEnabled = supportPointDataComponentViewModel.IsEnabledSupportPoint(vm.SupportPoint);
 
         /// <summary>
         /// Gets the add support point command.

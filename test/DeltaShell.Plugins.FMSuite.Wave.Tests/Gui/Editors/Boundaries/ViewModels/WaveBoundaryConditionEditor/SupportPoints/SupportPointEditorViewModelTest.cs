@@ -629,6 +629,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         Is.SameAs(viewModel.SelectedSupportPointViewModel.SupportPoint));
         }
 
+        [Test]
+        public void RefreshIsEnabled_DatComponentChanged_RefreshesIsEnabledOnSupportPoints()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = 
+                new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+            waveBoundary.GeometricDefinition.Returns(geometricDefinition);
+            waveBoundary.ConditionDefinition.Returns(conditionDefinition);
+
+
+            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            supportPointDataComponentViewModel = 
+                new SupportPointDataComponentViewModel(conditionDefinition,
+                                                       new BoundaryParametersFactory(), 
+                                                       mediator);
+
+            var viewModel = new SupportPointEditorViewModel(geometricDefinition, 
+                                                            supportPointDataComponentViewModel);
+
+            viewModel.SelectedSupportPointViewModel = GetExistingSupportPointViewModel();
+            GetExistingSupportPointViewModel(random.Next() * 100.0, 2);
+
+
+            foreach (SupportPointViewModel supportPoint in viewModel.SupportPointViewModels)
+            {
+                supportPoint.IsEnabled = true;
+            }
+
+            // Call
+            conditionDefinition.DataComponent = 
+                new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
+            viewModel.RefreshIsEnabled();
+
+            // Assert
+            foreach (SupportPointViewModel supportPoint in viewModel.SupportPointViewModels)
+            {
+                Assert.That(supportPoint.IsEnabled, Is.False); 
+            }
+        }
+
         private SupportPointViewModel GetExistingSupportPointViewModel()
         {
             return GetExistingSupportPointViewModel(random.NextDouble());
