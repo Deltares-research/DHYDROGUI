@@ -725,7 +725,6 @@ src/DeltaShell.NGHS.IO/Grid/UGridNetworkDiscretisationApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/UGridToNetworkAdapter.cs -text
 src/DeltaShell.NGHS.IO/Grid/UnmanagedMemoryRegister.cs -text
 src/DeltaShell.NGHS.IO/Grid/UnstructuredGridFileHelper.cs -text
-src/DeltaShell.NGHS.IO/Grid/WorkAroundNetFile.cs -text
 src/DeltaShell.NGHS.IO/Helpers/BranchChainageExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ConfigurationSetting.cs -text
 src/DeltaShell.NGHS.IO/Helpers/DelftIniCategory.cs -text
