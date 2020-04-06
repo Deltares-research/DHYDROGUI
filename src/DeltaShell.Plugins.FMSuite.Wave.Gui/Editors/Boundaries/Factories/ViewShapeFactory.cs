@@ -62,6 +62,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
+        public IReadOnlyList<Type> GetViewShapeTypesList()
+        {
+            return new List<Type>
+            {
+                typeof(GaussViewShape),
+                typeof(JonswapViewShape),
+                typeof(PiersonMoskowitzViewShape),
+            };
+        }
+
         private GaussViewShape ConstructDefaultGaussViewShape() =>
             ConstructGaussViewShape(factory.ConstructDefaultGaussShape());
 

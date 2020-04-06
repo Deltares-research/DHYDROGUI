@@ -56,17 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.announceDataComponentChanged = announceDataComponentChanged;
 
             Shape = this.shapeFactory.ConstructFromShape(observedBoundaryCondition.Shape);
+            ShapeTypeList = this.shapeFactory.GetViewShapeTypesList();
         }
 
         /// <summary>
         /// Gets the list of Shape types available.
         /// </summary>
-        public IReadOnlyList<Type> ShapeTypeList { get; } = new List<Type>()
-        {
-            typeof(GaussViewShape),
-            typeof(JonswapViewShape),
-            typeof(PiersonMoskowitzViewShape),
-        };
+        public IReadOnlyList<Type> ShapeTypeList { get; }
 
         /// <summary>
         /// Gets or sets the type of the shape.

@@ -93,5 +93,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             void Call() => viewFactory.ConstructFromType(t);
             Assert.Throws<InvalidEnumArgumentException>(Call);
         }
+
+        [Test]
+        public void GetViewShapeTypesList_ExpectedResults()
+        {
+            // Setup
+            var modelFactory = Substitute.For<IBoundaryConditionShapeFactory>();
+            var viewFactory = new ViewShapeFactory(modelFactory);
+
+            // Call
+            IReadOnlyList<Type> shapeTypes = viewFactory.GetViewShapeTypesList();
+
+            // Assert
+            Assert.That(shapeTypes, Is.Not.Null);
+
+            var expectedTypes = new List<Type>
+            {
+                typeof(GaussViewShape),
+                typeof(JonswapViewShape),
+                typeof(PiersonMoskowitzViewShape)
+            };
+
+            Assert.That(shapeTypes, Is.EquivalentTo(expectedTypes));
+            
+        }
     }
 }

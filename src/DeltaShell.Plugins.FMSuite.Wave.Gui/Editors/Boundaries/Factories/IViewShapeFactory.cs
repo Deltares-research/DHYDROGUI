@@ -1,4 +1,6 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+﻿using System;
+using System.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.Shapes;
 
@@ -35,5 +37,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// </exception>
         IViewShape ConstructFromShape(IBoundaryConditionShape shape);
 
+        /// <summary>
+        /// Gets the list of concrete <see cref="IViewShape"/> types.
+        /// </summary>
+        /// <returns>
+        /// The list of concrete <see cref="IViewShape"/> types.
+        /// </returns>
+        IReadOnlyList<Type> GetViewShapeTypesList();
     }
 }

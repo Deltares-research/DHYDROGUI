@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
-                                                                        .WithDefaultShapeFactory()
+                                                                        .WithShapeFactory(new ViewShapeFactory(Substitute.For<IBoundaryConditionShapeFactory>()))
                                                                         .WithDefaultDataComponentFactory()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
