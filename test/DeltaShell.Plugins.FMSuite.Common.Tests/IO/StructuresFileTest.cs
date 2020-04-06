@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -33,7 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadStructuresUsingExampleFile()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
@@ -49,21 +49,50 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(1, structures.Count(s => s.Structure2DType == Structure2DType.LeveeBreach));
 
             var weirDown = structures.First(s => s.Name == "Weir_down");
-            Assert.AreEqual(6, weirDown.Properties.Count);
-            Assert.AreEqual("680", weirDown.GetProperty(KnownStructureProperties.X).GetValueAsString());
-            Assert.AreEqual("360", weirDown.GetProperty(KnownStructureProperties.Y).GetValueAsString());
-            Assert.AreEqual("2", weirDown.GetProperty(KnownStructureProperties.CrestLevel).GetValueAsString());
-            Assert.AreEqual("1", weirDown.GetProperty(KnownStructureProperties.LateralContractionCoefficient).GetValueAsString());
+            Assert.AreEqual(8, weirDown.Properties.Count);
+            Assert.AreEqual("47.9853 -260.3466", weirDown.GetProperty(StructureRegion.XCoordinates.Key).GetValueAsString());
+            Assert.AreEqual("1700.8989 1119.2005", weirDown.GetProperty(StructureRegion.YCoordinates.Key).GetValueAsString());
+            Assert.AreEqual("2", weirDown.GetProperty(StructureRegion.CrestLevel.Key).GetValueAsString());
+            Assert.AreEqual("1", weirDown.GetProperty(StructureRegion.CorrectionCoeff.Key).GetValueAsString());
+            Assert.AreEqual("1", weirDown.GetProperty(StructureRegion.UseVelocityHeight.Key).GetValueAsString());
 
             var generalStructure = structures.First(s => s.Name == "gs_01");
-            Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
-            Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
-            Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.CrestWidth).GetValueAsString(), Is.EqualTo("2.3"));
+            Assert.That(generalStructure.Properties.Count, Is.EqualTo(32));
+            Assert.AreEqual("2", generalStructure.GetProperty(StructureRegion.NumberOfCoordinates.Key).GetValueAsString());
+            Assert.AreEqual("1111.2222 3333.4444", generalStructure.GetProperty(StructureRegion.XCoordinates.Key).GetValueAsString());
+            Assert.AreEqual("2222.1111 4444.3333", generalStructure.GetProperty(StructureRegion.YCoordinates.Key).GetValueAsString());
+            Assert.AreEqual("6", generalStructure.GetProperty(StructureRegion.Upstream1Level.Key).GetValueAsString());
+            Assert.AreEqual("1", generalStructure.GetProperty(StructureRegion.Upstream1Width.Key).GetValueAsString());
+            Assert.AreEqual("7", generalStructure.GetProperty(StructureRegion.Upstream2Level.Key).GetValueAsString());
+            Assert.AreEqual("2", generalStructure.GetProperty(StructureRegion.Upstream2Width.Key).GetValueAsString());
+            Assert.AreEqual("3", generalStructure.GetProperty(StructureRegion.CrestWidth.Key).GetValueAsString());
+            Assert.AreEqual("9", generalStructure.GetProperty(StructureRegion.Downstream1Level.Key).GetValueAsString());
+            Assert.AreEqual("4", generalStructure.GetProperty(StructureRegion.Downstream1Width.Key).GetValueAsString());
+            Assert.AreEqual("10", generalStructure.GetProperty(StructureRegion.Downstream2Level.Key).GetValueAsString());
+            Assert.AreEqual("5", generalStructure.GetProperty(StructureRegion.Downstream2Width.Key).GetValueAsString());
+            Assert.AreEqual("8", generalStructure.GetProperty(StructureRegion.CrestLevel.Key).GetValueAsString());
+            Assert.AreEqual("11", generalStructure.GetProperty(StructureRegion.GateLowerEdgeLevel.Key).GetValueAsString());
+            Assert.AreEqual("12", generalStructure.GetProperty(StructureRegion.PosFreeGateFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("13", generalStructure.GetProperty(StructureRegion.PosDrownGateFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("14", generalStructure.GetProperty(StructureRegion.PosFreeWeirFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("15", generalStructure.GetProperty(StructureRegion.PosDrownWeirFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("16", generalStructure.GetProperty(StructureRegion.PosContrCoefFreeGate.Key).GetValueAsString());
+            Assert.AreEqual("17", generalStructure.GetProperty(StructureRegion.NegFreeGateFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("18", generalStructure.GetProperty(StructureRegion.NegDrownGateFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("19", generalStructure.GetProperty(StructureRegion.NegFreeWeirFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("20", generalStructure.GetProperty(StructureRegion.NegDrownWeirFlowCoeff.Key).GetValueAsString());
+            Assert.AreEqual("21", generalStructure.GetProperty(StructureRegion.NegContrCoefFreeGate.Key).GetValueAsString());
+            Assert.AreEqual("22", generalStructure.GetProperty(StructureRegion.CrestLength.Key).GetValueAsString());
+            Assert.AreEqual("1", generalStructure.GetProperty(StructureRegion.UseVelocityHeight.Key).GetValueAsString());
+            Assert.AreEqual("23", generalStructure.GetProperty(StructureRegion.ExtraResistance.Key).GetValueAsString());
+            Assert.AreEqual("24", generalStructure.GetProperty(StructureRegion.GateHeight.Key).GetValueAsString());
+            Assert.AreEqual("25", generalStructure.GetProperty(StructureRegion.GateOpeningWidth.Key).GetValueAsString());
+            Assert.AreEqual("symmetric", generalStructure.GetProperty(StructureRegion.GateHorizontalOpeningDirection.Key).GetValueAsString());
+
 
             var leveeBreach = structures.FirstOrDefault(s => s.Name == "lb_01");
             Assert.NotNull(leveeBreach);
-            Assert.AreEqual(15, leveeBreach.Properties.Count);
-            Assert.AreEqual("lb_01.pli", leveeBreach.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString());
+            Assert.AreEqual(17, leveeBreach.Properties.Count);
 
         }
 
@@ -79,22 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadStructuresWithUnsupportedCategories()
         {
-            // [test]
-            // dummy			= value		#I'm just a dumy value
-            // 
-            // [structure]
-            // type             = weir
-            // id               = w
-            // x                = 1
-            // y                = 2
-            // crest_level      = 3
-            // crest_width      = 4
-            // discharge_coeff  = 1
-            // lat_dis_coeff    = 1
-            // allowed_flow_dir = 0
             var path = TestHelper.GetTestFilePath(@"structures\mixedFile.imp");
             var schema =
                 new StructureSchemaCsvFile().ReadStructureSchema(
@@ -285,9 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureWhenWritingToFileAndReadingFromThatFileThenResultingStructuresAreTheSame()
         {
             var iniFilePath = TestHelper.GetTestFilePath(@"structures\temp_file.ini");
-            var pliFilePath = TestHelper.GetTestFilePath(@"structures\gs01.pli");
             if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
-            if (File.Exists(pliFilePath)) File.Delete(pliFilePath);
 
             var initialFormula = new GeneralStructureWeirFormula
             {
@@ -377,7 +390,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             //cleanup
             if (File.Exists(iniFilePath)) File.Delete(iniFilePath);
-            if (File.Exists(pliFilePath)) File.Delete(pliFilePath);
         }
 
         [Test]
@@ -415,7 +427,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ReadTimeDependentSobekStructuresTest()
         {
             var path = TestHelper.GetTestFilePath(@"structures\time_dependent_structures.ini");

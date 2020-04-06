@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 nwrwDischargeData.SetCorrectLateralSurface(rrModel);
 
                 // then
-                var expectedValue = dwf.DailyVolumeConstant / 1000 / 86400; // from dm³/day to m³/s 
+                var expectedValue = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
                 Assert.That(nwrwDischargeData.LateralSurface, Is.EqualTo(expectedValue).Within(tolerance));
             }
         }
