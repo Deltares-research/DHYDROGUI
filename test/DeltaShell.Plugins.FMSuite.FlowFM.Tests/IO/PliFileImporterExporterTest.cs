@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             IList<FixedWeir> resultList = new List<FixedWeir>();
             
-            TestHelper.AssertIsFasterThan(8500, () => importer.ImportItem(path, resultList));
+            TestHelper.AssertIsFasterThan(12500, () => importer.ImportItem(path, resultList));
             Assert.AreEqual(19459, resultList.Count);
         }
 

@@ -361,8 +361,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             SetTimeSeriesProperty(structure2D, StructureRegion.CrestLevel.Key, path, refDate, weir,
                 nameof(weir.UseCrestLevelTimeSeries),
                 nameof(weir.CrestLevel), weir.CrestLevelTimeSeries);
-            weir.UseVelocityHeight = (bool)structure2D.GetProperty(StructureRegion.UseVelocityHeight.Key).Value;
-
+            var useVelocityHeightProperty = structure2D.GetProperty(StructureRegion.UseVelocityHeight.Key);
+            if (useVelocityHeightProperty != null)
+            {
+                weir.UseVelocityHeight = (bool)useVelocityHeightProperty.Value;
+            }
+            
             return weir;
         }
 

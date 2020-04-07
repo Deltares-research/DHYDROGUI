@@ -204,8 +204,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
             structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "680");
             structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
+            structure.AddProperty(StructureRegion.CrestLevel.Key, typeof(Steerable), "2");
+            structure.AddProperty(StructureRegion.CorrectionCoeff.Key, typeof(double), "0.7");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
@@ -234,9 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_moving");
             structure.AddProperty(StructureRegion.XCoordinates.Key, typeof(double), "680");
             structure.AddProperty(StructureRegion.YCoordinates.Key, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_crest_level.tim");
-            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof (double), "23.5");
-            structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
+            structure.AddProperty(StructureRegion.CrestLevel.Key, typeof(Steerable), "weir_crest_level.tim");
+            structure.AddProperty(StructureRegion.CrestWidth.Key, typeof (double), "23.5");
+            structure.AddProperty(StructureRegion.CorrectionCoeff.Key, typeof(double), "0.7");
 
             var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
