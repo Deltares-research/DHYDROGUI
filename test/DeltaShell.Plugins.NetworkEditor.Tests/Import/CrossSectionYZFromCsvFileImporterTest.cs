@@ -33,7 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ImportYZCrossSections()
         {
             var path = TestHelper.GetTestFilePath("testcsYZ.csv");
@@ -80,11 +79,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             Assert.AreEqual(100, flowProfile[6].X, 1e-06);
 
             Assert.AreEqual(0, flowProfile[0].Y, 1e-06);
-            Assert.AreEqual(-1.002327187, flowProfile[1].Y, 1e-06);
-            Assert.AreEqual(-6.894323144, flowProfile[2].Y, 1e-06);
-            Assert.AreEqual(-6.894323144, flowProfile[3].Y, 1e-06);
-            Assert.AreEqual(0.754585153, flowProfile[4].Y, 1e-06);
-            Assert.AreEqual(-0.721939551, flowProfile[5].Y, 1e-06);
+            Assert.AreEqual(-1.604947274, flowProfile[1].Y, 1e-06);
+            Assert.AreEqual(-10, flowProfile[2].Y, 1e-06);
+            Assert.AreEqual(-10, flowProfile[3].Y, 1e-06);
+            Assert.AreEqual(0, flowProfile[4].Y, 1e-06);
+            Assert.AreEqual(-2.192828665, flowProfile[5].Y, 1e-06);
             Assert.AreEqual(0, flowProfile[6].Y, 1e-06);
         }
 

@@ -61,9 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(typeof(DateTime))]
         [TestCase(typeof(bool))]
         [TestCase(typeof(TimeSpan))]
-        [TestCase(typeof(IList<double>))]
         [TestCase(typeof(Enum))]
-        [Category("Quarantine")]
         public void Test_SelectTemplate_GivenWpfGuiProperty_ReturnsTemplate(Type propertyType)
         {
             var item = new WpfGuiProperty(new FieldUIDescription(null, null)
@@ -72,6 +70,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             });
 
             GetAndCheckDataTemplate(item);
+        }
+
+        [Test]
+        public void Test_SelectTemplate_GivenFieldUIDescriptionWithNullFunc_ThrowsException()
+        {
+            TestDelegate call = () =>
+            {
+                new WpfGuiProperty(new FieldUIDescription(null, null)
+                {
+                    ValueType = typeof(IList<double>)
+                });
+            };
+            Assert.That(call, Throws.Exception.TypeOf<InvalidOperationException>());
         }
 
         [Test]
