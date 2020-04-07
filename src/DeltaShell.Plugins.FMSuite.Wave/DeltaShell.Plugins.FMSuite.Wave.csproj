@@ -193,6 +193,7 @@
     <Compile Include="IO\Helpers\Boundaries\IImportBoundaryConditionDataComponentFactory.cs" />
     <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactory.cs" />
     <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
+    <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodType.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeType.cs" />

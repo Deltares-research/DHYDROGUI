@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         public override void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
         {
             BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
-                                         "Degrees");
+                                         KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
 
             if (hasConstantValues)
             {
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         public override void Visit(PowerDefinedSpreading powerDefinedSpreading)
         {
             BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
-                                         "Power");
+                                         KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
 
             if (hasConstantValues)
             {
@@ -100,19 +101,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public void Visit(GaussShape gaussShape)
         {
-            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Gauss");
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
             BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
         }
 
         public void Visit(JonswapShape jonswapShape)
         {
-            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Jonswap");
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
             BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
         }
 
         public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
         {
-            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, "Pierson-Moskowitz");
+            BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
         }
 
         public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
