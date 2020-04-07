@@ -15,12 +15,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <see cref="BoundaryWideParametersViewModel"/> defines the view model for the boundary wide parameters view.
     /// </summary>
     /// <seealso cref="INotifyPropertyChanged"/>
-    public class BoundaryWideParametersViewModel : INotifyPropertyChanged
+    /// <seealso cref="IRefreshViewModel"/>
+    public class BoundaryWideParametersViewModel : INotifyPropertyChanged, IRefreshViewModel
     {
         private readonly IWaveBoundaryConditionDefinition observedBoundaryCondition;
         private readonly IViewShapeFactory shapeFactory;
         private readonly IViewDataComponentFactory dataComponentFactory;
-        private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
+        private IAnnounceDataComponentChanged announceDataComponentChanged;
 
         private IViewShape shape;
 
@@ -34,26 +35,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="dataComponentFactory">
         /// <see cref="IViewDataComponentFactory"/> to construct data components with.
         /// </param>
-        /// <param name="announceDataComponentChanged">
-        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
-        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public BoundaryWideParametersViewModel(IWaveBoundaryConditionDefinition observedBoundaryCondition,
                                                IViewShapeFactory shapeFactory,
-                                               IViewDataComponentFactory dataComponentFactory,
-                                               IAnnounceDataComponentChanged announceDataComponentChanged)
+                                               IViewDataComponentFactory dataComponentFactory)
         {
             Ensure.NotNull(observedBoundaryCondition, nameof(observedBoundaryCondition));
             Ensure.NotNull(shapeFactory, nameof(shapeFactory));
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
-            Ensure.NotNull(announceDataComponentChanged, nameof(announceDataComponentChanged));
 
             this.observedBoundaryCondition = observedBoundaryCondition;
             this.shapeFactory = shapeFactory;
             this.dataComponentFactory = dataComponentFactory;
-            this.announceDataComponentChanged = announceDataComponentChanged;
 
             Shape = this.shapeFactory.ConstructFromShape(observedBoundaryCondition.Shape);
             ShapeTypeList = this.shapeFactory.GetViewShapeTypesList();
@@ -140,14 +135,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
+        /// <summary>
+        /// Gets whether the parameters should be visible.
+        /// </summary>
+        public bool IsVisible => dataComponentFactory.GetAreBoundaryWideParametersVisible(observedBoundaryCondition.DataComponent);
+
+        public void RefreshViewModel()
+        {
+            OnPropertyChanged(string.Empty);
+        }
+
+        /// <summary>
+        /// Sets the mediator on this class that should announce changes.
+        /// </summary>
+        /// <param name="mediator">
+        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
+        /// </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="mediator"/> is <c>null</c>.
+        /// </exception>
+        public void SetMediator(IAnnounceDataComponentChanged mediator)
+        {
+            Ensure.NotNull(mediator, nameof(mediator));
+            announceDataComponentChanged = mediator;
+        }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        internal void RaisePropertyChanged()
-        {
-            OnPropertyChanged(string.Empty);
         }
 
         private static ViewShapeType ToViewShapeType(Type t)

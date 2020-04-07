@@ -109,6 +109,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
+        public bool GetAreBoundaryWideParametersVisible(IBoundaryConditionDataComponent dataComponent)
+        {
+            Ensure.NotNull(dataComponent, nameof(dataComponent));
+
+            switch (dataComponent)
+            {
+                case UniformDataComponent<FileBasedParameters> _:
+                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
         public IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
@@ -212,6 +226,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> dc when newSpreadingType == DirectionalSpreadingViewType.Power:
                     return dataComponentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(dc);
 
+                case UniformDataComponent<FileBasedParameters> dc:
+                    return dc;
+                case SpatiallyVaryingDataComponent<FileBasedParameters> dc:
+                    return dc;
                 default:
                     throw new NotSupportedException("The provided data component and spreading type is not supported.");
             }

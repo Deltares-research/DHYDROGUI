@@ -106,7 +106,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.AddSupportPointCommand, Is.Not.Null);
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
 
-            Assert.That(viewModel, Is.InstanceOf<IRefreshIsEnabledOnDataComponentChanged>());
             Assert.That(viewModel.IsEnabled, Is.True);
 ;        }
 

@@ -58,20 +58,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
                                                               geometryFactory,
                                                               dataComponentModel);
 
-            var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
-                                                                   BoundarySpecificParametersSettingsViewModel);
-
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
-                                                                    dataComponentFactory,
-                                                                    mediator);
+                                                                    dataComponentFactory);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
             BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition,
                                                                                   viewShapeFactory,
-                                                                                  dataComponentFactory,
-                                                                                  mediator);
+                                                                                  dataComponentFactory);
 
-            DescriptionViewModel.PropertyChanged += (sender, args) => BoundaryWideParametersViewModel.RaisePropertyChanged();
+            var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
+                                                                   BoundarySpecificParametersSettingsViewModel,
+                                                                   BoundaryWideParametersViewModel);
+
+            DescriptionViewModel.SetMediator(mediator);
+            BoundaryWideParametersViewModel.SetMediator(mediator);
         }
 
         /// <summary>

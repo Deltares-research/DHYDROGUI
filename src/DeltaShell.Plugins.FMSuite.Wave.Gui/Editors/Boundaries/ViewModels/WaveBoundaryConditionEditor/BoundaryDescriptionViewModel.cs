@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundary observedBoundary;
         private readonly IViewDataComponentFactory dataComponentFactory;
-        private readonly IAnnounceDataComponentChanged announceDataComponentChanged;
+        private IAnnounceDataComponentChanged announceDataComponentChanged;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -30,23 +30,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="dataComponentFactory">
         /// The <see cref="IViewDataComponentFactory"/> used to construct the data components.
         /// </param>
-        /// <param name="announceDataComponentChanged">
-        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
-        /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any of the parameters is <c>null</c>.
         /// </exception>
         public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary,
-                                            IViewDataComponentFactory dataComponentFactory,
-                                            IAnnounceDataComponentChanged announceDataComponentChanged)
+                                            IViewDataComponentFactory dataComponentFactory)
         {
             Ensure.NotNull(observedBoundary, nameof(observedBoundary));
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
-            Ensure.NotNull(announceDataComponentChanged, nameof(announceDataComponentChanged));
 
             this.observedBoundary = observedBoundary;
             this.dataComponentFactory = dataComponentFactory;
-            this.announceDataComponentChanged = announceDataComponentChanged;
         }
 
         /// <summary>
@@ -109,6 +103,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 OnPropertyChanged();
                 announceDataComponentChanged.AnnounceDataComponentChanged();
             }
+        }
+
+        /// <summary>
+        /// Sets the mediator on this class that should announce changes.
+        /// </summary>
+        /// <param name="mediator">
+        /// The <see cref="IAnnounceDataComponentChanged"/> used to signal the data component has changed.
+        /// </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="mediator"/> is <c>null</c>.
+        /// </exception>
+        public void SetMediator(IAnnounceDataComponentChanged mediator)
+        {
+            Ensure.NotNull(mediator, nameof(mediator));
+            announceDataComponentChanged = mediator;
         }
 
         private DirectionalSpreadingViewType GetSpreadingViewType() => dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition.DataComponent);

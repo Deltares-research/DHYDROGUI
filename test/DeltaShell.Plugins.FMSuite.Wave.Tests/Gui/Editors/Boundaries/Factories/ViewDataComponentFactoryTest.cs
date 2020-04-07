@@ -571,6 +571,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
         }
 
+        private static IEnumerable<TestCaseData> GetAreBoundaryWideParametersVisibleData()
+        {
+            yield return new TestCaseData(Substitute.For<IBoundaryConditionDataComponent>(), true);
+
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), false);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), false);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetAreBoundaryWideParametersVisibleData))]
+        public void GetAreBoundaryWideParametersVisible_ExpectedResults(IBoundaryConditionDataComponent dataComponent, bool expectedVisibility)
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
+
+            // Call
+            bool result = factory.GetAreBoundaryWideParametersVisible(dataComponent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedVisibility));
+        }
+
+        [Test]
+        public void GetAreBoundaryWideParametersVisible_DataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var modelDataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
+
+            // Call | Assert
+            void Call() => factory.GetAreBoundaryWideParametersVisible(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
+        }
+
         private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData()
         {
             yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())), 
@@ -593,6 +631,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                                           DirectionalSpreadingViewType.Power);
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), 
                                           DirectionalSpreadingViewType.Degrees);
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), 
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), 
+                                          DirectionalSpreadingViewType.Power);
         }
 
         [Test]

@@ -8,16 +8,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
     [TestFixture]
     public class WaveBoundaryConditionEditorMediatorTest
     {
+        private IRefreshIsEnabledOnDataComponentChanged supportPointEditorViewModel;
+        private IRefreshDataComponentViewModel parametersSettingsViewModel;
+        private IRefreshViewModel refreshViewModel;
+
+        [SetUp]
+        public void SetUp()
+        {
+            supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
+            parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
+            refreshViewModel = Substitute.For<IRefreshViewModel>();
+        }
+
         [Test]
         public void Constructor_ExpectedResults()
         {
-            // Setup
-            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
-            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
-
             // Call
-            var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, 
-                                                                   parametersSettingsViewModel);
+            var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel,
+                                                                   parametersSettingsViewModel,
+                                                                   refreshViewModel);
 
             // Assert
             Assert.That(mediator, Is.InstanceOf<IAnnounceDataComponentChanged>());
@@ -26,41 +35,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         [Test]
         public void Constructor_SupportPointEditorViewModelNull_ThrowsArgumentNullException()
         {
-            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
-            
-            void Call() => new WaveBoundaryConditionEditorMediator(null, parametersSettingsViewModel);
+            void Call() => new WaveBoundaryConditionEditorMediator(null, parametersSettingsViewModel, refreshViewModel);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentIsEnabledDependentViewModel"));
         }
-        
+
         [Test]
         public void Constructor_SpecificParametersSettingsViewModelNull_ThrowsArgumentNullException()
         {
-            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
-
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, null);
+            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, null, refreshViewModel);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentViewModelDependentViewModel"));
         }
 
         [Test]
+        public void Constructor_RefreshViewModelNull_ThrowsArgumentNullException()
+        {
+            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("refreshViewModel"));
+        }
+
+        [Test]
         public void GivenAMediator_WhenDataComponentChangedIsCalled_ThenTheAppropriateObjectsAreNotified()
         {
             // Given 
-            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
-            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
-
-            var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, 
-                                                                   parametersSettingsViewModel);
+            var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel,
+                                                                   parametersSettingsViewModel,
+                                                                   refreshViewModel);
 
             // When
             mediator.AnnounceDataComponentChanged();
 
             // Then
-            supportPointEditorViewModel.Received(1).RefreshIsEnabled();
-            parametersSettingsViewModel.Received(1).RefreshDataComponentViewModel();
+            Received.InOrder(() =>
+            {
+                parametersSettingsViewModel.RefreshDataComponentViewModel();
+                supportPointEditorViewModel.RefreshIsEnabled();
+                refreshViewModel.RefreshViewModel();
+            });
         }
     }
 }

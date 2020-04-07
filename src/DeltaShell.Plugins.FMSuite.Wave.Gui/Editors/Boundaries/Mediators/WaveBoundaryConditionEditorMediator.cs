@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
     {
         private readonly IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel;
         private readonly IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel;
+        private readonly IRefreshViewModel refreshViewModel;
 
         /// <summary>
         /// Creates a new <see cref="WaveBoundaryConditionEditorMediator"/>.
@@ -24,20 +25,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public WaveBoundaryConditionEditorMediator(IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel,
-                                                   IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel)
+                                                   IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel,
+                                                   IRefreshViewModel refreshViewModel)
 
         {
             Ensure.NotNull(dataComponentIsEnabledDependentViewModel, nameof(dataComponentIsEnabledDependentViewModel));
             Ensure.NotNull(dataComponentViewModelDependentViewModel, nameof(dataComponentViewModelDependentViewModel));
+            Ensure.NotNull(refreshViewModel, nameof(refreshViewModel));
 
             this.dataComponentIsEnabledDependentViewModel = dataComponentIsEnabledDependentViewModel;
             this.dataComponentViewModelDependentViewModel = dataComponentViewModelDependentViewModel;
+            this.refreshViewModel = refreshViewModel;
         }
 
         public void AnnounceDataComponentChanged()
         {
             dataComponentViewModelDependentViewModel.RefreshDataComponentViewModel();
             dataComponentIsEnabledDependentViewModel.RefreshIsEnabled();
+            refreshViewModel.RefreshViewModel();
         }
     }
 }

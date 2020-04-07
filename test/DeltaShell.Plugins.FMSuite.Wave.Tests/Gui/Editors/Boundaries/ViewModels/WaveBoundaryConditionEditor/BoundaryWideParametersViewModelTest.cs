@@ -39,17 +39,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             dataComponentFactory.GetDirectionalSpreadingViewType(dataComponent)
                                 .Returns(DirectionalSpreadingViewType.Degrees);
 
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
-
             // Call
             var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
                                                                 shapeFactory,
-                                                                dataComponentFactory,
-                                                                announceDataComponentChanged);
+                                                                dataComponentFactory);
 
             // Assert
             shapeFactory.Received(1).ConstructFromShape(modelShape);
 
+            Assert.That(viewModel, Is.InstanceOf<INotifyPropertyChanged>());
+            Assert.That(viewModel, Is.InstanceOf<IRefreshViewModel>());
             Assert.That(viewModel.ShapeType, Is.EqualTo(typeof(GaussViewShape)));
             Assert.That(viewModel.Shape, Is.SameAs(viewShape));
             Assert.That(viewModel.PeriodType, Is.EqualTo(PeriodViewType.Mean));
@@ -62,13 +61,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var shapeFactory = Substitute.For<IViewShapeFactory>();
             var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
             void Call() => new BoundaryWideParametersViewModel(null,
                                                                shapeFactory,
-                                                               dataComponentFactory,
-                                                               announceDataComponentChanged);
+                                                               dataComponentFactory);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
@@ -83,18 +80,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
             void Call() => new BoundaryWideParametersViewModel(boundaryCondition,
                                                                null,
-                                                               dataComponentFactory,
-                                                               announceDataComponentChanged);
+                                                               dataComponentFactory);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
             Assert.That(exception.ParamName, Is.EqualTo("shapeFactory"),
+                        "Expected a different ParamName:");
+        }
+
+        [Test]
+        public void SetMediator_AnnounceDataComponentChangedNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            var shapeFactory = Substitute.For<IViewShapeFactory>();
+
+            var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
+                                                                shapeFactory,
+                                                                dataComponentFactory);
+
+            // Call
+            void Call() => viewModel.SetMediator(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
+            // Assert
+            Assert.That(exception.ParamName, Is.EqualTo("mediator"),
                         "Expected a different ParamName:");
         }
 
@@ -371,7 +387,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             };
 
             // Call
-            viewModel.RaisePropertyChanged();
+            viewModel.RefreshViewModel();
 
             // Assert
             Assert.That(propertyChangedRaised, Is.True);
@@ -457,8 +473,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
                 ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition,
                                                                 ShapeFactory,
-                                                                DataComponentFactory,
-                                                                AnnounceDataComponentChanged);
+                                                                DataComponentFactory);
+                ViewModel.SetMediator(AnnounceDataComponentChanged);
                 ViewModel.PropertyChanged += OnPropertyChanged;
 
                 return this;

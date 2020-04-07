@@ -63,14 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_GeometryFactoryNull_ThrowsArgumentNullException()
         {
             // Setup
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-
-            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             // Call
-            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, null, referenceTimeProvider);
+            void Call() => new WaveBoundaryConditionEditorViewModel(CreateBoundary(), null, referenceTimeProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -83,31 +79,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-
-            var boundary = new WaveBoundary("boundary", geometricDefinition, conditionDefinition);
-
-            void Call() => new WaveBoundaryConditionEditorViewModel(boundary, factory, null);
+            void Call() => new WaveBoundaryConditionEditorViewModel(CreateBoundary(), factory, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
-        }
-
-        [Test]
-        public void GivenWaveBoundaryConditionEditorViewModel_WhenViewModelRaisesPropertyChanged_ThenBoundaryWideParameterPropertyChangedEventRaised()
-        {
-            // Given
-            var viewModel = new WaveBoundaryConditionEditorViewModel(CreateBoundary(), Substitute.For<IWaveBoundaryGeometryFactory>(), Substitute.For<IReferenceDateTimeProvider>());
-            var propertyChangedRaised = false;
-            viewModel.BoundaryWideParametersViewModel.PropertyChanged += (sender, args) => propertyChangedRaised = true;
-
-            // When
-            viewModel.DescriptionViewModel.Name = "new name";
-
-            // Then
-            Assert.That(propertyChangedRaised, Is.True);
         }
 
         private static WaveBoundary CreateBoundary()

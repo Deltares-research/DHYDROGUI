@@ -50,10 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
                                                                      expectedForcingType, 
                                                                      expectedSpatialDefinition);
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
 
             // Assert
             Assert.That(viewModel.Name, Is.EqualTo(expectedName), 
@@ -69,10 +68,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var factory = Substitute.For<IViewDataComponentFactory>();
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryDescriptionViewModel(null, factory, announceDataComponentChanged);
+            void Call() => new BoundaryDescriptionViewModel(null, factory);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
@@ -85,10 +83,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var boundary = Substitute.For<IWaveBoundary>();
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             // Call
-            void Call() => new BoundaryDescriptionViewModel(boundary, null, announceDataComponentChanged);
+            void Call() => new BoundaryDescriptionViewModel(boundary, null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
@@ -97,18 +94,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void Constructor_AnnounceDataComponentChangedNull_ThrowsArgumentNullException()
+        public void SetMediator_AnnounceDataComponentChangedNull_ThrowsArgumentNullException()
         {
             // Setup
             var boundary = Substitute.For<IWaveBoundary>();
             var factory = Substitute.For<IViewDataComponentFactory>();
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
 
             // Call
-            void Call() => new BoundaryDescriptionViewModel(boundary, factory, null);
+            void Call() => viewModel.SetMediator(null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
             // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("announceDataComponentChanged"),
+            Assert.That(exception.ParamName, Is.EqualTo("mediator"),
                         "Expected a different ParamName:");
         }
 
@@ -122,9 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
                                                                      ForcingViewType.Constant,
                                                                      SpatialDefinitionViewType.SpatiallyVarying);
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
@@ -148,9 +145,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IViewDataComponentFactory factory = GetConfiguredFactory(boundary.ConditionDefinition.DataComponent,
                                                                      ForcingViewType.Constant,
                                                                      SpatialDefinitionViewType.SpatiallyVarying);
-            var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
@@ -185,8 +181,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
-            
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            viewModel.SetMediator(announceDataComponentChanged);
+
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
@@ -214,7 +211,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                      SpatialDefinitionViewType.SpatiallyVarying);
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            viewModel.SetMediator(announceDataComponentChanged);
             
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
@@ -248,7 +246,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            viewModel.SetMediator(announceDataComponentChanged);
             
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
@@ -277,7 +276,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                      SpatialDefinitionViewType.SpatiallyVarying);
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
-            var viewModel = new BoundaryDescriptionViewModel(boundary, factory, announceDataComponentChanged);
+            var viewModel = new BoundaryDescriptionViewModel(boundary, factory);
+            viewModel.SetMediator(announceDataComponentChanged);
             
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
