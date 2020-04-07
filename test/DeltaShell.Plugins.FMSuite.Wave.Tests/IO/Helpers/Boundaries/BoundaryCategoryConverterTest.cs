@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private double RandomDouble => Math.Round(random.NextDouble(), 3);
 
         [Test]
-        public void Converter_BoundaryCategoryNull_ThrowsArgumentNullException()
+        public void Convert_BoundaryCategoryNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => BoundaryCategoryConverter.Convert(null);

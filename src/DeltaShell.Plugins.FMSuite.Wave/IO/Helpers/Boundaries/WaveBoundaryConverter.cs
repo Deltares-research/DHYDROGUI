@@ -26,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         private readonly IImportBoundaryConditionDataComponentFactory importDataComponentFactory;
         private readonly IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory;
 
+        private const double doublePrecision = 1E-5;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveBoundaryConverter"/> class.
         /// </summary>
@@ -154,12 +156,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             if (IsSpatiallyVariant(boundaryBlock))
             {
                 IEnumerable<SupportPoint> supportPoints = boundaryBlock.Distances
-                                                                       .Select(d => GetByDistance(geometricDefinition, d));
+                                                                       .Select(d => GetSupportPointWithDistance(geometricDefinition, d));
 
                 if (IsTimeDependent(functions))
                 {
                     IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<TSpreading>>> data =
-                        supportPoints.Zip(functions.Select(FromFunction<TSpreading>), Tuple.Create);
+                        supportPoints.Zip(functions.Select(CreateWaveEnergyFunction<TSpreading>), Tuple.Create);
                     return importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent(data);
                 }
                 else
@@ -172,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             if (IsTimeDependent(functions))
             {
-                IWaveEnergyFunction<TSpreading> data = FromFunction<TSpreading>(functions.First());
+                IWaveEnergyFunction<TSpreading> data = CreateWaveEnergyFunction<TSpreading>(functions.First());
                 return importDataComponentFactory.CreateUniformTimeDependentComponent(data);
             }
             else
@@ -193,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private static IWaveEnergyFunction<TSpreading> FromFunction<TSpreading>(IFunction function)
+        private static IWaveEnergyFunction<TSpreading> CreateWaveEnergyFunction<TSpreading>(IFunction function)
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             IEnumerable<DateTime> times = GetFunctionValues<DateTime>(
@@ -272,14 +274,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private static SupportPoint GetByDistance(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
+        private static SupportPoint GetSupportPointWithDistance(IWaveBoundaryGeometricDefinition geometricDefinition,
+                                                                double d)
         {
             return geometricDefinition.SupportPoints.FirstOrDefault(s => DoubleEquals(s.Distance, d));
         }
 
         private static bool DoubleEquals(double valueA, double valueB)
         {
-            return Math.Abs(valueA - valueB) < 0.00001;
+            return Math.Abs(valueA - valueB) < doublePrecision;
         }
 
         private static bool Exists(IEnumerable<double> values, double value)

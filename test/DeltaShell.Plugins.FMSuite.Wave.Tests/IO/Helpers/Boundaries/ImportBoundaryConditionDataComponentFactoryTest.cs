@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
 
             TimeDependentParameters<T> timeDependentParameters = GetExpectedTimeDependentParameters(
-                parametersFactory, out WaveEnergyFunction<T> waveEnergyFunction);
+                parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction);
 
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
 
@@ -181,11 +181,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             var supportPoint1 = new SupportPoint(random.NextDouble(), geometricDefinition);
             TimeDependentParameters<T> timeDependentParameters1 = GetExpectedTimeDependentParameters(
-                parametersFactory, out WaveEnergyFunction<T> waveEnergyFunction1);
+                parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction1);
 
             var supportPoint2 = new SupportPoint(random.NextDouble(), geometricDefinition);
             TimeDependentParameters<T> timeDependentParameters2 = GetExpectedTimeDependentParameters(
-                parametersFactory, out WaveEnergyFunction<T> waveEnergyFunction2);
+                parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction2);
 
             Tuple<SupportPoint, IWaveEnergyFunction<T>>[] dataPerSupportPoint =
             {
@@ -223,9 +223,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         private static TimeDependentParameters<T> GetExpectedTimeDependentParameters(
-            IBoundaryParametersFactory parametersFactory, out WaveEnergyFunction<T> waveEnergyFunction)
+            IBoundaryParametersFactory parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction)
         {
-            waveEnergyFunction = new WaveEnergyFunction<T>();
+            waveEnergyFunction = Substitute.For<IWaveEnergyFunction<T>>();
             var timeDependentParameters = new TimeDependentParameters<T>(waveEnergyFunction);
 
             parametersFactory.ConstructTimeDependentParameters(waveEnergyFunction)

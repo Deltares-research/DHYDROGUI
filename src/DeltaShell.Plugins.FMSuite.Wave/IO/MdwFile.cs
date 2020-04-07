@@ -645,7 +645,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             CurvilinearGrid grid = modelDefinition.OuterDomain.Grid;
             if (grid.IsEmpty)
             {
-                Log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_the_outer_grid_is_empty_);
+                Log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected);
                 return;
             }
 

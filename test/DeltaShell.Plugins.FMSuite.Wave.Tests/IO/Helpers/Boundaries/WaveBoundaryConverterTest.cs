@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private readonly ShapeEqualityComparer shapeComparer = new ShapeEqualityComparer();
         private readonly IBoundaryParametersFactory parametersFactory = new BoundaryParametersFactory();
 
+        private const double doublePrecision = 1E-5;
+
         public WaveBoundaryConverterTest(SpreadingType spreadingType)
         {
             this.spreadingType = spreadingType;
@@ -94,9 +96,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_UniformConstantBoundaryData_ReturnsCorrectResult(ShapeType shapeType, PeriodType periodType, IBoundaryConditionShape expectedShape,
-                                                                             BoundaryConditionPeriodType expectedPeriod,
-                                                                             double gaussianSpreading, double peakEnhancementFactor)
+        public void Convert_UniformConstantBoundaryData_ReturnsCorrectUniformConstantWaveBoundary(
+            ShapeType shapeType, PeriodType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
         {
             // Setup
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
@@ -131,9 +135,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_UniformTimeDependentBoundaryData_ReturnsCorrectResult(ShapeType shapeType, PeriodType periodType, IBoundaryConditionShape expectedShape,
-                                                                                  BoundaryConditionPeriodType expectedPeriod,
-                                                                                  double gaussianSpreading, double peakEnhancementFactor)
+        public void Convert_UniformTimeDependentBoundaryData_ReturnsCorrectUniformTimeDependentWaveBoundary(
+            ShapeType shapeType, PeriodType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
         {
             // Setup
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
@@ -170,9 +176,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_SpatiallyVaryingConstantBoundaryData_ReturnsCorrectResult(ShapeType shapeType, PeriodType periodType, IBoundaryConditionShape expectedShape,
-                                                                                      BoundaryConditionPeriodType expectedPeriod,
-                                                                                      double gaussianSpreading, double peakEnhancementFactor)
+        public void Convert_SpatiallyVaryingConstantBoundaryData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+            ShapeType shapeType, PeriodType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
         {
             // Setup
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
@@ -215,9 +223,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_SpatiallyVaryingTimeDependentBoundaryData_ReturnsCorrectResult(ShapeType shapeType, PeriodType periodType, IBoundaryConditionShape expectedShape,
-                                                                                           BoundaryConditionPeriodType expectedPeriod,
-                                                                                           double gaussianSpreading, double peakEnhancementFactor)
+        public void Convert_SpatiallyVaryingTimeDependentBoundaryData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
+            ShapeType shapeType, PeriodType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
         {
             // Setup
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
@@ -289,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_BoundaryDataWithoutCoordinatesDefinition_IsSkipped()
+        public void Convert_BoundaryDataWithDefinitionThatIsNotXYCoordinates_IsSkipped()
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -407,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static bool DoubleEquals(double valueA, double valueB)
         {
-            return Math.Abs(valueA - valueB) < 0.00001;
+            return Math.Abs(valueA - valueB) < doublePrecision;
         }
 
         private static IFunction CreateTimeSeriesFunction(BcwTestValues values, int i)
