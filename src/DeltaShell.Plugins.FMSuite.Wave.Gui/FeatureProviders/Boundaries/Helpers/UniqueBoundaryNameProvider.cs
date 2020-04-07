@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -25,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// <paramref name="boundaryContainer"/>.
         /// </summary>
         /// <param name="boundaryContainer">The boundary container.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="boundaryContainer"/> is <c>null</c>.
         /// </exception>
         public UniqueBoundaryNameProvider(IBoundaryContainer boundaryContainer)
