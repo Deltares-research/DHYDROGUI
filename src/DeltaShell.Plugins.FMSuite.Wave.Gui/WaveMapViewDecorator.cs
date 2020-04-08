@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;

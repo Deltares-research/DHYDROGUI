@@ -350,11 +350,11 @@
     <Compile Include="Editors\WaveTimePointEditor.Designer.cs">
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryEndPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
-    <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainer.cs" />
-    <Compile Include="FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundarySupportPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Containers\IBoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IUniqueBoundaryNameProvider.cs" />

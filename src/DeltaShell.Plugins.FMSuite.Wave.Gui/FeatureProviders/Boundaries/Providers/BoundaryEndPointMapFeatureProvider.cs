@@ -10,7 +10,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers
 {
     /// <summary>
     /// <see cref="BoundaryEndPointMapFeatureProvider"/> is responsible for

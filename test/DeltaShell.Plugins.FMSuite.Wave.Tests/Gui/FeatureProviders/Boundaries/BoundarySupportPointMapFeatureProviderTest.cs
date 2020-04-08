@@ -2,7 +2,6 @@
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NSubstitute;
@@ -13,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Api;
 

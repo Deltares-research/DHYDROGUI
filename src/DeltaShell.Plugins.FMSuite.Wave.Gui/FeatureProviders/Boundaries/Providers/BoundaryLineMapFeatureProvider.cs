@@ -11,7 +11,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers
 {
     /// <summary>
     /// <see cref="BoundaryLineMapFeatureProvider"/> is responsible for showing

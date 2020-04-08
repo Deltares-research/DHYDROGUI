@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCompon
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Api;
 
