@@ -154,7 +154,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
         [EditAction]
-        protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
         {
             if (CrossSectionDefinitionName == null)
             {
@@ -166,10 +166,8 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (crossSectionDefinition != null)
                 {
                     var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
-                    pipeCrossSection.Name = "SewerProfile_0";
-                    //pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
+                    pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
                     pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
-                    helper?.PipeCrossSections.Add(pipeCrossSection);
                     CrossSection = pipeCrossSection;
                     CrossSectionDefinitionName = crossSection.Definition.Name;
                     
