@@ -284,11 +284,11 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModelTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryEndPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryLineMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainerTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundarySupportPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactoryTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Helpers\UniqueBoundaryNameProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelperTest.cs" />

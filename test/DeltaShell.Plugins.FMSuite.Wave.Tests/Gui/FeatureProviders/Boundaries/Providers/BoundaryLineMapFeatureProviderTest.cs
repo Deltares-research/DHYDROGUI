@@ -13,7 +13,7 @@ using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Providers
 {
     [TestFixture]
     public class BoundaryLineMapFeatureProviderTest

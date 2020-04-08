@@ -1,22 +1,22 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
-using NSubstitute;
-using NUnit.Framework;
-using SharpMap.Data.Providers;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NSubstitute;
+using NUnit.Framework;
 using SharpMap.Api;
+using SharpMap.Data.Providers;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Providers
 {
     [TestFixture]
     public class BoundarySupportPointMapFeatureProviderTest
