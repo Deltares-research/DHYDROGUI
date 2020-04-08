@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Windows;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -24,16 +22,14 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.LayerPropertiesEditor;
 using GeoAPI.Extensions.Coverages;
-using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
 using SharpMap.UI.Forms;
-using SharpTestsEx;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
@@ -44,8 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Category(TestCategory.WindowsForms)]
         public void ShowGatedWeirInPropertyGrid()
         {
-            var mockrepos = new MockRepository();
-            var guiMock = mockrepos.Stub<IGui>();
+            var guiMock = Substitute.For<IGui>();
 
             var grid = new PropertyGrid(guiMock)
             {
@@ -60,60 +55,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             };
 
             WindowsFormsTestHelper.ShowModal(grid);
-        }
-
-        [Test]
-        [Ignore("Some strange bug, hangs")]
-        [Category(TestCategory.Wpf)]
-        public void CheckIfHydroNetworkEditorViewContextIsRestoredAfterViewIsClosed()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                IApplication app = gui.Application;
-
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-
-                gui.Run();
-
-                Project project = app.Project;
-
-                // add data
-                var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-                project.RootFolder.Add(network);
-
-                // show gui main window
-                var mainWindow = (Window) gui.MainWindow;
-
-                // wait until gui starts
-                Action mainWindowShown = delegate
-                {
-                    LogHelper.SetLoggingLevel(Level.Debug);
-
-                    IDataItem networkDataItem = project.RootFolder.DataItems.First();
-                    gui.CommandHandler.OpenView(networkDataItem);
-
-                    ProjectItemMapView networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                    networkEditor.MapView.Map.Layers.Add(new GroupLayer {Name = "test group layer"});
-
-                    // close view
-                    gui.DocumentViews.Clear();
-
-                    // reopening view should restore view context
-                    gui.CommandHandler.OpenView(networkDataItem);
-
-                    networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-
-                    networkEditor.MapView.Map.Layers.Count.Should(
-                                     "map should contain 2 layers, network and group layer (remembered as part of a view context)")
-                                 .Be.EqualTo(2);
-
-                    // now remove network from the project
-                    project.RootFolder.Items.Remove(networkDataItem);
-                };
-
-                WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
-            }
         }
 
         [Test] //TOOLS-6594
