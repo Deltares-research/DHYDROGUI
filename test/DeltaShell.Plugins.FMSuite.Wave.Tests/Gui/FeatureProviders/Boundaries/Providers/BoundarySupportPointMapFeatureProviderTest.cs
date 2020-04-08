@@ -22,14 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
     public class BoundarySupportPointMapFeatureProviderTest
     {
         private readonly Random random = new Random();
-        private IBoundaryContainer boundaryContainer;
+        private IBoundaryProvider boundaryProvider;
         private IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
         private ICoordinateSystem coordinateSystem;
 
         [SetUp]
         public void SetUp()
         {
-            boundaryContainer = Substitute.For<IBoundaryContainer>();
+            boundaryProvider = Substitute.For<IBoundaryProvider>();
             waveBoundaryGeometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             coordinateSystem = Substitute.For<ICoordinateSystem>();
         }
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Constructor_ExpectedValues()
         {
             // Call
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
@@ -60,14 +60,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("boundaryContainer"));
+            Assert.That(exception, Has.Property("ParamName").EqualTo("boundaryProvider"));
         }
 
         [Test]
         public void Constructor_GeometryFactoryNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            void Call() => new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                       coordinateSystem,
                                                                       null);
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         public void AddGeometry_Add_IFeature_ThrowsNotSupportedException()
         {
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
@@ -98,14 +98,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             IWaveBoundary boundary = CreateBoundary();
-            boundaryContainer.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
+            boundaryProvider.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
 
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
             var geometry = Substitute.For<IPoint>();
             waveBoundaryGeometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
 
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
@@ -121,19 +121,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         [Category(TestCategory.Integration)]
         [TestCaseSource(nameof(RemoveBoundaryCalls))]
-        public void GivenABoundarySupportPointMapFeatureProvider_WhenABoundaryIsRemovedFromTheBoundaryContainerAndNewSupportPointIsAdded_ThenFeaturesChangedIsNotCalled(Action<IBoundaryContainer> removeBoundary)
+        public void GivenABoundarySupportPointMapFeatureProvider_WhenABoundaryIsRemovedFromTheBoundaryContainerAndNewSupportPointIsAdded_ThenFeaturesChangedIsNotCalled(Action<IBoundaryProvider> removeBoundary)
         {
             // Setup
             IWaveBoundary boundary = CreateBoundary();
-            boundaryContainer.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
+            boundaryProvider.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
 
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
-                removeBoundary.Invoke(boundaryContainer);
+                removeBoundary.Invoke(boundaryProvider);
 
                 // Call
                 void Call() => boundary.GeometricDefinition.SupportPoints.Add(supportPoint);
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             }
         }
 
-        private IEnumerable<Action<IBoundaryContainer>> RemoveBoundaryCalls()
+        private IEnumerable<Action<IBoundaryProvider>> RemoveBoundaryCalls()
         {
             yield return bc => bc.Boundaries.Clear();
             yield return bc => bc.Boundaries.RemoveAt(0);
@@ -157,18 +157,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             IWaveBoundary boundary = CreateBoundary();
 
-            boundaryContainer.Boundaries.Returns(new EventedList<IWaveBoundary>());
+            boundaryProvider.Boundaries.Returns(new EventedList<IWaveBoundary>());
 
             var supportPoint = new SupportPoint(random.NextDouble(), boundary.GeometricDefinition);
 
             var geometry = Substitute.For<IPoint>();
             waveBoundaryGeometryFactory.ConstructBoundarySupportPoint(supportPoint).Returns(geometry);
 
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
-                boundaryContainer.Boundaries.Add(boundary);
+                boundaryProvider.Boundaries.Add(boundary);
 
                 // Precondition
                 Assert.That(featureProvider.Features, Is.Empty);
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var feature = Substitute.For<IFeature>();
 
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var features = Substitute.For<IList>();
 
-            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                                                     coordinateSystem,
                                                                                     waveBoundaryGeometryFactory))
             {

@@ -34,34 +34,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     public class BoundarySupportPointMapFeatureProvider : Feature2DCollection
     {
         private readonly MultiIEventedListAdapter<SupportPoint, SupportPointFeature> pointFeatures;
-        private readonly IBoundaryContainer boundaryContainer;
+        private readonly IBoundaryProvider boundaryProvider;
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundarySupportPointMapFeatureProvider"/> class.
         /// </summary>
-        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public BoundarySupportPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
+        public BoundarySupportPointMapFeatureProvider(IBoundaryProvider boundaryProvider,
                                                       ICoordinateSystem coordinateSystem,
                                                       IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
 
             CoordinateSystem = coordinateSystem;
 
-            this.boundaryContainer = boundaryContainer;
+            this.boundaryProvider = boundaryProvider;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
             pointFeatures = new MultiIEventedListAdapter<SupportPoint, SupportPointFeature>(ObtainSupportPointFromFeature,
                                                                                             CreateSupportPointFeature);
 
-            RegisterBoundaries(boundaryContainer.Boundaries);
+            RegisterBoundaries(boundaryProvider.Boundaries);
             SubscribeToEventing();
         }
 
@@ -99,13 +99,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         private void SubscribeToEventing()
         {
             pointFeatures.CollectionChanged += OnFeaturesCollectionChanged;
-            boundaryContainer.Boundaries.CollectionChanged += OnBoundariesCollectionChanged;
+            boundaryProvider.Boundaries.CollectionChanged += OnBoundariesCollectionChanged;
         }
 
         private void UnsubscribeFromEventing()
         {
             pointFeatures.CollectionChanged -= OnFeaturesCollectionChanged;
-            boundaryContainer.Boundaries.CollectionChanged -= OnBoundariesCollectionChanged;
+            boundaryProvider.Boundaries.CollectionChanged -= OnBoundariesCollectionChanged;
         }
 
         private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         {
             if (disposing)
             {
-                DeregisterBoundaries(boundaryContainer.Boundaries);
+                DeregisterBoundaries(boundaryProvider.Boundaries);
                 UnsubscribeFromEventing();
             }
         }
