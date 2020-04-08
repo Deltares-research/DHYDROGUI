@@ -29,19 +29,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
             this.factory = factory;
         }
 
-        public bool CanCreateLayerFor(object sourceData, object parentData)
-        {
-            return sourceData is BoundaryMapFeaturesContainer &&
-                   parentData is IWaveModel;
-        }
+        public bool CanCreateLayerFor(object sourceData, object parentData) =>
+            sourceData is BoundaryMapFeaturesContainer &&
+            parentData is IWaveModel;
 
-        public ILayer CreateLayer(object sourceData, object parentData)
-        {
-            return sourceData is BoundaryMapFeaturesContainer container &&
-                   parentData is IWaveModel model 
-                       ? factory.CreateBoundaryLayer(container, model) 
-                       : null;
-        }
+        public ILayer CreateLayer(object sourceData, object parentData) =>
+            sourceData is BoundaryMapFeaturesContainer container &&
+            parentData is IWaveModel model 
+                ? factory.CreateBoundaryLayer(container) 
+                : null;
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
         {

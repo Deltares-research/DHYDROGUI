@@ -350,8 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var factory = new WaveLayerFactory();
 
             // Call
-            ILayer layer = factory.CreateBoundaryLayer(featureProviderContainer, 
-                                                                model);
+            ILayer layer = factory.CreateBoundaryLayer(featureProviderContainer);
 
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
                         $"Expected the result to be an instance of {nameof(GroupLayer)}");
@@ -392,30 +391,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             var factory = new WaveLayerFactory();
 
             // Call
-            void Call() => factory.CreateBoundaryLayer(null, model);
+            void Call() => factory.CreateBoundaryLayer(null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("featuresProviderContainer"));
-        }
-
-        [Test]
-        public void CreateBoundaryLayer_ModelNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
-            var coordinateSystem = Substitute.For<ICoordinateSystem>();
-
-            var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
-                                                                            coordinateSystem);
-            var factory = new WaveLayerFactory();
-
-            // Call
-            void Call() => factory.CreateBoundaryLayer(featureProviderContainer, null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("model"));
         }
 
         private static void AssertCorrectSupportPointsLayer(ILayer supportPointsLayer,

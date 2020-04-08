@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected override object GetInvalidParentData() => null;
 
         protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateBoundaryLayer(container, model);
+            FactoryMock.CreateBoundaryLayer(container);
 
         [Test]
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()

@@ -179,33 +179,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        public ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer,
-                                          IWaveModel model)
+        public ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer)
         {
             Ensure.NotNull(featuresProviderContainer, nameof(featuresProviderContainer));
-            Ensure.NotNull(model, nameof(model));
 
             var groupLayer = new GroupLayer(WaveLayerNames.SpatiallyVaryingBoundaryLayerName)
             {
                 LayersReadOnly = false,
             };
 
-            groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer, model));
+            groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer));
 
             return groupLayer;
         }
 
-        private static IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer, 
-                                                                IWaveModel model)
+        private static IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
         {
-            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider,
-                                                  model);
+            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider);
             yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
-            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider,
-                                                 model);
+            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider);
         }
 
-        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider, IWaveModel model)
+        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider)
         {
             return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
             {
@@ -223,8 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider,
-                                                      IWaveModel model)
+        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider)
         {
             var lineDataLayer = new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
             {
@@ -236,7 +230,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 
                 Style = new VectorStyle
                 {
-                    // TODO: Figure out whether we want to make these configurable, or whether we want to define a set of predefined values
                     Line = new Pen(Color.Blue, 3f),
                     GeometryType = typeof(ILineString)
                 },

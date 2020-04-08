@@ -118,14 +118,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Creates the boundary group layer.
         /// </summary>
         /// <param name="featuresProviderContainer">The features container.</param>
-        /// <param name="model">The model.</param>
         /// <returns>
         /// A new boundary group layer.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer,
-                                   IWaveModel model);
+        ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer);
     }
 }
