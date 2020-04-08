@@ -974,7 +974,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 // Assert
                 List<string> warningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
                 Assert.That(warningMessages, Has.Count.EqualTo(1));
-                Assert.That(warningMessages[0], Is.EqualTo("Boundaries cannot be imported, because the outer grid is empty."));
+                Assert.That(warningMessages[0], Is.EqualTo("Boundaries cannot be imported, because there is no grid detected."));
             }
         }
 
