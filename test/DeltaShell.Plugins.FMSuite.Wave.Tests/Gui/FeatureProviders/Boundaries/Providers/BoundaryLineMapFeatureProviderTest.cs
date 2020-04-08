@@ -253,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
-        public void Features_Set_ThrowsNotSupportedExpection()
+        public void Features_Set_ThrowsNotSupportedException()
         {
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
