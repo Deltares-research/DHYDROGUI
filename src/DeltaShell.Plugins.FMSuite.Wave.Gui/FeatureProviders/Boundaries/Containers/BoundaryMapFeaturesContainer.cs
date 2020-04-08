@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Extensions.CoordinateSystems;
+using SharpMap.Api;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers
 {
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
     /// Upon construction the different factories, and FeatureProviders are
     /// created.
     /// </summary>
-    public class BoundaryMapFeaturesContainer
+    public class BoundaryMapFeaturesContainer : IBoundaryMapFeaturesContainer
     {
         /// <summary>
         /// Creates a new <see cref="BoundaryMapFeaturesContainer"/>.
@@ -56,31 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
                                                            geometryFactory);
         }
 
-        /// <summary>
-        /// Gets the <see cref="BoundaryLineMapFeatureProvider"/> of this
-        /// <see cref="BoundaryMapFeaturesContainer"/>.
-        /// </summary>
-        /// <value>
-        /// The boundary line map feature provider.
-        /// </value>
-        public BoundaryLineMapFeatureProvider BoundaryLineMapFeatureProvider { get; }
-
-        /// <summary>
-        /// Gets the <see cref="BoundaryEndPointMapFeatureProvider"/> of this
-        /// <see cref="BoundaryMapFeaturesContainer"/>.
-        /// </summary>
-        /// <value>
-        /// The boundary end point map feature provider.
-        /// </value>
-        public BoundaryEndPointMapFeatureProvider BoundaryEndPointMapFeatureProvider { get; }
-
-        /// <summary>
-        /// Gets the <see cref="SupportPointMapFeatureProvider"/> of this
-        /// <see cref="BoundaryMapFeaturesContainer"/>.
-        /// </summary>
-        /// <value>
-        /// The boundary support point map feature provider.
-        /// </value>
-        public BoundarySupportPointMapFeatureProvider SupportPointMapFeatureProvider { get; }
+        public IFeatureProvider BoundaryLineMapFeatureProvider { get; }
+        public IFeatureProvider BoundaryEndPointMapFeatureProvider { get; }
+        public IFeatureProvider SupportPointMapFeatureProvider { get; }
     }
 }

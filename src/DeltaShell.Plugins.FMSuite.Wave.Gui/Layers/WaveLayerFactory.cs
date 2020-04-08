@@ -10,6 +10,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Interactors;
@@ -204,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                                                  model);
         }
 
-        private static ILayer CreateSupportPointsLayer(BoundarySupportPointMapFeatureProvider featureProvider, IWaveModel model)
+        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider, IWaveModel model)
         {
             return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
             {
@@ -222,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        private static ILayer CreateBoundaryLineLayer(BoundaryLineMapFeatureProvider featureProvider,
+        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider,
                                                       IWaveModel model)
         {
             var lineDataLayer = new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
@@ -244,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return lineDataLayer;
         }
 
-        private static ILayer CreateBoundaryEndPointLayer(BoundaryEndPointMapFeatureProvider featureProvider)
+        private static ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider)
         {
             var endPointsLayer = new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
             {

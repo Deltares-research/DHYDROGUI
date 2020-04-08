@@ -355,6 +355,7 @@
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Containers\IBoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IUniqueBoundaryNameProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IWaveBoundaryFactoryHelper.cs" />
