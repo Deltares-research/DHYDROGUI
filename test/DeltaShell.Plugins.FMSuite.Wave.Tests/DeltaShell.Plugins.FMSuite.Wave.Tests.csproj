@@ -350,6 +350,7 @@
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstantsTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodImportTypeTest.cs" />
