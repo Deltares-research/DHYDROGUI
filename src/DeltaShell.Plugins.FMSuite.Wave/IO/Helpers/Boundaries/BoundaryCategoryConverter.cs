@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static T GetEnumValue<T>(this DelftIniCategory category, string propertyName)
         {
-            return EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName).ToLower());
+            return EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName));
         }
 
         private static double GetDoubleValue(this DelftIniCategory category, string propertyName)
