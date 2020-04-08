@@ -2,7 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Common.Gui.MapView;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui
+namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui.MapView
 {
     [TestFixture]
     public class ActualSizeObserverTest
