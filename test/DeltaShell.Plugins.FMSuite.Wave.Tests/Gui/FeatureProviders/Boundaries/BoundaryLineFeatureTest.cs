@@ -1,4 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 

@@ -351,7 +351,7 @@
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProvider.cs" />
-    <Compile Include="FeatureProviders\Boundaries\BoundaryLineFeature.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProvider.cs" />
@@ -364,7 +364,7 @@
     <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryFactory.cs" />
-    <Compile Include="FeatureProviders\Boundaries\SupportPointFeature.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Features\SupportPointFeature.cs" />
     <Compile Include="FeatureProviders\MultiIEventedListAdapter.cs" />
     <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
     <Compile Include="Forms\WaveSupportPointMode.cs" />

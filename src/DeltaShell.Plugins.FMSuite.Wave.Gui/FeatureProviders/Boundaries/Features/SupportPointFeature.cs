@@ -2,7 +2,7 @@
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features
 {
     /// <summary>
     /// <see cref="SupportPointFeature"/> describes a support point of a <see cref="IWaveBoundaryGeometricDefinition"/>

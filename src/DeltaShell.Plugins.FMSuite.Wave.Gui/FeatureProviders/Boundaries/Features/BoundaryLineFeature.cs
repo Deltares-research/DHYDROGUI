@@ -1,7 +1,7 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using NetTopologySuite.Extensions.Features;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features
 {
     /// <summary>
     /// <see cref="BoundaryLineFeature"/> describes the line of a <see cref="IWaveBoundary"/>
