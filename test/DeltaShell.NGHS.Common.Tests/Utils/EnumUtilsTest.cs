@@ -1,4 +1,5 @@
-﻿using DeltaShell.NGHS.Common.Utils;
+﻿using System;
+using DeltaShell.NGHS.Common.Utils;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.Common.Tests.Utils
@@ -6,11 +7,27 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
     [TestFixture]
     public class EnumUtilsTest
     {
+        [Test]
+        public void GetEnumValueByDescription_DescriptionNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => EnumUtils.GetEnumValueByDescription<TestEnum>(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("description"));
+        }
+
         [TestCase("first_value", TestEnum.A)]
+        [TestCase("First_value", TestEnum.A)]
         [TestCase("second_value", TestEnum.B)]
+        [TestCase("SECOND_value", TestEnum.B)]
         [TestCase("third_value", TestEnum.C)]
+        [TestCase("THIRD_VALUE", TestEnum.C)]
         [TestCase("fourth_value", default(TestEnum))]
-        [TestCase(null, default(TestEnum))]
+        [TestCase("1", default(TestEnum))]
+        [TestCase("2", default(TestEnum))]
+        [TestCase("3", default(TestEnum))]
         [TestCase("", default(TestEnum))]
         public void GetEnumValueByDescription_ReturnsCorrectResult(string description,
                                                                    object expectedResult)
