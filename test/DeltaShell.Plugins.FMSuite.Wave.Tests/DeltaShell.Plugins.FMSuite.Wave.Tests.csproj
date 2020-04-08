@@ -287,7 +287,7 @@
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryLineFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryLineMapFeatureProviderTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\BoundaryMapFeaturesContainerTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainerTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactoryTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Helpers\UniqueBoundaryNameProviderTest.cs" />

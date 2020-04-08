@@ -5,7 +5,7 @@ using GeoAPI.Extensions.CoordinateSystems;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Containers
 {
     [TestFixture]
     public class BoundaryMapFeaturesContainerTest
