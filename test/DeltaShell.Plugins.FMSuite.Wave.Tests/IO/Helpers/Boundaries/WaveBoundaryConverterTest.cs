@@ -324,6 +324,55 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result, Is.Empty);
         }
 
+        [TestCaseSource(nameof(ShapePeriodTestCases))]
+        public void Convert_SpatiallyVaryingConstantBoundaryData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+            ShapeImportType shapeType, PeriodImportType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
+        {
+            // Setup
+            var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+            geometricDefinition.SupportPoints.Add(new SupportPoint(0, geometricDefinition));
+            geometricDefinition.SupportPoints.Add(new SupportPoint(10, geometricDefinition));
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<T>>();
+            importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>(
+                                                                                      p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
+                                      .Returns(spatiallyVaryingDataComponent);
+
+            DelftIniCategory[] categories = { GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues) };
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+                                                  .ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            IWaveBoundary waveBoundary = result[0];
+            Assert.That(waveBoundary.Name, Is.EqualTo("boundary_name"));
+            Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+
+            IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
+            Assert.That(supportPoints, Has.Count.EqualTo(5));
+            Assert.That(supportPoints[0].Distance, Is.EqualTo(0));
+            Assert.That(supportPoints[1].Distance, Is.EqualTo(10));
+            Assert.That(supportPoints[2].Distance, Is.EqualTo(mdwValues.Distances[0]));
+            Assert.That(supportPoints[3].Distance, Is.EqualTo(mdwValues.Distances[1]));
+            Assert.That(supportPoints[4].Distance, Is.EqualTo(mdwValues.Distances[2]));
+
+            IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
+            Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(expectedPeriod));
+            Assert.That(conditionDefinition.DataComponent, Is.SameAs(spatiallyVaryingDataComponent));
+        }
+
         private static IEnumerable<TestCaseData> ShapePeriodTestCases()
         {
             double peakEnhancementFactor = RandomDouble;
