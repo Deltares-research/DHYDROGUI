@@ -3,7 +3,6 @@ using System.Drawing;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -180,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        public ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
+        public ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer,
                                           IWaveModel model)
         {
             Ensure.NotNull(featuresProviderContainer, nameof(featuresProviderContainer));
@@ -196,7 +195,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return groupLayer;
         }
 
-        private static IEnumerable<ILayer> CreateBoundaryLayers(BoundaryMapFeaturesContainer featuresProviderContainer, IWaveModel model)
+        private static IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer, 
+                                                                IWaveModel model)
         {
             yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider,
                                                   model);

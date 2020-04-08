@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        ILayer CreateBoundaryLayer(BoundaryMapFeaturesContainer featuresProviderContainer,
+        ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer,
                                    IWaveModel model);
     }
 }
