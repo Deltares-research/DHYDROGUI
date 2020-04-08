@@ -22,6 +22,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                                 coordinateSystem);
 
             // Assert
+            Assert.That(boundaryMapFeaturesContainer, Is.InstanceOf<IBoundaryMapFeaturesContainer>());
+
             Assert.That(boundaryMapFeaturesContainer.BoundaryEndPointMapFeatureProvider, Is.Not.Null);
             Assert.That(boundaryMapFeaturesContainer.BoundaryLineMapFeatureProvider, Is.Not.Null);
             Assert.That(boundaryMapFeaturesContainer.SupportPointMapFeatureProvider, Is.Not.Null);
