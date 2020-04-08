@@ -29,42 +29,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     public sealed class BoundaryLineMapFeatureProvider : Feature2DCollection
     {
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
-        private readonly IBoundaryContainer boundaryContainer;
+        private readonly IBoundaryProvider boundaryProvider;
         private readonly IWaveBoundaryFactory waveBoundaryFactory;
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
-        // TODO: (MWT) move these to a helper class, so they can be easily tested?
-        private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature)
-        {
-            return new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
-                                                                         boundaryContainer.Boundaries);
-        }
+        private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature) =>
+            new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
+                                                                  boundaryProvider.Boundaries);
 
-        private BoundaryLineFeature CreateBoundaryLineFeature(IWaveBoundary waveBoundary)
-        {
-            return new BoundaryLineFeature()
+        private BoundaryLineFeature CreateBoundaryLineFeature(IWaveBoundary waveBoundary) =>
+            new BoundaryLineFeature()
             {
                 ObservedWaveBoundary = waveBoundary,
                 Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
             };
-        }
 
         /// <summary>
         /// Creates a new <see cref="BoundaryLineMapFeatureProvider"/>.
         /// </summary>
-        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
         /// <param name="waveBoundaryGeometryFactory">The waveBoundaryGeometryFactory.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
-        public BoundaryLineMapFeatureProvider(IBoundaryContainer boundaryContainer, 
+        public BoundaryLineMapFeatureProvider(IBoundaryProvider boundaryProvider, 
                                               ICoordinateSystem coordinateSystem, 
                                               IWaveBoundaryFactory waveBoundaryFactory,
                                               IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
             Ensure.NotNull(waveBoundaryFactory, nameof(waveBoundaryFactory));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
 
@@ -73,11 +68,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
             this.waveBoundaryFactory = waveBoundaryFactory;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
-            this.boundaryContainer = boundaryContainer;
+            this.boundaryProvider = boundaryProvider;
 
             lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
                                                                                             CreateBoundaryLineFeature);
-            lineFeatures.RegisterList(this.boundaryContainer.Boundaries);
+            lineFeatures.RegisterList(this.boundaryProvider.Boundaries);
             SubscribeToEventing();
         }
 
@@ -107,16 +102,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
                 return null;
             }
 
-            boundaryContainer.Boundaries.Add(boundary);
+            boundaryProvider.Boundaries.Add(boundary);
             
             // We do not want to return this here, however the interface requires this (but never uses it).
             return null; 
         }
 
-        public override bool Add(IFeature feature)
-        {
+        public override bool Add(IFeature feature) => 
             throw new NotSupportedException("This is currently not supported, implement when needed.");
-        }
 
         private void SubscribeToEventing()
         {
