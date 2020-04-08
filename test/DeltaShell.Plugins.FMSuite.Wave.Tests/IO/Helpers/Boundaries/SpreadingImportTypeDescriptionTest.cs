@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         protected override IDictionary<SpreadingImportType, string> ExpectedDescriptionForEnumValues =>
             new Dictionary<SpreadingImportType, string>
             {
-                {SpreadingImportType.Degrees, "degrees"},
-                {SpreadingImportType.Power, "power"},
+                {SpreadingImportType.Degrees, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading},
+                {SpreadingImportType.Power, KnownWaveBoundariesFileConstants.PowerDefinedSpreading},
             };
     }
 }

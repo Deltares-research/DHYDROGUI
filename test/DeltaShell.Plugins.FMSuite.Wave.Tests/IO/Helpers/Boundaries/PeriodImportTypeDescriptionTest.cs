@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         protected override IDictionary<PeriodImportType, string> ExpectedDescriptionForEnumValues =>
             new Dictionary<PeriodImportType, string>
             {
-                {PeriodImportType.Mean, "mean"},
-                {PeriodImportType.Peak, "peak"},
+                {PeriodImportType.Mean, KnownWaveBoundariesFileConstants.MeanPeriodType},
+                {PeriodImportType.Peak, KnownWaveBoundariesFileConstants.PeakPeriodType},
             };
     }
 }

@@ -7,10 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public enum DefinitionImportType
     {
-        [Description("xy-coordinates")]
+        [Description(KnownWaveBoundariesFileConstants.CoordinatesDefinitionType)]
         Coordinates,
 
-        [Description("orientation")]
+        [Description(KnownWaveBoundariesFileConstants.OrientationDefinitionType)]
         Oriented
     }
 }

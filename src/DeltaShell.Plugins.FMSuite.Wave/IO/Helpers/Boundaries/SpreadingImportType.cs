@@ -7,10 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public enum SpreadingImportType
     {
-        [Description("degrees")]
+        [Description(KnownWaveBoundariesFileConstants.DegreesDefinedSpreading)]
         Degrees,
 
-        [Description("power")]
+        [Description(KnownWaveBoundariesFileConstants.PowerDefinedSpreading)]
         Power
     }
 }

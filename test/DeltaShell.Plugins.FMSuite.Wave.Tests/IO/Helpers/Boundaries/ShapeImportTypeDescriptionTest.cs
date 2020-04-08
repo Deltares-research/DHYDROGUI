@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         protected override IDictionary<ShapeImportType, string> ExpectedDescriptionForEnumValues =>
             new Dictionary<ShapeImportType, string>
             {
-                {ShapeImportType.Jonswap, "jonswap"},
-                {ShapeImportType.PiersonMoskowitz, "pierson-moskowitz"},
-                {ShapeImportType.Gauss, "gauss"},
+                {ShapeImportType.Jonswap, KnownWaveBoundariesFileConstants.JonswapShape},
+                {ShapeImportType.PiersonMoskowitz, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape},
+                {ShapeImportType.Gauss, KnownWaveBoundariesFileConstants.GaussShape},
             };
     }
 }

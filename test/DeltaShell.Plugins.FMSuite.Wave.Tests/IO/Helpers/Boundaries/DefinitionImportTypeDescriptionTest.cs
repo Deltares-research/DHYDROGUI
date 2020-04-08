@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         protected override IDictionary<DefinitionImportType, string> ExpectedDescriptionForEnumValues =>
             new Dictionary<DefinitionImportType, string>
             {
-                {DefinitionImportType.Coordinates, "xy-coordinates"},
-                {DefinitionImportType.Oriented, "orientation"},
+                {DefinitionImportType.Coordinates, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType},
+                {DefinitionImportType.Oriented, KnownWaveBoundariesFileConstants.OrientationDefinitionType},
             };
     }
 }

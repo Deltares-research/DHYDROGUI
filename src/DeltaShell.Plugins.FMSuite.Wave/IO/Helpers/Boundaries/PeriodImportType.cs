@@ -7,10 +7,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public enum PeriodImportType
     {
-        [Description("mean")]
+        [Description(KnownWaveBoundariesFileConstants.MeanPeriodType)]
         Mean,
 
-        [Description("peak")]
+        [Description(KnownWaveBoundariesFileConstants.PeakPeriodType)]
         Peak
     }
 }

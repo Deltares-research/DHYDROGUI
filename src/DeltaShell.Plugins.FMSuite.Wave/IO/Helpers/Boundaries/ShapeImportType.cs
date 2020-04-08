@@ -7,13 +7,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public enum ShapeImportType
     {
-        [Description("gauss")]
+        [Description(KnownWaveBoundariesFileConstants.GaussShape)]
         Gauss,
 
-        [Description("jonswap")]
+        [Description(KnownWaveBoundariesFileConstants.JonswapShape)]
         Jonswap,
 
-        [Description("pierson-moskowitz")]
+        [Description(KnownWaveBoundariesFileConstants.PiersonMoskowitzShape)]
         PiersonMoskowitz
     }
 }
