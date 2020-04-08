@@ -353,7 +353,7 @@
     <Compile Include="FeatureProviders\Boundaries\BoundaryEndPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundaryLineMapFeatureProvider.cs" />
-    <Compile Include="FeatureProviders\Boundaries\BoundaryMapFeaturesContainer.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainer.cs" />
     <Compile Include="FeatureProviders\Boundaries\BoundarySupportPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Helpers\IUniqueBoundaryNameProvider.cs" />

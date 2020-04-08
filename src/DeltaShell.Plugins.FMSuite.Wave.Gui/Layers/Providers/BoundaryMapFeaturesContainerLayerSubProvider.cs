@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers

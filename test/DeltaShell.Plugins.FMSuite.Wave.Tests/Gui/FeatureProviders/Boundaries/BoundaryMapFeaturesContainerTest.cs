@@ -1,6 +1,6 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using GeoAPI.Extensions.CoordinateSystems;
 using NSubstitute;
 using NUnit.Framework;

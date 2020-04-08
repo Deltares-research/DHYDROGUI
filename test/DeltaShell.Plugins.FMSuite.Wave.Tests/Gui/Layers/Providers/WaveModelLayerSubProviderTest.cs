@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;

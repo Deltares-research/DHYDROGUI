@@ -7,7 +7,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using GeoAPI.Extensions.CoordinateSystems;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers
 {
     /// <summary>
     /// <see cref="BoundaryMapFeaturesContainer"/> acts as a convenience to
