@@ -24,12 +24,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
-            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryContainer, 
+            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
                                                                                 coordinateSystem,
                                                                                 geometryFactory))
             {
@@ -55,18 +55,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"));
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"));
         }
 
         [Test]
         public void Constructor_GeometryFactory_ThrowsArgumentNullException()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
-            void Call() => new BoundaryEndPointMapFeatureProvider(boundaryContainer, 
+            void Call() => new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
                                                                   coordinateSystem, 
                                                                   null);
 
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void GivenABoundaryEndPointMapFeatureProviderWithBoundaries_WhenFeaturesAreRetrieved_ThenTheCorrectEndPointsAreGenerated()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 Substitute.For<IWaveBoundary>(),
             };
 
-            boundaryContainer.Boundaries.Returns(boundaries);
+            boundaryProvider.Boundaries.Returns(boundaries);
 
             List<Point> endPoints = Enumerable.Range(0, 6)
                                               .Select(x => new Point(new Coordinate(x + 0.5, -x + 0.5)))
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                .Returns(endPoints.Skip(i * 2).Take(2));
             }
 
-            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
                                                                                 geometryFactory))
             {
@@ -125,12 +125,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Features_Set_ThrowsNotSupportedException()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
-            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
                                                                                 geometryFactory))
             {
@@ -144,12 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Add_Geometry_ThrowsNotSupportedException()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
-            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
                                                                                 geometryFactory))
             {
@@ -163,12 +163,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Add_Feature_ThrowsNotSupportedException()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             // Call
-            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryContainer,
+            using (var featureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
                                                                                 geometryFactory))
             {

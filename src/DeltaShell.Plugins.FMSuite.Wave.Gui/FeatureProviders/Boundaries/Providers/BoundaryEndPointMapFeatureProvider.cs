@@ -36,27 +36,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     /// <seealso cref="FeatureCollection"/>
     public sealed class BoundaryEndPointMapFeatureProvider : FeatureCollection
     {
-        private readonly IBoundaryContainer boundaryContainer;
+        private readonly IBoundaryProvider boundaryProvider;
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryEndPointMapFeatureProvider"/>.
         /// </summary>
-        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryContainer"/> or
+        /// Thrown when <paramref name="boundaryProvider"/> or
         /// <paramref name="waveBoundaryGeometryFactory"/> is <c>null</c>.
         /// </exception>
-        public BoundaryEndPointMapFeatureProvider(IBoundaryContainer boundaryContainer,
+        public BoundaryEndPointMapFeatureProvider(IBoundaryProvider boundaryProvider,
                                                   ICoordinateSystem coordinateSystem, 
                                                   IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
         {
-            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
 
-            this.boundaryContainer = boundaryContainer;
+            this.boundaryProvider = boundaryProvider;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
             CoordinateSystem = coordinateSystem;
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 
         public override IList Features
         {
-            get => boundaryContainer.Boundaries
+            get => boundaryProvider.Boundaries
                                     .SelectMany(boundary => waveBoundaryGeometryFactory.ConstructBoundaryEndPoints(boundary))
                                     .Select(p => new Feature2DPoint {Geometry = p})
                                     .ToList();
