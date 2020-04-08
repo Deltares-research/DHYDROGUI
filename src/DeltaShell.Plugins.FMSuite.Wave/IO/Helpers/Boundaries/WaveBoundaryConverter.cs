@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             foreach (DelftIniCategory category in boundaryCategories)
             {
                 BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category);
-                if (boundaryBlock.DefinitionType != DefinitionType.Coordinates)
+                if (boundaryBlock.DefinitionType != DefinitionImportType.Coordinates)
                 {
                     continue;
                 }
@@ -124,10 +124,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             switch (boundaryBlock.SpreadingType)
             {
-                case SpreadingType.Power:
+                case SpreadingImportType.Power:
                     return CreateDataComponent<PowerDefinedSpreading>(boundaryBlock, timeSeriesData,
                                                                       geometricDefinition);
-                case SpreadingType.Degrees:
+                case SpreadingImportType.Degrees:
                     return CreateDataComponent<DegreesDefinedSpreading>(boundaryBlock, timeSeriesData,
                                                                         geometricDefinition);
                 default:
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                                                                     IWaveBoundaryGeometricDefinition
                                                                         geometricDefinition)
         {
-            if (boundaryBlock.SpectrumType == SpectrumType.Parametrized)
+            if (boundaryBlock.SpectrumType == SpectrumImportType.Parametrized)
             {
                 return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
             }
@@ -250,9 +250,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             switch (boundaryBlock.PeriodType)
             {
-                case PeriodType.Mean:
+                case PeriodImportType.Mean:
                     return BoundaryConditionPeriodType.Mean;
-                case PeriodType.Peak:
+                case PeriodImportType.Peak:
                     return BoundaryConditionPeriodType.Peak;
                 default:
                     throw new NotSupportedException($"Value '{boundaryBlock.PeriodType}' is not a valid period type.");
@@ -263,11 +263,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             switch (boundaryBlock.ShapeType)
             {
-                case ShapeType.Gauss:
+                case ShapeImportType.Gauss:
                     return new GaussShape {GaussianSpread = boundaryBlock.Spreading};
-                case ShapeType.Jonswap:
+                case ShapeImportType.Jonswap:
                     return new JonswapShape {PeakEnhancementFactor = boundaryBlock.PeakEnhancementFactor};
-                case ShapeType.PiersonMoskowitz:
+                case ShapeImportType.PiersonMoskowitz:
                     return new PiersonMoskowitzShape();
                 default:
                     throw new NotSupportedException($"Value '{boundaryBlock.ShapeType}' is not a valid shape type.");

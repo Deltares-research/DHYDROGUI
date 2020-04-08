@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <summary>
         /// Gets or sets the definition type.
         /// </summary>
-        public DefinitionType DefinitionType { get; set; }
+        public DefinitionImportType DefinitionType { get; set; }
 
         /// <summary>
         /// Gets or sets the x of the start coordinate.
@@ -57,22 +57,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <summary>
         /// Gets or sets the spectrum type.
         /// </summary>
-        public SpectrumType SpectrumType { get; set; }
+        public SpectrumImportType SpectrumType { get; set; }
 
         /// <summary>
         /// Gets or sets the shape type
         /// </summary>
-        public ShapeType ShapeType { get; set; }
+        public ShapeImportType ShapeType { get; set; }
 
         /// <summary>
         /// Gets or sets the period type.
         /// </summary>
-        public PeriodType PeriodType { get; set; }
+        public PeriodImportType PeriodType { get; set; }
 
         /// <summary>
         /// Gets or sets the spreading type.
         /// </summary>
-        public SpreadingType SpreadingType { get; set; }
+        public SpreadingImportType SpreadingType { get; set; }
 
         /// <summary>
         /// Gets or sets the peak enhancement factor.

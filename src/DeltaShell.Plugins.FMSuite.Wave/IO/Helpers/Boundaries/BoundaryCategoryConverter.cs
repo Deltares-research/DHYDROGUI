@@ -39,15 +39,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             return new BoundaryMdwBlock(boundaryCategory.GetPropertyValue(KnownWaveProperties.Name))
             {
-                DefinitionType = boundaryCategory.GetEnumValue<DefinitionType>(KnownWaveProperties.Definition),
+                DefinitionType = boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition),
                 XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX),
                 YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY),
                 XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX),
                 YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY),
-                SpectrumType = boundaryCategory.GetEnumValue<SpectrumType>(KnownWaveProperties.SpectrumSpec),
-                ShapeType = boundaryCategory.GetEnumValue<ShapeType>(KnownWaveProperties.ShapeType),
-                PeriodType = boundaryCategory.GetEnumValue<PeriodType>(KnownWaveProperties.PeriodType),
-                SpreadingType = boundaryCategory.GetEnumValue<SpreadingType>(KnownWaveProperties.DirectionalSpreadingType),
+                SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportType>(KnownWaveProperties.SpectrumSpec),
+                ShapeType = boundaryCategory.GetEnumValue<ShapeImportType>(KnownWaveProperties.ShapeType),
+                PeriodType = boundaryCategory.GetEnumValue<PeriodImportType>(KnownWaveProperties.PeriodType),
+                SpreadingType = boundaryCategory.GetEnumValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType),
                 PeakEnhancementFactor = boundaryCategory.GetDoubleValue(KnownWaveProperties.PeakEnhancementFactor),
                 Spreading = boundaryCategory.GetDoubleValue(KnownWaveProperties.GaussianSpreading),
                 Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist),

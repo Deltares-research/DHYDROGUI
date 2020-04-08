@@ -3,9 +3,9 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
-    /// Shape type of the wave boundary
+    /// Shape import type of the wave boundary
     /// </summary>
-    public enum ShapeType
+    public enum ShapeImportType
     {
         [Description("gauss")]
         Gauss,

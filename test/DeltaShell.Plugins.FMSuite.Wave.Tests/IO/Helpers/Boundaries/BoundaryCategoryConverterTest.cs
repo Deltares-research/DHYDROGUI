@@ -42,11 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetTestCases))]
-        public void Convert_ReturnsCorrectResult(string spectrumTypeStr, SpectrumType expectedSpectrumType,
-                                                 string shapeTypeStr, ShapeType expectedShapeType,
-                                                 string periodTypeStr, PeriodType expectedPeriodType,
-                                                 string spreadingTypeStr, SpreadingType expectedSpreadingType,
-                                                 string definitionTypeStr, DefinitionType expectedDefinitionType)
+        public void Convert_ReturnsCorrectResult(string spectrumTypeStr, SpectrumImportType expectedSpectrumType,
+                                                 string shapeTypeStr, ShapeImportType expectedShapeType,
+                                                 string periodTypeStr, PeriodImportType expectedPeriodType,
+                                                 string spreadingTypeStr, SpreadingImportType expectedSpreadingType,
+                                                 string definitionTypeStr, DefinitionImportType expectedDefinitionType)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -120,11 +120,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionImportType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumImportType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
 
             // Call
             BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
@@ -157,33 +157,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static IEnumerable<object[]> SpectrumTypeTestCases()
         {
-            yield return SubTestCase("from file", SpectrumType.FromFile);
-            yield return SubTestCase("parametric", SpectrumType.Parametrized);
+            yield return SubTestCase("from file", SpectrumImportType.FromFile);
+            yield return SubTestCase("parametric", SpectrumImportType.Parametrized);
         }
 
         private static IEnumerable<object[]> ShapeTypeTestCases()
         {
-            yield return SubTestCase("gauss", ShapeType.Gauss);
-            yield return SubTestCase("jonswap", ShapeType.Jonswap);
-            yield return SubTestCase("pierson-moskowitz", ShapeType.PiersonMoskowitz);
+            yield return SubTestCase("gauss", ShapeImportType.Gauss);
+            yield return SubTestCase("jonswap", ShapeImportType.Jonswap);
+            yield return SubTestCase("pierson-moskowitz", ShapeImportType.PiersonMoskowitz);
         }
 
         private static IEnumerable<object[]> PeriodTypeTestCases()
         {
-            yield return SubTestCase("mean", PeriodType.Mean);
-            yield return SubTestCase("peak", PeriodType.Peak);
+            yield return SubTestCase("mean", PeriodImportType.Mean);
+            yield return SubTestCase("peak", PeriodImportType.Peak);
         }
 
         private static IEnumerable<object[]> SpreadingTypeTestCases()
         {
-            yield return SubTestCase("degrees", SpreadingType.Degrees);
-            yield return SubTestCase("power", SpreadingType.Power);
+            yield return SubTestCase("degrees", SpreadingImportType.Degrees);
+            yield return SubTestCase("power", SpreadingImportType.Power);
         }
 
         private static IEnumerable<object[]> DefinitionTypeTestCases()
         {
-            yield return SubTestCase("xy-coordinates", DefinitionType.Coordinates);
-            yield return SubTestCase("orientation", DefinitionType.Oriented);
+            yield return SubTestCase("xy-coordinates", DefinitionImportType.Coordinates);
+            yield return SubTestCase("orientation", DefinitionImportType.Oriented);
         }
 
         private static object[] SubTestCase(string value, object expected)
