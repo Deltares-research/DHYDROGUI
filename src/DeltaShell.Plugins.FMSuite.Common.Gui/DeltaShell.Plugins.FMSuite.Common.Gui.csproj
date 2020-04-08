@@ -234,6 +234,7 @@
     <Compile Include="MapView\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MapView\MapViewModel.cs" />
     <Compile Include="ModelTreeShortcut.cs" />
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
