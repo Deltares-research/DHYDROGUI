@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             if (FeatureType == typeof(Manhole))
             {
-                return GetEnumerableList(Network.Manholes, (INotifyCollectionChange) Network);
+                return GetEnumerableList(Network.Nodes.OfType<Manhole>(), (INotifyCollectionChange)Network);
             }
             if (FeatureType == typeof(OutletCompartment))
             {
