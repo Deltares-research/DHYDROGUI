@@ -8,10 +8,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
     [TestFixture]
-    [Category(TestCategory.Wpf)]
     public class WeirViewWpfTest
     {
         [Test]
+        [Category(TestCategory.Wpf)]
         public void Show()
         {
             var view = new WeirViewWpf();
@@ -20,13 +20,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            WpfTestHelper.ShowModal(view, () =>
-            {
-                view.Data = weir;
-            });
+            WpfTestHelper.ShowModal(view, () => { view.Data = weir; });
         }
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowSimpleWeirFormulaViewWpf()
         {
             var view = new SimpleWeirFormulaViewWpf();
@@ -34,6 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowGeneralStructureWeirFormulaViewWpf()
         {
             var view = new GeneralStructureWeirFormulaViewWpf();
