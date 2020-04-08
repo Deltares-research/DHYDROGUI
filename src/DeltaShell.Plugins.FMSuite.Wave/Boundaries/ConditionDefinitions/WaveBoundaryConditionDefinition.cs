@@ -68,8 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         public void AcceptVisitor(IBoundaryConditionVisitor visitor)
         {
             visitor.Visit(this);
-            Shape.AcceptVisitor(visitor);
-            DataComponent.AcceptVisitor(visitor);
         }
 
         private IBoundaryConditionDataComponent dataComponent;

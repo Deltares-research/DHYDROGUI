@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// </summary>
         public string FilePath { get; set; }
 
-        public void AcceptVisitor(IDataComponentVisitor visitor)
+        public void AcceptVisitor(IParametersVisitor visitor)
         {
             throw new NotSupportedException();
         }

@@ -171,8 +171,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
 
             // Assert
             visitor.Received().Visit(conditionDefinition);
-            shape.Received().AcceptVisitor(visitor);
-            dataComponent.Received().AcceptVisitor(visitor);
         }
     }
 }

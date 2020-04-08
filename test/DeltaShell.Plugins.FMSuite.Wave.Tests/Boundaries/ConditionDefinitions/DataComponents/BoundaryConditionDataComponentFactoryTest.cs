@@ -39,10 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
 
         private class DummyParameters : IBoundaryConditionDataComponent {
-            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
-            {
-                throw new NotImplementedException();
-            }
+            public void AcceptVisitor(IDataComponentVisitor visitor) {}
         }
 
         [Test]

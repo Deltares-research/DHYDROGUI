@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     /// <summary>
     /// Visitor used for retrieving the boundary condition properties needed for writing the Mdw file.
     /// </summary>
-    public class MdwBoundaryConditionPropertiesCreator : BaseDataComponentVisitor, IBoundaryConditionVisitor
+    public class MdwBoundaryConditionPropertiesCreator : IBoundaryConditionVisitor, IShapeVisitor, IDataComponentVisitor, IParametersVisitor, ISpreadingVisitor
     {
         private bool hasConstantValues;
         private bool isUniform;
@@ -32,18 +32,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private IList<SupportPoint> SupportPoints { get; set; }
         
-        public override void Visit<T>(UniformDataComponent<T> uniformDataComponent) 
+        public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IBoundaryConditionParameters
         {
             isUniform = true;
+            uniformDataComponent.Data.AcceptVisitor(this);
         }
 
-        public override void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) 
+        public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IBoundaryConditionParameters
         {
             isUniform = false;
             SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
+
+            IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = spatiallyVaryingDataComponent.Data.OrderBy(kvp => kvp.Key.Distance);
+
+            foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
+            {
+                supportPointKeyValuePair.Value.AcceptVisitor(this);
+            }
         }
 
-        public override void Visit<T>(ConstantParameters<T> constantParameters)
+        public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
         { 
             hasConstantValues = true;
             if (isUniform)
@@ -62,9 +70,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 
                 supportPointCounter++;
             }
+
+            constantParameters.Spreading.AcceptVisitor(this);
         }
 
-        public override void Visit<T>(TimeDependentParameters<T> timeDependentParameters) 
+        public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new() 
         {
             hasConstantValues = false;
             if (!isUniform)
@@ -73,9 +83,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                              SupportPoints[supportPointCounter].Distance);
                 supportPointCounter++;
             }
+            new T().AcceptVisitor(this);
         }
         
-        public override void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
+        public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
         {
             BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
                                          KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
@@ -87,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        public override void Visit(PowerDefinedSpreading powerDefinedSpreading)
+        public void Visit(PowerDefinedSpreading powerDefinedSpreading)
         {
             BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
                                          KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
@@ -125,6 +136,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             
             //place holder
             BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
+
+            waveBoundaryConditionDefinition.Shape.AcceptVisitor(this);
+            
+            waveBoundaryConditionDefinition.DataComponent.AcceptVisitor(this);
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
         /// used for the export.
        /// </summary>
         /// <param name="visitor"></param>
-        public void AcceptVisitor(IBoundaryConditionVisitor visitor)
+        public void AcceptVisitor(IShapeVisitor visitor)
         {
             visitor.Visit(this);
         }

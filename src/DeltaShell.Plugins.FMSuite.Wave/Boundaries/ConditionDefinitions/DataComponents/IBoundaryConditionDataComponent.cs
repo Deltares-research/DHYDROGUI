@@ -1,6 +1,4 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
 {
     /// <summary>
     /// <see cref="IBoundaryConditionDataComponent"/> defines the different boundary
@@ -17,12 +15,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
     /// As such, this interface is empty. Other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    public interface IBoundaryConditionDataComponent 
-    {
-        /// <summary>
-        /// Method needed for visitor design pattern.
-        /// </summary>
-        /// <param name="visitor"></param>
-        void AcceptVisitor(IDataComponentVisitor visitor);
-    }
+    public interface IBoundaryConditionDataComponent : IVisitableBoundaryConditionDataComponent {}
 }

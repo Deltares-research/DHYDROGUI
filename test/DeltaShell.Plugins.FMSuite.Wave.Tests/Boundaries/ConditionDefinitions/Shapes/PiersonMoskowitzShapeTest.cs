@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var shape = new PiersonMoskowitzShape();
-            var visitor = Substitute.For<IBoundaryConditionVisitor>();
+            var visitor = Substitute.For<IShapeVisitor>();
 
             // Call
             shape.AcceptVisitor(visitor);

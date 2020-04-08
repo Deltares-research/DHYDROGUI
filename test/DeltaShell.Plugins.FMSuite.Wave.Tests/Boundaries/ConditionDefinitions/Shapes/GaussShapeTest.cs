@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var shape = new GaussShape();
-            var visitor = Substitute.For<IBoundaryConditionVisitor>();
+            IShapeVisitor visitor = Substitute.For<IShapeVisitor>();
 
             // Call
             shape.AcceptVisitor(visitor);

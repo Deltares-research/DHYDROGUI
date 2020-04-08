@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
@@ -95,12 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
         public void AcceptVisitor(IDataComponentVisitor visitor)
         {
             visitor.Visit(this);
-            IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = Data.OrderBy(kvp => kvp.Key.Distance);
-            
-            foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
-            {
-                supportPointKeyValuePair.Value.AcceptVisitor(visitor);
-            }
         }
     }
 }

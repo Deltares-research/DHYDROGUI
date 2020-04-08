@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
         /// used for the export.
         /// </summary>
         /// <param name="visitor"></param>
-        public void AcceptVisitor(IDataComponentVisitor visitor)
+        public void AcceptVisitor(ISpreadingVisitor visitor)
         {
             visitor.Visit(this);
         }

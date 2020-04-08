@@ -12,10 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     {
         private readonly Random random = new Random();
 
-        private class DummyConditionSpreading : IBoundaryConditionSpreading {
-            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
-            {
-            }
+        private class DummyConditionSpreading : IBoundaryConditionSpreading 
+        {
+            public void AcceptVisitor(ISpreadingVisitor visitor) {}
         }
 
         [Test]

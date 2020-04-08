@@ -40,10 +40,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parame
         /// Order is important for the corresponding actions.
         /// </summary>
         /// <param name="visitor"></param>
-        public void AcceptVisitor(IDataComponentVisitor visitor)
+        public void AcceptVisitor(IParametersVisitor visitor)
         {
             visitor.Visit(this);
-            new TSpreading().AcceptVisitor(visitor);
         }
     }
 }
