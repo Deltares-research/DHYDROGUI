@@ -2,7 +2,7 @@
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.Features
 {
     [TestFixture]
     public class SupportPointFeatureTest
