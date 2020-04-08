@@ -230,6 +230,7 @@
     <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapView\ActualSizeObserver.cs" />
     <Compile Include="MapView\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>

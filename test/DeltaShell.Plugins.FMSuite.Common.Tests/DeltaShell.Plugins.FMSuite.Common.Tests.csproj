@@ -150,6 +150,7 @@
     <Compile Include="Dependency\BooleanIsTrueDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueEqualsDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueGreaterOrLesserThanDependencyExpressionTest.cs" />
+    <Compile Include="Gui\ActualSizeObserverTest.cs" />
     <Compile Include="Gui\Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionSetTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionsPointsSyncedListTest.cs" />
