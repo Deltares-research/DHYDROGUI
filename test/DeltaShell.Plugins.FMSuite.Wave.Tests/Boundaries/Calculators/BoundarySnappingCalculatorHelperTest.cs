@@ -11,25 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class BoundarySnappingCalculatorHelperTest
     {
+        private const double tolerance = 1E-10;
         private readonly Random random = new Random();
         private IDistanceCalculator distanceCalculator;
-
-        [SetUp]
-        public void Setup()
-        {
-            distanceCalculator = Substitute.For<IDistanceCalculator>();
-        }
-
-        [Test]
-        [TestCaseSource(nameof(CoordinateTestData))]
-        public void IsDefined_ValidCoordinate_ReturnsExpectedResult(Coordinate coordinate, bool expectedResult)
-        {
-            // Call
-            var result = coordinate.IsDefined();
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }
 
         private IEnumerable<TestCaseData> CoordinateTestData
         {
@@ -37,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             {
                 yield return new TestCaseData(new Coordinate(random.NextDouble(), random.NextDouble()), true);
 
-                var invalidValues = new[]
+                double[] invalidValues = new[]
                 {
                     double.NaN,
                     double.PositiveInfinity,
@@ -52,6 +36,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             }
         }
 
+        [SetUp]
+        public void Setup()
+        {
+            distanceCalculator = Substitute.For<IDistanceCalculator>();
+        }
+
+        [Test]
+        [TestCaseSource(nameof(CoordinateTestData))]
+        public void IsDefined_ValidCoordinate_ReturnsExpectedResult(Coordinate coordinate, bool expectedResult)
+        {
+            // Call
+            bool result = coordinate.IsDefined();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
         [Test]
         public void GivenAnEmptySetOfCoordinates_WhenFindClosestIndicesIsCalled_ThenAnEmptySetAndPosInfIsReturned()
         {
@@ -60,9 +61,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             var coordinateRef = new Coordinate(0.0, 0.0);
 
             // Call
-            Tuple<IEnumerable<int>, double> result = 
-                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator, 
-                                                                    coordinateRef, 
+            Tuple<IEnumerable<int>, double> result =
+                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator,
+                                                                    coordinateRef,
                                                                     coordinates);
 
             // Assert
@@ -96,9 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             SetUpDistances(coordinateRef, coordinates, expectedDistances);
 
             // Call
-            Tuple<IEnumerable<int>, double> result = 
-                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator, 
-                                                                    coordinateRef, 
+            Tuple<IEnumerable<int>, double> result =
+                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator,
+                                                                    coordinateRef,
                                                                     coordinates);
 
             // Assert
@@ -135,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             SetUpDistances(coordinateRef, coordinates, expectedDistances);
 
             // Call
-            Tuple<IEnumerable<int>, double> result = 
-                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator, 
-                                                                    coordinateRef, 
+            Tuple<IEnumerable<int>, double> result =
+                BoundarySnappingCalculatorHelper.FindClosestIndices(distanceCalculator,
+                                                                    coordinateRef,
                                                                     coordinates);
 
             // Assert
@@ -171,13 +172,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                                                                                                  distanceCalculator);
 
             // Assert
-            Assert.That(result.Equals2D(coordinates[index], 1E-15), $"Expected: {coordinates[index]} \n" +
-                                                                    $"But was:  {result}.");
+            Assert.That(result.Equals2D(coordinates[index], tolerance), $"Expected: {coordinates[index]} \n" +
+                                                                        $"But was:  {result}.");
         }
 
         [Test]
-        public void
-            GivenASetOfCoordinatesAndAValidDistance_WhenCalculateCoordinateFromDistanceIsCalled_ThenCorrectResultIsReturned()
+        public void GivenASetOfCoordinatesAndAValidDistance_WhenCalculateCoordinateFromDistanceIsCalled_ThenCorrectResultIsReturned()
         {
             // Setup
             int index = random.Next(9);
@@ -199,8 +199,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                                                                   coordinates,
                                                                   index);
 
-            Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
-                                                                    $"But was:  {result}.");
+            Assert.That(result.Equals2D(expectedCoordinate, tolerance), $"Expected: {expectedCoordinate} \n" +
+                                                                        $"But was:  {result}.");
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                                     IList<Coordinate> coordinates,
                                     IList<double> distances)
         {
-            for (int i = 0; i < coordinates.Count; i++)
+            for (var i = 0; i < coordinates.Count; i++)
             {
                 distanceCalculator.CalculateDistance(coordinateRef, coordinates[i]).Returns(distances[i]);
                 distanceCalculator.CalculateDistance(coordinates[i], coordinateRef).Returns(distances[i]);

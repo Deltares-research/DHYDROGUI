@@ -5,14 +5,17 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.PropertyBag.Dynamic;
 using DeltaShell.Gui;
+using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -28,6 +31,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Layers;
 using SharpMap.Rendering.Thematics;
+using SharpMap.UI.Forms;
 using SharpTestsEx;
 using Point = NetTopologySuite.Geometries.Point;
 
@@ -43,17 +47,17 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             var mockrepos = new MockRepository();
             var guiMock = mockrepos.Stub<IGui>();
 
-            var grid = new DeltaShell.Gui.Forms.PropertyGrid.PropertyGrid(guiMock)
+            var grid = new PropertyGrid(guiMock)
+            {
+                Data = new DynamicPropertyBag(new WeirProperties
                 {
-                    Data = new DynamicPropertyBag(new Gui.Forms.PropertyGrid.WeirProperties
-                        {
-                            Data = new Weir("gated")
-                                {
-                                    WeirFormula = new GatedWeirFormula(),
-                                    ParentStructure = new CompositeBranchStructure()
-                                }
-                        })
-                };
+                    Data = new Weir("gated")
+                    {
+                        WeirFormula = new GatedWeirFormula(),
+                        ParentStructure = new CompositeBranchStructure()
+                    }
+                })
+            };
 
             WindowsFormsTestHelper.ShowModal(grid);
         }
@@ -65,64 +69,61 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
 
                 gui.Run();
 
-                var project = app.Project;
+                Project project = app.Project;
 
                 // add data
-                var network = new HydroNetwork();
+                var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
                 project.RootFolder.Add(network);
 
                 // show gui main window
-                var mainWindow = (Window)gui.MainWindow;
+                var mainWindow = (Window) gui.MainWindow;
 
                 // wait until gui starts
                 Action mainWindowShown = delegate
                 {
-                        LogHelper.SetLoggingLevel(Level.Debug);
+                    LogHelper.SetLoggingLevel(Level.Debug);
 
-                        var networkDataItem = project.RootFolder.DataItems.First();
-                         gui.CommandHandler.OpenView(networkDataItem);
+                    IDataItem networkDataItem = project.RootFolder.DataItems.First();
+                    gui.CommandHandler.OpenView(networkDataItem);
 
-                         var networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                        networkEditor.MapView.Map.Layers.Add(new GroupLayer { Name = "test group layer" });
+                    ProjectItemMapView networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                    networkEditor.MapView.Map.Layers.Add(new GroupLayer {Name = "test group layer"});
 
-                        // close view
-                        gui.DocumentViews.Clear();
+                    // close view
+                    gui.DocumentViews.Clear();
 
+                    // reopening view should restore view context
+                    gui.CommandHandler.OpenView(networkDataItem);
 
-                        // reopening view should restore view context
-                        gui.CommandHandler.OpenView(networkDataItem);
+                    networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
 
-                        networkEditor = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                    networkEditor.MapView.Map.Layers.Count.Should(
+                                     "map should contain 2 layers, network and group layer (remembered as part of a view context)")
+                                 .Be.EqualTo(2);
 
-                        networkEditor.MapView.Map.Layers.Count.Should(
-                            "map should contain 2 layers, network and group layer (remembered as part of a view context)")
-                            .Be.EqualTo(2);
-
-                        // now remove network from the project
-                        project.RootFolder.Items.Remove(networkDataItem);
-
-
-                    };
+                    // now remove network from the project
+                    project.RootFolder.Items.Remove(networkDataItem);
+                };
 
                 WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
             }
         }
-        
-        [Test]//TOOLS-6594
+
+        [Test] //TOOLS-6594
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DeleteLocationFromCoverageWithoutSegmentLayerDoesNotCauseCrash()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
 
-            INetworkCoverage networkCoverage = new NetworkCoverage { Network = network };
+            INetworkCoverage networkCoverage = new NetworkCoverage {Network = network};
 
             // set values
             var location = new NetworkLocation(network.Branches[0], 0.0);
@@ -132,23 +133,20 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             networkCoverage[new NetworkLocation(network.Branches[1], 50.0)] = 0.4;
             networkCoverage[new NetworkLocation(network.Branches[1], 200.0)] = 0.5;
 
-            var coverageView = new CoverageView { Data = networkCoverage };
+            var coverageView = new CoverageView {Data = networkCoverage};
 
-            var mapView = coverageView.ChildViews.OfType<MapView>().First();
-            var networkCoverageLayer = mapView.Map.GetAllLayers(true).OfType<NetworkCoverageGroupLayer>().First();
+            MapView mapView = coverageView.ChildViews.OfType<MapView>().First();
+            NetworkCoverageGroupLayer networkCoverageLayer = mapView.Map.GetAllLayers(true).OfType<NetworkCoverageGroupLayer>().First();
 
             //remove segment layer
             networkCoverageLayer.LayersReadOnly = false;
             networkCoverageLayer.Layers.Remove(networkCoverageLayer.SegmentLayer);
             networkCoverageLayer.LayersReadOnly = true;
 
-            var mapControl = mapView.MapControl;
+            MapControl mapControl = mapView.MapControl;
             mapControl.Visible = false; //prevent rendering
 
-            var hydroNetworkEditorMapTool = new HydroRegionEditorMapTool
-            {
-                IsActive = true
-            };
+            var hydroNetworkEditorMapTool = new HydroRegionEditorMapTool {IsActive = true};
             mapControl.Tools.Add(hydroNetworkEditorMapTool);
 
             hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer = networkCoverageLayer;
@@ -167,14 +165,18 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             IHydroNetwork hydroNetwork = GetHydroNetworkWithPumpAndWeir();
 
             var weirLayer = new VectorLayer
-                                {
-                                    DataSource = new HydroNetworkFeatureCollection
-                                                     {
-                                                         Network = hydroNetwork,
-                                                         FeatureType = typeof (Weir)
-                                                     }
-                                };
-            var editor = new ThemeEditor {ThemeType = ThemeType.Categorial, Layer = weirLayer};
+            {
+                DataSource = new HydroNetworkFeatureCollection
+                {
+                    Network = hydroNetwork,
+                    FeatureType = typeof(Weir)
+                }
+            };
+            var editor = new ThemeEditor
+            {
+                ThemeType = ThemeType.Categorial,
+                Layer = weirLayer
+            };
             WindowsFormsTestHelper.ShowModal(editor);
         }
 
@@ -196,16 +198,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.Run();
 
                 //add a network to the project
-                var project = gui.Application.Project;
+                Project project = gui.Application.Project;
                 var hydroNetwork = new HydroNetwork();
                 var dataItem = new DataItem(hydroNetwork);
-                project.RootFolder.Add(dataItem);    
+                project.RootFolder.Add(dataItem);
 
                 //open view for the object
                 gui.DocumentViewsResolver.OpenViewForData(dataItem.Value);
                 //close all views
                 gui.DocumentViews.Clear();
-                
+
                 //link unlink the DI
                 dataItem.LinkTo(new DataItem(new HydroNetwork()));
                 //unlink create a new value for the item..
@@ -215,12 +217,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.DocumentViewsResolver.OpenViewForData(dataItem.Value);
             }
         }
-		
+
         [Test]
         [Category(TestCategory.Integration)]
         public void DeleteBranchShouldRemoveBoundaryNodes()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0), new Point(100, 100));
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0), new Point(100, 100));
             network.Branches.Remove(network.Branches[0]);
             NetworkHelper.RemoveUnusedNodes(network);
             Assert.AreEqual(2, network.HydroNodes.Count(n => !n.IsConnectedToMultipleBranches));
@@ -228,15 +230,25 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
         private static IHydroNetwork GetHydroNetworkWithPumpAndWeir()
         {
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1") {OffsetY = 1000,StopDelivery = 18,StartDelivery = 12,StopSuction = 12,StartSuction = 15};
-            var weir = new Weir("weri1"){CrestLevel = 15,CrestWidth = 50};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 1000,
+                StopDelivery = 18,
+                StartDelivery = 12,
+                StopSuction = 12,
+                StartSuction = 15
+            };
+            var weir = new Weir("weri1")
+            {
+                CrestLevel = 15,
+                CrestWidth = 50
+            };
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, hydroNetwork.Branches[0], 50);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
             return hydroNetwork;
         }
-
     }
 }
