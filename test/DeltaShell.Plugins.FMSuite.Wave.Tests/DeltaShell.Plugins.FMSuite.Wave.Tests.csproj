@@ -284,6 +284,7 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModelTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModelTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\BoundaryFromLineAddBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryEndPointMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
