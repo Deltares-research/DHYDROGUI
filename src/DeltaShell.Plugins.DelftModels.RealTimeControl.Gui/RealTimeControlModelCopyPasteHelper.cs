@@ -8,6 +8,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using log4net;
 using Netron.GraphLib;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {

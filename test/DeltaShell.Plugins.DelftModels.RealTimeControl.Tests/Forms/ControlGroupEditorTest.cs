@@ -585,15 +585,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
         private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject)
         {
-            RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcBaseObject);
-            IEnumerable<XElement> listXElements = serializer.ToXml(Fns, string.Empty);
-            var stringBuilder = new StringBuilder();
-            foreach (XElement xElement in listXElements)
+            using (var clipboardMock = new ClipboardMock())
             {
-                stringBuilder.Append(xElement + Environment.NewLine);
+                clipboardMock.ContainsText_Returns(true);
+                clipboardMock.GetText_Returns_SetText();
+
+                RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcBaseObject);
+                IEnumerable<XElement> listXElements = serializer.ToXml(Fns, string.Empty);
+                var stringBuilder = new StringBuilder();
+                foreach (XElement xElement in listXElements)
+                {
+                    stringBuilder.Append(xElement + Environment.NewLine);
+                }
+
+                Assert.AreEqual(stringBuilder.ToString(), Clipboard.GetText());
             }
-            
-            Assert.AreEqual(stringBuilder.ToString(), Clipboard.GetText());
         }
     }
 }
