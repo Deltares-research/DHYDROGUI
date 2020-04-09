@@ -24,6 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// <returns>
         /// A new <see cref="IBoundaryMapFeaturesContainer"/> with <see cref="BoundaryFromLineAddBehaviour"/>.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundaryContainer"/> is <c>null</c>.
+        /// </exception>
         public static IBoundaryMapFeaturesContainer ConstructEditableBoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
                                                                                                   ICoordinateSystem coordinateSystem)
         {
@@ -41,20 +44,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// <summary>
         /// Constructs a read-only <see cref="IBoundaryMapFeaturesContainer"/>.
         /// </summary>
-        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary container.</param>
+        /// <param name="geometryFactory">The geometry factory.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <returns>
         /// A new <see cref="IBoundaryMapFeaturesContainer"/> with <see cref="ReadOnlyAddBehaviour"/>.
         /// </returns>
-        public static IBoundaryMapFeaturesContainer ConstructReadOnlyBoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundaryProvider"/> or
+        /// <paramref name="geometryFactory"/> are <c>null</c>.
+        /// </exception>
+        public static IBoundaryMapFeaturesContainer ConstructReadOnlyBoundaryMapFeaturesContainer(IBoundaryProvider boundaryProvider,
+                                                                                                  IWaveBoundaryGeometryFactory geometryFactory,
                                                                                                   ICoordinateSystem coordinateSystem)
         {
-            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
+            Ensure.NotNull(geometryFactory, nameof(geometryFactory));
 
-            IWaveBoundaryGeometryFactory geometryFactory = ConstructGeometryFactory(boundaryContainer);
             IAddBehaviour addBehaviour = constructReadOnlyAddBehaviour();
 
-            return ConstructFeaturesContainer(boundaryContainer, 
+            return ConstructFeaturesContainer(boundaryProvider, 
                                               coordinateSystem, 
                                               addBehaviour, 
                                               geometryFactory);

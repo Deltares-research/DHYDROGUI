@@ -44,12 +44,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void ConstructReadOnlyBoundaryMapFeaturesContainer_ExpectedResults()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var coordSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
             IBoundaryMapFeaturesContainer result =
-                BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(boundaryContainer,
+                BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(boundaryProvider,
+                                                                                                  geometryFactory,
                                                                                                   coordSystem);
 
             // Assert
@@ -63,11 +65,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Call | Assert
             void Call() => BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(
                 null,
+                Substitute.For<IWaveBoundaryGeometryFactory>(),
                 Substitute.For<ICoordinateSystem>());
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"));
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"));
         }
-        
+
+        [Test]
+        public void ConstructReadOnlyBoundaryMapFeaturesContainer_GeometryFactoryNull_ThrowsArgumentNullException()
+        {
+            // Call | Assert
+            void Call() => BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(
+                Substitute.For<IBoundaryProvider>(),
+                null,
+                Substitute.For<ICoordinateSystem>());
+
+            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
+        }
     }
 }
