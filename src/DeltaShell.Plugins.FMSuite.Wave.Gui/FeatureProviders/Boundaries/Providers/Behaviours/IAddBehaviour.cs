@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     {
         /// <summary>
         /// Execute the this <see cref="IAddBehaviour"/> for the given
+        /// <paramref name="geometry"/>.
         /// </summary>
         /// <param name="geometry">The geometry of the Feature to add.</param>
         /// <remarks>

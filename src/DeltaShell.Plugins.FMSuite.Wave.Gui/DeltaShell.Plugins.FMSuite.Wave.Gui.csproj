@@ -351,6 +351,7 @@
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryEndPointMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProvider.cs" />
