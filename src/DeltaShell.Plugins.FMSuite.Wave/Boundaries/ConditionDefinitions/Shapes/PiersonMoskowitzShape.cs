@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
+﻿using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
 {
@@ -11,13 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
     /// </remarks>
     public class PiersonMoskowitzShape : IBoundaryConditionShape
     {
-        /// <summary>
-        /// Method for accepting visitors of the visitor design pattern,
-        /// used for the export.
-       /// </summary>
-        /// <param name="visitor"></param>
         public void AcceptVisitor(IShapeVisitor visitor)
         {
+            Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);
         }
     }

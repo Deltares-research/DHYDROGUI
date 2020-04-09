@@ -44,9 +44,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         IBoundaryConditionDataComponent DataComponent { get; set; }
 
         /// <summary>
-        /// Method needed for visitor design pattern.
+        /// Method for accepting IBoundaryConditionVisitor visitor of the visitor design pattern,
+        /// used for the export.
         /// </summary>
-        /// <param name="visitor"></param>
+        /// <param name="visitor">Visitor who wants to visit this object</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="visitor"/>
+        /// is <c>null</c>.
+        /// </exception>
         void AcceptVisitor(IBoundaryConditionVisitor visitor);
     }
 }

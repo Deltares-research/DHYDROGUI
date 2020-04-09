@@ -5,9 +5,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
     public interface IVisitableBoundaryConditionSpreading
     {
         /// <summary>
-        /// Method needed for visitor design pattern.
+        /// Method for accepting ISpreadingVisitor visitor of the visitor design pattern,
+        /// used for the export.
         /// </summary>
-        /// <param name="visitor"></param>
+        /// <param name="visitor">Visitor who wants to visit this object</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="visitor"/>
+        /// is <c>null</c>.
+        /// </exception>
         void AcceptVisitor(ISpreadingVisitor visitor);
     }
 }

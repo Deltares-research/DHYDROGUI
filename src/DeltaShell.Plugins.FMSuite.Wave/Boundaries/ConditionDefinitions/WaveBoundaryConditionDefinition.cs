@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
@@ -59,14 +60,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
             set => dataComponent = value ?? throw new ArgumentNullException(nameof(value)); 
         }
 
-        /// <summary>
-        /// Method for accepting visitors of the visitor design pattern,
-        /// used for the export.
-        /// Order is important for the corresponding actions.
-        /// </summary>
-        /// <param name="visitor"></param>
         public void AcceptVisitor(IBoundaryConditionVisitor visitor)
         {
+            Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);
         }
 

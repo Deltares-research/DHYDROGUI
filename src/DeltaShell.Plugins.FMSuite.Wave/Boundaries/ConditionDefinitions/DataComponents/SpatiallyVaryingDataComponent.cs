@@ -85,14 +85,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataCo
             RemoveSupportPoint(oldSupportPoint);
         }
 
-        /// <summary>
-        /// Method for accepting visitors of the visitor design pattern,
-        /// used for the export.
-        /// Order is important for the corresponding actions.
-        /// </summary>
-        /// <param name="visitor"></param>
         public void AcceptVisitor(IDataComponentVisitor visitor)
         {
+            Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);
         }
     }
