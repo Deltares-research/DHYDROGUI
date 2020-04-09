@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
         [Test]
         [TestCaseSource(nameof(GetUniqueBoundaryNameTestData))]
-        public void GivenAnUniqueBoundaryNameProviderWithABoundaryContainer_WhenGetUniqueNameIsCalled_ThenTheExpectedResultIsReturned(IBoundaryContainer boundaryContainer, string expectedResult)
+        public void GivenAnUniqueBoundaryNameProviderWithABoundaryContainer_WhenGetUniqueNameIsCalled_ThenTheExpectedResultIsReturned(IBoundaryProvider boundaryContainer, string expectedResult)
         {
             // Given
             var provider = new UniqueBoundaryNameProvider(boundaryContainer);
