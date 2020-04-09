@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup 
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
-            var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var addBehaviour = Substitute.For<IAddBehaviour>();
