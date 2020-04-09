@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         }
 
         public bool CanCreateLayerFor(object sourceData, object parentData) =>
-            sourceData is BoundaryMapFeaturesContainer &&
+            sourceData is IBoundaryMapFeaturesContainer &&
             parentData is IWaveModel;
 
         public ILayer CreateLayer(object sourceData, object parentData) =>
-            sourceData is BoundaryMapFeaturesContainer container &&
+            sourceData is IBoundaryMapFeaturesContainer container &&
             parentData is IWaveModel model 
                 ? factory.CreateBoundaryLayer(container) 
                 : null;

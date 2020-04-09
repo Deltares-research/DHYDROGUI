@@ -1,0 +1,107 @@
+﻿using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
+using GeoAPI.Extensions.CoordinateSystems;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
+{
+    /// <summary>
+    /// <see cref="BoundaryMapFeaturesContainerFactory"/> implements the
+    /// construction methods for the different configured <see cref="IBoundaryMapFeaturesContainer"/>.
+    /// </summary>
+    public static class BoundaryMapFeaturesContainerFactory
+    {
+        /// <summary>
+        /// Constructs an editable <see cref="IBoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new <see cref="IBoundaryMapFeaturesContainer"/> with <see cref="BoundaryFromLineAddBehaviour"/>.
+        /// </returns>
+        public static IBoundaryMapFeaturesContainer ConstructEditableBoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
+                                                                                                  ICoordinateSystem coordinateSystem)
+        {
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+
+            IWaveBoundaryGeometryFactory geometryFactory = ConstructGeometryFactory(boundaryContainer);
+            IAddBehaviour addBehaviour = ConstructBoundaryFromLineAddBehaviour(boundaryContainer);
+
+            return ConstructFeaturesContainer(boundaryContainer, 
+                                              coordinateSystem, 
+                                              addBehaviour, 
+                                              geometryFactory);
+        }
+
+        /// <summary>
+        /// Constructs a read-only <see cref="IBoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="coordinateSystem">The coordinate system.</param>
+        /// <returns>
+        /// A new <see cref="IBoundaryMapFeaturesContainer"/> with <see cref="ReadOnlyAddBehaviour"/>.
+        /// </returns>
+        public static IBoundaryMapFeaturesContainer ConstructReadOnlyBoundaryMapFeaturesContainer(IBoundaryContainer boundaryContainer,
+                                                                                                  ICoordinateSystem coordinateSystem)
+        {
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+
+            IWaveBoundaryGeometryFactory geometryFactory = ConstructGeometryFactory(boundaryContainer);
+            IAddBehaviour addBehaviour = constructReadOnlyAddBehaviour();
+
+            return ConstructFeaturesContainer(boundaryContainer, 
+                                              coordinateSystem, 
+                                              addBehaviour, 
+                                              geometryFactory);
+        }
+
+        private static BoundaryMapFeaturesContainer ConstructFeaturesContainer(IBoundaryProvider boundaryProvider,
+                                                                               ICoordinateSystem coordinateSystem,
+                                                                               IAddBehaviour addBehaviour,
+                                                                               IWaveBoundaryGeometryFactory geometryFactory)
+        {
+            var boundaryLineMapFeatureProvider = 
+                new BoundaryLineMapFeatureProvider(boundaryProvider,
+                                                   coordinateSystem,
+                                                   geometryFactory, 
+                                                   addBehaviour);
+            var boundaryEndPointMapFeatureProvider = 
+                new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
+                                                       coordinateSystem, 
+                                                       geometryFactory);
+
+            var supportPointMapFeatureProvider =
+                new BoundarySupportPointMapFeatureProvider(boundaryProvider,
+                                                           coordinateSystem,
+                                                           geometryFactory);
+
+            return new BoundaryMapFeaturesContainer(boundaryLineMapFeatureProvider, 
+                                                    boundaryEndPointMapFeatureProvider, 
+                                                    supportPointMapFeatureProvider);
+        }
+
+        private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer) 
+        {
+            var parametersFactory = new BoundaryParametersFactory();
+            var dataComponentFactory = new BoundaryConditionDataComponentFactory(parametersFactory);
+            var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
+                                                              new WaveBoundaryFactoryHelper(dataComponentFactory), 
+                                                              new UniqueBoundaryNameProvider(boundaryContainer));
+
+            return new BoundaryFromLineAddBehaviour(boundaryContainer, 
+                                                     waveBoundaryFactory);
+        }
+
+        private static ReadOnlyAddBehaviour constructReadOnlyAddBehaviour() =>
+            new ReadOnlyAddBehaviour();
+
+        private static IWaveBoundaryGeometryFactory ConstructGeometryFactory(IBoundaryContainer boundaryContainer) => 
+            new WaveBoundaryGeometryFactory(boundaryContainer, boundaryContainer);
+
+    }
+}

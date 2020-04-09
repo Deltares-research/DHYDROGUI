@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using SharpMap.Api.Layers;
@@ -53,7 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 
             yield return new WaveSnappedFeaturesGroupLayerData(model);
 
-            yield return new BoundaryMapFeaturesContainer(model.BoundaryContainer, model.CoordinateSystem);
+            yield return BoundaryMapFeaturesContainerFactory.ConstructEditableBoundaryMapFeaturesContainer(
+                model.BoundaryContainer, 
+                model.CoordinateSystem);
 
             yield return model.BoundaryConditions;
             yield return model.Boundaries;

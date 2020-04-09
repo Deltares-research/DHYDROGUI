@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
@@ -341,12 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         public void CreateBoundaryLayer_ValidParameters_ReturnsCorrectResults()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
-            var coordinateSystem = Substitute.For<ICoordinateSystem>();
-
-            var featureProviderContainer = new BoundaryMapFeaturesContainer(boundaryContainer,
-                                                                            coordinateSystem);
-            var model = Substitute.For<IWaveModel>();
+            var featureProviderContainer = Substitute.For<IBoundaryMapFeaturesContainer>();
             var factory = new WaveLayerFactory();
 
             // Call
@@ -399,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         }
 
         private static void AssertCorrectSupportPointsLayer(ILayer supportPointsLayer,
-                                                            BoundaryMapFeaturesContainer featureProviderContainer)
+                                                            IBoundaryMapFeaturesContainer featureProviderContainer)
         {
             Assert.That(supportPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
                         $"Expected the layer with name '{WaveLayerNames.BoundarySupportPointsLayerName}' to be of type {typeof(VectorLayer)}");

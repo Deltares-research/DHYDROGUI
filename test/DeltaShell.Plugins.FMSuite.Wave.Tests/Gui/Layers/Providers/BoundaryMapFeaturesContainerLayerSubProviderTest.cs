@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
@@ -14,8 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public class BoundaryMapFeaturesContainerLayerSubProviderTest : WaveLayerSubProviderTestFixture
     {
-        private readonly BoundaryMapFeaturesContainer container = new BoundaryMapFeaturesContainer(Substitute.For<IBoundaryContainer>(),
-                                                                                                   null);
+        private readonly IBoundaryMapFeaturesContainer container = Substitute.For<IBoundaryMapFeaturesContainer>();
         private readonly IWaveModel model = Substitute.For<IWaveModel>();
 
         protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
