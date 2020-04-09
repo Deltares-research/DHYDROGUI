@@ -85,47 +85,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [TestCase(false, 1)] // RTC Inputs greater than limit
         public void TestRtcInputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
-            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
-
-            var controlGroupEditor = new ControlGroupEditor
+            using (var clipboardStub = new ClipboardStub())
             {
-                Data = new ControlGroup(),
-                Model = rtcModel
-            };
+                var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
 
-            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+                var controlGroupEditor = new ControlGroupEditor
+                {
+                    Data = new ControlGroup(),
+                    Model = rtcModel
+                };
 
-            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
-               .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
-               .Repeat.Once();
+                var maxValues = (int) TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
 
-            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
-               .Return(new List<DataItem> { new DataItem() {Role = DataItemRole.Output}})
-               .Repeat.Any();
-            
-            mocks.ReplayAll();
+                rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
+                        .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+                        .Repeat.Once();
 
-            var shape = new InputItemShape()
-            {
-                Tag = new Input(),
-                IsSelected = true
-            };
-            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
+                rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+                        .Return(new List<DataItem> {new DataItem() {Role = DataItemRole.Output}})
+                        .Repeat.Any();
 
-            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[] { null, null });
+                mocks.ReplayAll();
 
-            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
-            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+                var shape = new InputItemShape()
+                {
+                    Tag = new Input(),
+                    IsSelected = true
+                };
+                controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
 
-            var menuItemNames = menuItems.Select(b => b.Text).ToList();
+                TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[]
+                {
+                    null,
+                    null
+                });
 
-            Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
-                "Context menu differs from what was expected");
+                var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+                controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
 
-            Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
-                "Users should always have the option to 'choose input location...' for RTC Outputs");
-            
-            mocks.VerifyAll();
+                var menuItemNames = menuItems.Select(b => b.Text).ToList();
+
+                Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
+                                "Context menu differs from what was expected");
+
+                Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
+                              "Users should always have the option to 'choose input location...' for RTC Outputs");
+
+                mocks.VerifyAll();
+            }
         }
 
         [Test]
