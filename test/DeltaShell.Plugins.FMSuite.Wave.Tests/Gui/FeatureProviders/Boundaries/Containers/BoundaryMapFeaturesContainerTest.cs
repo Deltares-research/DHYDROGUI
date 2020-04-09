@@ -45,9 +45,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Assert
             Assert.That(boundaryMapFeaturesContainer, Is.InstanceOf<IBoundaryMapFeaturesContainer>());
 
-            Assert.That(boundaryMapFeaturesContainer.BoundaryEndPointMapFeatureProvider, 
-                        Is.SameAs(lineFeatureProvider));
             Assert.That(boundaryMapFeaturesContainer.BoundaryLineMapFeatureProvider, 
+                        Is.SameAs(lineFeatureProvider));
+            Assert.That(boundaryMapFeaturesContainer.BoundaryEndPointMapFeatureProvider, 
                         Is.SameAs(endPointFeatureProvider));
             Assert.That(boundaryMapFeaturesContainer.SupportPointMapFeatureProvider, 
                         Is.SameAs(supportPointFeatureProvider));
