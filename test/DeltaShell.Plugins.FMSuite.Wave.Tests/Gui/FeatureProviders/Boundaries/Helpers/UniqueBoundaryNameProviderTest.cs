@@ -15,10 +15,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
 
             // Call
-            var nameProvider = new UniqueBoundaryNameProvider(boundaryContainer);
+            var nameProvider = new UniqueBoundaryNameProvider(boundaryProvider);
 
             // Assert
             Assert.That(nameProvider, Is.InstanceOf<IUniqueBoundaryNameProvider>());
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"), 
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"), 
                         "Expected a different ParamName:");
         }
 
@@ -53,29 +53,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         private static IEnumerable<TestCaseData> GetUniqueBoundaryNameTestData()
         {
 
-            yield return new TestCaseData(EmptyContainer, UniqueBoundaryNameProvider.DefaultBoundaryName);
-            yield return new TestCaseData(NoDefaultContainer,            "Boundary(1)");
-            yield return new TestCaseData(GetContainerWithNElements(5),  "Boundary(5)");
-            yield return new TestCaseData(GetContainerWithNElements(12), "Boundary(12)");
-            yield return new TestCaseData(GetContainerWithNElements(53), "Boundary(53)");
+            yield return new TestCaseData(EmptyProvider, UniqueBoundaryNameProvider.DefaultBoundaryName);
+            yield return new TestCaseData(NoDefaultProvider,            "Boundary(1)");
+            yield return new TestCaseData(GetProviderWithNElements(5),  "Boundary(5)");
+            yield return new TestCaseData(GetProviderWithNElements(12), "Boundary(12)");
+            yield return new TestCaseData(GetProviderWithNElements(53), "Boundary(53)");
         }
 
-        private static IBoundaryContainer EmptyContainer
+        private static IBoundaryProvider EmptyProvider
         {
             get
             {
-                var containerEmpty = Substitute.For<IBoundaryContainer>();
-                containerEmpty.Boundaries.Returns(new EventedList<IWaveBoundary>());
+                var emptyProvider = Substitute.For<IBoundaryProvider>();
+                emptyProvider.Boundaries.Returns(new EventedList<IWaveBoundary>());
 
-                return containerEmpty;
+                return emptyProvider;
             }
         }
 
-        private static IBoundaryContainer NoDefaultContainer
+        private static IBoundaryProvider NoDefaultProvider
         {
             get
             { 
-                var containerNoDefault = Substitute.For<IBoundaryContainer>(); 
+                var providerDefault = Substitute.For<IBoundaryProvider>(); 
                 var boundariesNoDefault = new EventedList<IWaveBoundary> 
                 {
                     GetBoundaryMockWithName("a1"), 
@@ -83,14 +83,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                     GetBoundaryMockWithName("c3"),
                 };
 
-                containerNoDefault.Boundaries.Returns(boundariesNoDefault);
-                return containerNoDefault;
+                providerDefault.Boundaries.Returns(boundariesNoDefault);
+                return providerDefault;
             }
         }
 
-        private static IBoundaryContainer GetContainerWithNElements(int nElements)
+        private static IBoundaryProvider GetProviderWithNElements(int nElements)
         {
-            var container= Substitute.For<IBoundaryContainer>();
+            var provider= Substitute.For<IBoundaryProvider>();
             var boundaries = new EventedList<IWaveBoundary>
             {
                 GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName),
@@ -103,8 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 boundaries.Add(GetBoundaryMockWithName(string.Format(template, i)));
             }
 
-            container.Boundaries.Returns(boundaries);
-            return container;
+            provider.Boundaries.Returns(boundaries);
+            return provider;
         }
 
         private static IWaveBoundary GetBoundaryMockWithName(string name)

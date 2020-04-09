@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
     /// <seealso cref="IUniqueBoundaryNameProvider" />
     public class UniqueBoundaryNameProvider : IUniqueBoundaryNameProvider
     {
-        private readonly IBoundaryContainer boundaryContainer;
+        private readonly IBoundaryProvider boundaryProvider;
 
         /// <summary>
         /// The default boundary name
@@ -21,21 +21,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
 
         /// <summary>
         /// Creates a new <see cref="UniqueBoundaryNameProvider"/> with the given
-        /// <paramref name="boundaryContainer"/>.
+        /// <paramref name="boundaryProvider"/>.
         /// </summary>
-        /// <param name="boundaryContainer">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary container.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="boundaryContainer"/> is <c>null</c>.
+        /// Thrown when <paramref name="boundaryProvider"/> is <c>null</c>.
         /// </exception>
-        public UniqueBoundaryNameProvider(IBoundaryContainer boundaryContainer)
+        public UniqueBoundaryNameProvider(IBoundaryProvider boundaryProvider)
         {
-            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
-            this.boundaryContainer = boundaryContainer;
+            Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
+            this.boundaryProvider = boundaryProvider;
         }
 
         public string GetUniqueName() =>
-            boundaryContainer.Boundaries.Any()
-                ? NamingHelper.GetUniqueName("Boundary({0})", boundaryContainer.Boundaries)
+            boundaryProvider.Boundaries.Any()
+                ? NamingHelper.GetUniqueName("Boundary({0})", boundaryProvider.Boundaries)
                 : DefaultBoundaryName;
     }
 }
