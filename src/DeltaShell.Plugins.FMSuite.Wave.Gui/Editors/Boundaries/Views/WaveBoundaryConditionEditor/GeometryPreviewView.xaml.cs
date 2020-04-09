@@ -22,9 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && DataContext is IDisposable disposableDataContext)
             {
-                WindowsFormsHost?.Dispose();
+                disposableDataContext.Dispose();
             }
         }
 

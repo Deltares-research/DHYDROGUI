@@ -1,29 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.FMSuite.Common.Gui.MapView;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
     /// <summary>
     /// <see cref="GeometryPreviewViewModel"/> implements the view model for the geometry preview view.
     /// </summary>
-    public class GeometryPreviewViewModel 
+    public sealed class GeometryPreviewViewModel : IDisposable
     {
-        private readonly IWaveBoundary waveBoundary;
-        private readonly IWaveBoundaryGeometryFactory geometryFactory;
-
         /// <summary>
         /// Creates a new <see cref="GeometryPreviewViewModel"/>.
         /// </summary>
         /// <param name="waveBoundary">The wave boundary.</param>
         /// <param name="geometryFactory">The geometry factory.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public GeometryPreviewViewModel(IWaveBoundary waveBoundary,
@@ -31,27 +28,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
-            
-            this.waveBoundary = waveBoundary;
-            this.geometryFactory = geometryFactory;
-            
-            Feature.Geometry = BuildBoundaryGeometry();
+
+            var singleBoundaryProvider = new SimpleBoundaryProvider(waveBoundary);
+
+            IBoundaryMapFeaturesContainer featuresContainer = 
+                BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(singleBoundaryProvider,
+                                                                                                  geometryFactory,
+                                                                                                  null);
+
+            var waveLayerFactory = new WaveLayerFactory();
+
+            MapViewModel.Map.Layers = new EventedList<ILayer> {waveLayerFactory.CreateBoundaryLayer(featuresContainer)};
+            MapViewModel.Map.ZoomToExtents();
+            MapViewModel.RefreshView();
+
+            featuresContainer.SupportPointMapFeatureProvider.FeaturesChanged +=
+                (sender, Args) => MapViewModel.RefreshView();
         }
 
         /// <summary>
-        /// Gets the feature displayed in this geometry preview.
+        /// Gets the <see cref="MapViewModel"/> used to render the preview.
         /// </summary>
-        public IFeature Feature { get; } = new Feature2D();
-        
-        private IGeometry BuildBoundaryGeometry()
+        public MapViewModel MapViewModel { get; } = new MapViewModel();
+
+        public void Dispose()
         {
-            IEnumerable<IPoint> endPoints = geometryFactory.ConstructBoundaryEndPoints(waveBoundary);
-            ILineString lineString = geometryFactory.ConstructBoundaryLineGeometry(waveBoundary);
+            MapViewModel?.Dispose();
+            GC.SuppressFinalize(this);
 
-            IEnumerable<IGeometry> geometries = endPoints.Concat<IGeometry>(new[] { lineString });
-
-            var geometryCollection = new GeometryCollection(geometries.ToArray());
-            return geometryCollection;
         }
     }
 }

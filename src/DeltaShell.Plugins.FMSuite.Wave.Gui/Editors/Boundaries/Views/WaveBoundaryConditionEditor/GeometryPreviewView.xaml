@@ -3,18 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:geometryPreview="clr-namespace:DeltaShell.Plugins.SharpMapGis.Gui.Forms;assembly=DeltaShell.Plugins.SharpMapGis.Gui"
-             xmlns:modelFeatureCoordinateDataEditor="clr-namespace:DeltaShell.Plugins.FMSuite.Common.Gui.Editors.ModelFeatureCoordinateDataEditor;assembly=DeltaShell.Plugins.FMSuite.Common.Gui"
+             xmlns:mapView="clr-namespace:DeltaShell.Plugins.FMSuite.Common.Gui.MapView;assembly=DeltaShell.Plugins.FMSuite.Common.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <GroupBox Header="Geometry">
-        <WindowsFormsHost modelFeatureCoordinateDataEditor:BoundaryGeometryPreviewWindowsFormsHostMap.Feature="{Binding Feature}"
-                          modelFeatureCoordinateDataEditor:BoundaryGeometryPreviewWindowsFormsHostMap.FeatureGeometry="{Binding Feature.Geometry}"
-                          Margin="10"
-                          x:Name="WindowsFormsHost">
-            <WindowsFormsHost.Child>
-                <geometryPreview:BoundaryGeometryPreview/>
-            </WindowsFormsHost.Child>
-        </WindowsFormsHost>
+        <mapView:MapView DataContext="{Binding Path=MapViewModel}"
+                         Width="auto"
+                         Height="auto"/>
     </GroupBox>
 </UserControl>
