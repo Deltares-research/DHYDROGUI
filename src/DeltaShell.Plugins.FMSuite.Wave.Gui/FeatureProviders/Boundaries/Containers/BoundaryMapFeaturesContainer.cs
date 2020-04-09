@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.Api;
 
@@ -42,11 +43,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
                                                               new UniqueBoundaryNameProvider(boundaryContainer));
             var geometryFactory = new WaveBoundaryGeometryFactory(boundaryContainer, boundaryContainer);
 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryContainer, 
+                                                                waveBoundaryFactory);
+
             BoundaryLineMapFeatureProvider = 
                 new BoundaryLineMapFeatureProvider(boundaryContainer,
                                                    coordinateSystem,
-                                                   waveBoundaryFactory,
-                                                   geometryFactory);
+                                                   geometryFactory, 
+                                                   addBehaviour);
             BoundaryEndPointMapFeatureProvider = 
                 new BoundaryEndPointMapFeatureProvider(boundaryContainer, 
                                                        coordinateSystem, 

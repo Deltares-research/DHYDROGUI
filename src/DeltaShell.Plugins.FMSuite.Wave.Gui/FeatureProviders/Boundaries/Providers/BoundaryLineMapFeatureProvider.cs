@@ -6,6 +6,7 @@ using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -30,8 +31,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     {
         private readonly MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature> lineFeatures;
         private readonly IBoundaryProvider boundaryProvider;
-        private readonly IWaveBoundaryFactory waveBoundaryFactory;
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
+        private readonly IAddBehaviour addBehaviour;
 
         private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature) =>
             new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
@@ -49,23 +50,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// </summary>
         /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <param name="waveBoundaryFactory">The waveBoundaryFactory.</param>
         /// <param name="waveBoundaryGeometryFactory">The waveBoundaryGeometryFactory.</param>
+        /// <param name="addBehaviour">The add behaviour.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter is <c>null</c>.
         /// </exception>
         public BoundaryLineMapFeatureProvider(IBoundaryProvider boundaryProvider, 
                                               ICoordinateSystem coordinateSystem, 
-                                              IWaveBoundaryFactory waveBoundaryFactory,
-                                              IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
+                                              IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory,
+                                              IAddBehaviour addBehaviour)
         {
             Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
-            Ensure.NotNull(waveBoundaryFactory, nameof(waveBoundaryFactory));
             Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+            Ensure.NotNull(addBehaviour, nameof(addBehaviour));
 
             CoordinateSystem = coordinateSystem;
 
-            this.waveBoundaryFactory = waveBoundaryFactory;
+            this.addBehaviour = addBehaviour;
             this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
 
             this.boundaryProvider = boundaryProvider;
@@ -77,33 +78,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         }
 
         /// <summary>
-        /// Construct a new <see cref="BoundaryLineFeature"/> based upon the
-        /// geometry, and add this feature to this <see cref="BoundaryLineMapFeatureProvider"/>.
+        /// Execute the provided add behaviour for the given <paramref name="geometry"/>,
+        /// and return null.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
         /// <returns>
-        /// The constructed <see cref="BoundaryLineFeature"/> if one could be constructed,
-        /// otherwise <c>null</c>.
+        /// <c>null</c>
         /// </returns>
-        /// <remarks>
-        /// This will add an <see cref="IWaveBoundary"/> to the underlying model.
-        /// </remarks>
         public override IFeature Add(IGeometry geometry)
         {
-            if (!(geometry is ILineString lineString))
-            {
-                return null;
-            }
-
-            IWaveBoundary boundary = waveBoundaryFactory.ConstructWaveBoundary(lineString);
-
-            if (boundary == null)
-            {
-                return null;
-            }
-
-            boundaryProvider.Boundaries.Add(boundary);
-            
+            addBehaviour.Execute(geometry);
             // We do not want to return this here, however the interface requires this (but never uses it).
             return null; 
         }
