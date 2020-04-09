@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
 
         public void Dispose()
         {
+            BoundaryGeometryView.Dispose();
         }
 
         public void EnsureVisible(object item)

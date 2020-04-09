@@ -14,6 +14,8 @@
         </Grid.ColumnDefinitions>
 
         <supportPoints:SupportPointEditorView Grid.Column="0" DataContext="{Binding Path=SupportPointEditorViewModel}"/>
-        <local:GeometryPreviewView Grid.Column="1" DataContext="{Binding Path=GeometryPreviewViewModel}" />
+        <local:GeometryPreviewView Grid.Column="1" 
+                                   DataContext="{Binding Path=GeometryPreviewViewModel}" 
+                                   x:Name="GeometryPreviewView"/>
     </Grid>
 </UserControl>
