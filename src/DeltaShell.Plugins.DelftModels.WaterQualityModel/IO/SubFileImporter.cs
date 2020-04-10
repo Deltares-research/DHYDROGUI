@@ -189,9 +189,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void ImportOutputParameters(IEventedList<WaterQualityOutputParameter> libraryOutputParameters, string subFileText)
         {
-            const string outputParameterPattern = @"output\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
-                                                  @"\s*description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                                                  @"end-output";
+            var outputRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("output", "Name", RegularExpression.Characters),
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+            };
+
+            string outputParameterPattern = SubFileHelper.GetRegexPattern(outputRegexInfos, @"\s*\n") +
+                                            @"end-output";
 
             var newOutputParameters = new Collection<WaterQualityOutputParameter>();
             var existingOutputParameters = new Collection<WaterQualityOutputParameter>();
@@ -377,6 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 target.Add(substance);
             }
         }
+
         #endregion
 
         #region Factory methods
