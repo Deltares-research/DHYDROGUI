@@ -10,6 +10,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -43,7 +45,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var boundary = Substitute.For<IWaveBoundary>();
             boundary.GeometricDefinition.Returns(geometricDefinition);
+
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var lineString = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 0),
+            });
+
+            geometryFactory.ConstructBoundarySupportPoint(null).ReturnsForAnyArgs(new Point(new Coordinate(5, 5)));
+            geometryFactory.ConstructBoundaryEndPoints(boundary).Returns(new[]
+            {
+                new Point(lineString.Coordinates[0]), 
+                new Point(lineString.Coordinates[1]), 
+            });
+
+
+            geometryFactory.ConstructBoundaryLineGeometry(boundary).Returns(lineString);
+
             SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
 
 

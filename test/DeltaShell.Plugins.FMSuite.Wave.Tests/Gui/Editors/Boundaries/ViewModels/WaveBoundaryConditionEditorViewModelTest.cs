@@ -10,6 +10,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -24,6 +26,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             WaveBoundary boundary = CreateBoundary();
             var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+
+            var lineString = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 0),
+            });
+
+            factory.ConstructBoundarySupportPoint(null).ReturnsForAnyArgs(new Point(new Coordinate(5, 5)));
+            factory.ConstructBoundaryEndPoints(boundary).Returns(new[]
+            {
+                new Point(lineString.Coordinates[0]), 
+                new Point(lineString.Coordinates[1]), 
+            });
+
+
+            factory.ConstructBoundaryLineGeometry(boundary).Returns(lineString);
+
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             boundary.Name = "A Boundary Name";
