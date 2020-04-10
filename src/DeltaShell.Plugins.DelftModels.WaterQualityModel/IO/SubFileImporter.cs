@@ -280,101 +280,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                    waterQualityOutputParameter.Name == Resources.SubstanceProcessLibrary_OutputParameters_Rad;
         }
 
-        private static bool Equals(WaterQualitySubstance first, WaterQualitySubstance second)
-        {
-            if (!Equals(first.Name, second.Name))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Description, second.Description))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Active, second.Active))
-            {
-                return false;
-            }
-
-            if (!Equals(first.ConcentrationUnit, second.ConcentrationUnit))
-            {
-                return false;
-            }
-
-            if (!Equals(first.WasteLoadUnit, second.WasteLoadUnit))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool Equals(WaterQualityProcess first, WaterQualityProcess second)
-        {
-            if (!Equals(first.Name, second.Name))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Description, second.Description))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool Equals(WaterQualityParameter first, WaterQualityParameter second)
-        {
-            if (!Equals(first.Name, second.Name))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Description, second.Description))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Unit, second.Unit))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool Equals(WaterQualityOutputParameter first, WaterQualityOutputParameter second)
-        {
-            if (!Equals(first.Name, second.Name))
-            {
-                return false;
-            }
-
-            if (!Equals(first.Description, second.Description))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool Equals(string first, string second)
-        {
-            if (first == null && second == null)
-            {
-                return true;
-            }
-
-            if (first == null)
-            {
-                return false;
-            }
-
-            return first.Equals(second, StringComparison.InvariantCultureIgnoreCase);
-        }
-
         #region Regex Patterns
 
         private static string GetSubstancePattern(string substanceSeparator)
@@ -654,6 +559,105 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             /// Gets the mew elements that were part of the import
             /// </summary>
             public IEnumerable<TWaterQualityElement> NewElements { get; }
+        }
+
+        #endregion
+
+        #region Equality methods
+
+        private static bool Equals(WaterQualitySubstance first, WaterQualitySubstance second)
+        {
+            if (!Equals(first.Name, second.Name))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Description, second.Description))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Active, second.Active))
+            {
+                return false;
+            }
+
+            if (!Equals(first.ConcentrationUnit, second.ConcentrationUnit))
+            {
+                return false;
+            }
+
+            if (!Equals(first.WasteLoadUnit, second.WasteLoadUnit))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool Equals(WaterQualityProcess first, WaterQualityProcess second)
+        {
+            if (!Equals(first.Name, second.Name))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Description, second.Description))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool Equals(WaterQualityParameter first, WaterQualityParameter second)
+        {
+            if (!Equals(first.Name, second.Name))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Description, second.Description))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Unit, second.Unit))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool Equals(WaterQualityOutputParameter first, WaterQualityOutputParameter second)
+        {
+            if (!Equals(first.Name, second.Name))
+            {
+                return false;
+            }
+
+            if (!Equals(first.Description, second.Description))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool Equals(string first, string second)
+        {
+            if (first == null && second == null)
+            {
+                return true;
+            }
+
+            if (first == null)
+            {
+                return false;
+            }
+
+            return first.Equals(second, StringComparison.InvariantCultureIgnoreCase);
         }
 
         #endregion
