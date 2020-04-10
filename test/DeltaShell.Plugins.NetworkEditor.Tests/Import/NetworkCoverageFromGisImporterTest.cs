@@ -15,7 +15,7 @@ using SharpMap.Extensions.Data.Providers;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category("Geodatabase_x86")]
+    [Category(TestCategory.X86)]
     public class NetworkCoverageFromGisImporterTest
     {
         [Test]

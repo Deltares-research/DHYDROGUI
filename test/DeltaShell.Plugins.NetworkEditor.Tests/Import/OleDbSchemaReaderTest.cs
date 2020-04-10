@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    [Category("OleDbSchema_x86")]
+    [Category(TestCategory.X86)]
     public class OleDbSchemaReaderTest
     {
         [Test]
