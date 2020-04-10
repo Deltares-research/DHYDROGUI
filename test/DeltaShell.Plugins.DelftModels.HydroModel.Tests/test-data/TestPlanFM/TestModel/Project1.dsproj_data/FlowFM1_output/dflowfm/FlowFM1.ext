@@ -1,6 +1,6 @@
 
 QUANTITY=discharge_salinity_temperature_sorsin
-FILENAME=SourceSink01.pli
+FILENAME=SourceSink01.pliz
 FILETYPE=9
 METHOD=1
 OPERAND=O

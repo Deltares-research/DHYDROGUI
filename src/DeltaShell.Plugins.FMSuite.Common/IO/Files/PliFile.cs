@@ -38,22 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
         public const string Extension = "pli";
 
-        /// <summary>
-        /// Creates and returns a <see cref="LineString" /> object with the provided coordinates.
-        /// </summary>
-        /// <param name="coordinates"> The collection of coordinates to put into the <see cref="LineString" /> object. </param>
-        /// <returns> An <see cref="IGeometry" /> object with the provided collection of coordinates. </returns>
-        /// <exception cref="ArgumentException"> Thrown when the amount of coordinates is smaller than 2. </exception>
-        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates)
-        {
-            if (coordinates.Count < 2)
-            {
-                throw new ArgumentException($"Cannot create polyline for {typeof(T).Name} with less than 2 points.");
-            }
-
-            return new LineString(coordinates.ToArray());
-        }
-
         public Func<List<Coordinate>, string, T> CreateDelegate { private get; set; }
 
         /// <summary>
@@ -318,10 +302,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return features;
         }
 
-        private T CreateFeature2D(string name, List<Coordinate> points, int numColumns,
-                                  IList<IList<double>> columnNumericalValueLists,
-                                  IList<IList<string>> columnStringValueLists,
-                                  IDictionary<int, string> locationNames, string pliFilePath)
+        private T CreateFeature2D(string name,
+                                  List<Coordinate> points, 
+                                  int numColumns,
+                                  IEnumerable<IList<double>> columnNumericalValueLists,
+                                  IEnumerable<IList<string>> columnStringValueLists,
+                                  IDictionary<int, string> locationNames, 
+                                  string pliFilePath)
         {
             T feature = CreateDelegate != null
                             ? CreateDelegate(points, name)
@@ -329,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             {
                                 Name = name,
                                 Geometry = points.Count != 1
-                                               ? CreatePolyLineGeometry(points)
+                                               ? GeometryCreator.CreatePolyLineGeometry(points)
                                                : new Point(points.FirstOrDefault())
                             };
 
@@ -384,8 +371,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return feature;
         }
 
-        private void BuildColumnValuesFromFeature<TS>(T feature2D, List<IList<TS>> columnValues,
-                                                      string[] columnAttributeKeys, ref int numColumns)
+        private static void BuildColumnValuesFromFeature<TS>(T feature2D, 
+                                                             ICollection<IList<TS>> columnValues,
+                                                             IEnumerable<string> columnAttributeKeys, 
+                                                             ref int numColumns)
         {
             foreach (string key in columnAttributeKeys)
             {
@@ -394,8 +383,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     continue;
                 }
 
-                var valueList = feature2D.Attributes[key] as IList<TS>;
-                if (valueList != null)
+                if (feature2D.Attributes[key] is IList<TS> valueList)
                 {
                     columnValues.Add(valueList);
                     numColumns++; // add value columns
@@ -403,8 +391,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
         }
 
-        private void ConstructLineContent<TS>(int lineNumber, List<IList<TS>> columnValues, TS defaultValue,
-                                              string[] columnAttributeKeys, ref string lineContent, string featureName)
+        private void ConstructLineContent<TS>(int lineNumber, 
+                                              IList<IList<TS>> columnValues, 
+                                              TS defaultValue,
+                                              IReadOnlyList<string> columnAttributeKeys,
+                                              ref string lineContent, 
+                                              string featureName)
         {
             foreach (IList<TS> columnValueList in columnValues)
             {

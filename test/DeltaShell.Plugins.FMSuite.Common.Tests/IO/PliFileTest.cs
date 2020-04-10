@@ -7,10 +7,10 @@ using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -24,14 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadGroupableFeaturePliFileAssignsGroupName()
         {
             var groupName = "CrsGroup1_crs.pli";
-            var filePath = TestHelper.GetTestFilePath(Path.Combine(@"HydroAreaCollection", groupName));
+            string filePath = TestHelper.GetTestFilePath(Path.Combine(@"HydroAreaCollection", groupName));
             Assert.IsTrue(File.Exists(filePath));
             filePath = TestHelper.CreateLocalCopy(filePath);
             try
             {
                 var pliFile = new PliFile<ObservationCrossSection2D>();
-                var readObjects = pliFile.Read(filePath);
-                var groups = readObjects.GroupBy(g => g.GroupName).ToList();
+                IList<ObservationCrossSection2D> readObjects = pliFile.Read(filePath);
+                List<IGrouping<string, ObservationCrossSection2D>> groups = readObjects.GroupBy(g => g.GroupName).ToList();
                 Assert.That(groups.Count, Is.EqualTo(1));
                 Assert.That(groups.First().Key, Is.EqualTo(filePath.Replace(@"\", "/")));
             }
@@ -46,27 +46,44 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void WriteReadFeatureWithColumnsAndLocationNames()
         {
             var feature = new Feature2D
-                {
-                    Name = "line",
-                    Geometry =
-                        new LineString(new []
-                            {
-                                new Coordinate(-12345, 54321), new Coordinate(-23451, 43215), new Coordinate(-34512, 32154),
-                                new Coordinate(-45123,21453)
-                            }),
-                    Attributes = new DictionaryFeatureAttributeCollection()
-                };
-            feature.Attributes.Add("Column3", new List<double>(new[] {0.5, 1.4, 2.3, 3.1}));
-            feature.Attributes.Add("Locations", new List<string>(new[] {"loc_a", "loc_b", "loc_c", "loc_d"}));
+            {
+                Name = "line",
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(-12345, 54321),
+                        new Coordinate(-23451, 43215),
+                        new Coordinate(-34512, 32154),
+                        new Coordinate(-45123, 21453)
+                    }),
+                Attributes = new DictionaryFeatureAttributeCollection()
+            };
+            feature.Attributes.Add("Column3", new List<double>(new[]
+            {
+                0.5,
+                1.4,
+                2.3,
+                3.1
+            }));
+            feature.Attributes.Add("Locations", new List<string>(new[]
+            {
+                "loc_a",
+                "loc_b",
+                "loc_c",
+                "loc_d"
+            }));
 
             var file = new PliFile<Feature2D>();
-            file.Write("feature.pli", new[] {feature});
+            file.Write("feature.pli", new[]
+            {
+                feature
+            });
 
-            var features = file.Read("feature.pli");
+            IList<Feature2D> features = file.Read("feature.pli");
 
             Assert.AreEqual(1, features.Count);
 
-            var featureCopy = features[0];
+            Feature2D featureCopy = features[0];
 
             Assert.AreEqual(feature.Name, featureCopy.Name);
             Assert.AreEqual(feature.Geometry.Coordinates, featureCopy.Geometry.Coordinates);
@@ -82,39 +99,79 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 Name = "line_1",
                 Geometry =
-                    new LineString(new []
-                            {
-                                new Coordinate(-12345, 54321), new Coordinate(-23451, 43215), new Coordinate(-34512, 32154),
-                                new Coordinate(-45123,21453)
-                            }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(-12345, 54321),
+                        new Coordinate(-23451, 43215),
+                        new Coordinate(-34512, 32154),
+                        new Coordinate(-45123, 21453)
+                    }),
                 Attributes = new DictionaryFeatureAttributeCollection()
             };
-            feature1.Attributes.Add("Column3", new List<double>(new[] { 0.5, 1.4, 2.3, 3.1 }));
-            feature1.Attributes.Add("Locations", new List<string>(new[] { "loc_a", "loc_b", "loc_c", "loc_d" }));
+            feature1.Attributes.Add("Column3", new List<double>(new[]
+            {
+                0.5,
+                1.4,
+                2.3,
+                3.1
+            }));
+            feature1.Attributes.Add("Locations", new List<string>(new[]
+            {
+                "loc_a",
+                "loc_b",
+                "loc_c",
+                "loc_d"
+            }));
 
             var feature2 = new Feature2D
             {
                 Name = "line_2",
                 Geometry =
-                    new LineString(new []
-                            {
-                                new Coordinate(-54321, 12345), new Coordinate(-43215, 23451), new Coordinate(-32154, 34512),
-                            }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(-54321, 12345),
+                        new Coordinate(-43215, 23451),
+                        new Coordinate(-32154, 34512),
+                    }),
                 Attributes = new DictionaryFeatureAttributeCollection()
             };
-            feature2.Attributes.Add("Column3", new List<double>(new[] { -0.5, -1.4, -2.3 }));
-            feature2.Attributes.Add("Column4", new List<double>(new[] { -0.6, -1.5, -2.4 }));
-            feature2.Attributes.Add("Column5", new List<double>(new[] { -0.7, -1.6, -2.5 }));
-            feature2.Attributes.Add("Locations", new List<string>(new[] { "loc_a*", "loc_b*", "loc_c*" }));
+            feature2.Attributes.Add("Column3", new List<double>(new[]
+            {
+                -0.5,
+                -1.4,
+                -2.3
+            }));
+            feature2.Attributes.Add("Column4", new List<double>(new[]
+            {
+                -0.6,
+                -1.5,
+                -2.4
+            }));
+            feature2.Attributes.Add("Column5", new List<double>(new[]
+            {
+                -0.7,
+                -1.6,
+                -2.5
+            }));
+            feature2.Attributes.Add("Locations", new List<string>(new[]
+            {
+                "loc_a*",
+                "loc_b*",
+                "loc_c*"
+            }));
 
             var file = new PliFile<Feature2D>();
-            file.Write("features.pli", new[] { feature1, feature2 });
+            file.Write("features.pli", new[]
+            {
+                feature1,
+                feature2
+            });
 
-            var features = file.Read("features.pli");
+            IList<Feature2D> features = file.Read("features.pli");
 
             Assert.AreEqual(2, features.Count());
 
-            var featureCopy = features[0];
+            Feature2D featureCopy = features[0];
 
             Assert.AreEqual(feature1.Name, featureCopy.Name);
             Assert.AreEqual(feature1.Geometry.Coordinates, featureCopy.Geometry.Coordinates);
@@ -143,20 +200,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             const string fileName = "many_features.pli";
 
             var featureCollection = new List<Feature2D>();
-            for (int i = 0; i < featureCount; ++i)
+            for (var i = 0; i < featureCount; ++i)
             {
                 var feature = new Feature2D {Name = "feature_" + i};
-                var elevation = Math.Tan(2*i*Math.PI/pointsPerFeature);
-                var points = Enumerable.Range(0, pointsPerFeature).Select(t => new Coordinate(t, elevation*t)).ToList();
+                double elevation = Math.Tan((2 * i * Math.PI) / pointsPerFeature);
+                List<Coordinate> points = Enumerable.Range(0, pointsPerFeature).Select(t => new Coordinate(t, elevation * t)).ToList();
                 feature.Geometry = new LineString(points.ToArray());
                 feature.Attributes = new DictionaryFeatureAttributeCollection
-                    {
-                        {"Column3", points.Select(p => p.Y/(1 + p.X*p.X)).ToList()},
-                        {"Column4", points.Select(p => p.X/(1 + p.Y*p.Y)).ToList()},
-                        {"Locations", Enumerable.Range(0, pointsPerFeature).Select(p => "pt_" + p).ToList()}
-                    };
+                {
+                    {"Column3", points.Select(p => p.Y / (1 + (p.X * p.X))).ToList()},
+                    {"Column4", points.Select(p => p.X / (1 + (p.Y * p.Y))).ToList()},
+                    {"Locations", Enumerable.Range(0, pointsPerFeature).Select(p => "pt_" + p).ToList()}
+                };
                 featureCollection.Add(feature);
             }
+
             var file = new PliFile<Feature2D>();
             try
             {
@@ -167,7 +225,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 File.Delete(fileName);
             }
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -180,20 +237,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             const string fileName = "many_features.pli";
 
             var featureCollection = new List<Feature2D>();
-            for (int i = 0; i < featureCount; ++i)
+            for (var i = 0; i < featureCount; ++i)
             {
-                var feature = new Feature2D { Name = "feature_" + i };
-                var elevation = Math.Tan(2 * i * Math.PI / pointsPerFeature);
-                var points = Enumerable.Range(0, pointsPerFeature).Select(t => new Coordinate(t, elevation * t)).ToList();
+                var feature = new Feature2D {Name = "feature_" + i};
+                double elevation = Math.Tan((2 * i * Math.PI) / pointsPerFeature);
+                List<Coordinate> points = Enumerable.Range(0, pointsPerFeature).Select(t => new Coordinate(t, elevation * t)).ToList();
                 feature.Geometry = new LineString(points.ToArray());
                 feature.Attributes = new DictionaryFeatureAttributeCollection
-                    {
-                        {"Column3", points.Select(p => p.Y/(1 + p.X*p.X)).ToList()},
-                        {"Column4", points.Select(p => p.X/(1 + p.Y*p.Y)).ToList()},
-                        {"Locations", Enumerable.Range(0, pointsPerFeature).Select(p => "pt_" + p).ToList()}
-                    };
+                {
+                    {"Column3", points.Select(p => p.Y / (1 + (p.X * p.X))).ToList()},
+                    {"Column4", points.Select(p => p.X / (1 + (p.Y * p.Y))).ToList()},
+                    {"Locations", Enumerable.Range(0, pointsPerFeature).Select(p => "pt_" + p).ToList()}
+                };
                 featureCollection.Add(feature);
             }
+
             var file = new PliFile<Feature2D>();
             try
             {
@@ -210,17 +268,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenSimplePliFile_WhenReadingFile_ThenAllDataIsReadAndStoredAsFeatureAttributes()
         {
             var testFileName = "OneSimpleFixedWeir_fxw.pli";
-            var testDir = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection"));
-            var filePath = Path.Combine(testDir, testFileName);
+            string testDir = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection"));
+            string filePath = Path.Combine(testDir, testFileName);
 
             var fileReader = new PliFile<Feature2D>();
-            var fixedWeirs = fileReader.Read(filePath);
+            IList<Feature2D> fixedWeirs = fileReader.Read(filePath);
             Assert.That(fixedWeirs.Count, Is.EqualTo(1));
 
-            var fixedWeir = fixedWeirs.FirstOrDefault();
-            var attributes = fixedWeir.Attributes;
+            Feature2D fixedWeir = fixedWeirs.FirstOrDefault();
+            IFeatureAttributeCollection attributes = fixedWeir.Attributes;
             Assert.That(attributes.Count, Is.EqualTo(8));
-            
+
             attributes.CheckDoubleValuesForColumn("Column3", 10.96, 10.89);
             attributes.CheckDoubleValuesForColumn("Column4", 3.5, 3.0);
             attributes.CheckDoubleValuesForColumn("Column5", 3.2, 3.3);
@@ -234,39 +292,46 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenSimpleFixedWeir_WhenWritingToPlizFile_ThenAllAttributeValuesAreWritten()
         {
-            var filePath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection/OneSimpleFixedWeir_fxw.pli"));
-            var writeToFilePath = Path.Combine(Path.GetDirectoryName(filePath), "WrittenFixedWeirs_fxw.pli");
+            string filePath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection/OneSimpleFixedWeir_fxw.pli"));
+            string writeToFilePath = Path.Combine(Path.GetDirectoryName(filePath), "WrittenFixedWeirs_fxw.pli");
             try
             {
                 var fileReaderWriter = new PliFile<Feature2D>();
-                var fixedWeirs = fileReaderWriter.Read(filePath);
+                IList<Feature2D> fixedWeirs = fileReaderWriter.Read(filePath);
                 fileReaderWriter.Write(writeToFilePath, fixedWeirs);
 
-                var originalContent = File.ReadAllLines(filePath);
-                var resultingContent = File.ReadAllLines(writeToFilePath);
+                string[] originalContent = File.ReadAllLines(filePath);
+                string[] resultingContent = File.ReadAllLines(writeToFilePath);
 
                 // Check if values in the resulting file are equal to the values in the original file.
                 Assert.That(originalContent.Length, Is.EqualTo(resultingContent.Length));
                 for (var i = 0; i < originalContent.Length; i++)
                 {
                     var originalSeparator = '\t';
-                    if (i == 1) originalSeparator = ' ';
+                    if (i == 1)
+                    {
+                        originalSeparator = ' ';
+                    }
+
                     var resultingSeparator = ' ';
 
-                    var originalLineContent = originalContent[i].Split(originalSeparator).Where(s => s != string.Empty).ToArray();
-                    var resultingLineContent = resultingContent[i].Split(resultingSeparator).Where(s => s != string.Empty).ToArray();
+                    string[] originalLineContent = originalContent[i].Split(originalSeparator).Where(s => s != string.Empty).ToArray();
+                    string[] resultingLineContent = resultingContent[i].Split(resultingSeparator).Where(s => s != string.Empty).ToArray();
                     Assert.That(originalLineContent.Length == resultingLineContent.Length);
                     for (var n = 0; n < resultingLineContent.Length; n++)
                     {
                         var equalValues = false;
-                        if (i < 2) equalValues = originalLineContent[n].Trim() == resultingLineContent[n].Trim();
+                        if (i < 2)
+                        {
+                            equalValues = originalLineContent[n].Trim() == resultingLineContent[n].Trim();
+                        }
                         else if (n < resultingLineContent.Length - 1)
                         {
-                            var originalValue = Double.Parse(originalLineContent[n], CultureInfo.InvariantCulture);
-                            var resultingValue = Double.Parse(resultingLineContent[n], CultureInfo.InvariantCulture);
-                            equalValues = (originalValue == resultingValue);
+                            double originalValue = double.Parse(originalLineContent[n], CultureInfo.InvariantCulture);
+                            double resultingValue = double.Parse(resultingLineContent[n], CultureInfo.InvariantCulture);
+                            equalValues = originalValue == resultingValue;
                         }
-                        else if(n == resultingLineContent.Length - 1)
+                        else if (n == resultingLineContent.Length - 1)
                         {
                             equalValues = originalLineContent[n].Trim() == resultingLineContent[n].Trim();
                         }
@@ -298,14 +363,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenValidPliFileWithLocationNamesOnPoints_WhenReading_ThenLocationNamesAreStoredInFeatureAttributes()
         {
-            var features = ReadPliFile("HydroAreaCollection/FeatureWithLocationNamesOnPoints_fxw.pli");
+            IList<Feature2D> features = ReadPliFile("HydroAreaCollection/FeatureWithLocationNamesOnPoints_fxw.pli");
             Assert.That(features.Count, Is.EqualTo(1));
-            var feature = features.FirstOrDefault();
+            Feature2D feature = features.FirstOrDefault();
             Assert.NotNull(feature);
 
-            var attributes = feature.Attributes;
+            IFeatureAttributeCollection attributes = feature.Attributes;
             Assert.That(attributes.Keys.Contains(Feature2D.LocationKey));
-            var locationNames = (GeometryPointsSyncedList<string>)attributes[Feature2D.LocationKey];
+            var locationNames = (GeometryPointsSyncedList<string>) attributes[Feature2D.LocationKey];
             Assert.That(locationNames[0], Is.EqualTo("point1"));
             Assert.That(locationNames[1], Is.EqualTo("point2"));
         }
@@ -313,40 +378,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenPliFileThatContainsOnePoint_WhenReadingPliFile_ThenPointIsReturned()
         {
-            var sources = ReadPliFile("structures/SourceSink01.pli");
+            IList<Feature2D> sources = ReadPliFile("structures/SourceSink01.pli");
             Assert.That(sources.Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void GivenCollectionOfCoordinates_WhenCreatingPolyLineGeometry_ThenLineStringWithTheSameCoordinatesIsReturned()
-        {
-            // Given
-            var coordinates = new[] {new Coordinate(0, 0), new Coordinate(1, 1)};
-
-            // When
-            var lineString = PliFile<Branch>.CreatePolyLineGeometry(coordinates) as LineString;
-
-            // Then
-            Assert.IsNotNull(lineString, "Returned IGeometry is not a LineString object.");
-            Assert.That(lineString.Coordinates, Is.EqualTo(coordinates));
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot create polyline for Embankment with less than 2 points.")]
-        public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingPolyLineGeometry_ThenArgumentExceptionIsThrown()
-        {
-            // Given
-            var coordinates = new[] { new Coordinate(0, 0) };
-
-            // When/Then
-            PliFile<Embankment>.CreatePolyLineGeometry(coordinates);
         }
 
         #region Test helper methods
 
         private static IList<Feature2D> ReadPliFile(string relativeFilePath)
         {
-            var filePath =
+            string filePath =
                 TestHelper.CreateLocalCopy(
                     TestHelper.GetTestFilePath(relativeFilePath));
             IList<Feature2D> features = new List<Feature2D>();
@@ -359,6 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(filePath));
             }
+
             return features;
         }
 
