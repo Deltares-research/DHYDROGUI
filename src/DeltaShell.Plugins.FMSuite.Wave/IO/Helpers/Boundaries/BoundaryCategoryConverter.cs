@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY),
                 SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportType>(KnownWaveProperties.SpectrumSpec),
                 ShapeType = boundaryCategory.GetEnumValue<ShapeImportType>(KnownWaveProperties.ShapeType),
-                PeriodType = boundaryCategory.GetEnumValue<PeriodImportType>(KnownWaveProperties.PeriodType),
+                PeriodType = boundaryCategory.GetEnumValue<PeriodImportExportType>(KnownWaveProperties.PeriodType),
                 SpreadingType = boundaryCategory.GetEnumValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType),
                 PeakEnhancementFactor = boundaryCategory.GetDoubleValue(KnownWaveProperties.PeakEnhancementFactor),
                 Spreading = boundaryCategory.GetDoubleValue(KnownWaveProperties.GaussianSpreading),

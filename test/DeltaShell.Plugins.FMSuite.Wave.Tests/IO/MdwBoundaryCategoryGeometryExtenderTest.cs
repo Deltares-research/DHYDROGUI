@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
     [TestFixture]
-    public class MdwBoundaryGeometryPropertiesCreatorTest
+    public class MdwBoundaryCategoryGeometryExtenderTest
     {
         [Test]
         public void AddNewProperties_ForBoundaryGeometryDefinitionWithUnsortedSupportPoints()
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint1).Returns(coordinate1);
             boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoint2).Returns(coordinate2);
 
-            MdwBoundaryGeometryPropertiesCreator.AddNewProperties(category, boundaryContainer, supportPoints);
+            MdwBoundaryCategoryGeometryExtender.AddNewProperties(category, boundaryContainer, supportPoints);
 
             List<DelftIniProperty> properties = category.Properties.ToList();
             Assert.AreEqual(5, properties.Count);

@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         [TestCaseSource(nameof(GetTestCases))]
         public void Convert_ReturnsCorrectResult(string spectrumTypeStr, SpectrumImportType expectedSpectrumType,
                                                  string shapeTypeStr, ShapeImportType expectedShapeType,
-                                                 string periodTypeStr, PeriodImportType expectedPeriodType,
+                                                 string periodTypeStr, PeriodImportExportType expectedPeriodType,
                                                  string spreadingTypeStr, SpreadingImportType expectedSpreadingType,
                                                  string definitionTypeStr, DefinitionImportType expectedDefinitionType)
         {
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportType>().GetDescription());
+            category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
 
             // Call
@@ -170,8 +170,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static IEnumerable<object[]> PeriodTypeTestCases()
         {
-            yield return SubTestCase("mean", PeriodImportType.Mean);
-            yield return SubTestCase("peak", PeriodImportType.Peak);
+            yield return SubTestCase("mean", PeriodImportExportType.Mean);
+            yield return SubTestCase("peak", PeriodImportExportType.Peak);
         }
 
         private static IEnumerable<object[]> SpreadingTypeTestCases()

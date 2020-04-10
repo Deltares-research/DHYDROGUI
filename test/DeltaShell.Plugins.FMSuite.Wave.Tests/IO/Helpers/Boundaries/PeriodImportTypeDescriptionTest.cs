@@ -6,13 +6,13 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
     [TestFixture]
-    public class PeriodImportTypeDescriptionTest : EnumDescriptionTestFixture<PeriodImportType>
+    public class PeriodImportTypeDescriptionTest : EnumDescriptionTestFixture<PeriodImportExportType>
     {
-        protected override IDictionary<PeriodImportType, string> ExpectedDescriptionForEnumValues =>
-            new Dictionary<PeriodImportType, string>
+        protected override IDictionary<PeriodImportExportType, string> ExpectedDescriptionForEnumValues =>
+            new Dictionary<PeriodImportExportType, string>
             {
-                {PeriodImportType.Mean, KnownWaveBoundariesFileConstants.MeanPeriodType},
-                {PeriodImportType.Peak, KnownWaveBoundariesFileConstants.PeakPeriodType},
+                {PeriodImportExportType.Mean, KnownWaveBoundariesFileConstants.MeanPeriodType},
+                {PeriodImportExportType.Peak, KnownWaveBoundariesFileConstants.PeakPeriodType},
             };
     }
 }

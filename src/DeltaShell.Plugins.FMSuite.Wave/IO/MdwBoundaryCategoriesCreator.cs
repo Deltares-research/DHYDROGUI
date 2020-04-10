@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     public static class MdwBoundaryCategoriesCreator
     {
         /// <summary>
-        /// Creates and returns a <see cref="DelftIniCategory"/> from the data of a wave spatiallyVaryingDataComponent condition.
+        /// Creates and returns a collection of <see cref="DelftIniCategory"/> from the wave boundaries in the specified <paramref name="boundaryContainer"/>
         /// </summary>
-        /// <param name="boundaryContainer"> </param>
-        /// <returns>The requested <see cref="DelftIniCategory"/>.</returns>
+        /// <param name="boundaryContainer"> Boundary container of the model definition </param>
+        /// <returns>A collection of <see cref="DelftIniCategory"/>.</returns>
         public static IEnumerable<DelftIniCategory> CreateCategories(IBoundaryContainer boundaryContainer)
         {
             foreach (IWaveBoundary boundary in boundaryContainer.Boundaries)
@@ -22,9 +22,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
                 
                 boundaryCategory.AddProperty(KnownWaveProperties.Name, boundary.Name);
-                MdwBoundaryGeometryPropertiesCreator.AddNewProperties(boundaryCategory, boundaryContainer, boundary.GeometricDefinition.SupportPoints);
+                MdwBoundaryCategoryGeometryExtender.AddNewProperties(boundaryCategory, boundaryContainer, boundary.GeometricDefinition.SupportPoints);
                 boundaryCategory.AddProperty(KnownWaveProperties.SpectrumSpec, "parametric");
-                MdwBoundaryConditionPropertiesCreator.AddNewProperties(boundaryCategory, boundary.ConditionDefinition);
+                MdwBoundaryCategoryConditionsExtender.AddNewProperties(boundaryCategory, boundary.ConditionDefinition);
 
                 yield return boundaryCategory;
             }

@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <summary>
         /// Gets or sets the period type.
         /// </summary>
-        public PeriodImportType PeriodType { get; set; }
+        public PeriodImportExportType PeriodType { get; set; }
 
         /// <summary>
         /// Gets or sets the spreading type.

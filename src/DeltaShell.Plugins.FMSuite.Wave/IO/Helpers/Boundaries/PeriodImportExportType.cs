@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// <summary>
     /// Period import type of the wave boundary
     /// </summary>
-    public enum PeriodImportType
+    public enum PeriodImportExportType
     {
         [Description(KnownWaveBoundariesFileConstants.MeanPeriodType)]
         Mean,

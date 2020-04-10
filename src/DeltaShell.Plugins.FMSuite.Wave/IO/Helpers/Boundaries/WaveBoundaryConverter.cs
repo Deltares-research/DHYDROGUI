@@ -250,9 +250,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             switch (boundaryBlock.PeriodType)
             {
-                case PeriodImportType.Mean:
+                case PeriodImportExportType.Mean:
                     return BoundaryConditionPeriodType.Mean;
-                case PeriodImportType.Peak:
+                case PeriodImportExportType.Peak:
                     return BoundaryConditionPeriodType.Peak;
                 default:
                     throw new NotSupportedException($"Value '{boundaryBlock.PeriodType}' is not a valid period type.");

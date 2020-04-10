@@ -200,7 +200,7 @@
     <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlock.cs" />
-    <Compile Include="IO\Helpers\Boundaries\PeriodImportType.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeImportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpectrumImportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportType.cs" />
@@ -218,9 +218,9 @@
     <Compile Include="IO\IShapeVisitor.cs" />
     <Compile Include="IO\IDataComponentVisitor.cs" />
     <Compile Include="IO\ISpreadingVisitor.cs" />
-    <Compile Include="IO\MdwBoundaryConditionPropertiesCreator.cs" />
+    <Compile Include="IO\MdwBoundaryCategoryConditionsExtender.cs" />
     <Compile Include="IO\MdwFile.cs" />
-    <Compile Include="IO\MdwBoundaryGeometryPropertiesCreator.cs" />
+    <Compile Include="IO\MdwBoundaryCategoryGeometryExtender.cs" />
     <Compile Include="IO\MdwBoundaryCategoriesCreator.cs" />
     <Compile Include="IO\Sp2File.cs" />
     <Compile Include="IO\WaveBoundaryImportHelper.cs" />

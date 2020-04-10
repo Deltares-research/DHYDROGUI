@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
     /// <see cref="BoundaryConditionPeriodType"/> defines the possible options of
@@ -8,10 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
     /// </summary>
     public enum BoundaryConditionPeriodType
     {
-        [Description("peak")]
         Peak = 1,
         
-        [Description("mean")]
         Mean = 2,
     }
 }

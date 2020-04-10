@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using NSubstitute;
@@ -157,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[7].Name);
             Assert.AreEqual("Jonswap", properties[7].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[8].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[8].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[8].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[9].Name);
             Assert.AreEqual("Power", properties[9].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[10].Name);

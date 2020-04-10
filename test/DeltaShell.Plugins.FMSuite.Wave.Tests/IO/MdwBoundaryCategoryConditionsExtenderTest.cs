@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
@@ -11,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
@@ -18,7 +18,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
     [TestFixture]
-    public class MdwBoundaryConditionPropertiesCreatorTest
+    public class MdwBoundaryCategoryConditionsExtenderTest
     {
         private const double height1 = 1.0;
         private const double period1 = 2.0;
@@ -34,96 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         private const BoundaryConditionPeriodType periodType = BoundaryConditionPeriodType.Peak;
-
-        [Test]
-        public void Visit_JonswapShape()
-        {
-            // Arrange
-            MdwBoundaryConditionPropertiesCreator propertiesCreator =
-                CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category);
-
-            category.AddProperty(KnownWaveProperties.ShapeType, "notset");
-           
-            // Act
-            propertiesCreator.Visit(jonswapShape);
-
-            // Assert
-            List<DelftIniProperty> properties = category.Properties.ToList();
-            Assert.AreEqual(2, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
-            Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[1].Name);
-            Assert.AreEqual(GetStringValue(factor), properties[1].Value);
-        }
-
-        [Test]
-        public void Visit_GaussShape()
-        {
-            // Arrange
-            MdwBoundaryConditionPropertiesCreator propertiesCreator =
-                CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category);
-
-            category.AddProperty(KnownWaveProperties.ShapeType, "notset");
-            
-            const double gaussianSpread = 3.4;
-            var gaussShape = new GaussShape { GaussianSpread = gaussianSpread };
-            
-            // Act
-            propertiesCreator.Visit(gaussShape);
-
-            // Assert
-            List<DelftIniProperty> properties = category.Properties.ToList();
-            Assert.AreEqual(2, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Gauss", properties[0].Value);
-            Assert.AreEqual(KnownWaveProperties.GaussianSpreading, properties[1].Name);
-            Assert.AreEqual(GetStringValue(gaussianSpread), properties[1].Value);
-        }
-
-        [Test]
-        public void Visit_PiersonMoskowitzShape()
-        {
-            // Arrange
-            MdwBoundaryConditionPropertiesCreator propertiesCreator =
-                CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category);
-
-            category.AddProperty(KnownWaveProperties.ShapeType, "notset");
-            
-            var piersonMoskowitzShape = new PiersonMoskowitzShape();
-            
-            // Act
-            propertiesCreator.Visit(piersonMoskowitzShape);
-
-            // Assert
-            List<DelftIniProperty> properties = category.Properties.ToList();
-            Assert.AreEqual(1, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Pierson-Moskowitz", properties[0].Value);
-        }
-        
-        [Test]
-        public void Visit_WaveBoundaryConditionDefinition()
-        {
-            // Arrange
-            MdwBoundaryConditionPropertiesCreator propertiesCreator =
-                CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category);
-
-            var waveBoundaryConditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            waveBoundaryConditionDefinition.PeriodType = periodType;
-
-            // Act
-            propertiesCreator.Visit(waveBoundaryConditionDefinition);
-            
-            // Assert
-            List<DelftIniProperty> properties = category.Properties.ToList();
-            Assert.AreEqual(3, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual(string.Empty, properties[0].Value);
-            Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
-            Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual(string.Empty, properties[2].Value);
-        }
         
         [Test]
         public void AddNewProperties_ForUniformConstantPowerBoundary()
@@ -136,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
            
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -145,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Power", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -172,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -181,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Degrees", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -208,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -217,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Power", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -236,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
 
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -245,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Degrees", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -272,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -281,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Power", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -330,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
             
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -339,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Power", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
@@ -361,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, periodType, dataComponent);
 
             // Act
-            MdwBoundaryConditionPropertiesCreator.AddNewProperties(category, conditionDefinition);
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             List<DelftIniProperty> properties = category.Properties.ToList();
@@ -370,18 +280,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
             Assert.AreEqual("Jonswap", properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
-            Assert.AreEqual(periodType.GetDescription(), properties[1].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
             Assert.AreEqual("Power", properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
-        }
-
-        private static MdwBoundaryConditionPropertiesCreator CreateMdwBoundaryConditionPropertiesCreator(out DelftIniCategory category)
-        {
-            category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-            var propertiesCreator = new MdwBoundaryConditionPropertiesCreator(category);
-            return propertiesCreator;
         }
 
         private static string GetStringValue(double value)

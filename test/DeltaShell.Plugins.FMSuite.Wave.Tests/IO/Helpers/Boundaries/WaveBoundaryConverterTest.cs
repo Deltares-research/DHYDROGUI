@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_UniformConstantBoundaryData_ReturnsCorrectUniformConstantWaveBoundary(
-            ShapeImportType shapeType, PeriodImportType periodType,
+            ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
             double gaussianSpreading, double peakEnhancementFactor)
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_UniformTimeDependentBoundaryData_ReturnsCorrectUniformTimeDependentWaveBoundary(
-            ShapeImportType shapeType, PeriodImportType periodType,
+            ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
             double gaussianSpreading, double peakEnhancementFactor)
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_SpatiallyVaryingConstantBoundaryData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
-            ShapeImportType shapeType, PeriodImportType periodType,
+            ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
             double gaussianSpreading, double peakEnhancementFactor)
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_SpatiallyVaryingTimeDependentBoundaryData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
-            ShapeImportType shapeType, PeriodImportType periodType,
+            ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
             double gaussianSpreading, double peakEnhancementFactor)
@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             DelftIniCategory[] categories =
             {
                 GetBoundaryCategory(random.NextEnumValue<ShapeImportType>(),
-                                    random.NextEnumValue<PeriodImportType>(),
+                                    random.NextEnumValue<PeriodImportExportType>(),
                                     mdwValues, spectrumSpec)
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
@@ -311,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             DelftIniCategory[] categories =
             {
                 GetBoundaryCategory(random.NextEnumValue<ShapeImportType>(),
-                                    random.NextEnumValue<PeriodImportType>(),
+                                    random.NextEnumValue<PeriodImportExportType>(),
                                     mdwValues, "parametrized", "orientation")
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_SpatiallyVaryingConstantBoundaryData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
-            ShapeImportType shapeType, PeriodImportType periodType,
+            ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
             double gaussianSpreading, double peakEnhancementFactor)
@@ -381,22 +381,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var expectedGaussShape = new GaussShape {GaussianSpread = gaussianSpreading};
             var expectedJonswapShape = new JonswapShape {PeakEnhancementFactor = peakEnhancementFactor};
 
-            yield return new TestCaseData(ShapeImportType.Gauss, PeriodImportType.Mean,
+            yield return new TestCaseData(ShapeImportType.Gauss, PeriodImportExportType.Mean,
                                           expectedGaussShape, BoundaryConditionPeriodType.Mean,
                                           gaussianSpreading, peakEnhancementFactor);
-            yield return new TestCaseData(ShapeImportType.Gauss, PeriodImportType.Peak,
+            yield return new TestCaseData(ShapeImportType.Gauss, PeriodImportExportType.Peak,
                                           expectedGaussShape, BoundaryConditionPeriodType.Peak,
                                           gaussianSpreading, peakEnhancementFactor);
-            yield return new TestCaseData(ShapeImportType.Jonswap, PeriodImportType.Mean,
+            yield return new TestCaseData(ShapeImportType.Jonswap, PeriodImportExportType.Mean,
                                           expectedJonswapShape, BoundaryConditionPeriodType.Mean,
                                           gaussianSpreading, peakEnhancementFactor);
-            yield return new TestCaseData(ShapeImportType.Jonswap, PeriodImportType.Peak,
+            yield return new TestCaseData(ShapeImportType.Jonswap, PeriodImportExportType.Peak,
                                           expectedJonswapShape, BoundaryConditionPeriodType.Peak,
                                           gaussianSpreading, peakEnhancementFactor);
-            yield return new TestCaseData(ShapeImportType.PiersonMoskowitz, PeriodImportType.Mean,
+            yield return new TestCaseData(ShapeImportType.PiersonMoskowitz, PeriodImportExportType.Mean,
                                           new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Mean,
                                           gaussianSpreading, peakEnhancementFactor);
-            yield return new TestCaseData(ShapeImportType.PiersonMoskowitz, PeriodImportType.Peak,
+            yield return new TestCaseData(ShapeImportType.PiersonMoskowitz, PeriodImportExportType.Peak,
                                           new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak,
                                           gaussianSpreading, peakEnhancementFactor);
         }
@@ -498,7 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return function;
         }
 
-        private DelftIniCategory GetBoundaryCategory(ShapeImportType shapeType, PeriodImportType periodType, MdwTestValues values,
+        private DelftIniCategory GetBoundaryCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values,
                                                      string spectrumSpec = "parametric",
                                                      string definition = "xy-coordinates")
         {
@@ -523,7 +523,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return category;
         }
 
-        private DelftIniCategory GetUniformConstantCategory(ShapeImportType shapeType, PeriodImportType periodType, MdwTestValues values)
+        private DelftIniCategory GetUniformConstantCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
             DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
 
@@ -532,7 +532,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return category;
         }
 
-        private DelftIniCategory GetSpatiallyVaryingConstantCategory(ShapeImportType shapeType, PeriodImportType periodType, MdwTestValues values)
+        private DelftIniCategory GetSpatiallyVaryingConstantCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
             DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
 
@@ -548,7 +548,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return category;
         }
 
-        private DelftIniCategory GetSpatiallyVaryingTimeDependentCategory(ShapeImportType shapeType, PeriodImportType periodType, MdwTestValues values)
+        private DelftIniCategory GetSpatiallyVaryingTimeDependentCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
             DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
 
