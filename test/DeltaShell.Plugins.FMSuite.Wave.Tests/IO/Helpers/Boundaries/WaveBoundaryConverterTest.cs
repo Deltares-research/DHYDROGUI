@@ -1,8 +1,13 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
@@ -16,11 +21,6 @@ using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using DeltaShell.NGHS.TestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
@@ -113,7 +113,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, mdwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory[] categories = {GetUniformConstantCategory(shapeType, periodType, mdwValues)};
+            DelftIniCategory[] categories =
+            {
+                GetUniformConstantCategory(shapeType, periodType, mdwValues)
+            };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
@@ -153,7 +156,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateUniformTimeDependentComponent(Arg.Is<IWaveEnergyFunction<T>>(f => MatchesWaveEnergyFunction(f, bcwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory[] categories = {GetBoundaryCategory(shapeType, periodType, mdwValues)};
+            DelftIniCategory[] categories =
+            {
+                GetBoundaryCategory(shapeType, periodType, mdwValues)
+            };
             Dictionary<string, List<IFunction>> timeSeriesData = CreateUniformTimeSeriesData(bcwValues);
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
@@ -196,7 +202,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories = {GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues)};
+            DelftIniCategory[] categories =
+            {
+                GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues)
+            };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
@@ -244,7 +253,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                                                         p => MatchesSpatiallyVaryingWaveEnergyFunctions(p, mdwValues, bcwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories = {GetSpatiallyVaryingTimeDependentCategory(shapeType, periodType, mdwValues)};
+            DelftIniCategory[] categories =
+            {
+                GetSpatiallyVaryingTimeDependentCategory(shapeType, periodType, mdwValues)
+            };
             Dictionary<string, List<IFunction>> timeSeriesData = GetSpatiallyVaryingTimeSeries(bcwValues);
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
@@ -317,8 +329,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            var result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
-                                  .ToList();
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+                                                  .ToList();
 
             // Assert
             Assert.That(result, Is.Empty);
@@ -345,7 +357,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParameters(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory[] categories = { GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues) };
+            DelftIniCategory[] categories =
+            {
+                GetSpatiallyVaryingConstantCategory(shapeType, periodType, mdwValues)
+            };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
@@ -397,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                                         random.NextEnumValue<PeriodImportExportType>(),
                                                                         firstMdwValues);
             const string firstBoundaryName = "boundary_name_1";
-            firstCategory.SetProperty(KnownWaveProperties.Name, firstBoundaryName );
+            firstCategory.SetProperty(KnownWaveProperties.Name, firstBoundaryName);
             DelftIniCategory secondCategory = GetUniformConstantCategory(random.NextEnumValue<ShapeImportType>(),
                                                                          random.NextEnumValue<PeriodImportExportType>(),
                                                                          secondMdwValues);
@@ -463,18 +478,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return geometricDefinitionFactory;
         }
 
-        private static bool MatchesCoordinate(Coordinate c, double x, double y)
-        {
-            return DoubleEquals(c.X, x) && DoubleEquals(c.Y, y);
-        }
+        private static bool MatchesCoordinate(Coordinate c, double x, double y) => DoubleEquals(c.X, x) && DoubleEquals(c.Y, y);
 
-        private static bool MatchesParameters(ParametersBlock p, MdwTestValues mdw, int i)
-        {
-            return DoubleEquals(p.WaveHeight, mdw.WaveHeights[i]) &&
-                   DoubleEquals(p.Period, mdw.Periods[i]) &&
-                   DoubleEquals(p.Direction, mdw.Directions[i]) &&
-                   DoubleEquals(p.DirectionalSpreading, mdw.DirSpreadings[i]);
-        }
+        private static bool MatchesParameters(ParametersBlock p, MdwTestValues mdw, int i) =>
+            DoubleEquals(p.WaveHeight, mdw.WaveHeights[i]) &&
+            DoubleEquals(p.Period, mdw.Periods[i]) &&
+            DoubleEquals(p.Direction, mdw.Directions[i]) &&
+            DoubleEquals(p.DirectionalSpreading, mdw.DirSpreadings[i]);
 
         private static bool MatchesSpatiallyVaryingParameters(IEnumerable<Tuple<SupportPoint, ParametersBlock>> p, MdwTestValues mdw)
         {
@@ -490,13 +500,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                    MatchesParameters(thirdPair.Item2, mdw, 2);
         }
 
-        private static bool MatchesWaveEnergyFunction(IWaveEnergyFunction<T> f, BcwTestValues t, int i)
-        {
-            return f.DirectionComponent.Values.SequenceEqual(t.Directions[i]) &&
-                   f.HeightComponent.Values.SequenceEqual(t.WaveHeights[i]) &&
-                   f.PeriodComponent.Values.SequenceEqual(t.Periods[i]) &&
-                   f.SpreadingComponent.Values.SequenceEqual(t.DirSpreadings[i]);
-        }
+        private static bool MatchesWaveEnergyFunction(IWaveEnergyFunction<T> f, BcwTestValues t, int i) =>
+            f.DirectionComponent.Values.SequenceEqual(t.Directions[i]) &&
+            f.HeightComponent.Values.SequenceEqual(t.WaveHeights[i]) &&
+            f.PeriodComponent.Values.SequenceEqual(t.Periods[i]) &&
+            f.SpreadingComponent.Values.SequenceEqual(t.DirSpreadings[i]);
 
         private static bool MatchesSpatiallyVaryingWaveEnergyFunctions(IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<T>>> p, MdwTestValues mdw, BcwTestValues bcw)
         {
@@ -512,10 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                    MatchesWaveEnergyFunction(thirdPair.Item2, bcw, 2);
         }
 
-        private static bool DoubleEquals(double valueA, double valueB)
-        {
-            return Math.Abs(valueA - valueB) < doublePrecision;
-        }
+        private static bool DoubleEquals(double valueA, double valueB) => Math.Abs(valueA - valueB) < doublePrecision;
 
         private static IFunction CreateTimeSeriesFunction(BcwTestValues values, int i)
         {
@@ -615,9 +620,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(values.DirSpreadings[i]));
         }
 
-        private static Dictionary<string, List<IFunction>> CreateUniformTimeSeriesData(BcwTestValues bcwValues)
-        {
-            return new Dictionary<string, List<IFunction>>
+        private static Dictionary<string, List<IFunction>> CreateUniformTimeSeriesData(BcwTestValues bcwValues) =>
+            new Dictionary<string, List<IFunction>>
             {
                 {
                     "boundary_name", new List<IFunction>
@@ -626,11 +630,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                     }
                 }
             };
-        }
 
-        private static Dictionary<string, List<IFunction>> GetSpatiallyVaryingTimeSeries(BcwTestValues bcwValues)
-        {
-            return new Dictionary<string, List<IFunction>>
+        private static Dictionary<string, List<IFunction>> GetSpatiallyVaryingTimeSeries(BcwTestValues bcwValues) =>
+            new Dictionary<string, List<IFunction>>
             {
                 {
                     "boundary_name", new List<IFunction>
@@ -641,7 +643,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                     }
                 }
             };
-        }
 
         private static string ToString(double value) => value.ToString(CultureInfo.InvariantCulture);
 
@@ -731,10 +732,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 }
             }
 
-            public int GetHashCode(IBoundaryConditionShape obj)
-            {
-                throw new NotImplementedException();
-            }
+            public int GetHashCode(IBoundaryConditionShape obj) => throw new NotImplementedException();
         }
     }
 }
