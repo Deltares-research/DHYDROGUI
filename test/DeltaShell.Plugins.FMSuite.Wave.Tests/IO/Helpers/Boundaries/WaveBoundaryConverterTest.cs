@@ -377,8 +377,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Convert_TwoDelftIniCategories_ReturnsTwoWaveBoundaries()
         {
             // Setup
-            var firstMdwValues = new MdwTestValues(random.NextDouble(), random.NextDouble());
-            var secondMdwValues = new MdwTestValues(random.NextDouble(), random.NextDouble());
+            var firstMdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+            var secondMdwValues = new MdwTestValues(RandomDouble, RandomDouble);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, firstMdwValues);
