@@ -1,5 +1,4 @@
 ﻿using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using SharpMap.Api;
 
@@ -8,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
     /// <summary>
     /// <see cref="BoundaryMapFeaturesContainer"/> acts as a convenience to
     /// group the different BoundaryMapFeatureProviders that are part of
-    /// the <see cref="IWaveBoundary"/> visualisation.
+    /// the <see cref="Wave.Boundaries.IWaveBoundary"/> visualisation.
     /// </summary>
     public class BoundaryMapFeaturesContainer : IBoundaryMapFeaturesContainer
     {
