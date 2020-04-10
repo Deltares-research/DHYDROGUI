@@ -139,10 +139,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 substances = CreateWaterQualitySubstances(substancePattern, subFileText);
             }
 
-            ImportElementInformation<WaterQualitySubstance> importInformation = GetImportInformation(librarySubstances, substances, Equals);
+            ImportElementInformation<WaterQualitySubstance> importInformation = GetWaterQualitySubstanceImportInformation(librarySubstances, substances);
             WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(importInformation.ExistingElements).ToArray();
             RemoveIrrelevantElements(librarySubstances, substancesToRemove, Resources.SubFileImporter_Substances_Name);
-           
+
             AddNewElements(librarySubstances, importInformation.NewElements, Resources.SubFileImporter_Substances_Name);
         }
 
@@ -158,10 +158,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 parameters = CreateWaterQualityParameters(parameterPattern, subFileText);
             }
 
-            ImportElementInformation<WaterQualityParameter> importInformation = GetImportInformation(libraryParameters, parameters, Equals);
+            ImportElementInformation<WaterQualityParameter> importInformation = GetWaterQualityParameterImportInformation(libraryParameters, parameters);
             WaterQualityParameter[] parametersToRemove = libraryParameters.Except(importInformation.ExistingElements).ToArray();
             RemoveIrrelevantElements(libraryParameters, parametersToRemove, Resources.SubFileImporter_Parameters_Name);
-            
+
             AddNewElements(libraryParameters, importInformation.NewElements, Resources.SubFileImporter_Parameters_Name);
         }
 
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 processes = CreateWaterQualityProcesses(processPattern, content);
             }
 
-            ImportElementInformation<WaterQualityProcess> importInformation = GetImportInformation(libraryProcesses, processes, Equals);
+            ImportElementInformation<WaterQualityProcess> importInformation = GetWaterQualityProcessImportInformation(libraryProcesses, processes);
             WaterQualityProcess[] processesToRemove = libraryProcesses.Except(importInformation.ExistingElements).ToArray();
             RemoveIrrelevantElements(libraryProcesses, processesToRemove, Resources.SubFileImporter_Processes_Name);
 
@@ -255,7 +255,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             // Filter the elements to add whether they are unique
             WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => !target.Any(item => Equals(item, element))).ToArray();
             AddNewElements(target, uniqueElementsToAdd, Resources.SubFileImporter_DefaultOutputParameters_Name);
-
         }
 
         private void UpdateProgress(string phaseName, int currentStep, int maxStep)
@@ -387,7 +386,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 new SubFilePropertyRegexInfo("waste-load-unit", "WasteLoadUnit", UnitCharacters)
             };
 
-            return $@"substance\s*'(?<Name>{RegularExpression.Characters})'" + 
+            return $@"substance\s*'(?<Name>{RegularExpression.Characters})'" +
                    $@"\s*(?<Active>{RegularExpression.Characters}){substanceSeparator}" +
                    SubFileHelper.GetRegexPattern(substanceRegexInfos, substanceSeparator) +
                    @"end-substance";
@@ -400,7 +399,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
                 new SubFilePropertyRegexInfo("unit", "Unit", UnitCharacters)
             };
-            
+
             return $@"parameter\s*'(?<Name>{RegularExpression.Characters})'{parameterSeparator}" +
                    SubFileHelper.GetRegexPattern(parameterRegexInfos, parameterSeparator) +
                    $@"\s*value\s*(?<Value>{RegularExpression.Characters}){parameterSeparator}" +
@@ -410,43 +409,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         #endregion
 
         #region Helper methods
-
-        /// <summary>
-        /// Retrieves the collection of new elements from <paramref name="newElements" />.
-        /// </summary>
-        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
-        /// <param name="existingElements"> The elements that are already present. </param>
-        /// <param name="newElements"> The elements to determine the new elements from. </param>
-        /// <param name="getEqualityFunc">The function to determine the equality between two <typeparamref name="TWaterQualityElement"/>. </param>
-        /// <returns> A collection of new elements. </returns>
-        /// <remarks>
-        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
-        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
-        /// .
-        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
-        /// </remarks>
-        private static ImportElementInformation<TWaterQualityElement> GetImportInformation<TWaterQualityElement>(IEventedList<TWaterQualityElement> existingElements,
-                                                                                                                 IEnumerable<TWaterQualityElement> newElements,
-                                                                                                                 Func<TWaterQualityElement, TWaterQualityElement, bool> getEqualityFunc)
-            where TWaterQualityElement : Unique<long>, INameable, ICloneable
-        {
-            var existingElementsDuringImport = new Collection<TWaterQualityElement>();
-            var newElementsDuringImport = new Collection<TWaterQualityElement>();
-            foreach (TWaterQualityElement element in newElements)
-            {
-                TWaterQualityElement existingElement = existingElements.FirstOrDefault(p => getEqualityFunc(p, element));
-                if (existingElement != null)
-                {
-                    existingElementsDuringImport.Add(existingElement);
-                }
-                else
-                {
-                    newElementsDuringImport.Add(element);
-                }
-            }
-
-            return new ImportElementInformation<TWaterQualityElement>(existingElementsDuringImport, newElementsDuringImport);
-        }
 
         /// <summary>
         /// Removes irrelevant elements from the <paramref name="target"/>.
@@ -492,7 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
-        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target, 
+        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target,
                                                           IEnumerable<TWaterQualityElement> elementsToAdd,
                                                           string elementName)
             where TWaterQualityElement : Unique<long>, INameable, ICloneable
@@ -510,7 +472,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 target.Add(substance);
             }
         }
-
         #endregion
 
         #region Factory methods
@@ -606,6 +567,66 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         #endregion
 
+        #region Import information
+
+        private static ImportElementInformation<WaterQualitySubstance> GetWaterQualitySubstanceImportInformation(
+            IEventedList<WaterQualitySubstance> existingSubstances,
+            IEnumerable<WaterQualitySubstance> newSubstances)
+        {
+            return GetImportInformation(existingSubstances, newSubstances, Equals);
+        }
+
+        private static ImportElementInformation<WaterQualityProcess> GetWaterQualityProcessImportInformation(
+            IEventedList<WaterQualityProcess> existingProcesses,
+            IEnumerable<WaterQualityProcess> newProcesses)
+        {
+            return GetImportInformation(existingProcesses, newProcesses, Equals);
+        }
+
+        private static ImportElementInformation<WaterQualityParameter> GetWaterQualityParameterImportInformation(
+            IEventedList<WaterQualityParameter> existingParameters,
+            IEnumerable<WaterQualityParameter> newParameters)
+        {
+            return GetImportInformation(existingParameters, newParameters, Equals);
+        }
+
+        /// <summary>
+        /// Retrieves the collection of new elements from <paramref name="newElements" />.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
+        /// <param name="existingElements"> The elements that are already present. </param>
+        /// <param name="newElements"> The elements to determine the new elements from. </param>
+        /// <param name="getEqualityFunc">The function to determine the equality between two <typeparamref name="TWaterQualityElement"/>. </param>
+        /// <returns> A collection of new elements. </returns>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private static ImportElementInformation<TWaterQualityElement> GetImportInformation<TWaterQualityElement>(IEventedList<TWaterQualityElement> existingElements,
+                                                                                                                 IEnumerable<TWaterQualityElement> newElements,
+                                                                                                                 Func<TWaterQualityElement, TWaterQualityElement, bool> getEqualityFunc)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            var existingElementsDuringImport = new Collection<TWaterQualityElement>();
+            var newElementsDuringImport = new Collection<TWaterQualityElement>();
+            foreach (TWaterQualityElement element in newElements)
+            {
+                TWaterQualityElement existingElement = existingElements.FirstOrDefault(p => getEqualityFunc(p, element));
+                if (existingElement != null)
+                {
+                    existingElementsDuringImport.Add(existingElement);
+                }
+                else
+                {
+                    newElementsDuringImport.Add(element);
+                }
+            }
+
+            return new ImportElementInformation<TWaterQualityElement>(existingElementsDuringImport, newElementsDuringImport);
+        }
+
         /// <summary>
         /// Class to store the information about the imported elements.
         /// </summary>
@@ -634,5 +655,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             /// </summary>
             public IEnumerable<TWaterQualityElement> NewElements { get; }
         }
+
+        #endregion
     }
 }
