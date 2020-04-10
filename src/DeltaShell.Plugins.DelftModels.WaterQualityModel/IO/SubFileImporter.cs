@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterComponents;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
@@ -128,27 +129,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void ImportSubstances(IEventedList<WaterQualitySubstance> librarySubstances, string subFileText)
         {
-            string substancePattern =
-                @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*(?<Active>" +
-                RegularExpression.Characters + @")\s*\n" +
-                @"\s*description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                @"\s*concentration-unit\s*'(?<ConcentrationUnit>" + UnitCharacters + @")'\s*\n" +
-                @"\s*waste-load-unit\s*'(?<WasteLoadUnit>" + UnitCharacters + @")'\s*\n" +
-                @"end-substance";
-
+            string substancePattern = GetSubstancePattern(@"\s*\n");
             IEnumerable<WaterQualitySubstance> substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
             // If there are no substances, try parsing according to the new substance pattern where the definitions 
             // are defined on a single line.
             if (!substances.Any())
             {
-                substancePattern =
-                    @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*" +
-                    "(?<Active>" + RegularExpression.Characters + @")\s*" +
-                    @"description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*" +
-                    @"concentration-unit\s*'(?<ConcentrationUnit>" + UnitCharacters + @")'\s*" +
-                    @"waste-load-unit\s*'(?<WasteLoadUnit>" + UnitCharacters + @")'\s*" +
-                    @"end-substance";
-
+                substancePattern = GetSubstancePattern(@"\s*");
                 substances = CreateWaterQualityModelElements(substancePattern, subFileText, GetSubstance);
             }
 
@@ -161,25 +148,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
         {
-            string parameterPattern = @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
-                                      @"\s*description\s*'(?<Description>" +
-                                      RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                                      @"\s*unit\s*'(?<Unit>" + UnitCharacters + @")'\s*\n" +
-                                      @"\s*value\s*(?<Value>" + RegularExpression.Characters + @")\s*\n" +
-                                      @"end-parameter";
-
+            string parameterPattern = GetParameterPattern(@"\s*\n");
             IEnumerable<WaterQualityParameter> parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
             // If there are no parameters, try parsing according to the new parameter pattern where the definitions 
             // are defined on a single line.
             if (!parameters.Any())
             {
-                parameterPattern =
-                    @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*" +
-                    @"description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*" +
-                    @"unit\s*'(?<Unit>" + UnitCharacters + @")'\s*" +
-                    @"value\s*(?<Value>" + RegularExpression.Characters + @")\s*" +
-                    @"end-parameter";
-
+                parameterPattern = GetParameterPattern(@"\s*");
                 parameters = CreateWaterQualityModelElements(parameterPattern, subFileText, GetParameter);
             }
 
@@ -585,6 +560,39 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             return unit;
         }
+
+        #region Regex Patterns
+
+        private static string GetSubstancePattern(string substanceSeparator)
+        {
+            var substanceRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+                new SubFilePropertyRegexInfo("concentration-unit", "ConcentrationUnit", UnitCharacters),
+                new SubFilePropertyRegexInfo("waste-load-unit", "WasteLoadUnit", UnitCharacters)
+            };
+
+            return $@"substance\s*'(?<Name>{RegularExpression.Characters})'" + 
+                   $@"\s*(?<Active>{RegularExpression.Characters}){substanceSeparator}" +
+                   SubFileHelper.GetRegexPattern(substanceRegexInfos, substanceSeparator) +
+                   @"end-substance";
+        }
+
+        private static string GetParameterPattern(string parameterSeparator)
+        {
+            var parameterRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+                new SubFilePropertyRegexInfo("unit", "Unit", UnitCharacters)
+            };
+            
+            return $@"parameter\s*'(?<Name>{RegularExpression.Characters})'{parameterSeparator}" +
+                   SubFileHelper.GetRegexPattern(parameterRegexInfos, parameterSeparator) +
+                   $@"\s*value\s*(?<Value>{RegularExpression.Characters}){parameterSeparator}" +
+                   @"end-parameter";
+        }
+
+        #endregion
 
         /// <summary>
         /// Class to store the information about the imported elements.

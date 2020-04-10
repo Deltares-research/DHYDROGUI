@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterComponents {
+namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterComponents
+{
     /// <summary>
     /// Helper class which contains helper methods to import data from a sub file.
     /// </summary>
-    public static class SubFileHelper 
+    public static class SubFileHelper
     {
         /// <summary>
         /// Gets a regex pattern based on its input arguments.
         /// </summary>
-        /// <param name="propertyRegexInfos">The collection of <see cref="SubFilePropertyRegexInfo"/>
-        /// to create the regex for.</param>
-        /// <param name="propertySeparator">The separator between the different properties.</param>
-        /// <returns>A regex pattern.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
+        /// <param name="propertyRegexInfos">
+        /// The collection of <see cref="SubFilePropertyRegexInfo" />
+        /// to create the regex for.
+        /// </param>
+        /// <param name="propertySeparator"> The separator between the different properties. </param>
+        /// <returns> A regex pattern. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when any parameter is <c> null </c>. </exception>
         public static string GetRegexPattern(IEnumerable<SubFilePropertyRegexInfo> propertyRegexInfos, string propertySeparator)
         {
             if (propertyRegexInfos == null)
