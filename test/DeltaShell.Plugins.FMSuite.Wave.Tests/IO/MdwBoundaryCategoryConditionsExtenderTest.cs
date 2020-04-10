@@ -53,11 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(8, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PowerDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.WaveHeight, properties[4].Name);
@@ -68,7 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(GetStringValue(direction1), properties[6].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingValue, properties[7].Name);
             Assert.AreEqual(GetStringValue(WaveSpreadingConstants.PowerDefaultSpreading), properties[7].Value);
-
         }
 
         [Test]
@@ -89,11 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(8, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Degrees", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.DegreesDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.WaveHeight, properties[4].Name);
@@ -125,11 +124,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(4, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PowerDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
         }
@@ -153,11 +152,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(4, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Degrees", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.DegreesDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
         }
@@ -189,11 +188,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(14, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PowerDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[4].Name);
@@ -247,11 +246,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(6, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PowerDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[4].Name);
@@ -278,18 +277,79 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             Assert.AreEqual(4, properties.Count);
             Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
-            Assert.AreEqual("Jonswap", properties[0].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.JonswapShape, properties[0].Value);
             Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
             Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[1].Value);
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[2].Name);
-            Assert.AreEqual("Power", properties[2].Value);
+            Assert.AreEqual(KnownWaveBoundariesFileConstants.PowerDefinedSpreading, properties[2].Value);
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(DifferentShapes))]
+        public void AddNewProperties_ForDifferentShapes_ReturnsCorrectPropertiesForSpecificShape(IBoundaryConditionShape shape, string expectedShapeTypeValue, string expectedExtraProperty)
+        {
+            // Arrange
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            var dataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                new ConstantParameters<PowerDefinedSpreading>(height1, period1, direction1, new PowerDefinedSpreading()));
+            var conditionDefinition = new WaveBoundaryConditionDefinition(shape, periodType, dataComponent);
+
+            // Act
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
+
+            // Assert
+            List<DelftIniProperty> properties = category.Properties.ToList();
+            bool onePropertyLess = string.IsNullOrEmpty(expectedExtraProperty);
+
+            Assert.AreEqual(onePropertyLess ? 7 : 8, properties.Count);
+            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[0].Name);
+            Assert.AreEqual(expectedShapeTypeValue, properties[0].Value);
+            if (!onePropertyLess)
+            {
+                Assert.AreEqual(expectedExtraProperty, properties[3].Name);
+                Assert.AreEqual(GetStringValue(factor), properties[3].Value);
+            }
+        }
+
+        [Test]
+        [TestCase(BoundaryConditionPeriodType.Peak, KnownWaveBoundariesFileConstants.PeakPeriodType)]
+        [TestCase(BoundaryConditionPeriodType.Mean, KnownWaveBoundariesFileConstants.MeanPeriodType)]
+        public void AddNewProperties_ForDifferentPeriodTypes_ReturnsCorrectPropertiesForSpecificType(BoundaryConditionPeriodType period, string expectedPeriodTypeValue)
+        {
+            // Arrange
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            var dataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                new ConstantParameters<PowerDefinedSpreading>(height1, period1, direction1, new PowerDefinedSpreading()));
+            var conditionDefinition = new WaveBoundaryConditionDefinition(jonswapShape, period, dataComponent);
+
+            // Act
+            MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
+
+            // Assert
+            List<DelftIniProperty> properties = category.Properties.ToList();
+
+            Assert.AreEqual(8, properties.Count);
+            Assert.AreEqual(KnownWaveProperties.PeriodType, properties[1].Name);
+            Assert.AreEqual(expectedPeriodTypeValue, properties[1].Value);
         }
 
         private static string GetStringValue(double value)
         {
             return value.ToString("e7", CultureInfo.InvariantCulture);
+        }
+
+        private static IEnumerable<TestCaseData> DifferentShapes
+        {
+            get
+            {
+                yield return new TestCaseData(new JonswapShape { PeakEnhancementFactor = factor }, KnownWaveBoundariesFileConstants.JonswapShape, KnownWaveProperties.PeakEnhancementFactor);
+                yield return new TestCaseData(new GaussShape { GaussianSpread = factor }, KnownWaveBoundariesFileConstants.GaussShape, KnownWaveProperties.GaussianSpreading);
+                yield return new TestCaseData(new PiersonMoskowitzShape(), KnownWaveBoundariesFileConstants.PiersonMoskowitzShape, null);
+            }
         }
     }
 }

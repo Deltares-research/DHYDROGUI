@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -22,8 +23,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <param name="dataComponent">The uniform or spatially
         /// varying data component</param>
         /// <returns>List of functions of a boundary</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="dataComponent"/>
+        /// is <c>null</c>.
+        /// </exception>
         public static List<IFunction> Collect(IBoundaryConditionDataComponent dataComponent)
         {
+            Ensure.NotNull(dataComponent, nameof(dataComponent));
+
             var visitor = new Visitor();
             dataComponent.AcceptVisitor(visitor);
 

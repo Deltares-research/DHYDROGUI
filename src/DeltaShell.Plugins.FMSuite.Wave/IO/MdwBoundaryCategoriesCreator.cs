@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -15,8 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <param name="boundaryContainer"> Boundary container of the model definition </param>
         /// <returns>A collection of <see cref="DelftIniCategory"/>.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundaryContainer"/>
+        /// is <c>null</c>.
+        /// </exception>
         public static IEnumerable<DelftIniCategory> CreateCategories(IBoundaryContainer boundaryContainer)
         {
+            Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
+            
             foreach (IWaveBoundary boundary in boundaryContainer.Boundaries)
             {
                 var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);

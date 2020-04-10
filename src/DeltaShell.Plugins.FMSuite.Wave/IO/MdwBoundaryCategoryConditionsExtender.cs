@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -27,9 +28,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <param name="boundaryCategory"> The category that needs to be extended.</param>
         /// <param name="conditionDefinition"> The condition definition of the boundary.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="boundaryCategory"/>
+        /// is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="conditionDefinition"/>
+        /// is <c>null</c>.
+        /// </exception>
         public static void AddNewProperties(DelftIniCategory boundaryCategory,
                                             IWaveBoundaryConditionDefinition conditionDefinition)
         {
+            Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
+            Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
+
             var visitor = new Visitor(boundaryCategory);
             conditionDefinition.AcceptVisitor(visitor);
 
@@ -77,12 +89,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             private IList<SupportPoint> SupportPoints { get; set; }
 
+            /// <summary>
+            /// Visit method for setting <see cref="isUniform"/> and calls the next AcceptVisitor method
+            /// of the Data stored in the <see cref="UniformDataComponent{T}"/> object.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IBoundaryConditionParameters"/> object</typeparam>
+            /// <param name="uniformDataComponent">The visited <see cref="UniformDataComponent{T}"/></param>
             public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IBoundaryConditionParameters
             {
                 isUniform = true;
                 uniformDataComponent.Data.AcceptVisitor(this);
             }
 
+            /// <summary>
+            /// Visit method for setting <see cref="isUniform"/> and <see cref="SupportPoints"/>.
+            /// Calls the next AcceptVisitors methods of the stored data for all support points in
+            /// the <see cref="SpatiallyVaryingDataComponent{T}"/> object.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IBoundaryConditionParameters"/> object</typeparam>
+            /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
             public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IBoundaryConditionParameters
             {
                 isUniform = false;
@@ -96,6 +121,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
+            /// <summary>
+            /// Visit method for setting <see cref="hasConstantValues"/> and adding constant values
+            /// to the category with/without distances. Calls the next AcceptVisitor method for the spreading.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IBoundaryConditionSpreading"/> object</typeparam>
+            /// <param name="constantParameters"> The visited <see cref="ConstantParameters{TSpreading}"/></param>
             public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
             {
                 hasConstantValues = true;
@@ -113,6 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 constantParameters.Spreading.AcceptVisitor(this);
             }
 
+            /// <summary>
+            /// Visit method for setting <see cref="hasConstantValues"/> and writing distances if needed.
+            /// Calls the next AcceptVisitor method for the spreading.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IBoundaryConditionSpreading"/> object</typeparam>
+            /// <param name="timeDependentParameters"> The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
             public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new()
             {
                 hasConstantValues = false;
@@ -126,6 +163,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 new T().AcceptVisitor(this);
             }
 
+            /// <summary>
+            /// Visit method for setting the directional spreading type and adding the directional
+            /// spreading value to the category.
+            /// </summary>
+            /// <param name="degreesDefinedSpreading"> The visited <see cref="DegreesDefinedSpreading"/></param>
             public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
             {
                 BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
@@ -138,6 +180,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
+            /// <summary>
+            /// Visit method for setting the directional spreading type at the place holder and adding the
+            /// directional spreading value to the category.
+            /// </summary>
+            /// <param name="powerDefinedSpreading"> The visited <see cref="PowerDefinedSpreading"/></param>
             public void Visit(PowerDefinedSpreading powerDefinedSpreading)
             {
                 BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
@@ -150,23 +197,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
+            /// <summary>
+            /// Visit method for setting the shape type at the place holder and adding the Gaussian spreading
+            /// to the category.
+            /// </summary>
+            /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
             public void Visit(GaussShape gaussShape)
             {
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
                 BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
             }
 
+            /// <summary>
+            /// Visit method for setting the shape type at the place holder and adding the Peak Enhancement factor 
+            /// to the category.
+            /// </summary>
+            /// <param name="jonswapShape">The visited <see cref="JonswapShape"/></param>
             public void Visit(JonswapShape jonswapShape)
             {
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
                 BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
             }
 
+            /// <summary>
+            /// Visit method for setting the shape type at the place holder in the category.
+            /// </summary>
+            /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
             public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
             {
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
             }
 
+            /// <summary>
+            /// Visit method for adding place holders for shape type and directional spreading type. Also adds
+            /// period type to the category. Calls next shape object to visit and data component.
+            /// </summary>
+            /// <param name="waveBoundaryConditionDefinition">The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
             public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
             {
                 //place holder

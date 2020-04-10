@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
@@ -17,9 +18,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Assert
             Assert.That(shape, Is.InstanceOf(typeof(IBoundaryConditionShape)));
         }
-        
+
         [Test]
-        public void AcceptVisitorTest()
+        public void AcceptVisitor_VisitorNull_ThrowsArgumentNullExceptionForJonswapShape()
+        {
+            // Setup
+            var shape = new JonswapShape();
+
+            // Call
+            void Call() => shape.AcceptVisitor(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("visitor"));
+        }
+
+        [Test]
+        public void AcceptVisitor_CallsCorrectVisitorMethodForJonswapShape()
         {
             // Setup
             var shape = new JonswapShape();
@@ -29,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             shape.AcceptVisitor(visitor);
 
             // Assert
-            visitor.Received().Visit(shape);
+            visitor.Received(1).Visit(shape);
         }
     }
 

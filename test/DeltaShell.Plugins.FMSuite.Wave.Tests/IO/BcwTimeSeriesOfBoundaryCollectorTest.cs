@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     public class BcwTimeSeriesOfBoundaryCollectorTest
     {
         [Test]
-        public void Collect_ForUniformTimeDependentBoundary()
+        public void Collect_ForUniformTimeDependentBoundary_Returns1TimeSerie()
         {
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var underlyingFunction = Substitute.For<IFunction>();
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
-        public void Collect_ForSpatiallyVaryingTimeDependentBoundary()
+        public void Collect_ForSpatiallyVaryingTimeDependentBoundaryWith2ActiveSupportPoints_Returns2TimeSeries()
         {
             var waveEnergyFunction1 = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var underlyingFunction1 = Substitute.For<IFunction>();

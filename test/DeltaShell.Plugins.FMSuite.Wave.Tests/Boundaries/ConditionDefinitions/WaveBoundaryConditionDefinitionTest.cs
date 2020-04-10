@@ -154,7 +154,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
         }
 
         [Test]
-        public void AcceptVisitorTest()
+        public void AcceptVisitor_VisitorNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var shape = Substitute.For<IBoundaryConditionShape>();
+            var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
+            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+           
+            var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
+                                                                          periodType,
+                                                                          dataComponent);
+
+            // Call
+            void Call() => conditionDefinition.AcceptVisitor(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("visitor"));
+        }
+
+        [Test]
+        public void AcceptVisitor_CallsCorrectVisitorMethodForConditionDefinition()
         {
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
@@ -170,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             conditionDefinition.AcceptVisitor(visitor);
 
             // Assert
-            visitor.Received().Visit(conditionDefinition);
+            visitor.Received(1).Visit(conditionDefinition);
         }
     }
 }
