@@ -380,9 +380,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyToClipboard()
         {
-            using (new ClipboardStub())
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 var menuItem = new MenuItem { Tag = rule };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
                 AssertCopyXmlToClipboard(rule);
@@ -396,9 +398,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyRuleToClipBoard()
         {
-            using (new ClipboardStub())
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 controlGroupEditor.CopyXmlToClipboard(rule);
 
                 AssertCopyXmlToClipboard(rule);
@@ -408,9 +412,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyConditionToClipBoard()
         {
-            using (new ClipboardStub())
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 controlGroupEditor.CopyXmlToClipboard(condition);
 
                 AssertCopyXmlToClipboard(condition);
@@ -420,9 +426,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyExpressionToClipBoard()
         {
-            using (new ClipboardStub())
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 var input = new Input();
                 var expression = new MathematicalExpression();
                 expression.Inputs.Add(input);
