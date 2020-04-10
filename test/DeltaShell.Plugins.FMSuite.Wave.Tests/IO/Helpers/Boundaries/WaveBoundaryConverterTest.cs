@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_UniformConstantBoundaryData_ReturnsCorrectUniformConstantWaveBoundary(
+        public void Convert_DelftIniCategory_WithUniformConstantData_ReturnsCorrectUniformConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_UniformTimeDependentBoundaryData_ReturnsCorrectUniformTimeDependentWaveBoundary(
+        public void Convert_DelftIniCategory_WithUniformTimeDependentData_ReturnsCorrectUniformTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_SpatiallyVaryingConstantBoundaryData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+        public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_SpatiallyVaryingTimeDependentBoundaryData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
+        public void Convert_DelftIniCategory_WithSpatiallyVaryingTimeDependentData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [TestCase("from file")]
         [TestCase("non_parametrized")]
-        public void Convert_NonParametrizedBoundaryData_ThrowsNotImplementedException(string spectrumSpec)
+        public void Convert_DelftIniCategory_WithNonParametrizedData_ThrowsNotImplementedException(string spectrumSpec)
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -299,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_BoundaryDataWithDefinitionThatIsNotXYCoordinates_IsSkipped()
+        public void Convert_DelftIniCategory_WithDefinitionThatIsNotXYCoordinates_IsSkipped()
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [TestCaseSource(nameof(ShapePeriodTestCases))]
-        public void Convert_SpatiallyVaryingConstantBoundaryData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
+        public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
             IBoundaryConditionShape expectedShape,
             BoundaryConditionPeriodType expectedPeriod,
@@ -371,6 +371,54 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
             Assert.That(conditionDefinition.PeriodType, Is.EqualTo(expectedPeriod));
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(spatiallyVaryingDataComponent));
+        }
+
+        [Test]
+        public void Convert_TwoDelftIniCategories_ReturnsTwoWaveBoundaries()
+        {
+            // Setup
+            var firstMdwValues = new MdwTestValues(random.NextDouble(), random.NextDouble());
+            var secondMdwValues = new MdwTestValues(random.NextDouble(), random.NextDouble());
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, firstMdwValues);
+            geometricDefinitionFactory.ConstructWaveBoundaryGeometricDefinition(
+                                          Arg.Is<Coordinate>(c => MatchesCoordinate(c, secondMdwValues.StartX, secondMdwValues.StartY)),
+                                          Arg.Is<Coordinate>(c => MatchesCoordinate(c, secondMdwValues.EndX, secondMdwValues.EndY)))
+                                      .Returns(geometricDefinition);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, secondMdwValues, 0)))
+                                      .Returns(new UniformDataComponent<ConstantParameters<T>>(parametersFactory.ConstructDefaultConstantParameters<T>()));
+            importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, firstMdwValues, 0)))
+                                      .Returns(new UniformDataComponent<ConstantParameters<T>>(parametersFactory.ConstructDefaultConstantParameters<T>()));
+
+            DelftIniCategory firstCategory = GetUniformConstantCategory(random.NextEnumValue<ShapeImportType>(),
+                                                                        random.NextEnumValue<PeriodImportExportType>(),
+                                                                        firstMdwValues);
+            const string firstBoundaryName = "boundary_name_1";
+            firstCategory.SetProperty(KnownWaveProperties.Name, firstBoundaryName );
+            DelftIniCategory secondCategory = GetUniformConstantCategory(random.NextEnumValue<ShapeImportType>(),
+                                                                         random.NextEnumValue<PeriodImportExportType>(),
+                                                                         secondMdwValues);
+            const string secondBoundaryName = "boundary_name_2";
+            secondCategory.SetProperty(KnownWaveProperties.Name, secondBoundaryName);
+            DelftIniCategory[] categories =
+            {
+                firstCategory,
+                secondCategory
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+                                                  .ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(2));
+            Assert.That(result[0].Name, Is.EqualTo(firstBoundaryName));
+            Assert.That(result[1].Name, Is.EqualTo(secondBoundaryName));
         }
 
         private static IEnumerable<TestCaseData> ShapePeriodTestCases()
