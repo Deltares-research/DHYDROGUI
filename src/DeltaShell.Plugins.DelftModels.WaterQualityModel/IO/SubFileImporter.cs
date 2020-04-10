@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             };
 
             // Filter the elements to add whether they are unique
-            WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => target.FirstOrDefault(item => Equals(item, element)) == null).ToArray();
+            WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => !target.Any(item => Equals(item, element))).ToArray();
             AddNewElements(target, uniqueElementsToAdd, Resources.SubFileImporter_DefaultOutputParameters_Name);
 
         }
