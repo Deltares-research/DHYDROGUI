@@ -323,6 +323,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
       <Project>{96cd03f1-2715-4827-95e1-3277a2deadae}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
       <Project>{F456B556-D969-4768-9E3F-F151A387071B}</Project>

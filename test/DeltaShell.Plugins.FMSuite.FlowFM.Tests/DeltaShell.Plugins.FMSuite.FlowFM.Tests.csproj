@@ -427,6 +427,7 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
       <Project>{96cd03f1-2715-4827-95e1-3277a2deadae}</Project>
       <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
       <Project>{56103155-e7a6-45d7-ba64-50a6f9d81b94}</Project>
