@@ -105,8 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
         private static Coordinate GetCoordinate(int index, GridSide side, IGridBoundary boundary)
         {
-            // TODO: (MWT) Fix this ToArray
-            GridBoundaryCoordinate gridBoundaryCoordinate = boundary[side].ToArray()[index];
+            GridBoundaryCoordinate gridBoundaryCoordinate = boundary[side].Skip(index).First();
             return boundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinate);
         }
     }
