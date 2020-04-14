@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
             }
         }
         
-        public void AcceptVisitor(IParametersVisitor visitor)
+        public void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor)
         {
             Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);

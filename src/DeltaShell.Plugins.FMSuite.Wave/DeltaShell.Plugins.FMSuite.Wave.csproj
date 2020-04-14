@@ -213,10 +213,10 @@
     <Compile Include="IO\Importers\WaveModelFileImporter.cs" />
     <Compile Include="IO\Importers\WaveSpectralFileImporter.cs" />
     <Compile Include="IO\Importers\WavmFileImporter.cs" />
-    <Compile Include="IO\IParametersVisitor.cs" />
+    <Compile Include="IO\IForcingTypeDefinedParametersVisitor.cs" />
     <Compile Include="IO\IBoundaryConditionVisitor.cs" />
     <Compile Include="IO\IShapeVisitor.cs" />
-    <Compile Include="IO\IDataComponentVisitor.cs" />
+    <Compile Include="IO\ISpatiallyDefinedDataComponentVisitor.cs" />
     <Compile Include="IO\ISpreadingVisitor.cs" />
     <Compile Include="IO\MdwBoundaryCategoryConditionsExtender.cs" />
     <Compile Include="IO\MdwFile.cs" />

@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
             var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
-            var visitor = Substitute.For<IParametersVisitor>();
+            var visitor = Substitute.For<IForcingTypeDefinedParametersVisitor>();
 
             // Call
             parameters.AcceptVisitor(visitor);

@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
     public interface IVisitableForcingTypeDefinedParameters
     {
         /// <summary>
-        /// Method for accepting IParametersVisitor visitor of the visitor design pattern,
+        /// Method for accepting IForcingTypeDefinedParametersVisitor visitor of the visitor design pattern,
         /// used for the export.
         /// </summary>
         /// <param name="visitor">Visitor who wants to visit this object</param>
@@ -13,6 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// Thrown when <paramref name="visitor"/>
         /// is <c>null</c>.
         /// </exception>
-        void AcceptVisitor(IParametersVisitor visitor);
+        void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor);
     }
 }

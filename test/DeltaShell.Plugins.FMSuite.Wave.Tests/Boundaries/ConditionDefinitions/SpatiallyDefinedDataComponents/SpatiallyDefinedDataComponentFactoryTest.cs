@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
 
         private class DummyParameters : ISpatiallyDefinedDataComponent {
-            public void AcceptVisitor(IDataComponentVisitor visitor) {}
+            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor) {}
         }
 
         [Test]

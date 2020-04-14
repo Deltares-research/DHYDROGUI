@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var data = DataComponentTestUtils.ConstructParameters<T>();
             var uniformDataComponent = new UniformDataComponent<T>(data);
-            var visitor = Substitute.For<IDataComponentVisitor>();
+            var visitor = Substitute.For<ISpatiallyDefinedDataComponentVisitor>();
 
             // Call
             uniformDataComponent.AcceptVisitor(visitor);

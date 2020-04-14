@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return visitor.TimeSeries;
         }
 
-        private class Visitor : IDataComponentVisitor, IParametersVisitor
+        private class Visitor : ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor
         {
             public List<IFunction> TimeSeries { get; } = new List<IFunction>();
             

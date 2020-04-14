@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// </summary>
         public IWaveEnergyFunction<TSpreading> WaveEnergyFunction { get; }
 
-        public void AcceptVisitor(IParametersVisitor visitor)
+        public void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor)
         {
             Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);

@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     public interface IVisitableSpatiallyDefinedDataComponent
     {
         /// <summary>
-        /// Method for accepting IDataComponentVisitor visitor of the visitor design pattern,
+        /// Method for accepting ISpatiallyDefinedDataComponentVisitor visitor of the visitor design pattern,
         /// used for the export.
         /// </summary>
         /// <param name="visitor">Visitor who wants to visit this object</param>
@@ -13,6 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// Thrown when <paramref name="visitor"/>
         /// is <c>null</c>.
         /// </exception>
-        void AcceptVisitor(IDataComponentVisitor visitor);
+        void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor);
     }
 }

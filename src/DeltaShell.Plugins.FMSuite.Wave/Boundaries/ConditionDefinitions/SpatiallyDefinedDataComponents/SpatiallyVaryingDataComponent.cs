@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             RemoveSupportPoint(oldSupportPoint);
         }
 
-        public void AcceptVisitor(IDataComponentVisitor visitor)
+        public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor)
         {
             Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);

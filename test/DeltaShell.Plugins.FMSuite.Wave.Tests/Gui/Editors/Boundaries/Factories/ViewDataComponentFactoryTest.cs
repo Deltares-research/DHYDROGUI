@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
         }
 
         private class DummyDataComponent : ISpatiallyDefinedDataComponent {
-            public void AcceptVisitor(IDataComponentVisitor boundaryConditionVisitor)
+            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor boundaryConditionVisitor)
             {
             }
         }

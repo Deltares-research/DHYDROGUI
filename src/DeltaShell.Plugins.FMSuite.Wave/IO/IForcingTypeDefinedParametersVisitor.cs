@@ -3,7 +3,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
-    public interface IParametersVisitor
+    public interface IForcingTypeDefinedParametersVisitor
     {
         /// <summary>
         /// Visit method for defining actions of visitors when they visit a <see cref="ConstantParameters{TSpreading}"/>

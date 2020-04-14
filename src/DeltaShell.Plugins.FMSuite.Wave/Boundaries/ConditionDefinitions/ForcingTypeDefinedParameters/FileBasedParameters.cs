@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// </summary>
         public string FilePath { get; set; }
 
-        public void AcceptVisitor(IParametersVisitor visitor)
+        public void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor)
         {
             throw new NotSupportedException();
         }

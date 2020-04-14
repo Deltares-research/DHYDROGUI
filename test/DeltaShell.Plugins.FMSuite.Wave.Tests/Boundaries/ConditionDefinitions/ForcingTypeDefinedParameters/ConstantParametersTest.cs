@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                                                                                  expectedPeriod,
                                                                                  expectedDirection,
                                                                                  expectedSpreading);
-            var visitor = Substitute.For<IParametersVisitor>();
+            var visitor = Substitute.For<IForcingTypeDefinedParametersVisitor>();
 
             // Call
             boundaryConditionParameters.AcceptVisitor(visitor);

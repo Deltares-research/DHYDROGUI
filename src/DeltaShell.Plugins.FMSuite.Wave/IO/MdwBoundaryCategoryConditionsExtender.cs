@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private class Visitor : IBoundaryConditionVisitor, IShapeVisitor, IDataComponentVisitor, IParametersVisitor, ISpreadingVisitor
+        private class Visitor : IBoundaryConditionVisitor, IShapeVisitor, ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor, ISpreadingVisitor
         {
             private bool hasConstantValues;
             private bool isUniform;

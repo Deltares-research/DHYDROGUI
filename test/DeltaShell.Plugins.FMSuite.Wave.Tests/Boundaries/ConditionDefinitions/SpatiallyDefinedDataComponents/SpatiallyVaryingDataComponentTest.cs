@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var dataComponent = new SpatiallyVaryingDataComponent<T>();
-            var visitor = Substitute.For<IDataComponentVisitor>();
+            var visitor = Substitute.For<ISpatiallyDefinedDataComponentVisitor>();
 
             // Call
             dataComponent.AcceptVisitor(visitor);
