@@ -5,15 +5,15 @@ using GeoAPI.Extensions.Feature;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours
 {
     /// <summary>
-    /// <see cref="IFeatureFromBoundaryBehaviour"/> defines the behaviours to
+    /// <see cref="IFeaturesFromBoundaryBehaviour"/> defines the behaviours to
     /// construct collections of <see cref="IFeature"/> from a given <see cref="IWaveBoundary"/>.
     /// This is utilised by the <see cref="BoundaryReadOnlyMapFeatureProvider"/> to construct its
     /// features.
     /// </summary>
-    public interface IFeatureFromBoundaryBehaviour
+    public interface IFeaturesFromBoundaryBehaviour
     {
         /// <summary>
-        /// Executes this <see cref="IFeatureFromBoundaryBehaviour"/> by constructing the relevant
+        /// Executes this <see cref="IFeaturesFromBoundaryBehaviour"/> by constructing the relevant
         /// collection of <see cref="IFeature"/> from the given <paramref name="waveBoundary"/>
         /// </summary>
         /// <param name="waveBoundary">The wave boundary.</param>

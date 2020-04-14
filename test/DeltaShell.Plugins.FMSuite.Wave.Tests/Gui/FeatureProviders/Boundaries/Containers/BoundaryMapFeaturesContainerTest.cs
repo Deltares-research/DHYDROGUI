@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Feature;
-using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -24,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var featuresFromBoundaryBehaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
@@ -32,13 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                          geometryFactory, 
                                                                          addBehaviour);
 
-            IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
-                geometryFactory.ConstructBoundaryEndPoints(boundary)
-                               .Select(p => new Feature2DPoint { Geometry = p});
 
             var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
-                                                                                 ConstructEndPointFeatures);
+                                                                                 featuresFromBoundaryBehaviour);
 
             var supportPointFeatureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider, 
                                                                                          coordSystem, 
@@ -65,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-
+            var featuresFromBoundaryBehaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
             var lineFeatureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider, 
@@ -73,14 +68,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                          geometryFactory, 
                                                                          addBehaviour);
 
-            IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
-                geometryFactory.ConstructBoundaryEndPoints(boundary)
-                               .Select(p => new Feature2DPoint { Geometry = p});
-
-
             var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
-                                                                                 ConstructEndPointFeatures);
+                                                                                 featuresFromBoundaryBehaviour);
 
             var supportPointFeatureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider, 
                                                                                          coordSystem, 

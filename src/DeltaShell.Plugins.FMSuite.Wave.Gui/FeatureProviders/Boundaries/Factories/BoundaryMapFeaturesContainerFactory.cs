@@ -84,14 +84,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                    geometryFactory, 
                                                    addBehaviour);
 
-        IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
-            geometryFactory.ConstructBoundaryEndPoints(boundary)
-                           .Select(p => new Feature2DPoint { Geometry = p});
-
             var boundaryEndPointMapFeatureProvider = 
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                        coordinateSystem, 
-                                                       ConstructEndPointFeatures);
+                                                       new PlaceholderFeatureFromBoundaryBehaviour(geometryFactory));
 
             var supportPointMapFeatureProvider =
                 new BoundarySupportPointMapFeatureProvider(boundaryProvider,
@@ -101,6 +97,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             return new BoundaryMapFeaturesContainer(boundaryLineMapFeatureProvider, 
                                                     boundaryEndPointMapFeatureProvider, 
                                                     supportPointMapFeatureProvider);
+        }
+
+        // TODO: this will replaced, please ignore
+        private class PlaceholderFeatureFromBoundaryBehaviour : IFeaturesFromBoundaryBehaviour
+        {
+            private readonly IWaveBoundaryGeometryFactory geometryFactory;
+
+            public PlaceholderFeatureFromBoundaryBehaviour(IWaveBoundaryGeometryFactory geometryFactory)
+            {
+                this.geometryFactory = geometryFactory;
+            }
+
+            public IEnumerable<IFeature> Execute(IWaveBoundary waveBoundary) =>
+                geometryFactory.ConstructBoundaryEndPoints(waveBoundary)
+                               .Select(p => new Feature2DPoint {Geometry = p});
         }
 
 

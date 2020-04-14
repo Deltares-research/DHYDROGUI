@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -38,29 +37,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     public sealed class BoundaryReadOnlyMapFeatureProvider : FeatureCollection
     {
         private readonly IBoundaryProvider boundaryProvider;
-        private readonly Func<IWaveBoundary, IEnumerable<IFeature>> constructFeaturesFromBoundaryFunc;
+        private readonly IFeaturesFromBoundaryBehaviour featuresFromBoundaryBehaviour;
 
         /// <summary>
         /// Creates a new <see cref="BoundaryReadOnlyMapFeatureProvider"/>.
         /// </summary>
         /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <param name="constructFeaturesFromBoundaryFunc">
-        /// The function to construct a collection of <see cref="IFeature"/> from a provided <see cref="IWaveBoundary"/>.
+        /// <param name="featuresFromBoundaryBehaviour">
+        /// The behaviour to construct a collection of <see cref="IFeature"/> from a provided <see cref="IWaveBoundary"/>.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="boundaryProvider"/> or
-        /// <paramref name="constructFeaturesFromBoundaryFunc"/> is <c>null</c>.
+        /// <paramref name="featuresFromBoundaryBehaviour"/> is <c>null</c>.
         /// </exception>
         public BoundaryReadOnlyMapFeatureProvider(IBoundaryProvider boundaryProvider,
                                                   ICoordinateSystem coordinateSystem, 
-                                                  Func<IWaveBoundary, IEnumerable<IFeature>> constructFeaturesFromBoundaryFunc)
+                                                  IFeaturesFromBoundaryBehaviour featuresFromBoundaryBehaviour )
         {
             Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
-            Ensure.NotNull(constructFeaturesFromBoundaryFunc, nameof(constructFeaturesFromBoundaryFunc));
+            Ensure.NotNull(featuresFromBoundaryBehaviour, nameof(featuresFromBoundaryBehaviour));
 
             this.boundaryProvider = boundaryProvider;
-            this.constructFeaturesFromBoundaryFunc = constructFeaturesFromBoundaryFunc;
+            this.featuresFromBoundaryBehaviour= featuresFromBoundaryBehaviour;
 
             CoordinateSystem = coordinateSystem;
             FeatureType = typeof(Feature2DPoint);
@@ -68,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 
         public override IList Features
         {
-            get => boundaryProvider.Boundaries.SelectMany(constructFeaturesFromBoundaryFunc).ToList();
+            get => boundaryProvider.Boundaries.SelectMany(featuresFromBoundaryBehaviour.Execute).ToList();
             set => throw new NotSupportedException("This is currently not supported, implement when needed.");
         }
 

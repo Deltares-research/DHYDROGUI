@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
@@ -26,12 +25,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            IEnumerable<IFeature> f(IWaveBoundary boundary) => new[] {Substitute.For<IFeature>()};
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
             using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                 coordinateSystem,
-                                                                                f))
+                                                                                behaviour))
             {
                 // Assert
                 Assert.That(featureProvider, Is.InstanceOf(typeof(FeatureCollection)));
@@ -46,12 +45,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             // Setup
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            IEnumerable<IFeature> f(IWaveBoundary boundary) => new[] {Substitute.For<IFeature>()};
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
             void Call() => new BoundaryReadOnlyMapFeatureProvider(null, 
                                                                   coordinateSystem, 
-                                                                  f);
+                                                                  behaviour);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -72,16 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("constructFeaturesFromBoundaryFunc"));
+            Assert.That(exception.ParamName, Is.EqualTo("featuresFromBoundaryBehaviour"));
         }
 
         [Test]
-        public void GivenABoundaryEndPointMapFeatureProviderWithBoundaries_WhenFeaturesAreRetrieved_ThenTheCorrectEndPointsAreGenerated()
+        public void GivenABoundaryReadOnlyMapFeatureProviderWithBoundaries_WhenFeaturesAreRetrieved_ThenTheCorrectFeaturesAreGenerated()
         {
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             var boundaries = new EventedList<IWaveBoundary>
             {
@@ -92,35 +91,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             boundaryProvider.Boundaries.Returns(boundaries);
 
-            List<Point> endPoints = Enumerable.Range(0, 6)
-                                              .Select(x => new Point(new Coordinate(x + 0.5, -x + 0.5)))
-                                              .ToList();
+            List<IFeature> endPoints = Enumerable.Range(0, 6)
+                                                 .Select(x => Substitute.For<IFeature>())
+                                                 .ToList();
 
             for (var i = 0; i < boundaries.Count; i++)
             {
-                geometryFactory.ConstructBoundaryEndPoints(boundaries[i])
-                               .Returns(endPoints.Skip(i * 2).Take(2));
+                behaviour.Execute(boundaries[i])
+                         .Returns(endPoints.Skip(i * 2).Take(2));
             }
-
-            IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
-                geometryFactory.ConstructBoundaryEndPoints(boundary)
-                               .Select(p => new Feature2DPoint { Geometry = p});
 
             using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
-                                                                                ConstructEndPointFeatures))
+                                                                                behaviour))
             {
                 // Call
-                List<Feature2DPoint> endPointFeatures = featureProvider.Features.Cast<Feature2DPoint>().ToList();
+                List<IFeature> endPointFeatures = featureProvider.Features.Cast<IFeature>().ToList();
 
                 // Assert
                 Assert.That(endPointFeatures, Has.Count.EqualTo(endPoints.Count));
                 Assert.That(endPointFeatures.Distinct().Count(), Is.EqualTo(endPointFeatures.Count));
 
-                foreach (Feature2DPoint feat in endPointFeatures)
+                foreach (IFeature feat in endPointFeatures)
                 {
-                    Assert.That(endPoints.Contains(feat.Geometry),
-                                $"Expected {feat.Geometry} to be contained in endPoints.");
+                    Assert.That(endPoints.Contains(feat), $"Expected {feat} to be contained in endPoints.");
                 }
             }
         }
@@ -131,12 +125,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            IEnumerable<IFeature> f(IWaveBoundary boundary) => new[] {Substitute.For<IFeature>()};
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
             using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
-                                                                                f))
+                                                                                behaviour))
             {
                 void Call() => featureProvider.Features = Substitute.For<IList>();
 
@@ -150,12 +144,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            IEnumerable<IFeature> f(IWaveBoundary boundary) => new[] {Substitute.For<IFeature>()};
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
             using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
-                                                                                f))
+                                                                                behaviour))
             {
                 void Call() => featureProvider.Add(Substitute.For<IGeometry>());
 
@@ -169,12 +163,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
-            IEnumerable<IFeature> f(IWaveBoundary boundary) => new[] {Substitute.For<IFeature>()};
+            var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
             using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
-                                                                                f))
+                                                                                behaviour))
             {
                 void Call() => featureProvider.Add(Substitute.For<IFeature>());
 
