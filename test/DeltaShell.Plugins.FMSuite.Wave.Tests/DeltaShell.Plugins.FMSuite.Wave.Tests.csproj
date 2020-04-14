@@ -211,12 +211,12 @@
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\DataComponentTestUtils.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponentTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponentTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Parameters\BoundaryParametersFactoryTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Parameters\ConstantParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\BoundaryParametersFactoryTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ConstantParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Parameters\FileBasedParametersTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Parameters\TimeDependentParametersTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Parameters\WaveParametersConstantsTests.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveParametersConstantsTests.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />

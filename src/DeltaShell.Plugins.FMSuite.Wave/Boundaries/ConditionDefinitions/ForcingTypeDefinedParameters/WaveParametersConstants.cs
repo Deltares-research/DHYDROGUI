@@ -1,6 +1,6 @@
 ﻿using DelftTools.Units;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
     /// <see cref="WaveParametersConstants"/> provides the constants used within the

@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
+﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
     /// <see cref="IBoundaryConditionParameters"/> defines the different boundary
