@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -210,10 +211,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Selectable = false,
                 NameIsReadOnly = true,
                 ShowInLegend = false,
+                SmoothingMode = SmoothingMode.AntiAlias,
+
                 Style = new VectorStyle
                 {
                     Fill = new SolidBrush(DeltaresColor.LightBlue),
-                    GeometryType = typeof(IPoint)
+                    GeometryType = typeof(IPoint),
                 }
             };
         }
@@ -227,6 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 NameIsReadOnly = true,
                 ReadOnly = true,
                 ShowInLegend = false,
+                SmoothingMode = SmoothingMode.AntiAlias,
                 
                 Style = new VectorStyle
                 {
@@ -248,6 +252,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Selectable = false,
                 ReadOnly = true,
                 NameIsReadOnly = true,
+                SmoothingMode = SmoothingMode.AntiAlias,
+
                 Style = new VectorStyle
                 {
                     Fill = Brushes.Gray,
