@@ -118,8 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void GivenAViewModel_WhenRefreshDataComponentViewModelIsCalled_ThenTheFactoryConstructsANewDataComponentViewModelAndThisIsSetOnTheParametersSettingsViewModel()
         {
             // Setup
-            var initialDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
-            var newDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var initialDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+            var newDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var initialDataComponentViewModel = Substitute.For<IParametersSettingsViewModel>();
             var newDataComponentViewModel = Substitute.For<IParametersSettingsViewModel>();
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void UpdateSelectedActiveParameters_SpatiallyVariantParametersSettingsViewModel_UpdateActiveSupportPointCalled()
         {
             // Setup
-            var initialDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var initialDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             var supportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
             var initialDataComponentViewModel = Substitute.For<ISpatiallyVariantParametersSettingsViewModel>();
 
@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void UpdateSelectedActiveParameters_UnsupportedParametersSettingsViewModel_ThrowsInvalidOperationException()
         {
             // Setup
-            var initialDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var initialDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var initialDataComponentViewModel = Substitute.For<IParametersSettingsViewModel>();
 

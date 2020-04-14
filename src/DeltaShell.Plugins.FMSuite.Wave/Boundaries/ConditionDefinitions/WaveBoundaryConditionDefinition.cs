@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// </exception>
         public WaveBoundaryConditionDefinition(IBoundaryConditionShape shape,
                                                BoundaryConditionPeriodType periodType,
-                                               IBoundaryConditionDataComponent dataComponent)
+                                               ISpatiallyDefinedDataComponent dataComponent)
         {
             Shape = shape ?? throw new ArgumentNullException(nameof(shape));
             PeriodType = periodType;
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 
         private BoundaryConditionPeriodType periodType;
 
-        public IBoundaryConditionDataComponent DataComponent
+        public ISpatiallyDefinedDataComponent DataComponent
         {
             get => dataComponent; 
             set => dataComponent = value ?? throw new ArgumentNullException(nameof(value)); 
@@ -66,6 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
             visitor.Visit(this);
         }
 
-        private IBoundaryConditionDataComponent dataComponent;
+        private ISpatiallyDefinedDataComponent dataComponent;
     }
 }

@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             // Call
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
         {
             // Setup
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             // Call
             void Call() => new WaveBoundaryConditionDefinition(null,
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             const BoundaryConditionPeriodType periodType = (BoundaryConditionPeriodType) 99;
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             // Call
             void Call() => new WaveBoundaryConditionDefinition(shape,
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
            
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Setup
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             var visitor = Substitute.For<IBoundaryConditionVisitor>();
 
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,

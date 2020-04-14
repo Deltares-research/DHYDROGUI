@@ -110,14 +110,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             IBoundaryConditionShape shape = GetShape(boundaryBlock);
             BoundaryConditionPeriodType periodType = GetPeriodType(boundaryBlock);
-            IBoundaryConditionDataComponent dataComponent = CreateDataComponent(boundaryBlock,
+            ISpatiallyDefinedDataComponent dataComponent = CreateDataComponent(boundaryBlock,
                                                                                 timeSeriesData,
                                                                                 geometricDefinition);
 
             return new WaveBoundaryConditionDefinition(shape, periodType, dataComponent);
         }
 
-        private IBoundaryConditionDataComponent CreateParametrizedDataComponent(BoundaryMdwBlock boundaryBlock,
+        private ISpatiallyDefinedDataComponent CreateParametrizedDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                                 IList<IFunction> timeSeriesData,
                                                                                 IWaveBoundaryGeometricDefinition
                                                                                     geometricDefinition)
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private IBoundaryConditionDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
+        private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                     IList<IFunction> timeSeriesData,
                                                                     IWaveBoundaryGeometricDefinition
                                                                         geometricDefinition)
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             throw new NotImplementedException();
         }
 
-        private IBoundaryConditionDataComponent CreateDataComponent<TSpreading>(BoundaryMdwBlock boundaryBlock,
+        private ISpatiallyDefinedDataComponent CreateDataComponent<TSpreading>(BoundaryMdwBlock boundaryBlock,
                                                                                 IList<IFunction> functions,
                                                                                 IWaveBoundaryGeometricDefinition geometricDefinition)
             where TSpreading : class, IBoundaryConditionSpreading, new()

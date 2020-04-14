@@ -8,25 +8,25 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
-    /// <see cref="IBoundaryConditionDataComponentFactory"/> provides the
-    /// methods to create new <see cref="IBoundaryConditionDataComponent"/>
+    /// <see cref="ISpatiallyDefinedDataComponentFactory"/> provides the
+    /// methods to create new <see cref="ISpatiallyDefinedDataComponent"/>
     /// instances.
     /// </summary>
-    public sealed class BoundaryConditionDataComponentFactory : IBoundaryConditionDataComponentFactory
+    public sealed class SpatiallyDefinedDataComponentFactory : ISpatiallyDefinedDataComponentFactory
     {
         private readonly IBoundaryParametersFactory parametersFactory;
 
-        private readonly IDictionary<Type, Func<IBoundaryConditionDataComponent>> constructionMap =
-            new Dictionary<Type, Func<IBoundaryConditionDataComponent>>();
+        private readonly IDictionary<Type, Func<ISpatiallyDefinedDataComponent>> constructionMap =
+            new Dictionary<Type, Func<ISpatiallyDefinedDataComponent>>();
 
         /// <summary>
-        /// Creates a new <see cref="BoundaryConditionDataComponentFactory"/>.
+        /// Creates a new <see cref="SpatiallyDefinedDataComponentFactory"/>.
         /// </summary>
         /// <param name="parametersFactory">The <see cref="IBoundaryParametersFactory"/> with which parameters are constructed.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="parametersFactory"/> is <c>null</c>.
         /// </exception>
-        public BoundaryConditionDataComponentFactory(IBoundaryParametersFactory parametersFactory)
+        public SpatiallyDefinedDataComponentFactory(IBoundaryParametersFactory parametersFactory)
         {
             Ensure.NotNull(parametersFactory, nameof(parametersFactory));
             this.parametersFactory = parametersFactory;
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
                                 ConstructSpatiallyVaryingFileBasedDataComponent);
         }
 
-        public T ConstructDefaultDataComponent<T>() where T : class, IBoundaryConditionDataComponent
+        public T ConstructDefaultDataComponent<T>() where T : class, ISpatiallyDefinedDataComponent
         {
 
             if (!constructionMap.ContainsKey(typeof(T)))
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         private static SpatiallyVaryingDataComponent<FileBasedParameters> ConstructSpatiallyVaryingFileBasedDataComponent() =>
             new SpatiallyVaryingDataComponent<FileBasedParameters>();
 
-        public IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(IBoundaryConditionDataComponent oldDataComponent) 
+        public ISpatiallyDefinedDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(ISpatiallyDefinedDataComponent oldDataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
         {
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             }
         }
 
-        private IBoundaryConditionDataComponent ConvertUniformConstantDataComponent<TOldSpreading, TNewSpreading>(
+        private ISpatiallyDefinedDataComponent ConvertUniformConstantDataComponent<TOldSpreading, TNewSpreading>(
             UniformDataComponent<ConstantParameters<TOldSpreading>> dataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             return new UniformDataComponent<ConstantParameters<TNewSpreading>>(newParameters);
         }
 
-        private IBoundaryConditionDataComponent ConvertSpatiallyVaryingConstantDataComponent<TOldSpreading, TNewSpreading>(
+        private ISpatiallyDefinedDataComponent ConvertSpatiallyVaryingConstantDataComponent<TOldSpreading, TNewSpreading>(
             SpatiallyVaryingDataComponent<ConstantParameters<TOldSpreading>> dataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             return newDataComponent;
         }
 
-        private IBoundaryConditionDataComponent ConvertUniformTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
+        private ISpatiallyDefinedDataComponent ConvertUniformTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
             UniformDataComponent<TimeDependentParameters<TOldSpreading>> dataComponent)
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             return new UniformDataComponent<TimeDependentParameters<TNewSpreading>>(newParameters);
         }
 
-        private IBoundaryConditionDataComponent ConvertSpatiallyVaryingTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
+        private ISpatiallyDefinedDataComponent ConvertSpatiallyVaryingTimeDependentDataComponent<TOldSpreading, TNewSpreading>(
             SpatiallyVaryingDataComponent<TimeDependentParameters<TOldSpreading>> dataComponent) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new() 
             where TNewSpreading : class, IBoundaryConditionSpreading, new()

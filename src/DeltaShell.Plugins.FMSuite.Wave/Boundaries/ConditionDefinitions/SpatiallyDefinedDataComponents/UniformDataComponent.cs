@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     /// <typeparam name="T">
     /// The type of <see cref="IBoundaryConditionParameters"/>.
     /// </typeparam>
-    /// <seealso cref="IBoundaryConditionDataComponent" />
-    public class UniformDataComponent<T> : IBoundaryConditionDataComponent where T : IBoundaryConditionParameters
+    /// <seealso cref="ISpatiallyDefinedDataComponent" />
+    public class UniformDataComponent<T> : ISpatiallyDefinedDataComponent where T : IBoundaryConditionParameters
     {
         /// <summary>
         /// Creates a new <see cref="UniformDataComponent{T}"/>.

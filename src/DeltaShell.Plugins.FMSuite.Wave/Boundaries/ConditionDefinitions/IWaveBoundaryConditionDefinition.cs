@@ -36,12 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// Gets or sets the data component.
         /// </summary>
         /// <value>
-        /// The <see cref="IBoundaryConditionDataComponent"/>.
+        /// The <see cref="ISpatiallyDefinedDataComponent"/>.
         /// </value>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
-        IBoundaryConditionDataComponent DataComponent { get; set; }
+        ISpatiallyDefinedDataComponent DataComponent { get; set; }
 
         /// <summary>
         /// Method for accepting IBoundaryConditionVisitor visitor of the visitor design pattern,

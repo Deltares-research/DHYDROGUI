@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
-        ForcingViewType GetForcingType(IBoundaryConditionDataComponent dataComponent);
+        ForcingViewType GetForcingType(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
         /// Gets the <see cref="SpatialDefinitionViewType"/> corresponding with
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.NotSupportedException">
         /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
         /// </exception>
-        SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent);
+        SpatialDefinitionViewType GetSpatialDefinition(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
         /// Gets the <see cref="DirectionalSpreadingViewType"/> corresponding with
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.NotSupportedException">
         /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
         /// </exception>
-        DirectionalSpreadingViewType GetDirectionalSpreadingViewType(IBoundaryConditionDataComponent dataComponent);
+        DirectionalSpreadingViewType GetDirectionalSpreadingViewType(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
         /// Gets whether the boundary wide parameters should be visible for the given <paramref name="dataComponent"/>.
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
         /// </exception>
-        bool GetAreBoundaryWideParametersVisible(IBoundaryConditionDataComponent dataComponent);
+        bool GetAreBoundaryWideParametersVisible(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
         /// Constructs the <see cref="IParametersSettingsViewModel"/> corresponding
@@ -86,32 +86,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.NotSupportedException">
         /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
         /// </exception>
-        IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent);
+        IParametersSettingsViewModel ConstructParametersSettingsViewModel(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
-        /// Constructs the <see cref="IBoundaryConditionDataComponent"/> corresponding
+        /// Constructs the <see cref="ISpatiallyDefinedDataComponent"/> corresponding
         /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
         /// </summary>
         /// <param name="forcingType">The <see cref="ForcingViewType"/>.</param>
         /// <param name="spatialDefinition">The <see cref="SpatialDefinitionViewType"/>.</param>
         /// <param name="spreadingType">The <see cref="DirectionalSpreadingViewType"/>.</param>
         /// <returns>
-        /// The <see cref="IBoundaryConditionDataComponent"/> corresponding
+        /// The <see cref="ISpatiallyDefinedDataComponent"/> corresponding
         /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
         /// </returns>
-        IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
+        ISpatiallyDefinedDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
                                                                                 SpatialDefinitionViewType spatialDefinition,
                                                                                 DirectionalSpreadingViewType spreadingType);
 
         /// <summary>
         /// Converts the provided <paramref name="currentDataComponent"/> to a similar
-        /// <see cref="IBoundaryConditionDataComponent"/> with the specified
+        /// <see cref="ISpatiallyDefinedDataComponent"/> with the specified
         /// <paramref name="newSpreadingType"/>.
         /// </summary>
         /// <param name="currentDataComponent">The current data component.</param>
         /// <param name="newSpreadingType">New type of the spreading.</param>
         /// <returns>
-        /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="currentDataComponent"/>
+        /// A <see cref="ISpatiallyDefinedDataComponent"/> equal to <paramref name="currentDataComponent"/>
         /// but with the specified <paramref name="newSpreadingType"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
@@ -120,8 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <exception cref="System.NotSupportedException">
         /// Thrown when <paramref name="currentDataComponent"/> is of an unsupported type.
         /// </exception>
-        IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(
-            IBoundaryConditionDataComponent currentDataComponent,
+        ISpatiallyDefinedDataComponent ConvertBoundaryConditionDataComponentSpreadingType(
+            ISpatiallyDefinedDataComponent currentDataComponent,
             DirectionalSpreadingViewType newSpreadingType);
     }
 }

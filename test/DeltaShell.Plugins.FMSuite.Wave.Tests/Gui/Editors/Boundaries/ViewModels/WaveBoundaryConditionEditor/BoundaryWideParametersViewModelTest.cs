@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             boundaryCondition.Shape = modelShape;
             boundaryCondition.PeriodType = BoundaryConditionPeriodType.Mean;
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             boundaryCondition.DataComponent = dataComponent;
 
             var viewShape = new GaussViewShape(modelShape);
@@ -309,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                         .WithDefaultDataComponentFactory()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
-            var dataComponentDegrees = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
             testConfig.DataComponentFactory
                       .GetDirectionalSpreadingViewType(dataComponentDegrees)
                       .Returns(DirectionalSpreadingViewType.Degrees);
@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             boundaryCondition.DataComponent = dataComponentDegrees;
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
 
-            var dataComponentPower = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponentPower = Substitute.For<ISpatiallyDefinedDataComponent>();
             testConfig.DataComponentFactory
                       .GetDirectionalSpreadingViewType(dataComponentPower)
                       .Returns(DirectionalSpreadingViewType.Power);
@@ -351,7 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                         .WithDefaultDataComponentFactory()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
-            var dataComponentDegrees = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
             testConfig.DataComponentFactory
                       .GetDirectionalSpreadingViewType(dataComponentDegrees)
                       .Returns(DirectionalSpreadingViewType.Degrees);

@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
-    public interface IVisitableBoundaryConditionDataComponent
+    public interface IVisitableSpatiallyDefinedDataComponent
     {
         /// <summary>
         /// Method for accepting IDataComponentVisitor visitor of the visitor design pattern,

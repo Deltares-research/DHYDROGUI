@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// Thrown when <paramref name="dataComponent"/>
         /// is <c>null</c>.
         /// </exception>
-        public static List<IFunction> Collect(IBoundaryConditionDataComponent dataComponent)
+        public static List<IFunction> Collect(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 

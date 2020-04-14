@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var dataComponent = new SpatiallyVaryingDataComponent<T>();
 
             // Assert
-            Assert.That(dataComponent, Is.InstanceOf<IBoundaryConditionDataComponent>());
+            Assert.That(dataComponent, Is.InstanceOf<ISpatiallyDefinedDataComponent>());
             Assert.That(dataComponent.Data, Is.Not.Null);
             Assert.That(dataComponent.Data, Is.Empty);
         }

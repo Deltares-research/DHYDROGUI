@@ -19,13 +19,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var boundary = Substitute.For<IWaveBoundary>();
             boundary.Name = name;
 
-            var dataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             boundary.ConditionDefinition.DataComponent = dataComponent;
 
             return boundary;
         }
 
-        private static IViewDataComponentFactory GetConfiguredFactory(IBoundaryConditionDataComponent dataComponent,
+        private static IViewDataComponentFactory GetConfiguredFactory(ISpatiallyDefinedDataComponent dataComponent,
                                                                       ForcingViewType forcingType, 
                                                                       SpatialDefinitionViewType spatialDefinition)
         {
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             factory.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
                    .Returns(spreadingType);
 
-            var newDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var newDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
                                                             SpatialDefinitionViewType.SpatiallyVarying,
                                                             spreadingType)
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             factory.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
                    .Returns(spreadingType);
 
-            var newDataComponent = Substitute.For<IBoundaryConditionDataComponent>();
+            var newDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
                                                             SpatialDefinitionViewType.Uniform,
                                                             spreadingType)

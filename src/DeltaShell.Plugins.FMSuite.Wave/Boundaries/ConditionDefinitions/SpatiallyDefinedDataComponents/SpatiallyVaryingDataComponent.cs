@@ -14,8 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     /// <typeparam name="T">
     /// The type of <see cref="IBoundaryConditionParameters"/>.
     /// </typeparam>
-    /// <seealso cref="IBoundaryConditionDataComponent" />
-    public class SpatiallyVaryingDataComponent<T> : IBoundaryConditionDataComponent where T : IBoundaryConditionParameters
+    /// <seealso cref="ISpatiallyDefinedDataComponent" />
+    public class SpatiallyVaryingDataComponent<T> : ISpatiallyDefinedDataComponent where T : IBoundaryConditionParameters
     {
         private readonly Dictionary<SupportPoint, T> data = 
             new Dictionary<SupportPoint, T>();

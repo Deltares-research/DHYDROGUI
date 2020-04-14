@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var uniformDataComponent = new UniformDataComponent<T>(data);
 
             // Assert
-            Assert.That(uniformDataComponent, Is.InstanceOf<IBoundaryConditionDataComponent>());
+            Assert.That(uniformDataComponent, Is.InstanceOf<ISpatiallyDefinedDataComponent>());
             Assert.That(uniformDataComponent.Data, Is.SameAs(data),
                         "Expected a different Data object:");
         }

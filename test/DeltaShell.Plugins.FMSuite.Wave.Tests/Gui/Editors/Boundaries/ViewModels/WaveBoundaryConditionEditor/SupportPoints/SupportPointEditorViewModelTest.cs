@@ -561,7 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
         [Test]
         [TestCaseSource(nameof(GetRefreshIsEnabledData))]
-        public void RefreshIsEnabled_SetsCorrectValue(IBoundaryConditionDataComponent dataComponent,
+        public void RefreshIsEnabled_SetsCorrectValue(ISpatiallyDefinedDataComponent dataComponent,
                                                       bool expectedValue)
         {
             // Setup

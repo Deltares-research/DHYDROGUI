@@ -3,23 +3,23 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
-    /// <see cref="IBoundaryConditionDataComponentFactory"/> defines the
-    /// methods to create new <see cref="IBoundaryConditionDataComponent"/>
+    /// <see cref="ISpatiallyDefinedDataComponentFactory"/> defines the
+    /// methods to create new <see cref="ISpatiallyDefinedDataComponent"/>
     /// instances.
     /// </summary>
-    public interface IBoundaryConditionDataComponentFactory
+    public interface ISpatiallyDefinedDataComponentFactory
     {
         /// <summary>
-        /// Construct a new default <see cref="IBoundaryConditionDataComponent"/>.
+        /// Construct a new default <see cref="ISpatiallyDefinedDataComponent"/>.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="IBoundaryConditionDataComponent"/>.</typeparam>
+        /// <typeparam name="T">The type of <see cref="ISpatiallyDefinedDataComponent"/>.</typeparam>
         /// <returns>
-        /// A new default <see cref="IBoundaryConditionDataComponent"/> of type <typeparamref name="T"/>.
+        /// A new default <see cref="ISpatiallyDefinedDataComponent"/> of type <typeparamref name="T"/>.
         /// </returns>
         /// <exception cref="System.NotSupportedException">
         /// Thrown when <typeparamref name="T"/> is not supported.
         /// </exception>
-        T ConstructDefaultDataComponent<T>() where T : class, IBoundaryConditionDataComponent;
+        T ConstructDefaultDataComponent<T>() where T : class, ISpatiallyDefinedDataComponent;
 
         /// <summary>
         /// Converts the specified <paramref name="oldDataComponent"/> with spreading
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// <typeparam name="TNewSpreading">The type of the new spreading.</typeparam>
         /// <param name="oldDataComponent">The old data component.</param>
         /// <returns>
-        /// A <see cref="IBoundaryConditionDataComponent"/> equal to <paramref name="oldDataComponent"/>
+        /// A <see cref="ISpatiallyDefinedDataComponent"/> equal to <paramref name="oldDataComponent"/>
         /// but with <typeparamref name="TNewSpreading"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
@@ -42,8 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// <exception cref="System.NotSupportedException">
         /// Thrown when either of the type parameters is not supported.
         /// </exception>
-        IBoundaryConditionDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(
-            IBoundaryConditionDataComponent oldDataComponent)
+        ISpatiallyDefinedDataComponent ConvertDataComponentSpreading<TOldSpreading, TNewSpreading>(
+            ISpatiallyDefinedDataComponent oldDataComponent)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
     }

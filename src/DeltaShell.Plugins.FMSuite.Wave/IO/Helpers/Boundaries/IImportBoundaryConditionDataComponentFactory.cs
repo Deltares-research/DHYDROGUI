@@ -9,7 +9,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
-    /// Helper factory for creating an <see cref="IBoundaryConditionDataComponent" /> from import data.
+    /// Helper factory for creating an <see cref="ISpatiallyDefinedDataComponent" /> from import data.
     /// </summary>
     public interface IImportBoundaryConditionDataComponentFactory
     {

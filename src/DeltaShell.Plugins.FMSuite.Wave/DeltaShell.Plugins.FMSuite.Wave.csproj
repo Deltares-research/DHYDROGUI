@@ -135,10 +135,10 @@
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculator.cs" />
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculatorProvider.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\BoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IBoundaryConditionDataComponent.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IBoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IVisitableBoundaryConditionDataComponent.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactory.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponent.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentFactory.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IVisitableSpatiallyDefinedDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Parameters\BoundaryParametersFactory.cs" />

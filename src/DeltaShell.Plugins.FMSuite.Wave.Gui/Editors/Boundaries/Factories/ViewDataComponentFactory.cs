@@ -18,18 +18,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     /// <seealso cref="IViewDataComponentFactory"/>
     public class ViewDataComponentFactory : IViewDataComponentFactory
     {
-        private readonly IBoundaryConditionDataComponentFactory dataComponentFactory;
+        private readonly ISpatiallyDefinedDataComponentFactory dataComponentFactory;
         private readonly IGenerateSeries generateSeries;
 
         /// <summary>
         /// Creates a new <see cref="ViewDataComponentFactory"/>.
         /// </summary>
-        /// <param name="dataComponentFactory">The <see cref="IBoundaryConditionDataComponentFactory"/>.</param>
+        /// <param name="dataComponentFactory">The <see cref="ISpatiallyDefinedDataComponentFactory"/>.</param>
         /// <param name="referenceDateTimeProvider">The reference date time provider.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="dataComponentFactory"/> is <c>null</c>.
         /// </exception>
-        public ViewDataComponentFactory(IBoundaryConditionDataComponentFactory dataComponentFactory,
+        public ViewDataComponentFactory(ISpatiallyDefinedDataComponentFactory dataComponentFactory,
                                         IReferenceDateTimeProvider referenceDateTimeProvider)
         {
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             generateSeries = new GenerateSeries(new GenerateSeriesDialogHelper(), referenceDateTimeProvider);
         }
 
-        public ForcingViewType GetForcingType(IBoundaryConditionDataComponent dataComponent)
+        public ForcingViewType GetForcingType(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public SpatialDefinitionViewType GetSpatialDefinition(IBoundaryConditionDataComponent dataComponent)
+        public SpatialDefinitionViewType GetSpatialDefinition(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public DirectionalSpreadingViewType GetDirectionalSpreadingViewType(IBoundaryConditionDataComponent dataComponent)
+        public DirectionalSpreadingViewType GetDirectionalSpreadingViewType(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public bool GetAreBoundaryWideParametersVisible(IBoundaryConditionDataComponent dataComponent)
+        public bool GetAreBoundaryWideParametersVisible(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public IParametersSettingsViewModel ConstructParametersSettingsViewModel(IBoundaryConditionDataComponent dataComponent)
+        public IParametersSettingsViewModel ConstructParametersSettingsViewModel(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
 
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public IBoundaryConditionDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
+        public ISpatiallyDefinedDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
                                                                                        SpatialDefinitionViewType spatialDefinition,
                                                                                        DirectionalSpreadingViewType spreadingType)
         {
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public IBoundaryConditionDataComponent ConvertBoundaryConditionDataComponentSpreadingType(IBoundaryConditionDataComponent currentDataComponent,
+        public ISpatiallyDefinedDataComponent ConvertBoundaryConditionDataComponentSpreadingType(ISpatiallyDefinedDataComponent currentDataComponent,
                                                                                                   DirectionalSpreadingViewType newSpreadingType)
         {
             Ensure.NotNull(currentDataComponent, nameof(currentDataComponent));
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        private IBoundaryConditionDataComponent ConstructTimeSeriesBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
+        private ISpatiallyDefinedDataComponent ConstructTimeSeriesBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
                                                                                                   DirectionalSpreadingViewType spreadingType)
         {
             switch (spatialDefinition)
@@ -253,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        private IBoundaryConditionDataComponent ConstructConstantBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
+        private ISpatiallyDefinedDataComponent ConstructConstantBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
                                                                                                 DirectionalSpreadingViewType spreadingType)
         {
             switch (spatialDefinition)
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        private IBoundaryConditionDataComponent ConstructFileBasedBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition)
+        private ISpatiallyDefinedDataComponent ConstructFileBasedBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition)
         {
             switch (spatialDefinition)
             {

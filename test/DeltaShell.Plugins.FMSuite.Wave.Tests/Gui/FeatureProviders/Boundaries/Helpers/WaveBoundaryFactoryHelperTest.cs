@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
 
             // Call
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void GivenABoundarySnappingCalculatorAndASetContainingLessThanTwoDistinctCoordinates_WhenGetSnappedEndPointsIsCalled_ThenAnArgumentExceptionIsThrown(IEnumerable<Coordinate> coordinates)
         {
             // Given
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             Coordinate[] coordinatesArray = coordinates.ToArray();
 
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                                                                                          IWaveBoundaryGeometricDefinition expectedDefinition)
         {
             // Given
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void GivenAnInvalidEnumerableOfGridBoundaryCoordinates_WhenGetGeometricDefinitionIsCalled_ThenNullIsReturned(IEnumerable<GridBoundaryCoordinate> coordinates)
         {
             // Given
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
             var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
 
@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var constantParameters = new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading());
             var dataComponent = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(constantParameters);
 
-            var dataComponentFactory = Substitute.For<IBoundaryConditionDataComponentFactory>();
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
             dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>()
                                 .Returns(dataComponent);
 

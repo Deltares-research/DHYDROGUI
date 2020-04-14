@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Gets the observed data component.
         /// </summary>
-        public IBoundaryConditionDataComponent ObservedDataComponent => conditionDefinition.DataComponent;
+        public ISpatiallyDefinedDataComponent ObservedDataComponent => conditionDefinition.DataComponent;
 
         /// <summary>
         /// Gets or sets the selected support point.

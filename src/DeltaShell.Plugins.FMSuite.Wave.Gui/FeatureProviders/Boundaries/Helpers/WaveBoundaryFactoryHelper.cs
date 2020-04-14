@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
     /// <seealso cref="IWaveBoundaryFactoryHelper" />
     public class WaveBoundaryFactoryHelper : IWaveBoundaryFactoryHelper
     { 
-        private readonly IBoundaryConditionDataComponentFactory componentFactory;
+        private readonly ISpatiallyDefinedDataComponentFactory componentFactory;
 
         /// <summary>
         /// Creates a new <see cref="WaveBoundaryFactoryHelper"/>.
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="componentFactory"/> is <c>null</c>.
         /// </exception>
-        public WaveBoundaryFactoryHelper(IBoundaryConditionDataComponentFactory componentFactory)
+        public WaveBoundaryFactoryHelper(ISpatiallyDefinedDataComponentFactory componentFactory)
         {
             Ensure.NotNull(componentFactory, nameof(componentFactory));
             this.componentFactory = componentFactory;
