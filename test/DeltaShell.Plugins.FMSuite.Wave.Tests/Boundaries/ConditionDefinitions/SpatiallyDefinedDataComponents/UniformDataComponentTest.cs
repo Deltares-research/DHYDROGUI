@@ -2,6 +2,8 @@
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
@@ -53,6 +55,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             
             Assert.That(exception.ParamName, Is.EqualTo("value"),
                         "Expected a different ParamName:");
+        }
+
+        [Test]
+        public void AcceptVisitor_VisitorNull_ThrowsArgumentNullExceptionForUniformDataComponent()
+        {
+            // Setup
+            var data = DataComponentTestUtils.ConstructParameters<T>();
+            var uniformDataComponent = new UniformDataComponent<T>(data);
+
+
+            // Call
+            void Call() => uniformDataComponent.AcceptVisitor(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("visitor"));
+        }
+
+        [Test]
+        public void AcceptVisitor_CallsCorrectVisitorMethodForUniformDataComponent()
+        {
+            // Setup
+            var data = DataComponentTestUtils.ConstructParameters<T>();
+            var uniformDataComponent = new UniformDataComponent<T>(data);
+            var visitor = Substitute.For<IDataComponentVisitor>();
+
+            // Call
+            uniformDataComponent.AcceptVisitor(visitor);
+
+            // Assert
+            visitor.Received(1).Visit(uniformDataComponent);
         }
     }
 }

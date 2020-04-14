@@ -277,16 +277,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         
         [Test]
-        public void SaveTo_ForAnUniformConstantBoundary()
+        public void SaveTo_ForAnUniformConstantBoundary_MdwFileShouldContainBoundaryCategoryWithoutBcwFile()
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
 
-            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
             UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformConstantDataComponent();
-            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak, uniformComponent);
-
-            IWaveBoundary boundary = BuildWaveBoundary(geometricDefinition, conditionDefinition);
+            IWaveBoundary boundary = BuildWaveBoundary(uniformComponent);
 
             modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
 
@@ -309,20 +306,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
-        public void SaveTo_ForAnUniformTimeDependentBoundary()
+        public void SaveTo_ForAnUniformTimeDependentBoundary_MdwFileShouldContainBoundaryCategoryWithBcwFile()
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
 
-            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
-            UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformTimeDependentDataComponent();
-            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak, uniformComponent);
-
-            IWaveBoundary boundary = BuildWaveBoundary(geometricDefinition, conditionDefinition);
-
+            UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> spatiallyVaryingComponent = CreateUniformTimeDependentDataComponent();
+            IWaveBoundary boundary = BuildWaveBoundary(spatiallyVaryingComponent);
+            
             modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
 
-            
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string targetPath = Path.Combine(tempDirectory.Path, "output.mdw");
@@ -342,6 +335,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 string timeSeriesFileNameMentioned = timeSeriesFileNameLine.Split('=').Last().Trim();
                 Assert.AreEqual("output.bcw", timeSeriesFileNameMentioned);
             }
+        }
+
+        private static IWaveBoundary BuildWaveBoundary(ISpatiallyDefinedDataComponent dataComponent)
+        {
+            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
+            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(),
+                                                                          BoundaryConditionPeriodType.Peak,
+                                                                          dataComponent);
+
+            var boundary = Substitute.For<IWaveBoundary>();
+            boundary.Name = "boundary_name";
+            boundary.GeometricDefinition.Returns(geometricDefinition);
+            boundary.ConditionDefinition.Returns(conditionDefinition);
+            return boundary;
         }
 
         private static WaveModelDefinition CreateWaveModelDefinition()

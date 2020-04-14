@@ -1,6 +1,8 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
@@ -78,6 +80,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("value"));
+        }
+
+        [Test]
+        public void AcceptVisitor_VisitorNull_ThrowsArgumentNullExceptionForConstantParameters()
+        {
+            // Setup
+            double expectedHeight = random.NextDouble() * 1000.0;
+            double expectedPeriod = random.NextDouble() * 1000.0;
+            double expectedDirection = random.NextDouble() * 1000.0;
+            var expectedSpreading = new TSpreading();
+
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
+                                                                                 expectedPeriod,
+                                                                                 expectedDirection,
+                                                                                 expectedSpreading);
+
+            // Call
+            void Call() => boundaryConditionParameters.AcceptVisitor(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("visitor"));
+        }
+
+        [Test]
+        public void AcceptVisitor_VisitorNull_CallsCorrectVisitorMethodForConstantParameters()
+        {
+            // Setup
+            double expectedHeight = random.NextDouble() * 1000.0;
+            double expectedPeriod = random.NextDouble() * 1000.0;
+            double expectedDirection = random.NextDouble() * 1000.0;
+            var expectedSpreading = new TSpreading();
+
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
+                                                                                 expectedPeriod,
+                                                                                 expectedDirection,
+                                                                                 expectedSpreading);
+            var visitor = Substitute.For<IParametersVisitor>();
+
+            // Call
+            boundaryConditionParameters.AcceptVisitor(visitor);
+
+            // Assert
+            visitor.Received(1).Visit(boundaryConditionParameters);
         }
     }
 }

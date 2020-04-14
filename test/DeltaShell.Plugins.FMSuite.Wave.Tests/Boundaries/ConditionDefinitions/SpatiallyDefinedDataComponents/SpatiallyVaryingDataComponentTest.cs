@@ -3,6 +3,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -207,6 +208,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             void Call() => dataComponent.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
 
             Assert.Throws<InvalidOperationException>(Call);
+        }
+
+        [Test]
+        public void AcceptVisitor_VisitorNull_ThrowsArgumentNullExceptionForSpatiallyVaryingDataComponent()
+        {
+            // Setup
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
+            
+            // Call
+            void Call() => dataComponent.AcceptVisitor(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("visitor"));
+        }
+
+        [Test]
+        public void AcceptVisitor_CallsCorrectVisitorMethodForSpatiallyVaryingDataComponent()
+        {
+            // Setup
+            var dataComponent = new SpatiallyVaryingDataComponent<T>();
+            var visitor = Substitute.For<IDataComponentVisitor>();
+
+            // Call
+            dataComponent.AcceptVisitor(visitor);
+
+            // Assert
+            visitor.Received(1).Visit(dataComponent);
         }
     }
 }
