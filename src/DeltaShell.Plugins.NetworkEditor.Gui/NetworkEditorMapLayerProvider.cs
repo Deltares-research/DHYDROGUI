@@ -158,7 +158,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.ThinDams;
                     yield return area2D.Weirs;
                 }
-
             }
 
             var routes = data as IEventedList<Route>;
@@ -192,7 +191,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public ILayer CreateLayer(object data, object parentData)
         {
-
             var area2D = data as HydroArea;
             if (area2D != null)
             {
@@ -214,16 +212,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 && parentData as HydroArea == null)
             {
                 return GenerateDrainageBasinLayer(hydroRegion, drainageBasin, data);
-            }
-
-            if (data is IEnumerable<Route> routes)
-            {
-                return new GroupLayer("Routes")
-                {
-                    Selectable = false,
-                    NameIsReadOnly = true,
-                    LayersReadOnly = true
-                };
             }
 
             
@@ -719,6 +707,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 case IEnumerable<ICrossSection> crossSections:
                     return CreateNetworkVectorLayer<CrossSection>(crossSections, "Cross Sections", hydroNetwork,
                         o => o is Channel && ((Channel) o).CrossSections.Any());
+                case IEnumerable<Route> routes:
+                    return new GroupLayer("Routes")
+                        {
+                            Selectable = false,
+                            NameIsReadOnly = true,
+                            LayersReadOnly = true
+                        };
                 default:
                     return null;
                     //throw new Exception($"Cannot generate Hydro network layer for data of type : {data.GetType()}");
