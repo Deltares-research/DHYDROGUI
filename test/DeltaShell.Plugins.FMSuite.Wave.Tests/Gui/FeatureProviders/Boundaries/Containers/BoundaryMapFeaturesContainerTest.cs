@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -29,9 +32,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                          geometryFactory, 
                                                                          addBehaviour);
 
-            var endPointFeatureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
+            IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
+                geometryFactory.ConstructBoundaryEndPoints(boundary)
+                               .Select(p => new Feature2DPoint { Geometry = p});
+
+            var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
-                                                                                 geometryFactory);
+                                                                                 ConstructEndPointFeatures);
 
             var supportPointFeatureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider, 
                                                                                          coordSystem, 
@@ -66,9 +73,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                          geometryFactory, 
                                                                          addBehaviour);
 
-            var endPointFeatureProvider = new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
+            IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
+                geometryFactory.ConstructBoundaryEndPoints(boundary)
+                               .Select(p => new Feature2DPoint { Geometry = p});
+
+
+            var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
-                                                                                 geometryFactory);
+                                                                                 ConstructEndPointFeatures);
 
             var supportPointFeatureProvider = new BoundarySupportPointMapFeatureProvider(boundaryProvider, 
                                                                                          coordSystem, 
@@ -82,12 +94,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullTestData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(BoundaryLineMapFeatureProvider lineMapFeatureProvider,
-                                                                          BoundaryEndPointMapFeatureProvider endPointFeatureProvider,
+                                                                          BoundaryReadOnlyMapFeatureProvider readOnlyFeatureProvider,
                                                                           BoundarySupportPointMapFeatureProvider supportPointFeatureProvider,
                                                                           string expectedParameterName)
         {
             void Call() => new BoundaryMapFeaturesContainer(lineMapFeatureProvider,
-                                                            endPointFeatureProvider,
+                                                            readOnlyFeatureProvider,
                                                             supportPointFeatureProvider);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);

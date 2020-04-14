@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -13,7 +14,7 @@ using SharpMap.Data.Providers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers
 {
     /// <summary>
-    /// <see cref="BoundaryEndPointMapFeatureProvider"/> is responsible for
+    /// <see cref="BoundaryReadOnlyMapFeatureProvider"/> is responsible for
     /// generating the features corresponding with the endpoints of all
     /// <see cref="IWaveBoundary"/>.
     /// </summary>
@@ -24,40 +25,42 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     ///
     /// * It is assumed that <see cref="IWaveBoundary"/> are static, once placed.
     ///   Follow up issues will most likely invalidate this invariant. In this
-    ///   case, <see cref="BoundaryEndPointMapFeatureProvider"/> will need to be
+    ///   case, <see cref="BoundaryReadOnlyMapFeatureProvider"/> will need to be
     ///   extended or rewritten, to allow for operations on EndPoints.
-    /// * Currently it assumed no explicit EndPoints are added, instead we assume
+    /// * Currently it assumed any features are not explicitly added , instead we assume
     ///   that once a <see cref="IWaveBoundary"/> is added through the
     ///   <see cref="BoundaryLineMapFeatureProvider"/>, a refresh is triggered,
-    ///   which will generate the EndPoints anew. This is not an ideal solution,
-    ///   but given the minimal amount of endpoints which will exist within a
-    ///   model it is sufficient.
+    ///   which will generate the features of this <see cref="BoundaryReadOnlyMapFeatureProvider"/>
+    ///   anew. This is not an ideal solution, but given the minimal amount of features which will exist
+    ///   within a model it should sufficient.
     /// </remarks>
     /// <seealso cref="FeatureCollection"/>
-    public sealed class BoundaryEndPointMapFeatureProvider : FeatureCollection
+    public sealed class BoundaryReadOnlyMapFeatureProvider : FeatureCollection
     {
         private readonly IBoundaryProvider boundaryProvider;
-        private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
+        private readonly Func<IWaveBoundary, IEnumerable<IFeature>> constructFeaturesFromBoundaryFunc;
 
         /// <summary>
-        /// Creates a new <see cref="BoundaryEndPointMapFeatureProvider"/>.
+        /// Creates a new <see cref="BoundaryReadOnlyMapFeatureProvider"/>.
         /// </summary>
         /// <param name="boundaryProvider">The boundary container.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
+        /// <param name="constructFeaturesFromBoundaryFunc">
+        /// The function to construct a collection of <see cref="IFeature"/> from a provided <see cref="IWaveBoundary"/>.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="boundaryProvider"/> or
-        /// <paramref name="waveBoundaryGeometryFactory"/> is <c>null</c>.
+        /// <paramref name="constructFeaturesFromBoundaryFunc"/> is <c>null</c>.
         /// </exception>
-        public BoundaryEndPointMapFeatureProvider(IBoundaryProvider boundaryProvider,
+        public BoundaryReadOnlyMapFeatureProvider(IBoundaryProvider boundaryProvider,
                                                   ICoordinateSystem coordinateSystem, 
-                                                  IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory)
+                                                  Func<IWaveBoundary, IEnumerable<IFeature>> constructFeaturesFromBoundaryFunc)
         {
             Ensure.NotNull(boundaryProvider, nameof(boundaryProvider));
-            Ensure.NotNull(waveBoundaryGeometryFactory, nameof(waveBoundaryGeometryFactory));
+            Ensure.NotNull(constructFeaturesFromBoundaryFunc, nameof(constructFeaturesFromBoundaryFunc));
 
             this.boundaryProvider = boundaryProvider;
-            this.waveBoundaryGeometryFactory = waveBoundaryGeometryFactory;
+            this.constructFeaturesFromBoundaryFunc = constructFeaturesFromBoundaryFunc;
 
             CoordinateSystem = coordinateSystem;
             FeatureType = typeof(Feature2DPoint);
@@ -65,10 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 
         public override IList Features
         {
-            get => boundaryProvider.Boundaries
-                                    .SelectMany(boundary => waveBoundaryGeometryFactory.ConstructBoundaryEndPoints(boundary))
-                                    .Select(p => new Feature2DPoint {Geometry = p})
-                                    .ToList();
+            get => boundaryProvider.Boundaries.SelectMany(constructFeaturesFromBoundaryFunc).ToList();
             set => throw new NotSupportedException("This is currently not supported, implement when needed.");
         }
 

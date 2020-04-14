@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public BoundaryMapFeaturesContainer(BoundaryLineMapFeatureProvider boundaryLineMapFeatureProvider,
-                                            BoundaryEndPointMapFeatureProvider boundaryEndPointMapFeatureProvider,
+                                            BoundaryReadOnlyMapFeatureProvider boundaryEndPointMapFeatureProvider,
                                             BoundarySupportPointMapFeatureProvider supportPointMapFeatureProvider)
         {
             Ensure.NotNull(boundaryLineMapFeatureProvider, nameof(boundaryLineMapFeatureProvider));

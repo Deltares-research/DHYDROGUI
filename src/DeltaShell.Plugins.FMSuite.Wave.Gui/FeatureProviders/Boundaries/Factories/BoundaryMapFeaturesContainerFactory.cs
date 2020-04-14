@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Guards;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
@@ -7,6 +9,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
 {
@@ -79,10 +83,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                    coordinateSystem,
                                                    geometryFactory, 
                                                    addBehaviour);
+
+        IEnumerable<IFeature> ConstructEndPointFeatures(IWaveBoundary boundary) => 
+            geometryFactory.ConstructBoundaryEndPoints(boundary)
+                           .Select(p => new Feature2DPoint { Geometry = p});
+
             var boundaryEndPointMapFeatureProvider = 
-                new BoundaryEndPointMapFeatureProvider(boundaryProvider, 
+                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                        coordinateSystem, 
-                                                       geometryFactory);
+                                                       ConstructEndPointFeatures);
 
             var supportPointMapFeatureProvider =
                 new BoundarySupportPointMapFeatureProvider(boundaryProvider,
@@ -93,6 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                     boundaryEndPointMapFeatureProvider, 
                                                     supportPointMapFeatureProvider);
         }
+
 
         private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer) 
         {

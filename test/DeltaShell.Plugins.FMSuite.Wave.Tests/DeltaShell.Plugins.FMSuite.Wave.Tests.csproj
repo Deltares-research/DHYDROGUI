@@ -289,7 +289,7 @@
     <Compile Include="Gui\FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactoryTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\BoundaryFromLineAddBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviourTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryEndPointMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainerTest.cs" />
