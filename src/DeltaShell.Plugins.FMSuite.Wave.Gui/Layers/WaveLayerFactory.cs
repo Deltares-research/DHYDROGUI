@@ -196,14 +196,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
         private static IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
         {
-            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider);
+            yield return CreateBoundaryStartPointLayer(featuresProviderContainer.BoundaryStartPointMapFeatureProvider);
             yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
+            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider);
             yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider);
         }
 
-        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider)
-        {
-            return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
+        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider) =>
+            new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
             {
                 ShowInTreeView = false,
                 DataSource = featureProvider,
@@ -212,18 +212,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 NameIsReadOnly = true,
                 ShowInLegend = false,
                 SmoothingMode = SmoothingMode.AntiAlias,
-
                 Style = new VectorStyle
                 {
                     Fill = new SolidBrush(DeltaresColor.LightBlue),
                     GeometryType = typeof(IPoint),
                 }
             };
-        }
 
-        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider)
-        {
-            var lineDataLayer = new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
+        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider) =>
+            new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
             {
                 ShowInTreeView = false,
                 DataSource = featureProvider,
@@ -231,7 +228,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 ReadOnly = true,
                 ShowInLegend = false,
                 SmoothingMode = SmoothingMode.AntiAlias,
-                
                 Style = new VectorStyle
                 {
                     Line = new Pen(Color.Blue, 3f),
@@ -239,12 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 },
             };
 
-            return lineDataLayer;
-        }
-
-        private static ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider)
-        {
-            var endPointsLayer = new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
+        private static ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider) =>
+            new VectorLayer(WaveLayerNames.BoundaryStartPointsLayerName)
             {
                 ShowInTreeView = false,
                 ShowInLegend = false,
@@ -253,16 +245,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 ReadOnly = true,
                 NameIsReadOnly = true,
                 SmoothingMode = SmoothingMode.AntiAlias,
-
                 Style = new VectorStyle
                 {
-                    Fill = Brushes.Gray,
+                    Fill = new SolidBrush(DeltaresColor.LightGreen),
                     GeometryType = typeof(IPoint),
-                    SymbolScale = 0.5F,
                 },
             };
 
-            return endPointsLayer;
-        }
+        private static ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider) =>
+            new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
+            {
+                ShowInTreeView = false,
+                ShowInLegend = false,
+                DataSource = featureProvider,
+                Selectable = false,
+                ReadOnly = true,
+                NameIsReadOnly = true,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                Style = new VectorStyle
+                {
+                    Fill = new SolidBrush(Color.LightCoral),
+                    GeometryType = typeof(IPoint),
+                },
+            };
     }
 }

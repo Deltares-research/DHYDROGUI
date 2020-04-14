@@ -84,36 +84,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                    geometryFactory, 
                                                    addBehaviour);
 
+            var boundaryStartPointMapFeatureProvider = 
+                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
+                                                       coordinateSystem, 
+                                                       new StartingPointFromBoundaryBehaviour(geometryFactory));
+
             var boundaryEndPointMapFeatureProvider = 
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                        coordinateSystem, 
-                                                       new PlaceholderFeatureFromBoundaryBehaviour(geometryFactory));
+                                                       new EndPointFromBoundaryBehaviour(geometryFactory));
 
             var supportPointMapFeatureProvider =
                 new BoundarySupportPointMapFeatureProvider(boundaryProvider,
                                                            coordinateSystem,
                                                            geometryFactory);
 
-            return new BoundaryMapFeaturesContainer(boundaryLineMapFeatureProvider, 
-                                                    boundaryEndPointMapFeatureProvider, 
+            return new BoundaryMapFeaturesContainer(boundaryLineMapFeatureProvider,
+                                                    boundaryStartPointMapFeatureProvider, 
+                                                    boundaryEndPointMapFeatureProvider,
                                                     supportPointMapFeatureProvider);
         }
-
-        // TODO: this will replaced, please ignore
-        private class PlaceholderFeatureFromBoundaryBehaviour : IFeaturesFromBoundaryBehaviour
-        {
-            private readonly IWaveBoundaryGeometryFactory geometryFactory;
-
-            public PlaceholderFeatureFromBoundaryBehaviour(IWaveBoundaryGeometryFactory geometryFactory)
-            {
-                this.geometryFactory = geometryFactory;
-            }
-
-            public IEnumerable<IFeature> Execute(IWaveBoundary waveBoundary) =>
-                geometryFactory.ConstructBoundaryEndPoints(waveBoundary)
-                               .Select(p => new Feature2DPoint {Geometry = p});
-        }
-
 
         private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer) 
         {

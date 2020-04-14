@@ -30,6 +30,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                          geometryFactory, 
                                                                          addBehaviour);
 
+            var startPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
+                                                                                   coordSystem, 
+                                                                                   featuresFromBoundaryBehaviour);
 
             var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
@@ -41,6 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call
             var boundaryMapFeaturesContainer = new BoundaryMapFeaturesContainer(lineFeatureProvider, 
+                                                                                startPointFeatureProvider, 
                                                                                 endPointFeatureProvider, 
                                                                                 supportPointFeatureProvider);
 
@@ -49,6 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             Assert.That(boundaryMapFeaturesContainer.BoundaryLineMapFeatureProvider, 
                         Is.SameAs(lineFeatureProvider));
+            Assert.That(boundaryMapFeaturesContainer.BoundaryStartPointMapFeatureProvider, 
+                        Is.SameAs(startPointFeatureProvider));
             Assert.That(boundaryMapFeaturesContainer.BoundaryEndPointMapFeatureProvider, 
                         Is.SameAs(endPointFeatureProvider));
             Assert.That(boundaryMapFeaturesContainer.SupportPointMapFeatureProvider, 
@@ -61,12 +67,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordSystem = Substitute.For<ICoordinateSystem>();
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var featuresFromBoundaryBehaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
+
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
             var lineFeatureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider, 
                                                                          coordSystem, 
                                                                          geometryFactory, 
                                                                          addBehaviour);
+
+            var startPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
+                                                                                   coordSystem, 
+                                                                                   featuresFromBoundaryBehaviour);
 
             var endPointFeatureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
                                                                                  coordSystem, 
@@ -76,20 +87,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                                          coordSystem, 
                                                                                          geometryFactory);
 
-            yield return new TestCaseData(null, endPointFeatureProvider, supportPointFeatureProvider, "boundaryLineMapFeatureProvider");
-            yield return new TestCaseData(lineFeatureProvider, null, supportPointFeatureProvider, "boundaryEndPointMapFeatureProvider");
-            yield return new TestCaseData(lineFeatureProvider, endPointFeatureProvider, null, "supportPointMapFeatureProvider");
+            yield return new TestCaseData(null, startPointFeatureProvider, endPointFeatureProvider, supportPointFeatureProvider, "boundaryLineMapFeatureProvider");
+            yield return new TestCaseData(lineFeatureProvider, null, endPointFeatureProvider, supportPointFeatureProvider, "boundaryStartPointMapFeatureProvider");
+            yield return new TestCaseData(lineFeatureProvider, startPointFeatureProvider, null, supportPointFeatureProvider, "boundaryEndPointMapFeatureProvider");
+            yield return new TestCaseData(lineFeatureProvider, startPointFeatureProvider, endPointFeatureProvider, null, "supportPointMapFeatureProvider");
         }
 
         [Test]
         [TestCaseSource(nameof(ConstructorParameterNullTestData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(BoundaryLineMapFeatureProvider lineMapFeatureProvider,
-                                                                          BoundaryReadOnlyMapFeatureProvider readOnlyFeatureProvider,
+                                                                          BoundaryReadOnlyMapFeatureProvider startPointFeatureProvider,
+                                                                          BoundaryReadOnlyMapFeatureProvider endPointFeatureProvider,
                                                                           BoundarySupportPointMapFeatureProvider supportPointFeatureProvider,
                                                                           string expectedParameterName)
         {
             void Call() => new BoundaryMapFeaturesContainer(lineMapFeatureProvider,
-                                                            readOnlyFeatureProvider,
+                                                            startPointFeatureProvider,
+                                                            endPointFeatureProvider,
                                                             supportPointFeatureProvider);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);

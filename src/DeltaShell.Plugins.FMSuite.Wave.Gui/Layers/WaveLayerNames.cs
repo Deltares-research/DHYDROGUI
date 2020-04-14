@@ -34,6 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string BoundaryEndPointsLayerName = "End Points";
 
         /// <summary>
+        /// The boundary end points layer name
+        /// </summary>
+        public const string BoundaryStartPointsLayerName = "Start Points";
+
+        /// <summary>
         /// The boundary condition layer name
         /// </summary>
         public const string BoundaryConditionLayerName = "Boundary Conditions";

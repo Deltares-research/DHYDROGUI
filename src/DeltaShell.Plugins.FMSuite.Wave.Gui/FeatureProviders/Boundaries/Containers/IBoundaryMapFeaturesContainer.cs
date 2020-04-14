@@ -18,6 +18,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Contai
         IFeatureProvider BoundaryLineMapFeatureProvider { get; }
 
         /// <summary>
+        /// Gets the boundary start point map feature provider of this
+        /// <see cref="BoundaryMapFeaturesContainer"/>.
+        /// </summary>
+        /// <value>
+        /// The boundary start point map feature provider.
+        /// </value>
+        IFeatureProvider BoundaryStartPointMapFeatureProvider { get; }
+
+        /// <summary>
         /// Gets the boundary end point map feature provider of this
         /// <see cref="BoundaryMapFeaturesContainer"/>.
         /// </summary>
