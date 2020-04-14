@@ -1,7 +1,7 @@
 ﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
-    /// <see cref="IBoundaryConditionParameters"/> defines the different boundary
+    /// <see cref="IForcingTypeDefinedParameters"/> defines the different boundary
     /// condition parameters used within the <see cref="IWaveBoundaryConditionDefinition"/>.
     ///
     /// Currently, the following are defined:
@@ -15,5 +15,5 @@
     /// As such, this interface is empty. Other classes will use it to type
     /// cast to the implementing types.
     /// </remarks>
-    public interface IBoundaryConditionParameters : IVisitableBoundaryConditionParameters {}
+    public interface IForcingTypeDefinedParameters : IVisitableForcingTypeDefinedParameters {}
 }

@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// <seealso cref="IImportBoundaryConditionDataComponentFactory" />
     public class ImportBoundaryConditionDataComponentFactory : IImportBoundaryConditionDataComponentFactory
     {
-        private readonly IBoundaryParametersFactory parametersFactory;
+        private readonly IForcingTypeDefinedParametersFactory parametersFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportBoundaryConditionDataComponentFactory" /> class.
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="parametersFactory" /> is <c> null </c>.
         /// </exception>
-        public ImportBoundaryConditionDataComponentFactory(IBoundaryParametersFactory parametersFactory)
+        public ImportBoundaryConditionDataComponentFactory(IForcingTypeDefinedParametersFactory parametersFactory)
         {
             Ensure.NotNull(parametersFactory, nameof(parametersFactory));
 

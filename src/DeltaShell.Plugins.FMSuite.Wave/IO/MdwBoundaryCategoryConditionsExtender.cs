@@ -93,9 +93,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// Visit method for setting <see cref="isUniform"/> and calls the next AcceptVisitor method
             /// of the Data stored in the <see cref="UniformDataComponent{T}"/> object.
             /// </summary>
-            /// <typeparam name="T"> An <see cref="IBoundaryConditionParameters"/> object</typeparam>
+            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
             /// <param name="uniformDataComponent">The visited <see cref="UniformDataComponent{T}"/></param>
-            public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IBoundaryConditionParameters
+            public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
             {
                 isUniform = true;
                 uniformDataComponent.Data.AcceptVisitor(this);
@@ -106,9 +106,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// Calls the next AcceptVisitors methods of the stored data for all support points in
             /// the <see cref="SpatiallyVaryingDataComponent{T}"/> object.
             /// </summary>
-            /// <typeparam name="T"> An <see cref="IBoundaryConditionParameters"/> object</typeparam>
+            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
             /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
-            public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IBoundaryConditionParameters
+            public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
             {
                 isUniform = false;
                 SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();

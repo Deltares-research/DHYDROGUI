@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private static double RandomDouble => Math.Round(random.NextDouble(), 3);
         private readonly SpreadingImportType spreadingType;
         private readonly ShapeEqualityComparer shapeComparer = new ShapeEqualityComparer();
-        private readonly IBoundaryParametersFactory parametersFactory = new BoundaryParametersFactory();
+        private readonly IForcingTypeDefinedParametersFactory parametersFactory = new ForcingTypeDefinedParametersFactory();
 
         private const double doublePrecision = 1E-5;
 

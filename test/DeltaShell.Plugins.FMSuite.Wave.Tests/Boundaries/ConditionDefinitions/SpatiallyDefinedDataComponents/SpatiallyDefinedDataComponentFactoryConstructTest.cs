@@ -12,13 +12,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture(typeof(TimeDependentParameters<DegreesDefinedSpreading>))]
     [TestFixture(typeof(FileBasedParameters))]
     public class SpatiallyDefinedDataComponentFactoryConstructTest<TParameters>
-        where TParameters : class, IBoundaryConditionParameters
+        where TParameters : class, IForcingTypeDefinedParameters
     {
         [Test]
         public void ConstructDefaultDataComponent_UniformDataComponentWithConstantParameters_ExpectedResult()
         {
             // Setup
-            var parameterFactory = new BoundaryParametersFactory();
+            var parameterFactory = new ForcingTypeDefinedParametersFactory();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             // Call
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConstructDefaultDataComponent_SpatiallyVaryingDataComponentWithConstantParameters_ExpectedResult()
         {
             // Setup
-            var parameterFactory = new BoundaryParametersFactory();
+            var parameterFactory = new ForcingTypeDefinedParametersFactory();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             // Call

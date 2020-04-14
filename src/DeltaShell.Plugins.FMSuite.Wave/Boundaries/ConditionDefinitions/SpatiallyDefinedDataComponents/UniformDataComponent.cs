@@ -7,14 +7,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
 {
     /// <summary>
     /// <see cref="UniformDataComponent{T}"/> defines a data component consisting
-    /// of a <see cref="IBoundaryConditionParameters"/> defined for the whole
+    /// of a <see cref="IForcingTypeDefinedParameters"/> defined for the whole
     /// <see cref="IWaveBoundary"/>.
     /// </summary>
     /// <typeparam name="T">
-    /// The type of <see cref="IBoundaryConditionParameters"/>.
+    /// The type of <see cref="IForcingTypeDefinedParameters"/>.
     /// </typeparam>
     /// <seealso cref="ISpatiallyDefinedDataComponent" />
-    public class UniformDataComponent<T> : ISpatiallyDefinedDataComponent where T : IBoundaryConditionParameters
+    public class UniformDataComponent<T> : ISpatiallyDefinedDataComponent where T : IForcingTypeDefinedParameters
     {
         /// <summary>
         /// Creates a new <see cref="UniformDataComponent{T}"/>.
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// </exception>
         public UniformDataComponent(T data)
         {
-            Ensure.NotNull((IBoundaryConditionParameters) data, nameof(data));
+            Ensure.NotNull((IForcingTypeDefinedParameters) data, nameof(data));
             Data = data;
         }
 
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
             get => data;
             set
             {
-                Ensure.NotNull((IBoundaryConditionParameters) value, nameof(value));
+                Ensure.NotNull((IForcingTypeDefinedParameters) value, nameof(value));
                 data = value;
             }
         }

@@ -211,7 +211,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\DataComponentTestUtils.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponentTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponentTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\BoundaryParametersFactoryTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ForcingTypeDefinedParametersFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ConstantParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParametersTest.cs" />

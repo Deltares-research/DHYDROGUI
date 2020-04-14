@@ -9,16 +9,16 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     [TestFixture]
-    public class BoundaryParametersFactoryTest
+    public class ForcingTypeDefinedParametersFactoryTest
     {
         [Test]
         public void Constructor_ExpectedValues()
         {
             // Call
-            var factory = new BoundaryParametersFactory();
+            var factory = new ForcingTypeDefinedParametersFactory();
 
             // Assert
-            Assert.That(factory, Is.InstanceOf<IBoundaryParametersFactory>());
+            Assert.That(factory, Is.InstanceOf<IForcingTypeDefinedParametersFactory>());
         }
 
         [TestFixture]
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             public void ConstructDefaultConstantParameters_ExpectedValues()
             {
                 // Setup
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 ConstantParameters<TSpreading> parameters =
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             public void ConstructConstantParameters_ExpectedValues()
             {
                 // Setup
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 const double expectedHeight = 1.5;
                 const double expectedPeriod = 2.5;
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             [Test]
             public void ConvertConstantParameters_ParametersNull_ThrowsArgumentNullException()
             {
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 void Call() => factory.ConvertConstantParameters<TSpreading, PowerDefinedSpreading>(null);
                 var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             {
                 // Setup
                 var initialParameters = new ConstantParameters<TSpreading>(5, 6, 7, new TSpreading());
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 ConstantParameters<PowerDefinedSpreading> result = factory.ConvertConstantParameters<TSpreading, PowerDefinedSpreading>(initialParameters);
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             {
                 // Setup
                 var initialParameters = new ConstantParameters<TSpreading>(15, 16, 17, new TSpreading());
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 ConstantParameters<DegreesDefinedSpreading> result = factory.ConvertConstantParameters<TSpreading, DegreesDefinedSpreading>(initialParameters);
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             public void ConstructTimeDependentParameters_ExpectedResults()
             {
                 // Setup
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
                 var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
 
                 // Call
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             public void ConstructTimeDependentParameters_WaveEnergyFunctionNull_ThrowsArgumentNullException()
             {
                 // Setup
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call | Assert
                 void Call() => factory.ConstructTimeDependentParameters<TSpreading>(null);
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             public void ConstructDefaultTimeDependentParameters_WaveEnergyFunctionNotNull()
             {
                 // Setup
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 TimeDependentParameters<TSpreading> parameters = factory.ConstructDefaultTimeDependentParameters<TSpreading>();
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             [Test]
             public void ConvertTimeDependentParameters_ParametersNull_ThrowsArgumentNullException()
             {
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 void Call() => factory.ConvertTimeDependentParameters<TSpreading, DegreesDefinedSpreading>(null);
                 var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                 // Setup
                 var energyFunction = new WaveEnergyFunction<TSpreading>();
                 var initialParameters = new TimeDependentParameters<TSpreading>(energyFunction);
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 TimeDependentParameters<PowerDefinedSpreading> result = factory.ConvertTimeDependentParameters<TSpreading, PowerDefinedSpreading>(initialParameters);
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                 // Setup
                 var energyFunction = new WaveEnergyFunction<TSpreading>();
                 var initialParameters = new TimeDependentParameters<TSpreading>(energyFunction);
-                var factory = new BoundaryParametersFactory();
+                var factory = new ForcingTypeDefinedParametersFactory();
 
                 // Call
                 TimeDependentParameters<DegreesDefinedSpreading> result = factory.ConvertTimeDependentParameters<TSpreading, DegreesDefinedSpreading>(initialParameters);
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConstructDefaultFileBasedParameters_ExpectedValues()
         {
             // Setup
-            var factory = new BoundaryParametersFactory();
+            var factory = new ForcingTypeDefinedParametersFactory();
 
             // Call
             FileBasedParameters parameters =

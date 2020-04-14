@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Constructor_InitializesInstanceCorrectly()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             // Call
             void Call() => new ImportBoundaryConditionDataComponentFactory(parametersFactory);
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateUniformConstantComponent_ParametersBlockNull_ReturnsCorrectResult()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var constantParameters = new ConstantParameters<T>(random.NextDouble(),
                                                                random.NextDouble(),
                                                                random.NextDouble(),
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateUniformConstantComponent_ReturnsCorrectResult()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             ConstantParameters<T> constantParameters = GetExpectedConstantParameters(parametersFactory,
                                                                                      out ParametersBlock parametersBlock);
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateUniformTimeDependentComponent_WaveEnergyFunctionNull_ThrowsArgumentNullException()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
 
             // Call
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateUniformTimeDependentComponent_ReturnsCorrectResult()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             TimeDependentParameters<T> timeDependentParameters = GetExpectedTimeDependentParameters(
                 parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction);
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateSpatiallyVaryingConstantComponent_DataPerSupportPointNull_ThrowsArgumentNullException()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
 
             // Call
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateSpatiallyVaryingConstantComponent_ReturnsCorrectResult()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
 
             var supportPoint1 = new SupportPoint(random.NextDouble(), geometricDefinition);
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateSpatiallyVaryingTimeDependentComponent_DataPerSupportPointNull_ThrowsArgumentNullException()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
 
             // Call
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void CreateSpatiallyVaryingTimeDependentComponent_ReturnsCorrectResult()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
 
             var supportPoint1 = new SupportPoint(random.NextDouble(), geometricDefinition);
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.Data[supportPoint2], Is.SameAs(timeDependentParameters2));
         }
 
-        private ConstantParameters<T> GetExpectedConstantParameters(IBoundaryParametersFactory parametersFactory,
+        private ConstantParameters<T> GetExpectedConstantParameters(IForcingTypeDefinedParametersFactory parametersFactory,
                                                                     out ParametersBlock parametersBlock)
         {
             double waveHeight = random.NextDouble();
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         private static TimeDependentParameters<T> GetExpectedTimeDependentParameters(
-            IBoundaryParametersFactory parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction)
+            IForcingTypeDefinedParametersFactory parametersFactory, out IWaveEnergyFunction<T> waveEnergyFunction)
         {
             waveEnergyFunction = Substitute.For<IWaveEnergyFunction<T>>();
             var timeDependentParameters = new TimeDependentParameters<T>(waveEnergyFunction);

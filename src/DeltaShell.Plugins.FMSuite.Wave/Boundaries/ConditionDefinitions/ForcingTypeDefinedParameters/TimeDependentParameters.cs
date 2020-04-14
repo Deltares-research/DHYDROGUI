@@ -12,8 +12,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
     /// of a spatially variant <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
     /// <typeparam name="TSpreading">The type of spreading.</typeparam>
-    /// <seealso cref="IBoundaryConditionParameters"/>
-    public class TimeDependentParameters<TSpreading> : IBoundaryConditionParameters
+    /// <seealso cref="IForcingTypeDefinedParameters"/>
+    public class TimeDependentParameters<TSpreading> : IForcingTypeDefinedParameters
         where TSpreading : IBoundaryConditionSpreading, new()
     {
         /// <summary>

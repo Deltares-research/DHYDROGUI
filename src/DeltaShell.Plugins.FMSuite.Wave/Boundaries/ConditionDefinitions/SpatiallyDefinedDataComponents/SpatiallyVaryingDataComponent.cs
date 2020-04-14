@@ -9,13 +9,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
 {
     /// <summary>
     /// <see cref="SpatiallyVaryingDataComponent{T}"/> defines a data component consisting
-    /// of an optional <see cref="IBoundaryConditionParameters"/> per support point.
+    /// of an optional <see cref="IForcingTypeDefinedParameters"/> per support point.
     /// </summary>
     /// <typeparam name="T">
-    /// The type of <see cref="IBoundaryConditionParameters"/>.
+    /// The type of <see cref="IForcingTypeDefinedParameters"/>.
     /// </typeparam>
     /// <seealso cref="ISpatiallyDefinedDataComponent" />
-    public class SpatiallyVaryingDataComponent<T> : ISpatiallyDefinedDataComponent where T : IBoundaryConditionParameters
+    public class SpatiallyVaryingDataComponent<T> : ISpatiallyDefinedDataComponent where T : IForcingTypeDefinedParameters
     {
         private readonly Dictionary<SupportPoint, T> data = 
             new Dictionary<SupportPoint, T>();
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         public void AddParameters(SupportPoint supportPoint, T parameters)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
-            Ensure.NotNull((IBoundaryConditionParameters) parameters, nameof(parameters));
+            Ensure.NotNull((IForcingTypeDefinedParameters) parameters, nameof(parameters));
 
             if (data.ContainsKey(supportPoint))
             {

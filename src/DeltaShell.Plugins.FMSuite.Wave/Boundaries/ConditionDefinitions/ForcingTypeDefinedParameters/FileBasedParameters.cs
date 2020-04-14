@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
     /// <see cref="GeometricDefinitions.SupportPoint"/> in the case of a spatially variant
     /// <see cref="IWaveBoundaryConditionDefinition"/>.
     /// </summary>
-    /// <seealso cref="IBoundaryConditionParameters"/>
-    public class FileBasedParameters : IBoundaryConditionParameters
+    /// <seealso cref="IForcingTypeDefinedParameters"/>
+    public class FileBasedParameters : IForcingTypeDefinedParameters
     {
         /// <summary>
         /// Creates a new <see cref="FileBasedParameters"/>.

@@ -11,17 +11,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     public static class DataComponentTestUtils
     {
         /// <summary>
-        /// Construct a new instance of <see cref="IBoundaryConditionParameters"/>
+        /// Construct a new instance of <see cref="IForcingTypeDefinedParameters"/>
         /// of type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T"> The type of <see cref="IBoundaryConditionParameters"/>.</typeparam>
+        /// <typeparam name="T"> The type of <see cref="IForcingTypeDefinedParameters"/>.</typeparam>
         /// <returns>
         /// A new instance of type <typeparamref name="T"/>.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         /// Thrown when an unsupported type <typeparamref name="T"/> is provided.
         /// </exception>
-        public static T ConstructParameters<T>() where T : class, IBoundaryConditionParameters
+        public static T ConstructParameters<T>() where T : class, IForcingTypeDefinedParameters
         {
             if (typeof(T) == typeof(ConstantParameters<PowerDefinedSpreading>))
             { 

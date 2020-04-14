@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             this.observedBoundary = observedBoundary;
 
-            var parametersFactory = new BoundaryParametersFactory();
+            var parametersFactory = new ForcingTypeDefinedParametersFactory();
             var modelDataComponentFactory = new SpatiallyDefinedDataComponentFactory(parametersFactory);
             var dataComponentFactory = new ViewDataComponentFactory(modelDataComponentFactory,
                                                                     referenceDateTimeProvider);

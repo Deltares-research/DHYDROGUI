@@ -2,7 +2,7 @@
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
-    public interface IVisitableBoundaryConditionParameters
+    public interface IVisitableForcingTypeDefinedParameters
     {
         /// <summary>
         /// Method for accepting IParametersVisitor visitor of the visitor design pattern,

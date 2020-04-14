@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory(), 
+                                                       new ForcingTypeDefinedParametersFactory(), 
                                                        mediator);
 
             supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             conditionDefinition.DataComponent = dataComponent;
 
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             parametersFactory.ConstructDefaultConstantParameters<TSpreading>().Returns(parameters);
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void GivenAnEnabledSupportPointViewModel_WhenIsEnabledIsSetToFalse_ThenTheCorrespondingParameterIsRemovedFromTheModel()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             // Setup initial statement
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             var initialDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void GivenADisabledSupportPointViewModelWithAnUniformDataComponent_WhenIsEnabledIsSetToTrue_ThenAnInvalidOperationExceptionIsThrown()
         {
             // Setup
-            var parametersFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
 
             var parametersNew = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());

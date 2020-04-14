@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
 
             return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          Substitute.For<IBoundaryParametersFactory>(),
+                                                          Substitute.For<IForcingTypeDefinedParametersFactory>(),
                                                           mediator);
         }
 

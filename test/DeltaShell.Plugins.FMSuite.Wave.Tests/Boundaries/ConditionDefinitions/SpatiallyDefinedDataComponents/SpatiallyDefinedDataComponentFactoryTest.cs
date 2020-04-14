@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void Constructor_ExpectedValues()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
             // Call
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConstructDefaultDataComponent_NotValidType_ThrowsNotSupportedException()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             // Call
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_OldDataComponentNull_ThrowsArgumentNullException()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             // Call
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_SameSpreadingType_ThrowsInvalidOperationException()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             // Call
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_UniformConstantDataComponentConvertedCorrectly()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             var parametersDegrees = new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading());
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_SpatiallyVaryingConstantDataComponentConvertedCorrectly()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             var component = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_UniformTimeDependentDataComponentConvertedCorrectly()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             var parametersDegrees = new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>());
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_SpatiallyVaryingTimeDependentDataComponentConvertedCorrectly()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             var component = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void ConvertDataComponentSpreading_UnsupportedDataComponent_ThrowsNotSupportedException()
         {
             // Setup
-            var parameterFactory = Substitute.For<IBoundaryParametersFactory>();
+            var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
             
             // Call

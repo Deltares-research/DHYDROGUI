@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
         private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer) 
         {
-            var parametersFactory = new BoundaryParametersFactory();
+            var parametersFactory = new ForcingTypeDefinedParametersFactory();
             var dataComponentFactory = new SpatiallyDefinedDataComponentFactory(parametersFactory);
             var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
                                                               new WaveBoundaryFactoryHelper(dataComponentFactory), 

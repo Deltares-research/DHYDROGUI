@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var boundaryConditionParameters = new FileBasedParameters(expectedFilePath);
 
             // Assert
-            Assert.That(boundaryConditionParameters, Is.InstanceOf<IBoundaryConditionParameters>());
+            Assert.That(boundaryConditionParameters, Is.InstanceOf<IForcingTypeDefinedParameters>());
             Assert.That(boundaryConditionParameters.FilePath, Is.EqualTo(expectedFilePath),
                         "Expected a different FilePath:");
         }

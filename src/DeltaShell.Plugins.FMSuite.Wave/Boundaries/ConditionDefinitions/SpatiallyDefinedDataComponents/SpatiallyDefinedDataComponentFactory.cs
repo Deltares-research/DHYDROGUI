@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     /// </summary>
     public sealed class SpatiallyDefinedDataComponentFactory : ISpatiallyDefinedDataComponentFactory
     {
-        private readonly IBoundaryParametersFactory parametersFactory;
+        private readonly IForcingTypeDefinedParametersFactory parametersFactory;
 
         private readonly IDictionary<Type, Func<ISpatiallyDefinedDataComponent>> constructionMap =
             new Dictionary<Type, Func<ISpatiallyDefinedDataComponent>>();
@@ -22,11 +22,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// <summary>
         /// Creates a new <see cref="SpatiallyDefinedDataComponentFactory"/>.
         /// </summary>
-        /// <param name="parametersFactory">The <see cref="IBoundaryParametersFactory"/> with which parameters are constructed.</param>
+        /// <param name="parametersFactory">The <see cref="IForcingTypeDefinedParametersFactory"/> with which parameters are constructed.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="parametersFactory"/> is <c>null</c>.
         /// </exception>
-        public SpatiallyDefinedDataComponentFactory(IBoundaryParametersFactory parametersFactory)
+        public SpatiallyDefinedDataComponentFactory(IForcingTypeDefinedParametersFactory parametersFactory)
         {
             Ensure.NotNull(parametersFactory, nameof(parametersFactory));
             this.parametersFactory = parametersFactory;

@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
 
             // Assert
-            Assert.That(parameters, Is.InstanceOf<IBoundaryConditionParameters>());
+            Assert.That(parameters, Is.InstanceOf<IForcingTypeDefinedParameters>());
             Assert.That(parameters, Has.Property(nameof(TimeDependentParameters<TSpreading>.WaveEnergyFunction))
                                        .SameAs(waveEnergyFunction));
         }

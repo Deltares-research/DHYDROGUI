@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// </summary>
     public class SupportPointDataComponentViewModel
     {
-        private readonly IBoundaryParametersFactory parametersFactory;
+        private readonly IForcingTypeDefinedParametersFactory parametersFactory;
         private readonly IWaveBoundaryConditionDefinition conditionDefinition;
         private readonly IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged;
 
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public SupportPointDataComponentViewModel(IWaveBoundaryConditionDefinition conditionDefinition,
-                                                  IBoundaryParametersFactory parametersFactory,
+                                                  IForcingTypeDefinedParametersFactory parametersFactory,
                                                   IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged)
         {
             Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));

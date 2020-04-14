@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory(), 
+                                                       new ForcingTypeDefinedParametersFactory(), 
                                                        mediator);
 
             viewModel = new SupportPointEditorViewModel(geometricDefinition, 
@@ -608,7 +608,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory(), 
+                                                       new ForcingTypeDefinedParametersFactory(), 
                                                        mediator);
 
             var viewModel = new SupportPointEditorViewModel(geometricDefinition, 
@@ -644,7 +644,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
             supportPointDataComponentViewModel = 
                 new SupportPointDataComponentViewModel(conditionDefinition,
-                                                       new BoundaryParametersFactory(), 
+                                                       new ForcingTypeDefinedParametersFactory(), 
                                                        mediator);
 
             var viewModel = new SupportPointEditorViewModel(geometricDefinition, 

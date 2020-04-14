@@ -5,10 +5,10 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
-    /// <see cref="BoundaryParametersFactory"/> provides the interface with which to construct
-    /// <see cref="IBoundaryConditionParameters"/>.
+    /// <see cref="ForcingTypeDefinedParametersFactory"/> provides the interface with which to construct
+    /// <see cref="IForcingTypeDefinedParameters"/>.
     /// </summary>
-    public sealed class BoundaryParametersFactory : IBoundaryParametersFactory
+    public sealed class ForcingTypeDefinedParametersFactory : IForcingTypeDefinedParametersFactory
     {
         public ConstantParameters<TSpreading> ConstructDefaultConstantParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new() =>

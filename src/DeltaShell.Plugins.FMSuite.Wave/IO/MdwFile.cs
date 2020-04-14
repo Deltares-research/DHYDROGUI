@@ -652,7 +652,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             boundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
 
             var boundariesConverter = new WaveBoundaryConverter(
-                new ImportBoundaryConditionDataComponentFactory(new BoundaryParametersFactory()),
+                new ImportBoundaryConditionDataComponentFactory(new ForcingTypeDefinedParametersFactory()),
                 new WaveBoundaryGeometricDefinitionFactory(boundaryContainer));
 
             IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(mdwCategories, mdwDirPath);
