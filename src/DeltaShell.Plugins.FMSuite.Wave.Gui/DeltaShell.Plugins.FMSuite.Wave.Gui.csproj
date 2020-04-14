@@ -355,6 +355,7 @@
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IFeaturesFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\StartingPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProvider.cs" />
