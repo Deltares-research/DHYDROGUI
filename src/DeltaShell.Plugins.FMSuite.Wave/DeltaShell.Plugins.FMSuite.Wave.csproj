@@ -135,6 +135,7 @@
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculator.cs" />
     <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculatorProvider.cs" />
     <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\IVisitableWaveBoundaryConditionDefinition.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponent.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentFactory.cs" />

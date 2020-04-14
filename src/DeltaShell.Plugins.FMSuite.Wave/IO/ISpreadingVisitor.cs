@@ -2,6 +2,9 @@
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
+    /// <summary>
+    /// <see cref="ISpreadingVisitor"/> contains visit methods for different spreading types.
+    /// </summary>
     public interface ISpreadingVisitor
     {
         /// <summary>

@@ -3,6 +3,9 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
+    /// <summary>
+    /// <see cref="IForcingTypeDefinedParametersVisitor"/> contains visit methods for different forcing type parameters.
+    /// </summary>
     public interface IForcingTypeDefinedParametersVisitor
     {
         /// <summary>

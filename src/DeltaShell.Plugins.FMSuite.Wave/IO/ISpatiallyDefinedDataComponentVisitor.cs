@@ -3,6 +3,10 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyD
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
+    /// <summary>
+    /// <see cref="ISpatiallyDefinedDataComponentVisitor"/> contains visit methods for different spatially
+    /// defined data components.
+    /// </summary>
     public interface ISpatiallyDefinedDataComponentVisitor
     {
         /// <summary>

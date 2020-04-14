@@ -2,6 +2,9 @@
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
+    /// <summary>
+    /// <see cref="IShapeVisitor"/> contains visit methods for different shapes.
+    /// </summary>
     public interface IShapeVisitor
     {
         /// <summary>

@@ -1,14 +1,14 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
-    /// <see cref="IVisitableBoundaryConditionSpreading"/> defines method to accept a <see cref="ISpreadingVisitor"/>
+    /// <see cref="IVisitableWaveBoundaryConditionDefinition"/> defines method to accept a <see cref="IBoundaryConditionVisitor"/>
     /// </summary>
-    public interface IVisitableBoundaryConditionSpreading
+    public interface IVisitableWaveBoundaryConditionDefinition
     {
         /// <summary>
-        /// Method for accepting <see cref="ISpreadingVisitor"/> of the visitor design pattern,
+        /// Method for accepting IBoundaryConditionVisitor visitor of the visitor design pattern,
         /// used for the export.
         /// </summary>
         /// <param name="visitor">Visitor who wants to visit this object</param>
@@ -16,6 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
         /// Thrown when <paramref name="visitor"/>
         /// is <c>null</c>.
         /// </exception>
-        void AcceptVisitor(ISpreadingVisitor visitor);
+        void AcceptVisitor(IBoundaryConditionVisitor visitor);
     }
 }

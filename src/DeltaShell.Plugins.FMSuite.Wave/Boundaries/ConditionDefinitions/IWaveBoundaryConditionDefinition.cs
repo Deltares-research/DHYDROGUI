@@ -1,6 +1,5 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
@@ -8,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
     /// <see cref="IWaveBoundaryConditionDefinition"/> defines the condition 
     /// attributes of a <see cref="IWaveBoundary"/>.
     /// </summary>
-    public interface IWaveBoundaryConditionDefinition
+    public interface IWaveBoundaryConditionDefinition : IVisitableWaveBoundaryConditionDefinition
     {
         /// <summary>
         /// Gets or sets the condition shape.
@@ -42,16 +41,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
         /// Thrown when <paramref name="value"/> is <c>null</c>.
         /// </exception>
         ISpatiallyDefinedDataComponent DataComponent { get; set; }
-
-        /// <summary>
-        /// Method for accepting IBoundaryConditionVisitor visitor of the visitor design pattern,
-        /// used for the export.
-        /// </summary>
-        /// <param name="visitor">Visitor who wants to visit this object</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="visitor"/>
-        /// is <c>null</c>.
-        /// </exception>
-        void AcceptVisitor(IBoundaryConditionVisitor visitor);
     }
 }
