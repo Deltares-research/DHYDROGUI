@@ -45,6 +45,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         IEnumerable<IPoint> ConstructBoundaryEndPoints(IWaveBoundary waveBoundary);
 
         /// <summary>
+        /// Constructs the <see cref="IPoint"/> corresponding with the given
+        /// <paramref name="waveBoundary"/> start point.
+        /// </summary>
+        /// <param name="waveBoundary">The wave boundary.</param>
+        /// <returns>
+        /// The <see cref="IPoint"/> corresponding with the start point
+        /// of <paramref name="waveBoundary"/>. If no start point could be generated
+        /// then <c>null</c> is returned.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
+        /// </exception>
+        IPoint ConstructBoundaryStartPoint(IWaveBoundary waveBoundary);
+
+        /// <summary>
+        /// Constructs the <see cref="IPoint"/> corresponding with the given
+        /// <paramref name="waveBoundary"/> end point.
+        /// </summary>
+        /// <param name="waveBoundary">The wave boundary.</param>
+        /// <returns>
+        /// The <see cref="IPoint"/> corresponding with the end point
+        /// of <paramref name="waveBoundary"/>. If no end point could be generated
+        /// then <c>null</c> is returned.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
+        /// </exception>
+        IPoint ConstructBoundaryEndPoint(IWaveBoundary waveBoundary);
+
+        /// <summary>
         /// Constructs the boundary support point geometry from the given <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>

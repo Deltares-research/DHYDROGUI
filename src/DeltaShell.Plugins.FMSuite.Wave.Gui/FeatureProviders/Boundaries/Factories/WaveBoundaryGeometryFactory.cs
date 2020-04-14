@@ -87,6 +87,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             };
         }
 
+        public IPoint ConstructBoundaryStartPoint(IWaveBoundary waveBoundary)
+        {
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
+            return ConstructGridPoint(waveBoundary.GeometricDefinition.StartingIndex,
+                                      waveBoundary.GeometricDefinition.GridSide);
+        }
+
+        public IPoint ConstructBoundaryEndPoint(IWaveBoundary waveBoundary)
+        {
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
+            return ConstructGridPoint(waveBoundary.GeometricDefinition.EndingIndex,
+                                      waveBoundary.GeometricDefinition.GridSide);
+        }
+
+        private IPoint ConstructGridPoint(int index, GridSide gridSide)
+        {
+            IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
+
+            if (gridBoundary == null)
+            {
+                return null;
+            }
+
+            Coordinate coordinate = GetCoordinate(index, gridSide, gridBoundary);
+            return new Point(coordinate);
+        }
+
         public IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
