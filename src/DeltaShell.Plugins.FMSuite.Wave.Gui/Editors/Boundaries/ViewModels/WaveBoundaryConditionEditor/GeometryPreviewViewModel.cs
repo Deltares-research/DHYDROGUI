@@ -6,6 +6,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
@@ -36,14 +37,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                                                                                                   geometryFactory,
                                                                                                   null);
 
-            var waveLayerFactory = new WaveLayerFactory();
+            InitialiseLayers(MapViewModel.Map, featuresContainer);
 
-            MapViewModel.Map.Layers = new EventedList<ILayer> {waveLayerFactory.CreateBoundaryLayer(featuresContainer)};
             MapViewModel.Map.ZoomToExtents();
             MapViewModel.RefreshView();
 
             featuresContainer.SupportPointMapFeatureProvider.FeaturesChanged +=
                 (sender, Args) => MapViewModel.RefreshView();
+        }
+        private static void InitialiseLayers(IMap map,
+                                             IBoundaryMapFeaturesContainer featuresContainer)
+        {
+            var waveLayerFactory = new WaveLayerFactory();
+
+            ILayer supportPointsLayer =
+                waveLayerFactory.CreateSupportPointsLayer(featuresContainer.SupportPointMapFeatureProvider);
+            ILayer startPointsLayer =
+                waveLayerFactory.CreateBoundaryStartPointLayer(featuresContainer.BoundaryStartPointMapFeatureProvider);
+            ILayer endPointsLayer =
+                waveLayerFactory.CreateBoundaryEndPointLayer(featuresContainer.BoundaryEndPointMapFeatureProvider);
+            ILayer lineLayer =
+                waveLayerFactory.CreateBoundaryLineLayer(featuresContainer.BoundaryLineMapFeatureProvider);
+
+            // For some reason the order matters due to the dispose of the Map.
+            map.Layers.AddRange(new[]
+            {
+                supportPointsLayer,
+                startPointsLayer,
+                endPointsLayer,
+                lineLayer,
+            });
+
+            startPointsLayer.RenderOrder = 1;
+            endPointsLayer.RenderOrder = 1;
+            supportPointsLayer.RenderOrder = 2;
+            lineLayer.RenderOrder = 5;
         }
 
         /// <summary>
