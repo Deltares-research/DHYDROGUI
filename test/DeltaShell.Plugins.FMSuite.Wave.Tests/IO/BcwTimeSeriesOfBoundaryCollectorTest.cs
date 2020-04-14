@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
@@ -63,6 +64,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(2, returnedTimeSeries.Count);
             Assert.Contains(underlyingFunction1, returnedTimeSeries);
             Assert.Contains(underlyingFunction2, returnedTimeSeries);
+        }
+    }
+
+    [TestFixture]
+    public class BcwTimeSeriesOfBoundaryCollectorTest
+    {
+        [Test]
+        public void Visit_UniformDataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+            dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>)null));
+
+            // Call
+            void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("uniformDataComponent"));
+        }
+
+        [Test]
+        public void Visit_SpatiallyVaryingDataComponentNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+            dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>)null));
+
+            // Call
+            void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("spatiallyVaryingDataComponent"));
+        }
+
+        [Test]
+        public void Visit_TimeDependentParametersNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+            dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>)null));
+
+            // Call
+            void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("timeDependentParameters"));
         }
     }
 }

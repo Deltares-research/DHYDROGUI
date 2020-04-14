@@ -95,8 +95,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// </summary>
             /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
             /// <param name="uniformDataComponent">The visited <see cref="UniformDataComponent{T}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="uniformDataComponent"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
             {
+                Ensure.NotNull(uniformDataComponent, nameof(uniformDataComponent));
                 isUniform = true;
                 uniformDataComponent.Data.AcceptVisitor(this);
             }
@@ -108,8 +113,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// </summary>
             /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
             /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="spatiallyVaryingDataComponent"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
             {
+                Ensure.NotNull(spatiallyVaryingDataComponent, nameof(spatiallyVaryingDataComponent));
+                
                 isUniform = false;
                 SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
 
@@ -127,8 +138,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// </summary>
             /// <typeparam name="T"> An <see cref="IBoundaryConditionSpreading"/> object</typeparam>
             /// <param name="constantParameters"> The visited <see cref="ConstantParameters{TSpreading}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="constantParameters"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
             {
+                Ensure.NotNull(constantParameters, nameof(constantParameters));
                 hasConstantValues = true;
                 if (!isUniform)
                 {
@@ -150,8 +166,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// </summary>
             /// <typeparam name="T"> An <see cref="IBoundaryConditionSpreading"/> object</typeparam>
             /// <param name="timeDependentParameters"> The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="timeDependentParameters"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new()
             {
+                Ensure.NotNull(timeDependentParameters, nameof(timeDependentParameters));
                 hasConstantValues = false;
                 if (!isUniform)
                 {
@@ -168,8 +189,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// spreading value to the category.
             /// </summary>
             /// <param name="degreesDefinedSpreading"> The visited <see cref="DegreesDefinedSpreading"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="degreesDefinedSpreading"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
             {
+                Ensure.NotNull(degreesDefinedSpreading, nameof(degreesDefinedSpreading));
                 BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
                                              KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
 
@@ -185,8 +211,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// directional spreading value to the category.
             /// </summary>
             /// <param name="powerDefinedSpreading"> The visited <see cref="PowerDefinedSpreading"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="powerDefinedSpreading"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(PowerDefinedSpreading powerDefinedSpreading)
             {
+                Ensure.NotNull(powerDefinedSpreading, nameof(powerDefinedSpreading));
                 BoundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType,
                                              KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
 
@@ -202,8 +233,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// to the category.
             /// </summary>
             /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="gaussShape"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(GaussShape gaussShape)
             {
+                Ensure.NotNull(gaussShape, nameof(gaussShape));
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
                 BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
             }
@@ -213,8 +249,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// to the category.
             /// </summary>
             /// <param name="jonswapShape">The visited <see cref="JonswapShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="jonswapShape"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(JonswapShape jonswapShape)
             {
+                Ensure.NotNull(jonswapShape, nameof(jonswapShape));
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
                 BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
             }
@@ -223,8 +264,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// Visit method for setting the shape type at the place holder in the category.
             /// </summary>
             /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="piersonMoskowitzShape"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
             {
+                Ensure.NotNull(piersonMoskowitzShape, nameof(piersonMoskowitzShape));
                 BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
             }
 
@@ -233,8 +279,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// period type to the category. Calls next shape object to visit and data component.
             /// </summary>
             /// <param name="waveBoundaryConditionDefinition">The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="waveBoundaryConditionDefinition"/>
+            /// is <c>null</c>.
+            /// </exception>
             public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
             {
+                Ensure.NotNull(waveBoundaryConditionDefinition, nameof(waveBoundaryConditionDefinition));
+                
                 //place holder
                 BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
                 
