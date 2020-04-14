@@ -29,9 +29,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             api.CreateFile(filePath, fileMetaData);
         }
 
-        public void Open(string filePath)
+        public void Open(string filePath, OpenMode openMode)
         {
-            api.Open(filePath);
+            api.Open(filePath, openMode);
         }
 
         public void Close()
@@ -69,9 +69,25 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return api.GetVarIds(meshId, locationType);
         }
 
+        public double[] GetVariableValues(string variableName, int meshId, GridLocationType location)
+        {
+            return api.GetVariableValues(variableName, meshId, location);
+        }
+
+        public void SetVariableValues(string variableName, string standardName, string longName, string unit, int meshId,
+            GridLocationType location, double[] values)
+        {
+            api.SetVariableValues(variableName, standardName, longName, unit, meshId, location, values);
+        }
+
         public int GetCoordinateSystemCode()
         {
             return api.GetCoordinateSystemCode();
+        }
+
+        public void SetCoordinateSystemCode(int epsgCode)
+        {
+            api.SetCoordinateSystemCode(epsgCode);
         }
 
         public int[] GetNetworkIds()
