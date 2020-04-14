@@ -5,7 +5,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Parameters
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
     /// <see cref="SpatiallyVaryingDataComponent{T}"/> defines a data component consisting

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions

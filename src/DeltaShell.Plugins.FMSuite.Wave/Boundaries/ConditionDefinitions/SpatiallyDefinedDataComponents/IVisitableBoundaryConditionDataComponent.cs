@@ -1,6 +1,6 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.IO;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     public interface IVisitableBoundaryConditionDataComponent
     {

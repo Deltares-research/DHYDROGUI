@@ -1,6 +1,6 @@
 ﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.DataComponents
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
     /// <see cref="IBoundaryConditionDataComponentFactory"/> defines the
