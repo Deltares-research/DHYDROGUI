@@ -3,6 +3,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers
 using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
@@ -125,5 +126,53 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer);
+
+        /// <summary>
+        /// Creates the support points layer.
+        /// </summary>
+        /// <param name="featureProvider">The support points feature provider.</param>
+        /// <returns>
+        /// A new support points layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the boundary line layer.
+        /// </summary>
+        /// <param name="featureProvider">The boundary line feature provider.</param>
+        /// <returns>
+        /// A new boundary line layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the boundary start point layer.
+        /// </summary>
+        /// <param name="featureProvider">The boundary start point feature provider.</param>
+        /// <returns>
+        /// A new boundary start point layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the boundary end point layer.
+        /// </summary>
+        /// <param name="featureProvider">The boundary end point feature provider.</param>
+        /// <returns>
+        /// A new boundary end point layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider);
     }
 }

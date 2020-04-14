@@ -13,6 +13,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 
@@ -366,22 +367,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                 groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryStartPointsLayerName);
             Assert.That(startPointsLayer, Is.Not.Null,
                         $"Expected the layer with name '{WaveLayerNames.BoundaryStartPointsLayerName}' to exist.");
-            Assert.That(startPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
-                        $"Expected the layer with name '{WaveLayerNames.BoundaryStartPointsLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectPointBoundaryLayer(startPointsLayer, featureProviderContainer.BoundaryStartPointMapFeatureProvider, WaveLayerNames.BoundaryStartPointsLayerName, DeltaresColor.LightGreen);
 
             ILayer endPointsLayer =
                 groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundaryEndPointsLayerName);
             Assert.That(endPointsLayer, Is.Not.Null,
                         $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to exist.");
-            Assert.That(endPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
-                        $"Expected the layer with name '{WaveLayerNames.BoundaryEndPointsLayerName}' to be of type {typeof(VectorLayer)}");
-            AssertCorrectMapTreeBehaviourSubBoundaryLayer(endPointsLayer);
+            AssertCorrectPointBoundaryLayer(endPointsLayer, featureProviderContainer.BoundaryEndPointMapFeatureProvider, WaveLayerNames.BoundaryEndPointsLayerName, Color.LightCoral);
 
             ILayer supportPointsLayer =
                 groupLayer.Layers.FirstOrDefault(x => x.Name == WaveLayerNames.BoundarySupportPointsLayerName);
             Assert.That(supportPointsLayer, Is.Not.Null,
                         $"Expected the layer with name '{WaveLayerNames.BoundarySupportPointsLayerName}' to exist.");
-            AssertCorrectSupportPointsLayer(supportPointsLayer, featureProviderContainer);
+            AssertCorrectPointBoundaryLayer(supportPointsLayer, featureProviderContainer.SupportPointMapFeatureProvider, WaveLayerNames.BoundaryStartPointsLayerName, DeltaresColor.LightBlue);
         }
 
         [Test]
@@ -399,23 +397,128 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception.ParamName, Is.EqualTo("featuresProviderContainer"));
         }
 
-        private static void AssertCorrectSupportPointsLayer(ILayer supportPointsLayer,
-                                                            IBoundaryMapFeaturesContainer featureProviderContainer)
+        [Test]
+        public void CreateBoundaryLineLayer_ValidParameters_ExpectedResults()
         {
-            Assert.That(supportPointsLayer, Is.InstanceOf(typeof(VectorLayer)),
-                        $"Expected the layer with name '{WaveLayerNames.BoundarySupportPointsLayerName}' to be of type {typeof(VectorLayer)}");
-            AssertCorrectMapTreeBehaviourSubBoundaryLayer(supportPointsLayer);
+            // Setup
+            var featureProvider = Substitute.For<IFeatureProvider>();
+            var factory = new WaveLayerFactory();
 
-            Assert.That(supportPointsLayer.DataSource,
-                        Is.EqualTo(featureProviderContainer.SupportPointMapFeatureProvider));
-            Assert.That(supportPointsLayer.Selectable, Is.False);
+            // Call
+            ILayer layer = factory.CreateBoundaryLineLayer(featureProvider);
 
-            var vectorLayer = (VectorLayer)supportPointsLayer;
+            // Assert
+            Assert.That(layer, Is.InstanceOf(typeof(VectorLayer)),
+                        $"Expected the layer with name '{WaveLayerNames.BoundaryLineLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectMapTreeBehaviourSubBoundaryLayer(layer);
+        }
+
+        [Test]
+        public void CreateBoundaryLineLayer_FeatureProviderNull_ThrowsArgumentNullException()
+        {
+            var factory = new WaveLayerFactory();
+
+            void Call() => factory.CreateBoundaryLineLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
+        }
+
+        [Test]
+        public void CreateBoundaryStartPointsLayer_ValidParameters_ExpectedResults()
+        {
+            // Setup
+            var featureProvider = Substitute.For<IFeatureProvider>();
+            var factory = new WaveLayerFactory();
+
+            // Call
+            ILayer layer = factory.CreateBoundaryStartPointLayer(featureProvider);
+
+            // Assert
+            AssertCorrectPointBoundaryLayer(layer, featureProvider, WaveLayerNames.BoundaryStartPointsLayerName, DeltaresColor.LightGreen);
+        }
+
+        [Test]
+        public void CreateBoundaryStartPointsLayer_FeatureProviderNull_ThrowsArgumentNullException()
+        {
+            var factory = new WaveLayerFactory();
+
+            void Call() => factory.CreateBoundaryStartPointLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
+        }
+
+
+        [Test]
+        public void CreateBoundaryEndPointsLayer_ValidParameters_ExpectedResults()
+        {
+            // Setup
+            var featureProvider = Substitute.For<IFeatureProvider>();
+            var factory = new WaveLayerFactory();
+
+            // Call
+            ILayer layer = factory.CreateBoundaryEndPointLayer(featureProvider);
+
+            // Assert
+            AssertCorrectPointBoundaryLayer(layer, featureProvider, WaveLayerNames.BoundaryEndPointsLayerName, Color.LightCoral);
+        }
+
+        [Test]
+        public void CreateBoundaryEndPointsLayer_FeatureProviderNull_ThrowsArgumentNullException()
+        {
+            var factory = new WaveLayerFactory();
+
+            void Call() => factory.CreateBoundaryEndPointLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
+        }
+
+        [Test]
+        public void CreateSupportPointsLayer_ValidParameters_ExpectedResults()
+        {
+            // Setup
+            var featureProvider = Substitute.For<IFeatureProvider>();
+            var factory = new WaveLayerFactory();
+
+            // Call
+            ILayer supportPointsLayer = factory.CreateSupportPointsLayer(featureProvider);
+
+            // Assert
+            AssertCorrectPointBoundaryLayer(supportPointsLayer, featureProvider, WaveLayerNames.BoundaryStartPointsLayerName, DeltaresColor.LightBlue);
+        }
+
+        [Test]
+        public void CreateSupportPointsLayer_FeatureProviderNull_ThrowsArgumentNullException()
+        {
+            var factory = new WaveLayerFactory();
+
+            void Call() => factory.CreateSupportPointsLayer(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
+        }
+
+        private static void AssertCorrectPointBoundaryLayer(ILayer layer,
+                                                       IFeatureProvider featureProvider,
+                                                       string expectedLayerName,
+                                                       Color expectedColor)
+        {
+            Assert.That(layer, Is.InstanceOf(typeof(VectorLayer)),
+                        $"Expected the layer with name '{expectedLayerName}' to be of type {typeof(VectorLayer)}");
+            AssertCorrectMapTreeBehaviourSubBoundaryLayer(layer);
+
+            Assert.That(layer.DataSource,
+                        Is.SameAs(featureProvider));
+            Assert.That(layer.Selectable, Is.False);
+
+            var vectorLayer = (VectorLayer)layer;
             Assert.That(vectorLayer.Style.GeometryType, Is.EqualTo(typeof(IPoint)));
 
             var solidBrush = vectorLayer.Style.Fill as SolidBrush;
             Assert.That(solidBrush, Is.Not.Null);
-            Assert.That(solidBrush.Color.Equals(DeltaresColor.LightBlue));
+            Assert.That(solidBrush.Color.Equals(expectedColor));
         }
 
         private static void AssertCorrectMapTreeBehaviourSubBoundaryLayer(ILayer layer)

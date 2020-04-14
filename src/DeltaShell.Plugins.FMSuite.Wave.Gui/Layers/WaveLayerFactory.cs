@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return groupLayer;
         }
 
-        private static IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
+        private IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
         {
             yield return CreateBoundaryStartPointLayer(featuresProviderContainer.BoundaryStartPointMapFeatureProvider);
             yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
@@ -202,8 +202,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider);
         }
 
-        private static ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider) =>
-            new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
+        public ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            return new VectorLayer(WaveLayerNames.BoundarySupportPointsLayerName)
             {
                 ShowInTreeView = false,
                 DataSource = featureProvider,
@@ -218,9 +220,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(IPoint),
                 }
             };
+        }
 
-        private static ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider) =>
-            new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
+        public ILayer CreateBoundaryLineLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            return new VectorLayer(WaveLayerNames.BoundaryLineLayerName)
             {
                 ShowInTreeView = false,
                 DataSource = featureProvider,
@@ -234,9 +239,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(ILineString)
                 },
             };
+        }
 
-        private static ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider) =>
-            new VectorLayer(WaveLayerNames.BoundaryStartPointsLayerName)
+        public ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            return new VectorLayer(WaveLayerNames.BoundaryStartPointsLayerName)
             {
                 ShowInTreeView = false,
                 ShowInLegend = false,
@@ -251,9 +259,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(IPoint),
                 },
             };
+        }
 
-        private static ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider) =>
-            new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
+        public ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            return new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
             {
                 ShowInTreeView = false,
                 ShowInLegend = false,
@@ -268,5 +279,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(IPoint),
                 },
             };
+        }
     }
 }
