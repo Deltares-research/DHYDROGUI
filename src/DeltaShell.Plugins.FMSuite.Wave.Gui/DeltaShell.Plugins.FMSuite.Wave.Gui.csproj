@@ -353,6 +353,7 @@
     <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\BoundaryFromLineAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IFeatureFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
