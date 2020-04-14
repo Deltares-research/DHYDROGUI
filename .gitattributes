@@ -1972,8 +1972,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/StructuresListType.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/UnstructuredGridNetCdfFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/UnsupportedFileBasedExtForceFileItem.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/WaterFlowFMModelHydroAreaExtensions.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/WaterFlowFMModelReader.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/WaterFlowFMModelReaderData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/WaterFlowFMModelWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/WaterFlowFMModelWriterData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/ISedimentModelData.cs -text
@@ -6117,7 +6115,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/UGridToUnstructuredGridAdaptorTe
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WaterFlowFMMduFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WaterFlowFMMduFileTestHelper.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WaterFlowFMModelHydroAreaExtensionsTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WaterFlowFMModelReadAndWriteTestBenchTests.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WaterFlowFMModelWriterReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/WindExtForceTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Layers/UnstructuredGridCellCoverageLayerTest.cs -text

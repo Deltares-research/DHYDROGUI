@@ -164,10 +164,8 @@
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\NetworkDataLocation.cs" />
     <Compile Include="IO\StructureFile.cs" />
-    <Compile Include="IO\WaterFlowFMModelReaderData.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
-    <Compile Include="IO\WaterFlowFMModelReader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriter.cs" />
     <Compile Include="IO\WaterFlowFMModelWriterData.cs" />
     <Compile Include="ModelDefinition\ICoordinateSystemExtensions.cs" />

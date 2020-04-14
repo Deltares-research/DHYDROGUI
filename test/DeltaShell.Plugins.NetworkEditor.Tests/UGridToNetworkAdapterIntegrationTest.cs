@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             
             loadedNetwork = (IHydroNetwork) loadedDiscretisation.Network;
 
-            HydroNetworkTestHelper.CompareNetworks(storedNetwork, loadedNetwork);
+            HydroNetworkTestHelper.CompareHydroNetworks(storedNetwork, loadedNetwork);
             HydroNetworkTestHelper.CompareDiscretisations(networkDiscretisation, loadedDiscretisation);
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -11,15 +13,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 {
     public static class HydroNetworkTestHelper
     {
-        public static void CompareNetworks(INetwork primaryNetwork, INetwork secondaryNetwork)
+        public static void CompareNetworks(INetwork primaryNetwork, INetwork secondaryNetwork, Func<INetwork, IList<INode>> getNodes = null, Func<INetwork, IList<IBranch>> getBranches = null)
         {
             Assert.AreEqual(primaryNetwork.Name, secondaryNetwork.Name);
             Assert.AreEqual(primaryNetwork.CoordinateSystem, secondaryNetwork.CoordinateSystem);
 
-            var primaryNodes = primaryNetwork.Nodes;
-            var secondaryNodes = secondaryNetwork.Nodes;
-            var primaryBranches = primaryNetwork.Branches;
-            var secondaryBranches = secondaryNetwork.Branches;
+            if (getNodes == null)
+            {
+                getNodes = (n) => n.Nodes;
+            }
+
+            if (getBranches == null)
+            {
+                getBranches = (n) => n.Branches;
+            }
+            
+            var primaryNodes = getNodes(primaryNetwork);
+            var secondaryNodes = getNodes(secondaryNetwork);
+            var primaryBranches = getBranches(primaryNetwork);
+            var secondaryBranches = getBranches(secondaryNetwork);
 
             Assert.AreEqual(primaryNodes.Count, secondaryNodes.Count);
             Assert.AreEqual(primaryBranches.Count, secondaryBranches.Count);
@@ -43,9 +55,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             }
         }
 
-        public static void CompareNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        public static void CompareHydroNetworks(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
         {
-            CompareNetworks((INetwork)primaryNetwork, secondaryNetwork);
+            CompareNetworks(primaryNetwork, secondaryNetwork,
+                n => ((IHydroNetwork) n).HydroNodes.OfType<INode>().ToList(),
+                n => ((IHydroNetwork) n).Channels.OfType<IBranch>().ToList());
+
             CompareSewerNetworks(primaryNetwork, secondaryNetwork);
         }
 
@@ -139,7 +154,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(primaryDiscretisation.Name, secondaryDiscretisation.Name);
             Assert.AreEqual(primaryDiscretisation.Locations.Values.Count, secondaryDiscretisation.Locations.Values.Count);
 
-            CompareNetworks(primaryDiscretisation.Network, secondaryDiscretisation.Network);
+            if (primaryDiscretisation.Network is IHydroNetwork primaryDiscretisationNetwork &&
+                secondaryDiscretisation.Network is IHydroNetwork secondaryDiscretisationNetwork)
+            {
+                CompareHydroNetworks(primaryDiscretisationNetwork, secondaryDiscretisationNetwork);
+            }
+            else
+            {
+                CompareNetworks(primaryDiscretisation.Network, secondaryDiscretisation.Network);
+            }
 
             for (int i = 0; i < primaryDiscretisation.Locations.Values.Count; i++)
             {
@@ -149,7 +172,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
                 Assert.AreEqual(primaryLocation.Chainage, secondaryLocation.Chainage);
                 Assert.AreEqual(primaryLocation.Name, secondaryLocation.Name);
                 Assert.AreEqual(primaryLocation.Description, secondaryLocation.Description);
-                CompareBranches(primaryLocation.Branch, secondaryLocation.Branch);
             }
         }
     }

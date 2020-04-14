@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Geometry = geometry,
                 Material = SewerProfileMapping.SewerProfileMaterial.Polyester
             };
+
             SewerFactory.AddDefaultPipeToNetwork(pipe, model.Network);
 
             WaterFlowFMModelWriter.Write(mduPath, model);
@@ -58,10 +59,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var ugridPath = Path.Combine(tempDirectory, model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).GetValueAsString());
             Assert.True(File.Exists(ugridPath));
 
-            var retrievedFmModel = WaterFlowFMModelReader.Read(model.MduFilePath);
+            var retrievedFmModel = new WaterFlowFMModel(model.MduFilePath);
             var retrievedNetwork = retrievedFmModel.Network;
             
-            HydroNetworkTestHelper.CompareNetworks(model.Network, retrievedNetwork);
+            HydroNetworkTestHelper.CompareHydroNetworks(model.Network, retrievedNetwork);
             HydroNetworkTestHelper.CompareDiscretisations(model.NetworkDiscretization, retrievedFmModel.NetworkDiscretization);
         }
 

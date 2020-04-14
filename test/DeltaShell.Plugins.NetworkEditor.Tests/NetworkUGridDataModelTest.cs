@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var networkDataModel = new NetworkUGridDataModel(network);
 
             var reconstructedNetwork = NetworkDiscretisationFactory.CreateHydroNetwork(networkDataModel);
-            HydroNetworkTestHelper.CompareNetworks(network, reconstructedNetwork);
+            HydroNetworkTestHelper.CompareHydroNetworks(network, reconstructedNetwork);
             Assert.AreEqual(network.Name, reconstructedNetwork.Name);
             Assert.AreEqual(network.CoordinateSystem, reconstructedNetwork.CoordinateSystem);
 
