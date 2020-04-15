@@ -352,6 +352,7 @@
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\SelectedSupportPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\IAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\IFeaturesFromBoundaryBehaviour.cs" />
