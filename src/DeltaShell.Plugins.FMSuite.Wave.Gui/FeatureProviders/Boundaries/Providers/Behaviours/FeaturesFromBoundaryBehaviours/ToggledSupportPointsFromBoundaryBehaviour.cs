@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using GeoAPI.Extensions.Feature;
@@ -14,56 +16,71 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     /// behaviour to construct the selected support point feature.
     /// </summary>
     /// <seealso cref="IFeaturesFromBoundaryBehaviour"/>
-    public sealed class SelectedSupportPointFromBoundaryBehaviour : IFeaturesFromBoundaryBehaviour
+    public class ToggledSupportPointsFromBoundaryBehaviour : IFeaturesFromBoundaryBehaviour
     {
+        private readonly bool shouldHaveBoundaryConditionData;
         private readonly SupportPointDataComponentViewModel supportPointDataComponentViewModel;
         private readonly IWaveBoundaryGeometryFactory geometryFactory;
 
         /// <summary>
-        /// Creates a new <see cref="SelectedSupportPointFromBoundaryBehaviour"/>.
+        /// Creates a new <see cref="ToggledSupportPointsFromBoundaryBehaviour"/>.
         /// </summary>
+        /// <param name="shouldHaveBoundaryConditionData">if set to <c>true</c> [should have boundary condition data].</param>
         /// <param name="supportPointDataComponentViewModel">The support point data component view model.</param>
         /// <param name="geometryFactory">The geometry factory.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="supportPointDataComponentViewModel"/> or
         /// <paramref name="geometryFactory"/> is <c>null</c>.
         /// </exception>
-        public SelectedSupportPointFromBoundaryBehaviour(SupportPointDataComponentViewModel supportPointDataComponentViewModel,
-                                                       IWaveBoundaryGeometryFactory geometryFactory)
+        public ToggledSupportPointsFromBoundaryBehaviour(bool shouldHaveBoundaryConditionData,
+                                                         SupportPointDataComponentViewModel supportPointDataComponentViewModel,
+                                                         IWaveBoundaryGeometryFactory geometryFactory)
         {
             Ensure.NotNull(supportPointDataComponentViewModel, nameof(supportPointDataComponentViewModel));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
 
+            this.shouldHaveBoundaryConditionData = shouldHaveBoundaryConditionData;
             this.supportPointDataComponentViewModel = supportPointDataComponentViewModel;
             this.geometryFactory = geometryFactory;
         }
 
         /// <summary>
-        /// Create a new selected support point from the <see cref="SupportPointEditorViewModel"/>
-        /// provided at construction time.
+        /// Create a collection of new support points that either have or do not
+        /// have data associated with them, as set by the shouldHaveBoundaryConditionData
+        /// flag in the constructor.
         /// </summary>
-        /// <param name="_">The boundary.</param>
+        /// <param name="boundary">The boundary.</param>
         /// <returns>
-        /// A collection containing the selected support point, if the support
+        /// A collection containing the active or inactive support points, if the support
         /// points are enabled, and geometry could be constructed; else an empty
         /// collection.
         /// </returns>
-        public IEnumerable<IFeature> Execute(IWaveBoundary _)
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundary"/> is <c>null</c>.
+        /// </exception>
+        public IEnumerable<IFeature> Execute(IWaveBoundary boundary)
         {
+            Ensure.NotNull(boundary, nameof(boundary));
+
             if (!supportPointDataComponentViewModel.IsEnabled())
             {
-                yield break;
+                return Enumerable.Empty<IFeature>();
             }
 
-            IPoint geom = geometryFactory.ConstructBoundarySupportPoint(
-                supportPointDataComponentViewModel.SelectedSupportPoint);
+            return boundary.GeometricDefinition.SupportPoints
+                           .Select(ConstructGeometry)
+                           .Where(x => x != null);
+        }
 
-            if (geom == null)
+        private IFeature ConstructGeometry(SupportPoint sp)
+        {
+            if (supportPointDataComponentViewModel.IsEnabledSupportPoint(sp) != shouldHaveBoundaryConditionData)
             {
-                yield break;
+                return null;
             }
 
-            yield return new Feature2DPoint { Geometry = geom };
+            IPoint p = geometryFactory.ConstructBoundarySupportPoint(sp);
+            return p != null ? new Feature2DPoint { Geometry = p } : null;
         }
     }
 }

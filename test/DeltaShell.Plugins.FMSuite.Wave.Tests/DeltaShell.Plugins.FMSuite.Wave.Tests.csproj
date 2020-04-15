@@ -292,6 +292,7 @@
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\StartingPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\ToggledSupportPointsFromBoundaryBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProviderTest.cs" />
