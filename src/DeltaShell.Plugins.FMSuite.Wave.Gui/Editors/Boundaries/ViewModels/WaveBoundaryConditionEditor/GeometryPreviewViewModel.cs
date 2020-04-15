@@ -85,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             MapViewModel?.Dispose();
             GC.SuppressFinalize(this);
-
         }
     }
 }

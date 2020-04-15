@@ -51,5 +51,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             // Assert
             selectedSupportPointDependentViewModel.Received(1).UpdateSelectedActiveParameters(supportPoint);
         }
+
+        [Test]
+        public void AnnounceSupportPointsChanged_CallsRefreshMap()
+        {
+            // Setup
+            var selectedSupportPointDependentViewModel =
+                Substitute.For<IRefreshDataComponentViewModel>();
+            var mediator = new DataComponentChangeMediator(selectedSupportPointDependentViewModel);
+
+            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
+            mediator.RefreshGeometryView = refreshGeometryView;
+
+            // Call
+            mediator.AnnounceSupportPointsChanged();
+
+            // Assert
+            refreshGeometryView.Received(1).RefreshGeometryView();
+        }
     }
 }

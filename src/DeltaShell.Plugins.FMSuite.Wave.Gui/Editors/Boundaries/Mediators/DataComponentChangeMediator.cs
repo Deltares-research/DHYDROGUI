@@ -30,9 +30,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
             selectedSupportPointDependentViewModel.UpdateSelectedActiveParameters(supportPoint);
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="IRefreshGeometryView"/>.
+        /// </summary>
+        public IRefreshGeometryView RefreshGeometryView { get; set; }
+
         public void AnnounceSupportPointsChanged()
         {
-
+            RefreshGeometryView?.RefreshGeometryView();
         }
     }
 }
