@@ -17,5 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
         /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint);
+
+        /// <summary>
+        /// Announces the support points have changed.
+        /// </summary>
+        void AnnounceSupportPointsChanged();
     }
 }

@@ -29,5 +29,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
         {
             selectedSupportPointDependentViewModel.UpdateSelectedActiveParameters(supportPoint);
         }
+
+        public void AnnounceSupportPointsChanged()
+        {
+
+        }
     }
 }
