@@ -1,6 +1,6 @@
 ﻿using GeoAPI.Geometries;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.AddBehaviours
 {
     /// <summary>
     /// <see cref="IAddBehaviour"/> defines the add behaviour to which

@@ -351,11 +351,11 @@
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\BoundaryFromLineAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\EndPointFromBoundaryBehaviour.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\IAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IFeaturesFromBoundaryBehaviour.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\ReadOnlyAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\StartingPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
