@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             void Call() => new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
-            Assert.That(exception.ParamName, Is.EqualTo("announceSelectedSupportPointDataChanged"));
+            Assert.That(exception.ParamName, Is.EqualTo("announceSupportPointDataChanged"));
         }
 
         [Test]
@@ -572,6 +572,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.SelectedSupportPoint = supportPoint;
 
             // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
             Assert.That(viewModel.SelectedSupportPoint, Is.SameAs(supportPoint));
         }
@@ -601,6 +602,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.AddDefaultParameters(supportPoint);
 
             // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
         }
 
@@ -629,7 +631,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.RemoveParameters(supportPoint);
 
             // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
+        }
+
+
+        [Test]
+        public void AddDefaultParameters_AnnounceSupportPointsDataChanged()
+        {
+            // Setup
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var dataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+
+            var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
+            parametersFactory.ConstructDefaultConstantParameters<TSpreading>().Returns(parameters);
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
+
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            mediator.ClearReceivedCalls();
+
+            // Call
+            viewModel.AddDefaultParameters(supportPoint);
+
+            // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
+        }
+
+        [Test]
+        public void RemoveParameters_AnnounceSupportPointsDataChanged()
+        {
+            // Setup
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
+            dataComponent.AddParameters(supportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            viewModel.SelectedSupportPoint = supportPoint;
+            mediator.ClearReceivedCalls();
+            // Call
+            viewModel.RemoveParameters(supportPoint);
+
+            // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
+        }
+
+        [Test]
+        public void ReplaceParameters_AnnounceSupportPointsDataChanged()
+        {
+            // Setup
+            SupportPoint oldSupportPoint = GetDefaultSupportPoint();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            var dataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            conditionDefinition.DataComponent = dataComponent;
+
+            var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
+            dataComponent.AddParameters(oldSupportPoint, parameters);
+
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
+            var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
+
+            mediator.ClearReceivedCalls();
+
+            // Call
+            viewModel.ReplaceSupportPoint(oldSupportPoint,
+                                          GetDefaultSupportPoint());
+
+            // Assert
+            mediator.Received(1).AnnounceSupportPointsChanged();
         }
 
         private static IEnumerable<TestCaseData> GetIsEnabledData()

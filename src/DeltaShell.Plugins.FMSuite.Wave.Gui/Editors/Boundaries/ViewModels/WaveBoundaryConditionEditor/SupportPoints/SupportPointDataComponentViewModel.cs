@@ -59,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             set
             {
                 selectedSupportPoint = value;
+                AnnounceSupportPointsChanged();
                 AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
             }
         }
@@ -147,6 +148,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }
 
+            AnnounceSupportPointsChanged();
+
             if (supportPoint == SelectedSupportPoint)
             {
                 AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
@@ -187,6 +190,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }
+
+            AnnounceSupportPointsChanged();
 
             if (supportPoint == SelectedSupportPoint)
             {
@@ -230,9 +235,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }
+            
+            AnnounceSupportPointsChanged();
         }
 
         private void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint) =>
             announceSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(supportPoint);
+
+        private void AnnounceSupportPointsChanged() =>
+            announceSupportPointDataChanged.AnnounceSupportPointsChanged();
     }
 }
