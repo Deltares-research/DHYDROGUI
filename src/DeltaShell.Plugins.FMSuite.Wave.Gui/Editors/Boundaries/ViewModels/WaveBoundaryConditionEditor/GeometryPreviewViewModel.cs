@@ -1,8 +1,8 @@
 ﻿using System;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.Gui.MapView;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="GeometryPreviewViewModel"/> implements the view model for the geometry preview view.
     /// </summary>
-    public sealed class GeometryPreviewViewModel : IDisposable
+    public sealed class GeometryPreviewViewModel : IRefreshGeometryView, IDisposable
     {
         /// <summary>
         /// Creates a new <see cref="GeometryPreviewViewModel"/>.
@@ -78,6 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Gets the <see cref="MapViewModel"/> used to render the preview.
         /// </summary>
         public MapViewModel MapViewModel { get; } = new MapViewModel();
+
+        public void RefreshGeometryView() => MapViewModel.RefreshView();
 
         public void Dispose()
         {

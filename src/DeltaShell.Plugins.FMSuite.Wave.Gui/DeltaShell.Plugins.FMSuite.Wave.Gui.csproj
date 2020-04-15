@@ -168,6 +168,7 @@
     <Compile Include="Editors\Boundaries\Mediators\DataComponentChangeMediator.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IAnnounceDataComponentChanged.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IAnnounceSupportPointDataChanged.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IRefreshGeometryView.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IRefreshViewModel.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IRefreshDataComponentViewModel.cs" />
     <Compile Include="Editors\Boundaries\Mediators\IRefreshIsEnabledOnDataComponentChanged.cs" />
