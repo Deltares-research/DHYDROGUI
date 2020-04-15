@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.DataComponent = 
                 new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             return new SupportPointDataComponentViewModel(conditionDefinition,
                                                           Substitute.For<IForcingTypeDefinedParametersFactory>(),

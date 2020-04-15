@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             // Call
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             // Call | Assert
             void Call() => new SupportPointDataComponentViewModel(null, parametersFactory, mediator);
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             // Call | Assert
             void Call() => new SupportPointDataComponentViewModel(conditionDefinition, null, mediator);
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             parametersFactory.ConstructDefaultConstantParameters<TSpreading>().Returns(parameters);
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
             parametersFactory.ConstructDefaultTimeDependentParameters<TSpreading>().Returns(parameters);
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parameters = new FileBasedParameters("path");
             parametersFactory.ConstructDefaultFileBasedParameters().Returns(parameters);
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
 
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             dataComponent.AddParameters(supportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
             dataComponent.AddParameters(supportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new FileBasedParameters("path");
             dataComponent.AddParameters(supportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
 
@@ -374,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             dataComponent.AddParameters(oldSupportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             SupportPoint newSupportPoint = GetDefaultSupportPoint();
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
             dataComponent.AddParameters(oldSupportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             SupportPoint newSupportPoint = GetDefaultSupportPoint();
@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new FileBasedParameters("path");
             dataComponent.AddParameters(oldSupportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             SupportPoint newSupportPoint = GetDefaultSupportPoint();
@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -480,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -500,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = dataComponent;
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             SupportPoint newSupportPoint = GetDefaultSupportPoint();
@@ -523,7 +523,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = dataComponent;
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             // Call | Assert
@@ -542,7 +542,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
 
@@ -561,7 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             conditionDefinition.DataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
@@ -589,7 +589,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             parametersFactory.ConstructDefaultConstantParameters<TSpreading>().Returns(parameters);
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
 
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -620,7 +620,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var parameters = new ConstantParameters<TSpreading>(0, 0, 0, new TSpreading());
             dataComponent.AddParameters(supportPoint, parameters);
 
-            var mediator = Substitute.For<IAnnounceSelectedSupportPointDataChanged>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
             viewModel.SelectedSupportPoint = supportPoint;

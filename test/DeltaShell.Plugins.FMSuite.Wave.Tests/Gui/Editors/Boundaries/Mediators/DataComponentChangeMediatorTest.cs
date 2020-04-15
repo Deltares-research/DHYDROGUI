@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             var mediator = new DataComponentChangeMediator(selectedSupportPointDependentViewModel);
 
             // Assert
-            Assert.That(mediator, Is.InstanceOf<IAnnounceSelectedSupportPointDataChanged>());
+            Assert.That(mediator, Is.InstanceOf<IAnnounceSupportPointDataChanged>());
         }
 
         [Test]

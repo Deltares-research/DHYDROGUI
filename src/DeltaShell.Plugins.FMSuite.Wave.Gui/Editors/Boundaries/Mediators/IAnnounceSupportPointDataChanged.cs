@@ -3,10 +3,10 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
 {
     /// <summary>
-    /// <see cref="IAnnounceSelectedSupportPointDataChanged"/> defines the
+    /// <see cref="IAnnounceSupportPointDataChanged"/> defines the
     /// methods used to signal that the selected support point data has changed.
     /// </summary>
-    public interface IAnnounceSelectedSupportPointDataChanged
+    public interface IAnnounceSupportPointDataChanged
     {
         /// <summary>
         /// Announces the data associated with <paramref name="supportPoint"/>

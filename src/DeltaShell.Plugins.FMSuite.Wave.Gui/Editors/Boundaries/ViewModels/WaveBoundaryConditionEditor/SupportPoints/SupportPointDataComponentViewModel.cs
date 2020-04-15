@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IForcingTypeDefinedParametersFactory parametersFactory;
         private readonly IWaveBoundaryConditionDefinition conditionDefinition;
-        private readonly IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged;
+        private readonly IAnnounceSupportPointDataChanged announceSupportPointDataChanged;
 
         private SupportPoint selectedSupportPoint;
 
@@ -28,21 +28,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         /// <param name="conditionDefinition">The condition definition</param>
         /// <param name="parametersFactory">The parameters factory.</param>
-        /// <param name="announceSelectedSupportPointDataChanged"> </param>
+        /// <param name="announceSupportPointDataChanged"> </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public SupportPointDataComponentViewModel(IWaveBoundaryConditionDefinition conditionDefinition,
                                                   IForcingTypeDefinedParametersFactory parametersFactory,
-                                                  IAnnounceSelectedSupportPointDataChanged announceSelectedSupportPointDataChanged)
+                                                  IAnnounceSupportPointDataChanged announceSupportPointDataChanged)
         {
             Ensure.NotNull(conditionDefinition, nameof(conditionDefinition));
             Ensure.NotNull(parametersFactory, nameof(parametersFactory));
-            Ensure.NotNull(announceSelectedSupportPointDataChanged, nameof(announceSelectedSupportPointDataChanged));
+            Ensure.NotNull(announceSupportPointDataChanged, nameof(announceSupportPointDataChanged));
 
             this.conditionDefinition = conditionDefinition;
             this.parametersFactory = parametersFactory;
-            this.announceSelectedSupportPointDataChanged = announceSelectedSupportPointDataChanged;
+            this.announceSupportPointDataChanged = announceSupportPointDataChanged;
         }
 
         /// <summary>
@@ -233,6 +233,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         private void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint) =>
-            announceSelectedSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(supportPoint);
+            announceSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(supportPoint);
     }
 }
