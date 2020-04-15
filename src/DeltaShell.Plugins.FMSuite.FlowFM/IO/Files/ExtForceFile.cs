@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                         string filePath, ExtForceFileItem extForceFileItem, DateTime modelReferenceDate)
         {
             Feature2D uniqueFeature = boundaryConditionSets.Select(bcs => bcs.Feature)
-                                                           .FirstOrDefault(f => f.Geometry.Equals(feature2D.Geometry)) ?? feature2D;
+                                                           .FirstOrDefault(f => f.Geometry.EqualsTopologically(feature2D.Geometry)) ?? feature2D;
 
             if (uniqueFeature == feature2D)
             {
