@@ -30,7 +30,7 @@ gate,crestLevel,Crest level,Steerable,,,,,Crest level (m AD).
 gate,crestWidth,Crest width,Double,,,,,Crest width (m).
 gate,gateLowerEdgeLevel,Lower edge level,Steerable,,,,FALSE,Position of gate door's lower edge (m AD).
 gate,gateHeight,Door height,Double,,,,FALSE,Height of gate door. Needed for possible overflow across door (m).
-gate,gateOpeningWidth,Opening width,Steerable,0,,,FALSE,Opening width between gate doors, should be smaller tan (or equal to) crestWidth. Use 0.0 for a vertical door. (m).
+gate,gateOpeningWidth,Opening width,Steerable,0,,,FALSE,Opening width between gate doors, should be smaller than (or equal to) crestWidth. Use 0.0 for a vertical door. (m).
 gate,gateOpeningHorizontalDirection,Horizontal opening direction:Symmetric|From Left|From Right,symmetric|fromLeft|fromRight,symmetric,,,FALSE,Horizontal direction of the opening doors
 generalstructure,type,Type,String,generalStructure,,,,"Structure type, must read generalStructure."
 generalstructure,upstream1Width,Upstream width 1,Double,10,,,,Upstream width 1

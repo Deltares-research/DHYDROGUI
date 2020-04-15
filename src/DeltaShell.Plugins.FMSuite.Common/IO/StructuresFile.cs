@@ -249,13 +249,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             if (gate.UseSillLevelTimeSeries)
             {
-                var timeFilePath = ConstructTimeFilePath(gate, KnownStructureProperties.GateSillLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, timeFilePath, structureType));
+                var timeFilePath = ConstructTimeFilePath(gate, StructureRegion.GateCrestLevel.Key);
+                properties.Add(ConstructProperty(StructureRegion.GateCrestLevel.Key, timeFilePath, structureType));
                 WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), gate.SillLevelTimeSeries, refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillLevel, gate.SillLevel, structureType));
+                properties.Add(ConstructProperty(StructureRegion.GateCrestLevel.Key, gate.SillLevel, structureType));
             }
 
             if (gate.UseLowerEdgeLevelTimeSeries)
@@ -299,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             properties.Add(ConstructProperty(KnownStructureProperties.GateHorizontalOpeningDirection, horizontalDirection, structureType));
             if (gate.SillWidth > 0.0)
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.GateSillWidth, gate.SillWidth, structureType));
+                properties.Add(ConstructProperty(StructureRegion.CrestWidth.Key, gate.SillWidth, structureType));
             }
             return properties;
         }
@@ -446,22 +446,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
             {
-                var timeFilePath = ConstructTimeFilePath(weir, KnownStructureProperties.CrestLevel);
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, timeFilePath, structureType));
+                var timeFilePath = ConstructTimeFilePath(weir, StructureRegion.CrestLevel.Key);
+                properties.Add(ConstructProperty(StructureRegion.CrestLevel.Key, timeFilePath, structureType));
                 WriteTimeFile(GetOtherFilePathInSameDirectory(path, timeFilePath), weir.CrestLevelTimeSeries, refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, weir.CrestLevel, structureType));
+                properties.Add(ConstructProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, structureType));
             }
 
             if (weir.CrestWidth > 0)
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestWidth, weir.CrestWidth, structureType));
+                properties.Add(ConstructProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth, structureType));
             }
 
             var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
-            properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient, formula.LateralContraction, structureType));
+            properties.Add(ConstructProperty(StructureRegion.CorrectionCoeff.Key, formula.LateralContraction, structureType));
             return properties;
         }
 

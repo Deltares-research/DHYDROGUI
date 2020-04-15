@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         [Category(TestCategory.Slow)]
         [Category("Quarantine")]
+        [Ignore("Sobek RR is not implemented yet.")]
         public void RunModelAndTakeInitialConditions()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())

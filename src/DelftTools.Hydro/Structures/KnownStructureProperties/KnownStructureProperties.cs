@@ -28,7 +28,7 @@
         #endregion
 
         #region Gate
-        public const string GateSillLevel = "stillLevel";
+        public const string GateSillLevel = "sillLevel";
         public const string GateCrestLevel = "crestLevel";
         public const string GateOpeningWidth = "gateOpeningWidth";
         public const string GateLowerEdgeLevel = "gateLowerEdgeLevel";

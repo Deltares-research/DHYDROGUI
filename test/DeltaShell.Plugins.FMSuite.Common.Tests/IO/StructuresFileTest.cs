@@ -199,7 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void WriteLeveeBreach()
         {
             var mocks = new MockRepository();
@@ -245,8 +244,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var expectedText =
                  "[structure]" + Environment.NewLine +
                  "    type                  = dambreak            # Type of structure" + Environment.NewLine +
-                 "    id                    = lb_01               # Name of the structure" + Environment.NewLine +
-                 "    polylinefile          = lb_01.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
+                 "    id                    = lb_01               # Unique structure id." + Environment.NewLine +
+                 "    polylinefile          = lb_01.pli           # *.pli" + Environment.NewLine +
                  "    StartLocationX        = 125                 # X-position of the breach growth" + Environment.NewLine +
                  "    StartLocationY        = 250                 # Y-position of the breach growth" + Environment.NewLine +
                  "    T0                    = 31622400            # Start time of the breach (in seconds) [s]" + Environment.NewLine +
@@ -273,7 +272,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
         public void CanRepeatedlyReadAndWrite()
         {
             var path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
@@ -296,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
         public void GivenGeneralStructureWhenWritingToFileAndReadingFromThatFileThenResultingStructuresAreTheSame()
         {
             var iniFilePath = TestHelper.GetTestFilePath(@"structures\temp_file.ini");
@@ -461,7 +460,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void WriteSobekStructuresTest()
         {
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
@@ -538,28 +536,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = pump                # Type of structure" + Environment.NewLine +
-                "    id                    = pump1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    capacity              = 3                   # Pump capacity (in [m3/s])" + Environment.NewLine +
+                "    type                  = pump                # \"Structure type must read pump.\"" + Environment.NewLine +
+                "    id                    = pump1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = pump1.pli           # *.pli" + Environment.NewLine +
+                "    capacity              = 3                   # Pump capacity (m�/s). (number of values = max(1 numStages))." + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    crest_level           = 2                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    crest_width           = 25                  # Weir crest width (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
+                "    type                  = weir                # \"Structure type must read weir.\"" + Environment.NewLine +
+                "    id                    = weir1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = weir1.pli           # *.pli" + Environment.NewLine +
+                "    crestLevel            = 2                   # Crest level of weir (m AD)." + Environment.NewLine +
+                "    crestWidth            = 25                  # (optional) Width of weir (m)." + Environment.NewLine +
+                "    corrCoeff             = 0.7                 # Correction coefficient (-)." + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = gate                # Type of structure" + Environment.NewLine +
-                "    id                    = gate1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    sill_level            = 1                   # Gate sill level (in [m])" + Environment.NewLine +
-                "    lower_edge_level      = 4                   # Gate lower edge level (in [m])" + Environment.NewLine +
-                "    opening_width         = 12                  # Gate opening width (in [m])" + Environment.NewLine +
-                "    door_height           = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    horizontal_opening_direction= from_left           # Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
+                "    type                  = gate                # \"Structure type must read gate.\"" + Environment.NewLine +
+                "    id                    = gate1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = gate1.pli           # *.pli" + Environment.NewLine +
+                "    crestLevel            = 1                   # Crest level (m AD)." + Environment.NewLine +
+                "    gateLowerEdgeLevel    = 4                   # Position of gate door's lower edge (m AD)." + Environment.NewLine +
+                "    gateOpeningWidth      = 12                  # Opening width between gate doors should be smaller than (or equal to) crestWidth. Use 0.0 for a vertical door. (m)." + Environment.NewLine +
+                "    gateHeight            = 3                   # Height of gate door. Needed for possible overflow across door (m)." + Environment.NewLine +
+                "    gateOpeningHorizontalDirection= from_left           # Horizontal direction of the opening doors" + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -573,7 +571,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void WriteTimeDependentSobekStructuresTest()
         {
             var exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
@@ -589,8 +586,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     "pump1.pli", "weir1.pli", "gate1.pli",
                     "pump1_capacity.tim",
-                    "weir1_crest_level.tim",
-                    "gate1_lower_edge_level.tim", "gate1_opening_width.tim"
+                    "weir1_crestLevel.tim",
+                    "gate1_gateLowerEdgeLevel.tim", "gate1_gateOpeningWidth.tim"
                 };
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -668,28 +665,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = pump                # Type of structure" + Environment.NewLine +
-                "    id                    = pump1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = pump1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    capacity              = pump1_capacity.tim  # Pump capacity (in [m3/s])" + Environment.NewLine +
+                "    type                  = pump                # \"Structure type must read pump.\"" + Environment.NewLine +
+                "    id                    = pump1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = pump1.pli           # *.pli" + Environment.NewLine +
+                "    capacity              = pump1_capacity.tim  # Pump capacity (m�/s). (number of values = max(1 numStages))." + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = weir1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    crest_level           = weir1_crest_level.tim# Weir crest height (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 0.7                 # Lateral contraction coefficient" + Environment.NewLine +
+                "    type                  = weir                # \"Structure type must read weir.\"" + Environment.NewLine +
+                "    id                    = weir1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = weir1.pli           # *.pli" + Environment.NewLine +
+                "    crestLevel            = weir1_crestLevel.tim# Crest level of weir (m AD)." + Environment.NewLine +
+                "    corrCoeff             = 0.7                 # Correction coefficient (-)." + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = gate                # Type of structure" + Environment.NewLine +
-                "    id                    = gate1               # Name of the structure" + Environment.NewLine +
-                "    polylinefile          = gate1.pli           # *.pli; Polyline geometry definition for 2D structure" + Environment.NewLine +
-                "    sill_level            = gate1_sill_level.tim# Gate sill level (in [m])" + Environment.NewLine +
-                "    lower_edge_level      = gate1_lower_edge_level.tim# Gate lower edge level (in [m])" + Environment.NewLine +
-                "    opening_width         = gate1_opening_width.tim# Gate opening width (in [m])" + Environment.NewLine +
-                "    door_height           = 3                   # Gate door height (in [m])" + Environment.NewLine +
-                "    horizontal_opening_direction= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
-                "    sill_width            = 15.5                # Gate sill width (in [m])" + Environment.NewLine, fileContents);
+                "    type                  = gate                # \"Structure type must read gate.\"" + Environment.NewLine +
+                "    id                    = gate1               # Unique structure id." + Environment.NewLine +
+                "    polylinefile          = gate1.pli           # *.pli" + Environment.NewLine +
+                "    crestLevel            = gate1_crestLevel.tim# Crest level (m AD)." + Environment.NewLine +
+                "    gateLowerEdgeLevel    = gate1_gateLowerEdgeLevel.tim# Position of gate door's lower edge (m AD)." + Environment.NewLine +
+                "    gateOpeningWidth      = gate1_gateOpeningWidth.tim# Opening width between gate doors should be smaller than (or equal to) crestWidth. Use 0.0 for a vertical door. (m)." + Environment.NewLine +
+                "    gateHeight            = 3                   # Height of gate door. Needed for possible overflow across door (m)." + Environment.NewLine +
+                "    gateOpeningHorizontalDirection= symmetric           # Horizontal direction of the opening doors" + Environment.NewLine +
+                "    crestWidth            = 15.5                # Crest width (m)." + Environment.NewLine, fileContents);
 
             foreach (var expectedFileName in expectedFileNames)
             {
@@ -703,7 +700,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachVerheij_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -764,7 +761,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachUserDefined_StructureBeforeWritingAndAfterLoading_ShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
@@ -827,7 +824,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
+        [Category("Quarantine")] // StructuresFile.Write() does not write a General category which is required for properly Reading back the structures.
         public void WriteReadLeveeBreachWithInactiveBreachGrowth_ExportedAndImportedStructuresShouldBeEqual()
         {
             var iniFilePath = TestHelper.GetCurrentMethodName() + ".ini";
