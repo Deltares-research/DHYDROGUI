@@ -32,7 +32,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             SupportPointEditorViewModel = new SupportPointEditorViewModel(waveBoundary.GeometricDefinition,
                                                                           supportPointDataComponentViewModel);
-            GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, geometryFactory);
+            GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, 
+                                                                    supportPointDataComponentViewModel,
+                                                                    geometryFactory);
         }
 
         /// <summary>
