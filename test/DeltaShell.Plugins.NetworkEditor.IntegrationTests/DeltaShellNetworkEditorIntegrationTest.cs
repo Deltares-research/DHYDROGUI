@@ -1,34 +1,24 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.PropertyBag.Dynamic;
 using DeltaShell.Gui;
-using DeltaShell.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms.LayerPropertiesEditor;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Layers;
-using SharpMap.Rendering.Thematics;
 using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
@@ -36,27 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
     [TestFixture]
     public class DeltaShellNetworkEditorIntegrationTest
     {
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowGatedWeirInPropertyGrid()
-        {
-            var guiMock = Substitute.For<IGui>();
-
-            var grid = new PropertyGrid(guiMock)
-            {
-                Data = new DynamicPropertyBag(new WeirProperties
-                {
-                    Data = new Weir("gated")
-                    {
-                        WeirFormula = new GatedWeirFormula(),
-                        ParentStructure = new CompositeBranchStructure()
-                    }
-                })
-            };
-
-            WindowsFormsTestHelper.ShowModal(grid);
-        }
-
         [Test] //TOOLS-6594
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -94,31 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 
             //remove a location
             mapControl.SelectTool.Select(networkCoverage.Locations.Values.First());
-            mapControl.DeleteTool.DeleteSelection();
+            Assert.DoesNotThrow(() => mapControl.DeleteTool.DeleteSelection());
 
             coverageView.Dispose();
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowThemeEditorForWeirLayer()
-        {
-            IHydroNetwork hydroNetwork = GetHydroNetworkWithPumpAndWeir();
-
-            var weirLayer = new VectorLayer
-            {
-                DataSource = new HydroNetworkFeatureCollection
-                {
-                    Network = hydroNetwork,
-                    FeatureType = typeof(Weir)
-                }
-            };
-            var editor = new ThemeEditor
-            {
-                ThemeType = ThemeType.Categorial,
-                Layer = weirLayer
-            };
-            WindowsFormsTestHelper.ShowModal(editor);
         }
 
         [Test]
@@ -167,29 +114,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             network.Branches.Remove(network.Branches[0]);
             NetworkHelper.RemoveUnusedNodes(network);
             Assert.AreEqual(2, network.HydroNodes.Count(n => !n.IsConnectedToMultipleBranches));
-        }
-
-        private static IHydroNetwork GetHydroNetworkWithPumpAndWeir()
-        {
-            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1")
-            {
-                OffsetY = 1000,
-                StopDelivery = 18,
-                StartDelivery = 12,
-                StopSuction = 12,
-                StartSuction = 15
-            };
-            var weir = new Weir("weri1")
-            {
-                CrestLevel = 15,
-                CrestWidth = 50
-            };
-            NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, hydroNetwork.Branches[0], 50);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
-            HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
-            return hydroNetwork;
         }
     }
 }

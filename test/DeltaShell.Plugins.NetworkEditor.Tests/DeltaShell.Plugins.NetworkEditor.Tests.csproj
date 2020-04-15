@@ -352,7 +352,6 @@
     <Compile Include="MapLayers\Editors\BranchNodeTopologyTest.cs" />
     <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WeirViewWpfTest.cs" />
     <Compile Include="WpfConverters\EnumToDescriptionConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
