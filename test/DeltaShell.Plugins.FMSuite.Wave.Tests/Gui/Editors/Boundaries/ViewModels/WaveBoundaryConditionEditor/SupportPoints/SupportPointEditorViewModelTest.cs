@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -107,6 +108,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.RemoveSupportPointCommand, Is.Not.Null);
 
             Assert.That(viewModel.IsEnabled, Is.True);
+            Assert.That(viewModel, Is.InstanceOf<IRefreshIsEnabledOnDataComponentChanged>());
+            Assert.That(viewModel, Is.InstanceOf<INotifyPropertyChanged>());
+            Assert.That(viewModel, Is.InstanceOf<IDisposable>());
 ;        }
 
         [Test]
@@ -336,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void ExecuteAddSupportPointCommand_MultipleTimes_AllViewModelsAreSortedOnDistance()
         {
             // Setup
@@ -433,7 +437,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [TestCase(0)]
         [TestCase(1)]
         [TestCase(2)]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueIsValid_ThenViewModelIsReplaced(int selectionIndex)
         {
             // Setup
@@ -490,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueAlreadyExists_ThenViewModelIsNotReplacedAndHasOriginalValue()
         {
             // Setup

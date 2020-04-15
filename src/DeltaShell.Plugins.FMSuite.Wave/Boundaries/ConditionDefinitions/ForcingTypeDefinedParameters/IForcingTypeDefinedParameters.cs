@@ -8,6 +8,7 @@
     ///
     /// * <see cref="ConstantParameters{TSpreading}"/>
     /// * <see cref="TimeDependentParameters{TSpreading}"/>
+    /// * <see cref="FileBasedParameters"/>
     /// 
     /// </summary>
     /// <remarks>

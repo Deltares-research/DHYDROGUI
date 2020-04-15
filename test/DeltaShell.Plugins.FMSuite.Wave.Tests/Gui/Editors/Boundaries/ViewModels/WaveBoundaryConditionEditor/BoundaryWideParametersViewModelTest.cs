@@ -53,6 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.Shape, Is.SameAs(viewShape));
             Assert.That(viewModel.PeriodType, Is.EqualTo(PeriodViewType.Mean));
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Degrees));
+            Assert.That(viewModel.IsVisible, Is.True);
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var shapeFactory = Substitute.For<IBoundaryConditionShapeFactory>();
             var viewShapeFactory = new ViewShapeFactory(shapeFactory);
-            
+
             var modelShape = new GaussShape();
 
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
@@ -182,8 +183,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             };
 
             Assert.That(testConfig.Senders, Is.EquivalentTo(expectedSenders));
-            Assert.That(testConfig.EventArgses.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.ShapeType)));
-            Assert.That(testConfig.EventArgses.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.Shape)));
+            Assert.That(testConfig.EventArgs.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.ShapeType)));
+            Assert.That(testConfig.EventArgs.Any(x => x.PropertyName == nameof(BoundaryWideParametersViewModel.Shape)));
         }
 
         [Test]
@@ -266,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(1));
             Assert.That(testConfig.Senders[0], Is.SameAs(viewModel));
-            Assert.That(testConfig.EventArgses[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.PeriodType)));
+            Assert.That(testConfig.EventArgs[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.PeriodType)));
         }
 
         [Test]
@@ -333,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.DirectionalSpreadingType, Is.EqualTo(DirectionalSpreadingViewType.Power));
             Assert.That(testConfig.NPropertyChangedCalls, Is.EqualTo(1));
             Assert.That(testConfig.Senders[0], Is.SameAs(viewModel));
-            Assert.That(testConfig.EventArgses[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.DirectionalSpreadingType)));
+            Assert.That(testConfig.EventArgs[0].PropertyName, Is.EqualTo(nameof(BoundaryWideParametersViewModel.DirectionalSpreadingType)));
 
             testConfig.AnnounceDataComponentChanged.Received(1).AnnounceDataComponentChanged();
         }
@@ -394,6 +395,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyNameChanged, Is.EqualTo(string.Empty));
         }
 
+        [Test]
+        [TestCase(ForcingViewType.TimeSeries, true)]
+        [TestCase(ForcingViewType.Constant, true)]
+        [TestCase(ForcingViewType.FileBased, false)]
+        public void GivenBoundaryWideParametersViewModelWithForcingType_ThenIsVisibleHasExpectedValue(ForcingViewType forcingViewType, bool isVisible)
+        {
+            // Given
+            ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
+                                                                        .WithDefaultShapeFactory()
+                                                                        .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultAnnounceDataComponentChanged()
+                                                                        .ConstructViewModel();
+            testConfig.DataComponentFactory.GetForcingType(Arg.Any<ISpatiallyDefinedDataComponent>()).Returns(forcingViewType);
+
+            // Then
+            Assert.That(testConfig.ViewModel.IsVisible, Is.EqualTo(isVisible));
+        }
+
         /// <summary>
         /// Helper class to ease setup and verification of <see cref="BoundaryWideParametersViewModel"/>.
         /// </summary>
@@ -409,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             public IList<object> Senders { get; } = new List<object>();
 
-            public IList<PropertyChangedEventArgs> EventArgses { get; } = new List<PropertyChangedEventArgs>();
+            public IList<PropertyChangedEventArgs> EventArgs { get; } = new List<PropertyChangedEventArgs>();
 
             public ParametersTestConfig WithBoundaryCondition(IWaveBoundaryConditionDefinition boundaryCondition)
             {
@@ -484,7 +503,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             {
                 NPropertyChangedCalls += 1;
                 Senders.Add(sender);
-                EventArgses.Add(e);
+                EventArgs.Add(e);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Controls.Wpf.Commands;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
             Assert.That(viewModel.FilePath, Is.EqualTo(parameters.FilePath));
+            Assert.That(viewModel.SelectFileCommand, Is.InstanceOf<RelayCommand>());
         }
 
         [Test]
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void SetHeight_ExpectedValues()
+        public void SetFilePath_ExpectedValues()
         {
             // Setup
             FileBasedParameters parameters = GetRandomFileBasedParameters();

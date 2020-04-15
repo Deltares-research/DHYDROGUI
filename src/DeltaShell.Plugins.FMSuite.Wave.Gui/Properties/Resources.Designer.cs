@@ -147,11 +147,65 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying Constant Parameters.
+        /// </summary>
+        public static string SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying File Based Parameters.
+        /// </summary>
+        public static string SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying Time Dependent Parameters.
+        /// </summary>
+        public static string SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2.
         /// </summary>
         public static string Spectrum_Files_Filter {
             get {
                 return ResourceManager.GetString("Spectrum_Files_Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform Constant Parameters.
+        /// </summary>
+        public static string UniformConstantParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformConstantParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform File Based Parameters.
+        /// </summary>
+        public static string UniformFileBasedParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformFileBasedParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform Time Dependent Parameters.
+        /// </summary>
+        public static string UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
             }
         }
         

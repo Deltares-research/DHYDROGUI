@@ -60,18 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         DirectionalSpreadingViewType GetDirectionalSpreadingViewType(ISpatiallyDefinedDataComponent dataComponent);
 
         /// <summary>
-        /// Gets whether the boundary wide parameters should be visible for the given <paramref name="dataComponent"/>.
-        /// </summary>
-        /// <param name="dataComponent">The current data component.</param>
-        /// <returns>
-        /// A boolean.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
-        /// </exception>
-        bool GetAreBoundaryWideParametersVisible(ISpatiallyDefinedDataComponent dataComponent);
-
-        /// <summary>
         /// Constructs the <see cref="IParametersSettingsViewModel"/> corresponding
         /// with the provided <paramref name="dataComponent"/>.
         /// </summary>

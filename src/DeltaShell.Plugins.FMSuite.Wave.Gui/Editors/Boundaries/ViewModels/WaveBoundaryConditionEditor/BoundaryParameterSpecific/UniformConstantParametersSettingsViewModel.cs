@@ -1,6 +1,7 @@
 ﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             Ensure.NotNull(parameters, nameof(parameters));
             ActiveParametersViewModel = new ConstantParametersViewModelGeneric<TSpreading>(parameters);
 
-            GroupBoxTitle = "Uniform Constant Parameters";
+            GroupBoxTitle = Resources.UniformConstantParametersSettingsViewModel_GroupBoxTitle;
         }
     }
 }

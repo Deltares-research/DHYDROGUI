@@ -2,6 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             Ensure.NotNull(parameters, nameof(parameters));
 
             ActiveParametersViewModel = new TimeDependentUniformParametersViewModel<TSpreading>(GenerateSeries, parameters);
-            GroupBoxTitle = "Uniform Time Dependent Parameters";
+            GroupBoxTitle = Resources.UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle;
         }
     }
 }

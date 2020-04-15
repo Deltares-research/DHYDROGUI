@@ -2,6 +2,7 @@
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
-            GroupBoxTitle = "Spatially Varying File Based Parameters";
+            GroupBoxTitle = Resources.SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle;
         }
 
         /// <summary>

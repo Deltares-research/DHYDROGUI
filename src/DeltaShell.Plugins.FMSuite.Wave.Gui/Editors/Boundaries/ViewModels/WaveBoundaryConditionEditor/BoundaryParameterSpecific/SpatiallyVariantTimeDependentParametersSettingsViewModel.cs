@@ -4,6 +4,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific.TimeSeriesGeneration;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
@@ -36,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
-            GroupBoxTitle = "Spatially Varying Time Dependent Parameters";
+            GroupBoxTitle = Resources.SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle;
         }
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)

@@ -126,6 +126,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), SpatialDefinitionViewType.Uniform);
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
             yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), SpatialDefinitionViewType.SpatiallyVarying);
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), SpatialDefinitionViewType.Uniform);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), SpatialDefinitionViewType.SpatiallyVarying);
         }
 
 
@@ -498,6 +501,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
                 .ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<FileBasedParameters>>();
         }
 
+        [Test]
+        [TestCase(ForcingViewType.Constant)]
+        [TestCase(ForcingViewType.TimeSeries)]
+        [TestCase(ForcingViewType.FileBased)]
+        public void ConstructBoundaryConditionDataComponent_UnsupportedData_ThrowsNotSupportedException(ForcingViewType forcingViewType)
+        {
+            // Setup
+            var srcDataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            var modelDataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
+            modelDataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<FileBasedParameters>>()
+                                     .Returns(srcDataComponent);
+
+            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
+            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
+
+            // Assert
+            void Call() => factory.ConstructBoundaryConditionDataComponent(forcingViewType,
+                                                                           (SpatialDefinitionViewType) 99,
+                                                                           DirectionalSpreadingViewType.Power);
+
+            Assert.That(Call, Throws.InstanceOf<NotSupportedException>());
+        }
+
 
         private static IEnumerable<TestCaseData> GetDirectionalSpreadingViewTypeData()
         {
@@ -567,44 +593,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             // Call | Assert
             void Call() => factory.GetDirectionalSpreadingViewType(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
-        }
-
-        private static IEnumerable<TestCaseData> GetAreBoundaryWideParametersVisibleData()
-        {
-            yield return new TestCaseData(Substitute.For<ISpatiallyDefinedDataComponent>(), true);
-
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), false);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), false);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetAreBoundaryWideParametersVisibleData))]
-        public void GetAreBoundaryWideParametersVisible_ExpectedResults(ISpatiallyDefinedDataComponent dataComponent, bool expectedVisibility)
-        {
-            // Setup
-            var modelDataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
-            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
-
-            // Call
-            bool result = factory.GetAreBoundaryWideParametersVisible(dataComponent);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedVisibility));
-        }
-
-        [Test]
-        public void GetAreBoundaryWideParametersVisible_DataComponentNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var modelDataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
-            var referenceDateProvider = Substitute.For<IReferenceDateTimeProvider>();
-            var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
-
-            // Call | Assert
-            void Call() => factory.GetAreBoundaryWideParametersVisible(null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
         }

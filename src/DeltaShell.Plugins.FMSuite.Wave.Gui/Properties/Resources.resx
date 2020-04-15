@@ -202,4 +202,22 @@
   <data name="Browse" xml:space="preserve">
     <value>Browse...</value>
   </data>
+  <data name="SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying File Based Parameters</value>
+  </data>
+  <data name="UniformFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform File Based Parameters</value>
+  </data>
+  <data name="UniformConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Time Dependent Parameters</value>
+  </data>
+  <data name="UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Time Dependent Parameters</value>
+  </data>
 </root>

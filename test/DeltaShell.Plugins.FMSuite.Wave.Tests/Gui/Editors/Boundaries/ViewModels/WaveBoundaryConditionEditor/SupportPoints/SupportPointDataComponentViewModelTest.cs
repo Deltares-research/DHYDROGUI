@@ -808,7 +808,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var dataComponentFileBased =
                 new SpatiallyVaryingDataComponent<FileBasedParameters>();
             dataComponentFileBased.AddParameters(supportPoint, new FileBasedParameters("path"));
-            enabledSpatiallyVaryingFileBasedDefinition.DataComponent = dataComponentTimeDependent;
+            enabledSpatiallyVaryingFileBasedDefinition.DataComponent = dataComponentFileBased;
             yield return new TestCaseData(enabledSpatiallyVaryingFileBasedDefinition, supportPoint, true);
         }
     }

@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Gets whether the parameters should be visible.
         /// </summary>
-        public bool IsVisible => dataComponentFactory.GetAreBoundaryWideParametersVisible(observedBoundaryCondition.DataComponent);
+        public bool IsVisible => dataComponentFactory.GetForcingType(observedBoundaryCondition.DataComponent) != ForcingViewType.FileBased;
 
         public void RefreshViewModel()
         {

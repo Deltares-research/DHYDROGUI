@@ -109,20 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             }
         }
 
-        public bool GetAreBoundaryWideParametersVisible(ISpatiallyDefinedDataComponent dataComponent)
-        {
-            Ensure.NotNull(dataComponent, nameof(dataComponent));
-
-            switch (dataComponent)
-            {
-                case UniformDataComponent<FileBasedParameters> _:
-                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
-                    return false;
-                default:
-                    return true;
-            }
-        }
-
         public IParametersSettingsViewModel ConstructParametersSettingsViewModel(ISpatiallyDefinedDataComponent dataComponent)
         {
             Ensure.NotNull(dataComponent, nameof(dataComponent));
@@ -236,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         }
 
         private ISpatiallyDefinedDataComponent ConstructTimeSeriesBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
-                                                                                                  DirectionalSpreadingViewType spreadingType)
+                                                                                                 DirectionalSpreadingViewType spreadingType)
         {
             switch (spatialDefinition)
             {
@@ -254,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         }
 
         private ISpatiallyDefinedDataComponent ConstructConstantBoundaryConditionDataComponent(SpatialDefinitionViewType spatialDefinition,
-                                                                                                DirectionalSpreadingViewType spreadingType)
+                                                                                               DirectionalSpreadingViewType spreadingType)
         {
             switch (spatialDefinition)
             {
@@ -262,11 +248,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                     return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
                 case SpatialDefinitionViewType.Uniform when spreadingType == DirectionalSpreadingViewType.Degrees:
                     return dataComponentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
-                case SpatialDefinitionViewType.SpatiallyVarying
-                    when spreadingType == DirectionalSpreadingViewType.Power:
+                case SpatialDefinitionViewType.SpatiallyVarying when spreadingType == DirectionalSpreadingViewType.Power:
                     return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
-                case SpatialDefinitionViewType.SpatiallyVarying
-                    when spreadingType == DirectionalSpreadingViewType.Degrees:
+                case SpatialDefinitionViewType.SpatiallyVarying when spreadingType == DirectionalSpreadingViewType.Degrees:
                     return dataComponentFactory.ConstructDefaultDataComponent<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>();
                 default:
                     throw new NotSupportedException($"The combination of {ForcingViewType.Constant}, {spatialDefinition} and {spreadingType} is currently not supported.");
