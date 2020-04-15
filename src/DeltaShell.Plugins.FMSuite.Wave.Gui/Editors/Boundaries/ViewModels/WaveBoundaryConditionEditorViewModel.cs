@@ -57,6 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
             GeometryViewModel = new BoundaryGeometryViewModel(observedBoundary,
                                                               geometryFactory,
                                                               dataComponentModel);
+            dataComponentModelMediator.RefreshGeometryView = GeometryViewModel.GeometryPreviewViewModel;
 
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
                                                                     dataComponentFactory);
