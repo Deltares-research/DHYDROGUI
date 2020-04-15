@@ -6,13 +6,13 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="ConstantParameters{TSpreading}"/> defines the view model for the ConstantParametersView.
+    /// <see cref="ConstantParametersViewModelGeneric{TSpreading}"/> defines the view model for the ConstantParametersView.
     /// </summary>
     public class ConstantParametersViewModelGeneric<TSpreading> : ConstantParametersViewModel
-        where TSpreading : IBoundaryConditionSpreading, new()
+        where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         /// <summary>
-        /// Creates a new <see cref="ConstantParametersViewModel"/>.
+        /// Creates a new <see cref="ConstantParametersViewModelGeneric{TSpreading}"/>.
         /// </summary>
         /// <param name="parameters">The observed constant parameters.</param>
         /// <exception cref="ArgumentNullException">
@@ -21,23 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public ConstantParametersViewModelGeneric(ConstantParameters<TSpreading> parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
+            
             ObservedParameters = parameters;
-
-            SpreadingUnit = GetSpreadingUnit();
-        }
-
-        private static string GetSpreadingUnit()
-        {
-            if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
-            {
-                return "-";
-            }
-            if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
-            {
-                return "deg";
-            }
-
-            return "";
+            SpreadingUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol;
         }
 
         /// <summary>
