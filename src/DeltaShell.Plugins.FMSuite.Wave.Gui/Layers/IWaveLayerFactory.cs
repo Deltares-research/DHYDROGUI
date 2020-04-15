@@ -174,5 +174,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the selected support point layer.
+        /// </summary>
+        /// <param name="featureProvider">The selected support point feature provider.</param>
+        /// <returns>
+        /// A new selected support point layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateSelectedSupportPointLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the inactive support points layer.
+        /// </summary>
+        /// <param name="featureProvider">The inactive support points feature provider.</param>
+        /// <returns>
+        /// A new inactive support points layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateInactiveSupportPointsLayer(IFeatureProvider featureProvider);
+
+        /// <summary>
+        /// Creates the active support points layer.
+        /// </summary>
+        /// <param name="featureProvider">The active support points feature provider.</param>
+        /// <returns>
+        /// A new active support points layer.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        ILayer CreateActiveSupportPointsLayer(IFeatureProvider featureProvider);
     }
 }

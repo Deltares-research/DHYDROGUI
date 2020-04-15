@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 SmoothingMode = SmoothingMode.AntiAlias,
                 Style = new VectorStyle
                 {
-                    Line = new Pen(Color.Blue, 3f),
+                    Line = new Pen(DeltaresColor.Blue, 3f),
                     GeometryType = typeof(ILineString)
                 },
             };
@@ -244,41 +244,86 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public ILayer CreateBoundaryStartPointLayer(IFeatureProvider featureProvider)
         {
             Ensure.NotNull(featureProvider, nameof(featureProvider));
-            return new VectorLayer(WaveLayerNames.BoundaryStartPointsLayerName)
+
+            var style = new VectorStyle
             {
-                ShowInTreeView = false,
-                ShowInLegend = false,
-                DataSource = featureProvider,
-                Selectable = false,
-                ReadOnly = true,
-                NameIsReadOnly = true,
-                SmoothingMode = SmoothingMode.AntiAlias,
-                Style = new VectorStyle
-                {
-                    Fill = new SolidBrush(DeltaresColor.LightGreen),
-                    GeometryType = typeof(IPoint),
-                },
+                Fill = new SolidBrush(Color.LightGreen),
+                GeometryType = typeof(IPoint),
             };
+
+            return CreateReadOnlyLayer(WaveLayerNames.BoundaryStartPointsLayerName, featureProvider, style);
         }
 
         public ILayer CreateBoundaryEndPointLayer(IFeatureProvider featureProvider)
         {
             Ensure.NotNull(featureProvider, nameof(featureProvider));
-            return new VectorLayer(WaveLayerNames.BoundaryEndPointsLayerName)
+
+            var style = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.LightCoral),
+                GeometryType = typeof(IPoint),
+            };
+
+            return CreateReadOnlyLayer(WaveLayerNames.BoundaryEndPointsLayerName, featureProvider, style);
+        }
+
+        public ILayer CreateInactiveSupportPointsLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+            
+            var style = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.LightGray),
+                Outline = new Pen(Color.DimGray),
+                GeometryType = typeof(IPoint),
+                ShapeSize = 26,
+            };
+
+            return CreateReadOnlyLayer(WaveLayerNames.InactiveSupportPointsLayerName, featureProvider, style);
+        }
+
+        public ILayer CreateActiveSupportPointsLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+
+            var style = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.Gold),
+                GeometryType = typeof(IPoint),
+                ShapeSize = 26,
+            };
+
+            return CreateReadOnlyLayer(WaveLayerNames.ActiveSupportPointsLayerName, featureProvider, style);
+        }
+
+        public ILayer CreateSelectedSupportPointLayer(IFeatureProvider featureProvider)
+        {
+            Ensure.NotNull(featureProvider, nameof(featureProvider));
+
+            var style = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.PaleVioletRed),
+                GeometryType = typeof(IPoint),
+                ShapeSize = 32,
+                EnableOutline = false,
+            };
+
+            return CreateReadOnlyLayer(WaveLayerNames.SelectedSupportPointLayerName, featureProvider, style);
+        }
+
+        private static VectorLayer CreateReadOnlyLayer(string layerName,
+                                                       IFeatureProvider dataSource,
+                                                       VectorStyle style) =>
+            new VectorLayer(layerName)
             {
                 ShowInTreeView = false,
-                ShowInLegend = false,
-                DataSource = featureProvider,
-                Selectable = false,
+                DataSource = dataSource,
                 ReadOnly = true,
+                Selectable = false,
                 NameIsReadOnly = true,
+                ShowInLegend = false,
                 SmoothingMode = SmoothingMode.AntiAlias,
-                Style = new VectorStyle
-                {
-                    Fill = new SolidBrush(Color.LightCoral),
-                    GeometryType = typeof(IPoint),
-                },
+                Style = style
             };
-        }
     }
 }

@@ -49,6 +49,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string BoundarySupportPointsLayerName = "Support points";
 
         /// <summary>
+        /// The active support points layer name
+        /// </summary>
+        public const string ActiveSupportPointsLayerName = "Active support points";
+
+        /// <summary>
+        /// The inactive support points layer name
+        /// </summary>
+        public const string InactiveSupportPointsLayerName = "Inactive support points";
+
+        /// <summary>
+        /// The selected support point layer name
+        /// </summary>
+        public const string SelectedSupportPointLayerName = "Selected support point";
+
+        /// <summary>
         /// The observation point layer name
         /// </summary>
         public const string ObservationPointLayerName = "Observation Points";
