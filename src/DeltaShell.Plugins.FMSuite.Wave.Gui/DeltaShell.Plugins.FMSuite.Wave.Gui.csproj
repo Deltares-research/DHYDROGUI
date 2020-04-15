@@ -352,11 +352,11 @@
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviour.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\EndPointFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\IAddBehaviour.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\IFeaturesFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\IFeaturesFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviour.cs" />
-    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\StartingPointFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\StartingPointFromBoundaryBehaviour.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProvider.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProvider.cs" />

@@ -2,7 +2,7 @@
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using GeoAPI.Extensions.Feature;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours
+namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.FeaturesFromBoundaryBehaviours
 {
     /// <summary>
     /// <see cref="IFeaturesFromBoundaryBehaviour"/> defines the behaviours to

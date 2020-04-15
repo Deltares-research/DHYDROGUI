@@ -288,9 +288,9 @@
     <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModelTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactoryTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviourTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\EndPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviourTest.cs" />
-    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\StartingPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\StartingPointFromBoundaryBehaviourTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProviderTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProviderTest.cs" />
