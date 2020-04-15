@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             network.Nodes.Add(hydroNode1);
             var hydroNode2 = new HydroNode { Name = "my Node2", LongName = "Node 2 Description", Description = "Node 2 Description", Geometry = new Point(3, 4), Network = network };
             network.Nodes.Add(hydroNode2);
-            var branch1 = new Branch
+            var branch1 = new Channel
             {
                 Name = "my Branch 1",
                 Description = "Branch 1 Description",
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(networkDataModel.NodesDescriptions, Is.EqualTo(new[] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty }));
 
             CheckNetworkBranchProperties(networkDataModel, new[] { 9.0, 11.5, 8.0, 9.0 });
-        }
+        }   
 
         [Test]
         public void ReconstructHydroNetworkTest()
