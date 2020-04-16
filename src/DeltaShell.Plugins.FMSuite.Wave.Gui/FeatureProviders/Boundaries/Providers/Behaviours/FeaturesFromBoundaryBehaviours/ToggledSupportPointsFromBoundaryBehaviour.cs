@@ -49,27 +49,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// have data associated with them, as set by the shouldHaveBoundaryConditionData
         /// flag in the constructor.
         /// </summary>
-        /// <param name="boundary">The boundary.</param>
+        /// <param name="waveBoundary">The boundary.</param>
         /// <returns>
         /// A collection containing the active or inactive support points, if the support
         /// points are enabled, and geometry could be constructed; else an empty
         /// collection.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="boundary"/> is <c>null</c>.
+        /// Thrown when <paramref name="waveBoundary"/> is <c>null</c>.
         /// </exception>
-        public IEnumerable<IFeature> Execute(IWaveBoundary boundary)
+        public IEnumerable<IFeature> Execute(IWaveBoundary waveBoundary)
         {
-            Ensure.NotNull(boundary, nameof(boundary));
+            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
 
             if (!supportPointDataComponentViewModel.IsEnabled())
             {
                 return Enumerable.Empty<IFeature>();
             }
 
-            return boundary.GeometricDefinition.SupportPoints
-                           .Select(ConstructGeometry)
-                           .Where(x => x != null);
+            return waveBoundary.GeometricDefinition.SupportPoints
+                               .Select(ConstructGeometry)
+                               .Where(x => x != null);
         }
 
         private IFeature ConstructGeometry(SupportPoint sp)

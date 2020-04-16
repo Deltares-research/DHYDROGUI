@@ -42,13 +42,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// Create a new selected support point from the <see cref="SupportPointEditorViewModel"/>
         /// provided at construction time.
         /// </summary>
-        /// <param name="_">The boundary.</param>
+        /// <param name="waveBoundary">The boundary.</param>
         /// <returns>
         /// A collection containing the selected support point, if the support
         /// points are enabled, and geometry could be constructed; else an empty
         /// collection.
         /// </returns>
-        public IEnumerable<IFeature> Execute(IWaveBoundary _)
+        public IEnumerable<IFeature> Execute(IWaveBoundary waveBoundary)
         {
             if (!supportPointDataComponentViewModel.IsEnabled())
             {
