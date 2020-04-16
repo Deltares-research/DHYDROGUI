@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing"><c>true</c>, if managed resources should be disposed; otherwise, <c>false</c>.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
