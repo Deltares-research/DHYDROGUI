@@ -1,5 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
@@ -31,6 +33,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("filePath"));
+        }
+
+        [Test]
+        public void AcceptVisitor_ThrowsNotSupportedExceptionForFileBasedParameters()
+        {
+            // Setup
+            var fileBasedParameters = new FileBasedParameters("test");
+            var visitor = Substitute.For<IForcingTypeDefinedParametersVisitor>();
+
+            // Call
+            void Call() => fileBasedParameters.AcceptVisitor(visitor);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(Call);
         }
     }
 }

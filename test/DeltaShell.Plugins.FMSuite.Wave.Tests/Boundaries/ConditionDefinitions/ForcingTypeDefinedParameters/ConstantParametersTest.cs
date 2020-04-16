@@ -86,16 +86,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public void AcceptVisitor_VisitorNull_ThrowsArgumentNullExceptionForConstantParameters()
         {
             // Setup
-            double expectedHeight = random.NextDouble() * 1000.0;
-            double expectedPeriod = random.NextDouble() * 1000.0;
-            double expectedDirection = random.NextDouble() * 1000.0;
-            var expectedSpreading = new TSpreading();
-
-            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
-                                                                                 expectedPeriod,
-                                                                                 expectedDirection,
-                                                                                 expectedSpreading);
-
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(random.NextDouble(),
+                                                                                 random.NextDouble(),
+                                                                                 random.NextDouble(),
+                                                                                 new TSpreading());
             // Call
             void Call() => boundaryConditionParameters.AcceptVisitor(null);
 
@@ -105,18 +99,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void AcceptVisitor_VisitorNull_CallsCorrectVisitorMethodForConstantParameters()
+        public void AcceptVisitor_CallsCorrectVisitorMethodForConstantParameters()
         {
             // Setup
-            double expectedHeight = random.NextDouble() * 1000.0;
-            double expectedPeriod = random.NextDouble() * 1000.0;
-            double expectedDirection = random.NextDouble() * 1000.0;
-            var expectedSpreading = new TSpreading();
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(random.NextDouble(),
+                                                                                 random.NextDouble(),
+                                                                                 random.NextDouble(),
+                                                                                 new TSpreading());
 
-            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
-                                                                                 expectedPeriod,
-                                                                                 expectedDirection,
-                                                                                 expectedSpreading);
             var visitor = Substitute.For<IForcingTypeDefinedParametersVisitor>();
 
             // Call

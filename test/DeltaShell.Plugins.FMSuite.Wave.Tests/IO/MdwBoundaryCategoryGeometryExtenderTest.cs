@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
@@ -62,7 +63,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.EndCoordinateY, properties[4].Name);
             Assert.AreEqual(GetStringValue(coordinate2.Y), properties[4].Value);
         }
-    
+
+        [Test]
+        public void AddNewProperties_CategoryNull_ThrowsArgumentNullException()
+        {
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            var supportPoints = new List<SupportPoint>();
+
+            // Act
+            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(null, boundaryContainer, supportPoints);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
+        }
+
+        [Test]
+        public void AddNewProperties_BoundaryContainerNull_ThrowsArgumentNullException()
+        {
+            var delftIniCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var supportPoints = new List<SupportPoint>();
+
+            // Act
+            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(delftIniCategory, null, supportPoints);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"));
+        }
+
+        [Test]
+        public void AddNewProperties_SupportPointsNull_ThrowsArgumentNullException()
+        {
+            var delftIniCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+
+            // Act
+            void Call() => MdwBoundaryCategoryGeometryExtender.AddNewProperties(delftIniCategory, boundaryContainer, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoints"));
+        }
 
         private static string GetStringValue(double value)
         {

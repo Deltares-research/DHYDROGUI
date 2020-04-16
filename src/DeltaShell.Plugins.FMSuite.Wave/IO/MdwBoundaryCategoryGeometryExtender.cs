@@ -24,16 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <param name="boundaryContainer"> The boundary container of the model</param>
         /// <param name="supportPoints"> The support points in the geometric definition</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/>
-        /// is <c>null</c>.
-        /// </exception>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="boundaryContainer"/>
-        /// is <c>null</c>.
-        /// </exception>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="supportPoints"/>
-        /// is <c>null</c>.
+        /// Thrown when <paramref name="boundaryCategory"/>, <paramref name="boundaryContainer"/>
+        /// or <paramref name="supportPoints"/> is <c>null</c>.
         /// </exception>
         public static void AddNewProperties(DelftIniCategory boundaryCategory, IBoundaryContainer boundaryContainer,
                                             IEnumerable<SupportPoint> supportPoints)

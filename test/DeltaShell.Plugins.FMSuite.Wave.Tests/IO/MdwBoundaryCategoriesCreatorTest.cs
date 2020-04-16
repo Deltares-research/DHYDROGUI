@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -97,6 +98,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             
             CheckCreatedCategory(category1.Properties.ToList(), boundary1Name, boundary1Coordinate1, boundary1Coordinate2);
             CheckCreatedCategory(category2.Properties.ToList(), boundary2Name, boundary2Coordinate1, boundary2Coordinate2);
+        }
+
+        [Test]
+        public void CreateCategories_BoundaryContainerNull_ThrowsArgumentNullException()
+        {
+            // Act
+            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(null).ToList();
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"));
         }
 
         private IWaveBoundary CreateWaveBoundary(out SupportPoint supportPoint1, out SupportPoint supportPoint2)

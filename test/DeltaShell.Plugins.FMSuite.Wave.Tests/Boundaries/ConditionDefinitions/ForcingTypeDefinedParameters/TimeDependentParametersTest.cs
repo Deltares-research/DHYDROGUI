@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void AcceptVisitor_VisitorNull_CallsCorrectVisitorMethodForTimeDependentParameters()
+        public void AcceptVisitor_CallsCorrectVisitorMethodForTimeDependentParameters()
         {
             // Setup
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();

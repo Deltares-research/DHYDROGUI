@@ -82,8 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// The collector should add the retrieved time serie to <see cref="TimeSeries"/>,
             /// since it is a time dependent boundary.
             /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="timeDependentParameters"></param>
+            /// <typeparam name="T">The type of spreading.</typeparam>
+            /// <param name="timeDependentParameters">The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
             /// <exception cref="System.ArgumentNullException">
             /// Thrown when <paramref name="timeDependentParameters"/>
             /// is <c>null</c>.
@@ -97,8 +97,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// <summary>
             /// The collector should do nothing, since it is apparently not a time dependent boundary. 
             /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="constantParameters"></param>
+            /// <typeparam name="T">The type of spreading.</typeparam>
+            /// <param name="constantParameters">The visited <see cref="ConstantParameters{TSpreading}"/></param>
             public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
             {
                 // Do nothing, since it is not a time dependent boundary.

@@ -380,6 +380,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     public class MdwBoundaryCategoryConditionsExtenderTest
     {
         [Test]
+        public void AddNewProperties_CategoryNull_ThrowsArgumentNullException()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+
+            // Act
+            void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(null, conditionDefinition);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryCategory"));
+        }
+
+        [Test]
+        public void AddNewProperties_ConditionDefinitionNull_ThrowsArgumentNullException()
+        {
+            var delftIniCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            // Act
+            void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(delftIniCategory, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("conditionDefinition"));
+        }
+
+        [Test]
         public void Visit_WaveBoundaryConditionDefinitionNull_ThrowsArgumentNullException()
         {
             // Setup

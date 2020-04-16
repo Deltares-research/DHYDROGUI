@@ -18,6 +18,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture(typeof(PowerDefinedSpreading))]
     public class BcwTimeSeriesOfBoundaryCollectorTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
+        private readonly Random random = new Random();
+
         [Test]
         public void Collect_ForUniformTimeDependentBoundary_Returns1TimeSerie()
         {
@@ -64,6 +66,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(2, returnedTimeSeries.Count);
             Assert.Contains(underlyingFunction1, returnedTimeSeries);
             Assert.Contains(underlyingFunction2, returnedTimeSeries);
+        }
+
+        [Test]
+        public void Collect_ForUniformConstantBoundary_NothingShouldHappen()
+        {
+            // Setup
+            var constantParameters = new ConstantParameters<TSpreading>(random.Next(), random.Next(), random.Next(), new TSpreading());
+            var dataComponent = new UniformDataComponent<ConstantParameters<TSpreading>>(constantParameters);
+
+            // Call
+            List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            Assert.That(returnedTimeSeries, Is.Empty);
+        }
+
+        [Test]
+        public void Collect_ForSpatiallyVaryingConstantBoundary_NothingShouldHappen()
+        {
+            // Setup
+            var dataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
+            var constantParameters = new ConstantParameters<TSpreading>(random.Next(), random.Next(), random.Next(), new TSpreading());
+            var supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            dataComponent.AddParameters(supportPoint, constantParameters);
+
+            // Call
+            List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            Assert.That(returnedTimeSeries, Is.Empty);
         }
     }
 
