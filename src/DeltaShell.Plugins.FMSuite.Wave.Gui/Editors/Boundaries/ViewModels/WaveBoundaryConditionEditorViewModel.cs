@@ -69,7 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
                                                                    BoundarySpecificParametersSettingsViewModel,
-                                                                   BoundaryWideParametersViewModel);
+                                                                   BoundaryWideParametersViewModel,
+                                                                   GeometryViewModel.GeometryPreviewViewModel);
 
             DescriptionViewModel.SetMediator(mediator);
             BoundaryWideParametersViewModel.SetMediator(mediator);

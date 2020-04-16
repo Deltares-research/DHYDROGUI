@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         private IRefreshIsEnabledOnDataComponentChanged supportPointEditorViewModel;
         private IRefreshDataComponentViewModel parametersSettingsViewModel;
         private IRefreshViewModel refreshViewModel;
+        private IRefreshGeometryView refreshGeometryView;
 
         [SetUp]
         public void SetUp()
@@ -18,6 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
             parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
             refreshViewModel = Substitute.For<IRefreshViewModel>();
+            refreshGeometryView = Substitute.For<IRefreshGeometryView>();
         }
 
         [Test]
@@ -26,7 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             // Call
             var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel,
                                                                    parametersSettingsViewModel,
-                                                                   refreshViewModel);
+                                                                   refreshViewModel, 
+                                                                   refreshGeometryView);
 
             // Assert
             Assert.That(mediator, Is.InstanceOf<IAnnounceDataComponentChanged>());
@@ -35,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         [Test]
         public void Constructor_SupportPointEditorViewModelNull_ThrowsArgumentNullException()
         {
-            void Call() => new WaveBoundaryConditionEditorMediator(null, parametersSettingsViewModel, refreshViewModel);
+            void Call() => new WaveBoundaryConditionEditorMediator(null, parametersSettingsViewModel, refreshViewModel, refreshGeometryView);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentIsEnabledDependentViewModel"));
@@ -44,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         [Test]
         public void Constructor_SpecificParametersSettingsViewModelNull_ThrowsArgumentNullException()
         {
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, null, refreshViewModel);
+            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, null, refreshViewModel, refreshGeometryView);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("dataComponentViewModelDependentViewModel"));
@@ -53,10 +56,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         [Test]
         public void Constructor_RefreshViewModelNull_ThrowsArgumentNullException()
         {
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, null);
+            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, null, refreshGeometryView);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("refreshViewModel"));
+        }
+
+        [Test]
+        public void Constructor_RefreshGeometryViewNull_ThrowsArgumentNullException()
+        {
+            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, refreshViewModel, null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("refreshGeometryView"));
         }
 
         [Test]
@@ -65,7 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             // Given 
             var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel,
                                                                    parametersSettingsViewModel,
-                                                                   refreshViewModel);
+                                                                   refreshViewModel,
+                                                                   refreshGeometryView);
 
             // When
             mediator.AnnounceDataComponentChanged();
@@ -76,6 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
                 parametersSettingsViewModel.RefreshDataComponentViewModel();
                 supportPointEditorViewModel.RefreshIsEnabled();
                 refreshViewModel.RefreshViewModel();
+                refreshGeometryView.RefreshGeometryView();
             });
         }
     }
