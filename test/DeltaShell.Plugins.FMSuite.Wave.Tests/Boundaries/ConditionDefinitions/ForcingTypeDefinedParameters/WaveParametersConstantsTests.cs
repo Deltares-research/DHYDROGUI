@@ -11,21 +11,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     {
         private static IEnumerable<TestCaseData> GetConstructUnitTestData()
         {
-            yield return new TestCaseData((Func<Unit>) WaveParametersConstants.ConstructMeterUnit, 
-                                           WaveParametersConstants.MeterUnitName, 
-                                           WaveParametersConstants.MeterUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveParametersConstants.ConstructSecondUnit, 
-                                           WaveParametersConstants.SecondUnitName, 
-                                           WaveParametersConstants.SecondUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveParametersConstants.ConstructEmptyUnit, 
-                                           WaveParametersConstants.EmptyUnitName, 
-                                           WaveParametersConstants.EmptyUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveParametersConstants.ConstructDegreesUnit, 
-                                           WaveParametersConstants.DegreesUnitName, 
-                                           WaveParametersConstants.DegreesUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveParametersConstants.ConstructPowerUnit, 
-                                           WaveParametersConstants.PowerUnitName, 
-                                           WaveParametersConstants.PowerUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructMeterUnit, 
+                                           WaveTimeDependentParametersConstants.MeterUnitName, 
+                                           WaveTimeDependentParametersConstants.MeterUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructSecondUnit, 
+                                           WaveTimeDependentParametersConstants.SecondUnitName, 
+                                           WaveTimeDependentParametersConstants.SecondUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructEmptyUnit, 
+                                           WaveTimeDependentParametersConstants.EmptyUnitName, 
+                                           WaveTimeDependentParametersConstants.EmptyUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructDegreesUnit, 
+                                           WaveTimeDependentParametersConstants.DegreesUnitName, 
+                                           WaveTimeDependentParametersConstants.DegreesUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructPowerUnit, 
+                                           WaveTimeDependentParametersConstants.PowerUnitName, 
+                                           WaveTimeDependentParametersConstants.PowerUnitSymbol);
         }
 
         [Test]

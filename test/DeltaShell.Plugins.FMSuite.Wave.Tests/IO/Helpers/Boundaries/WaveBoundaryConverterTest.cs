@@ -524,27 +524,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static IFunction CreateTimeSeriesFunction(BcwTestValues values, int i)
         {
-            var function = new Function(WaveParametersConstants.WaveQuantityName);
-            var timeArgument = new Variable<DateTime>(WaveParametersConstants.TimeVariableName);
+            var function = new Function(WaveTimeDependentParametersConstants.WaveQuantityName);
+            var timeArgument = new Variable<DateTime>(WaveTimeDependentParametersConstants.TimeVariableName);
             function.Arguments.Add(timeArgument);
             timeArgument.SetValues(new[]
             {
                 DateTime.Today,
                 DateTime.Today.AddDays(1)
             });
-            var heightComponent = new Variable<double>(WaveParametersConstants.HeightVariableName);
+            var heightComponent = new Variable<double>(WaveTimeDependentParametersConstants.HeightVariableName);
             function.Components.Add(heightComponent);
             heightComponent.SetValues(values.WaveHeights[i]);
 
-            var periodComponent = new Variable<double>(WaveParametersConstants.PeriodVariableName);
+            var periodComponent = new Variable<double>(WaveTimeDependentParametersConstants.PeriodVariableName);
             function.Components.Add(periodComponent);
             periodComponent.SetValues(values.Periods[i]);
 
-            var directionComponent = new Variable<double>(WaveParametersConstants.DirectionVariableName);
+            var directionComponent = new Variable<double>(WaveTimeDependentParametersConstants.DirectionVariableName);
             function.Components.Add(directionComponent);
             directionComponent.SetValues(values.Directions[i]);
 
-            var spreadingComponent = new Variable<double>(WaveParametersConstants.SpreadingVariableName);
+            var spreadingComponent = new Variable<double>(WaveTimeDependentParametersConstants.SpreadingVariableName);
             function.Components.Add(spreadingComponent);
             spreadingComponent.SetValues(values.DirSpreadings[i]);
 

@@ -24,44 +24,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Assert
             Assert.That(function.UnderlyingFunction, Has.Property(nameof(IFunction.Name))
-                                     .EqualTo(WaveParametersConstants.WaveQuantityName),
+                                     .EqualTo(WaveTimeDependentParametersConstants.WaveQuantityName),
                         "Expected a different function name:");
 
             Assert.That(function.UnderlyingFunction.Arguments, Has.Count.EqualTo(1),
                         "Expected a different number of Arguments:");
             Assert.That(function.TimeArgument, Has.Property(nameof(Variable<double>.Name))
-                                     .EqualTo(WaveParametersConstants.TimeVariableName));
+                                     .EqualTo(WaveTimeDependentParametersConstants.TimeVariableName));
 
             Assert.That(function.UnderlyingFunction.Components, Has.Count.EqualTo(4),
                         "Expected a different number of Components:");
 
             AssertHasCorrectComponent(function.HeightComponent,
-                                      WaveParametersConstants.HeightVariableName,
-                                      WaveParametersConstants.MeterUnitName,
-                                      WaveParametersConstants.MeterUnitSymbol);
+                                      WaveTimeDependentParametersConstants.HeightVariableName,
+                                      WaveTimeDependentParametersConstants.MeterUnitName,
+                                      WaveTimeDependentParametersConstants.MeterUnitSymbol);
 
             AssertHasCorrectComponent(function.PeriodComponent,
-                                      WaveParametersConstants.PeriodVariableName,
-                                      WaveParametersConstants.SecondUnitName,
-                                      WaveParametersConstants.SecondUnitSymbol,
+                                      WaveTimeDependentParametersConstants.PeriodVariableName,
+                                      WaveTimeDependentParametersConstants.SecondUnitName,
+                                      WaveTimeDependentParametersConstants.SecondUnitSymbol,
                                       1.0);
 
             AssertHasCorrectComponent(function.DirectionComponent,
-                                      WaveParametersConstants.DirectionVariableName,
-                                      WaveParametersConstants.DegreesUnitName,
-                                      WaveParametersConstants.DegreesUnitSymbol);
+                                      WaveTimeDependentParametersConstants.DirectionVariableName,
+                                      WaveTimeDependentParametersConstants.DegreesUnitName,
+                                      WaveTimeDependentParametersConstants.DegreesUnitSymbol);
             AssertHasCorrectComponent(function.SpreadingComponent, 
-                                      WaveParametersConstants.SpreadingVariableName,
+                                      WaveTimeDependentParametersConstants.SpreadingVariableName,
                                       SpreadingConversion.GetSpreadingUnit<TSpreading>().Name,
                                       SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol, 
                                       SpreadingConversion.GetSpreadingDefaultValue<TSpreading>());
 
             Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeFunctionAttributeName], 
-                        Is.EqualTo(WaveParametersConstants.NonEquidistantTimeFunctionAttributeName));
+                        Is.EqualTo(WaveTimeDependentParametersConstants.NonEquidistantTimeFunctionAttributeName));
             Assert.That(function.UnderlyingFunction.Attributes[BcwFile.RefDateAttributeName], 
                         Is.EqualTo(new DateTime().ToString(BcwFile.DateFormatString)));
             Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeUnitAttributeName], 
-                        Is.EqualTo(WaveParametersConstants.MinuteUnitName));
+                        Is.EqualTo(WaveTimeDependentParametersConstants.MinuteUnitName));
         }
 
         private static void AssertHasCorrectComponent(IVariable component,

@@ -63,8 +63,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Unit unit = SpreadingConversion.GetSpreadingUnit<DegreesDefinedSpreading>();
 
             // Assert
-            Assert.That(unit.Name, Is.EqualTo(WaveParametersConstants.DegreesUnitName));
-            Assert.That(unit.Symbol, Is.EqualTo(WaveParametersConstants.DegreesUnitSymbol));
+            Assert.That(unit.Name, Is.EqualTo(WaveTimeDependentParametersConstants.DegreesUnitName));
+            Assert.That(unit.Symbol, Is.EqualTo(WaveTimeDependentParametersConstants.DegreesUnitSymbol));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Unit unit = SpreadingConversion.GetSpreadingUnit<PowerDefinedSpreading>();
 
             // Assert
-            Assert.That(unit.Name, Is.EqualTo(WaveParametersConstants.PowerUnitName));
-            Assert.That(unit.Symbol, Is.EqualTo(WaveParametersConstants.PowerUnitSymbol));
+            Assert.That(unit.Name, Is.EqualTo(WaveTimeDependentParametersConstants.PowerUnitName));
+            Assert.That(unit.Symbol, Is.EqualTo(WaveTimeDependentParametersConstants.PowerUnitSymbol));
         }
 
         [Test]
