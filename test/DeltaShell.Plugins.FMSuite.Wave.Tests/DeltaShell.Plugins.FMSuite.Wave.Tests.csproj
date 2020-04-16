@@ -220,7 +220,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParametersTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParametersTest.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveParametersConstantsTests.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveTimeDependentParametersConstantsTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactoryTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />
