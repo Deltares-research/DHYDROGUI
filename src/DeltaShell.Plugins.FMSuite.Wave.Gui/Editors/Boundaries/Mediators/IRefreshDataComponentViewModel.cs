@@ -17,6 +17,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
         /// Updates the selected active parameters parameters.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        /// Thrown when the data is not spatially variant.
+        /// </exception>
         void UpdateSelectedActiveParameters(SupportPoint supportPoint);
     }
 }

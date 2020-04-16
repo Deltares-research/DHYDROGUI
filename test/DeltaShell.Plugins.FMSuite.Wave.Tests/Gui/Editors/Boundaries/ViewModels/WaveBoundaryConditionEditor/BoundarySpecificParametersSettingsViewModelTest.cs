@@ -203,5 +203,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.Throws<InvalidOperationException>(Call);
         }
+
+        [Test]
+        public void UpdateSelectedActiveParameters_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var initialDataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+
+            var initialDataComponentViewModel = Substitute.For<IParametersSettingsViewModel>();
+
+            var factory = Substitute.For<IViewDataComponentFactory>();
+            factory.ConstructParametersSettingsViewModel(initialDataComponent)
+                   .Returns(initialDataComponentViewModel);
+
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent = initialDataComponent;
+
+            var viewModel = new BoundarySpecificParametersSettingsViewModel(conditionDefinition, factory);
+
+            // Call | Assert
+            void Call() => viewModel.UpdateSelectedActiveParameters(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
+        }
     }
 }

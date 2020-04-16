@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -70,13 +69,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         public void UpdateSelectedActiveParameters(SupportPoint supportPoint)
         {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
             if (ParametersSettingsViewModel is ISpatiallyVariantParametersSettingsViewModel spatiallyVariantParametersSettingsViewModel)
             {
                 spatiallyVariantParametersSettingsViewModel.UpdateActiveSupportPoint(supportPoint);
             }
             else
             {
-                throw new InvalidOperationException(
+                throw new System.InvalidOperationException(
                     "Cannot set the selected view point when the data is not spatially variant.");
             }
         }
