@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     public abstract class TimeDependentParametersViewModel
     {
         /// <summary>
-        /// 
+        /// Creates a new <see cref="TimeDependentParametersViewModel"/>.
         /// </summary>
         protected TimeDependentParametersViewModel()
         {
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         /// <summary>
-        /// Gets the time dependent parameters function.
+        /// Gets the time dependent parameters functions.
         /// </summary>
         public abstract IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
 
