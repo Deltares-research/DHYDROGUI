@@ -27,7 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <param name="dataComponentFactory">The <see cref="ISpatiallyDefinedDataComponentFactory"/>.</param>
         /// <param name="referenceDateTimeProvider">The reference date time provider.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="dataComponentFactory"/> is <c>null</c>.
+        /// Thrown when <paramref name="dataComponentFactory"/> or
+        /// <paramref name="referenceDateTimeProvider"/> is <c>null</c>.
         /// </exception>
         public ViewDataComponentFactory(ISpatiallyDefinedDataComponentFactory dataComponentFactory,
                                         IReferenceDateTimeProvider referenceDateTimeProvider)
