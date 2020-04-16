@@ -3,13 +3,13 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
-    /// <see cref="WaveParametersConstants"/> provides the constants used within the
+    /// <see cref="WaveTimeDependentParametersConstants"/> provides the constants used within the
     /// boundary condition parameters.
     /// </summary>
-    public static class WaveParametersConstants
+    public static class WaveTimeDependentParametersConstants
     {
         /// <summary>
-        /// The wave quantity name
+        /// The wave quantity name.
         /// </summary>
         public const string WaveQuantityName = "wave_energy_density";
 

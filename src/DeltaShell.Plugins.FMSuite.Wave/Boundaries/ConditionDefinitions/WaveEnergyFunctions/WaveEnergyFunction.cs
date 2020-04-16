@@ -35,36 +35,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
 
         private static IFunction ConstructEmptyWaveEnergyFunction()
         {
-            var function = new Function(WaveParametersConstants.WaveQuantityName);
+            var function = new Function(WaveTimeDependentParametersConstants.WaveQuantityName);
 
-            function.Arguments.Add(new Variable<DateTime>(WaveParametersConstants.TimeVariableName));
+            function.Arguments.Add(new Variable<DateTime>(WaveTimeDependentParametersConstants.TimeVariableName));
 
             function.Components.Add(GetHeightVariable());
             function.Components.Add(GetPeriodVariable());
             function.Components.Add(GetDirectionVariable());
             function.Components.Add(GetSpreadingVariable());
 
-            function.Attributes[BcwFile.TimeFunctionAttributeName] = WaveParametersConstants.NonEquidistantTimeFunctionAttributeName;
+            function.Attributes[BcwFile.TimeFunctionAttributeName] = WaveTimeDependentParametersConstants.NonEquidistantTimeFunctionAttributeName;
             function.Attributes[BcwFile.RefDateAttributeName] = new DateTime().ToString(BcwFile.DateFormatString);
-            function.Attributes[BcwFile.TimeUnitAttributeName] = WaveParametersConstants.MinuteUnitName;
+            function.Attributes[BcwFile.TimeUnitAttributeName] = WaveTimeDependentParametersConstants.MinuteUnitName;
 
             return function;
         }
 
         private static Variable<double> GetHeightVariable() => 
-            new Variable<double>(WaveParametersConstants.HeightVariableName,
-                                 WaveParametersConstants.ConstructMeterUnit());
+            new Variable<double>(WaveTimeDependentParametersConstants.HeightVariableName,
+                                 WaveTimeDependentParametersConstants.ConstructMeterUnit());
 
         private static Variable<double> GetPeriodVariable() =>
-            new Variable<double>(WaveParametersConstants.PeriodVariableName,
-                                 WaveParametersConstants.ConstructSecondUnit()) {DefaultValue = 1.0};
+            new Variable<double>(WaveTimeDependentParametersConstants.PeriodVariableName,
+                                 WaveTimeDependentParametersConstants.ConstructSecondUnit()) {DefaultValue = 1.0};
 
         private static Variable<double> GetDirectionVariable() =>
-            new Variable<double>(WaveParametersConstants.DirectionVariableName,
-                                 WaveParametersConstants.ConstructDegreesUnit());
+            new Variable<double>(WaveTimeDependentParametersConstants.DirectionVariableName,
+                                 WaveTimeDependentParametersConstants.ConstructDegreesUnit());
 
         private static Variable<double> GetSpreadingVariable() =>
-            new Variable<double>(WaveParametersConstants.SpreadingVariableName,
+            new Variable<double>(WaveTimeDependentParametersConstants.SpreadingVariableName,
                                  SpreadingConversion.GetSpreadingUnit<TSpreading>()) {DefaultValue = SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()};
 
         /// <summary>

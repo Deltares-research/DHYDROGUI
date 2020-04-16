@@ -151,7 +151,7 @@
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParametersFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IVisitableForcingTypeDefinedParameters.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveParametersConstants.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveTimeDependentParametersConstants.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactory.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShape.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShape.cs" />

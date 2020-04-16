@@ -58,10 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
-                return WaveParametersConstants.ConstructDegreesUnit();
+                return WaveTimeDependentParametersConstants.ConstructDegreesUnit();
 
             if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
-                return WaveParametersConstants.ConstructPowerUnit();
+                return WaveTimeDependentParametersConstants.ConstructPowerUnit();
 
             throw new NotSupportedException($"{typeof(TSpreading)} is not supported.");
         }

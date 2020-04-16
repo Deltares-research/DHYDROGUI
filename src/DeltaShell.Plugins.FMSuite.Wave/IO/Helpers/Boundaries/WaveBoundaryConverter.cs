@@ -199,15 +199,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             IEnumerable<DateTime> times = GetFunctionValues<DateTime>(
-                function.Arguments, WaveParametersConstants.TimeVariableName);
+                function.Arguments, WaveTimeDependentParametersConstants.TimeVariableName);
             IEnumerable<double> waveHeights = GetFunctionValues<double>(
-                function.Components, WaveParametersConstants.HeightVariableName);
+                function.Components, WaveTimeDependentParametersConstants.HeightVariableName);
             IEnumerable<double> periods = GetFunctionValues<double>(
-                function.Components, WaveParametersConstants.PeriodVariableName);
+                function.Components, WaveTimeDependentParametersConstants.PeriodVariableName);
             IEnumerable<double> spreadings = GetFunctionValues<double>(
-                function.Components, WaveParametersConstants.SpreadingVariableName);
+                function.Components, WaveTimeDependentParametersConstants.SpreadingVariableName);
             IEnumerable<double> directions = GetFunctionValues<double>(
-                function.Components, WaveParametersConstants.DirectionVariableName);
+                function.Components, WaveTimeDependentParametersConstants.DirectionVariableName);
 
             var waveFunction = new WaveEnergyFunction<TSpreading>();
             waveFunction.TimeArgument.SetValues(times);
