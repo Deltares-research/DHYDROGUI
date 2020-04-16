@@ -42,7 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_SupportPointToParametersMappingNull_ThrowsArgumentNullException()
         {
+            // Setup
             var generateSeries = Substitute.For<IGenerateSeries>();
+
+            // Call | Assert
             void Call() => new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(null, generateSeries);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -52,7 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_GenerateSeriesNull_ThrowsArgumentNullException()
         {
+            // Setup
             var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>();
+
+            // Call | Assert
             void Call() => new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -123,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
-            var otherSupportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            SupportPoint otherSupportPoint = GetDefaultSupportPoint();
 
             // Call
             viewModel.UpdateActiveSupportPoint(otherSupportPoint);
@@ -187,12 +193,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
                                                                                                      generateSeries);
 
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
-
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
-            var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            SupportPoint supportPoint = GetDefaultSupportPoint();
+
+            // Preconditions
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
             // Call
             viewModel.UpdateActiveSupportPoint(supportPoint);
