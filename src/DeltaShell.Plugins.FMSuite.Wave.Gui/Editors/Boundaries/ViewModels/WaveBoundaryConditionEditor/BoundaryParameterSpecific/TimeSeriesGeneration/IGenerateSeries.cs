@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="otherFunctions">The other functions if any.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="owner"/> or
-        /// <paramref name="selectedFunction"/> are <c>null</c>.
+        /// <paramref name="selectedFunction"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="System.NotSupportedException">
         /// Thrown when the selected <see cref="Forms.WaveSupportPointMode"/> is out of range.

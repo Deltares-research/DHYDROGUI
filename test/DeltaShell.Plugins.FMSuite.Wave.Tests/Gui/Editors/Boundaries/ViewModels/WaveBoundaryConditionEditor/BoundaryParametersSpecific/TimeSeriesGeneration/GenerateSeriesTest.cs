@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 dialogHelper.GetTimeSeriesGeneratorResponse(windowOwner, 
                                                             expectedDateTime,
                                                             expectedDateTime + TimeSpan.FromDays(1),
-                                                            TimeSpan.FromHours(1))
+                                                            TimeSpan.FromDays(1))
                             .Returns(timeSeriesDialog);
 
                 var generateSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);

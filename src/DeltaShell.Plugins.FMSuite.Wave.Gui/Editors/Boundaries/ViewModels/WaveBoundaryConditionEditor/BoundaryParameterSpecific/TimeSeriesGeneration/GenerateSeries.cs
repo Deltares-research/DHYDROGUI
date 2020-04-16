@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(dialogHelper, nameof(dialogHelper));
             Ensure.NotNull(referenceDateTimeProvider, nameof(referenceDateTimeProvider));
-            
+
             this.dialogHelper = dialogHelper;
             this.referenceDateTimeProvider = referenceDateTimeProvider;
         }
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 dialogHelper.GetTimeSeriesGeneratorResponse(owner,
                                                             referenceDateTimeProvider.ModelReferenceDateTime,
                                                             referenceDateTimeProvider.ModelReferenceDateTime + TimeSpan.FromDays(1.0),
-                                                            TimeSpan.FromHours(1.0)))
+                                                            TimeSpan.FromDays(1.0)))
             {
                 if (response.DialogResult != DialogResult.OK)
                 {
@@ -87,7 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             where TSpreading : IBoundaryConditionSpreading, new()
         {
             foreach (IWaveEnergyFunction<TSpreading> waveEnergyFunction in functions)
+            {
                 dialog.Apply(waveEnergyFunction.TimeArgument);
+            }
         }
     }
 }
