@@ -44,7 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_ActiveParametersViewModelNull_ThrowsArgumentNullException()
         {
+            // Setup
             var generateSeries = Substitute.For<IGenerateSeries>();
+
+            // Call | Assert
             void Call() => new UniformTimeDependentParametersSettingsViewModel<TSpreading>(null, generateSeries);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -54,7 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [Test]
         public void Constructor_GenerateSeriesNull_ThrowsArgumentNullException()
         {
+            // Setup
             var parameters = new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
+
+            // Call | Assert
             void Call() => new UniformTimeDependentParametersSettingsViewModel<TSpreading>(parameters, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
