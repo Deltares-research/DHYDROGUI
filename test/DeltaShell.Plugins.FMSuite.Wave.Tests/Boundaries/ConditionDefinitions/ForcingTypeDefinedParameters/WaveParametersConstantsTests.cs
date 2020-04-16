@@ -17,9 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructSecondUnit, 
                                            WaveTimeDependentParametersConstants.SecondUnitName, 
                                            WaveTimeDependentParametersConstants.SecondUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructEmptyUnit, 
-                                           WaveTimeDependentParametersConstants.EmptyUnitName, 
-                                           WaveTimeDependentParametersConstants.EmptyUnitSymbol);
             yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructDegreesUnit, 
                                            WaveTimeDependentParametersConstants.DegreesUnitName, 
                                            WaveTimeDependentParametersConstants.DegreesUnitSymbol);

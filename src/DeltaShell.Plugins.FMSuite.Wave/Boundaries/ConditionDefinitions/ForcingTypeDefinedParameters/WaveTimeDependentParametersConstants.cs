@@ -82,25 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         public const string SecondUnitSymbol = "s";
 
         /// <summary>
-        /// Gets a new empty <see cref="Unit"/>.
-        /// </summary>
-        /// <returns>
-        /// A new empty <see cref="Unit"/>.
-        /// </returns>
-        public static Unit ConstructEmptyUnit() => new Unit(EmptyUnitName, 
-                                                            EmptyUnitSymbol);
-
-        /// <summary>
-        /// The empty unit name.
-        /// </summary>
-        public const string EmptyUnitName = "";
-
-        /// <summary>
-        /// The empty unit symbol.
-        /// </summary>
-        public const string EmptyUnitSymbol = "-";
-
-        /// <summary>
         /// Constructs a new degrees <see cref="Unit"/>.
         /// </summary>
         /// <returns>
