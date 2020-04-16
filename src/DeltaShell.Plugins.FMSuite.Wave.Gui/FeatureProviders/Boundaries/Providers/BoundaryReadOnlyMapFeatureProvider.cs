@@ -14,18 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 {
     /// <summary>
     /// <see cref="BoundaryReadOnlyMapFeatureProvider"/> is responsible for
-    /// generating the features corresponding with the endpoints of all
-    /// <see cref="IWaveBoundary"/>.
+    /// generating the features corresponding with the the provided
+    /// <see cref="IFeaturesFromBoundaryBehaviour"/> of all
+    /// <see cref="IWaveBoundary"/> provided by the <see cref="IWaveBoundary"/>.
     /// </summary>
     /// <remarks>
     /// Several assumptions are made, which might be invalidated in future
     /// implementations, this will most likely require this class to be
     /// rewritten.
     ///
-    /// * It is assumed that <see cref="IWaveBoundary"/> are static, once placed.
-    ///   Follow up issues will most likely invalidate this invariant. In this
+    /// * It is assumed that the produced features are read-only, as such
+    ///   no methods are provided to interact with them.
+    ///   Follow up issues might invalidate this invariant. In this
     ///   case, <see cref="BoundaryReadOnlyMapFeatureProvider"/> will need to be
-    ///   extended or rewritten, to allow for operations on EndPoints.
+    ///   extended or rewritten, to allow for such operations.
     /// * Currently it assumed any features are not explicitly added , instead we assume
     ///   that once a <see cref="IWaveBoundary"/> is added through the
     ///   <see cref="BoundaryLineMapFeatureProvider"/>, a refresh is triggered,
@@ -65,6 +67,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
             FeatureType = typeof(Feature2DPoint);
         }
 
+        /// <summary>
+        /// Gets the collection of features.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Setting is currently not supported, implement when needed.</exception>
+        /// <remarks>
+        /// Note that calling the get method will create a new instance of the features list, with new instances
+        /// of features. As such it should be cached locally when possible.
+        /// </remarks>
         public override IList Features
         {
             get => boundaryProvider.Boundaries.SelectMany(featuresFromBoundaryBehaviour.Execute).ToList();
