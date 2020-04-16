@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
@@ -208,8 +209,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                                           model.BoundaryContainer);
                     var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
 
+                    var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, 
+                                                                                         new WaveLayerFactory(), 
+                                                                                         model.CoordinateSystem);
+
                     return new WaveBoundaryConditionEditorViewModel(data, 
-                                                                    geometryFactory, 
+                                                                    geometryPreviewConfigurator, 
                                                                     referenceDateTimeProvider);
                 },
                 CloseForData = (v, o) => v.Data.Equals(o)

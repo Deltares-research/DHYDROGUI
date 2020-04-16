@@ -1,8 +1,8 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor
 {
@@ -15,18 +15,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Creates a new instance of the <see cref="BoundaryGeometryViewModel" /> class.
         /// </summary>
         /// <param name="waveBoundary"> The observed <see cref="IWaveBoundary"/>.</param>
-        /// <param name="geometryFactory"> The geometry factory. </param>
+        /// <param name="previewMapConfigurator">The preview map configurator</param>
         /// <param name="supportPointDataComponentViewModel">The <see cref="SupportPointEditorViewModel"/> to view.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="waveBoundary"/> or
-        /// <paramref name="geometryFactory"/> is <c> null </c>.
+        /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public BoundaryGeometryViewModel(IWaveBoundary waveBoundary,
-                                         IWaveBoundaryGeometryFactory geometryFactory,
+                                         IGeometryPreviewMapConfigurator previewMapConfigurator,
                                          SupportPointDataComponentViewModel supportPointDataComponentViewModel)
         {
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
-            Ensure.NotNull(geometryFactory, nameof(geometryFactory));
+            Ensure.NotNull(previewMapConfigurator, nameof(previewMapConfigurator));
             Ensure.NotNull(supportPointDataComponentViewModel, 
                            nameof(supportPointDataComponentViewModel));
 
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                                                                           supportPointDataComponentViewModel);
             GeometryPreviewViewModel = new GeometryPreviewViewModel(waveBoundary, 
                                                                     supportPointDataComponentViewModel,
-                                                                    geometryFactory);
+                                                                    previewMapConfigurator);
         }
 
         /// <summary>

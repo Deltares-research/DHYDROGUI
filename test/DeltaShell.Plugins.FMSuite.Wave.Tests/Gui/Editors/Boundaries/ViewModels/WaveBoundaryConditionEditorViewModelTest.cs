@@ -7,11 +7,9 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -25,30 +23,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             WaveBoundary boundary = CreateBoundary();
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
-
-            var lineString = new LineString(new[]
-            {
-                new Coordinate(0, 0),
-                new Coordinate(1, 0),
-            });
-
-            factory.ConstructBoundarySupportPoint(null).ReturnsForAnyArgs(new Point(new Coordinate(5, 5)));
-            factory.ConstructBoundaryEndPoints(boundary).Returns(new[]
-            {
-                new Point(lineString.Coordinates[0]), 
-                new Point(lineString.Coordinates[1]), 
-            });
-
-
-            factory.ConstructBoundaryLineGeometry(boundary).Returns(lineString);
-
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             boundary.Name = "A Boundary Name";
 
             // Call
-            var viewModel = new WaveBoundaryConditionEditorViewModel(boundary, factory, referenceTimeProvider);
+            var viewModel = new WaveBoundaryConditionEditorViewModel(boundary, configurator, referenceTimeProvider);
 
             // Assert
             Assert.That(viewModel.Name, Is.EqualTo(boundary.Name),
@@ -67,11 +48,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_ObservedBoundaryNull_ThrowsArgumentNullException()
         {
             // Setup
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             // Call
-            void Call() => new WaveBoundaryConditionEditorViewModel(null, factory, referenceTimeProvider);
+            void Call() => new WaveBoundaryConditionEditorViewModel(null, configurator, referenceTimeProvider);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -79,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void Constructor_GeometryFactoryNull_ThrowsArgumentNullException()
+        public void Constructor_PreviewMapConfiguratorNull_ThrowsArgumentNullException()
         {
             // Setup
             var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
@@ -89,16 +70,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
+            Assert.That(exception.ParamName, Is.EqualTo("previewMapConfigurator"));
         }
 
         [Test]
         public void Constructor_ReferenceDateTimeProviderNull_ThrowsArgumentNullException()
         {
             // Setup
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
 
-            void Call() => new WaveBoundaryConditionEditorViewModel(CreateBoundary(), factory, null);
+            void Call() => new WaveBoundaryConditionEditorViewModel(CreateBoundary(), configurator, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);

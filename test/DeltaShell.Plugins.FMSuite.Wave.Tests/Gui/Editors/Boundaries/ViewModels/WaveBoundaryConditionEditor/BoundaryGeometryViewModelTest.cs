@@ -6,12 +6,10 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -46,29 +44,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var boundary = Substitute.For<IWaveBoundary>();
             boundary.GeometricDefinition.Returns(geometricDefinition);
 
-            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
-            var lineString = new LineString(new[]
-            {
-                new Coordinate(0, 0),
-                new Coordinate(1, 0),
-            });
-
-            geometryFactory.ConstructBoundarySupportPoint(null).ReturnsForAnyArgs(new Point(new Coordinate(5, 5)));
-            geometryFactory.ConstructBoundaryEndPoints(boundary).Returns(new[]
-            {
-                new Point(lineString.Coordinates[0]), 
-                new Point(lineString.Coordinates[1]), 
-            });
-
-
-            geometryFactory.ConstructBoundaryLineGeometry(boundary).Returns(lineString);
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
 
             SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
 
 
             // Call
             var viewModel = new BoundaryGeometryViewModel(boundary,
-                                                          geometryFactory,
+                                                          configurator,
                                                           dataComponentViewModel);
 
             // Assert
@@ -82,11 +65,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void Constructor_WaveBoundaryNull_ThrowsArgumentNullException()
         {
             // Setup
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
             SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
 
             // Call
-            void Call() => new BoundaryGeometryViewModel(null, factory, dataComponentViewModel);
+            void Call() => new BoundaryGeometryViewModel(null, configurator, dataComponentViewModel);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -105,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
+            Assert.That(exception.ParamName, Is.EqualTo("previewMapConfigurator"));
         }
 
         [Test]
@@ -113,10 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var waveBoundary = Substitute.For<IWaveBoundary>();
-            var factory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
 
             // Call
-            void Call() => new BoundaryGeometryViewModel(waveBoundary, factory, null);
+            void Call() => new BoundaryGeometryViewModel(waveBoundary, configurator, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
