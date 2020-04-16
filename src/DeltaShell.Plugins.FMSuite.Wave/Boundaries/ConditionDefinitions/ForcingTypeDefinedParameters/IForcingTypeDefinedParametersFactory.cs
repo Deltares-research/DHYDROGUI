@@ -70,7 +70,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
-        /// Constructs a new <see cref="TimeDependentParameters{TSpreading}"/> instance.
+        /// Creates a new <see cref="TimeDependentParameters{TSpreading}"/>
+        /// with the provided <paramref name="waveEnergyFunction"/>.
         /// </summary>
         /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
         /// <param name="waveEnergyFunction">The wave energy function.</param>
@@ -87,6 +88,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         TimeDependentParameters<TSpreading> ConstructTimeDependentParameters<TSpreading>(IWaveEnergyFunction<TSpreading> waveEnergyFunction)
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
+        /// <summary>
+        /// Converts the time dependent parameters from the <typeparamref name="TOldSpreading"/>
+        /// to <typeparamref name="TNewSpreading"/>.
+        /// </summary>
+        /// <typeparam name="TOldSpreading">The type of the old spreading.</typeparam>
+        /// <typeparam name="TNewSpreading">The type of the new spreading.</typeparam>
+        /// <param name="parameters">The time dependent parameters to change.</param>
+        /// <returns>
+        /// Time-dependent parameters with the spreading type adjusted to <typeparamref name="TNewSpreading"/>.
+        /// </returns>
         TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
