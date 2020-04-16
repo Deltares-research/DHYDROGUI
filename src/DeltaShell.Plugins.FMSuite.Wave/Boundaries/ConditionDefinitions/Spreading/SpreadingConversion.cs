@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
         /// </summary>
         /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
         /// <returns>
-        /// The unit corresponding with the <typeparamref name="TSpreading"/>
+        /// The unit corresponding with the <typeparamref name="TSpreading"/>.
         /// </returns>
         /// <exception cref="NotSupportedException">
         /// Thrown when <typeparamref name="TSpreading"/> is not supported.
