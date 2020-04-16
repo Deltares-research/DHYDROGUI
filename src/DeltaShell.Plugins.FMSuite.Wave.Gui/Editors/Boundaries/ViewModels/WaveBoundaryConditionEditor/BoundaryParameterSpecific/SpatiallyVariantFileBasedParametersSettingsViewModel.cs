@@ -33,18 +33,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             GroupBoxTitle = Resources.SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle;
         }
 
-        /// <summary>
-        /// Updates the currently selected <see cref="FileBasedParameters"/>
-        /// with the newly selected <paramref name="supportPoint"/>.
-        /// </summary>
-        /// <param name="supportPoint">The support point.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="supportPoint"/> is null.
-        /// </exception>
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
             FileBasedParameters correspondingParameters =
-                supportPoint != null &&
                 supportPointToParametersMapping.TryGetValue(supportPoint, out FileBasedParameters value)
                     ? value
                     : null;

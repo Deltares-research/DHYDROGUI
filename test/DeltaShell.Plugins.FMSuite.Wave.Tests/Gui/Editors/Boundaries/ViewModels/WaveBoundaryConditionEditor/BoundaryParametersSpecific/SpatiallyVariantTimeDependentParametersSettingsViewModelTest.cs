@@ -140,41 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void UpdateActiveSupportPoint_ObservedParameters_SupportPointNull()
-        {
-            // Setup
-            SupportPoint supportPoint = GetDefaultSupportPoint();
-            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>()
-            {
-                {supportPoint, GetDefaultParameters()}
-            };
-            
-            var generateSeries = Substitute.For<IGenerateSeries>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
-                                                                                                     generateSeries);
-
-            viewModel.UpdateActiveSupportPoint(supportPoint);
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
-
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
-
-            // Call
-            viewModel.UpdateActiveSupportPoint(null);
-
-            // Assert
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null);
-
-            Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(1));
-            Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
-
-            PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
-                        Is.EqualTo(nameof(SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
-        }
-
-
-        [Test]
         public void UpdateActiveSupportPoint_ObservedParameters_ValueAlreadySet()
         {
             // Setup
@@ -238,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void UpdateActiveSupportPoint_SupportPointNull_Sets()
+        public void UpdateActiveSupportPoint_SupportPointNull_ThrowsArgumentNullException()
         {
             // Setup
             var generateSeries = Substitute.For<IGenerateSeries>();
@@ -246,11 +211,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
                                                                                                      generateSeries);
 
-            // Call
-            viewModel.UpdateActiveSupportPoint(null);
+            // Call | Assert
+            void Call() => viewModel.UpdateActiveSupportPoint(null);
 
-            // Assert
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null); 
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
     }
 }

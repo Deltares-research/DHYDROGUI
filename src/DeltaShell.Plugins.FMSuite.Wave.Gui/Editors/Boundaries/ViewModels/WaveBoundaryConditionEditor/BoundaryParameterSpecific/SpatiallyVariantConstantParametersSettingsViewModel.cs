@@ -37,8 +37,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
             ConstantParameters<TSpreading> correspondingParameters =
-                supportPoint != null &&
                 supportPointToParametersMapping.TryGetValue(supportPoint, out ConstantParameters<TSpreading> value)
                     ? value
                     : null;

@@ -14,8 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// with the newly selected <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        /// Thrown when <paramref name="supportPoint"/> is null.
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         void UpdateActiveSupportPoint(SupportPoint supportPoint);
     }

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
         }
 
         [Test]
-        public void AnnounceSelectedSupportPointDataChanged()
+        public void AnnounceSelectedSupportPoint_DataChanged()
         {
             // Setup
             var selectedSupportPointDependentViewModel =
@@ -50,6 +50,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
 
             // Assert
             selectedSupportPointDependentViewModel.Received(1).UpdateSelectedActiveParameters(supportPoint);
+        }
+
+        [Test]
+        public void AnnounceSelectedSupportPoint_SupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var selectedSupportPointDependentViewModel =
+                Substitute.For<IRefreshDataComponentViewModel>();
+            var mediator = new DataComponentChangeMediator(selectedSupportPointDependentViewModel);
+
+            // Call | Assert
+            void Call() => mediator.AnnounceSelectedSupportPointDataChanged(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
 
         [Test]

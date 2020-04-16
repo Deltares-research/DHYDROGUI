@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 {
     /// <summary>
     /// <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/> defines the view model for the
-    /// ParametersSettingsView given spatially varying constant data.
+    /// TimeDependentParametersSettingsView given spatially varying time dependent data.
     /// </summary>
     /// <seealso cref="ConstantParameters{TSpreading}"/>
     /// <seealso cref="ISpatiallyVariantParametersSettingsViewModel"/>
@@ -42,8 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)
         {
+            Ensure.NotNull(supportPoint, nameof(supportPoint));
             TimeDependentParameters<TSpreading> correspondingParameters =
-                supportPoint != null &&
                 supportPointToParametersMapping.TryGetValue(supportPoint, out TimeDependentParameters<TSpreading> value)
                     ? value
                     : null;

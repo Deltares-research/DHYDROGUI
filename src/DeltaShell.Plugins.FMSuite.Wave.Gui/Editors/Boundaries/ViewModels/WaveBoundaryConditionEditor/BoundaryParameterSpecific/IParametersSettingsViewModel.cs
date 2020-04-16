@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 {
     /// <summary>
     /// <see cref="IParametersSettingsViewModel"/> defines the different parameter
-    /// settings view model used within the Boundary Parameters Specific Settings view.
+    /// settings view models used within the Boundary Parameters Specific Settings view.
     /// Currently, the following are defined:
     /// * <see cref="ConstantParametersSettingsViewModel"/>
     /// * <see cref="TimeDependentParametersSettingsViewModel"/>
