@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 {
     /// <summary>
     /// <see cref="SpatiallyVariantTimeDependentParametersSettingsViewModel{TSpreading}"/> defines the view model for the
-    /// TimeDependentParametersSettingsView given spatially varying time dependent data.
+    /// ParametersSettingsView given spatially varying time dependent data.
     /// </summary>
-    /// <seealso cref="ConstantParameters{TSpreading}"/>
+    /// <seealso cref="TimeDependentParameters{TSpreading}"/>
     /// <seealso cref="ISpatiallyVariantParametersSettingsViewModel"/>
     public sealed class SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading> : TimeDependentParametersSettingsViewModel, ISpatiallyVariantParametersSettingsViewModel
         where TSpreading : class, IBoundaryConditionSpreading, new()
