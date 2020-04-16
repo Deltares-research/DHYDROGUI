@@ -8,6 +8,7 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -208,10 +209,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             if (parentData is IHydroRegion hydroRegion 
-                && parentData is IDrainageBasin drainageBasin
                 && parentData as HydroArea == null)
             {
-                return GenerateDrainageBasinLayer(hydroRegion, drainageBasin, data);
+                return GenerateDrainageBasinLayer(hydroRegion, data);
             }
 
             
@@ -549,8 +549,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        private static ILayer GenerateDrainageBasinLayer(IHydroRegion hydroRegion, IDrainageBasin drainageBasin, object data)
+        private static ILayer GenerateDrainageBasinLayer(IHydroRegion hydroRegion, object data)
         {
+            var drainageBasin = hydroRegion as IDrainageBasin;
             switch (data)
             {
                 case IEventedList<HydroLink> links:
@@ -559,16 +560,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         Visible = true,
                         Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin != null),
                         NameIsReadOnly = true,
-                        DataSource = new ComplexFeatureCollection(drainageBasin, 
-                            (IList)hydroRegion.Links, typeof(HydroLink))
-                        ,
+                        DataSource = new FeatureCollection { Features = (IList)hydroRegion.Links, FeatureType = typeof(HydroLink), CoordinateSystem = hydroRegion.CoordinateSystem },
                         FeatureEditor = new HydroLinkFeatureEditor
                         {
-                            SnapRules = {new HydroLinkSnapRule {Obligatory = true, PixelGravity = 40}},
+                            SnapRules = { new HydroLinkSnapRule { Obligatory = true, PixelGravity = 40 } },
                             Region = hydroRegion
                         }
                     };
-                case IEventedList<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants:
+                case IEventedList<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants when drainageBasin != null:
                     return new VectorLayer("Wastewater Treatment Plants")
                     {
                         Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
@@ -582,7 +581,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             },
                         FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
                     };
-                case IEventedList<RunoffBoundary> runoffBoundaries:
+                case IEventedList<RunoffBoundary> runoffBoundaries when drainageBasin != null:
                     return new VectorLayer("Runoff Boundaries")
                     {
                         Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
@@ -593,9 +592,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             ,
                         FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
                     };
-                case IEventedList<Catchment> catchments:
+                case IEventedList<Catchment> catchments when drainageBasin != null:
                 {
-                    var flattenedCatchments = catchments.SelectMany(c => new[] {c}.Concat(c.SubCatchments));
+                    var flattenedCatchments = catchments.Select(c => c).Concat(catchments.Flatten(c => c.SubCatchments));
 
                     var centerLayers = new VectorLayer
                     {
