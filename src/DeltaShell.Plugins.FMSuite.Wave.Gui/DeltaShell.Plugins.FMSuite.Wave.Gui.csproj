@@ -161,6 +161,8 @@
     <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\SpatialDefinitionViewType.cs" />
     <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
+    <Compile Include="Editors\Boundaries\Factories\GeometryPreviewMapConfigurator.cs" />
+    <Compile Include="Editors\Boundaries\Factories\IGeometryPreviewMapConfigurator.cs" />
     <Compile Include="Editors\Boundaries\Factories\IViewDataComponentFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\IViewShapeFactory.cs" />
     <Compile Include="Editors\Boundaries\Factories\ViewDataComponentFactory.cs" />

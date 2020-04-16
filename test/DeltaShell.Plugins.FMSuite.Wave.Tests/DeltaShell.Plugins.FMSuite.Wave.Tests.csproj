@@ -47,7 +47,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49392\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="DelftTools.Controls.Wpf">
+    <Reference Include="DelftTools.Controls.Wpf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.49392\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -261,6 +261,7 @@
     <Compile Include="Gui\Editors\Boundaries\Enums\PeriodViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\SpatialDefinitionViewTypeTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensionsTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Factories\GeometryPreviewMapConfiguratorTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Factories\ViewDataComponentFactoryTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Factories\ViewShapeFactoryTest.cs" />
     <Compile Include="Gui\Editors\Boundaries\Mediators\DataComponentChangeMediatorTest.cs" />
