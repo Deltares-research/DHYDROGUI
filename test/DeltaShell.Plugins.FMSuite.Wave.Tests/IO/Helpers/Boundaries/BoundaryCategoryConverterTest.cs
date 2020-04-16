@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private readonly Random random = new Random();
 
         private double RandomDouble => Math.Round(random.NextDouble(), 3);
+        private double RandomInt => random.Next(100);
 
         [Test]
         public void Convert_BoundaryCategoryNull_ThrowsArgumentNullException()
@@ -41,12 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        [TestCaseSource(nameof(GetTestCases))]
-        public void Convert_ReturnsCorrectResult(string spectrumTypeStr, SpectrumImportType expectedSpectrumType,
-                                                 string shapeTypeStr, ShapeImportType expectedShapeType,
-                                                 string periodTypeStr, PeriodImportExportType expectedPeriodType,
-                                                 string spreadingTypeStr, SpreadingImportType expectedSpreadingType,
-                                                 string definitionTypeStr, DefinitionImportType expectedDefinitionType)
+        [TestCaseSource(nameof(GetParameterizedTestCases))]
+        public void Convert_ParameterizedImportType_ReturnsCorrectResult(string shapeTypeStr, ShapeImportType expectedShapeType,
+                                                                         string periodTypeStr, PeriodImportExportType expectedPeriodType,
+                                                                         string spreadingTypeStr, SpreadingImportType expectedSpreadingType,
+                                                                         string definitionTypeStr, DefinitionImportType expectedDefinitionType)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
             category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
             category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, spectrumTypeStr);
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.Parametrized.GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
             category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
             Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
             Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
-            Assert.That(result.SpectrumType, Is.EqualTo(expectedSpectrumType));
+            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
             Assert.That(result.ShapeType, Is.EqualTo(expectedShapeType));
             Assert.That(result.PeriodType, Is.EqualTo(expectedPeriodType));
             Assert.That(result.SpreadingType, Is.EqualTo(expectedSpreadingType));
@@ -114,14 +114,72 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
+        [TestCaseSource(nameof(GetFromFileTestCases))]
+        public void Convert_FromFileImportType_ReturnsCorrectResult(string shapeTypeStr, string periodTypeStr, string spreadingTypeStr, string definitionTypeStr, DefinitionImportType expectedDefinitionType)
+        {
+            // Setup
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            const string name = "boundary_name";
+            double startX = RandomDouble;
+            double startY = RandomDouble;
+            double endX = RandomDouble;
+            double endY = RandomDouble;
+            double distance1 = RandomDouble;
+            double distance2 = RandomDouble;
+            string spectrum1 = "spectrum file " + RandomInt;
+            string spectrum2 = "spectrum file " + RandomInt;
+            double peakEnhancementFactor = RandomDouble;
+            double gaussianSpread = RandomDouble;
+
+            category.AddProperty(KnownWaveProperties.Name, name);
+            category.AddProperty(KnownWaveProperties.Definition, definitionTypeStr);
+            category.AddProperty(KnownWaveProperties.StartCoordinateX, ToString(startX));
+            category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
+            category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
+            category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.FromFile.GetDescription());
+            category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
+            category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
+            category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
+            category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
+            category.AddProperty(KnownWaveProperties.Spectrum, spectrum1);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance2));
+            category.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
+
+            // Call
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+
+            // Assert
+            Assert.That(result.Name, Is.EqualTo(name));
+            Assert.That(result.DefinitionType, Is.EqualTo(expectedDefinitionType));
+            Assert.That(result.XStartCoordinate, Is.EqualTo(startX));
+            Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
+            Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
+            Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
+            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
+            Assert.That(result.ShapeType, Is.EqualTo(ShapeImportType.Gauss));
+            Assert.That(result.PeriodType, Is.EqualTo(PeriodImportExportType.Mean));
+            Assert.That(result.SpreadingType, Is.EqualTo(SpreadingImportType.Degrees));
+            Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
+            Assert.That(result.SpectrumFiles, Is.EqualTo(new[]
+            {
+                spectrum1,
+                spectrum2
+            }));
+        }
+
+        [Test]
         public void Convert_PropertyWithDoubleValueNotFound_ReturnsCorrectResult()
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.Parametrized.GetDescription());
             category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionImportType>().GetDescription());
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, random.NextEnumValue<SpectrumImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
@@ -138,27 +196,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.PeakEnhancementFactor, Is.NaN);
         }
 
-        private static IEnumerable<TestCaseData> GetTestCases()
+        private static IEnumerable<TestCaseData> GetParameterizedTestCases()
         {
-            foreach (object[] spectrumTypeCase in SpectrumTypeTestCases())
             foreach (object[] shapeTypeCase in ShapeTypeTestCases())
             foreach (object[] periodTypeCase in PeriodTypeTestCases())
             foreach (object[] spreadingTypeCase in SpreadingTypeTestCases())
             foreach (object[] definitionTypeCase in DefinitionTypeTestCases())
             {
-                yield return new TestCaseData(
-                    spectrumTypeCase[0], spectrumTypeCase[1],
-                    shapeTypeCase[0], shapeTypeCase[1],
-                    periodTypeCase[0], periodTypeCase[1],
-                    spreadingTypeCase[0], spreadingTypeCase[1],
-                    definitionTypeCase[0], definitionTypeCase[1]);
+                yield return new TestCaseData(shapeTypeCase[0], shapeTypeCase[1],
+                                              periodTypeCase[0], periodTypeCase[1],
+                                              spreadingTypeCase[0], spreadingTypeCase[1],
+                                              definitionTypeCase[0], definitionTypeCase[1]);
             }
         }
 
-        private static IEnumerable<object[]> SpectrumTypeTestCases()
+        private static IEnumerable<TestCaseData> GetFromFileTestCases()
         {
-            yield return SubTestCase("from file", SpectrumImportType.FromFile);
-            yield return SubTestCase("parametric", SpectrumImportType.Parametrized);
+            foreach (object[] shapeTypeCase in ShapeTypeTestCases())
+            foreach (object[] periodTypeCase in PeriodTypeTestCases())
+            foreach (object[] spreadingTypeCase in SpreadingTypeTestCases())
+            foreach (object[] definitionTypeCase in DefinitionTypeTestCases())
+            {
+                yield return new TestCaseData(shapeTypeCase[0],
+                                              periodTypeCase[0],
+                                              spreadingTypeCase[0],
+                                              definitionTypeCase[0],
+                                              definitionTypeCase[1]);
+            }
         }
 
         private static IEnumerable<object[]> ShapeTypeTestCases()
@@ -204,9 +268,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             };
         }
 
-        private static string ToString(double value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
+        private static string ToString(double value) => value.ToString(CultureInfo.InvariantCulture);
     }
 }

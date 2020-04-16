@@ -9,16 +9,16 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
-    /// Helper factory for creating an <see cref="ISpatiallyDefinedDataComponent" /> from import data.
+    /// Helper factory for creating an <see cref="ISpatiallyDefinedDataComponent"/> from import data.
     /// </summary>
     public interface IImportBoundaryConditionDataComponentFactory
     {
         /// <summary>
         /// Constructs a uniform constant data component from the
-        /// specified <paramref name="parametersBlock" />.
+        /// specified <paramref name="parametersBlock"/>.
         /// </summary>
-        /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
-        /// <param name="parametersBlock"> The parameters block. </param>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
+        /// <param name="parametersBlock">The parameters block.</param>
         /// <returns>
         /// The constructed uniform constant data component, if <paramref name="parametersBlock"/>
         /// is specified; otherwise the data component with default constant parameters.
@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         /// <summary>
         /// Constructs a uniform time dependent data component from the
-        /// specified <paramref name="waveEnergyFunction" />.
+        /// specified <paramref name="waveEnergyFunction"/>.
         /// </summary>
-        /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
-        /// <param name="waveEnergyFunction"> The wave energy function. </param>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
+        /// <param name="waveEnergyFunction">The wave energy function.</param>
         /// <returns>
         /// The constructed uniform time dependent data component.
         /// </returns>
@@ -45,11 +45,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
-        /// Constructs a spatially varying constant data component from the
-        /// specified <paramref name="dataPerSupportPoint" />.
+        /// Constructs a uniform file based data component from the
+        /// specified <paramref name="filePath"/>.
         /// </summary>
-        /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
-        /// <param name="dataPerSupportPoint"> The support points with their respective parameters block. </param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>
+        /// The constructed uniform file based data component, if <paramref name="filePath"/>
+        /// is specified; otherwise the data component with default file based parameters.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c>.
+        /// </exception>
+        UniformDataComponent<FileBasedParameters> CreateUniformFileBasedComponent(string filePath);
+
+        /// <summary>
+        /// Constructs a spatially varying constant data component from the
+        /// specified <paramref name="dataPerSupportPoint"/>.
+        /// </summary>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
+        /// <param name="dataPerSupportPoint">The support points with their respective parameters block.</param>
         /// <returns>
         /// The constructed spatially varying constant data component.
         /// </returns>
@@ -61,10 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         /// <summary>
         /// Constructs a spatially varying time dependent data component from the
-        /// specified <paramref name="dataPerSupportPoint" />.
+        /// specified <paramref name="dataPerSupportPoint"/>.
         /// </summary>
-        /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
-        /// <param name="dataPerSupportPoint"> The support points with their respective wave energy function. </param>
+        /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
+        /// <param name="dataPerSupportPoint">The support points with their respective wave energy function.</param>
         /// <returns>
         /// The constructed spatially varying time dependent data component.
         /// </returns>
@@ -73,5 +87,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// </exception>
         SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>> CreateSpatiallyVaryingTimeDependentComponent<TSpreading>(IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<TSpreading>>> dataPerSupportPoint)
             where TSpreading : class, IBoundaryConditionSpreading, new();
+
+        /// <summary>
+        /// Constructs a spatially varying file based data component from the
+        /// specified <paramref name="dataPerSupportPoint"/>.
+        /// </summary>
+        /// <param name="dataPerSupportPoint">The support points with their respective file paths.</param>
+        /// <returns>
+        /// The constructed spatially varying file based data component.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="dataPerSupportPoint"/> is <c>null</c>.
+        /// </exception>
+        SpatiallyVaryingDataComponent<FileBasedParameters> CreateSpatiallyVaryingFileBasedComponent(IEnumerable<Tuple<SupportPoint, string>> dataPerSupportPoint);
     }
 }

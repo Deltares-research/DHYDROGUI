@@ -108,5 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Gets or sets the directional spreadings at the support points.
         /// </summary>
         public double[] DirectionalSpreadings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the spectrum file paths the support points.
+        /// </summary>
+        public string[] SpectrumFiles { get; set; }
     }
 }

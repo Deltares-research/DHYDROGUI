@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(exception.ParamName, Is.EqualTo("timeSeriesData"));
         }
 
+        [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_DelftIniCategory_WithUniformConstantData_ReturnsCorrectUniformConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
@@ -137,6 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
         }
 
+        [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_DelftIniCategory_WithUniformTimeDependentData_ReturnsCorrectUniformTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
@@ -178,6 +180,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
             Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
             Assert.That(conditionDefinition.PeriodType, Is.EqualTo(expectedPeriod));
+            Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
+        }
+
+        [Test]
+        public void Convert_DelftIniCategory_WithUniformFileBasedData_ReturnsCorrectUniformConstantWaveBoundary()
+        {
+            // Setup
+            double peakEnhancementFactor = RandomDouble;
+            double gaussianSpreading = RandomDouble;
+            var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+
+            var uniformDataComponent = new UniformDataComponent<FileBasedParameters>(parametersFactory.ConstructDefaultFileBasedParameters());
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+
+            importDataComponentFactory.CreateUniformFileBasedComponent(mdwValues.SpectrumFiles.First())
+                                      .Returns(uniformDataComponent);
+
+            DelftIniCategory[] categories =
+            {
+                GetUniformFileBasedCategory(mdwValues)
+            };
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+                                                  .ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            IWaveBoundary waveBoundary = result[0];
+            Assert.That(waveBoundary.Name, Is.EqualTo("boundary_name"));
+            Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+
+            IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
         }
 
@@ -283,9 +324,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(spatiallyVaryingDataComponent));
         }
 
-        [TestCase("from file")]
         [TestCase("non_parametrized")]
-        public void Convert_DelftIniCategory_WithNonParametrizedData_ThrowsNotImplementedException(string spectrumSpec)
+        public void Convert_DelftIniCategory_WithNonParametrizedData_ThrowsNotSupportedException(string spectrumSpec)
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
@@ -303,11 +343,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>())
-                                    .ToList();
+            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>()).ToList();
 
             // Assert
-            Assert.Throws<NotImplementedException>(Call);
+            Assert.Throws<NotSupportedException>(Call);
         }
 
         [Test]
@@ -555,6 +594,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                      string spectrumSpec = "parametric",
                                                      string definition = "xy-coordinates")
         {
+            DelftIniCategory category = GetBoundaryCategory(values, spectrumSpec, definition);
+
+            category.AddProperty(KnownWaveProperties.ShapeType, shapeType.GetDescription());
+            category.AddProperty(KnownWaveProperties.PeriodType, periodType.GetDescription());
+            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingType.GetDescription());
+
+            return category;
+        }
+
+        private static DelftIniCategory GetBoundaryCategory(MdwTestValues values,
+                                                            string spectrumSpec = "parametric",
+                                                            string definition = "xy-coordinates")
+        {
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
             category.AddProperty(KnownWaveProperties.Definition, definition);
@@ -566,19 +618,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             category.AddProperty(KnownWaveProperties.SpectrumSpec, spectrumSpec);
 
-            category.AddProperty(KnownWaveProperties.ShapeType, shapeType.GetDescription());
-            category.AddProperty(KnownWaveProperties.PeriodType, periodType.GetDescription());
-            category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingType.GetDescription());
-
             category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(values.PeakEnhancementFactor));
             category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(values.GaussianSpreading));
-
             return category;
         }
 
         private DelftIniCategory GetUniformConstantCategory(ShapeImportType shapeType, PeriodImportExportType periodType, MdwTestValues values)
         {
             DelftIniCategory category = GetBoundaryCategory(shapeType, periodType, values);
+
+            AddParametersToCategory(values, category, 0);
+
+            return category;
+        }
+
+        private DelftIniCategory GetUniformFileBasedCategory(MdwTestValues values)
+        {
+            DelftIniCategory category = GetBoundaryCategory(values, "from file");
 
             AddParametersToCategory(values, category, 0);
 
@@ -618,6 +674,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.Period, ToString(values.Periods[i]));
             category.AddProperty(KnownWaveProperties.Direction, ToString(values.Directions[i]));
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(values.DirSpreadings[i]));
+            category.AddProperty(KnownWaveProperties.Spectrum, values.SpectrumFiles[i]);
         }
 
         private static Dictionary<string, List<IFunction>> CreateUniformTimeSeriesData(BcwTestValues bcwValues) =>
@@ -703,6 +760,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             public readonly double[] Directions = GetDataForThreeLocations();
 
             public readonly double[] DirSpreadings = GetDataForThreeLocations();
+
+            public readonly string[] SpectrumFiles = new []
+            {
+                "file 1",
+                "file 2",
+                "file 3"
+            };
 
             private static double[] GetDataForThreeLocations()
             {

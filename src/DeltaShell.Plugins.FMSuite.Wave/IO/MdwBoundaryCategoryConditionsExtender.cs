@@ -56,23 +56,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 return;
             }
 
-            string spreadingValue;
             switch (conditionDefinition.DataComponent)
             {
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
-                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
-                    spreadingValue = KnownWaveBoundariesFileConstants.DegreesDefinedSpreading;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _: {}
+                    boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
                     break;
                 case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
-                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
-                    spreadingValue = KnownWaveBoundariesFileConstants.PowerDefinedSpreading;
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _: {}
+                    boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
+                    break;
+                case UniformDataComponent<FileBasedParameters> _:
+                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
                     break;
                 default:
-                    throw new NotSupportedException(
-                        "The type of the specified dataComponent does not correspond with a supported type");
+                    throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }
-
-            boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingValue);
         }
 
         private class Visitor : IBoundaryConditionVisitor, IShapeVisitor, ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor, ISpreadingVisitor
@@ -187,6 +186,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
 
                 new T().AcceptVisitor(this);
+            }
+
+            public void Visit(FileBasedParameters fileBasedParameters)
+            {
+                Ensure.NotNull(fileBasedParameters, nameof(fileBasedParameters));
+                hasConstantValues = false;
+                if (!isUniform)
+                {
+                    BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
+                                                 SupportPoints[supportPointCounter].Distance);
+                    supportPointCounter++;
+                }
+
+                BoundaryCategory.AddProperty(KnownWaveProperties.Spectrum, fileBasedParameters.FilePath);
             }
 
             /// <summary>

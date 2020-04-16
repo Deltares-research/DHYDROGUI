@@ -35,7 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
 
         public void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor)
         {
-            throw new NotSupportedException();
+            Ensure.NotNull(visitor, nameof(visitor));
+            visitor.Visit(this);
         }
     }
 }

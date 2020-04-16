@@ -1,19 +1,19 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
@@ -23,10 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public class WaveBoundaryConverter
     {
+        private const double doublePrecision = 1E-5;
         private readonly IImportBoundaryConditionDataComponentFactory importDataComponentFactory;
         private readonly IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory;
-
-        private const double doublePrecision = 1E-5;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveBoundaryConverter"/> class.
@@ -111,46 +110,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             IBoundaryConditionShape shape = GetShape(boundaryBlock);
             BoundaryConditionPeriodType periodType = GetPeriodType(boundaryBlock);
             ISpatiallyDefinedDataComponent dataComponent = CreateDataComponent(boundaryBlock,
-                                                                                timeSeriesData,
-                                                                                geometricDefinition);
+                                                                               timeSeriesData,
+                                                                               geometricDefinition);
 
             return new WaveBoundaryConditionDefinition(shape, periodType, dataComponent);
         }
 
         private ISpatiallyDefinedDataComponent CreateParametrizedDataComponent(BoundaryMdwBlock boundaryBlock,
-                                                                                IList<IFunction> timeSeriesData,
-                                                                                IWaveBoundaryGeometricDefinition
-                                                                                    geometricDefinition)
+                                                                               IList<IFunction> timeSeriesData,
+                                                                               IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             switch (boundaryBlock.SpreadingType)
             {
                 case SpreadingImportType.Power:
-                    return CreateDataComponent<PowerDefinedSpreading>(boundaryBlock, timeSeriesData,
-                                                                      geometricDefinition);
+                    return CreateDataComponent<PowerDefinedSpreading>(boundaryBlock, timeSeriesData, geometricDefinition);
                 case SpreadingImportType.Degrees:
-                    return CreateDataComponent<DegreesDefinedSpreading>(boundaryBlock, timeSeriesData,
-                                                                        geometricDefinition);
+                    return CreateDataComponent<DegreesDefinedSpreading>(boundaryBlock, timeSeriesData, geometricDefinition);
                 default:
                     throw new NotSupportedException($"Value '{boundaryBlock.SpreadingType}' is not a valid spreading type.");
             }
         }
 
-        private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
-                                                                    IList<IFunction> timeSeriesData,
-                                                                    IWaveBoundaryGeometricDefinition
-                                                                        geometricDefinition)
+        private ISpatiallyDefinedDataComponent CreateFileBasedDataComponent(BoundaryMdwBlock boundaryBlock, IWaveBoundaryGeometricDefinition geometricDefinition)
         {
-            if (boundaryBlock.SpectrumType == SpectrumImportType.Parametrized)
+            if (IsSpatiallyVariant(boundaryBlock))
             {
-                return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
+                IEnumerable<SupportPoint> supportPoints = boundaryBlock.Distances.Select(d => GetSupportPointWithDistance(geometricDefinition, d));
+                return importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(supportPoints.Zip(boundaryBlock.SpectrumFiles, Tuple.Create));
             }
 
-            throw new NotImplementedException();
+            return importDataComponentFactory.CreateUniformFileBasedComponent(GetFilePaths(boundaryBlock).FirstOrDefault());
+        }
+
+        private static IEnumerable<string> GetFilePaths(BoundaryMdwBlock boundaryBlock) => boundaryBlock.SpectrumFiles;
+
+        private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
+                                                                   IList<IFunction> timeSeriesData,
+                                                                   IWaveBoundaryGeometricDefinition
+                                                                       geometricDefinition)
+        {
+            switch (boundaryBlock.SpectrumType)
+            {
+                case SpectrumImportType.Parametrized:
+                    return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
+                case SpectrumImportType.FromFile:
+                    return CreateFileBasedDataComponent(boundaryBlock, geometricDefinition);
+                default:
+                    throw new NotSupportedException($"Spectrum type {boundaryBlock.SpectrumType} is not supported.");
+            }
         }
 
         private ISpatiallyDefinedDataComponent CreateDataComponent<TSpreading>(BoundaryMdwBlock boundaryBlock,
-                                                                                IList<IFunction> functions,
-                                                                                IWaveBoundaryGeometricDefinition geometricDefinition)
+                                                                               IList<IFunction> functions,
+                                                                               IWaveBoundaryGeometricDefinition geometricDefinition)
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             if (IsSpatiallyVariant(boundaryBlock))
@@ -219,13 +231,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return waveFunction;
         }
 
-        private static IEnumerable<T> GetFunctionValues<T>(IEnumerable<IVariable> components, string componentName)
-        {
-            return components.GetByName(componentName).Values.OfType<T>();
-        }
+        private static IEnumerable<T> GetFunctionValues<T>(IEnumerable<IVariable> components, string componentName) => components.GetByName(componentName).Values.OfType<T>();
 
-        private static void CreateSupportPoints(BoundaryMdwBlock boundaryBlock,
-                                                IWaveBoundaryGeometricDefinition geometricDefinition)
+        private static void CreateSupportPoints(BoundaryMdwBlock boundaryBlock, IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             IEnumerable<double> existingDistances = geometricDefinition.SupportPoints.Select(s => s.Distance);
 
@@ -236,15 +244,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             geometricDefinition.SupportPoints.AddRange(newSupportPoints);
         }
 
-        private static bool IsSpatiallyVariant(BoundaryMdwBlock boundaryBlock)
-        {
-            return boundaryBlock.Distances.Any();
-        }
+        private static bool IsSpatiallyVariant(BoundaryMdwBlock boundaryBlock) => boundaryBlock.Distances.Any();
 
-        private static bool IsTimeDependent(IList<IFunction> functions)
-        {
-            return functions != null;
-        }
+        private static bool IsTimeDependent(IList<IFunction> functions) => functions != null;
 
         private static BoundaryConditionPeriodType GetPeriodType(BoundaryMdwBlock boundaryBlock)
         {
@@ -274,16 +276,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private static SupportPoint GetSupportPointWithDistance(IWaveBoundaryGeometricDefinition geometricDefinition,
-                                                                double d)
+        private static SupportPoint GetSupportPointWithDistance(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
         {
             return geometricDefinition.SupportPoints.FirstOrDefault(s => DoubleEquals(s.Distance, d));
         }
 
-        private static bool DoubleEquals(double valueA, double valueB)
-        {
-            return Math.Abs(valueA - valueB) < doublePrecision;
-        }
+        private static bool DoubleEquals(double valueA, double valueB) => Math.Abs(valueA - valueB) < doublePrecision;
 
         private static bool Exists(IEnumerable<double> values, double value)
         {

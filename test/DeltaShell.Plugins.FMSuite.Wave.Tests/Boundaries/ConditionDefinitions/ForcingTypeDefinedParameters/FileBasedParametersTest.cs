@@ -36,17 +36,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void AcceptVisitor_ThrowsNotSupportedExceptionForFileBasedParameters()
+        public void AcceptVisitor_CallsCorrectVisitorMethodForFileBasedParameters()
         {
             // Setup
-            var fileBasedParameters = new FileBasedParameters("test");
+            var boundaryConditionParameters = new FileBasedParameters("path");
             var visitor = Substitute.For<IForcingTypeDefinedParametersVisitor>();
 
             // Call
-            void Call() => fileBasedParameters.AcceptVisitor(visitor);
+            boundaryConditionParameters.AcceptVisitor(visitor);
 
             // Assert
-            Assert.Throws<NotSupportedException>(Call);
+            visitor.Received(1).Visit(boundaryConditionParameters);
         }
     }
 }

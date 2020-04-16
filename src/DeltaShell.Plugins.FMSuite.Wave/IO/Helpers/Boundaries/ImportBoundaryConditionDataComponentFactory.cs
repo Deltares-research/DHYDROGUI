@@ -10,19 +10,19 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
-    /// Helper factory for creating an <see cref="ISpatiallyDefinedDataComponent" /> from import data.
+    /// Helper factory for creating an <see cref="ISpatiallyDefinedDataComponent"/> from import data.
     /// </summary>
-    /// <seealso cref="IImportBoundaryConditionDataComponentFactory" />
+    /// <seealso cref="IImportBoundaryConditionDataComponentFactory"/>
     public class ImportBoundaryConditionDataComponentFactory : IImportBoundaryConditionDataComponentFactory
     {
         private readonly IForcingTypeDefinedParametersFactory parametersFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImportBoundaryConditionDataComponentFactory" /> class.
+        /// Initializes a new instance of the <see cref="ImportBoundaryConditionDataComponentFactory"/> class.
         /// </summary>
         /// <param name="parametersFactory"> The parameters factory. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="parametersFactory" /> is <c> null </c>.
+        /// Thrown when <paramref name="parametersFactory"/> is <c> null </c>.
         /// </exception>
         public ImportBoundaryConditionDataComponentFactory(IForcingTypeDefinedParametersFactory parametersFactory)
         {
@@ -52,6 +52,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return new UniformDataComponent<TimeDependentParameters<TSpreading>>(timeDependentParameters);
         }
 
+        public UniformDataComponent<FileBasedParameters> CreateUniformFileBasedComponent(string filePath)
+        {
+            FileBasedParameters parameters = filePath != null
+                                                 ? new FileBasedParameters(filePath)
+                                                 : parametersFactory.ConstructDefaultFileBasedParameters();
+
+            return new UniformDataComponent<FileBasedParameters>(parameters);
+        }
+
         public SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>> CreateSpatiallyVaryingConstantComponent<TSpreading>(
             IEnumerable<Tuple<SupportPoint, ParametersBlock>> dataPerSupportPoint) where TSpreading : class, IBoundaryConditionSpreading, new()
         {
@@ -77,6 +86,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             foreach (Tuple<SupportPoint, IWaveEnergyFunction<TSpreading>> v in dataPerSupportPoint)
             {
                 dataComponent.AddParameters(v.Item1, parametersFactory.ConstructTimeDependentParameters(v.Item2));
+            }
+
+            return dataComponent;
+        }
+
+        public SpatiallyVaryingDataComponent<FileBasedParameters> CreateSpatiallyVaryingFileBasedComponent(IEnumerable<Tuple<SupportPoint, string>> dataPerSupportPoint)
+        {
+            Ensure.NotNull(dataPerSupportPoint, nameof(dataPerSupportPoint));
+
+            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+
+            foreach (Tuple<SupportPoint, string> v in dataPerSupportPoint)
+            {
+                dataComponent.AddParameters(v.Item1, new FileBasedParameters(v.Item2));
             }
 
             return dataComponent;
