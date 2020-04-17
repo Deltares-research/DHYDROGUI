@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Functions;
@@ -17,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         protected TimeDependentParametersViewModel()
         {
-            GenerateTimeSeriesCommand = new RelayCommand(view => GenerateSeries((IWin32Window) view));
+            GenerateTimeSeriesCommand = new RelayCommand(_ => GenerateSeries());
         }
 
         /// <summary>
@@ -34,8 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Generates the time series for the contained time dependent functions.
         /// </summary>
-        /// <param name="owner">The owning window required for user prompts.</param>
-        protected abstract void GenerateSeries(IWin32Window owner);
+        protected abstract void GenerateSeries();
     }
 
 }

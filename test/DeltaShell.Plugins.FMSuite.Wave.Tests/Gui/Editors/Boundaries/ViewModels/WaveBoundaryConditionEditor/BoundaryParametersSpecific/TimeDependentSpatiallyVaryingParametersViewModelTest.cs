@@ -129,8 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.GenerateTimeSeriesCommand.Execute(window);
             
             // Assert
-            generateSeries.Received(1).Execute(Arg.Is(window), 
-                                               Arg.Is(waveEnergyFunction), 
+            generateSeries.Received(1).Execute(Arg.Is(waveEnergyFunction), 
                                                Arg.Is<IEnumerable<IWaveEnergyFunction<TSpreading>>>(x => x.SequenceEqual(otherFunctions)));
         }
     }

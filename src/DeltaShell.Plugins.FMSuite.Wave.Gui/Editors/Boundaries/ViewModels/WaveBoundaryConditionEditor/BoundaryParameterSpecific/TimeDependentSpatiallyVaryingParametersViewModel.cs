@@ -53,9 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
 
-        protected override void GenerateSeries(IWin32Window owner) => 
-            generateSeries.Execute(owner, 
-                                   ObservedParameters.WaveEnergyFunction, 
+        protected override void GenerateSeries() => 
+            generateSeries.Execute(ObservedParameters.WaveEnergyFunction, 
                                    supportPointToParametersMapping.Values
                                                                   .Where(p => p != ObservedParameters)
                                                                   .Select(p => p.WaveEnergyFunction));

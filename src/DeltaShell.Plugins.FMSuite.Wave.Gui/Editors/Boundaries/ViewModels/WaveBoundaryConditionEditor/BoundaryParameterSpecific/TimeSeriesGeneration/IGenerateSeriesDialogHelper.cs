@@ -14,15 +14,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Prompts and returns the user for a generate time series action.
         /// </summary>
-        /// <param name="owner">The owning window</param>
         /// <param name="startTime">The start time.</param>
         /// <param name="stopTime">The stop time.</param>
         /// <param name="timeStep">The time step.</param>
         /// <returns>
         /// The <see cref="TimeSeriesGeneratorDialog"/> after querying the user.
         /// </returns>
-        TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(IWin32Window owner,
-                                                                 DateTime startTime, 
+        TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(DateTime startTime, 
                                                                  DateTime stopTime, 
                                                                  TimeSpan timeStep);
 
@@ -32,6 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <returns>
         /// The <see cref="WaveSupportPointMode"/> after querying the user.
         /// </returns>
-        WaveSupportPointMode GetSupportPointSelectionMode(IWin32Window owner);
+        WaveSupportPointMode GetSupportPointSelectionMode();
     }
 }

@@ -41,17 +41,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.referenceDateTimeProvider = referenceDateTimeProvider;
         }
 
-        public void Execute<TSpreading>(IWin32Window owner,
-                                        IWaveEnergyFunction<TSpreading> selectedFunction,
+        public void Execute<TSpreading>(IWaveEnergyFunction<TSpreading> selectedFunction,
                                         IEnumerable<IWaveEnergyFunction<TSpreading>> otherFunctions = null)
             where TSpreading : IBoundaryConditionSpreading, new()
         {
-            Ensure.NotNull(owner, nameof(owner));
             Ensure.NotNull(selectedFunction, nameof(selectedFunction));
 
             using (TimeSeriesGeneratorDialog response =
-                dialogHelper.GetTimeSeriesGeneratorResponse(owner,
-                                                            referenceDateTimeProvider.ModelReferenceDateTime,
+                dialogHelper.GetTimeSeriesGeneratorResponse(referenceDateTimeProvider.ModelReferenceDateTime,
                                                             referenceDateTimeProvider.ModelReferenceDateTime + TimeSpan.FromDays(1.0),
                                                             TimeSpan.FromDays(1.0)))
             {
@@ -60,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                     return;
                 }
 
-                switch (GetSupportPointMode(owner, otherFunctions != null))
+                switch (GetSupportPointMode(otherFunctions != null))
                 {
                     case WaveSupportPointMode.SelectedActiveSupportPoint:
                         GenerateTimeSeries(response, selectedFunction);
@@ -76,10 +73,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        private WaveSupportPointMode GetSupportPointMode(IWin32Window owner,
-                                                         bool hasOtherFunctions) =>
+        private WaveSupportPointMode GetSupportPointMode(bool hasOtherFunctions) =>
             hasOtherFunctions
-                ? dialogHelper.GetSupportPointSelectionMode(owner)
+                ? dialogHelper.GetSupportPointSelectionMode()
                 : WaveSupportPointMode.SelectedActiveSupportPoint;
 
         private static void GenerateTimeSeries<TSpreading>(TimeSeriesGeneratorDialog dialog,

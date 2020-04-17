@@ -52,19 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void Execute_OwnerNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var generateSeries = new GenerateSeries(Substitute.For<IGenerateSeriesDialogHelper>(),
-                                                    Substitute.For<IReferenceDateTimeProvider>());
-            
-            // Call | Assert
-            void Call() => generateSeries.Execute(null, Substitute.For<IWaveEnergyFunction<TSpreading>>());
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("owner"));
-        }
-
-        [Test]
         public void Execute_SelectedFunctionNull_ThrowsArgumentNullException()
         {
             // Setup
@@ -74,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var generateSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);
             
             // Call | Assert
-            void Call() => generateSeries.Execute<TSpreading>(Substitute.For<IWin32Window>(), null);
+            void Call() => generateSeries.Execute<TSpreading>(null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("selectedFunction"));
         }
@@ -90,12 +77,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
                 referenceDateTimeProvider.ModelReferenceDateTime.Returns(expectedDateTime);
 
-                var windowOwner = Substitute.For<IWin32Window>();
                 timeSeriesDialog.DialogResult = DialogResult.Cancel;
 
                 var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
-                dialogHelper.GetTimeSeriesGeneratorResponse(windowOwner, 
-                                                            expectedDateTime,
+                dialogHelper.GetTimeSeriesGeneratorResponse(expectedDateTime,
                                                             expectedDateTime + TimeSpan.FromDays(1),
                                                             TimeSpan.FromDays(1))
                             .Returns(timeSeriesDialog);
@@ -105,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 var selectedFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
 
                 // Call
-                generateSeries.Execute(windowOwner, selectedFunction);
+                generateSeries.Execute(selectedFunction);
 
                 // Assert
                 VerifyNotCalled(selectedFunction);
@@ -208,23 +193,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                          DateTime.Today + TimeSpan.FromDays(1), 
                                          TimeSpan.FromHours(1));
 
-                var windowOwner = Substitute.For<IWin32Window>();
                 timeSeriesDialog.DialogResult = DialogResult.OK;
 
                 var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
-                dialogHelper.GetTimeSeriesGeneratorResponse(Arg.Is(windowOwner), 
-                                                            Arg.Any<DateTime>(),
+                dialogHelper.GetTimeSeriesGeneratorResponse(Arg.Any<DateTime>(),
                                                             Arg.Any<DateTime>(),
                                                             Arg.Any<TimeSpan>())
                             .Returns(timeSeriesDialog);
-                dialogHelper.GetSupportPointSelectionMode(windowOwner)
+                dialogHelper.GetSupportPointSelectionMode()
                             .Returns(mode);
 
                 var generateSeries = new GenerateSeries(dialogHelper, referenceTimeProvider);
 
 
                 // Call
-                generateSeries.Execute(windowOwner, selectedFunction, otherFunctions);
+                generateSeries.Execute(selectedFunction, otherFunctions);
 
                 // Assert
                 assertAction.Invoke(selectedFunction, otherFunctions);

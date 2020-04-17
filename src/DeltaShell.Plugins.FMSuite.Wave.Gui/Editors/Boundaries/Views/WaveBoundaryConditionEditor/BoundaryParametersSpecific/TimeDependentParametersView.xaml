@@ -23,8 +23,7 @@
             </WindowsFormsHost.Child>
         </WindowsFormsHost>
         <Button Grid.Row="1" 
-                Command="{Binding GenerateTimeSeriesCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                Command="{Binding GenerateTimeSeriesCommand}">
             <StackPanel Orientation="Horizontal" >
                 <Image Source="pack://application:,,,/DeltaShell.Plugins.FMSuite.Common.Gui;component/Resources/generate_data.png" 
                        VerticalAlignment="Center"

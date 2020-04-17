@@ -12,23 +12,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <seealso cref="IGenerateSeriesDialogHelper" />
     public class GenerateSeriesDialogHelper : IGenerateSeriesDialogHelper
     {
-        public TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(IWin32Window owner, 
-                                                                        DateTime startTime, 
+        public TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(DateTime startTime, 
                                                                         DateTime stopTime,
                                                                         TimeSpan timeStep)
         {
             var generateDialog = new TimeSeriesGeneratorDialog { ApplyOnAccept = false};
             generateDialog.SetData(null, startTime, stopTime, timeStep);
-            generateDialog.ShowDialog(owner);
+            generateDialog.ShowDialog(null);
 
             return generateDialog;
         }
 
-        public WaveSupportPointMode GetSupportPointSelectionMode(IWin32Window owner)
+        public WaveSupportPointMode GetSupportPointSelectionMode()
         {
             using (var supportPointsDialog = new WaveSupportPointSelectionForm())
             {
-                supportPointsDialog.ShowDialog(owner);
+                supportPointsDialog.ShowDialog(null);
 
                 return supportPointsDialog.SupportPointOperationMode;
             }

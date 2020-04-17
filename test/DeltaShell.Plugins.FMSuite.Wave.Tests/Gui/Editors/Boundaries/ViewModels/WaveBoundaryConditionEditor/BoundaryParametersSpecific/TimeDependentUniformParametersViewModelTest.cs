@@ -70,13 +70,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new TimeDependentUniformParametersViewModel<TSpreading>(generateSeries,
                                                                                     parameters);
 
-            var window = Substitute.For<IWin32Window>();
-
             // Call
-            viewModel.GenerateTimeSeriesCommand.Execute(window);
+            viewModel.GenerateTimeSeriesCommand.Execute(null);
             
             // Assert
-            generateSeries.Received(1).Execute(window, waveEnergyFunction, null);
+            generateSeries.Received(1).Execute(waveEnergyFunction, null);
         }
     }
 }
