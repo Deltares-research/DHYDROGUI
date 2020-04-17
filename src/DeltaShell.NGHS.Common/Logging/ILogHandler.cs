@@ -1,4 +1,4 @@
-﻿namespace DeltaShell.NGHS.IO.Handlers
+﻿namespace DeltaShell.NGHS.Common.Logging
 {
     /// <summary>
     /// Represents a handler for log messages and is responsible for keeping track of the log messages and their severity and logging them as one report.

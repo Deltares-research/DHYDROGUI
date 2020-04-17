@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using NUnit.Framework;
 
-namespace DeltaShell.NGHS.IO.Tests.Handlers
+namespace DeltaShell.NGHS.Common.Tests.Logging
 {
     [TestFixture]
     public class LogHandlerTest

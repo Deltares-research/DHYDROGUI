@@ -134,8 +134,6 @@
     <Compile Include="Grid\UGridTest.cs" />
     <Compile Include="Grid\UGridUnitTests.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelperTest.cs" />
-    <Compile Include="Handlers\LogHandlerTest.cs" />
-    <Compile Include="Handlers\LogMessagesListTest.cs" />
     <Compile Include="Helpers\DelftIniPropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,6 +150,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">

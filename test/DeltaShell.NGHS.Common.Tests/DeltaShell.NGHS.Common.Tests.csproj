@@ -103,6 +103,8 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
+    <Compile Include="Logging\LogHandlerTest.cs" />
+    <Compile Include="Logging\LogMessagesListTest.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />
     <Compile Include="Gui\DeltaresColorTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
@@ -132,6 +134,7 @@
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -143,8 +143,6 @@
     <Compile Include="Grid\UGrid.cs" />
     <Compile Include="Grid\UGridMeshType.cs" />
     <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
-    <Compile Include="Handlers\ILogHandler.cs" />
-    <Compile Include="Handlers\LogHandler.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="NGHSFileBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -164,6 +162,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

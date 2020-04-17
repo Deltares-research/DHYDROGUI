@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 
-namespace DeltaShell.NGHS.IO.Handlers
+namespace DeltaShell.NGHS.Common.Logging
 {
     /// <inheritdoc />
-    /// <seealso cref="T:DeltaShell.NGHS.IO.Handlers.ILogHandler" />
+    /// <seealso cref="T:DeltaShell.NGHS.Common.Logging.ILogHandler" />
     public class LogHandler : ILogHandler
     {
         private readonly ILog log;
@@ -133,7 +133,7 @@ namespace DeltaShell.NGHS.IO.Handlers
 
     /// <inheritdoc />
     /// <summary>
-    /// Represent a list of <see cref="T:System.String" /> and <see cref="T:DeltaShell.NGHS.IO.Handlers.LogSeverity" /> pairs.
+    /// Represent a list of <see cref="T:System.String" /> and <see cref="T:DeltaShell.NGHS.Common.Logging.LogSeverity" /> pairs.
     /// </summary>
     /// <seealso cref="T:System.Collections.Generic.List`1" />
     public class LogMessagesList : List<Tuple<string, LogSeverity>>
