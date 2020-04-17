@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.Functions;
-using DelftTools.Units;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
@@ -47,18 +46,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                                       WaveTimeDependentParametersConstants.DirectionVariableName,
                                       WaveTimeDependentParametersConstants.DegreesUnitName,
                                       WaveTimeDependentParametersConstants.DegreesUnitSymbol);
-            AssertHasCorrectComponent(function.SpreadingComponent, 
+            AssertHasCorrectComponent(function.SpreadingComponent,
                                       WaveTimeDependentParametersConstants.SpreadingVariableName,
                                       SpreadingConversion.GetSpreadingUnit<TSpreading>().Name,
-                                      SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol, 
+                                      SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol,
                                       SpreadingConversion.GetSpreadingDefaultValue<TSpreading>());
 
-            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeFunctionAttributeName], 
+            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeFunctionAttributeName],
                         Is.EqualTo(WaveTimeDependentParametersConstants.NonEquidistantTimeFunctionAttributeName));
-            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.RefDateAttributeName], 
+            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.RefDateAttributeName],
                         Is.EqualTo(new DateTime().ToString(BcwFile.DateFormatString)));
-            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeUnitAttributeName], 
+            Assert.That(function.UnderlyingFunction.Attributes[BcwFile.TimeUnitAttributeName],
                         Is.EqualTo(WaveTimeDependentParametersConstants.MinuteUnitName));
+        }
+
+        [Test]
+        public void ConvertSpreadingType_ToSameType_ExpectedResults()
+        {
+            // Setup
+            var oldWaveEnergyFunction = new WaveEnergyFunction<TSpreading>();
+            var generator = new TimeSeriesGenerator();
+            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
+
+            // Call
+            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
+
+            // Assert
+            Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
+        }
+
+        [Test]
+        public void ConvertSpreadingType_ToNewType_ExpectedResults()
+        {
+            // Setup
+            var oldWaveEnergyFunction = new WaveEnergyFunction<TSpreading>();
+            var generator = new TimeSeriesGenerator();
+            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
+
+            // Call
+            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
+
+            // Assert
+            Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
+        }
+
+        [Test]
+        public void ConvertSpreading_OldWaveEnergyFunctionNull_ThrowsArgumentNullException()
+        {
+            // Call | Assert
+            void Call() => WaveEnergyFunction<TSpreading>.ConvertSpreadingType((IWaveEnergyFunction<TSpreading>) null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("oldWaveEnergyFunction"));
         }
 
         private static void AssertHasCorrectComponent(IVariable component,
@@ -73,76 +112,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             if (defaultValue != null)
             {
-                Assert.That(component.DefaultValue, Is.EqualTo(defaultValue), 
+                Assert.That(component.DefaultValue, Is.EqualTo(defaultValue),
                             "Expected a different default value");
             }
-        }
-
-        [Test]
-        public void ConvertSpreadingType_FromDegrees_ExpectedResults()
-        {
-            // Setup
-            var oldWaveEnergyFunction = new WaveEnergyFunction<DegreesDefinedSpreading>();
-            var generator = new TimeSeriesGenerator();
-            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
-
-            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
-
-            // Call
-            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
-
-            // Assert
-            if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
-            {
-                Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
-            }
-
-            Assert.That(newWaveFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
-            Assert.That(newWaveFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
-
-            if (typeof(TSpreading) != typeof(DegreesDefinedSpreading))
-            {
-                Assert.That(newWaveFunction.SpreadingComponent.AllValues, Has.All.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
-            }
-        }
-
-        [Test]
-        public void ConvertSpreadingType_FromPower_ExpectedResults()
-        {
-            // Setup
-            var oldWaveEnergyFunction = new WaveEnergyFunction<PowerDefinedSpreading>();
-            var generator = new TimeSeriesGenerator();
-            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
-
-            Unit expectedUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>();
-
-            // Call
-            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
-
-            // Assert
-            if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
-            {
-                Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
-            }
-
-            Assert.That(newWaveFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
-            Assert.That(newWaveFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
-            Assert.That(newWaveFunction.SpreadingComponent.DefaultValue, Is.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
-
-            if (typeof(TSpreading) != typeof(PowerDefinedSpreading))
-            {
-                Assert.That(newWaveFunction.SpreadingComponent.AllValues, Has.All.EqualTo(SpreadingConversion.GetSpreadingDefaultValue<TSpreading>()));
-            }
-        }
-
-        [Test]
-        public void ConvertSpreading_OldWaveEnergyFunctionNull_ThrowsArgumentNullException()
-        {
-            // Call | Assert
-            void Call() => WaveEnergyFunction<TSpreading>.ConvertSpreadingType((IWaveEnergyFunction<TSpreading>)null);
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("oldWaveEnergyFunction"));
         }
     }
 }
