@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         private readonly Random random = new Random();
 
         [Test]
-        public void Collect_ForUniformTimeDependentBoundary_Returns1TimeSerie()
+        public void Collect_ForUniformTimeDependentBoundary_Returns1TimeSeries()
         {
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
             var underlyingFunction = Substitute.For<IFunction>();
@@ -88,6 +88,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Setup
             var dataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<TSpreading>>();
             var constantParameters = new ConstantParameters<TSpreading>(random.Next(), random.Next(), random.Next(), new TSpreading());
+            var supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+            dataComponent.AddParameters(supportPoint, constantParameters);
+
+            // Call
+            List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            Assert.That(returnedTimeSeries, Is.Empty);
+        }
+
+        [Test]
+        public void Collect_ForUniformFileBasedBoundary_NothingShouldHappen()
+        {
+            // Setup
+            var constantParameters = new FileBasedParameters("path");
+            var dataComponent = new UniformDataComponent<FileBasedParameters>(constantParameters);
+
+            // Call
+            List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
+
+            // Assert
+            Assert.That(returnedTimeSeries, Is.Empty);
+        }
+
+        [Test]
+        public void Collect_ForSpatiallyVaryingFileBasedBoundary_NothingShouldHappen()
+        {
+            // Setup
+            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            var constantParameters = new FileBasedParameters("path");
             var supportPoint = new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>());
             dataComponent.AddParameters(supportPoint, constantParameters);
 
