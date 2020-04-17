@@ -24,11 +24,6 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
         [TestCase("SECOND_value", TestEnum.B)]
         [TestCase("third_value", TestEnum.C)]
         [TestCase("THIRD_VALUE", TestEnum.C)]
-        [TestCase("fourth_value", default(TestEnum))]
-        [TestCase("1", default(TestEnum))]
-        [TestCase("2", default(TestEnum))]
-        [TestCase("3", default(TestEnum))]
-        [TestCase("", default(TestEnum))]
         public void GetEnumValueByDescription_ReturnsCorrectResult(string description,
                                                                    object expectedResult)
         {
@@ -37,6 +32,16 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase("fourth_value")]
+        [TestCase("1")]
+        [TestCase("2")]
+        [TestCase("3")]
+        [TestCase("")]
+        public void GetEnumValueByDescription_InvalidDescription_ThrowsNotSupportedException(string description)
+        {
+            Assert.That(() => EnumUtils.GetEnumValueByDescription<TestEnum>(description), Throws.InstanceOf<NotSupportedException>());
         }
 
         private enum TestEnum

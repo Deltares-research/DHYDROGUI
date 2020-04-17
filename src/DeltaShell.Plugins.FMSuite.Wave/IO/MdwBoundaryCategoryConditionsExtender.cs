@@ -59,11 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             switch (conditionDefinition.DataComponent)
             {
                 case SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>> _:
-                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _: {}
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>> _:
                     boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading);
                     break;
                 case SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>> _:
-                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _: {}
+                case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
                     boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
                     break;
                 case UniformDataComponent<FileBasedParameters> _:

@@ -222,6 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
         }
 
+        [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
@@ -272,6 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(spatiallyVaryingDataComponent));
         }
 
+        [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_DelftIniCategory_WithSpatiallyVaryingTimeDependentData_ReturnsCorrectSpatiallyVaryingTimeDependentWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,
@@ -324,6 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(spatiallyVaryingDataComponent));
         }
 
+        [Test]
         [TestCase("non_parametrized")]
         public void Convert_DelftIniCategory_WithNonParametrizedData_ThrowsNotSupportedException(string spectrumSpec)
         {
@@ -375,6 +378,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result, Is.Empty);
         }
 
+        [Test]
         [TestCaseSource(nameof(ShapePeriodTestCases))]
         public void Convert_DelftIniCategory_WithSpatiallyVaryingConstantData_WithActiveAndInactiveSupportPoints_ReturnsCorrectSpatiallyVaryingConstantWaveBoundary(
             ShapeImportType shapeType, PeriodImportExportType periodType,

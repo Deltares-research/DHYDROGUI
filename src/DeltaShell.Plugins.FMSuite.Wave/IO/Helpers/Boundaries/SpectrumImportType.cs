@@ -8,9 +8,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     public enum SpectrumImportType
     {
         [Description(KnownWaveBoundariesFileConstants.FromFileSpectrumType)]
-        FromFile = 1,
+        FromFile,
 
         [Description(KnownWaveBoundariesFileConstants.ParametrizedSpectrumType)]
-        Parametrized = 2
+        Parametrized
     }
 }

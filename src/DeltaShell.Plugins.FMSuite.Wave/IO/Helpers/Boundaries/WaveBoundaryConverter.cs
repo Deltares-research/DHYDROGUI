@@ -146,8 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                    IList<IFunction> timeSeriesData,
-                                                                   IWaveBoundaryGeometricDefinition
-                                                                       geometricDefinition)
+                                                                   IWaveBoundaryGeometricDefinition geometricDefinition)
         {
             switch (boundaryBlock.SpectrumType)
             {

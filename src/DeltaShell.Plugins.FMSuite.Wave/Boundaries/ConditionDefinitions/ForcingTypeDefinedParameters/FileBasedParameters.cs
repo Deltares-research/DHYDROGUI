@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Utils.Guards;
+﻿using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// Creates a new <see cref="FileBasedParameters"/>.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="filePath"/> is <c>null</c>.
         /// </exception>
         public FileBasedParameters(string filePath)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
@@ -29,9 +30,14 @@ namespace DeltaShell.NGHS.Common.Utils
         {
             Ensure.NotNull(description, nameof(description));
 
-            return Enum.GetValues(typeof(T)).OfType<T>()
-                       .FirstOrDefault(v => description.Equals((v as Enum).GetDescription(),
-                                                               StringComparison.OrdinalIgnoreCase));
+            IEnumerable<T> enumsFromDescription = Enum.GetValues(typeof(T)).OfType<T>().Where(v => description.Equals((v as Enum).GetDescription(), StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            if (!enumsFromDescription.Any())
+            {
+                throw new NotSupportedException($"The value {description} is not a valid description for {typeof(T)}.");
+            }
+
+            return enumsFromDescription.First();
         }
     }
 }

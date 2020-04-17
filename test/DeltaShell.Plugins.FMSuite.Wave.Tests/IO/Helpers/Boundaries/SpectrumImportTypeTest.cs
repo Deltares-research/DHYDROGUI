@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         protected override IDictionary<SpectrumImportType, int> ExpectedValueForEnumValues =>
             new Dictionary<SpectrumImportType, int>
             {
-                {SpectrumImportType.FromFile, 1},
-                {SpectrumImportType.Parametrized, 2}
+                {SpectrumImportType.FromFile, 0},
+                {SpectrumImportType.Parametrized, 1}
             };
     }
 }
