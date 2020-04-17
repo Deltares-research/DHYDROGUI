@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             // When
             waveModelDefinition.ModelReferenceDateTime = newDateTime;
 
-            // Assert
+            // Then
             Assert.That(referenceTimeProvider.ModelReferenceDateTime, Is.EqualTo(newDateTime));
         }
 

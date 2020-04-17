@@ -21,8 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Creates a new <see cref="TimeDependentParametersSettingsViewModel"/>.
         /// </summary>
         /// <param name="generateSeries">The generate series.</param>
+        /// <param name="groupBoxTitle">The title of this settings view group box.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="generateSeries"/> is <c>null</c>.
+        /// Thrown when <paramref name="generateSeries"/> or
+        /// <paramref name="groupBoxTitle"/> is <c>null</c>.
         /// </exception>
         protected TimeDependentParametersSettingsViewModel(IGenerateSeries generateSeries,
                                                            string groupBoxTitle)
