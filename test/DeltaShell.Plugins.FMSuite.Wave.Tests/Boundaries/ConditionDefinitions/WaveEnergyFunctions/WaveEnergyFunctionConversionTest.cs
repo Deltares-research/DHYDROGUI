@@ -5,7 +5,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.WaveEnergyFunctions {
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.WaveEnergyFunctions
+{
     [TestFixture]
     [TestFixture(typeof(DegreesDefinedSpreading), typeof(PowerDefinedSpreading))]
     [TestFixture(typeof(PowerDefinedSpreading), typeof(DegreesDefinedSpreading))]
