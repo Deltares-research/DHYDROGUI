@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -217,8 +218,8 @@ namespace DeltaShell.NGHS.IO.Grid
                     {
                         var compartmentX = m.Geometry.Coordinate.X - offset + i;
                         var compartmentY = m.Geometry.Coordinate.Y;
-                        compartmentsX.Add(Math.Round(compartmentX - 0.0000005, 6));
-                        compartmentsY.Add(Math.Round(compartmentY - 0.0000005, 6));
+                        compartmentsX.Add(Math.Floor(compartmentX * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); // Math.Round(compartmentX, 6, MidpointRounding.ToEven));
+                        compartmentsY.Add(Math.Floor(compartmentY * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); //Math.Round(compartmentY, 6, MidpointRounding.ToEven));
                         compartmentCoordinateDictionary.Add(m.Compartments[i].Name, new Coordinate(compartmentX, compartmentY));
                     }
                 });

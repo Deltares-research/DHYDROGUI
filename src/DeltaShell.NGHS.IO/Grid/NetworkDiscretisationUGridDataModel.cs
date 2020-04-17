@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Geometries;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
     public class NetworkDiscretisationUGridDataModel
     {
+        public const int DIGITS = (int) 1E6;
+
         public string Name;
         public int NetworkId;
         public int NumberOfMeshEdges;
@@ -51,61 +55,138 @@ namespace DeltaShell.NGHS.IO.Grid
 
             if (discretisation.Network != null)
             {
-                /*NumberOfMeshEdges = discretisationPoints.Length
-                                    - discretisation.Network.Nodes.Count
-                                    + discretisation.Network.Branches.Count;
-*/
-
-                BranchIdx = discretisationPoints.Select(l => l.Branch)
-                    .ToArray()
-                    .Select(b => discretisation.Network.Branches.IndexOf(b))
-                    .ToArray();
+                var branches = discretisation.Network.Branches.ToList();
+                BranchIdx = new int[NumberOfDiscretisationPoints];
+                Offsets = new double[NumberOfDiscretisationPoints];
+                DiscretisationPointIds = new string[NumberOfDiscretisationPoints];
+                DiscretisationPointDescriptions = new string[NumberOfDiscretisationPoints];
+                DiscretisationPointsX = new double[NumberOfDiscretisationPoints];
+                DiscretisationPointsY = new double[NumberOfDiscretisationPoints];
+                Parallel.For(0, NumberOfDiscretisationPoints,discretisationPointIdx =>
+                {
+                    var discretisationPoint = discretisationPoints[discretisationPointIdx];
+                    var discretisationPointBranch = discretisationPoint.Branch;
+                    BranchIdx[discretisationPointIdx] = branches.IndexOf(discretisationPointBranch);
+                    Offsets[discretisationPointIdx] = discretisationPointBranch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(discretisationPoint.Chainage);
+                    DiscretisationPointIds[discretisationPointIdx] = discretisationPoint.Name;
+                    DiscretisationPointDescriptions[discretisationPointIdx] = discretisationPoint.LongName;
+                    DiscretisationPointsX[discretisationPointIdx] = discretisationPoint.Geometry.Coordinate != null
+                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.X * DIGITS) / DIGITS //Math.Round(discretisationPoint.Geometry.Coordinate.X, 6, MidpointRounding.ToEven)
+                        : 0.0d;
+                    DiscretisationPointsY[discretisationPointIdx] = discretisationPoint.Geometry.Coordinate != null
+                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.Y * DIGITS) / DIGITS //Math.Round(discretisationPoint.Geometry.Coordinate.Y, 6, MidpointRounding.ToEven)
+                        : 0.0d;
+                });
                 
+                var networkSegments = discretisation.Segments.Values.OfType<NetworkSegment>().ToArray();
+
+                NumberOfMeshEdges = networkSegments.Length;
+                EdgeIdx = new int[NumberOfMeshEdges];
+                EdgeChainage = new double[NumberOfMeshEdges];
+                EdgePointsX = new double[NumberOfMeshEdges];
+                EdgePointsY = new double[NumberOfMeshEdges];
+                EdgeNodes = new int[(NumberOfMeshEdges) * 2];
+                var epsilonLocation = 1e-5;
+                var discretisationPointByBranchByDiscretisationPointChainage =
+                    discretisationPoints.ToLookup(p => p.Branch,
+                        p => new
+                        {
+                            Chainage = p.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(p.Chainage),
+                            NetworkLocation = p
+                        });
+
+                var discretisationPointByCoordinate = discretisationPoints.ToLookup(p => p.Geometry?.Coordinate, p => p, new CoordinateComparison2D());
+                Parallel.For(0, NumberOfMeshEdges, meshEdgesIdx =>
+                {
+                    var meshEdge = networkSegments[meshEdgesIdx];
+                    var meshEdgeBranch = meshEdge.Branch;
+                    EdgeIdx[meshEdgesIdx] = branches.IndexOf(meshEdgeBranch);
+                    EdgeChainage[meshEdgesIdx] =
+                        meshEdgeBranch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(
+                            (meshEdge.Chainage + meshEdge.EndChainage) / 2);
+                    
+                    EdgePointsX[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.X * DIGITS) / DIGITS : 0.0d;//Math.Round(meshEdge.Geometry.Centroid.X, 6, MidpointRounding.ToEven) 
+                    EdgePointsY[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.Y * DIGITS) / DIGITS : 0.0d;//Math.Round(meshEdge.Geometry.Centroid.Y, 6, MidpointRounding.ToEven) 
+
+                    var segmentStartChainage = meshEdge.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(meshEdge.Chainage);
+                    EdgeNodes[meshEdgesIdx*2] = -1;
+
+                    if (discretisationPointByBranchByDiscretisationPointChainage.Contains(meshEdgeBranch))
+                    {
+                        foreach (var pointWithStartChainageOnBranch in
+                            discretisationPointByBranchByDiscretisationPointChainage[meshEdgeBranch]
+                                .Where(o => Math.Abs(o.Chainage - segmentStartChainage) < epsilonLocation))
+                        {
+                            EdgeNodes[meshEdgesIdx*2] = Array.IndexOf(discretisationPoints,
+                                pointWithStartChainageOnBranch.NetworkLocation);
+                            if (EdgeNodes[meshEdgesIdx*2] != -1)
+                                break;
+                        }
+                    }
+
+                    if (EdgeNodes[meshEdgesIdx * 2] == -1)
+                    {
+                        var segmentStartCoordinate = meshEdge.Geometry?.Coordinates[0];
+
+                        var discretizationPointsByThisStartCoordinate =
+                            discretisationPointByCoordinate.FirstOrDefault(p =>
+                                p.Key.Equals2D(segmentStartCoordinate, epsilonLocation));
+
+                        if (segmentStartCoordinate != null &&
+                            discretizationPointsByThisStartCoordinate != null)
+                        {
+                            foreach (var pointWithStartCoordinate in
+                                discretisationPointByCoordinate[discretizationPointsByThisStartCoordinate.Key])
+                            {
+                                EdgeNodes[meshEdgesIdx * 2] = Array.IndexOf(discretisationPoints,
+                                    pointWithStartCoordinate);
+                                if (EdgeNodes[meshEdgesIdx * 2] != -1)
+                                    break;
+                            }
+                        }
+                    }
+
+                    EdgeNodes[meshEdgesIdx*2 + 1] = -1;
+                    var segmentEndChainage = meshEdge.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(meshEdge.EndChainage);
+                    
+                    if (discretisationPointByBranchByDiscretisationPointChainage.Contains(meshEdgeBranch))
+                    {
+                        foreach (var pointWithEndChainageOnBranch in
+                            discretisationPointByBranchByDiscretisationPointChainage[meshEdgeBranch]
+                                .Where(o => Math.Abs(o.Chainage - segmentEndChainage) < epsilonLocation))
+                        {
+
+                            EdgeNodes[meshEdgesIdx*2 + 1] = Array.IndexOf(discretisationPoints,
+                                pointWithEndChainageOnBranch.NetworkLocation);
+                            if (EdgeNodes[meshEdgesIdx*2 + 1] != -1)
+                                break;
+                        }
+                    }
+
+                    if (EdgeNodes[meshEdgesIdx * 2 + 1] == -1)
+                    {
+                        var segmentEndCoordinate = meshEdge.Geometry?.Coordinates?.LastOrDefault();
+
+                        var discretizationPointsByThisEndCoordinate =
+                            discretisationPointByCoordinate.FirstOrDefault(p =>
+                                p.Key.Equals2D(segmentEndCoordinate, epsilonLocation));
+
+                        if (segmentEndCoordinate != null &&
+                            discretizationPointsByThisEndCoordinate != null)
+                        {
+                            foreach (var pointWithEndCoordinate in
+                                discretisationPointByCoordinate[discretizationPointsByThisEndCoordinate.Key])
+                            {
+
+                                EdgeNodes[meshEdgesIdx * 2 + 1] = Array.IndexOf(discretisationPoints,
+                                    pointWithEndCoordinate);
+                                if (EdgeNodes[meshEdgesIdx * 2 + 1] != -1)
+                                    break;
+                            }
+                        }
+                    }
+                });
             }
-
-            Offsets = discretisationPoints.Select(l => l.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(l.Chainage)).ToArray();
-
-            DiscretisationPointIds = discretisationPoints.Select(p => p.Name).ToArray();
-            //Branch1dMeshCalculationNodesIdx = discretisationPoints.Select(l => l.) 
-                /*discretisationPoints.Select(l => l.Branch)
-                .Select(b => discretisation.Network.Nodes.IndexOf(b.Source)).ToArray();*/
-                /*.Plus(discretisationPoints.Select(l => l.Branch)
-                    .Select(b => discretisation.Network.Nodes.IndexOf(b.Target))).ToArray();
-*/
-
-            DiscretisationPointDescriptions = discretisationPoints.Select(p => p.LongName).ToArray();
-            DiscretisationPointsX = discretisationPoints.Select(dp => Math.Round(dp.Geometry.Coordinate.X - 0.0000005, 6)).ToArray();
-            DiscretisationPointsY = discretisationPoints.Select(dp => Math.Round(dp.Geometry.Coordinate.Y - 0.0000005, 6)).ToArray();
-            var networkSegments = discretisation.Segments.Values.OfType<NetworkSegment>().ToArray();
-            EdgeIdx = networkSegments.Select(s => discretisation.Network.Branches.IndexOf(s.Branch)).ToArray();
-            
-            EdgeChainage = networkSegments.Select(s => s.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch((s.Chainage + s.EndChainage)/ 2)).ToArray(); 
-            EdgePointsX = networkSegments.Select(s => Math.Round(s.Geometry.Centroid.X - 0.0000005, 6)).ToArray();
-            EdgePointsY = networkSegments.Select(s => Math.Round(s.Geometry.Centroid.Y - 0.0000005, 6)).ToArray();
-
-            var epsilonLocation = 0.01;
-            EdgeNodes = networkSegments.SelectMany(s => new int[]
-            {
-                Array.IndexOf(discretisationPoints,
-                    discretisationPoints.FirstOrDefault(p =>
-                    {
-                        var pointChainage = p.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(p.Chainage);
-                        var segmentStartChainage = s.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(s.Chainage);
-                        return p.Branch == s.Branch && Math.Abs(pointChainage - segmentStartChainage) < double.Epsilon ||
-                               p.Geometry.Coordinate.Equals2D(s.Geometry.Coordinates[0], epsilonLocation);
-                    })),
-                Array.IndexOf(discretisationPoints,
-                    discretisationPoints.FirstOrDefault(p =>
-                    {
-                        var pointChainage = p.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(p.Chainage);
-                        var segmentEndChainage = s.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(s.EndChainage);
-
-                        return p.Branch == s.Branch && Math.Abs(pointChainage - segmentEndChainage) < double.Epsilon ||
-                               p.Geometry.Coordinate.Equals2D(s.Geometry.Coordinates.Last(), epsilonLocation);
-                    }))
-            }).ToArray();
-
-            NumberOfMeshEdges = EdgeIdx.Length;
         }
 
         public int[] EdgeNodes { get; set; }
