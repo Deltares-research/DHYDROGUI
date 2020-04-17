@@ -98,6 +98,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// <returns>
         /// Time-dependent parameters with the spreading type adjusted to <typeparamref name="TNewSpreading"/>.
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="parameters`"/> is <c>null</c>.
+        /// </exception>
         TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters) 
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
