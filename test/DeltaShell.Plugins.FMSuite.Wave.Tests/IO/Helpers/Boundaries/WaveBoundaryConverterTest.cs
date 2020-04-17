@@ -366,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             {
                 GetBoundaryCategory(random.NextEnumValue<ShapeImportType>(),
                                     random.NextEnumValue<PeriodImportExportType>(),
-                                    mdwValues, "parametrized", "orientation")
+                                    mdwValues, "parametric", "orientation")
             };
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
