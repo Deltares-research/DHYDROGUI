@@ -24,10 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="generateSeries"/> is <c>null</c>.
         /// </exception>
-        protected TimeDependentParametersSettingsViewModel(IGenerateSeries generateSeries)
+        protected TimeDependentParametersSettingsViewModel(IGenerateSeries generateSeries,
+                                                           string groupBoxTitle)
         {
             Ensure.NotNull(generateSeries, nameof(generateSeries));
+            Ensure.NotNull(groupBoxTitle, nameof(groupBoxTitle));
+            
             GenerateSeries = generateSeries;
+            GroupBoxTitle = groupBoxTitle;
         }
 
         /// <summary>
@@ -51,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
         }
 
-        public string GroupBoxTitle { get; protected set; }
+        public string GroupBoxTitle { get; }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
