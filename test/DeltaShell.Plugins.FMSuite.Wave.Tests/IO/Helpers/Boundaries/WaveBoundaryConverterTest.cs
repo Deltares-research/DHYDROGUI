@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
     public class WaveBoundaryConverterTest<T> where T : class, IBoundaryConditionSpreading, new()
     {
         private static readonly Random random = new Random();
-        private static double RandomDouble => Math.Round(random.NextDouble(), 3);
+        private static double RandomDouble => Math.Round(random.NextDouble(), 5);
         private readonly SpreadingImportType spreadingType;
         private readonly ShapeEqualityComparer shapeComparer = new ShapeEqualityComparer();
         private readonly IForcingTypeDefinedParametersFactory parametersFactory = new ForcingTypeDefinedParametersFactory();
