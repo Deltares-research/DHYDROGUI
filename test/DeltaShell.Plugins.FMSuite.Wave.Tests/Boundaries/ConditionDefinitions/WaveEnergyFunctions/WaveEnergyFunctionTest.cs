@@ -76,21 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         }
 
         [Test]
-        public void ConvertSpreadingType_ToNewType_ExpectedResults()
-        {
-            // Setup
-            var oldWaveEnergyFunction = new WaveEnergyFunction<TSpreading>();
-            var generator = new TimeSeriesGenerator();
-            generator.GenerateTimeSeries(oldWaveEnergyFunction.UnderlyingFunction, DateTime.Today, DateTime.Today + TimeSpan.FromDays(1), TimeSpan.FromHours(1));
-
-            // Call
-            IWaveEnergyFunction<TSpreading> newWaveFunction = WaveEnergyFunction<TSpreading>.ConvertSpreadingType(oldWaveEnergyFunction);
-
-            // Assert
-            Assert.That(newWaveFunction, Is.SameAs(oldWaveEnergyFunction));
-        }
-
-        [Test]
         public void ConvertSpreading_OldWaveEnergyFunctionNull_ThrowsArgumentNullException()
         {
             // Call | Assert
