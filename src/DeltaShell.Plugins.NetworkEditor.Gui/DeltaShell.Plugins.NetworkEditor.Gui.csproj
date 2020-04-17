@@ -609,6 +609,7 @@
     <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
     <Compile Include="Layers\Providers\GroupableFeature2DPolygonsLayerProvider.cs" />
     <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
+    <Compile Include="Layers\Providers\HydroRegionLayerProvider.cs" />
     <Compile Include="Layers\Providers\LandBoundariesLayerProvider.cs" />
     <Compile Include="Layers\Providers\ObservationCrossSectionsLayerProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointsLayerProvider.cs" />

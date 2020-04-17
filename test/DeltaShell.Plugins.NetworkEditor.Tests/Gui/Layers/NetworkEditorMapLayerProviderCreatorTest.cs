@@ -24,9 +24,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
                                                                                 .ToArray();
 
             // Assert
-            Assert.That(providers.Length, Is.EqualTo(13));
+            Assert.That(providers.Length, Is.EqualTo(14));
 
             Assert.That(providers.Any(p => p is HydroAreaLayerProvider));
+            Assert.That(providers.Any(p => p is HydroRegionLayerProvider));
             Assert.That(providers.Any(p => p is ThinDamsLayerProvider));
             Assert.That(providers.Any(p => p is FixedWeirsLayerProvider));
             Assert.That(providers.Any(p => p is ObservationPointsLayerProvider));
