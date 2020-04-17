@@ -23,14 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var function = new WaveEnergyFunction<TSpreading>();
 
             // Assert
-            Assert.That(function.UnderlyingFunction, Has.Property(nameof(IFunction.Name))
-                                     .EqualTo(WaveTimeDependentParametersConstants.WaveQuantityName),
+            Assert.That(function.UnderlyingFunction.Name, Is.EqualTo(WaveTimeDependentParametersConstants.WaveQuantityName),
                         "Expected a different function name:");
 
             Assert.That(function.UnderlyingFunction.Arguments, Has.Count.EqualTo(1),
                         "Expected a different number of Arguments:");
-            Assert.That(function.TimeArgument, Has.Property(nameof(Variable<double>.Name))
-                                     .EqualTo(WaveTimeDependentParametersConstants.TimeVariableName));
+            Assert.That(function.TimeArgument.Name, Is.EqualTo(WaveTimeDependentParametersConstants.TimeVariableName));
 
             Assert.That(function.UnderlyingFunction.Components, Has.Count.EqualTo(4),
                         "Expected a different number of Components:");
@@ -141,6 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         [Test]
         public void ConvertSpreading_OldWaveEnergyFunctionNull_ThrowsArgumentNullException()
         {
+            // Call | Assert
             void Call() => WaveEnergyFunction<TSpreading>.ConvertSpreadingType((IWaveEnergyFunction<TSpreading>)null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
