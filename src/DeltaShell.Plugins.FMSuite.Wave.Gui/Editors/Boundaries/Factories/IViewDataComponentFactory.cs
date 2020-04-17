@@ -12,54 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     public interface IViewDataComponentFactory
     {
         /// <summary>
-        /// Gets the <see cref="ForcingViewType"/> corresponding with the
-        /// provided <paramref name="dataComponent"/>.
-        /// </summary>
-        /// <param name="dataComponent">The data component.</param>
-        /// <returns>
-        /// The <see cref="ForcingViewType"/> corresponding with the provided
-        /// <paramref name="dataComponent"/>.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
-        /// </exception>
-        ForcingViewType GetForcingType(ISpatiallyDefinedDataComponent dataComponent);
-
-        /// <summary>
-        /// Gets the <see cref="SpatialDefinitionViewType"/> corresponding with
-        /// the provided <paramref name="dataComponent"/>.
-        /// </summary>
-        /// <param name="dataComponent">The data component.</param>
-        /// <returns>
-        /// The <see cref="SpatialDefinitionViewType"/> corresponding with the provided
-        /// <paramref name="dataComponent"/>.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="System.NotSupportedException">
-        /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
-        /// </exception>
-        SpatialDefinitionViewType GetSpatialDefinition(ISpatiallyDefinedDataComponent dataComponent);
-
-        /// <summary>
-        /// Gets the <see cref="DirectionalSpreadingViewType"/> corresponding with
-        /// the provided <paramref name="dataComponent"/>.
-        /// </summary>
-        /// <param name="dataComponent">The data component.</param>
-        /// <returns>
-        /// The <see cref="DirectionalSpreadingViewType"/> corresponding with the provided
-        /// <paramref name="dataComponent"/>.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="dataComponent"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="System.NotSupportedException">
-        /// Thrown when <paramref name="dataComponent"/> is of an unsupported type.
-        /// </exception>
-        DirectionalSpreadingViewType GetDirectionalSpreadingViewType(ISpatiallyDefinedDataComponent dataComponent);
-
-        /// <summary>
         /// Constructs the <see cref="IParametersSettingsViewModel"/> corresponding
         /// with the provided <paramref name="dataComponent"/>.
         /// </summary>

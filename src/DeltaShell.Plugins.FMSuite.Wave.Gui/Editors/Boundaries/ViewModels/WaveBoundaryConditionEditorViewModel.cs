@@ -58,13 +58,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
                                                               dataComponentModel);
             dataComponentModelMediator.RefreshGeometryView = GeometryViewModel.GeometryPreviewViewModel;
 
+            var dataComponentConverter = new ViewEnumFromDataComponentQuerier();
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
-                                                                    dataComponentFactory);
+                                                                    dataComponentFactory, 
+                                                                    dataComponentConverter);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());
             BoundaryWideParametersViewModel = new BoundaryWideParametersViewModel(observedBoundary.ConditionDefinition,
                                                                                   viewShapeFactory,
-                                                                                  dataComponentFactory);
+                                                                                  dataComponentFactory,
+                                                                                  dataComponentConverter);
 
             var mediator = new WaveBoundaryConditionEditorMediator(GeometryViewModel.SupportPointEditorViewModel,
                                                                    BoundarySpecificParametersSettingsViewModel,

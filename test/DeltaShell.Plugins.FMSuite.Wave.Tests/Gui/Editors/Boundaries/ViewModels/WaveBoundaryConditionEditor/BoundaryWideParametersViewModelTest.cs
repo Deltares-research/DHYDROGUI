@@ -36,13 +36,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             shapeFactory.ConstructFromShape(modelShape).Returns(viewShape);
 
             var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-            dataComponentFactory.GetDirectionalSpreadingViewType(dataComponent)
-                                .Returns(DirectionalSpreadingViewType.Degrees);
+
+            var dataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
+            dataComponentConverter.GetDirectionalSpreadingViewType(dataComponent)
+                                  .Returns(DirectionalSpreadingViewType.Degrees);
 
             // Call
             var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
                                                                 shapeFactory,
-                                                                dataComponentFactory);
+                                                                dataComponentFactory, 
+                                                                dataComponentConverter);
 
             // Assert
             shapeFactory.Received(1).ConstructFromShape(modelShape);
@@ -56,42 +59,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.IsVisible, Is.True);
         }
 
-        [Test]
-        public void Constructor_ObservedBoundaryConditionNull_ThrowsArgumentNullException()
+        public IEnumerable<TestCaseData> GetConstructorNullData()
         {
-            // Setup
+            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var shapeFactory = Substitute.For<IViewShapeFactory>();
             var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            var dataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
 
-            // Call
-            void Call() => new BoundaryWideParametersViewModel(null,
-                                                               shapeFactory,
-                                                               dataComponentFactory);
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-
-            // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("observedBoundaryCondition"),
-                        "Expected a different ParamName:");
+            yield return new TestCaseData(null, shapeFactory, dataComponentFactory, dataComponentConverter, "observedBoundaryCondition");
+            yield return new TestCaseData(boundaryCondition, null, dataComponentFactory, dataComponentConverter, "shapeFactory");
+            yield return new TestCaseData(boundaryCondition, shapeFactory, null, dataComponentConverter, "dataComponentFactory");
+            yield return new TestCaseData(boundaryCondition, shapeFactory, dataComponentFactory, null, "viewEnumFromDataComponentQuerier");
         }
 
         [Test]
-        public void Constructor_ShapeFactoryNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(GetConstructorNullData))]
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(IWaveBoundaryConditionDefinition boundaryCondition,
+                                                                          IViewShapeFactory shapeFactory,
+                                                                          IViewDataComponentFactory dataComponentFactory,
+                                                                          IViewEnumFromDataComponentQuerier viewEnumFromDataComponentConverter,
+                                                                          string expectedParamName)
         {
-            // Setup
-            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-
-            // Call
+            // Call | Assert
             void Call() => new BoundaryWideParametersViewModel(boundaryCondition,
-                                                               null,
-                                                               dataComponentFactory);
+                                                               shapeFactory,
+                                                               dataComponentFactory, 
+                                                               viewEnumFromDataComponentConverter);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-
-            // Assert
-            Assert.That(exception.ParamName, Is.EqualTo("shapeFactory"),
-                        "Expected a different ParamName:");
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName), "Expected a different ParamName:");
         }
 
         [Test]
@@ -101,10 +97,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
             var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
             var shapeFactory = Substitute.For<IViewShapeFactory>();
+            var dataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
 
             var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
                                                                 shapeFactory,
-                                                                dataComponentFactory);
+                                                                dataComponentFactory, 
+                                                                dataComponentConverter);
 
             // Call
             void Call() => viewModel.SetMediator(null);
@@ -311,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
-            testConfig.DataComponentFactory
+            testConfig.ViewEnumFromDataComponentConverter
                       .GetDirectionalSpreadingViewType(dataComponentDegrees)
                       .Returns(DirectionalSpreadingViewType.Degrees);
 
@@ -319,7 +317,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
 
             var dataComponentPower = Substitute.For<ISpatiallyDefinedDataComponent>();
-            testConfig.DataComponentFactory
+            testConfig.ViewEnumFromDataComponentConverter
                       .GetDirectionalSpreadingViewType(dataComponentPower)
                       .Returns(DirectionalSpreadingViewType.Power);
             testConfig.DataComponentFactory
@@ -353,7 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
-            testConfig.DataComponentFactory
+            testConfig.ViewEnumFromDataComponentConverter
                       .GetDirectionalSpreadingViewType(dataComponentDegrees)
                       .Returns(DirectionalSpreadingViewType.Degrees);
 
@@ -405,9 +403,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
-            testConfig.DataComponentFactory.GetForcingType(Arg.Any<ISpatiallyDefinedDataComponent>()).Returns(forcingViewType);
+            testConfig.ViewEnumFromDataComponentConverter.GetForcingType(Arg.Any<ISpatiallyDefinedDataComponent>()).Returns(forcingViewType);
 
             // Then
             Assert.That(testConfig.ViewModel.IsVisible, Is.EqualTo(isVisible));
@@ -420,6 +419,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             public IWaveBoundaryConditionDefinition BoundaryCondition { get; private set; }
             public IViewDataComponentFactory DataComponentFactory { get; private set; }
+            public IViewEnumFromDataComponentQuerier ViewEnumFromDataComponentConverter { get; private set; }
             public IAnnounceDataComponentChanged AnnounceDataComponentChanged { get; private set; }
             public IViewShapeFactory ShapeFactory { get; private set; }
             public BoundaryWideParametersViewModel ViewModel { get; private set; }
@@ -450,6 +450,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             public ParametersTestConfig WithDefaultDataComponentFactory()
             {
                 DataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+                return this;
+            }
+
+            public ParametersTestConfig WithDefaultDataComponentConverter()
+            {
+                ViewEnumFromDataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
                 return this;
             }
 
@@ -488,11 +494,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 Assert.That(BoundaryCondition, Is.Not.Null);
                 Assert.That(ShapeFactory, Is.Not.Null);
                 Assert.That(DataComponentFactory, Is.Not.Null);
+                Assert.That(ViewEnumFromDataComponentConverter, Is.Not.Null);
                 Assert.That(AnnounceDataComponentChanged, Is.Not.Null);
 
                 ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition,
                                                                 ShapeFactory,
-                                                                DataComponentFactory);
+                                                                DataComponentFactory, 
+                                                                ViewEnumFromDataComponentConverter);
                 ViewModel.SetMediator(AnnounceDataComponentChanged);
                 ViewModel.PropertyChanged += OnPropertyChanged;
 

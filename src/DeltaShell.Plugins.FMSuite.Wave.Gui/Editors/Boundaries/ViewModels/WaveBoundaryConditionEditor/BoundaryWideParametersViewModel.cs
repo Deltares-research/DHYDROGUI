@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private readonly IWaveBoundaryConditionDefinition observedBoundaryCondition;
         private readonly IViewShapeFactory shapeFactory;
         private readonly IViewDataComponentFactory dataComponentFactory;
+        private readonly IViewEnumFromDataComponentQuerier viewEnumFromDataComponentQuerier;
         private IAnnounceDataComponentChanged announceDataComponentChanged;
 
         private IViewShape shape;
@@ -35,20 +36,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="dataComponentFactory">
         /// <see cref="IViewDataComponentFactory"/> to construct data components with.
         /// </param>
+        /// <param name="viewEnumFromDataComponentQuerier">
+        /// The <see cref="IViewEnumFromDataComponentQuerier"/> used to obtain the view enums.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public BoundaryWideParametersViewModel(IWaveBoundaryConditionDefinition observedBoundaryCondition,
                                                IViewShapeFactory shapeFactory,
-                                               IViewDataComponentFactory dataComponentFactory)
+                                               IViewDataComponentFactory dataComponentFactory,
+                                               IViewEnumFromDataComponentQuerier viewEnumFromDataComponentQuerier)
         {
             Ensure.NotNull(observedBoundaryCondition, nameof(observedBoundaryCondition));
             Ensure.NotNull(shapeFactory, nameof(shapeFactory));
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+            Ensure.NotNull(viewEnumFromDataComponentQuerier, nameof(viewEnumFromDataComponentQuerier));
 
             this.observedBoundaryCondition = observedBoundaryCondition;
             this.shapeFactory = shapeFactory;
             this.dataComponentFactory = dataComponentFactory;
+            this.viewEnumFromDataComponentQuerier = viewEnumFromDataComponentQuerier;
 
             Shape = this.shapeFactory.ConstructFromShape(observedBoundaryCondition.Shape);
             ShapeTypeList = this.shapeFactory.GetViewShapeTypesList();
@@ -119,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public DirectionalSpreadingViewType DirectionalSpreadingType
         {
-            get => dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundaryCondition.DataComponent);
+            get => viewEnumFromDataComponentQuerier.GetDirectionalSpreadingViewType(observedBoundaryCondition.DataComponent);
             set
             {
                 if (DirectionalSpreadingType == value)
@@ -138,7 +145,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Gets whether the parameters should be visible.
         /// </summary>
-        public bool IsVisible => dataComponentFactory.GetForcingType(observedBoundaryCondition.DataComponent) != ForcingViewType.FileBased;
+        public bool IsVisible => 
+            viewEnumFromDataComponentQuerier.GetForcingType(observedBoundaryCondition.DataComponent) != ForcingViewType.FileBased;
 
         public void RefreshViewModel()
         {

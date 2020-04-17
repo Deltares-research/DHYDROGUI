@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     {
         private readonly IWaveBoundary observedBoundary;
         private readonly IViewDataComponentFactory dataComponentFactory;
+        private readonly IViewEnumFromDataComponentQuerier viewEnumFromDataComponentQuerier;
         private IAnnounceDataComponentChanged announceDataComponentChanged;
 
         /// <summary>
@@ -30,17 +31,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <param name="dataComponentFactory">
         /// The <see cref="IViewDataComponentFactory"/> used to construct the data components.
         /// </param>
+        /// <param name="viewEnumFromDataComponentQuerier">
+        /// The <see cref="IViewEnumFromDataComponentQuerier"/> used to obtain the view enums.
+        /// </param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any of the parameters is <c>null</c>.
         /// </exception>
         public BoundaryDescriptionViewModel(IWaveBoundary observedBoundary,
-                                            IViewDataComponentFactory dataComponentFactory)
+                                            IViewDataComponentFactory dataComponentFactory,
+                                            IViewEnumFromDataComponentQuerier viewEnumFromDataComponentQuerier)
         {
             Ensure.NotNull(observedBoundary, nameof(observedBoundary));
             Ensure.NotNull(dataComponentFactory, nameof(dataComponentFactory));
+            Ensure.NotNull(viewEnumFromDataComponentQuerier, nameof(viewEnumFromDataComponentQuerier));
 
             this.observedBoundary = observedBoundary;
             this.dataComponentFactory = dataComponentFactory;
+            this.viewEnumFromDataComponentQuerier = viewEnumFromDataComponentQuerier;
         }
 
         /// <summary>
@@ -66,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public ForcingViewType ForcingType
         {
-            get => dataComponentFactory.GetForcingType(observedBoundary.ConditionDefinition.DataComponent);
+            get => viewEnumFromDataComponentQuerier.GetForcingType(observedBoundary.ConditionDefinition.DataComponent);
             set
             {
                 if (value == ForcingType)
@@ -88,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         public SpatialDefinitionViewType SpatialDefinition
         {
-            get => dataComponentFactory.GetSpatialDefinition(observedBoundary.ConditionDefinition.DataComponent);
+            get => viewEnumFromDataComponentQuerier.GetSpatialDefinition(observedBoundary.ConditionDefinition.DataComponent);
             set
             {
                 if (value == SpatialDefinition)
@@ -120,7 +127,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             announceDataComponentChanged = mediator;
         }
 
-        private DirectionalSpreadingViewType GetSpreadingViewType() => dataComponentFactory.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition.DataComponent);
+        private DirectionalSpreadingViewType GetSpreadingViewType() => 
+            viewEnumFromDataComponentQuerier.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition.DataComponent);
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
