@@ -129,6 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithShapeFactory(viewShapeFactory)
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
@@ -158,6 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                         .WithDefaultShapeFactory()
                                                                         .WithShapeFactoryAction(f => f.ConstructFromType(expectedViewShapeType).Returns(expectedShape))
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
@@ -192,6 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithDefaultBoundaryCondition()
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
@@ -222,6 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithShapeFactory(shapeFactory)
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
@@ -251,6 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
@@ -280,6 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
 
@@ -306,6 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
@@ -348,6 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(boundaryCondition)
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             var dataComponentDegrees = Substitute.For<ISpatiallyDefinedDataComponent>();
@@ -373,6 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             ParametersTestConfig testConfig = new ParametersTestConfig().WithBoundaryCondition(Substitute.For<IWaveBoundaryConditionDefinition>())
                                                                         .WithDefaultShapeFactory()
                                                                         .WithDefaultDataComponentFactory()
+                                                                        .WithDefaultDataComponentConverter()
                                                                         .WithDefaultAnnounceDataComponentChanged()
                                                                         .ConstructViewModel();
             BoundaryWideParametersViewModel viewModel = testConfig.ViewModel;
