@@ -80,7 +80,10 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginTestHelper.cs" />
     <Compile Include="AssertConstraints\Collection.cs" />
+    <Compile Include="AssertConstraints\ConstraintExpressionExtensions.cs" />
     <Compile Include="AssertConstraints\ContainsOnlyConstraint.cs" />
+    <Compile Include="AssertConstraints\Does.cs" />
+    <Compile Include="AssertConstraints\ExistConstraint.cs" />
     <Compile Include="EnumDescriptionTestFixture.cs" />
     <Compile Include="EnumValuesTestFixture.cs" />
     <Compile Include="NghsTestCategory.cs" />
