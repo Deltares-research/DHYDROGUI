@@ -14,6 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <typeparam name="T"> The forcing type. </typeparam>
         /// <param name="uniformDataComponent"> The visited <see cref="UniformDataComponent{T}"/></param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="uniformDataComponent"/> is <c>null</c>.
+        /// </exception>
         void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters;
 
         /// <summary>
@@ -21,6 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <typeparam name="T"> The forcing type.</typeparam>
         /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="spatiallyVaryingDataComponent"/> is <c>null</c>.
+        /// </exception>
         void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters;
     }
 }
