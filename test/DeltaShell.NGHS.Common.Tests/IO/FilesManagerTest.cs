@@ -71,33 +71,36 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Add_And_CopyTo_FileExistsAtTarget_LogsWarning()
+        public void Add_And_CopyTo_FileExistsAtTarget_OverwritesFileAndLogsWarning()
         {
             // Given
             var filesManager = new FilesManager();
             var logHandler = Substitute.For<ILogHandler>();
 
-            const string fileName = "file_1.txt";
+            const string fileName = "file.txt";
 
             using (var tempDir = new TemporaryDirectory())
             {
-                string sourceDir1 = tempDir.CreateDirectory("source1");
-                string sourceDir2 = tempDir.CreateDirectory("source2");
-                string sourceFilePath1 = CreateFile(sourceDir1, fileName);
-                string sourceFilePath2 = CreateFile(sourceDir2, fileName);
+                string sourceDir = tempDir.CreateDirectory("source");
+                string sourceFilePath = CreateFile(sourceDir, fileName);
                 string targetDir = tempDir.CreateDirectory("target");
+                string targetFilePath = CreateFile(targetDir, fileName);
+
+                // Precondition
+                string sourceFileContent = File.ReadAllText(sourceFilePath);
+                string targetFileContent = File.ReadAllText(targetFilePath);
+                Assert.That(targetFileContent, Is.Not.EqualTo(sourceFileContent));
 
                 // When
-                filesManager.Add(sourceFilePath1);
-                filesManager.Add(sourceFilePath1);
-                filesManager.Add(sourceFilePath2);
+                filesManager.Add(sourceFilePath);
                 filesManager.CopyTo(targetDir, logHandler);
 
                 // Then
-                string expectedTargetFilePath = Path.Combine(targetDir, fileName);
-                Assert.That(sourceDir1, Does.Exist, "File was not copied.");
+                Assert.That(targetFilePath, Does.Exist);
+                Assert.That(File.ReadAllText(targetFilePath), Is.EqualTo(sourceFileContent));
+
                 Assert.That(logHandler.ReceivedCalls().Count(), Is.EqualTo(1));
-                logHandler.Received(1).ReportWarning($"File already exists at '{expectedTargetFilePath}'.");
+                logHandler.Received(1).ReportWarning($"File already exists at '{targetFilePath}' and will be overwritten.");
             }
         }
 
@@ -119,6 +122,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 string targetDir = tempDir.CreateDirectory("target");
 
                 // When
+                filesManager.Add(sourceFilePath1);
                 filesManager.Add(sourceFilePath1);
                 filesManager.Add(sourceFilePath2);
                 filesManager.CopyTo(targetDir, logHandler);
@@ -142,7 +146,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         private static string CreateFile(string dirPath, string fileName)
         {
             string filePath = Path.Combine(dirPath, fileName);
-            File.WriteAllText(filePath, "test_file");
+            File.WriteAllText(filePath, filePath);
 
             return filePath;
         }

@@ -45,11 +45,10 @@ namespace DeltaShell.NGHS.Common.IO
                 var targetFile = new FileInfo(Path.Combine(dirInfo.FullName, file.Name));
                 if (targetFile.Exists)
                 {
-                    logHandler?.ReportWarning($"File already exists at '{targetFile.FullName}'.");
-                    continue;
+                    logHandler?.ReportWarning($"File already exists at '{targetFile.FullName}' and will be overwritten.");
                 }
 
-                file.CopyTo(targetFile.FullName);
+                file.CopyTo(targetFile.FullName, overwrite: true);
             }
         }
     }
