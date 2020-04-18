@@ -68,11 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Setup
             var category = new DelftIniCategory("");
-            var visitor = new SpectrumParametersVisitor(category,
-                                                        Substitute.For<IFilesManager>());
+            var filesManager = Substitute.For<IFilesManager>();
+            var visitor = new SpectrumParametersVisitor(category, filesManager);
 
             const string fileName = "file.txt";
-            var parameters = new FileBasedParameters($"D:\\some_directory\\{fileName}");
+            string filePath = $"D:\\some_directory\\{fileName}";
+            var parameters = new FileBasedParameters(filePath);
 
             // Call
             visitor.Visit(parameters);
@@ -83,6 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(property.Value, Is.EqualTo("from file"));
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(fileName));
+            filesManager.Received(1).Add(filePath);
         }
 
         [TestFixture]
