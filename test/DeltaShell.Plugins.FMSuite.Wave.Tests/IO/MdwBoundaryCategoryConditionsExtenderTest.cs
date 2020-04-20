@@ -530,6 +530,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(exception.ParamName, Is.EqualTo("spatiallyVaryingDataComponent"));
         }
 
+        private IEnumerable<ISpatiallyDefinedDataComponent> GetFileBasedDataComponent()
+        {
+            yield return new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(""));
+
+            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            dataComponent.AddParameters(new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>()),
+                                        new FileBasedParameters(""));
+            yield return dataComponent;
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetFileBasedDataComponent))]
+        public void AddNewProperties_ForSpatiallyVaryingFileBasedBoundary_ThrowsNotSupportException(ISpatiallyDefinedDataComponent dataComponent)
+        {
+            // Arrange
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(),
+                                                                          BoundaryConditionPeriodType.Peak,
+                                                                          dataComponent);
+
+            // Act
+            void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
+
+            // Assert
+            Assert.That(Call, Throws.TypeOf<NotSupportedException>());
+        }
+
         [Test]
         public void Visit_ConstantParametersNull_ThrowsArgumentNullException()
         {

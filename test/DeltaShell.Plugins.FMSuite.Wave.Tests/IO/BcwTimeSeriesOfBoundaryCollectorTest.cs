@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Test]
         public void Collect_ForUniformTimeDependentBoundary_Returns1TimeSeries()
         {
+            // Setup
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
             var underlyingFunction = Substitute.For<IFunction>();
             waveEnergyFunction.UnderlyingFunction.Returns(underlyingFunction);
@@ -30,8 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var dataComponent = new UniformDataComponent<TimeDependentParameters<TSpreading>>(
                 new TimeDependentParameters<TSpreading>(waveEnergyFunction));
 
+            // Call
             List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
 
+            // Assert
             Assert.AreEqual(1, returnedTimeSeries.Count);
             Assert.AreSame(underlyingFunction, returnedTimeSeries.First());
         }
@@ -39,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Test]
         public void Collect_ForSpatiallyVaryingTimeDependentBoundaryWith2ActiveSupportPoints_Returns2TimeSeries()
         {
+            // Setup
             var waveEnergyFunction1 = Substitute.For<IWaveEnergyFunction<TSpreading>>();
             var underlyingFunction1 = Substitute.For<IFunction>();
             waveEnergyFunction1.UnderlyingFunction.Returns(underlyingFunction1);
@@ -60,9 +64,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var dataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
             dataComponent.AddParameters(supportPoint1, timeDependentParameters1);
             dataComponent.AddParameters(supportPoint2, timeDependentParameters2);
-            
+
+            // Call
             List<IFunction> returnedTimeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
 
+            // Assert
             Assert.AreEqual(2, returnedTimeSeries.Count);
             Assert.Contains(underlyingFunction1, returnedTimeSeries);
             Assert.Contains(underlyingFunction2, returnedTimeSeries);

@@ -188,18 +188,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 new T().AcceptVisitor(this);
             }
 
+            /// <summary>
+            /// This method throws a <see cref="NotSupportedException"/>.
+            /// </summary>
+            /// <param name="fileBasedParameters">This parameter is not used.</param>
             public void Visit(FileBasedParameters fileBasedParameters)
             {
-                Ensure.NotNull(fileBasedParameters, nameof(fileBasedParameters));
-                hasConstantValues = false;
-                if (!isUniform)
-                {
-                    BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
-                                                 SupportPoints[supportPointCounter].Distance);
-                    supportPointCounter++;
-                }
-
-                BoundaryCategory.AddProperty(KnownWaveProperties.Spectrum, fileBasedParameters.FilePath);
+                throw new NotSupportedException("File based boundaries are not supported here.");
             }
 
             /// <summary>
