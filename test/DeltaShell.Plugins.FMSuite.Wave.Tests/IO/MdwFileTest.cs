@@ -278,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForAnUniformConstantBoundary_MdwFileShouldContainBoundaryCategoryWithoutBcwFile()
+        public void SaveTo_ForUniformConstantBoundary_MdwFileShouldContainBoundaryCategoryWithoutBcwFile()
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
@@ -308,7 +308,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForAnUniformTimeDependentBoundary_MdwFileShouldContainBoundaryCategoryWithBcwFile()
+        public void SaveTo_ForUniformTimeDependentBoundary_MdwFileShouldContainBoundaryCategoryWithBcwFile()
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SaveTo_UniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied()
+        public void SaveTo_ForUniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied()
         {
             // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void SaveTo_SpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied()
+        public void SaveTo_ForSpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied()
         {
             // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
