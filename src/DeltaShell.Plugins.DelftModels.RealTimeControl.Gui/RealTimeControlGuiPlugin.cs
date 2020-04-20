@@ -29,6 +29,7 @@ using ValidationAspects;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 using TreeNode = DelftTools.Controls.Swf.TreeViewControls.TreeNode;
 using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {

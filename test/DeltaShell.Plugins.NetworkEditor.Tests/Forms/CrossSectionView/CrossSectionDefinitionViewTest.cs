@@ -17,6 +17,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 {
@@ -450,32 +451,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         [Category(TestCategory.WindowsForms)]
         public void PasteIntoTableAndVerify()
         {
-            EventedList<CrossSectionSectionType> sectionTypes = GetSectionTypesList(new[] { "Main", "FloodPlain1", "FloodPlain2" });
-            var hydroNetwork = new HydroNetwork { CrossSectionSectionTypes = sectionTypes };
+            using (var clipboardMock = new ClipboardMock())
+            {
+                clipboardMock.ContainsText_Returns(true);
+                clipboardMock.GetText_Returns_SetText();
 
-            var csDef = new CrossSectionDefinitionZW();
-            var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(csDef, hydroNetwork);
+                EventedList<CrossSectionSectionType> sectionTypes = GetSectionTypesList(new[]
+                {
+                    "Main",
+                    "FloodPlain1",
+                    "FloodPlain2"
+                });
+                var hydroNetwork = new HydroNetwork {CrossSectionSectionTypes = sectionTypes};
 
-            var crossSectionView = new CrossSectionDefinitionView
+                var csDef = new CrossSectionDefinitionZW();
+                var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(csDef, hydroNetwork);
+
+                var crossSectionView = new CrossSectionDefinitionView
                 {
                     Data = csDef,
                     ViewModel = viewModel
                 };
 
-            var tableView = crossSectionView.FieldValue<TableView>("tableView"); //hax
-            var controller = tableView.PasteController;
+                var tableView = crossSectionView.FieldValue<TableView>("tableView"); //hax
+                var controller = tableView.PasteController;
 
-            WindowsFormsTestHelper.ShowModal(crossSectionView, f =>
-            {
-                var text = "49,74\t374\t12\r\n" + "49,43\t374\t13\r\n" + "48,74\t368\t19\r\n";
-                text = text.Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
-                Clipboard.SetText(text);
-                controller.PasteClipboardContents();
-                Assert.AreEqual(3, csDef.RawData.Rows.Count);
-                Assert.AreEqual(12.0, csDef.ZWDataTable[0].StorageWidth);
-                Assert.AreEqual(13.0, csDef.ZWDataTable[1].StorageWidth);
-                Assert.AreEqual(19.0, csDef.ZWDataTable[2].StorageWidth);
-            });
+                WindowsFormsTestHelper.ShowModal(crossSectionView, f =>
+                {
+                    var text = "49,74\t374\t12\r\n" + "49,43\t374\t13\r\n" + "48,74\t368\t19\r\n";
+                    text = text.Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    Clipboard.SetText(text);
+                    controller.PasteClipboardContents();
+                    Assert.AreEqual(3, csDef.RawData.Rows.Count);
+                    Assert.AreEqual(12.0, csDef.ZWDataTable[0].StorageWidth);
+                    Assert.AreEqual(13.0, csDef.ZWDataTable[1].StorageWidth);
+                    Assert.AreEqual(19.0, csDef.ZWDataTable[2].StorageWidth);
+                });
+            }
         }
 
         [Test]

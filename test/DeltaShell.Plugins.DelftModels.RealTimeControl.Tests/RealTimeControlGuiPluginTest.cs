@@ -25,8 +25,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var gui = mocks.DynamicMock<IGui>();
             var documentViews = mocks.DynamicMock<IViewList>();
+            using(var clipboardMock= new ClipboardMock())
             using (var mapView = new MapView())
             {
+                clipboardMock.GetData_Returns_SetData();
+                
                 var activityRunner = mocks.DynamicMock<IActivityRunner>();
                 var application = mocks.DynamicMock<IApplication>();
                 var project = new Project();

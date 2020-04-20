@@ -27,6 +27,7 @@ using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
@@ -85,47 +86,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [TestCase(false, 1)] // RTC Inputs greater than limit
         public void TestRtcInputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
-            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
-
-            var controlGroupEditor = new ControlGroupEditor
+            using (var clipboardStub = new ClipboardStub())
             {
-                Data = new ControlGroup(),
-                Model = rtcModel
-            };
+                var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
 
-            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+                var controlGroupEditor = new ControlGroupEditor
+                {
+                    Data = new ControlGroup(),
+                    Model = rtcModel
+                };
 
-            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
-               .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
-               .Repeat.Once();
+                var maxValues = (int) TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
 
-            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
-               .Return(new List<DataItem> { new DataItem() {Role = DataItemRole.Output}})
-               .Repeat.Any();
-            
-            mocks.ReplayAll();
+                rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
+                        .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+                        .Repeat.Once();
 
-            var shape = new InputItemShape()
-            {
-                Tag = new Input(),
-                IsSelected = true
-            };
-            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
+                rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+                        .Return(new List<DataItem> {new DataItem() {Role = DataItemRole.Output}})
+                        .Repeat.Any();
 
-            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[] { null, null });
+                mocks.ReplayAll();
 
-            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
-            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+                var shape = new InputItemShape()
+                {
+                    Tag = new Input(),
+                    IsSelected = true
+                };
+                controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
 
-            var menuItemNames = menuItems.Select(b => b.Text).ToList();
+                TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[]
+                {
+                    null,
+                    null
+                });
 
-            Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
-                "Context menu differs from what was expected");
+                var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+                controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
 
-            Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
-                "Users should always have the option to 'choose input location...' for RTC Outputs");
-            
-            mocks.VerifyAll();
+                var menuItemNames = menuItems.Select(b => b.Text).ToList();
+
+                Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
+                                "Context menu differs from what was expected");
+
+                Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
+                              "Users should always have the option to 'choose input location...' for RTC Outputs");
+
+                mocks.VerifyAll();
+            }
         }
 
         [Test]
@@ -134,47 +142,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [TestCase(false, 1)] // RTC Outputs greater than limit
         public void TestRtcOutputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
-            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
-
-            var controlGroupEditor = new ControlGroupEditor
+            using (new ClipboardStub())
             {
-                Data = new ControlGroup(),
-                Model = rtcModel
-            };
+                var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
 
-            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+                var controlGroupEditor = new ControlGroupEditor
+                {
+                    Data = new ControlGroup(),
+                    Model = rtcModel
+                };
 
-            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input))
-               .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
-               .Repeat.Once();
+                var maxValues = (int) TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
 
-            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
-               .Return(new List<DataItem> { new DataItem() { Role = DataItemRole.Input } })
-               .Repeat.Any();
+                rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Input))
+                        .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+                        .Repeat.Once();
 
-            mocks.ReplayAll();
-            
-            var shape = new OutputItemShape()
-            {
-                Tag = new Output(),
-                IsSelected = true
-            };
-            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
-            
-            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[] {null, null});
-            
-            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
-            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+                rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+                        .Return(new List<DataItem> {new DataItem() {Role = DataItemRole.Input}})
+                        .Repeat.Any();
 
-            var menuItemNames = menuItems.Select(b => b.Text).ToList();
-            
-            Assert.AreEqual(expectedResult, menuItemNames.Contains("Output locations"), 
-                "Context menu differs from what was expected");
+                mocks.ReplayAll();
 
-            Assert.IsTrue(menuItemNames.Contains("Choose output locations..."),
-                "Users should always have the option to 'choose output location...' for RTC Outputs");
+                var shape = new OutputItemShape()
+                {
+                    Tag = new Output(),
+                    IsSelected = true
+                };
+                controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
 
-            mocks.VerifyAll();
+                TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[]
+                {
+                    null,
+                    null
+                });
+
+                var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+                controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+
+                var menuItemNames = menuItems.Select(b => b.Text).ToList();
+
+                Assert.AreEqual(expectedResult, menuItemNames.Contains("Output locations"),
+                                "Context menu differs from what was expected");
+
+                Assert.IsTrue(menuItemNames.Contains("Choose output locations..."),
+                              "Users should always have the option to 'choose output location...' for RTC Outputs");
+
+                mocks.VerifyAll();
+            }
         }
 
         [Test]
@@ -366,8 +381,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyToClipboard()
         {
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 var menuItem = new MenuItem { Tag = rule };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
                 AssertCopyXmlToClipboard(rule);
@@ -381,8 +399,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyRuleToClipBoard()
         {
+            using (var clipboardMock = new ClipboardMock())
             using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 controlGroupEditor.CopyXmlToClipboard(rule);
 
                 AssertCopyXmlToClipboard(rule);
@@ -392,8 +413,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyConditionToClipBoard()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            using (var clipboardMock = new ClipboardMock())
+            using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 controlGroupEditor.CopyXmlToClipboard(condition);
 
                 AssertCopyXmlToClipboard(condition);
@@ -403,8 +427,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyExpressionToClipBoard()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            using (var clipboardMock = new ClipboardMock())
+            using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
             {
+                clipboardMock.GetText_Returns_SetText();
+
                 var input = new Input();
                 var expression = new MathematicalExpression();
                 expression.Inputs.Add(input);
@@ -592,7 +619,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             {
                 stringBuilder.Append(xElement + Environment.NewLine);
             }
-            
+
             Assert.AreEqual(stringBuilder.ToString(), Clipboard.GetText());
         }
     }

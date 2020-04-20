@@ -85,7 +85,7 @@ def get_previous_build(build_config: str, tag: str, wrapper: RequestWrapper) -> 
     if previous_build_response.status_code != 200:
         return None
 
-    return json.loads(previous_build_response.text)
+    return previous_build_response.json()
 
 
 def unpin_build(build_id: str, wrapper: RequestWrapper) -> None:
@@ -257,7 +257,8 @@ def get_new_build(build_config_id: str, nuget_package_file_name: str, wrapper: R
         new_build_info = wrapper.get(new_build_url)
 
         if new_build_info.status_code != 200:
-            return None
+            logging.warning(f"Request '{new_build_url}' returned {new_build_info.status_code}.")
+            continue
 
         return new_build_info.json()
 
