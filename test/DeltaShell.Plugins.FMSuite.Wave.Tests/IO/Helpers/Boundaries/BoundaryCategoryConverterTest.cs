@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
             category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
             category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.Parametrized.GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
             category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
             Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
             Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
-            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             Assert.That(result.ShapeType, Is.EqualTo(expectedShapeType));
             Assert.That(result.PeriodType, Is.EqualTo(expectedPeriodType));
             Assert.That(result.SpreadingType, Is.EqualTo(expectedSpreadingType));
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.StartCoordinateY, ToString(startY));
             category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
             category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.FromFile.GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, shapeTypeStr);
             category.AddProperty(KnownWaveProperties.PeriodType, periodTypeStr);
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, spreadingTypeStr);
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
             Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
             Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
-            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
+            Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(result.ShapeType, Is.EqualTo(ShapeImportType.Gauss));
             Assert.That(result.PeriodType, Is.EqualTo(PeriodImportExportType.Mean));
             Assert.That(result.SpreadingType, Is.EqualTo(SpreadingImportType.Degrees));
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
-            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportType.Parametrized.GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
             category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());

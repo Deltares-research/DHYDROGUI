@@ -150,9 +150,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         {
             switch (boundaryBlock.SpectrumType)
             {
-                case SpectrumImportType.Parametrized:
+                case SpectrumImportExportType.Parametrized:
                     return CreateParametrizedDataComponent(boundaryBlock, timeSeriesData, geometricDefinition);
-                case SpectrumImportType.FromFile:
+                case SpectrumImportExportType.FromFile:
                     return CreateFileBasedDataComponent(boundaryBlock, geometricDefinition);
                 default:
                     throw new NotSupportedException($"Spectrum type {boundaryBlock.SpectrumType} is not supported.");

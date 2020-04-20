@@ -43,15 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY),
                 XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX),
                 YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY),
-                SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportType>(KnownWaveProperties.SpectrumSpec),
+                SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportExportType>(KnownWaveProperties.SpectrumSpec),
                 Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist)
             };
 
-            if (block.SpectrumType == SpectrumImportType.Parametrized)
+            if (block.SpectrumType == SpectrumImportExportType.Parametrized)
             {
                 ConvertParameterizedProperties(boundaryCategory, block);
             }
-            else if (block.SpectrumType == SpectrumImportType.FromFile)
+            else if (block.SpectrumType == SpectrumImportExportType.FromFile)
             {
                 block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum);
             }

@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             visitor.Visit(dataComponent);
 
             // Assert
-            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
+            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
 
             DelftIniProperty[] properties = category.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(2));
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             visitor.Visit(dataComponent);
 
             // Assert
-            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
+            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
 
             DelftIniProperty[] properties = category.Properties.ToArray();
             Assert.That(properties, Has.Length.EqualTo(7));
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 // Assert
                 AssertProperty(category.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
 
             [Test]
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 // Assert
                 AssertProperty(category.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
 
             [Test]
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 // Assert
                 AssertProperty(category.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
 
             [Test]
@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 // Assert
                 AssertProperty(category.Properties.Single(),
                                KnownWaveProperties.SpectrumSpec, "parametric");
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             }
         }
 

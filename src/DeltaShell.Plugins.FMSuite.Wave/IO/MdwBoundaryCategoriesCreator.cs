@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 var dataComponentVisitor = new SpectrumDataComponentVisitor(boundaryCategory, filesManager);
                 boundary.ConditionDefinition.DataComponent.AcceptVisitor(dataComponentVisitor);
 
-                if (dataComponentVisitor.SpectrumType != SpectrumImportType.FromFile)
+                if (dataComponentVisitor.SpectrumType != SpectrumImportExportType.FromFile)
                 {
                     MdwBoundaryCategoryConditionsExtender.AddNewProperties(boundaryCategory, boundary.ConditionDefinition);
                 }

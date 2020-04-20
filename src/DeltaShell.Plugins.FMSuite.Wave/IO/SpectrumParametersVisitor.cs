@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <summary>
         /// Gets the spectrum type of the boundary.
         /// </summary>
-        public SpectrumImportType SpectrumType { get; private set; }
+        public SpectrumImportExportType SpectrumType { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumParametersVisitor"/> class.
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             Ensure.NotNull(constantParameters, nameof(constantParameters));
 
-            SpectrumType = SpectrumImportType.Parametrized;
+            SpectrumType = SpectrumImportExportType.Parametrized;
             SetSpectrumProperty();
         }
 
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             Ensure.NotNull(timeDependentParameters, nameof(timeDependentParameters));
 
-            SpectrumType = SpectrumImportType.Parametrized;
+            SpectrumType = SpectrumImportExportType.Parametrized;
             SetSpectrumProperty();
         }
 
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             Ensure.NotNull(fileBasedParameters, nameof(fileBasedParameters));
 
-            SpectrumType = SpectrumImportType.FromFile;
+            SpectrumType = SpectrumImportExportType.FromFile;
             SetSpectrumProperty();
 
             filesManager.Add(fileBasedParameters.FilePath);

@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
     [TestFixture]
-    public class PeriodImportTypeTest : EnumValuesTestFixture<PeriodImportExportType>
+    public class PeriodImportExportTypeTest : EnumValuesTestFixture<PeriodImportExportType>
     {
         protected override IDictionary<PeriodImportExportType, int> ExpectedValueForEnumValues =>
             new Dictionary<PeriodImportExportType, int>

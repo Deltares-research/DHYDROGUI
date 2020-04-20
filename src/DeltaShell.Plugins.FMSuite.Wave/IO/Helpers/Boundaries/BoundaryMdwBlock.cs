@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <summary>
         /// Gets or sets the spectrum type.
         /// </summary>
-        public SpectrumImportType SpectrumType { get; set; }
+        public SpectrumImportExportType SpectrumType { get; set; }
 
         /// <summary>
         /// Gets or sets the shape type

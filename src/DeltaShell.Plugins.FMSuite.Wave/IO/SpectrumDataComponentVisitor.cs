@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <summary>
         /// Gets spectrum type of the boundary.
         /// </summary>
-        public SpectrumImportType SpectrumType { get; private set; }
+        public SpectrumImportExportType SpectrumType { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumDataComponentVisitor"/> class.
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             uniformDataComponent.Data.AcceptVisitor(parametersVisitor);
 
             SpectrumType = parametersVisitor.SpectrumType;
-            if (SpectrumType == SpectrumImportType.FromFile)
+            if (SpectrumType == SpectrumImportExportType.FromFile)
             {
                 category.SetProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
             }
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 kvp.Value.AcceptVisitor(parametersVisitor);
 
                 SpectrumType = parametersVisitor.SpectrumType;
-                if (SpectrumType != SpectrumImportType.FromFile)
+                if (SpectrumType != SpectrumImportExportType.FromFile)
                 {
                     return;
                 }

@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             DelftIniProperty property = category.Properties.Single();
             Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
             Assert.That(property.Value, Is.EqualTo("from file"));
-            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.FromFile));
+            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(fileName));
             filesManager.Received(1).Add(filePath);
         }
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 DelftIniProperty property = category.Properties.Single();
                 Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
                 Assert.That(property.Value, Is.EqualTo("parametric"));
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
                 Assert.That(visitor.SpectrumFile, Is.Null);
             }
 
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 DelftIniProperty property = category.Properties.Single();
                 Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
                 Assert.That(property.Value, Is.EqualTo("parametric"));
-                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportType.Parametrized));
+                Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
                 Assert.That(visitor.SpectrumFile, Is.Null);
             }
         }

@@ -369,12 +369,12 @@
     <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstantsTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlockTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\PeriodImportTypeDescriptionTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\PeriodImportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeImportTypeTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\SpectrumImportTypeDescriptionTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\SpectrumImportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumImportExportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumImportExportTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
