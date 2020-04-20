@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DeltaShell.NGHS.Common.Logging;
+﻿using DeltaShell.NGHS.Common.Logging;
 
 namespace DeltaShell.NGHS.Common.IO
 {
@@ -47,7 +46,7 @@ namespace DeltaShell.NGHS.Common.IO
         /// <exception cref="System.ArgumentException">
         /// Thrown when <paramref name="targetPath"/> contains invalid characters such as ", &lt;, &gt;, or |.
         /// </exception>
-        /// <exception cref="PathTooLongException">
+        /// <exception cref="System.IO.PathTooLongException">
         /// The specified path, file name, or both exceed the system-defined maximum length.
         /// </exception>
         void CopyTo(string targetPath, ILogHandler logHandler = null);
