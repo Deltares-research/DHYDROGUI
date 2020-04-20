@@ -24,13 +24,14 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
-    [TestFixture(typeof(DegreesDefinedSpreading), SpreadingImportType.Degrees)]
-    [TestFixture(typeof(PowerDefinedSpreading), SpreadingImportType.Power)]
+    [TestFixture(typeof(DegreesDefinedSpreading))]
+    [TestFixture(typeof(PowerDefinedSpreading))]
     public class WaveBoundaryConverterTest<T> where T : class, IBoundaryConditionSpreading, new()
     {
         private const double doublePrecision = 1E-5;
         private static readonly Random random = new Random(39);
-        private readonly SpreadingImportType spreadingType;
+        private readonly SpreadingImportType spreadingType = GetSpreadingImportType();
+
         private readonly ShapeEqualityComparer shapeComparer = new ShapeEqualityComparer();
         private readonly IForcingTypeDefinedParametersFactory parametersFactory = new ForcingTypeDefinedParametersFactory();
         private static double RandomDouble => Math.Round(random.NextDouble(), 5);
@@ -519,9 +520,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result[1].Name, Is.EqualTo(secondBoundaryName));
         }
 
-        public WaveBoundaryConverterTest(SpreadingImportType spreadingType)
+        private static SpreadingImportType GetSpreadingImportType()
         {
-            this.spreadingType = spreadingType;
+            switch (typeof(T))
+            {
+                case var a when a == typeof(DegreesDefinedSpreading):
+                    return SpreadingImportType.Degrees;
+                case var a when a == typeof(PowerDefinedSpreading):
+                    return SpreadingImportType.Power;
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         private static IEnumerable<TestCaseData> ShapePeriodTestCases()
