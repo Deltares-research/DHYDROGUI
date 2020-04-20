@@ -35,6 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// </summary>
         /// <param name="category">The category.</param>
         /// <param name="filesManager">The files manager.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="category"/> or <paramref name="filesManager"/>
+        /// is <c>null</c>.
+        /// </exception>
         public SpectrumParametersVisitor(DelftIniCategory category, IFilesManager filesManager)
         {
             Ensure.NotNull(category, nameof(category));
