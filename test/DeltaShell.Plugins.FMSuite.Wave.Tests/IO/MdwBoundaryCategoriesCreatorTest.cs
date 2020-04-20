@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
@@ -52,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             SetupBoundaryContainerForBoundary(boundarySnappingCalculator, supportPoint1, supportPoint2, out Coordinate coordinate1, out Coordinate coordinate2);
 
             // Act
-            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer);
+            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, Substitute.For<IFilesManager>());
 
             // Assert
             DelftIniCategory createdCategory = categories.Single();
@@ -91,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                               out Coordinate boundary2Coordinate1, out Coordinate boundary2Coordinate2);
 
             // Act
-            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer).ToList();
+            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, Substitute.For<IFilesManager>()).ToList();
 
             // Assert
             Assert.AreEqual(2, categories.Count);
@@ -102,15 +104,120 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             CheckCreatedCategory(category2.Properties.ToList(), boundary2Name, boundary2Coordinate1, boundary2Coordinate2);
         }
 
-        [Test]
-        public void CreateCategories_BoundaryContainerNull_ThrowsArgumentNullException()
+        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "boundaryContainer");
+            yield return new TestCaseData(Substitute.For<IBoundaryContainer>(), null, "filesManager");
+        }
+
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void CreateCategories_ArgumentNull_ThrowsArgumentNullException(IBoundaryContainer boundaryContainer,
+                                                                              IFilesManager filesManager,
+                                                                              string expectedParamName)
         {
             // Act
-            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(null).ToList();
+            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryContainer"));
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
+        }
+
+        [Test]
+        public void CreateCategories_WithUniformFileBasedData_CreatesCorrectCategory()
+        {
+            // Setup
+            const string name = "boundary_name";
+            double startX = random.NextDouble();
+            double startY = random.NextDouble();
+            double endX = random.NextDouble();
+            double endY = random.NextDouble();
+            const string fileName = "some_file.txt";
+            string filePath = $"D:\\some_directory\\{fileName}";
+
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            IWaveBoundary boundary = WaveBoundaryBuilder.Create(name, boundaryContainer, 0, 10)
+                                                        .WithCoordinates(startX, startY, endX, endY)
+                                                        .WithUniformFileBasedData(filePath)
+                                                        .Finish();
+            boundaryContainer.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
+
+            var filesManager = Substitute.For<IFilesManager>();
+
+            // Call
+            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+
+            // Assert
+            DelftIniCategory category = categories.Single();
+            DelftIniProperty[] properties = category.Properties.ToArray();
+            Assert.That(properties, Has.Length.EqualTo(8));
+            AssertProperty(properties[0], KnownWaveProperties.Name, name);
+            AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
+            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
+            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
+            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
+            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
+            AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "from file");
+            AssertProperty(properties[7], KnownWaveProperties.Spectrum, fileName);
+
+            filesManager.Received(1).Add(filePath);
+        }
+
+        [Test]
+        public void CreateCategories_WithSpatiallyVaryingFileBasedData_CreatesCorrectCategory()
+        {
+            // Setup
+            const string name = "boundary_name";
+            double startX = random.NextDouble();
+            double startY = random.NextDouble();
+            double endX = random.NextDouble();
+            double endY = random.NextDouble();
+
+            const int distance1 = 0;
+            const string fileName1 = "file_1.txt";
+            string filePath1 = $"D:\\some_directory\\{fileName1}";
+
+            const int distance2 = 5;
+            const string fileName2 = "file_2.txt";
+            string filePath2 = $"D:\\some_directory\\{fileName2}";
+
+            const int distance3 = 10;
+            const string fileName3 = "file_3.txt";
+            string filePath3 = $"D:\\some_directory\\{fileName3}";
+
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            IWaveBoundary boundary = WaveBoundaryBuilder.Create(name, boundaryContainer, distance1, distance2, distance3)
+                                                        .WithCoordinates(startX, startY, endX, endY)
+                                                        .WithSpatiallyVaryingFileBasedData(filePath1, filePath2, filePath3)
+                                                        .Finish();
+            boundaryContainer.Boundaries.Returns(new EventedList<IWaveBoundary> {boundary});
+
+            var filesManager = Substitute.For<IFilesManager>();
+
+            // Call
+            List<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+
+            // Assert
+            DelftIniCategory category = categories.Single();
+            DelftIniProperty[] properties = category.Properties.ToArray();
+            Assert.That(properties, Has.Length.EqualTo(13));
+            AssertProperty(properties[0], KnownWaveProperties.Name, name);
+            AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
+            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
+            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
+            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
+            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
+            AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "from file");
+            AssertProperty(properties[7], KnownWaveProperties.CondSpecAtDist, distance1);
+            AssertProperty(properties[8], KnownWaveProperties.Spectrum, fileName1);
+            AssertProperty(properties[9], KnownWaveProperties.CondSpecAtDist, distance2);
+            AssertProperty(properties[10], KnownWaveProperties.Spectrum, fileName2);
+            AssertProperty(properties[11], KnownWaveProperties.CondSpecAtDist, distance3);
+            AssertProperty(properties[12], KnownWaveProperties.Spectrum, fileName3);
+
+            filesManager.Received(1).Add(filePath1);
+            filesManager.Received(1).Add(filePath2);
+            filesManager.Received(1).Add(filePath3);
         }
 
         private IWaveBoundary CreateWaveBoundary(out SupportPoint supportPoint1, out SupportPoint supportPoint2)
@@ -180,5 +287,80 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         private static string GetStringValue(double value) => value.ToString("e7", CultureInfo.InvariantCulture);
+
+        private static void AssertProperty(DelftIniProperty property, string name, double value)
+        {
+            AssertProperty(property, name, value.ToString("e7", CultureInfo.InvariantCulture));
+        }
+
+        private static void AssertProperty(DelftIniProperty property, string name, string value)
+        {
+            Assert.That(property.Name, Is.EqualTo(name));
+            Assert.That(property.Value, Is.EqualTo(value));
+        }
+
+        private class WaveBoundaryBuilder
+        {
+            private readonly IBoundaryContainer boundaryContainer;
+            private readonly IWaveBoundary boundary;
+            private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
+            private readonly IWaveBoundaryConditionDefinition conditionDefinition;
+            private readonly SupportPoint[] supportPoints;
+
+            private WaveBoundaryBuilder(string name, IBoundaryContainer boundaryContainer, params double[] distances)
+            {
+                this.boundaryContainer = boundaryContainer;
+
+                boundary = Substitute.For<IWaveBoundary>();
+                boundary.Name.Returns(name);
+
+                geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+                boundary.GeometricDefinition.Returns(geometricDefinition);
+                supportPoints = distances.OrderBy(d => d)
+                                         .Select(d => new SupportPoint(d, geometricDefinition)).ToArray();
+                geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>(supportPoints));
+
+                conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+                boundary.ConditionDefinition.Returns(conditionDefinition);
+            }
+
+            public static WaveBoundaryBuilder Create(string name, IBoundaryContainer boundaryContainer, params double[] distances) => new WaveBoundaryBuilder(name, boundaryContainer, distances);
+
+            public WaveBoundaryBuilder WithCoordinates(double startX, double startY, double endX, double endY)
+            {
+                var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
+                boundaryContainer.GetBoundarySnappingCalculator().Returns(boundarySnappingCalculator);
+
+                boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoints.First())
+                                          .Returns(new Coordinate(startX, startY));
+                boundarySnappingCalculator.CalculateCoordinateFromSupportPoint(supportPoints.Last())
+                                          .Returns(new Coordinate(endX, endY));
+
+                return this;
+            }
+
+            public WaveBoundaryBuilder WithUniformFileBasedData(string filePath)
+            {
+                var dataComponent = new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(filePath));
+                conditionDefinition.DataComponent.Returns(dataComponent);
+
+                return this;
+            }
+
+            public WaveBoundaryBuilder WithSpatiallyVaryingFileBasedData(params string[] filePaths)
+            {
+                var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+                foreach (DelftTools.Utils.Tuple<SupportPoint, string> pair in supportPoints.Zip(filePaths))
+                {
+                    dataComponent.AddParameters(pair.First, new FileBasedParameters(pair.Second));
+                }
+
+                conditionDefinition.DataComponent.Returns(dataComponent);
+
+                return this;
+            }
+
+            public IWaveBoundary Finish() => boundary;
+        }
     }
 }

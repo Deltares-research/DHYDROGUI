@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -337,6 +338,119 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [Test]
+        public void SaveTo_UniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied()
+        {
+            // Arrange
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName = "file.txt";
+                string sourceFilePath = Path.Combine(sourceDir, fileName);
+                File.WriteAllText(sourceFilePath, sourceFilePath);
+
+                var dataComponent = new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(sourceFilePath));
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, true);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath, Does.Exist);
+                Assert.That(Path.Combine(targetDir, fileName), Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(8));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, fileName);
+            }
+        }
+
+        [Test]
+        public void SaveTo_SpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied()
+        {
+            // Arrange
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName1 = "file_1.txt";
+                string sourceFilePath1 = Path.Combine(sourceDir, fileName1);
+                File.WriteAllText(sourceFilePath1, sourceFilePath1);
+
+                const string fileName2 = "file_2.txt";
+                string sourceFilePath2 = Path.Combine(sourceDir, fileName2);
+                File.WriteAllText(sourceFilePath2, sourceFilePath2);
+
+                var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                IEventedList<SupportPoint> supportPoints = boundary.GeometricDefinition.SupportPoints;
+                dataComponent.AddParameters(supportPoints[0], new FileBasedParameters(sourceFilePath1));
+                dataComponent.AddParameters(supportPoints[1], new FileBasedParameters(sourceFilePath2));
+
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, true);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath1, Does.Exist);
+                Assert.That(sourceFilePath2, Does.Exist);
+                Assert.That(Path.Combine(targetDir, fileName1), Does.Exist);
+                Assert.That(Path.Combine(targetDir, fileName2), Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(11));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000e+000");
+                AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, fileName1);
+                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "1.0000000e+001");
+                AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, fileName2);
+            }
+        }
+
+        private static void AssertPropertyLine(string line, string propertyName, string value)
+        {
+            string[] pair = line.Split('=');
+
+            Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
+            Assert.That(pair[1].Trim(), Is.EqualTo(value));
+        }
+
+        private static string[] GetBoundaryLines(string filePath)
+        {
+            return File.ReadAllLines(filePath)
+                       .SkipWhile(l => !l.Contains($"[{KnownWaveCategories.BoundaryCategory}]"))
+                       .Skip(1)
+                       .TakeWhile(l => !l.Contains("[") && !string.IsNullOrWhiteSpace(l))
+                       .ToArray();
+        }
+
         private static IWaveBoundary BuildWaveBoundary(ISpatiallyDefinedDataComponent dataComponent)
         {
             IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
@@ -355,7 +469,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             var modelDefinition = new WaveModelDefinition();
             CurvilinearGrid grid = CreateCurvilinearGrid(10, 10);
-            modelDefinition.OuterDomain = new WaveDomainData("Outer") { Grid = grid };
+            modelDefinition.OuterDomain = new WaveDomainData("Outer") {Grid = grid};
             modelDefinition.BoundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
             return modelDefinition;
         }
@@ -405,7 +519,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             geometricDefinition.EndingIndex.Returns(10);
             geometricDefinition.StartingIndex.Returns(0);
             geometricDefinition.Length.Returns(10);
-            geometricDefinition.GridSide.Returns(GridSide.East);
+            geometricDefinition.GridSide.Returns(GridSide.West);
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
             {
                 new SupportPoint(0, geometricDefinition),

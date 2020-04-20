@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO;
@@ -101,12 +102,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
-            IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer);
+            var filesManager = new FilesManager();
+            IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer,
+                                                                                                             filesManager);
+
             WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir);
 
             List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
             mdwCategories.AddRange(boundaryCategories);
+
+            if (!string.IsNullOrEmpty(targetDir))
+            {
+                filesManager.CopyTo(targetDir);
+            }
 
             if (MdwFilePath != null)
             {
@@ -139,12 +148,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // grid is not edited within DS, so always in sync
                 // and a plain file copy suffices
                 CopyGridFiles(allDomains.Select(d => d.GridFileName), sourceDir, targetDir);
-
-                IEnumerable<string> boundarySpectralFiles = mdwCategories
-                                                            .Where(c => c.Name == KnownWaveCategories.BoundaryCategory)
-                                                            .SelectMany(
-                                                                c => c.GetPropertyValues(KnownWaveProperties.Spectrum));
-                boundarySpectralFiles.ForEach(f => CopyModelFile(f, sourceDir, targetDir));
 
                 if (modelDefinition.BoundaryIsDefinedBySpecFile)
                 {
