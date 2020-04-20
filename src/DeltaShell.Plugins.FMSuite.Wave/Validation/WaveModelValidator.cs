@@ -14,6 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 WaveDomainValidator.Validate(model),
                 WaveTimePointValidator.Validate(model),
                 WaveBoundaryConditionValidator.Validate(model.BoundaryConditions),
+                WaveBoundariesValidator.Validate(model.BoundaryContainer.Boundaries),
                 WaveAreaValidator.Validate(model),
                 WaveCouplingValidator.Validate(model),
                 WavePropertiesValidator.Validate(model),
