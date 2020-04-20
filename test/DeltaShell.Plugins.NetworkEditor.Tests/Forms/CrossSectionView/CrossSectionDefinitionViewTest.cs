@@ -17,6 +17,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 {
