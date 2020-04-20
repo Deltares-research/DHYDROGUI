@@ -290,7 +290,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             private readonly IBoundaryContainer boundaryContainer;
             private readonly IWaveBoundary boundary;
-            private readonly IWaveBoundaryGeometricDefinition geometricDefinition;
             private readonly IWaveBoundaryConditionDefinition conditionDefinition;
             private readonly SupportPoint[] supportPoints;
 
@@ -301,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 boundary = Substitute.For<IWaveBoundary>();
                 boundary.Name.Returns(name);
 
-                geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+                var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
                 boundary.GeometricDefinition.Returns(geometricDefinition);
                 supportPoints = distances.OrderBy(d => d)
                                          .Select(d => new SupportPoint(d, geometricDefinition)).ToArray();
