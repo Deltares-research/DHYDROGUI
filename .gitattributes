@@ -3155,7 +3155,6 @@ test/DelftTools.Hydro.Tests/Helpers/CrossSectionConverterTest.cs -text
 test/DelftTools.Hydro.Tests/Helpers/CrossSectionHelperTest.cs -text
 test/DelftTools.Hydro.Tests/Helpers/CrossSectionValidatorTest.cs -text
 test/DelftTools.Hydro.Tests/Helpers/HydroNetworkHelperTest.cs -text
-test/DelftTools.Hydro.Tests/Helpers/RoughnessSectionHelper.cs -text
 test/DelftTools.Hydro.Tests/Helpers/StandardCrossSectionsFactoryTest.cs -text
 test/DelftTools.Hydro.Tests/Helpers/TestSewerNetworkProvider.cs -text
 test/DelftTools.Hydro.Tests/Helpers/ThreadingHelperTest.cs -text

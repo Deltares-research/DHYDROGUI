@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
-using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 
             Assert.IsNotNull(waterFlowFmModel.RoughnessSections);
-            Assert.Greater(waterFlowFmModel.RoughnessSections.Count,0);
+            Assert.Greater(waterFlowFmModel.RoughnessSections.Count, 0);
             Assert.AreEqual(network.CrossSectionSectionTypes.Count, waterFlowFmModel.RoughnessSections.Count);
         }
 
@@ -65,9 +65,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var channelD = network.Branches[3];
             var channelE = network.Branches[4];
             var sections = waterFlowFmModel.RoughnessSections;
-            var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
-            var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
-            
+            var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(GetMainRoughnessSection(sections));
+            var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(GetFloodplain1(sections));
+
             //see readme.txt in model for details
             var locationA = new NetworkLocation(channelA, 10);
             Assert.AreEqual(2.5, reverseMain.EvaluateRoughnessValue(locationA));
@@ -99,8 +99,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(0.02, reverseFp1.EvaluateRoughnessValue(locationD));
             Assert.AreEqual(RoughnessType.Manning, reverseFp1.EvaluateRoughnessType(locationD));
 
-            var main = sections.GetMainRoughnessSection();
-            var floodplain1 = sections.GetFloodplain1();
+            var main = GetMainRoughnessSection(sections);
+            var floodplain1 = GetFloodplain1(sections);
 
             var locationE = new NetworkLocation(channelE, 0); //reverse leading
             Assert.AreEqual(30, main.EvaluateRoughnessValue(locationE));
@@ -138,25 +138,25 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             var network = waterFlowFmModel.Network;
             var sections = waterFlowFmModel.RoughnessSections;
-            var reverseMain = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetMainRoughnessSection());
-            var reverseFp1 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain1());
-            var reverseFp2 = (ReverseRoughnessSection) sections.GetApplicableReverseRoughnessSection(sections.GetFloodplain2());
+            var reverseMain = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(GetMainRoughnessSection(sections));
+            var reverseFp1 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(GetFloodplain1(sections));
+            var reverseFp2 = (ReverseRoughnessSection)sections.GetApplicableReverseRoughnessSection(GetFloodplain2(sections));
 
             Assert.IsTrue(waterFlowFmModel.UseReverseRoughness);
             Assert.IsNotNull(sections);
             Assert.Greater(sections.Count, 0);
-            Assert.AreEqual(network.CrossSectionSectionTypes.Count*2, sections.Count);
+            Assert.AreEqual(network.CrossSectionSectionTypes.Count * 2, sections.Count);
 
             Assert.IsFalse(reverseMain.UseNormalRoughness); //reverse roughness is only defined on main in this model
             Assert.IsFalse(reverseFp1.UseNormalRoughness); //copy of main
             Assert.IsFalse(reverseFp2.UseNormalRoughness); //copy of main
 
             //check values and reverse values differ. 
-            var main = sections.GetMainRoughnessSection();
+            var main = GetMainRoughnessSection(sections);
             var reverseValues =
-                ((IMultiDimensionalArray<double>) reverseMain.RoughnessNetworkCoverage.Components[0].Values).Skip(10).
+                ((IMultiDimensionalArray<double>)reverseMain.RoughnessNetworkCoverage.Components[0].Values).Skip(10).
                     Take(5).ToArray();
-            
+
             var values =
                 ((IMultiDimensionalArray<double>)main.RoughnessNetworkCoverage.Components[0].Values).Skip(10).
                     Take(5).ToArray();
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             Assert.IsNotNull(crossSection);
 
-            var roughnessValues = roughnessSection.RoughnessNetworkCoverage.GetValues(new VariableValueFilter<NetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations,new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
+            var roughnessValues = roughnessSection.RoughnessNetworkCoverage.GetValues(new VariableValueFilter<NetworkLocation>(roughnessSection.RoughnessNetworkCoverage.Locations, new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
 
             Assert.AreEqual(0.04, (double)roughnessValues[0], 0.001);
         }
@@ -208,13 +208,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                                                                                  new IPartialSobekImporter[]
                                                                                      {
                                                                                          new SobekBranchesImporter(),
-                                                                                         new SobekRoughnessImporter(), 
+                                                                                         new SobekRoughnessImporter(),
                                                                                      });
-            
+
             // since upgrade to framework 1.2, takes approx. 15 secs locally - much longer on build server
             TestHelper.AssertIsFasterThan(38000, importer.Import); //on my pc: 13sec, was 75sec.. more to gain though
 
-            Assert.AreEqual(10960, flowModel.RoughnessSections.GetMainRoughnessSection().RoughnessNetworkCoverage.Locations.Values.Count);
+            Assert.AreEqual(10960, GetMainRoughnessSection(flowModel.RoughnessSections).RoughnessNetworkCoverage.Locations.Values.Count);
         }
 
         [Test]
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 });
             importer.Import();
 
-            Assert.IsNotNull(flowModel.RoughnessSections.GetMainRoughnessSection());
+            Assert.IsNotNull(GetMainRoughnessSection(flowModel.RoughnessSections));
 
             var sewerRoughness =
                 flowModel.RoughnessSections.First(rs => rs.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
@@ -251,6 +251,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var roughnessLocation = sewerRoughness.RoughnessNetworkCoverage.Locations.AllValues.First(l => pipeToCheck != null && l.Branch.Equals(pipeToCheck));
             Assert.AreEqual(0.004, sewerRoughness.RoughnessNetworkCoverage[roughnessLocation]);
 
+        }
+
+        private static RoughnessSection GetMainRoughnessSection(IEnumerable<RoughnessSection> sections)
+        {
+            return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.MainSectionTypeName);
+        }
+
+        private static RoughnessSection GetFloodplain1(IEnumerable<RoughnessSection> sections)
+        {
+            return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.Floodplain1SectionTypeName);
+        }
+
+        private static RoughnessSection GetFloodplain2(IEnumerable<RoughnessSection> sections)
+        {
+            return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.Floodplain2SectionTypeName);
         }
     }
 }

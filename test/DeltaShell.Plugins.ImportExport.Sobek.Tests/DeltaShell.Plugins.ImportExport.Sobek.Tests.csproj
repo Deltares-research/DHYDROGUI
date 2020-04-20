@@ -278,10 +278,6 @@
       <Name>DeltaShell.Plugins.ImportExport.Sobek</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
-      <Project>{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}</Project>
-      <Name>DelftTools.Hydro.Tests</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
