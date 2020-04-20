@@ -276,8 +276,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             return modelDef;
         }
 
-        
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_ForAnUniformConstantBoundary_MdwFileShouldContainBoundaryCategoryWithoutBcwFile()
         {
             // Arrange
@@ -307,6 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_ForAnUniformTimeDependentBoundary_MdwFileShouldContainBoundaryCategoryWithBcwFile()
         {
             // Arrange
@@ -339,9 +340,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_UniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied()
         {
-            // Arrange
+            // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
 
             using (var tempDirectory = new TemporaryDirectory())
@@ -381,9 +383,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_SpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied()
         {
-            // Arrange
+            // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
 
             using (var tempDirectory = new TemporaryDirectory())
@@ -487,16 +490,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
             var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Spherical);
             return grid;
-        }
-
-        private static IWaveBoundary BuildWaveBoundary(IWaveBoundaryGeometricDefinition geometricDefinition,
-                                                       WaveBoundaryConditionDefinition conditionDefinition)
-        {
-            var boundary = Substitute.For<IWaveBoundary>();
-            boundary.Name = "boundary_name";
-            boundary.GeometricDefinition.Returns(geometricDefinition);
-            boundary.ConditionDefinition.Returns(conditionDefinition);
-            return boundary;
         }
 
         private static UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> CreateUniformConstantDataComponent()
