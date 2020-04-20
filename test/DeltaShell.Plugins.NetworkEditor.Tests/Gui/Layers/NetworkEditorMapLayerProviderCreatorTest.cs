@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
@@ -26,20 +27,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
             // Assert
             Assert.That(providers.Length, Is.EqualTo(14));
 
-            Assert.That(providers.Any(p => p is HydroAreaLayerProvider));
-            Assert.That(providers.Any(p => p is HydroRegionLayerProvider));
-            Assert.That(providers.Any(p => p is ThinDamsLayerProvider));
-            Assert.That(providers.Any(p => p is FixedWeirsLayerProvider));
-            Assert.That(providers.Any(p => p is ObservationPointsLayerProvider));
-            Assert.That(providers.Any(p => p is ObservationCrossSectionsLayerProvider));
-            Assert.That(providers.Any(p => p is PumpsLayerProvider));
-            Assert.That(providers.Any(p => p is WeirsLayerProvider));
-            Assert.That(providers.Any(p => p is LandBoundariesLayerProvider));
-            Assert.That(providers.Any(p => p is DryPointsLayerProvider));
-            Assert.That(providers.Any(p => p is DryAreasLayerProvider));
-            Assert.That(providers.Any(p => p is EmbankmentsLayerProvider));
-            Assert.That(providers.Any(p => p is EnclosuresLayerProvider));
-            Assert.That(providers.Any(p => p is BridgePillarsLayerProvider));
+            IEnumerable<Type> providerTypes = providers.Select(p => p.GetType());
+            Assert.That(providerTypes, Is.EqualTo(new []
+            {
+                typeof(HydroAreaLayerProvider),
+                typeof(HydroRegionLayerProvider),
+                typeof(ThinDamsLayerProvider),
+                typeof(FixedWeirsLayerProvider),
+                typeof(ObservationPointsLayerProvider),
+                typeof(ObservationCrossSectionsLayerProvider),
+                typeof(PumpsLayerProvider),
+                typeof(WeirsLayerProvider),
+                typeof(LandBoundariesLayerProvider),
+                typeof(DryPointsLayerProvider),
+                typeof(DryAreasLayerProvider),
+                typeof(EmbankmentsLayerProvider),
+                typeof(EnclosuresLayerProvider),
+                typeof(BridgePillarsLayerProvider)
+            }));
         }
 
         [Test]

@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
 
         internal static IEnumerable<ILayerSubProvider> GetSubLayerProviders()
         {
-            // Note that the ordering is important, HydroArea is more specific than IHydroRegion, and as such is first.
             yield return new HydroAreaLayerProvider(); 
             yield return new HydroRegionLayerProvider(); 
             yield return new ThinDamsLayerProvider();
