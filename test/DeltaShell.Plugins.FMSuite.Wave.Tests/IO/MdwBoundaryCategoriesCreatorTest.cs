@@ -262,31 +262,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                                  Coordinate coordinate2)
         {
             Assert.AreEqual(11, properties.Count);
-            Assert.AreEqual(KnownWaveProperties.Name, properties[0].Name);
-            Assert.AreEqual(boundary1Name, properties[0].Value);
-            Assert.AreEqual(KnownWaveProperties.Definition, properties[1].Name);
-            Assert.AreEqual("xy-coordinates", properties[1].Value);
-            Assert.AreEqual(KnownWaveProperties.StartCoordinateX, properties[2].Name);
-            Assert.AreEqual(GetStringValue(coordinate1.X), properties[2].Value);
-            Assert.AreEqual(KnownWaveProperties.EndCoordinateX, properties[3].Name);
-            Assert.AreEqual(GetStringValue(coordinate2.X), properties[3].Value);
-            Assert.AreEqual(KnownWaveProperties.StartCoordinateY, properties[4].Name);
-            Assert.AreEqual(GetStringValue(coordinate1.Y), properties[4].Value);
-            Assert.AreEqual(KnownWaveProperties.EndCoordinateY, properties[5].Name);
-            Assert.AreEqual(GetStringValue(coordinate2.Y), properties[5].Value);
-            Assert.AreEqual(KnownWaveProperties.SpectrumSpec, properties[6].Name);
-            Assert.AreEqual("parametric", properties[6].Value);
-            Assert.AreEqual(KnownWaveProperties.ShapeType, properties[7].Name);
-            Assert.AreEqual("Jonswap", properties[7].Value);
-            Assert.AreEqual(KnownWaveProperties.PeriodType, properties[8].Name);
-            Assert.AreEqual(KnownWaveBoundariesFileConstants.PeakPeriodType, properties[8].Value);
-            Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingType, properties[9].Name);
-            Assert.AreEqual("Power", properties[9].Value);
-            Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[10].Name);
-            Assert.AreEqual(GetStringValue(factor), properties[10].Value);
+            AssertProperty(properties[0], KnownWaveProperties.Name, boundary1Name);
+            AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
+            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, coordinate1.X);
+            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, coordinate2.X);
+            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, coordinate1.Y);
+            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, coordinate2.Y);
+            AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "parametric");
+            AssertProperty(properties[7], KnownWaveProperties.ShapeType, "Jonswap");
+            AssertProperty(properties[8], KnownWaveProperties.PeriodType, KnownWaveBoundariesFileConstants.PeakPeriodType);
+            AssertProperty(properties[9], KnownWaveProperties.DirectionalSpreadingType, "Power");
+            AssertProperty(properties[10], KnownWaveProperties.PeakEnhancementFactor, factor);
         }
-
-        private static string GetStringValue(double value) => value.ToString("e7", CultureInfo.InvariantCulture);
 
         private static void AssertProperty(DelftIniProperty property, string name, double value)
         {
