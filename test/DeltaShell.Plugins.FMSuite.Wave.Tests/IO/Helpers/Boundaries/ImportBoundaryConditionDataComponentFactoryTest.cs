@@ -112,6 +112,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
+        public void CreateUniformFileBasedComponent_ParametersBlockNull_ReturnsCorrectResult()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var fileBasedParameters = new FileBasedParameters("file path");
+            parametersFactory.ConstructDefaultFileBasedParameters().Returns(fileBasedParameters);
+
+            var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
+
+            // Call
+            UniformDataComponent<FileBasedParameters> result = factory.CreateUniformFileBasedComponent(null);
+
+            // Assert
+            Assert.That(result.Data, Is.SameAs(fileBasedParameters));
+        }
+
+        [Test]
+        public void CreateUniformFileBasedComponent_ReturnsCorrectResult()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+
+            const string filePath = "test file path";
+
+            var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
+
+            // Call
+            UniformDataComponent<FileBasedParameters> result = factory.CreateUniformFileBasedComponent(filePath);
+
+            // Assert
+            Assert.That(result.Data.FilePath, Is.SameAs(filePath));
+        }
+
+        [Test]
         public void CreateSpatiallyVaryingConstantComponent_DataPerSupportPointNull_ThrowsArgumentNullException()
         {
             // Setup
@@ -202,6 +236,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Assert
             Assert.That(result.Data[supportPoint1], Is.SameAs(timeDependentParameters1));
             Assert.That(result.Data[supportPoint2], Is.SameAs(timeDependentParameters2));
+        }
+
+        [Test]
+        public void CreateSpatiallyVaryingFileBasedComponent_DataPerSupportPointNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
+
+            // Call
+            void Call() => factory.CreateSpatiallyVaryingFileBasedComponent(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("dataPerSupportPoint"));
+        }
+
+        [Test]
+        public void CreateSpatiallyVaryingFileBasedComponent_ReturnsCorrectResult()
+        {
+            // Setup
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            var supportPoint1 = new SupportPoint(random.NextDouble(), geometricDefinition);
+            const string filePath1 = "file path 1";
+
+            var supportPoint2 = new SupportPoint(random.NextDouble(), geometricDefinition);
+            const string filePath2 = "file path 2";
+
+            Tuple<SupportPoint, string>[] dataPerSupportPoint =
+            {
+                new Tuple<SupportPoint, string>(supportPoint1, filePath1),
+                new Tuple<SupportPoint, string>(supportPoint2, filePath2),
+            };
+
+            var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
+
+            // Call
+            SpatiallyVaryingDataComponent<FileBasedParameters> result = factory.CreateSpatiallyVaryingFileBasedComponent(dataPerSupportPoint);
+
+            // Assert
+            Assert.That(result.Data[supportPoint1].FilePath, Is.SameAs(filePath1));
+            Assert.That(result.Data[supportPoint2].FilePath, Is.SameAs(filePath2));
         }
 
         private ConstantParameters<T> GetExpectedConstantParameters(IForcingTypeDefinedParametersFactory parametersFactory,
