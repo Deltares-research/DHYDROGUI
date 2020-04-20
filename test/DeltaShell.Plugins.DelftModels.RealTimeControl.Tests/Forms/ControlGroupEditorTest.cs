@@ -27,6 +27,7 @@ using Netron.GraphLib;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
