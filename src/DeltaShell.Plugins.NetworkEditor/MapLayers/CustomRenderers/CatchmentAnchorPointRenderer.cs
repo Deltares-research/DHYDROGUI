@@ -14,6 +14,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
     public class CatchmentAnchorPointRenderer : IFeatureRenderer
     {
+        private Dictionary<Bitmap, VectorStyle> CatchmentVectorStyleByBitMap { get; } = new Dictionary<Bitmap, VectorStyle>();
+        private VectorStyle DefaultCatchmentVectorStyle = new VectorStyle { Fill = Brushes.DarkCyan };
         public bool Render(IFeature feature, Graphics g, ILayer layer)
         {
             var catchment = (Catchment)feature;
@@ -27,12 +29,21 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                              : catchment.SubCatchments.Count == 0
                                    ? catchmentType.Icon
                                    : catchmentType.SoftIcon;
-
-            var vectorStyle = new VectorStyle {Fill = Brushes.DarkCyan};
+            VectorStyle vectorStyle = null;
             if (symbol != null)
             {
-                vectorStyle.Symbol = symbol;
+                if (!CatchmentVectorStyleByBitMap.TryGetValue(symbol, out vectorStyle))
+                {
+                    vectorStyle = new VectorStyle {Fill = Brushes.DarkCyan};
+                    vectorStyle.Symbol = symbol;
+                    CatchmentVectorStyleByBitMap[symbol] = vectorStyle;
+                }
             }
+            else
+            {
+                vectorStyle = DefaultCatchmentVectorStyle;
+            }
+
 
             VectorRenderingHelper.RenderGeometry(g, layer.Map, geometry, vectorStyle, null, true);
 
