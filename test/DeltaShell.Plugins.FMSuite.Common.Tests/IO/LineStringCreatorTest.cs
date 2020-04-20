@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
     [TestFixture]
-    public class GeometryCreatorTest
+    public class LineStringCreatorTest
     {
         [Test]
-        public void GivenCollectionOfCoordinates_WhenCreatingPolyLineGeometry_ThenLineStringWithTheSameCoordinatesIsReturned()
+        public void GivenCollectionOfCoordinates_WhenCreatingLineString_ThenLineStringWithTheSameCoordinatesIsReturned()
         {
             // Given
             var coordinates = new[]
@@ -20,16 +20,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             // When
-            var lineString = GeometryCreator.CreatePolyLineGeometry(coordinates);
+            LineString lineString = LineStringCreator.CreateLineString(coordinates);
 
             // Then
-            Assert.That(lineString, Is.InstanceOf<LineString>());
             Assert.That(lineString.Coordinates, Is.EqualTo(coordinates));
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Cannot create poly line with less than 2 points.")]
-        public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingPolyLineGeometry_ThenArgumentExceptionIsThrown()
+        public void GivenCollectionOfCoordinatesSmallerThan2_WhenCreatingLineString_ThenArgumentExceptionIsThrown()
         {
             // Given
             var coordinates = new[]
@@ -38,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             // When/Then
-            GeometryCreator.CreatePolyLineGeometry(coordinates);
+            LineStringCreator.CreateLineString(coordinates);
         }
     }
 }

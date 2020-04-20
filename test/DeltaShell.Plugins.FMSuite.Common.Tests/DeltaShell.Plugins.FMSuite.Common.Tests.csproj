@@ -175,7 +175,7 @@
     <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
     <Compile Include="IO\FunctionExtentionsTest.cs" />
-    <Compile Include="IO\GeometryCreatorTest.cs" />
+    <Compile Include="IO\LineStringCreatorTest.cs" />
     <Compile Include="IO\HtcFileReaderTest.cs" />
     <Compile Include="IO\HtcFileTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />

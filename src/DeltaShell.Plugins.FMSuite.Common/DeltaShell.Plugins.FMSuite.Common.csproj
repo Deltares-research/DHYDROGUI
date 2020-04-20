@@ -150,7 +150,7 @@
     <Compile Include="IO\BackwardCompatibility\DelftIniBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\BackwardCompatibility\IDelftIniBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\FileConstants.cs" />
-    <Compile Include="IO\Files\GeometryCreator.cs" />
+    <Compile Include="IO\Files\LineStringCreator.cs" />
     <Compile Include="IO\Files\HtcFile.cs" />
     <Compile Include="IO\Files\Structures\StructureRegion.cs" />
     <Compile Include="IO\Readers\DiaFileLogSeverity.cs" />

@@ -321,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 : new Feature2D
                 {
                     Name = name,
-                    Geometry = GeometryCreator.CreatePolyLineGeometry(points)
+                    Geometry = LineStringCreator.CreateLineString(points)
                 };
 
         private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems,

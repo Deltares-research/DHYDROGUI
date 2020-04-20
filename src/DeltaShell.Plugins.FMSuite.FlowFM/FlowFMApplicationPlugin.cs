@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return new Embankment
                     {
                         Name = name,
-                        Geometry = GeometryCreator.CreatePolyLineGeometry(points)
+                        Geometry = LineStringCreator.CreateLineString(points)
                     };
                 },
             };
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var feature1 = new FixedWeir
                     {
                         Name = name1,
-                        Geometry = GeometryCreator.CreatePolyLineGeometry(points1)
+                        Geometry = LineStringCreator.CreateLineString(points1)
                     };
                     feature1.InitializeAttributes();
                     return feature1;
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     var pump2D = new Pump2D(true)
                     {
                         Name = name1,
-                        Geometry = GeometryCreator.CreatePolyLineGeometry(points1)
+                        Geometry = LineStringCreator.CreateLineString(points1)
                     };
                     return pump2D;
                 },
@@ -330,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             : new Feature2D
                             {
                                 Name = name,
-                                Geometry = GeometryCreator.CreatePolyLineGeometry(points)
+                                Geometry = LineStringCreator.CreateLineString(points)
                             }
             };
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>

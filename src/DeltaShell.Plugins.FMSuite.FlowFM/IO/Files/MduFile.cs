@@ -894,7 +894,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     var feature = new FixedWeir
                     {
                         Name = name,
-                        Geometry = GeometryCreator.CreatePolyLineGeometry(points)
+                        Geometry = LineStringCreator.CreateLineString(points)
                     };
                     feature.InitializeAttributes();
                     return feature;
@@ -924,7 +924,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         internal static BridgePillar CreateDelegateBridgePillar(string name, List<Coordinate> points)
         {
             var feature = new BridgePillar {Name = name};
-            feature.Geometry = GeometryCreator.CreatePolyLineGeometry(points);
+            feature.Geometry = LineStringCreator.CreateLineString(points);
             feature.InitializeAttributes();
             return feature;
         }

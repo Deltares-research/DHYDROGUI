@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                             {
                                 Name = name,
                                 Geometry = points.Count != 1
-                                               ? GeometryCreator.CreatePolyLineGeometry(points)
+                                               ? (IGeometry) LineStringCreator.CreateLineString(points)
                                                : new Point(points.FirstOrDefault())
                             };
 

@@ -7,9 +7,9 @@ using NetTopologySuite.Geometries;
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     /// <summary>
-    /// Creator methods to used to create instances of <see cref="IGeometry"/>.
+    /// Creator method to used to create instances of <see cref="LineString"/>.
     /// </summary>
-    public static class GeometryCreator
+    public static class LineStringCreator
     {
         /// <summary>
         /// Creates and returns a <see cref="LineString"/> object with the provided coordinates.
@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// <param name="coordinates">The collection of coordinates to put into the <see cref="LineString"/> object.</param>
         /// <returns>A <see cref="LineString"/> object with the provided collection of coordinates.</returns>
         /// <exception cref="ArgumentException">Thrown when the amount of coordinates is smaller than 2.</exception>
-        public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates)
+        public static LineString CreateLineString(IList<Coordinate> coordinates)
         {
             if (coordinates.Count < 2)
             {
