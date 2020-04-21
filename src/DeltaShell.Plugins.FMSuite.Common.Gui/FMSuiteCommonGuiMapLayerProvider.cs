@@ -141,5 +141,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         {
            yield break;
         }
+
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
     }
 }

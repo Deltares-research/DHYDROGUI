@@ -113,5 +113,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 }
             }
         }
+
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
     }
 }

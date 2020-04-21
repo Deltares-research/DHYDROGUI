@@ -120,5 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 }
             }
         }
+
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
     }
 }

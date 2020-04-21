@@ -190,6 +190,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
+
         public ILayer CreateLayer(object data, object parentData)
         {
             var area2D = data as HydroArea;

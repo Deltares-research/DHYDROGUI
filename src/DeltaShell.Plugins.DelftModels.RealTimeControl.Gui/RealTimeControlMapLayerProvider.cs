@@ -137,6 +137,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
 
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
+
         private static CategorialThemeItem CreateEnumCategorialThemeItem<T>(T enumValue, Image image) where T : struct, IConvertible
         {
             var value = (Enum)Enum.Parse(typeof(T), enumValue.ToString());

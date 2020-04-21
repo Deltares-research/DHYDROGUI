@@ -534,6 +534,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            
+        }
+
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
