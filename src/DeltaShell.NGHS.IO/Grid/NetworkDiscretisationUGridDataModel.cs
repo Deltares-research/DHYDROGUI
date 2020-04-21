@@ -71,10 +71,10 @@ namespace DeltaShell.NGHS.IO.Grid
                     DiscretisationPointIds[discretisationPointIdx] = discretisationPoint.Name;
                     DiscretisationPointDescriptions[discretisationPointIdx] = discretisationPoint.LongName;
                     DiscretisationPointsX[discretisationPointIdx] = discretisationPoint.Geometry.Coordinate != null
-                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.X * DIGITS) / DIGITS //Math.Round(discretisationPoint.Geometry.Coordinate.X, 6, MidpointRounding.ToEven)
+                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.X * DIGITS) / DIGITS 
                         : 0.0d;
                     DiscretisationPointsY[discretisationPointIdx] = discretisationPoint.Geometry.Coordinate != null
-                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.Y * DIGITS) / DIGITS //Math.Round(discretisationPoint.Geometry.Coordinate.Y, 6, MidpointRounding.ToEven)
+                        ? Math.Floor(discretisationPoint.Geometry.Coordinate.Y * DIGITS) / DIGITS
                         : 0.0d;
                 });
                 
@@ -105,8 +105,8 @@ namespace DeltaShell.NGHS.IO.Grid
                         meshEdgeBranch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(
                             (meshEdge.Chainage + meshEdge.EndChainage) / 2);
                     
-                    EdgePointsX[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.X * DIGITS) / DIGITS : 0.0d;//Math.Round(meshEdge.Geometry.Centroid.X, 6, MidpointRounding.ToEven) 
-                    EdgePointsY[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.Y * DIGITS) / DIGITS : 0.0d;//Math.Round(meshEdge.Geometry.Centroid.Y, 6, MidpointRounding.ToEven) 
+                    EdgePointsX[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.X * DIGITS) / DIGITS : 0.0d;
+                    EdgePointsY[meshEdgesIdx] = meshEdge.Geometry?.Centroid != null ? Math.Floor(meshEdge.Geometry.Centroid.Y * DIGITS) / DIGITS : 0.0d;
 
                     var segmentStartChainage = meshEdge.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(meshEdge.Chainage);
                     EdgeNodes[meshEdgesIdx*2] = -1;

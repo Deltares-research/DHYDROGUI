@@ -218,27 +218,19 @@ namespace DeltaShell.NGHS.IO.Grid
                     {
                         var compartmentX = m.Geometry.Coordinate.X - offset + i;
                         var compartmentY = m.Geometry.Coordinate.Y;
-                        compartmentsX.Add(Math.Floor(compartmentX * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); // Math.Round(compartmentX, 6, MidpointRounding.ToEven));
-                        compartmentsY.Add(Math.Floor(compartmentY * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); //Math.Round(compartmentY, 6, MidpointRounding.ToEven));
+                        compartmentsX.Add(Math.Floor(compartmentX * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); 
+                        compartmentsY.Add(Math.Floor(compartmentY * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS); 
                         compartmentCoordinateDictionary.Add(m.Compartments[i].Name, new Coordinate(compartmentX, compartmentY));
                     }
                 });
 
                 NumberOfNodes = nonManholeNetworkNodes.Count + compartmentCount;
                 NodesX = nonManholeNetworkNodes
-                    .Select(n => n.Geometry.Coordinates.Any() ? Math.Round(n.Geometry.Coordinates[0].X - 0.0000005, 6) : 0).Concat(compartmentsX)
+                    .Select(n => n.Geometry.Coordinates.Any() ? Math.Floor(n.Geometry.Coordinates[0].X * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS : 0).Concat(compartmentsX)
                     .ToArray();
-                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? Math.Round(n.Geometry.Coordinates[0].Y - 0.0000005, 6) : 0).Concat(compartmentsY).ToArray();
+                NodesY = nonManholeNetworkNodes.Select(n => n.Geometry.Coordinates.Any() ? Math.Floor(n.Geometry.Coordinates[0].Y * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS : 0).Concat(compartmentsY).ToArray();
                 NodesNames = nonManholeNetworkNodes.Select(n => n.Name).Concat(compartments.Select(c => c.Name)).ToArray();
                 NodesDescriptions = nonManholeNetworkNodes.OfType<IHydroNode>().Select(n => n.LongName).Concat(compartments.Select(c => string.Empty)).ToArray();
-                
-                /*var networkNodes = network.Nodes.OfType<IHydroNode>().ToArray();
-                NumberOfNodes = networkNodes.Length;
-                NodesX = networkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].X : 0).ToArray();
-                NodesY = networkNodes.Select(n => n.Geometry.Coordinates.Any() ? n.Geometry.Coordinates[0].Y : 0).ToArray();
-                NodesNames = networkNodes.Select(n => n.Name).ToArray();
-                NodesDescriptions = networkNodes.Select(n => n.LongName).ToArray();
-                */
             }
 
             if (network.Branches != null)
@@ -258,34 +250,18 @@ namespace DeltaShell.NGHS.IO.Grid
                 }).ToArray();
                 TargedNodesIds = targetNames.Select(n => NodesNames.ToList().IndexOf(n)).ToArray();
 
-                BranchLengths = network.Branches.Select(b => b.IsLengthCustom? b.Length : Math.Round(b.Length - 0.0000005, 6)).ToArray();
+                BranchLengths = network.Branches.Select(b => b.IsLengthCustom? b.Length : Math.Floor(b.Length * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS).ToArray();
 
-                NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry.Coordinates.Length);
+                NumberOfGeometryPoints = network.Branches.Sum(b => b.Geometry?.Coordinates?.Length ?? 0);
                 NumberOfGeometryPointsPerBranch = network.Branches.Select(b => b.Geometry?.Coordinates?.Length ?? 0).ToArray();
 
                 BranchNames = network.Branches.Select(b => b.Name).ToArray();
                 BranchDescriptions = network.Branches.Select(b => b.Description).ToArray();
                 BranchOrderNumbers = network.Branches.Select(b => b.OrderNumber).ToArray();
                 
-                /*var nonSewerConnections = network.Branches.Where(b => !(b is SewerConnection)).ToArray();
-
-                // Determine the end points of the sewer connections,
-                // because the compartment coordinates are adjusted slightly
-                var sourceAndTargetCompartments = new List<string>();
-                network.SewerConnections.ForEach(sc =>
-                {
-                    sourceAndTargetCompartments.Add(sc.SourceCompartment.Name);
-                    sourceAndTargetCompartments.Add(sc.TargetCompartment.Name);
-                });
-
-                var compartmentXCoordinates = sourceAndTargetCompartments.Select(name => compartmentCoordinateDictionary[name].X);
-                var compartmentYCoordinates = sourceAndTargetCompartments.Select(name => compartmentCoordinateDictionary[name].Y);
-
-                GeopointsX = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.X)).Concat(compartmentXCoordinates).ToArray();
-                GeopointsY = nonSewerConnections.SelectMany(b => b.Geometry.Coordinates.Select(c => c.Y)).Concat(compartmentYCoordinates).ToArray();*/
                 var networkBranches = network.Branches.ToArray();
-                GeopointsX = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => Math.Round(c.X - 0.0000005, 6))).ToArray();
-                GeopointsY = networkBranches.SelectMany(branch => branch.Geometry.Coordinates.Select(c => Math.Round(c.Y - 0.0000005, 6))).ToArray();
+                GeopointsX = networkBranches.SelectMany(branch => branch.Geometry?.Coordinates?.Select(c => Math.Floor(c.X * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS)).ToArray();
+                GeopointsY = networkBranches.SelectMany(branch => branch.Geometry?.Coordinates?.Select(c => Math.Floor(c.Y * NetworkDiscretisationUGridDataModel.DIGITS) / NetworkDiscretisationUGridDataModel.DIGITS)).ToArray();
                 BranchTypes = networkBranches.Select(GetBranchType).ToArray();
             }
         }
