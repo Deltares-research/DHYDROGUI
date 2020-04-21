@@ -9,6 +9,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Store1D;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
@@ -116,29 +117,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var netFilePath = Path;
             if (!File.Exists(netFilePath)) return;
-            int numberOfNetworks;
-            using (var uGridNetwork = new UGridNetwork(netFilePath))
-            {
-                numberOfNetworks = uGridNetwork.GetNumberOfNetworks();
-            }
+
+            int numberOfNetworks = UGridFileHelper.GetNumberOfNetworks(netFilePath);
             if (numberOfNetworks != 1) return;
 
-            int numberOfNetworkDiscretisations;
-            using (var uGridNetworkDiscretisation = new UGridNetworkDiscretisation(netFilePath))
-            {
-                numberOfNetworkDiscretisations = uGridNetworkDiscretisation.GetNumberOfNetworkDiscretisations();
-            }
+            int numberOfNetworkDiscretisations = UGridFileHelper.GetNumberOfNetworkDiscretizations(netFilePath);
             if (numberOfNetworkDiscretisations != 1) return;
 
             using (ReconnectToMapFile())
             {
-                if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
+                if (!UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
 
-                var branchData = UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath);
+                var branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+                var compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
                 outputNetwork.Nodes.Clear();
                 outputNetwork.Branches.Clear();
                 outputDiscretization.Clear();
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, null, branchData);
+
+                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, compartmentData, branchData);
 
                 foreach (var hydroObject in outputNetwork.AllHydroObjects)
                 {
@@ -151,42 +147,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             }
         }
-        private GridApiDataSet.DataSetConventions GetNcFileConvention()
-        {
-            try
-            {
-                var api = GridApiFactory.CreateNew();
-                if (api != null)
-                {
-                    using (api)
-                    {
-                        GridApiDataSet.DataSetConventions convention;
-                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
-                        if (ierr != GridApiDataSet.GridConstants.NOERR)
-                        {
-                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
-                        }
-                        return convention;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.ErrorFormat("Failed to construct grid spatial data : {0}", e.Message);
-            }
-
-            return GridApiDataSet.DataSetConventions.CONV_NULL;
-        }
 
         protected virtual void UpdateFunctionsAfterPathSet()
         {
-            if(CoordinateSystem == null) CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(Path);
+            if(CoordinateSystem == null) CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
             Functions.Clear();
             if (File.Exists(Path))
             {
                 using (ReconnectToMapFile())
                 {
-                    if (GetNcFileConvention() != GridApiDataSet.DataSetConventions.CONV_UGRID) return;
+                    if (! UGridFileHelper.IsUGridFile(netCdfFile.Path)) return;
                     Functions.AddRange(ConstructFunctions(GetVariableInfos()));
                 }
             }
@@ -261,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
 
-            var location = netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location);
+            var location = netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName);
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
 
             coverage = CreateNetworkCoverage(coverageLongName, unitSymbol);

@@ -1034,9 +1034,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UnstructuredGridFileHelper.BedLevelLocation.Faces,
-                UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev,
-                UnstructuredGridFileHelper.BedLevelLocation.Faces
+                UGridFileHelper.BedLevelLocation.Faces,
+                UGridFileHelper.BedLevelLocation.NodesMeanLev,
+                UGridFileHelper.BedLevelLocation.Faces
             }, 
             new[]
             {
@@ -1048,9 +1048,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev,
-                UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes,
-                UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev
+                UGridFileHelper.BedLevelLocation.NodesMaxLev,
+                UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes,
+                UGridFileHelper.BedLevelLocation.NodesMinLev
             }, 
             new[]
             {
@@ -1062,7 +1062,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(
             new[]
             {
-                UnstructuredGridFileHelper.BedLevelLocation.CellEdges
+                UGridFileHelper.BedLevelLocation.CellEdges
             }, 
             new[]
             {
@@ -1072,7 +1072,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         )]
 
-        public void TestUpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
+        public void TestUpdateBathymetryCoverage(UGridFileHelper.BedLevelLocation[] bedLevelLocations, Type[] coverageTypes)
         {
             // if this is false, the test cases are not correct
             Assert.That(coverageTypes.Length, Is.EqualTo(bedLevelLocations.Length));
@@ -1436,7 +1436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(File.Exists(gridPath));
 
             model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).SetValueAsString(gridPath);
-            model.Grid = UnstructuredGridFileHelper.LoadFromFile(gridPath);
+            model.Grid = UGridFileHelper.ReadUnstructuredGrid(gridPath);
             Assert.IsNotEmpty(model.Links);
             Assert.That(model.Links.Count, Is.Not.EqualTo(0));
         }

@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         public static UnstructuredGrid CreateUnstructuredGrid(this Disposable2DMeshGeometry meshGeometry)
         {
             var grid = new UnstructuredGrid();
-            grid.SetMeshGeometry(meshGeometry);
+            grid.SetMesh2DGeometry(meshGeometry);
             return grid;
         }
 
@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// </summary>
         /// <param name="grid">Grid to reset</param>
         /// <param name="meshGeometry">Mesh geometry to use</param>
-        public static void SetMeshGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry)
+        public static void SetMesh2DGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry)
         {
             if (!grid.IsEmpty)
             {
@@ -62,7 +62,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <returns>The generated <see cref="Disposable2DMeshGeometry"/></returns>
         public static Disposable2DMeshGeometry CreateDisposable2DMeshGeometry(this UnstructuredGrid grid)
         {
-
             var mesh = new Disposable2DMeshGeometry();
 
             mesh.SetNodeArrays(grid.Vertices);
@@ -169,7 +168,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         public static IDiscretization CreateDiscretization(this Disposable1DMeshGeometry meshGeometry, IHydroNetwork network)
         {
             var grid = new Discretization();
-            grid.SetMeshGeometry(meshGeometry, network);
+            grid.SetMesh1DGeometry(meshGeometry, network);
             return grid;
         }
 
@@ -179,7 +178,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to set</param>
         /// <param name="meshGeometry">Mesh geometry to set</param>
         /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
-        public static void SetMeshGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network)
+        public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network)
         {
             discretization.Network = network;
             discretization.Name = meshGeometry.Name;
@@ -316,8 +315,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static void SetBranchDataArrays(DisposableNetworkGeometry mesh, IHydroNetwork network, IDictionary<object, int> nodeIndexLookup)
         {
-            var innerConnections = CreateInnerConnections(network).ToList();
-            var numberOfBranches = network.Branches.Count + innerConnections.Count;
+            var numberOfBranches = network.Branches.Count;
 
             mesh.BranchIds = new string[numberOfBranches];
             mesh.BranchLongNames = new string[numberOfBranches];
@@ -332,13 +330,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             var geometryYData = new List<double>();
 
             // add channels, pipes and sewer-connections as branches
-            var branches = network.Branches.Concat(innerConnections).ToArray();
 
             for (int i = 0; i < numberOfBranches; i++)
             {
-                var branch = branches[i];
+                var branch = network.Branches[i];
                 mesh.BranchIds[i] = branch.Name;
-                mesh.BranchLongNames[i] = branch.Description;
+                mesh.BranchLongNames[i] = branch.Description ?? "";
                 mesh.BranchGeometryNodesCount[i] = branch.Geometry.Coordinates.Length;
                 mesh.BranchLengths[i] = branch.Length;
                 mesh.BranchOrder[i] = branch.OrderNumber;
@@ -347,8 +344,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 // lookup node index in nodes array
                 if (branch is ISewerConnection connection)
                 {
-                    mesh.NodesTo[i] = nodeIndexLookup[connection.TargetCompartment];
-                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment];
+                    mesh.NodesTo[i] = nodeIndexLookup[connection.TargetCompartment ?? (object)connection.Target];
+                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment ?? (object)connection.Source];
                 }
                 else
                 {
@@ -374,86 +371,60 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         private static Dictionary<object, int> SetNodeDataArrays(DisposableNetworkGeometry mesh, IHydroNetwork network)
         {
-            var compartments = network.Manholes.SelectMany(m => m.Compartments).ToList();
-            var hydroNodes = network.HydroNodes.ToList();
+            var compartmentsCount = network.Manholes.SelectMany(m => m.Compartments).Count();
+            var hydroNodesCount = network.HydroNodes.Count();
 
-            var nodeCount = compartments.Count + hydroNodes.Count; // compartments and hydro nodes
+            var nodeCount = compartmentsCount + hydroNodesCount; // compartments and hydro nodes
 
             mesh.NodesX = new double[nodeCount];
             mesh.NodesY = new double[nodeCount];
             mesh.NodeIds = new string[nodeCount];
             mesh.NodeLongNames = new string[nodeCount];
 
-            // add compartments as nodes
-            var compartmentInfoLookup = network.Manholes
-                .SelectMany(m => m.Compartments
-                    .Select((c, i) => new {Compartment = c, Manhole = m, Index = i}))
-                .ToDictionary(t => t.Compartment, t => t);
-
             // cache node indices
             var nodeIndexLookup = new Dictionary<object, int>();
-            for (int i = 0; i < compartments.Count; i++)
+            var addedNodeIndex = 0;
+
+            for (int i = 0; i < network.Nodes.Count; i++)
             {
-                var compartment = compartments[i];
-                var compartmentInfo = compartmentInfoLookup[compartment];
+                var node = network.Nodes[i];
+                if (node is IManhole manhole)
+                {
+                    for (int j = 0; j < manhole.Compartments.Count; j++)
+                    {
+                        var compartment = manhole.Compartments[j];
 
-                var manhole = compartmentInfo.Manhole;
-                var offset = (manhole.Compartments.Count - 1) * 0.5;
+                        var offset = (manhole.Compartments.Count - 1) * 0.5;
+                        var compartmentX = manhole.Geometry.Coordinate.X - offset + j;
 
-                var compartmentX = manhole.Geometry.Coordinate.X - offset + compartmentInfo.Index;
+                        mesh.NodesX[addedNodeIndex] = compartmentX;
+                        mesh.NodesY[addedNodeIndex] = manhole.Geometry.Coordinate.Y;
+                        mesh.NodeIds[addedNodeIndex] = compartment.Name;
+                        mesh.NodeLongNames[addedNodeIndex] = manhole.LongName ?? "";
 
-                mesh.NodesX[i] = compartmentX;
-                mesh.NodesY[i] = manhole.Geometry.Coordinate.Y;
-                mesh.NodeIds[i] = compartment.Name;
-                mesh.NodeLongNames[i] = manhole.LongName;
+                        nodeIndexLookup.Add(compartment, addedNodeIndex);
+                        addedNodeIndex += 1;
+                    }
+                    continue;
+                }
 
-                nodeIndexLookup.Add(compartment, i);
-            }
+                mesh.NodesX[addedNodeIndex] = node.Geometry.Coordinate.X;
+                mesh.NodesY[addedNodeIndex] = node.Geometry.Coordinate.Y;
+                mesh.NodeIds[addedNodeIndex] = node.Name;
 
-            //  add hydro-nodes as nodes 
-            for (int i = 0; i < hydroNodes.Count; i++)
-            {
-                var hydroNode = hydroNodes[i];
-                var index = compartments.Count + i;
+                if (node is IHydroNode hydroNode)
+                {
+                    mesh.NodeLongNames[addedNodeIndex] = hydroNode.LongName ?? "";
+                }
 
-                mesh.NodesX[index] = hydroNode.Geometry.Coordinate.X;
-                mesh.NodesY[index] = hydroNode.Geometry.Coordinate.Y;
-                mesh.NodeIds[index] = hydroNode.Name;
-                mesh.NodeLongNames[index] = hydroNode.LongName;
-
-                nodeIndexLookup.Add(hydroNode, index);
+                nodeIndexLookup.Add(node, addedNodeIndex);
+                addedNodeIndex += 1;
             }
 
             return nodeIndexLookup;
         }
 
-        private static IEnumerable<ISewerConnection> CreateInnerConnections(IHydroNetwork network)
-        {
-            var manholes = network.Manholes.Where(m => m.Compartments.Count > 1).ToList();
-            for (int i = 0; i < manholes.Count; i++)
-            {
-                var manhole = manholes[i];
-                var manholeCoordinate = manhole.Geometry.Coordinate;
-                var offset = (manhole.Compartments.Count - 1) * 0.5;
-
-                for (var j = 1; j < manhole.Compartments.Count; j++)
-                {
-                    yield return new SewerConnection($"innerConnection{i + j}")
-                    {
-                        SourceCompartment = manhole.Compartments[j-1],
-                        TargetCompartment = manhole.Compartments[j],
-                        Length = 1, // always 1 m
-                        Geometry = new LineString(new []
-                        {
-                            new Coordinate(manholeCoordinate.X + offset + j -1, manholeCoordinate.Y),
-                            new Coordinate(manholeCoordinate.X + offset + j, manholeCoordinate.Y),
-                        })
-                    };
-                }
-            }
-        }
-
-        private static NetworkUGridDataModel.BranchType GetBranchType(this IBranch branch)
+        private static BranchType GetBranchType(this IBranch branch)
         {
             switch (branch)
             {
@@ -461,18 +432,18 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     switch (s.WaterType)
                     {
                         case SewerConnectionWaterType.None:
-                            return NetworkUGridDataModel.BranchType.TransportWater;
+                            return BranchType.TransportWater;
                         case SewerConnectionWaterType.StormWater:
-                            return NetworkUGridDataModel.BranchType.StormWaterFlow;
+                            return BranchType.StormWaterFlow;
                         case SewerConnectionWaterType.DryWater:
-                            return NetworkUGridDataModel.BranchType.DryWeatherFlow;
+                            return BranchType.DryWeatherFlow;
                         case SewerConnectionWaterType.Combined:
-                            return NetworkUGridDataModel.BranchType.MixedFlow;
+                            return BranchType.MixedFlow;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
                 default:
-                    return NetworkUGridDataModel.BranchType.SurfaceWater;
+                    return BranchType.SurfaceWater;
                 case null:
                     throw new ArgumentNullException(nameof(branch));
             }
@@ -488,6 +459,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 .ToDictionary(n => n.key, m => m.node);
 
             var propertiesLookup = branchProperties?.ToDictionary(p => p.Name);
+            var compartments = nodes.OfType<IManhole>().SelectMany(m => m.Compartments).ToDictionary(c => c.Name);
 
             var branches = new List<IBranch>();
 
@@ -495,39 +467,39 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             for (int i = 0; i < numberOfBranches; i++)
             {
-                var nodeTo = nodeLookup[networkGeometry.NodeIds[networkGeometry.NodesTo[i]]];
-                var nodeFrom = nodeLookup[networkGeometry.NodeIds[networkGeometry.NodesFrom[i]]];
+                var toNodeId = networkGeometry.NodeIds[networkGeometry.NodesTo[i]];
+                var fromNodeId = networkGeometry.NodeIds[networkGeometry.NodesFrom[i]];
 
-                var nodeCount = networkGeometry.BranchGeometryNodesCount[i];
-                if (nodeTo == nodeFrom)
-                {
-                    // skip if it is a connection between 2 compartments in the same manhole
-                    geometryOffset += nodeCount;
-                    continue;
-                }
-
-                var type = networkGeometry.BranchTypes[i];
-
+                // var type = networkGeometry.BranchTypes[i];
                 // todo: find out what to do with branch type from file.
                 // Currently the branch type from the properties is used
                 var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i]);
                 
-                branch.Source = nodeFrom;
-                branch.Target = nodeTo;
+                branch.Source = nodeLookup[fromNodeId];
+                branch.Target = nodeLookup[toNodeId];
                 branch.Name = networkGeometry.BranchIds[i];
                 ((IHydroNetworkFeature)branch).LongName = networkGeometry.BranchLongNames[i];
                 branch.Length = networkGeometry.BranchLengths[i];
                 branch.OrderNumber = networkGeometry.BranchOrder[i];
 
-                var coordinates = new List<Coordinate>();
-
-                for (int j = geometryOffset; j < nodeCount + geometryOffset; j++)
+                if (branch is ISewerConnection sewerConnection)
                 {
-                    coordinates.Add(new Coordinate(networkGeometry.BranchGeometryX[j], networkGeometry.BranchGeometryY[j]));
+                    // compartment can be null when coupled to rural network
+                    sewerConnection.SourceCompartment = compartments.ContainsKey(fromNodeId) ? compartments[fromNodeId] : null;
+                    sewerConnection.TargetCompartment = compartments.ContainsKey(toNodeId) ? compartments[toNodeId] : null;
+                }
+
+                var nodeCount = networkGeometry.BranchGeometryNodesCount[i];
+                var coordinates = new Coordinate[nodeCount];
+
+                for (int j = 0; j < nodeCount; j++)
+                {
+                    var geometryIndex = j + geometryOffset;
+                    coordinates[j] = new Coordinate(networkGeometry.BranchGeometryX[geometryIndex], networkGeometry.BranchGeometryY[geometryIndex]);
                 }
 
                 geometryOffset += nodeCount;
-                branch.Geometry = new LineString(coordinates.ToArray());
+                branch.Geometry = new LineString(coordinates);
 
                 branches.Add(branch);
             }
@@ -543,6 +515,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 {
                     yield return compartment.Name;
                 }
+                yield break;
             }
 
             yield return node.Name;

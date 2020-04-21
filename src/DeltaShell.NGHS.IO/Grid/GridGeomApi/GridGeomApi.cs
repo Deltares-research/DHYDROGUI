@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Utils.Interop;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -45,7 +46,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             get { return Path.Combine(DllDirectory, Environment.Is64BitProcess ? "x64" : "x86", DFLOWFM_FOLDER_NAME, DFLOWFM_BINFOLDER_NAME); }
         }
 
-        public int LastErrorCode { get; private set; } = GridApiDataSet.GridConstants.NOERR;
+        public int LastErrorCode { get; private set; } = UGridConstants.NoErrorCode;
 
         #region 1d2dlinks logic
 
@@ -74,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                         filter1DMesh);
             }
 
-            LastErrorCode = GridApiDataSet.GridConstants.NOERR;
+            LastErrorCode = UGridConstants.NoErrorCode;
             return null; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
@@ -97,7 +98,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(mesh2D, mesh1D, MakeLateral1D2DLinks, selectedArea, LinkType.EmbeddedOneToOne, filter1DMesh);
             }
 
-            LastErrorCode = GridApiDataSet.GridConstants.NOERR;
+            LastErrorCode = UGridConstants.NoErrorCode;
 
             return null; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
@@ -114,7 +115,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 return SetUpGridGeomConnectionAndInvokeFunctionMake1D2DLink(mesh2D, mesh1D, Make1D2DGullyLinks, null, LinkType.GullySewer, filter1DMesh, geometryGullies);
             }
 
-            LastErrorCode = GridApiDataSet.GridConstants.NOERR;
+            LastErrorCode = UGridConstants.NoErrorCode;
             return null; //no selected area possible, no discretization points available. result will be no 1d2d links anyway -> no error
         }
 
@@ -144,14 +145,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 Marshal.Copy(filterMesh1DPointsArray, 0, intPtrfilterMesh1DPoints, nFilterMesh1DPoints);
 
                 var ierr = geomWrapper.Make1D2DGullyLinks(ref nCoordinatesGullies, ref intPtrXValuesGullies, ref intPtrYValuesGullies, ref nFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     return ierr;
                 }
             }
             catch
             {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                return UGridConstants.GeneralFatalErrorCode;
             }
             finally
             {
@@ -166,7 +167,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
-            return GridApiDataSet.GridConstants.NOERR;
+            return UGridConstants.NoErrorCode;
         }
 
         private int MakeLateral1D2DLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> dummy = null)
@@ -201,14 +202,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                 var ierr = geomWrapper.Make1D2DLateralLinks(ref nCoordinates, ref intPtrXValuesSelectedArea, ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPointsArray, ref intPtrfilterMesh1DPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     return ierr;
                 }
             }
             catch
             {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                return UGridConstants.GeneralFatalErrorCode;
             }
             finally
             {
@@ -226,7 +227,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
-            return GridApiDataSet.GridConstants.NOERR;
+            return UGridConstants.NoErrorCode;
         }
 
         private int MakeEmbeddedOneToOne1D2DLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> dummy = null)
@@ -261,14 +262,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                 var ierr = geomWrapper.Make1D2DEmbeddedOneToOneLinks(ref nCoordinates, ref intPtrXValuesSelectedArea, ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPointsArray, ref intPtrfilterMesh1DPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     return ierr;
                 }
             }
             catch
             {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                return UGridConstants.GeneralFatalErrorCode;
             }
             finally
             {
@@ -286,7 +287,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
-            return GridApiDataSet.GridConstants.NOERR;
+            return UGridConstants.NoErrorCode;
         }
 
         private int MakeEmbeddedOneToMany1D2DLinks(IPolygon selectedArea, IList<bool> filterMesh1DPoints, IEnumerable<IGeometry> dummy = null)
@@ -322,14 +323,14 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 var ierr = geomWrapper.Make1D2DEmbeddedOneToManyLinks(ref nCoordinates, ref intPtrXValuesSelectedArea,
                         ref intPtrYValuesSelectedArea, ref intPtrZValuesSelectedArea, ref nFilterMesh1DPointsArray, ref intPtrfilterMesh1DPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     return ierr;
                 }
             }
             catch
             {
-                return GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                return UGridConstants.GeneralFatalErrorCode;
             }
             finally
             {
@@ -347,7 +348,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 intPtrfilterMesh1DPoints = IntPtr.Zero;
             }
 
-            return GridApiDataSet.GridConstants.NOERR;
+            return UGridConstants.NoErrorCode;
         }
 
         private static IPolygon GetSelectAllArea(List<IPoint> points)
@@ -389,7 +390,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             try
             {
                 var ierr = geomWrapper.DeallocateMemory();
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -401,7 +402,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                     ref native.branchLength, ref native.branchIds, ref native.sourcenodeid, ref native.targetnodeid, ref native.nBranches,
                     ref native.nMeshPoints);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -412,7 +413,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 
                 ierr = geomWrapper.Convert(ref meshtwod, ref meshtwoddim);
 
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -420,7 +421,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
                 //9. make the links
                 ierr = make1D2DLinks.Invoke(selectedArea, filter1DMesh, filter2DMesh);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -430,7 +431,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 var intLinkType = (int)linkType;
                 var linksCount = 0;
                 ierr = geomWrapper.GetLinkCount(ref linksCount, ref intLinkType);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -443,7 +444,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 c_arrayfrom = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //2d cell number
                 c_arrayto = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)) * linksCount); //1d node
                 ierr = geomWrapper.Get1d2dLinks(ref c_arrayfrom, ref c_arrayto, ref linksCount, ref intLinkType);
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -468,7 +469,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                     Marshal.FreeCoTaskMem(c_arrayto);
 
                 ierr = geomWrapper.DeallocateMemory();
-                if (ierr != GridApiDataSet.GridConstants.NOERR)
+                if (ierr != UGridConstants.NoErrorCode)
                 {
                     LastErrorCode = ierr;
                     return null;
@@ -478,7 +479,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             }
             catch (Exception e)
             {
-                LastErrorCode = GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                LastErrorCode = UGridConstants.GeneralFatalErrorCode;
                 return null;
             }
             finally

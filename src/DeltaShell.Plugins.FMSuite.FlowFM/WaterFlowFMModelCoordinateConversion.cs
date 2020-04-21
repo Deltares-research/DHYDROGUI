@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // we immediately rewrite the grid file
             if (!model.Grid.IsEmpty)
             {
-                UnstructuredGridFileHelper.RewriteGridCoordinates(model.NetFilePath, model.Grid);
+                UGridFileHelper.RewriteGridCoordinates(model.NetFilePath, model.Grid);
             }
 
             model.InvalidateSnapping();

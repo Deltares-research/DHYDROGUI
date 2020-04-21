@@ -1705,7 +1705,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void EnableMorphology(WaterFlowFMModel model)
         {
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+            var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
             model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
         }
 
@@ -1802,7 +1802,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private void UpdateBedLevel(WaterFlowFMModel model)
         {
-            TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev);
+            TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UGridFileHelper.BedLevelLocation.NodesMinLev);
         }
 
         private static void AddModelToProject(WaterFlowFMModel model, IApplication app)

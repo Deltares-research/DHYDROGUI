@@ -377,6 +377,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     app.Project.RootFolder.Add(integratedModel);
                     using (var model = new WaterFlowFMModel())
                     {
+                        model.NetworkDiscretization.Name = "mesh1d";
                         model.MoveModelIntoIntegratedModel(app.Project.RootFolder, integratedModel);
                         HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,
                             new[] {new Point(0, 0), new Point(1, 1), new Point(2, 4)});

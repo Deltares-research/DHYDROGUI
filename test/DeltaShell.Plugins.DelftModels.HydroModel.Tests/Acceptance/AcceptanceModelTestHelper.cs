@@ -1,4 +1,5 @@
-﻿using DelftTools.Shell.Core;
+﻿using System;
+using DelftTools.Shell.Core;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -91,9 +92,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <param name="tempProjectPath2">The temporary project file path to be used for the second save action.</param>
         public static void SaveLoadAndResaveProject(IApplication application, string tempProjectPath1, string tempProjectPath2)
         {
+            Console.WriteLine("Saving (first time)");
             application.SaveProjectAs(tempProjectPath1);
+
+            Console.WriteLine("Importing model");
             application.CloseProject();
+
+            Console.WriteLine("Opening");
             application.OpenProject(tempProjectPath1);
+
+            Console.WriteLine("Saving (second time)");
             application.SaveProjectAs(tempProjectPath2);
         }
     }

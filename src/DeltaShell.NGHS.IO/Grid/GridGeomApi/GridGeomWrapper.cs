@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
         /// <param name="meshgeomdim"></param>
         /// <returns></returns>
         [DllImport(GridGeomApi.LIB_DLL_NAME, EntryPoint = "ggeo_convert", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, ref int startIndex);
+        public static extern int ggeo_convert_dll([In, Out] ref meshgeom meshgeom, [In] ref meshgeomdim meshgeomdim, ref int startIndex);
 
         /// <summary>
         /// Makes embedded 1-1 the 1d2d links 
@@ -137,7 +137,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             return ierr;
         }
 
-        public int Convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim)
+        public int Convert(ref meshgeom c_meshgeom, ref meshgeomdim c_meshgeomdim)
         {
             int startIndex = 0;
             int ierr = ggeo_convert_dll(ref c_meshgeom, ref c_meshgeomdim, ref startIndex);

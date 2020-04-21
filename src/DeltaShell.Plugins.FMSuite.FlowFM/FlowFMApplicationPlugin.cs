@@ -396,7 +396,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new WaterFlowFMFileExporter();
-            yield return new WaterFlowFmAndF1DFileExporter();
             yield return new Area2DStructuresExporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListExporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };

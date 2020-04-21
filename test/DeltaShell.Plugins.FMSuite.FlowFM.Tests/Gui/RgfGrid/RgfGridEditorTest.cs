@@ -88,11 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
             Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
 
-            using (var uGrid = new UGrid(gridPath))
-            {
-                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
-                Assert.AreEqual(12, numEdges); // 12 new rows. 
-            }
+            var grid = UGridFileHelper.ReadUnstructuredGrid(gridPath); 
+            Assert.AreEqual(12, grid.Edges.Count); // 12 new rows. 
         }
 
         [Test, RequiresMTA]
@@ -118,11 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
             Assert.IsTrue(new FileInfo(gridPath).Length > 0, "Generated grid file is empty, RGFGrid generation failed.");
 
-            using (var uGrid = new UGrid(gridPath))
-            {
-                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
-                Assert.AreEqual(24, numEdges); // 12 existing + 12 new rows.
-            }
+            var grid = UGridFileHelper.ReadUnstructuredGrid(gridPath);
+            Assert.AreEqual(24, grid.Edges.Count); // 12 existing + 12 new rows.
         }
 
         private static void PerformActionWithCancellationThread(int timeout, Action action)

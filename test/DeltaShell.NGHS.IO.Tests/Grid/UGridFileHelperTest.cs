@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -16,7 +17,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
-    public class UnstructuredGridFileHelperTest
+    public class UGridFileHelperTest
     {
         [TestCase("fileDoesNotExist.nc", false)]
         [TestCase(@"ugrid\Custom_Ugrid.nc", true)]
@@ -27,22 +28,22 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(gridShouldLoad, File.Exists(testFilePath));
 
-            var grid = UnstructuredGridFileHelper.LoadFromFile(testFilePath);
+            var grid = UGridFileHelper.ReadUnstructuredGrid(testFilePath);
             Assert.AreEqual(gridShouldLoad, grid != null);
         }
 
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.Faces)]
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev)]
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev)]
-        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
-        public void TestReadZValues(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.Faces)]
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.NodesMaxLev)]
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.NodesMeanLev)]
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.NodesMinLev)]
+        [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.NodesMeanLev)]
+        public void TestReadZValues(string filePath, UGridFileHelper.BedLevelLocation location)
         {
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, location);
+            var zValues = UGridFileHelper.ReadZValues(testFilePath, location);
             Assert.IsTrue(zValues.Length > 0);
             Assert.IsTrue(zValues.All(v => v > 0.0));
         }
@@ -53,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
+            var zValues = UGridFileHelper.ReadZValues(testFilePath, UGridFileHelper.BedLevelLocation.Faces);
             Assert.AreEqual(0, zValues.Length);
         }
 
@@ -66,8 +67,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var zValues = new double[0];
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => 
-                zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
-                Properties.Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
+                zValues = UGridFileHelper.ReadZValues(testFilePath, UGridFileHelper.BedLevelLocation.CellEdges),
+                Properties.Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
 
             Assert.AreEqual(0, zValues.Length);
         }
@@ -81,43 +82,72 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var zValues = new double[0];
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-                zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
-                string.Format(Properties.Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, testFilePath));
+                zValues = UGridFileHelper.ReadZValues(testFilePath, UGridFileHelper.BedLevelLocation.CellEdges),
+                string.Format(Properties.Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, testFilePath));
 
             Assert.AreEqual(0, zValues.Length);
         }
 
-        [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.Faces)]
-        [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
-        [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev)]
-        [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
-        [TestCase(@"ugrid\Custom_Ugrid.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev)]
-        [TestCase(@"nonUgrid\TAK3_net.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
-        public void TestWriteZValues_DoesNotThrowForSupportedLocations(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
+        [TestCase(@"ugrid\Custom_Ugrid.nc", UGridFileHelper.BedLevelLocation.Faces)]
+        [TestCase(@"ugrid\Custom_Ugrid.nc", UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes)]
+        [TestCase(@"ugrid\Custom_Ugrid.nc", UGridFileHelper.BedLevelLocation.NodesMaxLev)]
+        [TestCase(@"ugrid\Custom_Ugrid.nc", UGridFileHelper.BedLevelLocation.NodesMeanLev)]
+        [TestCase(@"ugrid\Custom_Ugrid.nc", UGridFileHelper.BedLevelLocation.NodesMinLev)]
+        [TestCase(@"nonUgrid\TAK3_net.nc", UGridFileHelper.BedLevelLocation.NodesMeanLev)]
+        public void TestWriteZValues_DoesNotThrowForSupportedLocations(string filePath, UGridFileHelper.BedLevelLocation location)
         {
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
 
             var zValues = new double[0];
 
             switch (location)
             {
-                case UnstructuredGridFileHelper.BedLevelLocation.Faces:
-                case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                case UGridFileHelper.BedLevelLocation.Faces:
+                case UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
                     zValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
                     break;
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
+                case UGridFileHelper.BedLevelLocation.NodesMeanLev:
+                case UGridFileHelper.BedLevelLocation.NodesMinLev:
+                case UGridFileHelper.BedLevelLocation.NodesMaxLev:
                     zValues = Enumerable.Repeat(123.456, grid.Vertices.Count).ToArray();
                     break;
             }
             
-            UnstructuredGridFileHelper.WriteZValues(localtestFile, location, zValues);
+            UGridFileHelper.WriteZValues(localtestFile, location, zValues);
             FileUtils.DeleteIfExists(localtestFile);
+        }
+
+        [TestCase(UGridFileHelper.BedLevelLocation.Faces)]
+        [TestCase(UGridFileHelper.BedLevelLocation.NodesMeanLev)]
+        public void TestWriteZValues_SupportedLocations(UGridFileHelper.BedLevelLocation location)
+        {
+            var testFilePath = TestHelper.GetTestWorkingDirectoryGeneratedTestFilePath(".nc");
+
+            FileUtils.DeleteIfExists(testFilePath);
+
+            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2,3,100,100);
+            var zValues = new double[0];
+
+            switch (location)
+            {
+                case UGridFileHelper.BedLevelLocation.Faces:
+                case UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                    zValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
+                    break;
+                case UGridFileHelper.BedLevelLocation.NodesMeanLev:
+                case UGridFileHelper.BedLevelLocation.NodesMinLev:
+                case UGridFileHelper.BedLevelLocation.NodesMaxLev:
+                    zValues = Enumerable.Repeat(123.456, grid.Vertices.Count).ToArray();
+                    break;
+            }
+
+            UGridFileHelper.WriteGridToFile(testFilePath, grid, null, null, null, "abc", "dummy", "1", location, zValues);
+
+            FileUtils.DeleteIfExists(testFilePath);
         }
 
         [Test]
@@ -127,13 +157,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
 
-            var location = UnstructuredGridFileHelper.BedLevelLocation.CellEdges;
+            var location = UGridFileHelper.BedLevelLocation.CellEdges;
             var zValues = Enumerable.Repeat(123.456, grid.Edges.Count).ToArray();
-            
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> UnstructuredGridFileHelper.WriteZValues(localtestFile, location, zValues),
-                Properties.Resources.UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(()=> UGridFileHelper.WriteZValues(localtestFile, location, zValues),
+                Properties.Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
 
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -146,7 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(testFileExists, File.Exists(testFilePath));
             
-            var coordinateSystemAuthorityCode = UnstructuredGridFileHelper.GetCoordinateSystem(testFilePath)?.AuthorityCode;
+            var coordinateSystemAuthorityCode = UGridFileHelper.ReadCoordinateSystem(testFilePath)?.AuthorityCode;
             Assert.AreEqual(expectedResult, coordinateSystemAuthorityCode);
         }
 
@@ -161,10 +191,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
 
             var coordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992); // Amersfoort / RD New
-            UnstructuredGridFileHelper.SetCoordinateSystem(localtestFile, coordinateSystem);
+            UGridFileHelper.WriteCoordinateSystem(localtestFile, coordinateSystem);
 
             coordinateSystem = coordinateSystemFactory.CreateFromEPSG(4326); // WGS84
-            UnstructuredGridFileHelper.SetCoordinateSystem(localtestFile, coordinateSystem);
+            UGridFileHelper.WriteCoordinateSystem(localtestFile, coordinateSystem);
 
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -176,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion",UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev,new double[]{});
+            UGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid(), new HydroNetwork(), new Discretization(), new List<ILink1D2D>(), "myName", "myPlugin", "myVersion",UGridFileHelper.BedLevelLocation.NodesMaxLev,new double[]{});
 
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -201,7 +231,8 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 {new Link1D2D(1, 1, "my link") {TypeOfLink = LinkType.EmbeddedOneToOne}}
             };
 
-            UnstructuredGridFileHelper.WriteGridToFile(localtestFilePath, unstructuredGrid, hydroNetwork, networkDiscretization, link1D2Ds, "myName", "myPlugin", "myVersion", UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev, new double[] { });
+            var zValues = Enumerable.Range(1, unstructuredGrid.Vertices.Count).Select(Convert.ToDouble).ToArray();
+            UGridFileHelper.WriteGridToFile(localtestFilePath, unstructuredGrid, hydroNetwork, networkDiscretization, link1D2Ds, "myName", "myPlugin", "myVersion", UGridFileHelper.BedLevelLocation.NodesMaxLev, zValues);
 
             Assert.IsTrue(File.Exists(localtestFilePath));
 
@@ -216,7 +247,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.IsTrue(File.Exists(testFilePath));
 
             var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            var grid = UGridFileHelper.ReadUnstructuredGrid(localtestFile);
 
             foreach (var coordinate in grid.Vertices)
             {
@@ -224,22 +255,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 coordinate.Y -= 1.0;
             }
 
-            UnstructuredGridFileHelper.RewriteGridCoordinates(localtestFile, grid);
+            UGridFileHelper.RewriteGridCoordinates(localtestFile, grid);
 
             FileUtils.DeleteIfExists(localtestFile);
         }
-
-        [TestCase(@"ugrid\Custom_Ugrid.nc", 1)]
-        [TestCase(@"nonUgrid\TAK3_net.nc", 0)]
-        public void TestDoIfUgrid(string filePath, int expectedCounter)
-        {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
-            Assert.IsTrue(File.Exists(testFilePath));
-
-            var counter = 0;
-            UnstructuredGridFileHelper.DoIfUgrid(testFilePath, uGridAdaptor => { counter++; });
-            Assert.AreEqual(expectedCounter, counter);
-        }
-
     }
 }

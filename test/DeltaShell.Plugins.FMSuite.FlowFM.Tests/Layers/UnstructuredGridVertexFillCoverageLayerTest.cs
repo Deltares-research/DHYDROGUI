@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Adaptors;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -149,11 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
-            {
-                grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
-            }
+            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
+
             Assert.NotNull(grid);
 
             var values = grid.Vertices.Select(v => v.Z);
@@ -182,11 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
-            {
-                grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
-            }
+            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
+
             Assert.NotNull(grid);
 
             var values = grid.Vertices.Select(v => v.Z);

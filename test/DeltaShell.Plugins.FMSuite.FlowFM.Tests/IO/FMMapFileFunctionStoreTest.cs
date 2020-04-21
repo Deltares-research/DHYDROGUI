@@ -259,7 +259,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 Path = TestHelper.GetTestFilePath("output_mapfiles\\simplebox_hex7_map.nc")
             };
+
             var grid = (UnstructuredGrid) TypeUtils.GetField(store, "grid");
+
             Assert.AreEqual(28992, grid.CoordinateSystem.AuthorityCode); // Amersfoort RD new
             store.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); // WGS84
             grid = (UnstructuredGrid)TypeUtils.GetField(store, "grid");

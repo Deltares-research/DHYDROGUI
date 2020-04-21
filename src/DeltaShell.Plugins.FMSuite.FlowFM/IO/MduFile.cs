@@ -226,9 +226,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
             var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UnstructuredGridFileHelper.WriteZValues(path, location, values);
+            UGridFileHelper.WriteZValues(path, location, values);
         }
 
         private static string VerifyTargetDirectory(string targetMduFilePath)
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                     // if needed, adjust coordinate system in netfile
                     if (modelDefinition.CoordinateSystem != null && File.Exists(targetFile) && !modelDefinition.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(targetFile))
-                        UnstructuredGridFileHelper.SetCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
+                        UGridFileHelper.WriteCoordinateSystem(targetFile, modelDefinition.CoordinateSystem);
                 }
 
                 // copy along any mdu-referenced files that are *not* yet supported/written in the UI:
@@ -917,8 +917,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
             string netFilePath = MduFileHelper.GetSubfilePath(filePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            if(!string.IsNullOrEmpty(netFilePath) && File.Exists(netFilePath))
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(netFilePath, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(netFilePath), UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(netFilePath));
+            if (!string.IsNullOrEmpty(netFilePath) && File.Exists(netFilePath))
+                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath), NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath));
 
             reportProgress("Reading external forcings file", 4, totalSteps);
             var extForceFileProperty = modelDefinition.GetModelProperty(KnownProperties.ExtForceFile);

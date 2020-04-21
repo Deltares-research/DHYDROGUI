@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var fmModel = new WaterFlowFMModel();
 
                 // set bed level location to faces
-                var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                var cellsValue = ((int)UGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
                 
                 app.Project.RootFolder.Add(fmModel);
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var fmModel = new WaterFlowFMModel();
 
                 // set bed level location to faces
-                var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                var cellsValue = ((int) UGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
 
                 app.Project.RootFolder.Add(fmModel);

@@ -81,14 +81,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteBranchFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<IBranch> branches)
         {
 
-            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, UGridToNetworkAdapter.BranchGuiFileName);
+            var branchesFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, NetworkPropertiesHelper.BranchGuiFileName);
             FileUtils.DeleteIfExists(branchesFilePath);
             if (!branches.Any())
             {
                 modelDefinition.SetModelProperty(KnownProperties.BranchFile, string.Empty);
             }
             BranchFile.Write(branchesFilePath, branches);
-            modelDefinition.SetModelProperty(KnownProperties.BranchFile, UGridToNetworkAdapter.BranchGuiFileName);
+            modelDefinition.SetModelProperty(KnownProperties.BranchFile, NetworkPropertiesHelper.BranchGuiFileName);
         }
         private static void WriteCrossSectionFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {

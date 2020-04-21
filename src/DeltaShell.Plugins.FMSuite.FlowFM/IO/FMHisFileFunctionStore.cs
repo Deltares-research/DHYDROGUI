@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         protected override void UpdateFunctionsAfterPathSet()
         {
             if(CoordinateSystem == null)
-                CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(Path);
+                CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
             base.UpdateFunctionsAfterPathSet();
         }
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)

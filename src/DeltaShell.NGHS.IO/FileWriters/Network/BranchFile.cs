@@ -7,6 +7,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 
@@ -102,14 +103,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             var file = NetCdfFile.OpenExisting(netFilePath);
             try
             {
-                var branchIds = file.GetVariableByName($"{GridApiDataSet.DataSetNames.Network}_{GridApiDataSet.UGridApiConstants.BranchIds}"); ;
+                var branchIds = file.GetVariableByName($"network_{UGridConstants.Naming.BranchIds}"); ;
                 if (branchIds == null) return propertiesPerBranch;
-                var branchTypes = file.GetVariableByName($"{GridApiDataSet.DataSetNames.Network}_{GridApiDataSet.UGridApiConstants.BranchType}");
+                var branchTypes = file.GetVariableByName($"network_{UGridConstants.Naming.BranchType}");
                 if (branchTypes == null) return propertiesPerBranch;
+
                 var branchIdValues = file.Read(branchIds)
                     .Cast<char[]>()
                     .SelectMany(s => s.Select((character, index) => new { character, index })
-                                     .GroupBy(y => y.index / GridWrapper.idssize)
+                                     .GroupBy(y => y.index / UGridFileHelper.IdsSize)
                                      .Select(y => new string(y.Select(z => z.character).ToArray()).Trim()))
                     .ToArray();
                 var branchTypeValues = file.Read(branchTypes).Cast<int>().ToArray();
@@ -135,11 +137,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
             switch (branchTypeValue)
             {
-                case (int) NetworkUGridDataModel.BranchType.DryWeatherFlow:
+                case (int) Grid.BranchType.DryWeatherFlow:
                     return SewerConnectionWaterType.DryWater;
-                case (int) NetworkUGridDataModel.BranchType.MixedFlow:
+                case (int) Grid.BranchType.MixedFlow:
                     return SewerConnectionWaterType.Combined;
-                case (int) NetworkUGridDataModel.BranchType.StormWaterFlow:
+                case (int) Grid.BranchType.StormWaterFlow:
                     return SewerConnectionWaterType.StormWater;
                 default:
                     return SewerConnectionWaterType.None;

@@ -67,9 +67,9 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             get { return objectGarbageCollectHandles.Count > 0; }
         }
 
-        public GridWrapper.meshgeomdim CreateMeshDimensions()
+        public meshgeomdim CreateMeshDimensions()
         {
-            return new GridWrapper.meshgeomdim()
+            return new meshgeomdim()
             {
                 dim = 2, //-> Type of grid 1d (=1)/2d (=2)
                 numnode = numberOfNodes,
@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             };
         }
 
-        public GridWrapper.meshgeom CreateMeshGeometry()
+        public meshgeom CreateMeshGeometry()
         {
             if (!IsMemoryPinned)
             {
@@ -93,7 +93,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
             var lookup = objectGarbageCollectHandles.ToDictionary(h => h.Target, h => h);
 
-            return new GridWrapper.meshgeom
+            return new meshgeom
             {
                 nodex = lookup[xNodes].AddrOfPinnedObject(),
                 nodey = lookup[yNodes].AddrOfPinnedObject(),

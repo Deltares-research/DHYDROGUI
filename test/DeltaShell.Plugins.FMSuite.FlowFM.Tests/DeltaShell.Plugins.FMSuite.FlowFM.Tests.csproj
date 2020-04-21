@@ -223,10 +223,8 @@
   <ItemGroup>
     <Compile Include="Gui\MeteoFieldListViewTest.cs" />
     <Compile Include="IO\Exporters\FmCrossSectionDefinitionExporterTest.cs" />
-    <Compile Include="IO\Exporters\WaterFlowFmAndF1DFileExporterTests.cs" />
     <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
-    <Compile Include="Api\Grid1d2dTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
     <Compile Include="Api\GridOperationApiTest.cs" />
@@ -330,7 +328,6 @@
     <Compile Include="IO\ObsFileImporterExporterTest.cs" />
     <Compile Include="IO\PolFileImporterExporterTest.cs" />
     <Compile Include="IO\StructureFileWriteTest.cs" />
-    <Compile Include="IO\UGridToUnstructuredGridAdaptorTest.cs" />
     <Compile Include="IO\Importers\FMRstFileImporterTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
     <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />
@@ -339,7 +336,6 @@
     <Compile Include="IO\FMModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WaterFlowFMMduFileTest.cs" />
     <Compile Include="IO\WaterFlowFMModelHydroAreaExtensionsTest.cs" />
-    <Compile Include="IO\WaterFlowFMModelWriterReaderTest.cs" />
     <Compile Include="IO\WindExtForceTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellCoverageLayerTest.cs" />
     <Compile Include="Layers\UnstructuredGridCellVectorCoverageLayerTest.cs" />

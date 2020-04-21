@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api.TempImpl
             UnstructuredGrid unstructuredGrid;
             try
             {
-                unstructuredGrid = UnstructuredGridFileHelper.LoadFromFile(mapFilePath, true);
+                unstructuredGrid = UGridFileHelper.ReadUnstructuredGrid(mapFilePath, true);
             }
             catch (Exception e)
             {

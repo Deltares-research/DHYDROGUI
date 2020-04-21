@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -233,9 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             });
             var mesh2DName = mesh2DNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(mesh2DNameNetCdfVariableInfo);
 
-            var isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
-            
-            var functions2D = Get2DFunctions(dataVariables, isUgridConvention, mesh2DName);
+            var isUGrid = UGridFileHelper.IsUGridFile(netCdfFile.Path);
+
+            var functions2D = Get2DFunctions(dataVariables, isUGrid, mesh2DName);
             var links1d2dNameNetCdfVariableInfo = netCdfVariables.FirstOrDefault(dv =>
             {
                 var attributes = netCdfFile.GetAttributes(dv);
@@ -251,8 +252,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             });
 
             var links1D2DName = links1d2dNameNetCdfVariableInfo == null ? string.Empty : netCdfFile.GetVariableName(links1d2dNameNetCdfVariableInfo);
-            var functions1D2DLinks = Get1D2DLinkFunctions(dataVariables, isUgridConvention, links1D2DName);
-            if (!isUgridConvention)
+            var functions1D2DLinks = Get1D2DLinkFunctions(dataVariables, isUGrid, links1D2DName);
+            if (!isUGrid)
             {
                 LogWarningsForExcludedTimeDependentVariables(dataVariables);
             }
@@ -630,7 +631,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         private UnstructuredGridCoverage AddCustomVelocityCoverage(UnstructuredGridCoverage ucxCoverage, UnstructuredGridCoverage ucyCoverage)
         {
-            var coverage = CreateCoverage(GridApiDataSet.UGridAttributeConstants.LocationValues.Face, VelocityCoverageName);
+            var coverage = CreateCoverage(UGridConstants.Naming.FaceLocationAttributeName, VelocityCoverageName);
 
             coverage.Components.Add(new Variable<double>()); // add 2nd component
             coverage.Components[1].Name = ucyCoverage.Components[0].Name;
@@ -676,13 +677,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             switch (location)
             {
                 // UGrid standard
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Face:
+                case UGridConstants.Naming.FaceLocationAttributeName:
                     return new UnstructuredGridCellCoverage(grid, true) { Name = coverageName };
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Edge:
+                case UGridConstants.Naming.EdgeLocationAttributeName:
                     return new UnstructuredGridEdgeCoverage(grid, true) { Name = coverageName };
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Node:
+                case UGridConstants.Naming.NodeLocationAttributeName:
                     return new UnstructuredGridVertexCoverage(grid, true) { Name = coverageName };
-                case GridApiDataSet.UGridAttributeConstants.LocationValues.Volume:
+                case UGridConstants.Naming.VolumeLocationAttributeName:
                     log.WarnFormat(Resources.FMMapFileFunctionStore_CreateCoverage_CannotCreateSpatialDataOnVolumeLocation, coverageName);
                     return null;
 
@@ -776,10 +777,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // some variables need to be read only once
             if (flowLinks1D2D == null)
             {
-                var link1D2Ds = UGrid1D2DLinksAdapter.Load1D2DLinks(Path).ToList();
+                var link1D2Ds = UGridFileHelper.Read1D2DLinks(Path).ToList();
                 discretization = new Discretization();
                 network = new HydroNetwork();
-                UGridToNetworkAdapter.LoadNetworkAndDiscretisation(Path, discretization, network, UGridToNetworkAdapter.ReadPropertiesPerNodeFromFile(Path),UGridToNetworkAdapter.ReadPropertiesPerBranchFromFile(Path));
+                UGridFileHelper.ReadNetworkAndDiscretisation(Path, discretization, network, NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(Path),NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(Path));
 
                 Links1D2DHelper.SetGeometry1D2DLinks(link1D2Ds, discretization.Locations, grid.Cells);
                 links1D2D = new EventedList<ILink1D2D>(link1D2Ds);
@@ -858,33 +859,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             linkFeatureCoverage.Components[0].Attributes[NcNameAttribute] = "link1d2d";
             linkCoverages.Add(linkFeatureCoverage);
             return linkFeatureCoverage;
-        }
-
-        public GridApiDataSet.DataSetConventions GetNcFileConvention()
-        {
-            try
-            {
-                var api = GridApiFactory.CreateNew();
-                if (api != null)
-                {
-                    using (api)
-                    {
-                        GridApiDataSet.DataSetConventions convention;
-                        var ierr = api.GetConvention(netCdfFile.Path, out convention);
-                        if (ierr != GridApiDataSet.GridConstants.NOERR)
-                        {
-                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
-                        }
-                        return convention;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.ErrorFormat(Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData, e.Message);
-            }
-
-            return GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName, string unitSymbol, string refDate, IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null, bool isNetworkCoverage = false)
@@ -992,10 +966,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? string.Format("{0} ({1})", longName, netCdfVariableName)
                 : netCdfVariableName;
 
-            var convention = GetNcFileConvention();
-
-            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
-                ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
+            var location = UGridFileHelper.IsUGridFile(netCdfFile.Path)
+                ? netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName)
                 : secondDimensionName; // backwards compatibility
 
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
@@ -1069,11 +1041,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 yield break;
             }
 
-            
-            var convention = GetNcFileConvention();
 
-            var location = convention == GridApiDataSet.DataSetConventions.CONV_UGRID
-                ? netCdfFile.GetAttributeValue(netcdfVariable, GridApiDataSet.UGridAttributeConstants.Names.Location)
+            var isUGrid = UGridFileHelper.IsUGridFile(netCdfFile.Path);
+
+            var location = isUGrid
+                ? netCdfFile.GetAttributeValue(netcdfVariable, UGridConstants.Naming.LocationAttributeName)
                 : secondDimensionName; // backwards compatibility
 
             var unitSymbol = netCdfFile.GetAttributeValue(netcdfVariable, UnitAttribute);
@@ -1113,7 +1085,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private void UpdateGrid()
         {
             // import the grid from the map file if there is no model grid available
-            grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
+            grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true);
             //network = waterFlowFmModel.Network;
             //discretization = waterFlowFmModel.NetworkDiscretization;
         }

@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
                 }
                 
-                var newGrid = UnstructuredGridFileHelper.LoadFromFile(NetFilePath); //may throw...
+                var newGrid = UGridFileHelper.ReadUnstructuredGrid(NetFilePath); //may throw...
                 if (newGrid == null)
                 {
                     Grid = new UnstructuredGrid();
@@ -202,21 +202,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             bathymetryNoDataValue = ndv;
                         }
                     }
-                    UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
-                    {
-                        if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
-                        {
-                            bathymetryNoDataValue = -999.0d;
-                            return;
-                        }
-                        var mesh2DId = uGridAdaptor.GetMesh2DId();
-                        if (mesh2DId != null)
-                        { 
-                            uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(mesh2DId.Value);
-                        }
 
-                        bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
-                    });
+                    bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
                     Grid = newGrid;
                 }
             }
@@ -261,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public UnstructuredGridFileHelper.BedLevelLocation BedLevelLocation
+        public UGridFileHelper.BedLevelLocation BedLevelLocation
         {
             get
             {
@@ -271,11 +258,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 if (bedLevelTypeProperty == null)
                 {
-                    Log.WarnFormat("Cannot determine Bed level location, z-values will be exported as {0}", default(UnstructuredGridFileHelper.BedLevelLocation));
-                    return default(UnstructuredGridFileHelper.BedLevelLocation);
+                    Log.WarnFormat("Cannot determine Bed level location, z-values will be exported as {0}", default(UGridFileHelper.BedLevelLocation));
+                    return default(UGridFileHelper.BedLevelLocation);
                 }
 
-                return (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                return (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
 
             }
         }
@@ -285,13 +272,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization
-            , IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, UnstructuredGridFileHelper.BedLevelLocation location, double[] zValues)
+            , IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, UGridFileHelper.BedLevelLocation location, double[] zValues)
         {
             if (path == null) return;
-            UnstructuredGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion, location, zValues);
+            UGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion, location, zValues);
             // if needed, adjust coordinate system in netfile
             if (File.Exists(path) && grid?.CoordinateSystem != null && !grid.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(path))
-                UnstructuredGridFileHelper.SetCoordinateSystem(path, grid.CoordinateSystem);
+                UGridFileHelper.WriteCoordinateSystem(path, grid.CoordinateSystem);
 
         }
 
@@ -331,10 +318,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void InitializeUnstructuredGridCoverages()
         {
-            var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UnstructuredGridFileHelper.BedLevelLocation>
+            var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UGridFileHelper.BedLevelLocation>
             {
-                UnstructuredGridFileHelper.BedLevelLocation.Faces,
-                UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes
+                UGridFileHelper.BedLevelLocation.Faces,
+                UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes
             };
 
             // Update bathymetry coverage based on specified value in .mdu file
@@ -342,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
             if (bedLevelTypeProperty != null)
             {
-                var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
+                var bedLevelType = (UGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
                 var zValues = GetZValuesFromNetFile(bedLevelType);
                 if (bedLevelLocationsForUnstructuredGridCellCoverage.Contains(bedLevelType))
                 {
@@ -381,29 +368,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
 
-        internal void UpdateBathymetryCoverage(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
+        internal void UpdateBathymetryCoverage(UGridFileHelper.BedLevelLocation bedLevelType)
         {
             if (Bathymetry == null) return;
 
             double[] zValues = null;
             switch (bedLevelType)
             {
-                case UnstructuredGridFileHelper.BedLevelLocation.Faces:
-                case UnstructuredGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
+                case UGridFileHelper.BedLevelLocation.Faces:
+                case UGridFileHelper.BedLevelLocation.FacesMeanLevFromNodes:
                     if (Bathymetry is UnstructuredGridCellCoverage && Bathymetry.GetValues().Count == Grid.Cells.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
-                case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
+                case UGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat(Resources.WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_not_currently_supported);
                     // Not supported yet, so create a VertexCoverage for now
                     if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
-                case UnstructuredGridFileHelper.BedLevelLocation.NodesMaxLev:
+                case UGridFileHelper.BedLevelLocation.NodesMeanLev:
+                case UGridFileHelper.BedLevelLocation.NodesMinLev:
+                case UGridFileHelper.BedLevelLocation.NodesMaxLev:
                     if (Bathymetry is UnstructuredGridVertexCoverage && Bathymetry.GetValues().Count == Grid.Vertices.Count) return;
                     zValues = GetZValuesFromNetFile(bedLevelType);
                     Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
@@ -431,10 +418,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private double[] GetZValuesFromNetFile(UnstructuredGridFileHelper.BedLevelLocation bedLevelType)
+        private double[] GetZValuesFromNetFile(UGridFileHelper.BedLevelLocation bedLevelType)
         {
             if(string.IsNullOrEmpty(NetFilePath) || !File.Exists(NetFilePath)) return null;
-            var zValuesFromNetFile = UnstructuredGridFileHelper.ReadZValues(NetFilePath, bedLevelType);
+            var zValuesFromNetFile = UGridFileHelper.ReadZValues(NetFilePath, bedLevelType);
             return zValuesFromNetFile.Length > 0 ? zValuesFromNetFile : null;
         }
 

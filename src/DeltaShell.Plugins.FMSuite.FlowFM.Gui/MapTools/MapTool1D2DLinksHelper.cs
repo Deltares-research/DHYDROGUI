@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var gGeomApi = new GridGeomApi();
             var links = gGeomApi.Get1D2DLinksFromGullies(disposableMeshGeometry, mesh1D, discretization, filter1DMesh, geometryGullies);
-            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
+            if (gGeomApi.LastErrorCode != UGridConstants.NoErrorCode)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var gGeomApi = new GridGeomApi();
             var links = gGeomApi.GetLateral1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh);
-            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
+            if (gGeomApi.LastErrorCode != UGridConstants.NoErrorCode)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var gGeomApi = new GridGeomApi();
             var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh, false);
-            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
+            if (gGeomApi.LastErrorCode != UGridConstants.NoErrorCode)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");
@@ -148,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             var gGeomApi = new GridGeomApi();
             var links = gGeomApi.GetEmbedded1D2DLinks(disposableMeshGeometry, mesh1D, discretization, selectedArea, filter1DMesh, true);
-            if (gGeomApi.LastErrorCode != GridApiDataSet.GridConstants.NOERR)
+            if (gGeomApi.LastErrorCode != UGridConstants.NoErrorCode)
             {
                 log.ErrorFormat(
                     "1D2D Links were not generated between the grid and the network of WaterFlowFMModel. Please make sure the grid has been saved and the network is correct.");

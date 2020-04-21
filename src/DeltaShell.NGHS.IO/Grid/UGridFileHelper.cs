@@ -1,0 +1,587 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Link1d2d;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
+using DelftTools.Utils.NetCdf;
+using Deltares.UGrid.Api;
+using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Coverages;
+using log4net;
+using NetTopologySuite.Extensions.Grids;
+using SharpMap.Extensions.CoordinateSystems;
+
+namespace DeltaShell.NGHS.IO.Grid
+{
+    /// <summary>
+    /// Helper for doing UGrid related read/write actions
+    /// </summary>
+    public static class UGridFileHelper
+    {
+        private const double DefaultNoDataValue = -999.0;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UGridFileHelper));
+        public const int IdsSize = 40;
+
+        public enum BedLevelLocation
+        {
+            Faces = 1,
+            CellEdges = 2,
+            NodesMeanLev = 3,
+            NodesMinLev = 4,
+            NodesMaxLev = 5,
+            FacesMeanLevFromNodes = 6
+        }
+
+        /// <summary>
+        /// Reads the Z values of the first <see cref="UnstructuredGrid"/> (2d mesh) in the file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="location">Location of the Z values on the grid</param>
+        /// <returns>Z values of the first 2d mesh</returns>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static double[] ReadZValues(string path, BedLevelLocation location)
+        {
+            if (!IsUGridFile(path))
+            {
+                Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+                return new double[0];
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if(meshIds2d.Length == 0) 
+                    return new double[0];
+
+                var locationType = GetLocationType(location);
+                if (locationType == GridLocationType.None) 
+                    return new double[0];
+
+                var variableName = GetVariableName(location);
+                return api.GetVariableValues(variableName, meshIds2d[0], locationType);
+            }
+        }
+
+        /// <summary>
+        /// Reads the no data value used for the Z values of the first <see cref="UnstructuredGrid"/>
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="location">Location of the Z values on the grid</param>
+        /// <returns>No data value used for Z values of the first 2d mesh</returns>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static double GetZCoordinateNoDataValue(string path, BedLevelLocation location)
+        {
+            if (!IsUGridFile(path))
+                return DefaultNoDataValue;
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if (meshIds2d.Length == 0)
+                    return DefaultNoDataValue;
+
+                var locationType = GetLocationType(location);
+                if (locationType == GridLocationType.None)
+                    return DefaultNoDataValue;
+
+                var variableName = GetVariableName(location);
+                return api.GetVariableNoDataValue(variableName, meshIds2d[0], locationType);
+            }
+        }
+
+        /// <summary>
+        /// Writes the Z values for the first <see cref="UnstructuredGrid"/> (2d mesh)
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="location">Location of the Z values on the grid</param>
+        /// <param name="values">Z values to write</param>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static void WriteZValues(string path, BedLevelLocation location, double[] values)
+        {
+            if (!IsUGridFile(path))
+            {
+                NetFile.WriteZValues(path, values);
+                return;
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path, OpenMode.Appending);
+
+                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if (meshIds2d.Length == 0)
+                {
+                    Log.Warn($"Unable to write z-values to file: \"{path}\", no 2d mesh found");
+                    return;
+                }
+
+                var locationType = GetLocationType(location);
+                if (locationType == GridLocationType.None) 
+                    return;
+                
+                var variableName = GetVariableName(location);
+                var longName = GetVariableLongName(location);
+
+                var unit = UGridConstants.Naming.Meter;
+                var standardName = UGridConstants.Naming.Altitude;
+
+                try
+                {
+                    api.SetVariableValues(variableName, standardName, longName, unit, meshIds2d[0], locationType, values);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Error", e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads the coordinate system used by the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <returns>The read coordinate system</returns>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static ICoordinateSystem ReadCoordinateSystem(string path)
+        {
+            if (!IsUGridFile(path))
+            {
+                return NetFile.ReadCoordinateSystem(path);
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path, OpenMode.Appending);
+
+                var epsgCode = api.GetCoordinateSystemCode();
+                return epsgCode > 0 
+                    ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsgCode) 
+                    : null;
+            }
+        }
+
+        /// <summary>
+        /// Writes the <paramref name="coordinateSystem"/> to the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="coordinateSystem">Coordinate system to write</param>.
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static void WriteCoordinateSystem(string path, ICoordinateSystem coordinateSystem)
+        {
+            if (!IsUGridFile(path))
+            {
+                NetFile.WriteCoordinateSystem(path, coordinateSystem);
+                return;
+            }
+
+            // using old implementation because api.SetCoordinateSystem is not yet implemented
+
+            var file = NetCdfFile.OpenExisting(path, true);
+            try
+            {
+                file.ReDefine();
+                var variableName = "projected_coordinate_system";
+                var ncVariable = file.GetVariableByName(variableName) ?? file.AddVariable(variableName, NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+
+                file.AddAttribute(ncVariable, new NetCdfAttribute("name", coordinateSystem.Name));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("epsg", (int)coordinateSystem.AuthorityCode));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("grid_mapping_name", coordinateSystem.IsGeographic ? "latitude_longitude" : "Unknown projected"));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("longitude_of_prime_meridian", 0.0));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("semi_major_axis", coordinateSystem.GetSemiMajor()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("semi_minor_axis", coordinateSystem.GetSemiMinor()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("inverse_flattening", coordinateSystem.GetInverseFlattening()));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("proj4_params", coordinateSystem.PROJ4));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("EPSG_code", string.Format("EPSG:{0}", coordinateSystem.AuthorityCode)));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("projection_name", "unknown"));
+                file.AddAttribute(ncVariable, new NetCdfAttribute("wkt", coordinateSystem.WKT));
+                file.EndDefine();
+                file.Flush();
+
+                // Note: Temporary solution - UGrid v2 will likely change the way the coordinate systems are written in the NetFile
+                UpdateNodeZVariables(file);
+            }
+            finally
+            {
+                file.Close();
+            }
+        }
+
+        /// <summary>
+        /// Reads the first <see cref="UnstructuredGrid"/> in the UGrid file, or reads old NetFile
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="loadFlowLinksAndCells">Also read flow links and cell information (Applies to NetFile only).
+        /// With a UGrid file the cell information is always read but not the flow links</param>
+        /// <returns>The first <see cref="UnstructuredGrid"/> in the UGrid file</returns>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static UnstructuredGrid ReadUnstructuredGrid(string path, bool loadFlowLinksAndCells = false)
+        {
+            if (!File.Exists(path) || Path.GetFileName(path) == null)
+            {
+                Log.WarnFormat("Could not find grid file at \"{0}\", this is because you maybe just created this model. If this is not the case please check if the file with" +
+                               "the grid in it exists.", path);
+                return null;
+            }
+
+            if (!IsUGridFile(path))
+            {
+                Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+                return loadFlowLinksAndCells
+                    ? NetFileImporter.ImportModelGrid(path)
+                    : NetFileImporter.ImportGrid(path);
+            }
+
+            UnstructuredGrid unstructuredGrid = null;
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if (meshIds2d.Length != 0)
+                {
+                    unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
+                }
+            }
+
+            var coordinateSystem = ReadCoordinateSystem(path);
+            if (unstructuredGrid != null)
+            {
+                unstructuredGrid.CoordinateSystem = coordinateSystem;
+            }
+
+            return unstructuredGrid;
+        }
+
+        /// <summary>
+        /// Reads the first <see cref="IHydroNetwork"/> and <see cref="IDiscretization"/> in the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="discretization">Instance of a <see cref="IDiscretization"/> to clear and fill with newly read data</param>
+        /// <param name="network">Instance of a <see cref="IHydroNetwork"/> to add the newly read data to</param>
+        /// <param name="compartmentPropertiesList">List of <see cref="BranchFile.BranchProperties"/> to use when constructing branches</param>
+        /// <param name="branchPropertiesList">List of <see cref="NodeFile.CompartmentProperties"/> to use when constructing compartments</param>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization, IHydroNetwork network, 
+            IList<NodeFile.CompartmentProperties> compartmentPropertiesList, IList<BranchFile.BranchProperties> branchPropertiesList)
+        {
+            if (!IsUGridFile(path) || network == null)
+            {
+                Log.Error($"Could not load network and computational grid from {path}");
+                return;
+            }
+
+            network.CoordinateSystem = ReadCoordinateSystem(path);
+            ReadNetwork(path, network, compartmentPropertiesList, branchPropertiesList);
+
+            if (discretization == null)
+            {
+                return;
+            }
+
+            Read1DMesh(path, discretization, network);
+        }
+
+        /// <summary>
+        /// Reads the first set of 1d/2d links from the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <returns>The first set of 1d/2d links from the UGrid file</returns>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static IList<ILink1D2D> Read1D2DLinks(string path)
+        {
+            if (!IsUGridFile(path))
+            {
+                Log.Error($"Could not load links from {path}. This is not a UGrid file.");
+                return new List<ILink1D2D>();
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var linksId = api.GetLinksId();
+                return linksId != -1 
+                    ? api.GetLinks(linksId).CreateLinks() 
+                    : new List<ILink1D2D>();
+            }
+        }
+
+        /// <summary>
+        /// Creates a new UGrid file and adds the <paramref name="grid"/>, <paramref name="network"/>, <paramref name="networkDiscretization"/>,
+        /// <paramref name="links"/> and <paramref name="zValues"/>
+        /// </summary>
+        /// <remarks>Deletes the previous file if it exists</remarks>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="grid"><see cref="UnstructuredGrid"/> to store in the UGrid file</param>
+        /// <param name="network"><see cref="IHydroNetwork"/> to store in the UGrid file</param>
+        /// <param name="networkDiscretization"><see cref="IDiscretization"/> to store in the UGrid file</param>
+        /// <param name="links"><see cref="IEnumerable{ILink1D2D}"/> to store in the UGrid file</param>
+        /// <param name="name">Name of the model</param>
+        /// <param name="pluginName">Name of the plugin creating the file</param>
+        /// <param name="pluginVersion">Version of the plugin creating the file</param>
+        /// <param name="location">Location of the Z values on the 2D grid</param>
+        /// <param name="zValues">Z values for the 2D grid</param>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        /// <exception cref="IOException">This error is thrown when trying to delete the file</exception>
+        public static void WriteGridToFile(string path, UnstructuredGrid grid, IHydroNetwork network, 
+            IDiscretization networkDiscretization, IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, BedLevelLocation location, double[] zValues)
+        {
+            FileUtils.DeleteIfExists(path);
+
+            using (var api = CreateUGridApi())
+            {
+                var metaData = new FileMetaData(name, pluginName ?? "custom", pluginVersion ?? "unknown");
+                api.CreateFile(path, metaData);
+                
+                if (network?.Nodes?.Count > 0)
+                {
+                    var networkId = api.WriteNetworkGeometry(network.CreateDisposableNetworkGeometry());
+
+                    if (networkDiscretization != null && networkDiscretization.Locations.Values.Count > 0)
+                    {
+                        api.WriteMesh1D(networkDiscretization.CreateDisposable1DMeshGeometry(), networkId);
+                    }
+                }
+
+                if (grid == null || grid.IsEmpty)
+                    return;
+
+                api.WriteMesh2D(grid.CreateDisposable2DMeshGeometry());
+            }
+
+            var link1D2Ds = links?.ToList();
+            if (link1D2Ds?.Count > 0)
+            {
+                using (var api = CreateUGridApi())
+                {
+                    api.Open(path, OpenMode.Appending);
+
+                    api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
+                }
+            }
+
+            if (!grid.IsEmpty)
+            {
+                WriteZValues(path, location, zValues);
+            }
+        }
+
+        /// <summary>
+        /// Overrides the existing x,y values of the first <see cref="UnstructuredGrid"/>s vertices
+        /// </summary>
+        /// <remarks>This function is mostly used for updating the vertices after a coordinate transformation</remarks>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <param name="unstructuredGrid"><see cref="UnstructuredGrid"/> containing the new vertices values</param>
+        /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
+        /// returned from a native function</exception>
+        public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
+        {
+            if (!IsUGridFile(path))
+            {
+                NetFile.RewriteGridCoordinates(path, unstructuredGrid);
+                return;
+            }
+
+            var xValues = new double[unstructuredGrid.Vertices.Count];
+            var yValues = new double[unstructuredGrid.Vertices.Count];
+            
+            for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
+            {
+                var vertex = unstructuredGrid.Vertices[i];
+                xValues[i] = vertex.X;
+                yValues[i] = vertex.Y;
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path, OpenMode.Appending);
+
+                var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if (meshIds.Length != 0)
+                {
+                    api.ResetMeshVerticesCoordinates(meshIds[0], xValues, yValues);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of 1d networks in the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <returns>The number of 1d networks in the UGrid file</returns>
+        public static int GetNumberOfNetworks(string path)
+        {
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+                return api.GetNumberOfNetworks();
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of discretizations in the UGrid file
+        /// </summary>
+        /// <param name="path">Path to the UGrid file</param>
+        /// <returns>The number of discretizations in the UGrid file</returns>
+        public static int GetNumberOfNetworkDiscretizations(string path)
+        {
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+                return api.GetNumberOfMeshByType(UGridMeshType.Mesh1D);
+            }
+        }
+
+        /// <summary>
+        /// Returns if the file (<paramref name="path"/>) is a UGrid file
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>if the file is a UGrid file</returns>
+        public static bool IsUGridFile(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                return false;
+            }
+
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+                return api.IsUGridFile();
+            }
+        }
+
+        private static void Read1DMesh(string path, IDiscretization discretization, IHydroNetwork network)
+        {
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D);
+                if (meshIds.Length != 0)
+                {
+                    var mesh1D = api.GetMesh1D(meshIds[0]);
+                    discretization.SetMesh1DGeometry(mesh1D, network);
+                }
+            }
+        }
+
+        private static void ReadNetwork(string path, IHydroNetwork network, IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
+            IList<BranchFile.BranchProperties> branchPropertiesList)
+        {
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                var networkIds = api.GetNetworkIds();
+                if (networkIds.Length != 0)
+                {
+                    network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList,
+                        compartmentPropertiesList);
+                }
+            }
+        }
+
+        private static void UpdateNodeZVariables(NetCdfFile file)
+        {
+            file.ReDefine();
+
+            // When updating the coordinate system in a UGrid file
+            // we must also update the grid-mapping attribute of only the node_Z variable
+            // to refer to the coordinate system
+            // This is because the CF commission is locked down on the node_x and node_y variables
+            // and we can't set the grid_mapping attribute on these
+            const string gridMappingAttributeName = "grid_mapping";
+            const string projectedCoordinateSystemAttributeValue = "projected_coordinate_system";
+            const string nodeZVariableName = "_node_z";
+
+            file.GetVariables()
+                .Where(v => file.GetVariableName(v).EndsWith(nodeZVariableName))
+                .ForEach(v =>
+                    file.AddAttribute(v,
+                        new NetCdfAttribute(gridMappingAttributeName, projectedCoordinateSystemAttributeValue)));
+
+            file.EndDefine();
+            file.Flush();
+        }
+
+        private static string GetVariableName(BedLevelLocation location)
+        {
+            switch (location)
+            {
+                case BedLevelLocation.Faces:
+                case BedLevelLocation.FacesMeanLevFromNodes: return UGridConstants.Naming.FaceZ;
+                case BedLevelLocation.CellEdges: return "";
+                case BedLevelLocation.NodesMeanLev:
+                case BedLevelLocation.NodesMinLev:
+                case BedLevelLocation.NodesMaxLev: return UGridConstants.Naming.NodeZ;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(location), location, null);
+            }
+        }
+
+        private static string GetVariableLongName(BedLevelLocation location)
+        {
+            switch (location)
+            {
+                case BedLevelLocation.Faces:
+                case BedLevelLocation.FacesMeanLevFromNodes: 
+                    return Resources.UGrid_WriteZValuesAtFacesForMeshId_z_coordinate_of_mesh_faces;
+                case BedLevelLocation.CellEdges: 
+                    return "";
+                case BedLevelLocation.NodesMeanLev:
+                case BedLevelLocation.NodesMinLev:
+                case BedLevelLocation.NodesMaxLev: 
+                    return Resources.UGrid_WriteZValuesAtNodesForMeshId_z_coordinate_of_mesh_nodes;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(location), location, null);
+            }
+        }
+
+        private static GridLocationType GetLocationType(BedLevelLocation location)
+        {
+            switch (location)
+            {
+                case BedLevelLocation.Faces:
+                case BedLevelLocation.FacesMeanLevFromNodes: 
+                    return GridLocationType.Face;
+                case BedLevelLocation.CellEdges:
+                    Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
+                    return GridLocationType.None;
+                case BedLevelLocation.NodesMeanLev:
+                case BedLevelLocation.NodesMinLev:
+                case BedLevelLocation.NodesMaxLev: 
+                    return GridLocationType.Node;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(location), location, null);
+            }
+        }
+
+        private static IUGridApi CreateUGridApi()
+        {
+            return new RemoteUGridApi();
+            //use new UGridApi() to disable remoting
+        }
+    }
+}

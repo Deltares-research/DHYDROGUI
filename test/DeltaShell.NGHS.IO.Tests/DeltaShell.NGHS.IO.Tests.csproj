@@ -59,7 +59,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Deltares.UGrid.1.0.66366\lib\net40\Deltares.UGrid.dll</HintPath>
+      <HintPath>..\..\packages\Deltares.UGrid.1.0.66411\lib\net40\Deltares.UGrid.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
@@ -161,26 +161,9 @@
     <Compile Include="FileWriters\Structures\StructuresFileWriterTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
-    <Compile Include="Grid\AGridTests.cs" />
     <Compile Include="Grid\DeltaresUGrid\HydroUGridExtensionsTest.cs" />
-    <Compile Include="Grid\GridApiTests.cs" />
-    <Compile Include="Grid\LUCAGridTests.cs" />
-    <Compile Include="Grid\NewUGridTests.cs" />
-    <Compile Include="Grid\TwoDimensionalArrayExtensions.cs" />
-    <Compile Include="Grid\UGrid1D2DLinksApiTests..cs" />
-    <Compile Include="Grid\UGrid1D2DLinksAdapterTests.cs" />
-    <Compile Include="Grid\UGridNetworkDiscretisationUnitTests.cs" />
-    <Compile Include="Grid\UGridNetworkIntegrationTests.cs" />
-    <Compile Include="Grid\UgridWrapperTests.cs" />
-    <Compile Include="Grid\UGrid2DIntegrationTests.cs" />
-    <Compile Include="Grid\UGridNetworkApiTests.cs" />
-    <Compile Include="Grid\UGridApiTests.cs" />
-    <Compile Include="Grid\UGridNetworkUnitTests.cs" />
-    <Compile Include="Grid\UGridStub.cs" />
-    <Compile Include="Grid\UGridTest.cs" />
-    <Compile Include="Grid\UGridUnitTests.cs" />
     <Compile Include="Helpers\StringArrayExtensionsTest.cs" />
-    <Compile Include="Grid\UnstructuredGridFileHelperTest.cs" />
+    <Compile Include="Grid\UGridFileHelperTest.cs" />
     <Compile Include="NGHSIOResourcesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -246,10 +229,8 @@ cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.5.0.49426-beta\tools\mkl
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.1.5.0.49426-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.1.5.0.49426-beta\build\net40\DeltaShell.TestProject.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\DeltaShell.TestProject.1.5.0.49426-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.1.5.0.49426-beta\build\net40\DeltaShell.TestProject.targets')" />
-  <Import Project="..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets')" />
 </Project>

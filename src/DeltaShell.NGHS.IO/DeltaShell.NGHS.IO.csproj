@@ -58,7 +58,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Deltares.UGrid.1.0.66366\lib\net40\Deltares.UGrid.dll</HintPath>
+      <HintPath>..\..\packages\Deltares.UGrid.1.0.66411\lib\net40\Deltares.UGrid.dll</HintPath>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
@@ -125,7 +125,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adaptors\UGridToUnstructuredGridAdaptor.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeDataExtensions.cs" />
     <Compile Include="DataObjects\Model1D\AggregationOptions.cs" />
     <Compile Include="DataObjects\Model1D\ElementSet.cs" />
@@ -256,50 +255,20 @@
     <Compile Include="FunctionStores\MapHisFileMetaData.cs" />
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
+    <Compile Include="Grid\DeltaresUGrid\UGridConstants.cs" />
     <Compile Include="Grid\GridGeomApi\DisposableMeshGeometryGridGeom.cs" />
-    <Compile Include="Grid\GridApi.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomApi.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomWrapper.cs" />
     <Compile Include="Grid\GridGeomApi\Mesh1DGeometry.cs" />
     <Compile Include="Grid\GridGeomApi\Mesh1DGeometryNative.cs" />
-    <Compile Include="Grid\IGridApi.cs" />
-    <Compile Include="Grid\IUGrid1D2DLinksApi.cs" />
-    <Compile Include="Grid\IUGridMesh2DApi.cs" />
-    <Compile Include="Grid\IUGridNetworkApi.cs" />
-    <Compile Include="Grid\IUGridNetworkDiscretisationApi.cs" />
     <Compile Include="Grid\GridGeomApi\LinkInformation.cs" />
-    <Compile Include="Grid\NetworkDiscretisationFactory.cs" />
-    <Compile Include="Grid\NetworkDiscretisationUGridDataModel.cs" />
-    <Compile Include="Grid\NetworkUGridDataModel.cs" />
-    <Compile Include="Grid\RemoteGridApi.cs" />
-    <Compile Include="Grid\RemoteUGrid1D2DLinksApi.cs" />
-    <Compile Include="Grid\RemoteUGrid2DMeshApi.cs" />
-    <Compile Include="Grid\RemoteUGridNetworkApi.cs" />
-    <Compile Include="Grid\RemoteUGridNetworkDiscretisationApi.cs" />
-    <Compile Include="Grid\StringBufferHandling.cs" />
-    <Compile Include="Grid\UGrid1D2DLinks.cs" />
-    <Compile Include="Grid\UGrid1D2DLinksAdapter.cs" />
-    <Compile Include="Grid\UGrid1D2DLinksApi.cs" />
-    <Compile Include="Grid\UGridMesh2DApi.cs" />
-    <Compile Include="Grid\UGridGlobalMetaData.cs" />
+    <Compile Include="Grid\BranchType.cs" />
+    <Compile Include="Grid\GridGeomApi\meshgeom.cs" />
+    <Compile Include="Grid\GridGeomApi\meshgeomdim.cs" />
     <Compile Include="Grid\DeltaresUGrid\HydroUGridExtensions.cs" />
-    <Compile Include="Grid\UGridNetwork.cs" />
-    <Compile Include="Grid\UGridNetworkDiscretisation.cs" />
-    <Compile Include="Grid\UGridApi.cs" />
-    <Compile Include="Grid\AGrid.cs" />
-    <Compile Include="Grid\GridApiDataSet.cs" />
-    <Compile Include="Grid\GridApiFactory.cs" />
-    <Compile Include="Grid\GridWrapper.cs" />
-    <Compile Include="Grid\IUGridApi.cs" />
-    <Compile Include="Grid\RemoteUGridApi.cs" />
-    <Compile Include="Grid\UGrid.cs" />
-    <Compile Include="Grid\UGridNetworkApi.cs" />
-    <Compile Include="Grid\UGridNetworkDiscretisationApi.cs" />
-    <Compile Include="Grid\UGridMeshType.cs" />
-    <Compile Include="Grid\UGridToNetworkAdapter.cs" />
+    <Compile Include="Grid\NetworkPropertiesHelper.cs" />
     <Compile Include="Grid\DeltaresUGrid\RemoteUGridApi.cs" />
-    <Compile Include="Grid\UnmanagedMemoryRegister.cs" />
-    <Compile Include="Grid\UnstructuredGridFileHelper.cs" />
+    <Compile Include="Grid\UGridFileHelper.cs" />
     <Compile Include="Helpers\BranchChainageExtensions.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
@@ -326,7 +295,6 @@
     <Compile Include="Store1D\OutputFile1DMetaData.cs" />
     <Compile Include="Store1D\TimeDependentVariableMetaDataBase.cs" />
     <Compile Include="TimFile.cs" />
-    <Compile Include="UgridGlobalMetaDataToProtoConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -341,12 +309,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Grid\Grid.cd" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="UML\OverView.cd" />
-    <None Include="UML\UGridApi.cd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.hbm.xml" />
@@ -396,9 +362,9 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.66411\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.66411\build\net40\Deltares.UGrid.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.1.5.0.49426-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.66366\build\net40\Deltares.UGrid.targets')" />
+  <Import Project="..\..\packages\Deltares.UGrid.1.0.66411\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.66411\build\net40\Deltares.UGrid.targets')" />
 </Project>

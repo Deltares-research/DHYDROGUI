@@ -162,6 +162,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             {
                 new BranchFile.BranchProperties{Name = "pipe1", BranchType = BranchFile.BranchType.Pipe },
                 new BranchFile.BranchProperties{Name = "pipe2", BranchType = BranchFile.BranchType.Pipe },
+                new BranchFile.BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
             };
 
             // Act
@@ -173,8 +174,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(4, network.HydroNodes.Count());
             Assert.AreEqual(3, network.Manholes.Count());
             
-            Assert.AreEqual(5, network.Branches.Count);
+            Assert.AreEqual(6, network.Branches.Count);
             Assert.AreEqual(3, network.Channels.Count());
+            Assert.AreEqual(3, network.SewerConnections.Count());
             Assert.AreEqual(2, network.Pipes.Count());
 
             // check nodes
@@ -247,7 +249,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             var compartment1Index = networkGeometry.NodeIds.ToList().IndexOf(compartment2.Name);
             Assert.AreEqual(manhole2.Geometry.Coordinate.X - 0.5, networkGeometry.NodesX[compartment1Index]);
             Assert.AreEqual(manhole2.Geometry.Coordinate.Y, networkGeometry.NodesY[compartment1Index]);
-            Assert.AreEqual(manhole2.LongName, networkGeometry.NodeLongNames[compartment1Index]);
+            // null gets converted to empty string
+            Assert.IsNull(manhole2.LongName);
+            Assert.AreEqual("", networkGeometry.NodeLongNames[compartment1Index]);
 
             var branch = network.Branches[0];
             var branchIdList = networkGeometry.BranchIds.ToList();
@@ -263,13 +267,15 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             Assert.AreEqual(pipe.Length, networkGeometry.BranchLengths[pipe1Index]);
             Assert.AreEqual(2, networkGeometry.BranchGeometryNodesCount[pipe1Index]);
-            Assert.AreEqual(pipe.LongName, networkGeometry.BranchLongNames[pipe1Index]);
+            // null gets converted to empty string
+            Assert.IsNull(pipe.LongName);
+            Assert.AreEqual("", networkGeometry.BranchLongNames[pipe1Index]);
 
             var innerConnection1Index = branchIdList.IndexOf("innerConnection1");
             Assert.AreEqual(1, networkGeometry.BranchLengths[innerConnection1Index]);
             Assert.AreEqual(2, networkGeometry.BranchGeometryNodesCount[innerConnection1Index]);
-            Assert.AreEqual(1, networkGeometry.NodesFrom[innerConnection1Index]);
-            Assert.AreEqual(2, networkGeometry.NodesTo[innerConnection1Index]);
+            Assert.AreEqual(5, networkGeometry.NodesFrom[innerConnection1Index]);
+            Assert.AreEqual(6, networkGeometry.NodesTo[innerConnection1Index]);
         }
 
         [Test]
@@ -294,7 +300,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             var network = CreateTestNetwork();
 
-            var points = network.Branches.SelectMany((b, i) =>
+            var points = network.Branches.Where(b => b is IPipe || b is IChannel).SelectMany((b, i) =>
             {
                 return Enumerable.Range(0, 10).Select(j => new
                 {
@@ -355,7 +361,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             //Arrange
             var network = CreateTestNetwork();
-            var points = network.Branches.SelectMany((b, i) =>
+            var points = network.Branches.Where(b => b is IPipe || b is IChannel).SelectMany((b, i) =>
             {
                 return Enumerable.Range(0, 10).Select(j => new
                 {
@@ -511,7 +517,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             network.Branches = new EventedList<IBranch>
             {
-                new Branch(node1,node3)
+                new Channel(node1,node3)
                 {
                     Name = "branch1",
                     Description = "branch1 long",
@@ -519,7 +525,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                     Network = network,
                     Geometry = new LineString(new[] {node1.Geometry.Coordinate, node3.Geometry.Coordinate})
                 },
-                new Branch(node2,node3)
+                new Channel(node2,node3)
                 {
                     Name = "branch2",
                     Description = "branch2 long",
@@ -527,7 +533,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                     Network = network,
                     Geometry = new LineString(new[] {node2.Geometry.Coordinate, node3.Geometry.Coordinate})
                 },
-                new Branch(node3,node4)
+                new Channel(node3,node4)
                 {
                     Name = "branch3",
                     Description = "branch3 long",
@@ -551,6 +557,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                     TargetCompartment = compartment4,
                     Network = network,
                     Geometry = new LineString(new[] { manhole2.Geometry.Coordinate, manhole3.Geometry.Coordinate})
+                },
+                new SewerConnection
+                {
+                    Name = "innerConnection1",
+                    SourceCompartment = compartment2,
+                    TargetCompartment = compartment3,
+                    Network = network,
+                    Geometry = new LineString(new[] { manhole2.Geometry.Coordinate, manhole2.Geometry.Coordinate})
                 }
             };
 

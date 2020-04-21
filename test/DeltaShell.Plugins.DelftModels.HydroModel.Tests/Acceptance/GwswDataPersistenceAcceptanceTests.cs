@@ -1,9 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using log4net.Core;
@@ -24,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         private static readonly object[] AcceptanceTests =
         {
+            // acceptanceModelName, preconditionExpectedBranchFeaturesCount, preconditionExpectedCatchmentsCount
             new object[] {"KorteWoerden", 84, 72},
             new object[] {"DidactischStelsel", 108, 73},
             new object[] {"Groesb2", 719, 675},
@@ -34,22 +39,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "AcceptanceModels", "GWSW");
+            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\GWSW");
         }
 
         [SetUp]
         public void SetUp()
         {
-            tempDirectory = FileUtils.CreateTempDirectory();
+            var subFolder = "AcceptanceTests";
+            tempDirectory = TestHelper.GetTestWorkingDirectory(subFolder);
 
-            var firstSaveDirectory = Path.Combine(tempDirectory, "First save");
-            firstSaveProjectPath = Path.Combine(firstSaveDirectory, "TestProject.dsproj");
+            firstSaveProjectPath = TestHelper.GetTestWorkingDirectoryTestProjectPath("TestProject", $@"{subFolder}\First save");
+            secondSaveProjectPath = TestHelper.GetTestWorkingDirectoryTestProjectPath("TestProject", $@"{subFolder}\Second save");
 
-            var secondSaveDirectory = Path.Combine(tempDirectory, "Second save");
-            secondSaveProjectPath = Path.Combine(secondSaveDirectory, "TestProject.dsproj");
-
-            Directory.CreateDirectory(firstSaveDirectory);
-            Directory.CreateDirectory(secondSaveDirectory);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(firstSaveProjectPath), true);
+            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(secondSaveProjectPath), true);
         }
 
         [TearDown]
@@ -69,6 +72,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+
+                Console.WriteLine("Importing model");
 
                 ImportGwswModelAndAssertPreconditions(
                     acceptanceModelName,

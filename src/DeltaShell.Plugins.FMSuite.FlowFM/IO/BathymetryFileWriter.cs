@@ -21,13 +21,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
 
-            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+            var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
             var values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
-            UnstructuredGridFileHelper.WriteZValues(filePath, location, values);
+            UGridFileHelper.WriteZValues(filePath, location, values);
         }
-        public static void Write(string filePath, UnstructuredGridFileHelper.BedLevelLocation location, double[] values)
+        public static void Write(string filePath, UGridFileHelper.BedLevelLocation location, double[] values)
         {
-            UnstructuredGridFileHelper.WriteZValues(filePath, location, values);
+            UGridFileHelper.WriteZValues(filePath, location, values);
         }
     }
 }

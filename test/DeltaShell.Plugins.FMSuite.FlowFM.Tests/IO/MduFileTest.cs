@@ -465,7 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var fileProjectedName = TypeUtils.CallPrivateStaticMethod(typeof(ICoordinateSystemExtensions), "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath) as string;
             Assert.That(fileProjectedName, Is.EqualTo("Unknown projected"));
 
-            UnstructuredGridFileHelper.SetCoordinateSystem(workingNetFilePath, coordinateSystem);
+            UGridFileHelper.WriteCoordinateSystem(workingNetFilePath, coordinateSystem);
 
             var editedFileProjectedName = TypeUtils.CallPrivateStaticMethod(typeof(ICoordinateSystemExtensions), "GetProjectedCoordinateSystemNameFromNetFile", workingNetFilePath) as string;
             Assert.IsTrue(editedFileProjectedName.Equals(expectedCoordinateSystemName));

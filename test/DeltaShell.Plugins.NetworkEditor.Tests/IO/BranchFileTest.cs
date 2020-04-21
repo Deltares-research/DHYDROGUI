@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
         [SetUp]
         public void Setup()
         {
-            filePath = Path.Combine(FileUtils.CreateTempDirectory(), UGridToNetworkAdapter.BranchGuiFileName);
+            filePath = Path.Combine(FileUtils.CreateTempDirectory(), NetworkPropertiesHelper.BranchGuiFileName);
         }
 
         [TearDown]

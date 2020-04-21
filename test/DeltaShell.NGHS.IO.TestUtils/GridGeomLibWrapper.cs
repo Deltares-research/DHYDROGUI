@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 
 namespace General.tests
 {
@@ -56,7 +57,7 @@ namespace General.tests
         /// <param name="meshgeomdim">The data structure containing the mesh dimensions</param>
         /// <returns></returns>
         [DllImport(LibDetails.LIB_DLL_NAME, EntryPoint = "ggeo_convert", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_convert_dll([In, Out] ref GridWrapper.meshgeom meshgeom, [In] ref GridWrapper.meshgeomdim meshgeomdim, [In] ref int startIndex);
+        public static extern int ggeo_convert_dll([In, Out] ref meshgeom meshgeom, [In] ref meshgeomdim meshgeomdim, [In] ref int startIndex);
 
         /// <summary>
         /// Makes the 1d/2d links (results are stored in memory)
@@ -200,7 +201,7 @@ namespace General.tests
         /// <param name="startIndex"> for index based array, the start index </param>
         /// <returns></returns>
         [DllImport(LibDetails.LIB_DLL_NAME, EntryPoint = "ggeo_find_cells", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_find_cells_dll([In] ref GridWrapper.meshgeomdim meshDimIn, [In] ref GridWrapper.meshgeom meshIn, [In,Out] ref GridWrapper.meshgeomdim meshDimOut, [In,Out] ref GridWrapper.meshgeom meshOut, [In] ref int startIndex);
+        public static extern int ggeo_find_cells_dll([In] ref meshgeomdim meshDimIn, [In] ref meshgeom meshIn, [In,Out] ref meshgeomdim meshDimOut, [In,Out] ref meshgeom meshOut, [In] ref int startIndex);
 
 
         /// <summary>
@@ -210,7 +211,7 @@ namespace General.tests
         /// <param name="meshIn">server allocated meshgeom structure, to destroy</param>
         /// <returns></returns>
         [DllImport(LibDetails.LIB_DLL_NAME, EntryPoint = "ggeo_meshgeom_destructor", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ggeo_meshgeom_destructor_dll([In, Out] ref GridWrapper.meshgeomdim meshDimIn, [In, Out] ref GridWrapper.meshgeom meshIn);
+        public static extern int ggeo_meshgeom_destructor_dll([In, Out] ref meshgeomdim meshDimIn, [In, Out] ref meshgeom meshIn);
 
         #endregion ggeo_functions
 
@@ -247,7 +248,7 @@ namespace General.tests
         }
 
 
-        public int ggeo_convert(ref GridWrapper.meshgeom c_meshgeom, ref GridWrapper.meshgeomdim c_meshgeomdim, ref int startIndex)
+        public int ggeo_convert(ref meshgeom c_meshgeom, ref meshgeomdim c_meshgeomdim, ref int startIndex)
         {
             int ierr = ggeo_convert_dll(ref  c_meshgeom, ref  c_meshgeomdim, ref startIndex);
             return ierr;
@@ -322,13 +323,13 @@ namespace General.tests
             return ierr;
         }
 
-        public int ggeo_find_cells(ref GridWrapper.meshgeomdim meshDimIn,  ref GridWrapper.meshgeom meshIn, ref GridWrapper.meshgeomdim meshDimOut,  ref GridWrapper.meshgeom meshOut,  ref int startIndex)
+        public int ggeo_find_cells(ref meshgeomdim meshDimIn,  ref meshgeom meshIn, ref meshgeomdim meshDimOut,  ref meshgeom meshOut,  ref int startIndex)
         {
             int ierr = ggeo_find_cells_dll(ref meshDimIn, ref  meshIn, ref meshDimOut, ref meshOut, ref startIndex);
             return ierr;
         }
 
-        public int ggeo_meshgeom_destructor(ref GridWrapper.meshgeomdim meshDimIn, ref GridWrapper.meshgeom meshIn)
+        public int ggeo_meshgeom_destructor(ref meshgeomdim meshDimIn, ref meshgeom meshIn)
         {
             int ierr = ggeo_meshgeom_destructor_dll(ref meshDimIn, ref meshIn);
             return ierr;

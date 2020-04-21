@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 }
 
                 var currentCoordinateSystem = model.CoordinateSystem;
-                var targetCoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(model.NetFilePath);
+                var targetCoordinateSystem = UGridFileHelper.ReadCoordinateSystem(model.NetFilePath);
 
                 if (currentCoordinateSystem != targetCoordinateSystem &&
                     (currentCoordinateSystem == null ||

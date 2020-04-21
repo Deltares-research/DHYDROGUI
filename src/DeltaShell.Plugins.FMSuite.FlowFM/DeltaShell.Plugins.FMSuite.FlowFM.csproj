@@ -151,7 +151,6 @@
     <Compile Include="FmModelSettings.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
-    <Compile Include="IO\Exporters\WaterFlowFMAndF1dFileExporter.cs" />
     <Compile Include="IO\FeatureFile1D2DReader.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\FM1DFileFunctionStore.cs" />
@@ -166,7 +165,6 @@
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
-    <Compile Include="IO\WaterFlowFMModelWriter.cs" />
     <Compile Include="IO\WaterFlowFMModelWriterData.cs" />
     <Compile Include="ModelDefinition\ICoordinateSystemExtensions.cs" />
     <Compile Include="EmbankmentGenerator.cs" />

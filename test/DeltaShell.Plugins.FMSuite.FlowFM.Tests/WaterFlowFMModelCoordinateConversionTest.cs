@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.Adaptors;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Grids;
@@ -18,12 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            using (var gridApi = GridApiFactory.CreateNew())
-            {
-                GridApiDataSet.DataSetConventions convention;
-                var ierr = gridApi.GetConvention(netFilePath, out convention);
-                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_OTHER));
-            }
+            Assert.IsFalse(UGridFileHelper.IsUGridFile(netFilePath));
             var grid = NetFileImporter.ImportGrid(netFilePath);
             
             grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
@@ -52,19 +46,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            using (var gridApi = GridApiFactory.CreateNew())
-            {
-                GridApiDataSet.DataSetConventions convention;
-                var ierr = gridApi.GetConvention(netFilePath, out convention);
-                Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
-            }
+            Assert.IsTrue(UGridFileHelper.IsUGridFile(netFilePath));
 
             // get original grid
-            UnstructuredGrid grid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
-            {
-                grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
-            }
+            var grid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
             Assert.NotNull(grid);
 
             // get original value
@@ -82,17 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreNotEqual(originalX, newX);
 
             // write new coordinates to netfile
-            using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
-            {
-                uGrid.RewriteGridCoordinatesForMeshId(1, grid.Vertices.Select(v => v.X).ToArray(), grid.Vertices.Select(v => v.Y).ToArray());
-            }
+            UGridFileHelper.RewriteGridCoordinates(netFilePath, grid);
 
             // read new grid
-            UnstructuredGrid adjustedGrid;
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdaptor(netFilePath))
-            {
-                adjustedGrid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
-            }
+            var adjustedGrid = UGridFileHelper.ReadUnstructuredGrid(netFilePath);
             Assert.NotNull(adjustedGrid);
 
             // compare to new value
