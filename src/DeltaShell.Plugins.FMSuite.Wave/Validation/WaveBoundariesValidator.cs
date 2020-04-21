@@ -82,6 +82,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         
         private class ValidatorVisitor :  IBoundaryConditionVisitor, ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor, IShapeVisitor, ISpreadingVisitor
         {
+            private bool isUniform = true;
+
+            private int supportPointCounter;
+
+            private string precedingSupportPointNumberText = string.Empty;
+
             /// <summary>
             /// The constructor should set the boundary, which is visited.
             /// </summary>
@@ -165,6 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
             {
                 Ensure.NotNull(uniformDataComponent, nameof(uniformDataComponent));
+                isUniform = true;
                 uniformDataComponent.Data.AcceptVisitor(this);
             }
 
@@ -180,9 +187,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
             {
                 Ensure.NotNull(spatiallyVaryingDataComponent, nameof(spatiallyVaryingDataComponent));
-                 List<SupportPoint> activeSupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
 
-                if (activeSupportPoints.Count < AllDefinedSupportPoints.Count)
+                isUniform = false;
+
+                IEnumerable<SupportPoint> activeSupportPoints = spatiallyVaryingDataComponent.Data.Keys;
+
+                if (activeSupportPoints.Count() < AllDefinedSupportPoints.Count)
                 {
                     ValidationIssues.Add(
                         new ValidationIssue(VariableDescription, ValidationSeverity.Info,
@@ -211,11 +221,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
             {
                 Ensure.NotNull(constantParameters, nameof(constantParameters));
+                
+                if (!isUniform)
+                {
+                    supportPointCounter++;
+                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
+                }
+
                 if (IsOutsideOfRange(constantParameters.Height, 1, 25))
                 {
                     ValidationIssues.Add( new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
-                                                     Resources
+                                                     precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_,
                                                      Boundary));
                 }
@@ -224,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
-                                                     Resources
+                                                     precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_,
                                                      Boundary));
                 }
@@ -233,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
-                                                     Resources
+                                                     precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_,
                                                      Boundary));
                 }
@@ -254,15 +271,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new()
             {
                 Ensure.NotNull(timeDependentParameters, nameof(timeDependentParameters));
+                
+                if (!isUniform)
+                {
+                    supportPointCounter++;
+                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
+                }
 
                 IVariable<DateTime> timeArgument = timeDependentParameters.WaveEnergyFunction.TimeArgument;
                 
                 if (timeArgument?.Values == null || timeArgument.Values.Count == 0)
                 {
-                    ValidationIssues.Add( new ValidationIssue(null, ValidationSeverity.Error,
-                                                     Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition,
-                                                     Boundary));
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition,
+                                                             Boundary));
 
                 }
 
@@ -271,9 +294,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (heightComponent?.Values != null && heightComponent.Values.Any(v=> IsOutsideOfRange(v, 0.0, 25.0)))
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                     Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range,
-                                                     Boundary));
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range,
+                                                             Boundary));
                 }
 
                 IVariable<double> periodComponent = timeDependentParameters.WaveEnergyFunction.PeriodComponent;
@@ -281,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (periodComponent?.Values != null && periodComponent.Values.Any(v => IsOutsideOfRange(v,0.1, 20.0)))
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                     Resources
+                                                             precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range,
                                                      Boundary));
                 }
@@ -291,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (directionComponent?.Values != null && directionComponent.Values.Any(v => IsOutsideOfRange(v,-360.0, 360.0)))
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                     Resources
+                                                             precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range,
                                                      Boundary));
                 }
@@ -302,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     spreadingComponent.Values.Any(v => IsOutsideOfRange(v,1.0, 800.0)))
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                     Resources
+                                                             precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800,
                                                      Boundary));
                 }
@@ -311,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     spreadingComponent.Values.Any(v => IsOutsideOfRange(v,2.0, 180.0)))
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
-                                                     Resources
+                                                             precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180,
                                                      Boundary));
                 }
@@ -340,11 +363,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
             {
                 Ensure.NotNull(degreesDefinedSpreading, nameof(degreesDefinedSpreading));
+                
                 if (IsOutsideOfRange(degreesDefinedSpreading.DegreesSpreading,2.0, 180.0))
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
-                                                     Resources
+                                                     precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180,
                                                      Boundary));
                 }
@@ -365,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
-                                                     Resources
+                                                     precedingSupportPointNumberText + Resources
                                                          .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800,
                                                      Boundary)); }
             }

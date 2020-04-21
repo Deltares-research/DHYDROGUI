@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        public void Visit_NoBoundaries_ReturnsEmptyReport()
+        public void Validate_NoBoundaries_ReturnsEmptyReport()
         {
             // Setup
             var boundaries = new EventedList<IWaveBoundary>();
@@ -535,7 +535,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
             
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = SetupVisitingTimeDependentParametersPowerSpreading(boundaries);
-            IVariable<double> heightVariable = CreateVariableForTestedDouble(height);
+            IVariable<double> heightVariable = CreateVariableForTestDouble(height);
             waveEnergyFunction.HeightComponent.Returns(heightVariable);
 
             // Call
@@ -567,7 +567,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = SetupVisitingTimeDependentParametersPowerSpreading(boundaries);
-            IVariable<double> periodVariable = CreateVariableForTestedDouble(period);
+            IVariable<double> periodVariable = CreateVariableForTestDouble(period);
             waveEnergyFunction.PeriodComponent.Returns(periodVariable);
 
             // Call
@@ -599,7 +599,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = SetupVisitingTimeDependentParametersPowerSpreading(boundaries);
-            IVariable<double> directionVariable = CreateVariableForTestedDouble(direction);
+            IVariable<double> directionVariable = CreateVariableForTestDouble(direction);
             waveEnergyFunction.DirectionComponent.Returns(directionVariable);
 
             // Call
@@ -631,7 +631,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = SetupVisitingTimeDependentParametersPowerSpreading(boundaries);
-            IVariable<double> spreadingVariable = CreateVariableForTestedDouble(spreading);
+            IVariable<double> spreadingVariable = CreateVariableForTestDouble(spreading);
             waveEnergyFunction.SpreadingComponent.Returns(spreadingVariable);
 
             // Call
@@ -853,6 +853,143 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(2, report.SubReports.Count());
         }
 
+        [Test]
+        public void Validate_SpatiallyVaryingConstantPowerBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
+        {
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+            
+            // Create constant parameters with only wrong values.
+            var constantParameters1 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading { SpreadingPower = -500} );
+            var constantParameters2 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading { SpreadingPower = -500 });
+
+            IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
+            
+            var supportPoint1 = new SupportPoint(0, geometryDefinition);
+            var supportPoint2 = new SupportPoint(20, geometryDefinition);
+
+            var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, constantParameters1);
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, constantParameters2);
+
+            ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
+        }
+
+        [Test]
+        public void Validate_SpatiallyVaryingConstantDegreesBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
+        {
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+
+            // Create constant parameters with only wrong values.
+            var constantParameters1 = new ConstantParameters<DegreesDefinedSpreading>(-500, -500, -500, new DegreesDefinedSpreading {DegreesSpreading = -500});
+            var constantParameters2 = new ConstantParameters<DegreesDefinedSpreading>(-500, -500, -500, new DegreesDefinedSpreading {DegreesSpreading = -500});
+
+            IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
+
+            var supportPoint1 = new SupportPoint(0, geometryDefinition);
+            var supportPoint2 = new SupportPoint(20, geometryDefinition);
+
+            var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, constantParameters1);
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, constantParameters2);
+
+            ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
+        }
+
+        private static void ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(IEventedList<IWaveBoundary> boundaries, SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters> spatiallyVaryingDataComponentDataComponent)
+        {
+            IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
+            waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponentDataComponent;
+            waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+
+            IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(8, validationIssues.Count);
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 1: "));
+            }
+
+            for (int i = 4; i < 8; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 2: "));
+            }
+        }
+
+        [Test]
+        public void Validate_SpatiallyVaryingTimeDependentPowerBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
+        {
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+            IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
+            
+            var supportPoint1 = new SupportPoint(0, geometryDefinition);
+            var supportPoint2 = new SupportPoint(20, geometryDefinition);
+
+            // Create time dependent parameters with only wrong values.
+            var waveEnergyFunction1 = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
+            IVariable<double> variable = CreateVariableForTestDouble(-500);
+            waveEnergyFunction1.HeightComponent.Returns(variable);
+            waveEnergyFunction1.PeriodComponent.Returns(variable);
+            waveEnergyFunction1.DirectionComponent.Returns(variable);
+            waveEnergyFunction1.SpreadingComponent.Returns(variable);
+            var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction1);
+            
+            var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, timeDependentParameters);
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, timeDependentParameters);
+
+            ValidateSpatiallyVaryingTimeDependentParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
+        }
+
+        [Test]
+        public void Validate_SpatiallyVaryingTimeDependentDegreesBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
+        {
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+            IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
+
+            var supportPoint1 = new SupportPoint(0, geometryDefinition);
+            var supportPoint2 = new SupportPoint(20, geometryDefinition);
+
+            // Create time dependent parameters with only wrong values.
+            var waveEnergyFunction1 = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
+            IVariable<double> variable = CreateVariableForTestDouble(-500);
+            waveEnergyFunction1.HeightComponent.Returns(variable);
+            waveEnergyFunction1.PeriodComponent.Returns(variable);
+            waveEnergyFunction1.DirectionComponent.Returns(variable);
+            waveEnergyFunction1.SpreadingComponent.Returns(variable);
+            var timeDependentParameters = new TimeDependentParameters<DegreesDefinedSpreading>(waveEnergyFunction1);
+
+            var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, timeDependentParameters);
+            spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, timeDependentParameters);
+
+            ValidateSpatiallyVaryingTimeDependentParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
+        }
+
+        private static void ValidateSpatiallyVaryingTimeDependentParametersMessagesContainingSupportPointNumberText(EventedList<IWaveBoundary> boundaries, SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters> spatiallyVaryingDataComponentDataComponent)
+        {
+            IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
+            waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponentDataComponent;
+            waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+
+            IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(10, validationIssues.Count);
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 1: "));
+            }
+
+            for (int i = 5; i < 10; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 2: "));
+            }
+        }
 
         private static EventedList<IWaveBoundary> CreateWaveBoundaryInList()
         {
@@ -862,10 +999,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             return boundaries;
         }
 
-        private static IVariable<double> CreateVariableForTestedDouble(double period)
+        private static IVariable<double> CreateVariableForTestDouble(double value)
         {
             var variable = Substitute.For<IVariable<double>>();
-            var values = new MultiDimensionalArray<double> { period };
+            var values = new MultiDimensionalArray<double> { value };
             variable.Values.Returns(values);
             return variable;
         }
