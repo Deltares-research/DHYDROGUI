@@ -717,7 +717,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(1, report.GetAllIssuesRecursive().Count);
             Assert.IsTrue(allIssues.Any(i =>
                                             i.Severity == ValidationSeverity.Error &&
-                                            i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition));
+                                            i.Message == Resources.WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data));
             Assert.AreEqual(1, report.SubReports.Count());
         }
 

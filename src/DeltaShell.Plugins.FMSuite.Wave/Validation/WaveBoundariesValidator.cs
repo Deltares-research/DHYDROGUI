@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                                 .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition,
+                                                                 .WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data,
                                                              Boundary));
 
                 }

@@ -90,6 +90,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary does not contain any valid boundary data..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_dat" +
+                        "a", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0 and smaller or equal to 25..
         /// </summary>
         public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_ {

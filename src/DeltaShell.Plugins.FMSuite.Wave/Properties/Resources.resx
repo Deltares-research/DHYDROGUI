@@ -166,6 +166,9 @@
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition" xml:space="preserve">
     <value>Boundary does not contain a boundary condition</value>
   </data>
+  <data name="WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data" xml:space="preserve">
+    <value>Boundary does not contain any valid boundary data.</value>
+  </data>
   <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
     <value>Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running</value>
   </data>
