@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                
             foreach (IWaveBoundary boundary in boundaries)
             {
-                List<ValidationIssue> validationIssues = CollectAllValidationIssues(boundary);
+                IEnumerable<ValidationIssue> validationIssues = CollectAllValidationIssues(boundary);
                 var report = new ValidationReport(boundary.Name, validationIssues);
                 subReports.Add(report);
             }
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport("Waves Model Boundaries", subReports);
         }
 
-        private static List<ValidationIssue> CollectAllValidationIssues(IWaveBoundary boundary)
+        private static IEnumerable<ValidationIssue> CollectAllValidationIssues(IWaveBoundary boundary)
         {
             var visitor = new ValidatorVisitor(boundary);
             boundary.ConditionDefinition.AcceptVisitor(visitor);
