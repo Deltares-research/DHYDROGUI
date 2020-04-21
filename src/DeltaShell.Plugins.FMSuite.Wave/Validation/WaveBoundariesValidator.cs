@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
                 }
 
-                if (IsOutsideOfRange(constantParameters.Height, 1, 25))
+                if (IsOutsideOfRange(constantParameters.Height, 0, 25))
                 {
                     ValidationIssues.Add( new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,

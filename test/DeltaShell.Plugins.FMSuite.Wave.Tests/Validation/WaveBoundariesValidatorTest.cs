@@ -348,9 +348,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase(0.9, 1)]
-        [TestCase(1, 0)]
-        [TestCase(1.1, 0)]
+        [TestCase(-0.1, 1)]
+        [TestCase(0, 0)]
+        [TestCase(0.1, 0)]
         [TestCase(24.9, 0)]
         [TestCase(25, 0)]
         [TestCase(25.1, 1)]
