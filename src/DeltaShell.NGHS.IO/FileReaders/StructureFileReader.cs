@@ -113,7 +113,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IList<ICrossSectionDefinition> crossSectionDefinitions, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
         {
             IList<IStructure1D> structure1Ds = new List<IStructure1D>();
-            var branchLookup = network.Branches.Where(b => b.Name != null).ToDictionary(b => b.Name);
+            var branchLookup = network.Branches.Where(b => !string.IsNullOrEmpty(b.Name)).ToDictionary(b => b.Name);
             var structureNameLookup = new HashSet<string>();
 
             foreach (var structureDefinitionCategory in structuresCategories.Where(category => category.Name == StructureRegion.Header))
