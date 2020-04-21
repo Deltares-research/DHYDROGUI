@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -295,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(1, allIssues.Count);
             Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Info &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points));
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -374,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -405,7 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -436,7 +436,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -467,7 +467,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -500,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -549,7 +549,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -581,7 +581,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -613,7 +613,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -645,7 +645,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -691,7 +691,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             {
                 Assert.IsTrue(allIssues.Any(i =>
                                                 i.Severity == ValidationSeverity.Error &&
-                                                i.Message == Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180));
+                                                i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180));
             }
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -754,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(1, allIssues.Count);
             Assert.IsTrue(allIssues.Any(i =>
                                             i.Severity == ValidationSeverity.Error &&
-                                            i.Message == string.Format(Resources.WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_, boundaries[0].Name)));
+                                            i.Message == string.Format(Resources.WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__, boundaries[0].Name)));
             Assert.AreEqual(1, report.SubReports.Count());
         }
 

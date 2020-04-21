@@ -236,7 +236,6 @@
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Validation\WaveBoundariesValidator.cs" />
-    <Compile Include="Validation\WaveBoundaryConditionValidator.cs" />
     <Compile Include="Validation\WaveCouplingValidator.cs" />
     <Compile Include="Validation\WaveOutputParametersValidator.cs" />
     <Compile Include="Validation\WavePropertiesValidator.cs" />

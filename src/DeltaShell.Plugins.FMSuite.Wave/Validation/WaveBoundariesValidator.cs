@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     visitor.ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
                                                      string.Format(
                                                          Resources
-                                                             .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_,
+                                                             .WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__,
                                                          boundaryName), boundaryName));
                 }
             }
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              Resources
-                                                                 .WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_,
+                                                                 .WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_,
                                                              Boundary));
                 }
 
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add(
                         new ValidationIssue(VariableDescription, ValidationSeverity.Info,
                                             Resources
-                                                .WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points,
+                                                .WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points,
                                             Boundary));
                 }
 
@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add( new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
                                                      precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_,
+                                                         .WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_,
                                                      Boundary));
                 }
 
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
                                                      precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_,
+                                                         .WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_,
                                                      Boundary));
                 }
 
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
                                                      precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_,
+                                                         .WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_,
                                                      Boundary));
                 }
 
@@ -295,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                                 .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range,
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range,
                                                              Boundary));
                 }
 
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range,
+                                                         .WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range,
                                                      Boundary));
                 }
 
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range,
+                                                         .WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range,
                                                      Boundary));
                 }
 
@@ -326,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800,
+                                                         .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800,
                                                      Boundary));
                 }
 
@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
                                                              precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180,
+                                                         .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180,
                                                      Boundary));
                 }
 
@@ -369,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
                                                      precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180,
+                                                         .WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180,
                                                      Boundary));
                 }
             }
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
                                                      ValidationSeverity.Error,
                                                      precedingSupportPointNumberText + Resources
-                                                         .WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800,
+                                                         .WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800,
                                                      Boundary)); }
             }
 

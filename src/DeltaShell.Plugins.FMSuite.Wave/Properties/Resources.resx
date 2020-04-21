@@ -160,46 +160,46 @@
   <data name="WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_isn_t_the_same_coordinate_system_as_our_model__The_model_has_co_ordinate_system__0___the_grid_has__1___Setting_the_model_to_the_grid_co_ordinate_system_type__1__" xml:space="preserve">
     <value>Grid is set in project but isn't the same coordinate system as our model. The model has co-ordinate system {0}, the grid has {1}. Setting the model to the grid co-ordinate system type {1}.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Boundary_condition_contains_internal_geometry_points" xml:space="preserve">
     <value>Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Boundary_does_not_contain_a_boundary_condition" xml:space="preserve">
     <value>Boundary does not contain a boundary condition</value>
   </data>
   <data name="WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data" xml:space="preserve">
     <value>Boundary does not contain any valid boundary data.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points" xml:space="preserve">
     <value>Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__" xml:space="preserve">
     <value>Time points are not synchronized on boundary: {0}</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_" xml:space="preserve">
     <value>Parameter "Height" must be greater than 0 and smaller or equal to 25.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_" xml:space="preserve">
     <value>Parameter "Period" must be a value within the range 0,1 - 20.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800" xml:space="preserve">
     <value>Parameter "Spreading" must be a value within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180" xml:space="preserve">
     <value>Parameter "Spreading" must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
     <value>Values in column "Hs" in the time series table must be greater than 0 and smaller than or equal to 25.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
     <value>Values in column "Tp" in the time series table must be within the range 0,1 - 20.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range" xml:space="preserve">
     <value>Values in column "Dir" in the time series table must be within the range -360 - 360.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800" xml:space="preserve">
     <value>Values in column "Spreading" in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180" xml:space="preserve">
     <value>Values in column "Spreading" in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees.</value>
   </data>
   <data name="WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_" xml:space="preserve">
@@ -211,10 +211,10 @@
   <data name="WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time" xml:space="preserve">
     <value>Model start time precedes reference time</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_" xml:space="preserve">
     <value>Parameter "Direction" must be a value within the range -360 - 360.</value>
   </data>
-  <data name="WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_" xml:space="preserve">
+  <data name="WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_" xml:space="preserve">
     <value>Peak Enhancement Factor must be a value within the range 1 - 10.</value>
   </data>
   <data name="WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_" xml:space="preserve">

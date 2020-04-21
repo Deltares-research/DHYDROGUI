@@ -397,7 +397,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\WaveBoundariesValidatorTest.cs" />
-    <Compile Include="Validation\WaveBoundaryConditionValidatorTest.cs" />
     <Compile Include="Validation\WaveCouplingValidatorTest.cs" />
     <Compile Include="Validation\WaveModelValidatorTest.cs" />
     <Compile Include="Validation\WaveOutputParametersValidatorTest.cs" />
