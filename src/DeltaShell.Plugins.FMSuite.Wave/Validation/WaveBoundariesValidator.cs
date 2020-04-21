@@ -119,7 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// Must be defined for visitor pattern.
             /// </summary>
             /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
-            public void Visit(GaussShape gaussShape) { }
+            public void Visit(GaussShape gaussShape)
+            {
+                // No validation rules.
+            }
 
             /// <summary>
             /// Visit method for validating the jonswap shape"/>. 
@@ -146,7 +149,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// Must be defined for visitor pattern.
             /// </summary>
             /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
-            public void Visit(PiersonMoskowitzShape piersonMoskowitzShape) { }
+            public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
+            {
+                // No validation rules.
+            }
 
             /// <summary>
             /// Visit method for calling the next AcceptVisitor method of the Data stored in <see cref="UniformDataComponent{T}"/>. 
@@ -318,7 +324,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// Must be defined for visitor pattern.
             /// </summary>
             /// <param name="fileBasedParameters"> The visited <see cref="FileBasedParameters"/>. </param>
-            public void Visit(FileBasedParameters fileBasedParameters) {}
+            public void Visit(FileBasedParameters fileBasedParameters)
+            {
+                // No validation rules.
+            }
 
             /// <summary>
             /// Visit method for validating <see cref="DegreesDefinedSpreading"/>. 
