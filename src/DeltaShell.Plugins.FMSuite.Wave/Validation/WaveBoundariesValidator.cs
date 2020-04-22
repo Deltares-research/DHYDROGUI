@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
@@ -28,19 +29,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         /// <param name="boundaries"> The boundaries of the boundary
         /// container in the model definition.</param>
+        /// <param name="modelStartTime"> Model start time. </param>
         /// <returns> A <see cref="ValidationReport"/></returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="boundaries"/>
         /// is <c>null</c>.
         /// </exception>
-        public static ValidationReport Validate(IEventedList<IWaveBoundary> boundaries)
+        public static ValidationReport Validate(IEventedList<IWaveBoundary> boundaries, DateTime modelStartTime)
         {
             Ensure.NotNull(boundaries, nameof(boundaries));
             IList<ValidationReport> subReports = new List<ValidationReport>();
                
             foreach (IWaveBoundary boundary in boundaries)
             {
-                IEnumerable<ValidationIssue> validationIssues = CollectAllValidationIssues(boundary);
+                IEnumerable<ValidationIssue> validationIssues = CollectAllValidationIssues(boundary, modelStartTime);
                 var report = new ValidationReport(boundary.Name, validationIssues);
                 subReports.Add(report);
             }
@@ -48,32 +50,63 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             return new ValidationReport("Waves Model Boundaries", subReports);
         }
 
-        private static IEnumerable<ValidationIssue> CollectAllValidationIssues(IWaveBoundary boundary)
+        private static IEnumerable<ValidationIssue> CollectAllValidationIssues(IWaveBoundary boundary, DateTime modelStartTime)
         {
             var visitor = new ValidatorVisitor(boundary);
             boundary.ConditionDefinition.AcceptVisitor(visitor);
-            ValidateAllTimeSeriesOfBoundary(visitor, boundary.Name);
+            ValidateAllTimeSeriesOfBoundary(visitor, boundary, modelStartTime);
             return visitor.ValidationIssues;
         }
 
-        private static void ValidateAllTimeSeriesOfBoundary(ValidatorVisitor visitor, string boundaryName)
+        private static void ValidateAllTimeSeriesOfBoundary(ValidatorVisitor visitor, INameable boundary, DateTime modelStartTime)
         {
-            if (visitor.DateTimesPerFunction.Count <= 1)
-            {
-                return;
-            }
+            List<IVariable<DateTime>> dateTimesPerFunction = visitor.DateTimesPerFunction;
+            List<ValidationIssue> validationIssues = visitor.ValidationIssues;
 
-            List<DateTime> times = visitor.DateTimesPerFunction[0].Values.ToList();
-            foreach (IVariable<DateTime> f in visitor.DateTimesPerFunction.Skip(1))
+            // constant parameters
+            if (dateTimesPerFunction.Count == 0) return;
+
+            IList<DateTime> values = dateTimesPerFunction.SelectMany(v => v.Values).ToList();
+
+            // empty time serie
+            if (!values.Any()) return;
+
+            ValidateIfModelStartTimeIsNotAfterAllTimeArguments(boundary, modelStartTime, values, validationIssues);
+
+            // nothing to compare
+            if (dateTimesPerFunction.Count == 1) return;
+
+            ValidateFunctionsIfTheyContainTheSameTimeArguments(boundary, dateTimesPerFunction, validationIssues);
+        }
+
+        private static void ValidateIfModelStartTimeIsNotAfterAllTimeArguments(INameable boundary, DateTime modelStartTime, IList<DateTime> values, List<ValidationIssue> validationIssues)
+        {
+            bool allTimePointsPrecedeModelStartTime = values.All(b => b < modelStartTime);
+
+            if (allTimePointsPrecedeModelStartTime)
+            {
+                validationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                         string.Format(
+                                                             Resources.WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__,
+                                                             boundary.Name, boundary.Name), boundary));
+            }
+        }
+
+        private static void ValidateFunctionsIfTheyContainTheSameTimeArguments(INameable boundary, List<IVariable<DateTime>> dateTimesPerFunction, List<ValidationIssue> validationIssues)
+        {
+            
+
+            List<DateTime> times = dateTimesPerFunction[0].Values.ToList();
+            foreach (IVariable<DateTime> f in dateTimesPerFunction.Skip(1))
             {
                 List<DateTime> compareTimes = f.Values.ToList();
                 if (!times.SequenceEqual(compareTimes))
                 {
-                    visitor.ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
-                                                     string.Format(
-                                                         Resources
-                                                             .WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__,
-                                                         boundaryName), boundaryName));
+                    validationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
+                                                             string.Format(
+                                                                 Resources
+                                                                     .WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__,
+                                                                 boundary.Name), boundary));
                 }
             }
         }
@@ -264,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// </summary>
             /// <typeparam name="T"> The type of spreading. </typeparam>
             /// <param name="timeDependentParameters"> The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
-            /// <exception cref="System.ArgumentNullException">
+            /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="timeDependentParameters"/>
             /// is <c>null</c>.
             /// </exception>
@@ -339,7 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                      Boundary));
                 }
 
-                DateTimesPerFunction.Add(timeDependentParameters.WaveEnergyFunction.TimeArgument);
+                DateTimesPerFunction.Add(timeArgument);
             }
 
             /// <summary>
@@ -356,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// Visit method for validating <see cref="DegreesDefinedSpreading"/>. 
             /// </summary>
             /// <param name="degreesDefinedSpreading"> The visited <see cref="DegreesDefinedSpreading"/></param>
-            /// <exception cref="System.ArgumentNullException">
+            /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="degreesDefinedSpreading"/>
             /// is <c>null</c>.
             /// </exception>
@@ -378,7 +411,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             /// Visit method for validating <see cref="PowerDefinedSpreading"/>. 
             /// </summary>
             /// <param name="powerDefinedSpreading"> The visited <see cref="PowerDefinedSpreading"/></param>
-            /// <exception cref="System.ArgumentNullException">
+            /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="powerDefinedSpreading"/>
             /// is <c>null</c>.
             /// </exception>

@@ -129,6 +129,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model start time does not precede any of the time points of &apos;{0}&apos;.
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__ {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede" +
+                        "_any_of_Boundary_Condition_time_points_of__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter &quot;Direction&quot; must be a value within the range -360 - 360..
         /// </summary>
         public static string WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_ {
@@ -463,16 +473,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_q" +
                         "uadruplets_is_activated_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Model start time does not precede any of the time points of.
-        /// </summary>
-        public static string WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_ {
-            get {
-                return ResourceManager.GetString("WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_st" +
-                        "art_time_does_not_precede_any_of_Boundary_Condition_time_points_", resourceCulture);
             }
         }
         

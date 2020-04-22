@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void Validate_BoundariesNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => WaveBoundariesValidator.Validate(null);
+            void Call() => WaveBoundariesValidator.Validate(null, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var boundaries = new EventedList<IWaveBoundary>();
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                          .Do(x => x.Arg<IBoundaryConditionVisitor>().Visit(null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IBoundaryConditionVisitor>().Visit(waveBoundaryCondition));
 
             // Call
-            WaveBoundariesValidator.Validate(boundaries);
+            WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             shape.Received(1).AcceptVisitor(Arg.Any<IShapeVisitor>());
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit((JonswapShape)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit((GaussShape)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.DoesNotThrow(Call);
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit((PiersonMoskowitzShape)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.DoesNotThrow(Call);
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(uniformDataComponent));
 
             // Call
-            WaveBoundariesValidator.Validate(boundaries);
+            WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             uniformDataComponent.Data.Received(1).AcceptVisitor(Arg.Any<IForcingTypeDefinedParametersVisitor>());
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponent));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -323,7 +323,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
 
             // Call
-            WaveBoundariesValidator.Validate(boundaries);
+            WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             constantParameters1.Received(1).AcceptVisitor(Arg.Any<IForcingTypeDefinedParametersVisitor>());
@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((ConstantParameters<PowerDefinedSpreading>)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -426,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -457,7 +457,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -490,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(constantParameters));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -515,7 +515,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             waveEnergyFunction.HeightComponent.Returns(heightVariable);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             waveEnergyFunction.PeriodComponent.Returns(periodVariable);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -603,7 +603,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             waveEnergyFunction.DirectionComponent.Returns(directionVariable);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -635,7 +635,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             waveEnergyFunction.SpreadingComponent.Returns(spreadingVariable);
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -681,7 +681,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -709,7 +709,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -746,7 +746,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  });
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -759,6 +759,55 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
+        public void Visit_TimeDependentParametersPowerSpreading_ShouldReturnValidationErrorIfModelStartTimeIsAfterAllTimesInTimeSeries()
+        {
+            // Setup
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+
+            IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = CreateWaveEnergyFunctionWithOneTimeArgumentPowerSpreading();
+            var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction);
+            
+            boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                                 .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2020, 4, 21));
+
+            // Assert
+            Assert.AreEqual("Waves Model Boundaries", report.Category);
+            IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(1, allIssues.Count);
+            Assert.IsTrue(allIssues.Any(i =>
+                                            i.Severity == ValidationSeverity.Error &&
+                                            i.Message == string.Format(
+                                                Resources.WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__, 
+                                                boundaries[0].Name)));
+            Assert.AreEqual(1, report.SubReports.Count());
+        }
+
+        [Test]
+        public void Visit_TimeDependentParametersPowerSpreading_ShouldNotReturnValidationErrorIfModelStartTimeIsNotAfterAllTimesInTimeSeries()
+        {
+            // Setup
+            EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
+
+            IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = CreateWaveEnergyFunctionWithOneTimeArgumentPowerSpreading();
+            var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction);
+
+            boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2020, 4, 19));
+
+            // Assert
+            Assert.AreEqual("Waves Model Boundaries", report.Category);
+            IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(0, allIssues.Count);
+            Assert.AreEqual(1, report.SubReports.Count());
+        }
+        
+        [Test]
         public void Visit_FileBasedParameters_ShouldDoNothing()
         {
             // Setup
@@ -770,7 +819,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                          .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(fileBasedParameters));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -788,7 +837,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                          .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.DoesNotThrow(Call);
@@ -804,7 +853,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpreadingVisitor>().Visit((DegreesDefinedSpreading)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -821,7 +870,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                     .Do(x => x.Arg<ISpreadingVisitor>().Visit((PowerDefinedSpreading)null));
 
             // Call
-            void Call() => WaveBoundariesValidator.Validate(boundaries);
+            void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -844,7 +893,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                          .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
@@ -903,7 +952,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
 
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(8, validationIssues.Count);
@@ -976,7 +1025,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries);
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2000,1,1));
 
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(10, validationIssues.Count);
