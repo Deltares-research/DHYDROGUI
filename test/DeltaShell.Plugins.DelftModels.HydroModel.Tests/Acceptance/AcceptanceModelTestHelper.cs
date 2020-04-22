@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             Console.WriteLine("Saving (first time)");
             application.SaveProjectAs(tempProjectPath1);
 
-            Console.WriteLine("Importing model");
+            Console.WriteLine("Closing model");
             application.CloseProject();
 
             Console.WriteLine("Opening");

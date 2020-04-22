@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
@@ -28,6 +30,8 @@ namespace DeltaShell.NGHS.IO.Grid
         private const double DefaultNoDataValue = -999.0;
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridFileHelper));
         public const int IdsSize = 40;
+        private static string lastCheckedUGridPath;
+        private static bool lastCheckedUGridPathResult;
 
         public enum BedLevelLocation
         {
@@ -49,15 +53,15 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double[] ReadZValues(string path, BedLevelLocation location)
         {
-            if (!IsUGridFile(path))
-            {
-                Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
-                return new double[0];
-            }
-
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
+
+                if (!api.IsUGridFile())
+                {
+                    Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+                    return new double[0];
+                }
 
                 var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
                 if(meshIds2d.Length == 0) 
@@ -82,12 +86,12 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double GetZCoordinateNoDataValue(string path, BedLevelLocation location)
         {
-            if (!IsUGridFile(path))
-                return DefaultNoDataValue;
-
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
+
+                if (!api.IsUGridFile())
+                    return DefaultNoDataValue;
 
                 var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
                 if (meshIds2d.Length == 0)
@@ -112,41 +116,17 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static void WriteZValues(string path, BedLevelLocation location, double[] values)
         {
-            if (!IsUGridFile(path))
-            {
-                NetFile.WriteZValues(path, values);
-                return;
-            }
-
             using (var api = CreateUGridApi())
             {
                 api.Open(path, OpenMode.Appending);
-
-                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
-                if (meshIds2d.Length == 0)
-                {
-                    Log.Warn($"Unable to write z-values to file: \"{path}\", no 2d mesh found");
-                    return;
-                }
-
-                var locationType = GetLocationType(location);
-                if (locationType == GridLocationType.None) 
-                    return;
                 
-                var variableName = GetVariableName(location);
-                var longName = GetVariableLongName(location);
-
-                var unit = UGridConstants.Naming.Meter;
-                var standardName = UGridConstants.Naming.Altitude;
-
-                try
+                if (!api.IsUGridFile())
                 {
-                    api.SetVariableValues(variableName, standardName, longName, unit, meshIds2d[0], locationType, values);
+                    NetFile.WriteZValues(path, values);
+                    return;
                 }
-                catch (Exception e)
-                {
-                    throw new Exception("Error", e);
-                }
+
+                WriteZValuesWithApi(api, location, values, path);
             }
         }
 
@@ -159,19 +139,13 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static ICoordinateSystem ReadCoordinateSystem(string path)
         {
-            if (!IsUGridFile(path))
-            {
-                return NetFile.ReadCoordinateSystem(path);
-            }
-
             using (var api = CreateUGridApi())
             {
-                api.Open(path, OpenMode.Appending);
+                api.Open(path);
 
-                var epsgCode = api.GetCoordinateSystemCode();
-                return epsgCode > 0 
-                    ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsgCode) 
-                    : null;
+                return !api.IsUGridFile()
+                    ? NetFile.ReadCoordinateSystem(path)
+                    : GetCoordinateSystemFromApi(api);
             }
         }
 
@@ -240,34 +214,28 @@ namespace DeltaShell.NGHS.IO.Grid
                 return null;
             }
 
-            if (!IsUGridFile(path))
-            {
-                Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
-                return loadFlowLinksAndCells
-                    ? NetFileImporter.ImportModelGrid(path)
-                    : NetFileImporter.ImportGrid(path);
-            }
-
-            UnstructuredGrid unstructuredGrid = null;
-
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
 
-                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
-                if (meshIds2d.Length != 0)
+                if (!api.IsUGridFile())
                 {
-                    unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
+                    Log.WarnFormat(Resources.UGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, path);
+                    return loadFlowLinksAndCells
+                        ? NetFileImporter.ImportModelGrid(path)
+                        : NetFileImporter.ImportGrid(path);
                 }
-            }
 
-            var coordinateSystem = ReadCoordinateSystem(path);
-            if (unstructuredGrid != null)
-            {
-                unstructuredGrid.CoordinateSystem = coordinateSystem;
+                var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+                if (meshIds2d.Length == 0) 
+                {
+                    return null;
+                }
+                
+                var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
+                unstructuredGrid.CoordinateSystem = GetCoordinateSystemFromApi(api);
+                return unstructuredGrid;
             }
-
-            return unstructuredGrid;
         }
 
         /// <summary>
@@ -280,24 +248,45 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="branchPropertiesList">List of <see cref="NodeFile.CompartmentProperties"/> to use when constructing compartments</param>
         /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
         /// returned from a native function</exception>
-        public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization, IHydroNetwork network, 
-            IList<NodeFile.CompartmentProperties> compartmentPropertiesList, IList<BranchFile.BranchProperties> branchPropertiesList)
+        public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization,
+            IHydroNetwork network,
+            IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
+            IList<BranchFile.BranchProperties> branchPropertiesList)
         {
-            if (!IsUGridFile(path) || network == null)
+            var errorMessage = $"Could not load network and computational grid from {path}";
+            if (network == null)
             {
-                Log.Error($"Could not load network and computational grid from {path}");
+                Log.Error(errorMessage);
                 return;
             }
 
-            network.CoordinateSystem = ReadCoordinateSystem(path);
-            ReadNetwork(path, network, compartmentPropertiesList, branchPropertiesList);
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+
+                if (!api.IsUGridFile())
+                {
+                    Log.Error(errorMessage);
+                    return;
+                }
+
+                ReadNetwork(api, network, compartmentPropertiesList, branchPropertiesList);
+
+                network.CoordinateSystem = GetCoordinateSystemFromApi(api);
+            }
 
             if (discretization == null)
             {
                 return;
             }
 
-            Read1DMesh(path, discretization, network);
+            // needs to be done with new api instance
+            // otherwise leads to crashes
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path);
+                Read1DMesh(api, discretization, network);
+            }
         }
 
         /// <summary>
@@ -309,15 +298,15 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static IList<ILink1D2D> Read1D2DLinks(string path)
         {
-            if (!IsUGridFile(path))
-            {
-                Log.Error($"Could not load links from {path}. This is not a UGrid file.");
-                return new List<ILink1D2D>();
-            }
-
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
+
+                if (!api.IsUGridFile())
+                {
+                    Log.Error($"Could not load links from {path}. This is not a UGrid file.");
+                    return new List<ILink1D2D>();
+                }
 
                 var linksId = api.GetLinksId();
                 return linksId != -1 
@@ -368,21 +357,19 @@ namespace DeltaShell.NGHS.IO.Grid
                     return;
 
                 api.WriteMesh2D(grid.CreateDisposable2DMeshGeometry());
-            }
-
-            var link1D2Ds = links?.ToList();
-            if (link1D2Ds?.Count > 0)
-            {
-                using (var api = CreateUGridApi())
+                
+                var link1D2Ds = links?.ToList();
+                if (link1D2Ds?.Count > 0)
                 {
-                    api.Open(path, OpenMode.Appending);
-
-                    api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
+                   api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
                 }
             }
 
             if (!grid.IsEmpty)
             {
+                // needs to be done with new api instance because on close
+                // the grid is flushed to file, making it available to write 
+                // depended data
                 WriteZValues(path, location, zValues);
             }
         }
@@ -397,24 +384,24 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
         {
-            if (!IsUGridFile(path))
-            {
-                NetFile.RewriteGridCoordinates(path, unstructuredGrid);
-                return;
-            }
-
-            var xValues = new double[unstructuredGrid.Vertices.Count];
-            var yValues = new double[unstructuredGrid.Vertices.Count];
-            
-            for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
-            {
-                var vertex = unstructuredGrid.Vertices[i];
-                xValues[i] = vertex.X;
-                yValues[i] = vertex.Y;
-            }
-
             using (var api = CreateUGridApi())
             {
+                if (!api.IsUGridFile())
+                {
+                    NetFile.RewriteGridCoordinates(path, unstructuredGrid);
+                    return;
+                }
+
+                var xValues = new double[unstructuredGrid.Vertices.Count];
+                var yValues = new double[unstructuredGrid.Vertices.Count];
+                
+                for (int i = 0; i < unstructuredGrid.Vertices.Count; i++)
+                {
+                    var vertex = unstructuredGrid.Vertices[i];
+                    xValues[i] = vertex.X;
+                    yValues[i] = vertex.Y;
+                }
+
                 api.Open(path, OpenMode.Appending);
 
                 var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
@@ -465,41 +452,71 @@ namespace DeltaShell.NGHS.IO.Grid
                 return false;
             }
 
+            if (lastCheckedUGridPath == path)
+            {
+                return lastCheckedUGridPathResult;
+            }
+
+            lastCheckedUGridPath = path;
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
-                return api.IsUGridFile();
+                
+                lastCheckedUGridPathResult = api.IsUGridFile();
+
+                return lastCheckedUGridPathResult;
             }
         }
-
-        private static void Read1DMesh(string path, IDiscretization discretization, IHydroNetwork network)
+        
+        private static void WriteZValuesWithApi(IUGridApi api, BedLevelLocation location, double[] values, string path)
         {
-            using (var api = CreateUGridApi())
+            var meshIds2d = api.GetMeshIdsByMeshType(UGridMeshType.Mesh2D);
+            if (meshIds2d.Length == 0)
             {
-                api.Open(path);
+                Log.Warn($"Unable to write z-values to file: \"{path}\", no 2d mesh found");
+                return;
+            }
 
-                var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D);
-                if (meshIds.Length != 0)
-                {
-                    var mesh1D = api.GetMesh1D(meshIds[0]);
-                    discretization.SetMesh1DGeometry(mesh1D, network);
-                }
+            var locationType = GetLocationType(location);
+            if (locationType == GridLocationType.None)
+                return;
+
+            var variableName = GetVariableName(location);
+            var longName = GetVariableLongName(location);
+
+            var unit = UGridConstants.Naming.Meter;
+            var standardName = UGridConstants.Naming.Altitude;
+
+            api.SetVariableValues(variableName, standardName, longName, unit, meshIds2d[0], locationType, values);
+        }
+
+        private static ICoordinateSystem GetCoordinateSystemFromApi(IUGridApi api)
+        {
+            var epsgCode = api.GetCoordinateSystemCode();
+            return epsgCode > 0
+                ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsgCode)
+                : null;
+        }
+
+        private static void Read1DMesh(IUGridApi api, IDiscretization discretization, IHydroNetwork network)
+        {
+            var meshIds = api.GetMeshIdsByMeshType(UGridMeshType.Mesh1D);
+            if (meshIds.Length != 0)
+            {
+                var mesh1D = api.GetMesh1D(meshIds[0]);
+                discretization.SetMesh1DGeometry(mesh1D, network);
             }
         }
 
-        private static void ReadNetwork(string path, IHydroNetwork network, IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
+        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
             IList<BranchFile.BranchProperties> branchPropertiesList)
         {
-            using (var api = CreateUGridApi())
+            var networkIds = api.GetNetworkIds();
+            if (networkIds.Length != 0)
             {
-                api.Open(path);
-
-                var networkIds = api.GetNetworkIds();
-                if (networkIds.Length != 0)
-                {
-                    network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList,
-                        compartmentPropertiesList);
-                }
+                network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList,
+                    compartmentPropertiesList);
             }
         }
 
