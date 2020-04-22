@@ -18,24 +18,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Test]
         public void IsClipBoardRtcObjectSetTest()
         {
-            var shapeCollection = new ShapeBase[] {new RuleShape(), new ConditionShape()};
-            RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapeCollection);
-            Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
+            using (var clipboardStub = new ClipboardStub())
+            {
+                var shapeCollection = new ShapeBase[]
+                {
+                    new RuleShape(),
+                    new ConditionShape()
+                };
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapeCollection);
+                Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
+            }
         }
 
         [Test]
         public void SetAndGetClipBoardRtcObjectsTest()
         {
-            string ruleText = "ruleTest";
-            var ruleShape = new RuleShape(){Text = ruleText};
-            var shapeCollection = new ShapeBase[] { ruleShape, new ConditionShape() };
-            RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapeCollection);
-            
-            var retrievedObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
-            Assert.AreEqual(2, retrievedObjects.Count());
-            foreach (RuleShape retrievedObject in retrievedObjects.OfType<RuleShape>())
+            using (var clipboardStub = new ClipboardStub())
             {
-                Assert.AreEqual(ruleText, retrievedObject.Text);
+                string ruleText = "ruleTest";
+                var ruleShape = new RuleShape() {Text = ruleText};
+                var shapeCollection = new ShapeBase[]
+                {
+                    ruleShape,
+                    new ConditionShape()
+                };
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapeCollection);
+
+                var retrievedObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
+                Assert.AreEqual(2, retrievedObjects.Count());
+                foreach (RuleShape retrievedObject in retrievedObjects.OfType<RuleShape>())
+                {
+                    Assert.AreEqual(ruleText, retrievedObject.Text);
+                }
             }
         }
 
