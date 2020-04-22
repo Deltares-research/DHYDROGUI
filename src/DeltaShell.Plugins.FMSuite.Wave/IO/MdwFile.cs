@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public void SaveTo(string mdwTargetFilePath, WaveModelDefinition modelDefinition, bool switchTo)
         {
-            var logHandler = new LogHandler("saving the D-Waves model");
+            var logHandler = new LogHandler(Resources.MdwFile_SaveTo_exporting_the_D_Waves_model, Log);
             var filesManager = new FilesManager();
 
             string modelName = Path.GetFileNameWithoutExtension(mdwTargetFilePath);
@@ -582,6 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public WaveModelDefinition Load(string filePath)
         {
+            var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, Log);
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
@@ -593,7 +594,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             string mdwDir = Path.GetDirectoryName(filePath);
 
-            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
+            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories, logHandler);
 
             // domain(s) and nesting
             List<WaveDomainData> allDomains = CreateWaveDomainData(mdwCategories).ToList();
@@ -641,6 +642,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
             }
 
+            logHandler.LogReport();
+
             return modelDefinition;
         }
 
@@ -687,12 +690,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// Based on the other property the correct one will be set. Otherwise the default value is based on the default value of
         /// the other property.
         /// </summary>
-        /// <param name="modelDefinition"> </param>
-        /// <param name="mdwCategories"> </param>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="mdwCategories">The delft ini categories from the mdw file.</param>
+        /// <param name="logHandler">The log handler.</param>
         private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
-                                                                     IEnumerable<DelftIniCategory> mdwCategories)
+                                                                     IEnumerable<DelftIniCategory> mdwCategories,
+                                                                     ILogHandler logHandler)
         {
-            var logHandler = new LogHandler(Resources.MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file, Log);
             var backwardsCompatibilityHelper = 
                 new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
@@ -779,8 +783,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     }
                 }
             }
-            
-            logHandler.LogReport();
         }
 
         private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)

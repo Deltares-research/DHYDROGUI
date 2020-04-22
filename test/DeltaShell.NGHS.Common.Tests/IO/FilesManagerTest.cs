@@ -44,7 +44,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
         [Test]
         [TestCaseSource(nameof(CopyToArgumentNullCases))]
-        public void CopyTo_TargetPathNull_ThrowsArgumentNullException(string targetPath, ILogHandler logHandler, string expectedParamName)
+        public void CopyTo_ArgumentNull_ThrowsArgumentNullException(string targetPath, ILogHandler logHandler, string expectedParamName)
         {
             // Call
             void Call() => new FilesManager().CopyTo(targetPath, logHandler);

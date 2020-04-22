@@ -247,10 +247,13 @@
   <data name="WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__" xml:space="preserve">
     <value>Could not find output (WAVM) file: {0}</value>
   </data>
-  <data name="MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file" xml:space="preserve">
-    <value>reading the mdw file</value>
-  </data>
   <data name="MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected" xml:space="preserve">
     <value>Boundaries cannot be imported, because there is no grid detected.</value>
+  </data>
+  <data name="MdwFile_SaveTo_exporting_the_D_Waves_model" xml:space="preserve">
+    <value>exporting the D-Waves model</value>
+  </data>
+  <data name="MdwFile_Load_loading_the_D_Waves_model" xml:space="preserve">
+    <value>loading the D-Waves model</value>
   </data>
 </root>

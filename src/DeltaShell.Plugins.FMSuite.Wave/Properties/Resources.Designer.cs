@@ -61,11 +61,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to reading the mdw file.
+        ///   Looks up a localized string similar to loading the D-Waves model.
         /// </summary>
-        public static string MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file {
+        public static string MdwFile_Load_loading_the_D_Waves_model {
             get {
-                return ResourceManager.GetString("MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file", resourceCulture);
+                return ResourceManager.GetString("MdwFile_Load_loading_the_D_Waves_model", resourceCulture);
             }
         }
         
@@ -76,6 +76,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_gri" +
                         "d_detected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to exporting the D-Waves model.
+        /// </summary>
+        public static string MdwFile_SaveTo_exporting_the_D_Waves_model {
+            get {
+                return ResourceManager.GetString("MdwFile_SaveTo_exporting_the_D_Waves_model", resourceCulture);
             }
         }
         
