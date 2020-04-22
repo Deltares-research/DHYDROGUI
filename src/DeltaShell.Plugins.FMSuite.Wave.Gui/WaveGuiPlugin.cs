@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -67,13 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             {
                 Description = "Wave settings",
                 GetViewName = (v, o) => o.Name + _wavesSettings,
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = (sender, propertyName) =>
-                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-                }
+                AfterCreate = ConfigureWpfSettingsView
             };
 
             // observation points
@@ -227,13 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                     v.EnsureVisible(shortcut.Data);
                 },
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
-                    v.GetChangedPropertyName = (sender, propertyName) =>
-                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-                }
+                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
 
             yield return new ViewInfo<WaveValidationShortcut, WaveModel, WpfSettingsView>
@@ -251,13 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
                     v.EnsureVisible(shortcut.TabName);
                 },
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaveSettingsHelper.GetWpfGuiCategories(o.WaveModel, Gui);
-                    v.GetChangedPropertyName = (sender, propertyName) =>
-                        (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
-                }
+                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
 
             yield return new ViewInfo<WaveModel, ValidationView>
@@ -273,6 +256,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
 
             yield return new ViewInfo<WaveSpectralFileImporter, BoundaryConditionImportDialog>();
+        }
+
+        private void ConfigureWpfSettingsView(WpfSettingsView view, WaveModel waveModel)
+        {
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Gui);
+
+            // Look for the time properties to synchronize the model updates with
+            IEnumerable<WpfGuiProperty> guiProperties = wpfGuiCategories.SelectMany(gp => gp.Properties).ToArray();
+
+            WpfGuiProperty[] propertiesToSynchronize =
+            {
+                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_time_step)),
+                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_start_time)),
+                guiProperties.Single(prop => string.Equals(prop.Label, Properties.Resources.WaveSettingsHelper_GetWaveSettings_Coupling_stop_time))
+            };
+
+            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(waveModel))
+            {
+                synchronizer.SynchronizeProperties(propertiesToSynchronize);
+
+                view.SettingsCategories = wpfGuiCategories;
+                view.GetChangedPropertyName = (sender, propertyName) =>
+                    (sender as WaveModelProperty)?.PropertyDefinition.FilePropertyName;
+            }
         }
 
         private static void ImportTimesFromBoundaryCondition(WaveModel model)
