@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using log4net;
 using Netron.GraphLib;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {

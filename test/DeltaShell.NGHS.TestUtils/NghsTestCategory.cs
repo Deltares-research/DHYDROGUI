@@ -2,8 +2,14 @@
 {
     public static class NghsTestCategory
     {
-        public const string LargeTestData = "Build.LargeTestData";
+        /// <summary>
+        /// Tests that run acceptance models/
+        /// </summary>
         public const string AcceptanceTests = "Build.Acceptance";
+
+        /// <summary>
+        /// Tests that should not run in the Code coverage run.
+        /// </summary>
         public const string DoNotRunForCodeCoverage = "DoNotRunForCodeCoverage";
     }
 }
