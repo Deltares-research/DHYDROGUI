@@ -9,6 +9,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
     public class FieldUIDescriptionHelperTest
     {
         [Test]
+        public void CreateFieldDescription_FieldDescriptionNull_ThrowsArgumentNullException()
+        {
+            // Call
+            TestDelegate call = () => FieldUIDescriptionHelper.CreateFieldDescription(null, null, null);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>()
+                                    .With.Property(nameof(ArgumentNullException.ParamName))
+                                    .EqualTo("fieldDescription"));
+        }
+
+        [Test]
         public void CreateFieldDescription_WithFieldDescription_ReturnsFieldUIDescriptionWithSameProperties()
         {
             // Setup
