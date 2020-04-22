@@ -66,6 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public void SaveTo(string mdwTargetFilePath, WaveModelDefinition modelDefinition, bool switchTo)
         {
+            var logHandler = new LogHandler("saving the D-Waves model");
+            var filesManager = new FilesManager();
+
             string modelName = Path.GetFileNameWithoutExtension(mdwTargetFilePath);
             string targetDir = Path.GetDirectoryName(mdwTargetFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -102,7 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
-            var filesManager = new FilesManager();
             IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer,
                                                                                                              filesManager);
 
@@ -111,11 +113,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
             mdwCategories.AddRange(boundaryCategories);
-
-            if (!string.IsNullOrEmpty(targetDir))
-            {
-                filesManager.CopyTo(targetDir);
-            }
 
             if (MdwFilePath != null)
             {
@@ -193,6 +190,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 MdwFilePath = mdwTargetFilePath;
             }
+
+            if (!string.IsNullOrEmpty(targetDir))
+            {
+                filesManager.CopyTo(targetDir, logHandler);
+            }
+
+            logHandler.LogReport();
         }
 
         private void SetConstantWindProperties(WaveModelDefinition modelDefinition)

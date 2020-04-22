@@ -28,9 +28,10 @@ namespace DeltaShell.NGHS.Common.IO
             files.Add(fileInfo);
         }
 
-        public void CopyTo(string targetPath, ILogHandler logHandler = null)
+        public void CopyTo(string targetPath, ILogHandler logHandler)
         {
             Ensure.NotNull(targetPath, nameof(targetPath));
+            Ensure.NotNull(logHandler, nameof(logHandler));
 
             var dirInfo = new DirectoryInfo(targetPath);
 
@@ -38,14 +39,14 @@ namespace DeltaShell.NGHS.Common.IO
             {
                 if (!file.Exists)
                 {
-                    logHandler?.ReportWarning($"Could not find file at '{file.FullName}'.");
+                    logHandler.ReportWarning($"Could not find file at '{file.FullName}'.");
                     continue;
                 }
 
                 var targetFile = new FileInfo(Path.Combine(dirInfo.FullName, file.Name));
                 if (targetFile.Exists)
                 {
-                    logHandler?.ReportWarning($"File already exists at '{targetFile.FullName}' and will be overwritten.");
+                    logHandler.ReportWarning($"File already exists at '{targetFile.FullName}' and will be overwritten.");
                 }
 
                 file.CopyTo(targetFile.FullName, overwrite: true);

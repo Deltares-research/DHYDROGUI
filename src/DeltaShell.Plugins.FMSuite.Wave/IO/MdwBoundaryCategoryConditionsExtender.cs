@@ -66,9 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 case SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>> _:
                     boundaryCategory.SetProperty(KnownWaveProperties.DirectionalSpreadingType, KnownWaveBoundariesFileConstants.PowerDefinedSpreading);
                     break;
-                case UniformDataComponent<FileBasedParameters> _:
-                case SpatiallyVaryingDataComponent<FileBasedParameters> _:
-                    break;
                 default:
                     throw new NotSupportedException("The type of the specified dataComponent does not correspond with a supported type");
             }

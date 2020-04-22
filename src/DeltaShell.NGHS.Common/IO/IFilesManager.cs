@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.Common.IO
         /// <param name="targetPath">The destination directory.</param>
         /// <param name="logHandler">The log handler.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="targetPath"/> is <c>null</c>.
+        /// Thrown when <paramref name="targetPath"/> or <paramref name="logHandler"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="System.Security.SecurityException">
         /// Thrown when the caller does not have the required permission.
@@ -49,6 +49,6 @@ namespace DeltaShell.NGHS.Common.IO
         /// <exception cref="System.IO.PathTooLongException">
         /// The specified path, file name, or both exceed the system-defined maximum length.
         /// </exception>
-        void CopyTo(string targetPath, ILogHandler logHandler = null);
+        void CopyTo(string targetPath, ILogHandler logHandler);
     }
 }

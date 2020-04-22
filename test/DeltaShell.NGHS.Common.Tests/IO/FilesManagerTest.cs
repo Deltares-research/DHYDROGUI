@@ -36,15 +36,22 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             Assert.That(exception.ParamName, Is.EqualTo("filePath"));
         }
 
+        private IEnumerable<TestCaseData> CopyToArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), "targetPath");
+            yield return new TestCaseData("some_value", null, "logHandler");
+        }
+
         [Test]
-        public void CopyTo_TargetPathNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(CopyToArgumentNullCases))]
+        public void CopyTo_TargetPathNull_ThrowsArgumentNullException(string targetPath, ILogHandler logHandler, string expectedParamName)
         {
             // Call
-            void Call() => new FilesManager().CopyTo(null, Substitute.For<ILogHandler>());
+            void Call() => new FilesManager().CopyTo(targetPath, logHandler);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("targetPath"));
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [Test]
