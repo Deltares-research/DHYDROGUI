@@ -111,12 +111,13 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             }
         }
 
-        [TestCaseSource(nameof(GetLogHandlers))]
+        [Test]
         [Category(TestCategory.Integration)]
-        public void Add_And_CopyTo_CopiesAddedFilesToTarget(ILogHandler logHandler)
+        public void Add_And_CopyTo_CopiesAddedFilesToTarget()
         {
             // Given
             var filesManager = new FilesManager();
+            var logHandler = Substitute.For<ILogHandler>();
 
             const string fileName1 = "file_1.txt";
             const string fileName2 = "file_2.txt";
