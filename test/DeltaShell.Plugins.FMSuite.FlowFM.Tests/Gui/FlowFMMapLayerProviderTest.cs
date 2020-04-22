@@ -473,6 +473,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.NotNull(layer.DataSource);
         }
 
+        [Test]
+        public void GivenFlowFMMapLayerProvider_CreatingModelLayer_ShouldSetRenderOrder()
+        {
+            //Arrange
+            var fmModel = new WaterFlowFMModel();
+
+            // Act
+            var mapLayerProviders = new List<IMapLayerProvider>
+            {
+                new NetworkEditorMapLayerProvider(),
+                new SharpMapLayerProvider(),
+                new FlowFMMapLayerProvider()
+            };
+
+            var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(fmModel, null, mapLayerProviders, new Dictionary<ILayer, object>());
+
+            // Assert
+            var layersWithoutOrder = layer.Layers
+                .Where(l => !(l is IGroupLayer))
+                .Count(l => l.RenderOrder == 0);
+
+            Assert.AreEqual(2, layersWithoutOrder);
+        }
+
         #region Test helper methods
         private static void ShowModelLayers(WaterFlowFMModel model)
         {

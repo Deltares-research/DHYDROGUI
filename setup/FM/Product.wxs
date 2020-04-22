@@ -38,7 +38,7 @@
   <?define plugin_manualshortcuts="$(var.ProjectDir)\ManualShortcuts.wxi"?>
   <?define plugin_features="$(var.ProjectDir)\Features.wxi"?>
   <?define plugin_utilityshortcuts="$(var.ProjectDir)\UtilityShortcuts.wxi"?>
-  <?define additionalfiles="$(var.ProjectDir)\..\DelftTools.Hydro\DelftTools.Hydro.wxi"?>
+  <?define additionalfiles="$(var.ProjectDir)\..\HydroLibraries\HydroLibraries.wxi"?>
 
   <!-- optional extra files to include in the bin folder in the main feature -->
   <?define customizationwxi="$(var.ProjectDir)\Extras.wxi"?>

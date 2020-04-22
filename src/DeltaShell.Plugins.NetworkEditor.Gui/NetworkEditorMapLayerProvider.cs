@@ -11,6 +11,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
@@ -192,7 +193,66 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
         {
-            
+            if (!(layer is IGroupLayer groupLayer)) return;
+
+            var objectsInRenderOrder = new List<object>();
+
+            if (layerObject is IHydroNetwork network)
+            {
+                objectsInRenderOrder.AddRange(new object[]
+                {
+                    network.ObservationPoints,
+                    network.LateralSources,
+                    network.Bridges,
+                    network.Orifices,
+                    network.Weirs,
+                    network.Pumps,
+                    network.ExtraResistances,
+                    network.Culverts,
+                    network.Gates,
+
+                    network.CrossSections,
+                    network.OutletCompartments,
+                    network.CompositeBranchStructures,
+                    network.Compartments,
+
+                    network.SewerConnections,
+                    network.Manholes,
+                    network.HydroNodes,
+                    network.Retentions,
+                    network.Routes,
+
+                    network.Pipes,
+                    network.Channels
+                });
+            }
+
+            if (layerObject is HydroArea area)
+            {
+                objectsInRenderOrder.AddRange(new object[]
+                {
+                    area.BridgePillars,
+                    area.DryPoints,
+                    area.DryAreas,
+
+                    area.Embankments,
+                    area.Enclosures,
+                    area.FixedWeirs,
+                    area.Gates,
+                    area.Gullies,
+                    area.LandBoundaries,
+                    area.LeveeBreaches,
+                    area.ObservationCrossSections,
+                    area.ObservationPoints,
+                    area.Pumps,
+                    area.RoofAreas,
+                    area.ThinDams,
+                    area.Weirs
+                });
+            }
+
+            if (objectsInRenderOrder.Count == 0) return;
+            groupLayer.SetRenderOrderByObjectOrder(objectsInRenderOrder, objectsLookup);
         }
 
         public ILayer CreateLayer(object data, object parentData)

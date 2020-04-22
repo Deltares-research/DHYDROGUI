@@ -15,7 +15,9 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -536,7 +538,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
         {
-            
+            if (!(layerObject is WaterFlowFMModel model) ||
+                !(layer is IGroupLayer groupLayer))
+            {
+                return;
+            }
+
+            var objectsInRenderOrder = new List<object>
+                {
+                    model.OutputHisFileStore,
+                    model.Output1DFileStore,
+                    model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(),
+                    model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(),
+                    model.InitialWaterLevel,
+                    model.RoughnessSections,
+                    model.NetworkDiscretization,
+                    model.Links,
+                    model.Network,
+                    model.BoundaryConditions1D,
+                    model.Boundaries,
+                    model.SourcesAndSinks,
+                    model.Area,
+                    model.Grid,
+                    model.Roughness,
+                    model.Bathymetry,
+                    model.Viscosity,
+                    model.Diffusivity
+                }
+                .Where(o => o != null)
+                .ToList();
+
+            groupLayer.SetRenderOrderByObjectOrder(objectsInRenderOrder, objectsLookup);
         }
 
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)

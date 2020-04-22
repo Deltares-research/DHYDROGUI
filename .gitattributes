@@ -44,7 +44,6 @@ lib/IKVM.Runtime.JNI.dll -text
 lib/IKVM.Runtime.dll -text
 lib/OpenDA.DotNet.AdditionalInterfaces.dll -text
 lib/OpenMI.Standard.dll -text
-setup/DelftTools.Hydro/DelftTools.Hydro.wxi -text
 setup/Dimr/D-HYDRO_Manuals/DIMR_Technical_Reference_Manual.pdf -text
 setup/Dimr/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/DIMR_Technical_Reference_Manual.pdf -text
 setup/Dimr/Delft3D[!!-~]FM[!!-~]HM_Manuals/DIMR_Technical_Reference_Manual.pdf -text
@@ -114,6 +113,7 @@ setup/FM/WixUI/FM_WixUI_Deltares.wxs -text
 setup/FM/WixUIVariables.wxl -text
 setup/GWSWImporter/GWSWImporterPlugin.wxi -text
 setup/GridEditor/GridEditorPlugin.wxi -text
+setup/HydroLibraries/HydroLibraries.wxi -text
 setup/HydroModel/HydroModelPlugin.wxi -text
 setup/HydroModel/HydroModel_FeatureContent.wxi -text
 setup/NGHS.IO/NGHS.IO.wxi -text
@@ -540,6 +540,10 @@ src/DeltaShell.Dimr/xsd/dimr-1.0.custom.cs -text
 src/DeltaShell.Dimr/xsd/dimr-1.0.serializers.cs -text
 src/DeltaShell.Dimr/xsd/dimr-1.0.xsd -text
 src/DeltaShell.Dimr/xsd/dimr-1_0.cs -text
+src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
+src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text
+src/DeltaShell.NGHS.Common.Gui/packages.config -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowParameter.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowParameter.hbm.xml -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowWaterLevelTable.cs -text
@@ -3201,6 +3205,11 @@ test/DeltaShell.Dimr.Tests/test-data/structures_all_types/unstruc.ini -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/unstruc_001.dia -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/weir02.pli -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/weir02_crest_level.tim -text
+test/DeltaShell.NGHS.Common.Gui.Tests/App.config -text
+test/DeltaShell.NGHS.Common.Gui.Tests/DeltaShell.NGHS.Common.Gui.Tests.csproj -text
+test/DeltaShell.NGHS.Common.Gui.Tests/LayerExtensionsTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Properties/AssemblyInfo.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/packages.config -text
 test/DeltaShell.NGHS.IO.TestUtils/App.config -text
 test/DeltaShell.NGHS.IO.TestUtils/CrossSectionDefinitionFileWritersTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/DeltaShell.NGHS.IO.TestUtils.csproj -text

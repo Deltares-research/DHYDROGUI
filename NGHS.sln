@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.IO", "src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj", "{E22A9330-5EE9-4C26-A014-3269BCF78DED}"
 EndProject
@@ -84,6 +84,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.ImportExport.GWSW", "src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj", "{F456B556-D969-4768-9E3F-F151A387071B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.Plugins.ImportExport.GWSW.Tests", "test\DeltaShell.Plugins.ImportExport.GWSW.Tests\DeltaShell.Plugins.ImportExport.GWSW.Tests.csproj", "{855BC365-72E4-4BBE-997D-DC94AC58DC3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common.Gui", "src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj", "{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common.Gui.Tests", "test\DeltaShell.NGHS.Common.Gui.Tests\DeltaShell.NGHS.Common.Gui.Tests.csproj", "{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +251,14 @@ Global
 		{855BC365-72E4-4BBE-997D-DC94AC58DC3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{855BC365-72E4-4BBE-997D-DC94AC58DC3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{855BC365-72E4-4BBE-997D-DC94AC58DC3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +303,8 @@ Global
 		{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 		{F456B556-D969-4768-9E3F-F151A387071B} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 		{855BC365-72E4-4BBE-997D-DC94AC58DC3F} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
+		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DB0000-7081-4B90-A760-F1705EB6D46A}

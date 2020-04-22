@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -6,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -17,6 +19,7 @@ using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NUnit.Framework;
+using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpTestsEx;
 
@@ -197,7 +200,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             }
         }
 
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void LinkLayerIsCreatedForBasinButNotForNetwork()
@@ -360,6 +362,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     mapView.Map.ZoomToExtents();
                 });
             }
+        }
+
+        [Test]
+        [TestCase(typeof(HydroNetwork))]
+        [TestCase(typeof(HydroArea))]
+        public void GivenNetworkEditorMapLayerProvider_CreatingLayer_ShouldSetRenderOrder(Type type)
+        {
+            //Arrange
+            var layerObject = Activator.CreateInstance(type);
+
+            // Act
+            var layer = (IGroupLayer) MapLayerProviderHelper.CreateLayersRecursive(layerObject, null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider() }, new Dictionary<ILayer, object>());
+
+            // Assert
+            var layersWithoutOrder  = layer.Layers
+                .Where(l => !(l is IGroupLayer))
+                .Count(l => l.RenderOrder == 0);
+
+            Assert.AreEqual(0, layersWithoutOrder);
         }
     }
 }

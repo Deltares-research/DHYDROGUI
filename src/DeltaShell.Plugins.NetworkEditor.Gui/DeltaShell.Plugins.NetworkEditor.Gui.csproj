@@ -939,6 +939,11 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
       <Name>DeltaShell.Plugins.NetworkEditor</Name>
