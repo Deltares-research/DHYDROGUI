@@ -38,8 +38,8 @@ morphology,MWWJHE,morphology,Hiding and exposure formulation,MWWJHE,Double,1,0.0
 
 morphology,Espir,morphology,Multiplication (calibration) factors,Effect of secondary flow on bed load direction,Double,0.5,0.0,,FALSE,,,,,,Effect of secondary flow on bed load direction,-
 morphology,Sus,morphology,Multiplication (calibration) factors,Current related reference concentration factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for suspended sediment reference concentration,-
-morphology,Bed,morphology,Multiplication (calibration) factors,Current related transport vector factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for bed-load transport vector magnitude,-
-morphology,SusW,morphology,Multiplication (calibration) factors,SusW,Double,1,0.0,,TRUE,,,,,,Wave-related suspended sed. transport factor,-
-morphology,BedW,morphology,Multiplication (calibration) factors,BedW,Double,1,0.0,,TRUE,,,,,,Wave-related bed-load sed. transport factor,-
+morphology,Bed,morphology,Multiplication (calibration) factors,Current related bedload transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for bedload transport vector magnitude,-
+morphology,SusW,morphology,Multiplication (calibration) factors,Wave-related suspended transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for wave-related suspended transport reference concentration,-
+morphology,BedW,morphology,Multiplication (calibration) factors,Wave-related bedload transport factor,Double,1,0.0,,FALSE,,,,,,Multiplication factor for wave-related bedload transport vector magnitude,-
 morphology,ThetSD,morphology,Multiplication (calibration) factors,Factor for erosion of adjacent dry cells,Double,0.0,0.0,,FALSE,,,,,,Factor for erosion of adjacent dry cells,-
 morphology,HMaxTH,morphology,Multiplication (calibration) factors,HMaxTH,Double,1.5,0.0,,FALSE,,,,,,Max depth for variable THETSD. Set < SEDTHR to use global value only,m
