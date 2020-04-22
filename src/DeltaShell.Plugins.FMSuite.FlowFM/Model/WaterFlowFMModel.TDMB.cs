@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         #region Overrides of TimeDependentModelBase
 
-        [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
@@ -41,7 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        [NoNotifyPropertyChange]
         public override DateTime StopTime
         {
             get => (DateTime) ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;

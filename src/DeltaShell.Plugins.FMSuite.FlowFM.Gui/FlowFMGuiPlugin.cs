@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
@@ -110,36 +111,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            Func<object, string, string> FmSettingsPropertyChanged = (object sender, string propertyName) =>
-            {
-                var property = sender as WaterFlowFMProperty;
-                if (property != null)
-                {
-                    return property.PropertyDefinition.MduPropertyName;
-                }
-
-                var model = sender as WaterFlowFMModel;
-                if (model != null)
-                {
-                    if (propertyName == nameof(model.CoordinateSystem))
-                    {
-                        return "CoordinateSystem";
-                    }
-                }
-
-                return null;
-            };
-
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
                 Description = "FM Settings",
                 GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
-                }
+                AfterCreate = ConfigureWpfSettingsView
             };
 
             yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, WpfSettingsView>
@@ -154,12 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (shortcut == null) return;
                     v.EnsureVisible(shortcut.Data);
                 },
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
-                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
-                }
+                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
             };
 
             yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, WpfSettingsView>
@@ -173,12 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (shortcut == null) return;
                     v.EnsureVisible(shortcut.TabName);
                 },
-                AfterCreate = (v, o) =>
-                {
-                    //Set the properties.
-                    v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o.FlowFmModel, Gui);
-                    v.GetChangedPropertyName = FmSettingsPropertyChanged;
-                }
+                AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
             };
 
             yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView>
@@ -446,6 +412,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.CoordinateSystem = model.CoordinateSystem;
                 }
             };
+        }
+
+        private void ConfigureWpfSettingsView(WpfSettingsView view, WaterFlowFMModel flowFmModel)
+        {
+            Func<object, string, string> fmSettingsPropertyChanged = (sender, propertyName) =>
+            {
+                var property = sender as WaterFlowFMProperty;
+                if (property != null)
+                {
+                    return property.PropertyDefinition.MduPropertyName;
+                }
+
+                var model = sender as WaterFlowFMModel;
+                if (model != null && propertyName == nameof(model.CoordinateSystem))
+                {
+                    return "CoordinateSystem";
+                }
+
+                return null;
+            };
+
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(flowFmModel, Gui);
+
+            // Look for the time properties to synchronize the model updates with
+            IEnumerable<WpfGuiProperty> guiProperties = wpfGuiCategories.SelectMany(gp => gp.Properties).ToArray();
+
+            WpfGuiProperty[] propertiesToSynchronize =
+            {
+                guiProperties.Single(prop => string.Equals(prop.Name, KnownProperties.DtUser, StringComparison.OrdinalIgnoreCase)),
+                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StopTime, StringComparison.OrdinalIgnoreCase)),
+                guiProperties.Single(prop => string.Equals(prop.Name, GuiProperties.StartTime, StringComparison.OrdinalIgnoreCase))
+            };
+
+            using (var synchronizer = new NotifyPropertyChangedWpfGuiPropertySynchronizer(flowFmModel))
+            {
+                synchronizer.SynchronizeProperties(propertiesToSynchronize);
+
+                view.SettingsCategories = wpfGuiCategories;
+                view.GetChangedPropertyName = fmSettingsPropertyChanged;
+            }
         }
 
         private object GetPipesFromSourcesAndSinks(FmModelTreeShortcut treeShortCut)
