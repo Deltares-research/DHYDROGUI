@@ -53,6 +53,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double[] ReadZValues(string path, BedLevelLocation location)
         {
+            if (!File.Exists(path))
+            {
+                return new double[0];
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -86,6 +91,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double GetZCoordinateNoDataValue(string path, BedLevelLocation location)
         {
+            if (!File.Exists(path))
+            {
+                return DefaultNoDataValue;
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -139,6 +149,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static ICoordinateSystem ReadCoordinateSystem(string path)
         {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -254,7 +269,7 @@ namespace DeltaShell.NGHS.IO.Grid
             IList<BranchFile.BranchProperties> branchPropertiesList)
         {
             var errorMessage = $"Could not load network and computational grid from {path}";
-            if (network == null)
+            if (network == null || !File.Exists(path))
             {
                 Log.Error(errorMessage);
                 return;
@@ -298,6 +313,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static IList<ILink1D2D> Read1D2DLinks(string path)
         {
+            if (!File.Exists(path))
+            {
+                return new List<ILink1D2D>();
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -357,20 +377,27 @@ namespace DeltaShell.NGHS.IO.Grid
                     return;
 
                 api.WriteMesh2D(grid.CreateDisposable2DMeshGeometry());
-                
+            }
+
+            if (grid.IsEmpty)
+            {
+                return;
+            }
+
+            // needs to be done with new api instance because on close
+            // the grid is flushed to file, making it available to write 
+            // depended data
+            using (var api = CreateUGridApi())
+            {
+                api.Open(path, OpenMode.Appending);
+
                 var link1D2Ds = links?.ToList();
                 if (link1D2Ds?.Count > 0)
                 {
-                   api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
+                    api.WriteLinks(link1D2Ds.CreateDisposableLinksGeometry());
                 }
-            }
 
-            if (!grid.IsEmpty)
-            {
-                // needs to be done with new api instance because on close
-                // the grid is flushed to file, making it available to write 
-                // depended data
-                WriteZValues(path, location, zValues);
+                WriteZValuesWithApi(api, location, zValues, path);
             }
         }
 
@@ -384,6 +411,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
         {
+            if (!File.Exists(path))
+            {
+                return;
+            }
+
             using (var api = CreateUGridApi())
             {
                 if (!api.IsUGridFile())
@@ -419,6 +451,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>The number of 1d networks in the UGrid file</returns>
         public static int GetNumberOfNetworks(string path)
         {
+            if (!File.Exists(path))
+            {
+                return 0;
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
@@ -433,6 +470,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>The number of discretizations in the UGrid file</returns>
         public static int GetNumberOfNetworkDiscretizations(string path)
         {
+            if (!File.Exists(path))
+            {
+                return 0;
+            }
+
             using (var api = CreateUGridApi())
             {
                 api.Open(path);
