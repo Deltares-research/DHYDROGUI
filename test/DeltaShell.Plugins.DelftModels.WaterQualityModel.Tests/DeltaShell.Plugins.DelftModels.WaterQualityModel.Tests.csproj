@@ -94,6 +94,8 @@
     <Compile Include="IO\MultiDimentionalArrayAdapterTest.cs" />
     <Compile Include="IO\NetCdfFileConventionCheckerTest.cs" />
     <Compile Include="IO\NetCdfFileReaderHelperTest.cs" />
+    <Compile Include="IO\SubFileImporterComponents\SubFileHelperTest.cs" />
+    <Compile Include="IO\SubFileImporterComponents\SubFilePropertyRegexInfoTest.cs" />
     <Compile Include="IO\WaqProcessValidationRuleTest.cs" />
     <Compile Include="IO\WaqValidationRulesExtensionTest.cs" />
     <Compile Include="IO\WaterQualityObservationAreaImporterTest.cs" />
@@ -428,6 +430,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent>
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.1.4.0.50010\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.1.4.0.50010\test-data\DelftTools.TestUtils

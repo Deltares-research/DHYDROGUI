@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
@@ -99,8 +100,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             UnitName = "";
         }
 
-        
-
+        public override object Clone()
+        {
+            var connectionPoint = (ConnectionPoint)Activator.CreateInstance(GetType());
+            connectionPoint.CopyFrom(this);
+            return connectionPoint;
+        }
         public virtual void CopyFrom(object source)
         {
             var connectionPoint = source as ConnectionPoint;

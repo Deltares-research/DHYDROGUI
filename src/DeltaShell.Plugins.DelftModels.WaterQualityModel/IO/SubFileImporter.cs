@@ -7,8 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Shell.Core;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Data;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterComponents;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
@@ -92,22 +96,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             if (!ShouldCancel)
             {
-                ImportSubstances(substanceProcessLibrary, subFileText);
+                ImportSubstances(substanceProcessLibrary.Substances, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportParameters(substanceProcessLibrary, subFileText);
+                ImportParameters(substanceProcessLibrary.Parameters, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportProcesses(substanceProcessLibrary, subFileText);
+                ImportProcesses(substanceProcessLibrary.Processes, subFileText);
             }
 
             if (!ShouldCancel)
             {
-                ImportOutputParameters(substanceProcessLibrary, subFileText);
+                ImportOutputParameters(substanceProcessLibrary.OutputParameters, subFileText);
             }
 
             substanceProcessLibrary.Name =
@@ -123,324 +127,139 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             substanceProcessLibrary.ImportedSubstanceFilePath = path;
         }
 
-        private void ImportSubstances(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportSubstances(IEventedList<WaterQualitySubstance> librarySubstances, string subFileText)
         {
-            const string substancePattern =
-                @"substance\s*'(?<Name>" + RegularExpression.Characters + @")'\s*(?<Active>" +
-                RegularExpression.Characters + @")\s*\n" +
-                @"\s*description\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                @"\s*concentration-unit\s*'(?<ConcentrationUnit>" + UnitCharacters + @")'\s*\n" +
-                @"\s*waste-load-unit\s*'(?<WasteLoadUnit>" + UnitCharacters + @")'\s*\n" +
-                @"end-substance";
-
-            var newSubstanceVariables = new Collection<WaterQualitySubstance>();
-            var existingSubstanceVariables = new Collection<WaterQualitySubstance>();
-            MatchCollection substanceMatches = RegularExpression.GetMatches(substancePattern, subFileText);
-
-            foreach (Match match in substanceMatches)
+            string substancePattern = GetSubstancePattern(@"\s*\n");
+            IEnumerable<WaterQualitySubstance> substances = CreateWaterQualitySubstances(substancePattern, subFileText);
+            // If there are no substances, try parsing according to the new substance pattern where the definitions 
+            // are defined on a single line.
+            if (!substances.Any())
             {
-                WaterQualitySubstance newSubstanceVariable = GetSubstance(match);
-                WaterQualitySubstance existingSubstanceVariable =
-                    substanceProcessLibrary.Substances.FirstOrDefault(sv => Equals(sv, newSubstanceVariable));
-
-                if (existingSubstanceVariable == null)
-                {
-                    newSubstanceVariables.Add(newSubstanceVariable);
-                }
-                else
-                {
-                    existingSubstanceVariables.Add(existingSubstanceVariable);
-                }
+                substancePattern = GetSubstancePattern(@"\s*");
+                substances = CreateWaterQualitySubstances(substancePattern, subFileText);
             }
 
-            // Remove all irrelevant substance variables
-            WaterQualitySubstance[] substancesToRemove = substanceProcessLibrary
-                                                         .Substances.Where(
-                                                             sub => !existingSubstanceVariables.Contains(sub))
-                                                         .ToArray();
-            for (var i = 0; i < substancesToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
+            ImportElementInformation<WaterQualitySubstance> importInformation = GetWaterQualitySubstanceImportInformation(librarySubstances, substances);
+            WaterQualitySubstance[] substancesToRemove = librarySubstances.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(librarySubstances, substancesToRemove, Resources.SubFileImporter_Substances_Name);
 
-                UpdateProgress("Removing irrelevant substances", i + 1, substancesToRemove.Length);
-
-                substanceProcessLibrary.Substances.Remove(substancesToRemove[i]);
-            }
-
-            // Add all new substance variables
-            for (var i = 0; i < newSubstanceVariables.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new substances", i + 1, newSubstanceVariables.Count);
-                substanceProcessLibrary.Substances.Add(newSubstanceVariables[i]);
-            }
+            AddNewElements(librarySubstances, importInformation.NewElements, Resources.SubFileImporter_Substances_Name);
         }
 
-        private void ImportParameters(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportParameters(IEventedList<WaterQualityParameter> libraryParameters, string subFileText)
         {
-            const string parameterPattern = @"parameter\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
-                                            @"\s*description\s*'(?<Description>" +
-                                            RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                                            @"\s*unit\s*'(?<Unit>" + UnitCharacters + @")'\s*\n" +
-                                            @"\s*value\s*(?<Value>" + RegularExpression.Characters + @")\s*\n" +
-                                            @"end-parameter";
-
-            var newParameters = new Collection<WaterQualityParameter>();
-            var existingParameters = new Collection<WaterQualityParameter>();
-            MatchCollection parameterMatches = RegularExpression.GetMatches(parameterPattern, subFileText);
-
-            foreach (Match match in parameterMatches)
+            string parameterPattern = GetParameterPattern(@"\s*\n");
+            IEnumerable<WaterQualityParameter> parameters = CreateWaterQualityParameters(parameterPattern, subFileText);
+            // If there are no parameters, try parsing according to the new parameter pattern where the definitions 
+            // are defined on a single line.
+            if (!parameters.Any())
             {
-                WaterQualityParameter newParameter = GetParameter(match);
-                WaterQualityParameter existingParameter =
-                    substanceProcessLibrary.Parameters.FirstOrDefault(p => Equals(p, newParameter));
-
-                if (existingParameter == null)
-                {
-                    newParameters.Add(newParameter);
-                }
-                else
-                {
-                    existingParameters.Add(existingParameter);
-                }
+                parameterPattern = GetParameterPattern(@"\s*");
+                parameters = CreateWaterQualityParameters(parameterPattern, subFileText);
             }
 
-            // Remove all irrelevant parameters
-            WaterQualityParameter[] parametersToRemove = substanceProcessLibrary
-                                                         .Parameters.Where(param => !existingParameters.Contains(param))
-                                                         .ToArray();
-            for (var i = 0; i < parametersToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
+            ImportElementInformation<WaterQualityParameter> importInformation = GetWaterQualityParameterImportInformation(libraryParameters, parameters);
+            WaterQualityParameter[] parametersToRemove = libraryParameters.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(libraryParameters, parametersToRemove, Resources.SubFileImporter_Parameters_Name);
 
-                UpdateProgress("Removing irrelevant parameters", i + 1, parametersToRemove.Length);
-
-                substanceProcessLibrary.Parameters.Remove(parametersToRemove[i]);
-            }
-
-            // Add all new parameters
-            for (var i = 0; i < newParameters.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new parameters", i + 1, newParameters.Count);
-                substanceProcessLibrary.Parameters.Add(newParameters[i]);
-            }
+            AddNewElements(libraryParameters, importInformation.NewElements, Resources.SubFileImporter_Parameters_Name);
         }
 
-        private void ImportProcesses(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportProcesses(IEventedList<WaterQualityProcess> libraryProcesses, string subFileText)
         {
             const string processesPattern = @"active-processes\s*\n(?<Processes>.*)end-active-processes";
             const string processPattern = @"\s*name\s*'(?<Name>" + RegularExpression.Characters +
                                           @")'\s*'(?<Description>" + RegularExpression.ExtendedCharacters + @")'\s*\n";
 
-            var newProcesses = new Collection<WaterQualityProcess>();
-            var existingProcesses = new Collection<WaterQualityProcess>();
             MatchCollection processesMatches = RegularExpression.GetMatches(processesPattern, subFileText);
 
+            IEnumerable<WaterQualityProcess> processes = Enumerable.Empty<WaterQualityProcess>();
             if (processesMatches.Count > 0)
             {
-                MatchCollection processMatches =
-                    RegularExpression.GetMatches(processPattern, processesMatches[0].Groups["Processes"].Value);
-
-                foreach (Match match in processMatches)
-                {
-                    WaterQualityProcess newProcess = GetProcess(match);
-                    WaterQualityProcess existingProcess =
-                        substanceProcessLibrary.Processes.FirstOrDefault(p => Equals(p, newProcess));
-
-                    if (existingProcess == null)
-                    {
-                        newProcesses.Add(newProcess);
-                    }
-                    else
-                    {
-                        existingProcesses.Add(existingProcess);
-                    }
-                }
+                string content = processesMatches[0].Groups["Processes"].Value;
+                processes = CreateWaterQualityProcesses(processPattern, content);
             }
 
-            // Remove all irrelevant processes
-            WaterQualityProcess[] processesToRemove = substanceProcessLibrary
-                                                      .Processes.Where(proc => !existingProcesses.Contains(proc))
-                                                      .ToArray();
-            for (var i = 0; i < processesToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
+            ImportElementInformation<WaterQualityProcess> importInformation = GetWaterQualityProcessImportInformation(libraryProcesses, processes);
+            WaterQualityProcess[] processesToRemove = libraryProcesses.Except(importInformation.ExistingElements).ToArray();
+            RemoveIrrelevantElements(libraryProcesses, processesToRemove, Resources.SubFileImporter_Processes_Name);
 
-                UpdateProgress("Removing irrelevant processes", i + 1, processesToRemove.Length);
-
-                substanceProcessLibrary.Processes.Remove(processesToRemove[i]);
-            }
-
-            // Add all new processes
-            for (var i = 0; i < newProcesses.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new processes", i + 1, newProcesses.Count);
-                substanceProcessLibrary.Processes.Add(newProcesses[i]);
-            }
+            AddNewElements(libraryProcesses, importInformation.NewElements, Resources.SubFileImporter_Processes_Name);
         }
 
-        private void ImportOutputParameters(SubstanceProcessLibrary substanceProcessLibrary, string subFileText)
+        private void ImportOutputParameters(IEventedList<WaterQualityOutputParameter> libraryOutputParameters, string subFileText)
         {
-            const string outputParameterPattern = @"output\s*'(?<Name>" + RegularExpression.Characters + @")'\s*\n" +
-                                                  @"\s*description\s*'(?<Description>" +
-                                                  RegularExpression.ExtendedCharacters + @")'\s*\n" +
-                                                  @"end-output";
+            var outputRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("output", "Name", RegularExpression.Characters),
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+            };
+
+            string outputParameterPattern = SubFileHelper.GetRegexPattern(outputRegexInfos, @"\s*\n") +
+                                            @"end-output";
 
             var newOutputParameters = new Collection<WaterQualityOutputParameter>();
             var existingOutputParameters = new Collection<WaterQualityOutputParameter>();
-            MatchCollection outputParameterMatches = RegularExpression.GetMatches(outputParameterPattern, subFileText);
-
-            foreach (Match match in outputParameterMatches)
+            IEnumerable<WaterQualityOutputParameter> outputs = CreateWaterQualityOutputParameters(outputParameterPattern, subFileText);
+            foreach (WaterQualityOutputParameter output in outputs)
             {
-                WaterQualityOutputParameter newOutputParameter = GetOutputParameter(match);
-                if (IsExistingDefaultOutputParameter(newOutputParameter, substanceProcessLibrary.OutputParameters))
+                // Ignore existing default output parameters
+                if (IsExistingDefaultOutputParameter(output, libraryOutputParameters))
                 {
-                    continue; // Skip any existing default output parameter
+                    continue;
                 }
 
-                WaterQualityOutputParameter existingOutputParameter =
-                    substanceProcessLibrary.OutputParameters.FirstOrDefault(op => Equals(op, newOutputParameter));
-                if (existingOutputParameter == null)
+                WaterQualityOutputParameter existingOutput = libraryOutputParameters.FirstOrDefault(p => Equals(p, output));
+                if (existingOutput == null)
                 {
-                    newOutputParameters.Add(newOutputParameter);
+                    newOutputParameters.Add(output);
                 }
                 else
                 {
-                    existingOutputParameters.Add(existingOutputParameter);
+                    existingOutputParameters.Add(existingOutput);
                 }
             }
 
             // Remove all irrelevant output parameters
-            WaterQualityOutputParameter[] outputParametersToRemove =
-                substanceProcessLibrary.OutputParameters.Where(
-                                           outputParameter =>
-                                               !IsDefaultOutputParameter(outputParameter) &&
-                                               !existingOutputParameters.Contains(outputParameter))
-                                       .ToArray();
-            for (var i = 0; i < outputParametersToRemove.Length; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
+            WaterQualityOutputParameter[] outputParametersToRemove = libraryOutputParameters.Except(existingOutputParameters)
+                                                                                            .Where(outputParameter => !IsDefaultOutputParameter(outputParameter))
+                                                                                            .ToArray();
+            RemoveIrrelevantElements(libraryOutputParameters, outputParametersToRemove, Resources.SubFileImporter_OutputParameters_Name);
+            AddNewElements(libraryOutputParameters, newOutputParameters, Resources.SubFileImporter_OutputParameters_Name);
 
-                UpdateProgress("Removing irrelevant output parameters", i + 1, outputParametersToRemove.Length);
+            AddDefaultOutputParameters(libraryOutputParameters);
+        }
 
-                substanceProcessLibrary.OutputParameters.Remove(outputParametersToRemove[i]);
-            }
-
-            // Add all new parameters
-            for (var i = 0; i < newOutputParameters.Count; i++)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                UpdateProgress("Importing new output parameters", i + 1, newOutputParameters.Count);
-                substanceProcessLibrary.OutputParameters.Add(newOutputParameters[i]);
-            }
-
-            // Add any default output parameter that is still missing (Tuple: name, description)
+        private void AddDefaultOutputParameters(IEventedList<WaterQualityOutputParameter> target)
+        {
+            // Add any default output parameter that is still missing
             var defaultOutputParameters = new[]
             {
-                new Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Volume,
-                                          Resources.SubstanceProcessLibrary_OutputParameters_Volume_description),
-                new Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Surf,
-                                          Resources.SubstanceProcessLibrary_OutputParameters_Surf_description),
-                new Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Temp,
-                                          Resources.SubstanceProcessLibrary_OutputParameters_Temp_description),
-                new Tuple<string, string>(Resources.SubstanceProcessLibrary_OutputParameters_Rad,
-                                          Resources.SubstanceProcessLibrary_OutputParameters_Rad_description)
-            };
-            for (var i = 0; i < defaultOutputParameters.Length; i++)
-            {
-                if (ShouldCancel)
+                new WaterQualityOutputParameter
                 {
-                    return;
-                }
-
-                UpdateProgress("Removing irrelevant output parameters", i + 1, defaultOutputParameters.Length);
-
-                if (substanceProcessLibrary.OutputParameters.All(op => op.Name != defaultOutputParameters[i].Item1))
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
+                },
+                new WaterQualityOutputParameter
                 {
-                    substanceProcessLibrary.OutputParameters.Add(new WaterQualityOutputParameter
-                    {
-                        Name = defaultOutputParameters[i].Item1,
-                        Description = defaultOutputParameters[i].Item2,
-                    });
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
+                },
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
+                },
+                new WaterQualityOutputParameter
+                {
+                    Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
+                    Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
                 }
-            }
-        }
-
-        private static WaterQualitySubstance GetSubstance(Match match)
-        {
-            return new WaterQualitySubstance
-            {
-                Name = match.Groups["Name"].Value,
-                Active = match.Groups["Active"].Value.ToLower().StartsWith("active"),
-                Description = match.Groups["Description"].Value,
-                ConcentrationUnit = StripParentheses(match.Groups["ConcentrationUnit"].Value),
-                WasteLoadUnit = StripParentheses(match.Groups["WasteLoadUnit"].Value)
             };
-        }
 
-        private static WaterQualityProcess GetProcess(Match match)
-        {
-            return new WaterQualityProcess
-            {
-                Name = match.Groups["Name"].Value,
-                Description = match.Groups["Description"].Value
-            };
-        }
-
-        private static WaterQualityParameter GetParameter(Match match)
-        {
-            double defaultValue;
-            double.TryParse(match.Groups["Value"].Value, NumberStyles.Float, CultureInfo.InvariantCulture,
-                            out defaultValue);
-
-            return new WaterQualityParameter
-            {
-                Name = match.Groups["Name"].Value,
-                Description = match.Groups["Description"].Value,
-                Unit = StripParentheses(match.Groups["Unit"].Value),
-                DefaultValue = defaultValue
-            };
-        }
-
-        private static WaterQualityOutputParameter GetOutputParameter(Match match)
-        {
-            return new WaterQualityOutputParameter
-            {
-                Name = match.Groups["Name"].Value,
-                Description = match.Groups["Description"].Value,
-                ShowInHis = true,
-                ShowInMap = true
-            };
+            // Filter the elements to add whether they are unique
+            WaterQualityOutputParameter[] uniqueElementsToAdd = defaultOutputParameters.Where(element => !target.Any(item => Equals(item, element))).ToArray();
+            AddNewElements(target, uniqueElementsToAdd, Resources.SubFileImporter_DefaultOutputParameters_Name);
         }
 
         private void UpdateProgress(string phaseName, int currentStep, int maxStep)
@@ -465,6 +284,292 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                    waterQualityOutputParameter.Name == Resources.SubstanceProcessLibrary_OutputParameters_Temp ||
                    waterQualityOutputParameter.Name == Resources.SubstanceProcessLibrary_OutputParameters_Rad;
         }
+
+        #region Regex Patterns
+
+        private static string GetSubstancePattern(string substanceSeparator)
+        {
+            var substanceRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+                new SubFilePropertyRegexInfo("concentration-unit", "ConcentrationUnit", UnitCharacters),
+                new SubFilePropertyRegexInfo("waste-load-unit", "WasteLoadUnit", UnitCharacters)
+            };
+
+            return $@"substance\s*'(?<Name>{RegularExpression.Characters})'" +
+                   $@"\s*(?<Active>{RegularExpression.Characters}){substanceSeparator}" +
+                   SubFileHelper.GetRegexPattern(substanceRegexInfos, substanceSeparator) +
+                   @"end-substance";
+        }
+
+        private static string GetParameterPattern(string parameterSeparator)
+        {
+            var parameterRegexInfos = new[]
+            {
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+                new SubFilePropertyRegexInfo("unit", "Unit", UnitCharacters)
+            };
+
+            return $@"parameter\s*'(?<Name>{RegularExpression.Characters})'{parameterSeparator}" +
+                   SubFileHelper.GetRegexPattern(parameterRegexInfos, parameterSeparator) +
+                   $@"\s*value\s*(?<Value>{RegularExpression.Characters}){parameterSeparator}" +
+                   @"end-parameter";
+        }
+
+        #endregion
+
+        #region Helper methods
+
+        /// <summary>
+        /// Removes irrelevant elements from the <paramref name="target"/>.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement">The type of element of the water quality model.</typeparam>
+        /// <param name="target">The collection to remove elements from.</param>
+        /// <param name="elementsToRemove">The collection of elements that should not be removed.</param>
+        /// <param name="elementName">The name of the type of elements that are removed.</param>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private void RemoveIrrelevantElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target,
+                                                                    IEnumerable<TWaterQualityElement> elementsToRemove,
+                                                                    string elementName)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            int nrOfElementsToRemove = elementsToRemove.Count();
+            for (var i = 0; i < nrOfElementsToRemove; i++)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                UpdateProgress($"Removing irrelevant {elementName}.", i + 1, nrOfElementsToRemove);
+                target.Remove(elementsToRemove.ElementAt(i));
+            }
+        }
+
+        /// <summary>
+        /// Adds new elements to the <paramref name="target"/>.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement">The type of element of the water quality model.</typeparam>
+        /// <param name="target">The collection to add the elements to.</param>
+        /// <param name="elementsToAdd">The elements that should be added.</param>
+        /// <param name="elementName">The name of the type of elements that are added.</param>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private void AddNewElements<TWaterQualityElement>(IEventedList<TWaterQualityElement> target,
+                                                          IEnumerable<TWaterQualityElement> elementsToAdd,
+                                                          string elementName)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            var j = 0;
+            int nrOfSubstancesToBeAdded = elementsToAdd.Count();
+            foreach (TWaterQualityElement substance in elementsToAdd)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                UpdateProgress($"Importing new {elementName}.", j++, nrOfSubstancesToBeAdded);
+                target.Add(substance);
+            }
+        }
+
+        #endregion
+
+        #region Factory methods
+
+        private static IEnumerable<WaterQualitySubstance> CreateWaterQualitySubstances(string pattern, string subFileContents)
+        {
+            return CreateWaterQualityModelElements(pattern, subFileContents, match => new WaterQualitySubstance
+            {
+                Name = match.Groups["Name"].Value,
+                Active = match.Groups["Active"].Value.ToLower().StartsWith("active"),
+                Description = match.Groups["Description"].Value,
+                ConcentrationUnit = StripParentheses(match.Groups["ConcentrationUnit"].Value),
+                WasteLoadUnit = StripParentheses(match.Groups["WasteLoadUnit"].Value)
+            });
+        }
+
+        private static IEnumerable<WaterQualityProcess> CreateWaterQualityProcesses(string pattern, string subFileContents)
+        {
+            return CreateWaterQualityModelElements(pattern, subFileContents, match => new WaterQualityProcess
+            {
+                Name = match.Groups["Name"].Value,
+                Description = match.Groups["Description"].Value
+            });
+        }
+
+        private static IEnumerable<WaterQualityParameter> CreateWaterQualityParameters(string pattern, string subFileContents)
+        {
+            return CreateWaterQualityModelElements(pattern, subFileContents, match =>
+            {
+                double defaultValue;
+                double.TryParse(match.Groups["Value"].Value, NumberStyles.Float, CultureInfo.InvariantCulture,
+                                out defaultValue);
+
+                return new WaterQualityParameter
+                {
+                    Name = match.Groups["Name"].Value,
+                    Description = match.Groups["Description"].Value,
+                    Unit = StripParentheses(match.Groups["Unit"].Value),
+                    DefaultValue = defaultValue
+                };
+            });
+        }
+
+        private static IEnumerable<WaterQualityOutputParameter> CreateWaterQualityOutputParameters(string pattern, string subFileContents)
+        {
+            return CreateWaterQualityModelElements(pattern, subFileContents, match => new WaterQualityOutputParameter
+            {
+                Name = match.Groups["Name"].Value,
+                Description = match.Groups["Description"].Value,
+                ShowInHis = true,
+                ShowInMap = true
+            });
+        }
+
+        /// <summary>
+        /// Creates a collection of water quality model elements based on its input arguments.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model that needs to be created. </typeparam>
+        /// <param name="pattern"> The pattern to extract the elements from the <paramref name="subFileContents" />. </param>
+        /// <param name="subFileContents"> The contents of the file to extract the elements from. </param>
+        /// <param name="createElementFunc"> The function to create the element based on the pattern match. </param>
+        /// <returns> A collection of <typeparamref name="TWaterQualityElement" />. </returns>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private static IEnumerable<TWaterQualityElement> CreateWaterQualityModelElements<TWaterQualityElement>(string pattern, string subFileContents,
+                                                                                                               Func<Match, TWaterQualityElement> createElementFunc)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            MatchCollection matches = RegularExpression.GetMatches(pattern, subFileContents);
+
+            var elements = new List<TWaterQualityElement>();
+            foreach (Match match in matches)
+            {
+                elements.Add(createElementFunc(match));
+            }
+
+            return elements;
+        }
+
+        private static string StripParentheses(string unit)
+        {
+            if (unit.StartsWith("(") && unit.EndsWith(")"))
+            {
+                return unit.Substring(1, unit.Length - 2);
+            }
+
+            return unit;
+        }
+
+        #endregion
+
+        #region Import information
+
+        private static ImportElementInformation<WaterQualitySubstance> GetWaterQualitySubstanceImportInformation(
+            IEventedList<WaterQualitySubstance> existingSubstances,
+            IEnumerable<WaterQualitySubstance> newSubstances)
+        {
+            return GetImportInformation(existingSubstances, newSubstances, Equals);
+        }
+
+        private static ImportElementInformation<WaterQualityProcess> GetWaterQualityProcessImportInformation(
+            IEventedList<WaterQualityProcess> existingProcesses,
+            IEnumerable<WaterQualityProcess> newProcesses)
+        {
+            return GetImportInformation(existingProcesses, newProcesses, Equals);
+        }
+
+        private static ImportElementInformation<WaterQualityParameter> GetWaterQualityParameterImportInformation(
+            IEventedList<WaterQualityParameter> existingParameters,
+            IEnumerable<WaterQualityParameter> newParameters)
+        {
+            return GetImportInformation(existingParameters, newParameters, Equals);
+        }
+
+        /// <summary>
+        /// Retrieves the collection of new elements from <paramref name="newElements" />.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
+        /// <param name="existingElements"> The elements that are already present. </param>
+        /// <param name="newElements"> The elements to determine the new elements from. </param>
+        /// <param name="getEqualityFunc">The function to determine the equality between two <typeparamref name="TWaterQualityElement"/>. </param>
+        /// <returns> A collection of new elements. </returns>
+        /// <remarks>
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
+        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// .
+        /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
+        /// </remarks>
+        private static ImportElementInformation<TWaterQualityElement> GetImportInformation<TWaterQualityElement>(IEventedList<TWaterQualityElement> existingElements,
+                                                                                                                 IEnumerable<TWaterQualityElement> newElements,
+                                                                                                                 Func<TWaterQualityElement, TWaterQualityElement, bool> getEqualityFunc)
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            var existingElementsDuringImport = new Collection<TWaterQualityElement>();
+            var newElementsDuringImport = new Collection<TWaterQualityElement>();
+            foreach (TWaterQualityElement element in newElements)
+            {
+                TWaterQualityElement existingElement = existingElements.FirstOrDefault(p => getEqualityFunc(p, element));
+                if (existingElement != null)
+                {
+                    existingElementsDuringImport.Add(existingElement);
+                }
+                else
+                {
+                    newElementsDuringImport.Add(element);
+                }
+            }
+
+            return new ImportElementInformation<TWaterQualityElement>(existingElementsDuringImport, newElementsDuringImport);
+        }
+
+        /// <summary>
+        /// Class to store the information about the imported elements.
+        /// </summary>
+        /// <typeparam name="TWaterQualityElement"> The type of water quality element it needs to store data from. </typeparam>
+        private class ImportElementInformation<TWaterQualityElement>
+            where TWaterQualityElement : Unique<long>, INameable, ICloneable
+        {
+            /// <summary>
+            /// Creates a new instance of <see cref="ImportElementInformation{TWaterQualityElement}" />.
+            /// </summary>
+            /// <param name="existingElements"> The existing elements of the import. </param>
+            /// <param name="newElements"> The new elements that are imported. </param>
+            public ImportElementInformation(IEnumerable<TWaterQualityElement> existingElements, IEnumerable<TWaterQualityElement> newElements)
+            {
+                ExistingElements = existingElements;
+                NewElements = newElements;
+            }
+
+            /// <summary>
+            /// Gets the existing elements that were part of  the import.
+            /// </summary>
+            public IEnumerable<TWaterQualityElement> ExistingElements { get; }
+
+            /// <summary>
+            /// Gets the mew elements that were part of the import
+            /// </summary>
+            public IEnumerable<TWaterQualityElement> NewElements { get; }
+        }
+
+        #endregion
+
+        #region Equality methods
 
         private static bool Equals(WaterQualitySubstance first, WaterQualitySubstance second)
         {
@@ -561,14 +666,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return first.Equals(second, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private static string StripParentheses(string unit)
-        {
-            if (unit.StartsWith("(") && unit.EndsWith(")"))
-            {
-                return unit.Substring(1, unit.Length - 2);
-            }
-
-            return unit;
-        }
+        #endregion
     }
 }

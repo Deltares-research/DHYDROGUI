@@ -381,54 +381,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void CopyToClipboard()
         {
+            var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
                 clipboardMock.GetText_Returns_SetText();
 
                 var menuItem = new MenuItem { Tag = rule };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                AssertCopyXmlToClipboard(rule);
-                
+                AssertCopyXmlToClipboard(rule, controlGroup.Name);
+
                 menuItem = new MenuItem { Tag = condition };
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
-                AssertCopyXmlToClipboard(condition);
+                AssertCopyXmlToClipboard(condition, controlGroup.Name);
             }
         }
 
         [Test]
         public void CopyRuleToClipBoard()
         {
+            var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() })
+            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
             {
                 clipboardMock.GetText_Returns_SetText();
 
                 controlGroupEditor.CopyXmlToClipboard(rule);
 
-                AssertCopyXmlToClipboard(rule);
+                AssertCopyXmlToClipboard(rule, controlGroup.Name);
             }
         }
 
         [Test]
         public void CopyConditionToClipBoard()
         {
+            var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 clipboardMock.GetText_Returns_SetText();
 
                 controlGroupEditor.CopyXmlToClipboard(condition);
 
-                AssertCopyXmlToClipboard(condition);
+                AssertCopyXmlToClipboard(condition, controlGroup.Name);
             }
         }
 
         [Test]
         public void CopyExpressionToClipBoard()
         {
+            var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()})
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 clipboardMock.GetText_Returns_SetText();
 
@@ -440,7 +444,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
                 controlGroupEditor.CopyXmlToClipboard(expression);
 
-                AssertCopyXmlToClipboard(expression);
+                AssertCopyXmlToClipboard(expression, controlGroup.Name);
             }
         }
 
@@ -610,10 +614,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             mocks.VerifyAll();
         }
 
-        private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject)
+        private static void AssertCopyXmlToClipboard(RtcBaseObject rtcBaseObject, string controlGroupName)
         {
             RtcSerializerBase serializer = SerializerCreator.CreateSerializerType(rtcBaseObject);
-            IEnumerable<XElement> listXElements = serializer.ToXml(Fns, string.Empty);
+            IEnumerable<XElement> listXElements = serializer.ToXml(Fns, controlGroupName);
             var stringBuilder = new StringBuilder();
             foreach (XElement xElement in listXElements)
             {
