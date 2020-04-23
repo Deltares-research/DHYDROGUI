@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     [Entity]
     public sealed class WpfSettingsViewModel : IDisposable
     {
-        private bool disposed = false;
+        private bool disposed;
         private ObservableCollection<WpfGuiCategory> settingsCategories;
 
         /// <summary>
@@ -36,14 +36,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<WpfGuiCategory> SettingsCategories
         {
-            get { return settingsCategories; }
+            get => settingsCategories;
             set
             {
                 if (value != null)
                 {
-                    settingsCategories = new ObservableCollection<WpfGuiCategory>(value.Where(cat => cat.IsVisible));
+                    IEnumerable<WpfGuiCategory> visibleCategories = value.Where(cat => cat.IsVisible);
+                    settingsCategories.ForEach(gp => gp.PropertyChanged -= OnPropertyChanged);
+                    settingsCategories.Clear();
+                    settingsCategories.AddRange(visibleCategories);
+
                     RemovedCategories = value.Where(cat => !cat.IsVisible).ToList();
-                    settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
                     settingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
                 }
             }
@@ -51,11 +54,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public void UpdatePropertyValue(string propertyName)
         {
-            if (UpdatingProperties) return;
+            if (UpdatingProperties)
+            {
+                return;
+            }
 
-            var firstOrDefault = SettingsCategories.SelectMany(sc => sc.Properties).FirstOrDefault(p => p.Name != null && p.Name.Equals(propertyName));
+            WpfGuiProperty firstOrDefault = SettingsCategories.SelectMany(sc => sc.Properties).FirstOrDefault(p => p.Name != null && p.Name.Equals(propertyName));
 
-            if (firstOrDefault!= null)
+            if (firstOrDefault != null)
             {
                 UpdatingProperties = true;
                 firstOrDefault.RaisePropertyChangedEvents();
@@ -64,20 +70,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WpfSettingsViewModel"/> class.
+        /// Initializes a new instance of the <see cref="WpfSettingsViewModel" /> class.
         /// </summary>
         public WpfSettingsViewModel()
         {
-            SettingsCategories = new ObservableCollection<WpfGuiCategory>(new List<WpfGuiCategory>());
+            settingsCategories = new ObservableCollection<WpfGuiCategory>();
+            settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
+
             RemovedCategories = new List<WpfGuiCategory>();
         }
 
         private void SettingsCategoriesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            if (SettingsCategories != null && !UpdatingProperties)
+            if (settingsCategories != null && !UpdatingProperties)
             {
                 UpdatingProperties = true;
-                SettingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
+                settingsCategories.ForEach(gp => gp.PropertyChanged += OnPropertyChanged);
                 UpdateVisibleCategories();
                 UpdatingProperties = false;
             }
@@ -89,19 +97,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (UpdatingProperties) return;
+            if (UpdatingProperties)
+            {
+                return;
+            }
+
             UpdatingProperties = true;
 
             //Notify to all properties with custom controls to update.
             //For tab visibility.
             UpdateVisibleCategories();
-            
+
             UpdatingProperties = false;
         }
 
         private void UpdateVisibleCategories()
         {
-            var notVisible = SettingsCategories.Where(sc => !sc.IsVisible).ToList();
+            List<WpfGuiCategory> notVisible = SettingsCategories.Where(sc => !sc.IsVisible).ToList();
             if (notVisible.Any())
             {
                 RemovedCategories.AddRange(notVisible);
@@ -112,8 +124,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             if (RemovedCategories.Any(rc => rc.IsVisible))
             {
-                var guiCategories = RemovedCategories.Where(rc => rc.IsVisible);
-                SettingsCategories.AddRange(guiCategories);
+                IEnumerable<WpfGuiCategory> guiCategories = RemovedCategories.Where(rc => rc.IsVisible);
+                settingsCategories.AddRange(guiCategories);
                 RemovedCategories.RemoveAllWhere(rc => rc.IsVisible);
             }
         }
@@ -133,12 +145,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             if (disposing)
             {
-                IEnumerable<IDisposable> disposables = SettingsCategories.Select(c => c.CustomControl)
-                                                                         .OfType<IDisposable>();
-                foreach (IDisposable disposable in disposables)
-                {
-                    disposable.Dispose();
-                }
+                SettingsCategories.ForEach(c => c.PropertyChanged -= OnPropertyChanged);
+                SettingsCategories.ForEach(c => c.Dispose());
+                SettingsCategories.Clear();
+
+                RemovedCategories.Clear();
             }
 
             disposed = true;

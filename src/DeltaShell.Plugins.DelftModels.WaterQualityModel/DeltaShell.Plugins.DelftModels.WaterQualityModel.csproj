@@ -86,6 +86,8 @@
     <Compile Include="IO\BloomSpeFileReader.cs" />
     <Compile Include="IO\MapFileMetaData.cs" />
     <Compile Include="IO\NetCdfFileReaderHelper.cs" />
+    <Compile Include="IO\SubFileImporterComponents\SubFileHelper.cs" />
+    <Compile Include="IO\SubFileImporterComponents\SubFilePropertyRegexInfo.cs" />
     <Compile Include="IO\WaqProcessesRules.cs" />
     <Compile Include="IO\WaqProcessValidationRule.cs" />
     <Compile Include="IO\WaqValidationRulesExtension.cs" />
@@ -536,6 +538,7 @@
     </Content>
     <Content Include="Resources\hydFile.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

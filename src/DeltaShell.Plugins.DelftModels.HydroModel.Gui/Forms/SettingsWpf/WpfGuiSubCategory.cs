@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         private bool expanded;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WpfGuiSubcategory"/> class.
+        /// Initializes a new instance of the <see cref="WpfGuiSubCategory"/> class.
         /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
         /// </summary>
         /// <param name="subCategory">The sub category.</param>

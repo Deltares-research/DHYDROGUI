@@ -686,4 +686,19 @@ INCLUDE 'includes_deltashell/B8_initials.inc'       ; From UI: Initials
   <data name="WaterQualityModelValidator_hyd_file_doesnt_exist" xml:space="preserve">
     <value>The hyd file with location {0} doesn't exist.</value>
   </data>
+  <data name="SubFileImporter_DefaultOutputParameters_Name" xml:space="preserve">
+    <value>default output parameters</value>
+  </data>
+  <data name="SubFileImporter_OutputParameters_Name" xml:space="preserve">
+    <value>output parameters</value>
+  </data>
+  <data name="SubFileImporter_Substances_Name" xml:space="preserve">
+    <value>substances</value>
+  </data>
+  <data name="SubFileImporter_Parameters_Name" xml:space="preserve">
+    <value>parameters</value>
+  </data>
+  <data name="SubFileImporter_Processes_Name" xml:space="preserve">
+    <value>processes</value>
+  </data>
 </root>
