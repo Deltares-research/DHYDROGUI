@@ -139,10 +139,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(supportPoints.Zip(boundaryBlock.SpectrumFiles, Tuple.Create));
             }
 
-            return importDataComponentFactory.CreateUniformFileBasedComponent(GetFilePaths(boundaryBlock).FirstOrDefault());
+            return importDataComponentFactory.CreateUniformFileBasedComponent(boundaryBlock.SpectrumFiles.FirstOrDefault());
         }
 
-        private static IEnumerable<string> GetFilePaths(BoundaryMdwBlock boundaryBlock) => boundaryBlock.SpectrumFiles;
 
         private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                    IList<IFunction> timeSeriesData,

@@ -17,15 +17,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Converts the specified <paramref name="boundaryCategory"/>
         /// to a <see cref="BoundaryMdwBlock"/>.
         /// </summary>
-        /// <param name="boundaryCategory"> The boundary delft ini category. </param>
+        /// <param name="boundaryCategory">The boundary delft ini category.</param>
         /// <returns>
         /// The created boundary mdw block.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/> is <c> null </c>.
+        /// Thrown when <paramref name="boundaryCategory"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when the <paramref name="boundaryCategory"/> is not an mdw boundary category.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when the <paramref name="boundaryCategory"/> contains properties without a valid
+        /// enum equivalent.
         /// </exception>
         public static BoundaryMdwBlock Convert(DelftIniCategory boundaryCategory)
         {
@@ -53,10 +57,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
             else if (block.SpectrumType == SpectrumImportExportType.FromFile)
             {
-                block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum);
+                ConvertFileBasedProperties(boundaryCategory, block);
             }
 
             return block;
+        }
+
+        private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)
+        {
+            block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum);
         }
 
         private static void ConvertParameterizedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)

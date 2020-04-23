@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private readonly Random random = new Random();
 
         private double RandomDouble => Math.Round(random.NextDouble(), 3);
-        private double RandomInt => random.Next(100);
+        private int RandomInt => random.Next(100);
 
         [Test]
         public void Convert_BoundaryCategoryNull_ThrowsArgumentNullException()

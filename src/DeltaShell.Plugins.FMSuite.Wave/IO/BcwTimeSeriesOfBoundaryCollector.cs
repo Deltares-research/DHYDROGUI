@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// <summary>
             /// The collector should do nothing, since it is apparently not a time dependent boundary. 
             /// </summary>
-            /// <param name="fileBasedParameters"></param>
+            /// <param name="fileBasedParameters">The visited file based parameters.</param>
             public void Visit(FileBasedParameters fileBasedParameters)
             {
                 // Do nothing, since it is not a time dependent boundary.
@@ -106,8 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             /// <summary>
             /// The collector should do nothing, since it is apparently not a time dependent boundary. 
             /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="constantParameters"></param>
+            /// <typeparam name="T">The type of spreading.</typeparam>
+            /// <param name="constantParameters">The visited constant parameters.</param>
             public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
             {
                 // Do nothing, since it is not a time dependent boundary.

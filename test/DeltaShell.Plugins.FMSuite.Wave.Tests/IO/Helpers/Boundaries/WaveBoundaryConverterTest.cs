@@ -368,8 +368,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        [TestCase("non_parametrized")]
-        public void Convert_DelftIniCategory_WithNonParametrizedData_ThrowsNotSupportedException(string spectrumSpec)
+        [TestCase("non_parametric")]
+        public void Convert_DelftIniCategory_WithNonParametricData_ThrowsNotSupportedException(string spectrumSpec)
         {
             // Setup
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
