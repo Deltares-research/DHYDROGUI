@@ -530,12 +530,18 @@ namespace DelftTools.Hydro.Helpers
             if (region == null) return featureName;
 
             var fullRegion = region.Parent as IHydroRegion ?? region;
+            HashSet<string> names = null;
+            lock (fullRegion)
+            {
+                var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName)
+                    .Select(f => f.Name);
+                var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links)
+                    .Select(l => l.Name);
+                var allNames = hydroObjectNames.Concat(allLinkNames);
 
-            var hydroObjectNames = fullRegion.AllHydroObjects.Where(f => f.GetEntityType().Name == featureName).Select(f => f.Name);
-            var allLinkNames = fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name);
-            var allNames = hydroObjectNames.Concat(allLinkNames);
+                names = new HashSet<string>(allNames);
+            }
 
-            var names = new HashSet<string>(allNames);
             if (checkIfNewNameIsNeeded)
             {
                 var nameProperty = feature.GetType().GetProperty("Name");
@@ -564,16 +570,23 @@ namespace DelftTools.Hydro.Helpers
             structure.Branch = compositeBranchStructure.Branch;
             structure.ParentStructure = compositeBranchStructure;
             structure.Chainage = compositeBranchStructure.Chainage;
-            compositeBranchStructure.Structures.Add(structure);
+            lock(compositeBranchStructure.Structures)
+            {
+                compositeBranchStructure.Structures.Add(structure);
+            }
 
             if (null != compositeBranchStructure.Geometry)
             {
                 structure.Geometry = (IGeometry)compositeBranchStructure.Geometry.Clone();
             }
-            structure.Branch.BranchFeatures.Add(structure);
+
+            lock (structure.Branch.BranchFeatures)
+            {
+                structure.Branch.BranchFeatures.Add(structure);
+            }
         }
 
-        public static ICompositeBranchStructure AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch)
+        public static ICompositeBranchStructure AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch, bool generateUniqueName = true)
         {
 
             var compositeBranchStructure = GetCompositeBranchStructure(structure, branch);
@@ -590,10 +603,16 @@ namespace DelftTools.Hydro.Helpers
                     Geometry = (IGeometry)structure.Geometry?.Clone()
                 };
 
-                // make new composite structure names unique
-                compositeBranchStructure.Name = GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+                if (generateUniqueName)
+                {
+                    // make new composite structure names unique
+                    compositeBranchStructure.Name = GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+                }
 
-                branch.BranchFeatures.Add(compositeBranchStructure);
+                lock(branch.BranchFeatures)
+                {
+                    branch.BranchFeatures.Add(compositeBranchStructure);
+                }
             }
 
             AddStructureToComposite(compositeBranchStructure, structure);
@@ -743,7 +762,11 @@ namespace DelftTools.Hydro.Helpers
         {
             var manholes = new List<IManhole>();
             if (network != null)
-                manholes = network.Manholes.ToList();
+                lock (network.Nodes)
+                {
+                    manholes = network.Manholes.ToList();
+                }
+                
 
             return NetworkHelper.GetUniqueName("Manhole{0:D2}", manholes, "Manhole");
         }

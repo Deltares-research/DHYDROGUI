@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
+using System.Threading;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
@@ -15,21 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
 
         #region Creators
-
-        public static IEnumerable<ISewerFeature> CreateSewerEntities(IList<GwswElement> gwswElements, Action<string, int, int> setProgress = null)
-        {
-            var elementTypesList= new List<KeyValuePair<SewerFeatureType, GwswElement>>();
-            foreach (var gwswElement in gwswElements)
-            {
-                SewerFeatureType elementType;
-                if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) continue;
-
-                elementTypesList.Add(new KeyValuePair<SewerFeatureType, GwswElement>(elementType, gwswElement));
-            }
-
-            return CreateSewerEntities(elementTypesList, setProgress);
-        }
-
+        
         /// <summary>
         /// Generate multiple sewer features from a list of GwswElements.
         /// </summary>
@@ -37,94 +25,72 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         /// <param name="setProgress"></param>
         /// <param name="gwswFileImporter"></param>
         /// <returns>IList of ISewerFeature objects that have been created from objects in gwswElements.<param name="gwswElements"/></returns>
-        public static IEnumerable<ISewerFeature> CreateSewerEntities(
-            IEnumerable<KeyValuePair<SewerFeatureType, GwswElement>> elementTypesList,
-            Action<string, int, int> setProgress = null, GwswFileImporter gwswFileImporter = null)
+        public static IEnumerable<ISewerFeature> CreateSewerEntities(ILookup<SewerFeatureType, GwswElement> elementTypesList, GwswFileImporter importer)
         {
-            // node types
-            var typesList = elementTypesList as KeyValuePair<SewerFeatureType, GwswElement>[] ?? elementTypesList.ToArray();
-            var nodeTypes = typesList.Where(k => k.Key == SewerFeatureType.Node).Select(k => k.Value).ToList();
-            if (nodeTypes.Any())
+            var listOfGwswElementGenerationActivities = new List<GwswElementGenerationActivity<ISewerFeature>>();
+            foreach (var element in elementTypesList)
             {
-                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(nodeTypes, "node", setProgress, gwswFileImporter).ToList()) yield return sewerFeature;
-            }
-            
-            // Cross section types
-            var crossSectionTypes = typesList.Where(k => k.Key == SewerFeatureType.Crosssection).Select(k => k.Value).ToList();
-            if (crossSectionTypes.Any())
-            {
-                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(crossSectionTypes, "cross section", setProgress, gwswFileImporter).ToList()) yield return sewerFeature;
+                var gwswElementGenerationActivity = new GwswElementGenerationActivity<ISewerFeature>(element.Key, element.ToArray(), importer);
+                listOfGwswElementGenerationActivities.Add(gwswElementGenerationActivity);
             }
 
-            // Connection types
-            var connectionTypes = typesList.Where(k => k.Key == SewerFeatureType.Connection).Select(k => k.Value).ToList();
-            if (connectionTypes.Any())
+            foreach (var gwswFileImportActivity in listOfGwswElementGenerationActivities)
             {
-                foreach (var sewerFeature in CreateSewerFeaturesWithProgress(connectionTypes, "connection type", setProgress, gwswFileImporter).ToList()) yield return sewerFeature;
+                importer.ActivityRunner.Enqueue(gwswFileImportActivity);
             }
-            
-            // Structure types 
-            var structureTypes = typesList.Where(k => k.Key == SewerFeatureType.Structure).Select(k => k.Value).ToList();
-            if (structureTypes.Any())
+
+            while (listOfGwswElementGenerationActivities.Any(im => im.Status != ActivityStatus.Cleaned))
             {
-                var structureFeatures = CreateSewerFeaturesWithProgress(structureTypes, "sewer", setProgress, gwswFileImporter).ToList();
-                var pointFeatures = structureFeatures.OfType<IStructure1D>();
-
-                foreach (var pointFeature in pointFeatures)
-                {
-
-                    if (pointFeature.Branch != null && pointFeature.Branch.Source == pointFeature.Branch.Target)
-                    {
-                        // is internal connection
-                        pointFeature.ParentPointFeature = (Manhole) pointFeature.Branch.Source;
-                    }
-                }
-
-                foreach (var structureFeature in structureFeatures)
-                {
-                    yield return structureFeature;
-                }
+                Thread.Sleep(100);
             }
-            
+
+            return listOfGwswElementGenerationActivities
+                .SelectMany(l => l.Features);
         }
-
-        private static IEnumerable<ISewerFeature> CreateSewerFeaturesWithProgress(IList<GwswElement> gwswElements,
-            string feature, Action<string, int, int> setProgress, GwswFileImporter gwswFileImporter)
-        {
-            var nrOfGwswFeatures = gwswElements.Count;
-            foreach (var element in gwswElements)
-            {
-                if(gwswFileImporter != null && gwswFileImporter.ShouldCancel) yield break;
-                var indexOf = gwswElements.IndexOf(element);
-                var stepSize = nrOfGwswFeatures / 20;
-                if (stepSize != 0 && indexOf % stepSize == 0)
-                {
-                    setProgress?.Invoke($"Generating {feature} features", indexOf, nrOfGwswFeatures);
-                }
-
-                yield return CreateSewerFeature(element);
-            }
-        }
-
-        /// <summary>
-        /// Generates a single sewer feature out of a GwswElement.
-        /// </summary>
-        /// <param name="gwswElement">Collection of attributes and values extracted from a Csv Element.</param>
-        /// <returns>Single sewer feature representing the <param name="gwswElement"/> given as a parameter.</returns>
-        private static ISewerFeature CreateSewerFeature(GwswElement gwswElement)
-        {
-            var generator = GetSewerFeatureGenerator(gwswElement);
-            return generator?.Generate(gwswElement);
-        }
-
+        
         #endregion
 
-        private static ISewerFeatureGenerator GetSewerFeatureGenerator(GwswElement gwswElement)
+        public static IGwswFeatureGenerator<T> GetGwswFeatureGenerator<T>(SewerFeatureType featureType, GwswElement gwswElement)
         {
-            SewerFeatureType elementType;
-            if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
+            if (typeof(T) == typeof(ISewerFeature))
+                return (IGwswFeatureGenerator<T>) GetSewerFeatureGenerator(featureType, gwswElement);
+            if (typeof(T) == typeof(INwrwFeature))
+                return (IGwswFeatureGenerator<T>) GetNwrwFeatureGenerator(featureType, gwswElement);
+            return null;
+        }
 
-            ISewerFeatureGenerator generator;
+        private static IGwswFeatureGenerator<INwrwFeature> GetNwrwFeatureGenerator(SewerFeatureType elementType,
+            GwswElement gwswElement)
+        {
+            IGwswFeatureGenerator<INwrwFeature> generator;
+            switch (elementType)
+            {
+                case SewerFeatureType.Surface:
+                    // Surface types (oppervlak.csv)
+                    generator = new GwswNwrwSurfaceDataGenerator();
+                    break;
+                case SewerFeatureType.Runoff:
+                    // Runoff types (nwrw.csv)
+                    generator = new GwswNwrwRunoffDefinitionGenerator();
+                    break;
+                case SewerFeatureType.Distribution:
+                    // Distribution types (verloop.csv)
+                    generator = new GwswNwrwDryWeatherFlowDefinitionGenerator();
+                    break;
+                case SewerFeatureType.Discharge:
+                    // Discharge types (debiet.csv)
+                    generator = new GwswNwrwDischargeDataGenerator();
+                    break;
+                default:
+                    generator = null;
+                    break;
+            }
+            return generator;
+        }
+
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerFeatureGenerator(SewerFeatureType elementType, GwswElement gwswElement)
+        {
+            IGwswFeatureGenerator<ISewerFeature> generator;
             switch (elementType)
             {
                 case SewerFeatureType.Node:
@@ -146,7 +112,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             return generator;
         }
 
-        private static ISewerFeatureGenerator GetCrossSectionGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetCrossSectionGenerator(this GwswElement gwswElement)
         {
             if (!gwswElement.IsValidGwswSewerProfile()) return null;
 
@@ -177,7 +143,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
         }
 
-        private static ISewerFeatureGenerator GetSewerStructureGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerStructureGenerator(this GwswElement gwswElement)
         {
             var structureTypeAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.StructureType);
             if (!structureTypeAttribute.IsValidAttribute()) return null;
@@ -209,7 +175,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             return compartmentGenerator;
         }
 
-        private static ISewerFeatureGenerator GetSewerConnectionGenerator(this GwswElement gwswElement)
+        private static IGwswFeatureGenerator<ISewerFeature> GetSewerConnectionGenerator(this GwswElement gwswElement)
         {
             var sewerTypeAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeType);
             var basicGenerator = new SewerConnectionGenerator();
@@ -240,6 +206,31 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         }
 
         #endregion
+
+        public static IEnumerable<INwrwFeature> CreateNwrwEntities(
+            ILookup<SewerFeatureType, GwswElement> elementTypesList, GwswFileImporter importer,
+            List<string> errorsDuringImport)
+        {
+            var listOfGwswElementGenerationActivities = new List<GwswElementGenerationActivity<INwrwFeature>>();
+            foreach (var element in elementTypesList)
+            {
+                var gwswElementGenerationActivity = new GwswElementGenerationActivity<INwrwFeature>(element.Key, element.ToArray(), importer);
+                listOfGwswElementGenerationActivities.Add(gwswElementGenerationActivity);
+            }
+            foreach (var gwswFileImportActivity in listOfGwswElementGenerationActivities)
+            {
+                importer.ActivityRunner.Enqueue(gwswFileImportActivity);
+            }
+
+            while (listOfGwswElementGenerationActivities.Any(im => im.Status != ActivityStatus.Cleaned))
+            {
+                Thread.Sleep(100);
+            }
+            errorsDuringImport.AddRange(listOfGwswElementGenerationActivities.SelectMany(l=>l.GenerationExceptions));
+            return listOfGwswElementGenerationActivities
+                .SelectMany(l => l.Features);
+        }
+        
     }
 
     internal static class GwswElementValidationExtensions

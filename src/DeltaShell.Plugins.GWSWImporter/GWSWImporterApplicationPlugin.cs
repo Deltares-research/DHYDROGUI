@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new GwswFileImporter(new DefinitionsProvider());
+            yield return new GwswFileImporter(new DefinitionsProvider()){ActivityRunner = Application.ActivityRunner};
         }
     }
 }

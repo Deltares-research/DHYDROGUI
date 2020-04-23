@@ -85,14 +85,21 @@ namespace DelftTools.Hydro.SewerFeatures
                     crossSection.Chainage = Length / 2;
                     if (HydroNetwork != null)
                     {
-                        var sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?.FirstOrDefault(scsd => scsd.Name.Equals(crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
+                        ICrossSectionDefinition sharedCrossSectionDefinition;
+                        lock (HydroNetwork.SharedCrossSectionDefinitions)
+                        {
+                            sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?.FirstOrDefault(scsd => scsd.Name.Equals(crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
+                        }
                         if (sharedCrossSectionDefinition != null)
                         {
                             crossSection?.UseSharedDefinition(sharedCrossSectionDefinition);
                         }
                         else
                         {
-                            crossSection?.ShareDefinitionAndChangeToProxy();
+                            lock (HydroNetwork.SharedCrossSectionDefinitions)
+                            {
+                                crossSection?.ShareDefinitionAndChangeToProxy();
+                            }
                         }
 
                         AddCrossSectionSectionToDefinition(HydroNetwork);
@@ -154,7 +161,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
         [EditAction]
-        protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
+        protected override void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             if (CrossSectionDefinitionName == null)
             {
@@ -162,19 +169,25 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             else
             {
-                var crossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
-                if (crossSectionDefinition != null)
-                {
-                    var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
-                    pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
-                    pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
-                    CrossSection = pipeCrossSection;
-                    CrossSectionDefinitionName = crossSection.Definition.Name;
-                    
-                    Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)crossSectionDefinition).Shape.MaterialName);
+                lock (hydroNetwork.SharedCrossSectionDefinitions)
+                { 
+                    var crossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
+                    if (crossSectionDefinition != null)
+                    {
+                        var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+                        pipeCrossSection.Name = "SewerProfile_0";
+                        //pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
+                        pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
+                        helper?.PipeCrossSections?.Enqueue(pipeCrossSection);
+                        CrossSection = pipeCrossSection;
+                        CrossSectionDefinitionName = crossSection.Definition.Name;
+                        
+                        Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(((CrossSectionDefinitionStandard)crossSectionDefinition).Shape.MaterialName);
+                    }
                 }
             }
         }
+
         [EditAction]
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
         {

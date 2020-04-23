@@ -7,7 +7,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public class SewerWeirGenerator : ISewerFeatureGenerator
+    public class SewerWeirGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
         private static ILog Log = LogManager.GetLogger(typeof(SewerWeirGenerator));
 

@@ -5,7 +5,7 @@ using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public class SewerPumpGenerator : ISewerFeatureGenerator
+    public class SewerPumpGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
         public ISewerFeature Generate(GwswElement gwswElement)
         {

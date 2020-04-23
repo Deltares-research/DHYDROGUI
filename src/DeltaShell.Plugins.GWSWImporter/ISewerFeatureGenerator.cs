@@ -1,9 +1,10 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public interface ISewerFeatureGenerator
+    public interface IGwswFeatureGenerator<T>
     {
-        ISewerFeature Generate(GwswElement gwswElement);
+        T Generate(GwswElement gwswElement);
     }
 }

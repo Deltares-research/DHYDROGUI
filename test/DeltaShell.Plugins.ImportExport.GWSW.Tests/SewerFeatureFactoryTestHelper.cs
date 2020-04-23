@@ -5,7 +5,9 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.ImportExport.Gwsw;
+using DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -191,7 +193,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
         protected static T CreateSewerFeature<T>(GwswElement gwswElement) where T : class, ISewerFeature
         {
-            var sewerEntities = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement> { gwswElement });
+            SewerFeatureType elementType;
+            if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
+
+            var lu = new Dictionary<SewerFeatureType, GwswElement> {{elementType, gwswElement}}.ToLookup(l => l.Key, l => l.Value);
+            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
+
+            var sewerEntities = SewerFeatureFactory.CreateSewerEntities(lu, gwswImporter);
             var sewerEntity = sewerEntities.FirstOrDefault() as T;
             return sewerEntity;
         }

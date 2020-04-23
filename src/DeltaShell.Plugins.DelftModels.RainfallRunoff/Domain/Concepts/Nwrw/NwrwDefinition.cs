@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
@@ -30,17 +31,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
  
         public IGeometry Geometry { get; set; }
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
+        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
 
-            if (rrModel == null || rrModel.NwrwDefinitions.Any(nd => nd.SurfaceType.Equals(this.SurfaceType)))
+            if (rrModel == null)
             {
                 Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
                 return;
             }
 
-            rrModel?.NwrwDefinitions.Add(this);
+            lock (rrModel.NwrwDefinitions)
+            {
+                if (rrModel.NwrwDefinitions.Any(nd => nd.SurfaceType.Equals(this.SurfaceType)))
+                {
+                    Log.Warn($"Could not add {nameof(NwrwDefinition)} to {nameof(RainfallRunoffModel)}.");
+                    return;
+                }
+            }
+
+            lock(rrModel.NwrwDefinitions)
+                rrModel.NwrwDefinitions.Add(this);
+        }
+
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
+            //nothing to initialize
         }
     }
 }

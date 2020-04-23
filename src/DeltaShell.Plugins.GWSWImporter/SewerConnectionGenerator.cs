@@ -4,7 +4,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public class SewerConnectionGenerator : ISewerFeatureGenerator
+    public class SewerConnectionGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
         public virtual ISewerFeature Generate(GwswElement gwswElement)
         {

@@ -396,6 +396,7 @@ src/DelftTools.Hydro/SewerFeatures/Orifice.cs -text
 src/DelftTools.Hydro/SewerFeatures/OutletCompartment.cs -text
 src/DelftTools.Hydro/SewerFeatures/Pipe.cs -text
 src/DelftTools.Hydro/SewerFeatures/SewerConnection.cs -text
+src/DelftTools.Hydro/SewerFeatures/SewerImporterHelper.cs -text
 src/DelftTools.Hydro/Structure2DType.cs -text
 src/DelftTools.Hydro/StructureType.cs -text
 src/DelftTools.Hydro/Structures/Bridge.cs -text
@@ -2052,13 +2053,18 @@ src/DeltaShell.Plugins.GWSWImporter/GwswAttribute.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswAttributeType.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswElement.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswElementExtensions.cs -text
+src/DeltaShell.Plugins.GWSWImporter/GwswElementGenerationActivity.cs -text
+src/DeltaShell.Plugins.GWSWImporter/GwswFeatureFactory.cs -text
+src/DeltaShell.Plugins.GWSWImporter/GwswFileImportActivity.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswFileImporter.cs -text
+src/DeltaShell.Plugins.GWSWImporter/GwswFileImporterkanweg.cs -text
 src/DeltaShell.Plugins.GWSWImporter/IDefinitionsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ISewerFeatureGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/InvertedEggCrossSectionShapeGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ManholeMapping.cs -text
 src/DeltaShell.Plugins.GWSWImporter/NwrwDischargeData.cs -text
 src/DeltaShell.Plugins.GWSWImporter/NwrwSurfaceData.cs -text
+src/DeltaShell.Plugins.GWSWImporter/ParallelHelper.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/AssemblyInfo.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Properties/Resources.Designer.cs -text

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nwrw
 {
@@ -8,14 +10,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
     {
         public static void GenerateNwrwModelData(RainfallRunoffModel rrModel)
         {
-            NwrwData nwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, "Catchment1");
+            const string catchment1Name = "Catchment1";
+            var nwrwImportHelper = new NwrwImporterHelper();
+            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment1Name, nwrwImportHelper);
+            NwrwData nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
+                md.Catchment.Name.Equals(catchment1Name, StringComparison.InvariantCultureIgnoreCase));
+            Assert.That(nwrwData, Is.Not.Null);
             nwrwData.Name = "node1";
             nwrwData.NodeOrBranchId = "node1";
             nwrwData.LateralSurface = 2.3;
             nwrwData.SurfaceLevelDict = GenerateSurfaceLevelDict();
             nwrwData.DryWeatherFlows = GenerateSingleDryWeatherFlow();
 
-            NwrwData anotherNwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, "Catchment2");
+            const string catchment2Name = "Catchment2";
+            NwrwData.CreateNewNwrwDataWithCatchment(rrModel, catchment2Name, nwrwImportHelper);
+            NwrwData anotherNwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
+                md.Catchment.Name.Equals(catchment2Name, StringComparison.InvariantCultureIgnoreCase));
+            Assert.That(anotherNwrwData, Is.Not.Null);
             anotherNwrwData.Name = "node2";
             anotherNwrwData.NodeOrBranchId = "node2";
             anotherNwrwData.LateralSurface = 4.5;

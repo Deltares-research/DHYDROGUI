@@ -1,15 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.ImportExport.GWSW;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
+    public class GwswNwrwSurfaceDataGenerator : IGwswFeatureGenerator<INwrwFeature>
+    {
+        public INwrwFeature Generate(GwswElement gwswElement)
+        {
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwSurfaceData(gwswElement);
+        }
+    }
+    public class GwswNwrwDischargeDataGenerator : IGwswFeatureGenerator<INwrwFeature>
+    {
+        public INwrwFeature Generate(GwswElement gwswElement)
+        {
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDischargeData(gwswElement);
+        }
+    }
+    public class GwswNwrwRunoffDefinitionGenerator : IGwswFeatureGenerator<INwrwFeature>
+    {
+        public INwrwFeature Generate(GwswElement gwswElement)
+        {
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwRunoffDefinition(gwswElement);
+        }
+    }
+    public class GwswNwrwDryWeatherFlowDefinitionGenerator : IGwswFeatureGenerator<INwrwFeature>
+    {
+        public INwrwFeature Generate(GwswElement gwswElement)
+        {
+            return gwswElement == null ? null : GwswNwrwGenerator.CreateNewNwrwDryWeatherFlowDefinition(gwswElement);
+        }
+    }
     public static class GwswNwrwGenerator 
     {
-       public static NwrwSurfaceData CreateNewNwrwSurfaceData(GwswElement gwswElement, IList<string> errorsDuringImport)
+       public static NwrwSurfaceData CreateNewNwrwSurfaceData(GwswElement gwswElement)
         {
+            var errorsDuringImport = new List<string>();
             var nwrwSurface = new NwrwSurfaceData();
             try
             {
@@ -36,14 +66,19 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             }
             catch (Exception e)
             {
-                errorsDuringImport.Add($"Could not import Nwrw surface data: {e.Message}");
+                errorsDuringImport.Add(e.Message);
             }
 
+            if (errorsDuringImport.Any())
+            {
+                throw new Exception($"Could not import Nwrw surface data: {Environment.NewLine}{string.Join(Environment.NewLine,errorsDuringImport)}");
+            }
             return nwrwSurface;
         }
 
-       public static NwrwDischargeData CreateNewNwrwDischargeData(GwswElement gwswElement, IList<string> errorsDuringImport)
+       public static NwrwDischargeData CreateNewNwrwDischargeData(GwswElement gwswElement)
        {
+           var errorsDuringImport = new List<string>();
            var nwrwDischargeData = new NwrwDischargeData();
            try
            {
@@ -71,12 +106,18 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
            {
                errorsDuringImport.Add($"Could not import Nwrw discharge data: {e.Message}");
            }
-           
+
+           if (errorsDuringImport.Any())
+           {
+               throw new Exception($"Could not import Nwrw discharge data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
+           }
            return nwrwDischargeData;
        }
 
-       public static NwrwDefinition CreateNewNwrwRunoffDefinition(GwswElement gwswElement, IList<string> errorsDuringImport)
+       public static NwrwDefinition CreateNewNwrwRunoffDefinition(GwswElement gwswElement)
        {
+           var errorsDuringImport = new List<string>();
+
            var nwrwDefinition = new NwrwDefinition();
 
            try
@@ -130,20 +171,25 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                if (terrainRoughness.TryGetValueAsDouble(out auxDouble))
                    nwrwDefinition.TerrainRoughness = auxDouble;
 
-                nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
+               nwrwDefinition.Remark = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Remarks)
                    .ValueAsString;
            }
            catch (Exception e)
            {
-               errorsDuringImport.Add($"Could not import Nwrw runoff data: {e.Message}");
+               errorsDuringImport.Add(e.Message);
            }
 
-           return nwrwDefinition;
+           if (errorsDuringImport.Any())
+           {
+               throw new Exception($"Could not import Nwrw runoff data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
+           }
+
+            return nwrwDefinition;
        }
 
-       public static NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(GwswElement gwswElement,
-           IList<string> errorsDuringImport)
+       public static NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(GwswElement gwswElement)
        {
+           var errorsDuringImport = new List<string>();
            var nwrwDryWeatherFlowDefinition = new NwrwDryWeatherFlowDefinition();
 
            try
@@ -303,10 +349,15 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
            }
            catch (Exception e)
            {
-               errorsDuringImport.Add($"Could not import Nwrw dry weather flow data: {e.Message}");
+               errorsDuringImport.Add(e.Message);
            }
 
-           return nwrwDryWeatherFlowDefinition;
+           if (errorsDuringImport.Any())
+           {
+               throw new Exception($"Could not import Nwrw dry weather flow data: {Environment.NewLine}{string.Join(Environment.NewLine, errorsDuringImport)}");
+           }
+
+            return nwrwDryWeatherFlowDefinition;
        }
 
     }

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -103,6 +104,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var outlet = (OutletCompartment) sender;
                 var model1DBoundaryNodeData = BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outlet.ParentManhole);
                 model1DBoundaryNodeData.SetBoundaryConditionDataForOutlet();
+            }
+
+            if (sender is SewerConnection connection && e.PropertyName.Equals(nameof(IBranch.Length)))
+            {
+                var locationsToRemove = NetworkDiscretization.Locations.Values
+                    .OfType<NetworkLocation>()
+                    .Where(nl => nl.Branch.Equals(connection) && Math.Abs(nl.Chainage) < 0.00001).ToArray();
+                if (locationsToRemove.Any())
+                    NetworkDiscretization.Locations.RemoveValues(new IVariableValueFilter[] { new VariableValueFilter<NetworkLocation>(NetworkDiscretization.Locations, locationsToRemove) });
+                NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                    new NetworkLocation(connection, 0));
+                if (connection.Length > 0)
+                {
+                    
+                    locationsToRemove = NetworkDiscretization.Locations.Values
+                        .OfType<NetworkLocation>()
+                        .Where(nl => nl.Branch.Equals(connection) && nl.Chainage > 0).ToArray();
+                    if(locationsToRemove.Any())
+                        NetworkDiscretization.Locations.RemoveValues(new IVariableValueFilter[] { new VariableValueFilter<NetworkLocation>(NetworkDiscretization.Locations, locationsToRemove) });
+                    NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                        new NetworkLocation(connection, connection.Length));
+                }
             }
 
             if (sender == Network && e.PropertyName == nameof(IEditableObject.IsEditing) && Network.CurrentEditAction is BranchSplitAction &&
@@ -727,7 +750,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddSewerRoughnessIfNecessary();
             }
         }
-        private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
+
+        public void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
             if (lateralSourceData == null) return;
             lateralSourceData.UseSalt = false;

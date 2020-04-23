@@ -8,7 +8,7 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public abstract class ASewerCrossSectionShapeGenerator : ISewerFeatureGenerator
+    public abstract class ASewerCrossSectionShapeGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
         private static ILog Log = LogManager.GetLogger(typeof(ASewerCrossSectionShapeGenerator));
         public abstract ISewerFeature Generate(GwswElement gwswElement);

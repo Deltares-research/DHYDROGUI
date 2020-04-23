@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             CalculationArea = Catchment.AreaSize;
         }
 
-        public static NwrwData CreateNewNwrwDataWithCatchment(IHydroModel model, string name)
+        public static void CreateNewNwrwDataWithCatchment(IHydroModel model, string name, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null)
@@ -66,11 +67,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             var catchment = Catchment.CreateDefault();
             catchment.CatchmentType = CatchmentType.NWRW;
             catchment.Name = name;
+            CurrentNwrwCatchmentModelDataByNodeOrBranchId = helper?.CurrentNwrwCatchmentModelDataByNodeOrBranchId;
+            rrModel.ModelDataAdded += RrModelOnModelDataAdded; 
             rrModel.Basin.Catchments.Add(catchment);
+            rrModel.ModelDataAdded -= RrModelOnModelDataAdded;
+            CurrentNwrwCatchmentModelDataByNodeOrBranchId = null;
+        }
 
-            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.Catchment.Equals(catchment));
+        private static ConcurrentDictionary<string, NwrwData> CurrentNwrwCatchmentModelDataByNodeOrBranchId { get; set; }
 
-            return nwrwData;
+        private static void RrModelOnModelDataAdded(object sender, EventArgs e)
+        {
+            var nwrwData = sender as NwrwData;
+            if (nwrwData == null) return;
+            CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);
         }
     }
 }

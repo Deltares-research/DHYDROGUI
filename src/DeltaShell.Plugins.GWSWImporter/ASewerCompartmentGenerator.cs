@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
 {
-    public abstract class ASewerCompartmentGenerator : ISewerFeatureGenerator
+    public abstract class ASewerCompartmentGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
         private static ILog Log = LogManager.GetLogger(typeof(ASewerCompartmentGenerator));
 

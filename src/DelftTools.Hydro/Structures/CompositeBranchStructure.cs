@@ -105,7 +105,7 @@ namespace DelftTools.Hydro.Structures
             Count = structures.Count;
         }
 
-        public CompositeBranchStructure() : this("StructureFeature", 0)
+        public CompositeBranchStructure() : this("CompositeBranchStructure_1D_1", 0)
         {
         }
 

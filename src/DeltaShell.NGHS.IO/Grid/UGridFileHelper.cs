@@ -30,6 +30,7 @@ namespace DeltaShell.NGHS.IO.Grid
         private const double DefaultNoDataValue = -999.0;
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridFileHelper));
         public const int IdsSize = 40;
+        public const int DIGITS = 6;
         private static string lastCheckedUGridPath;
         private static bool lastCheckedUGridPathResult;
 

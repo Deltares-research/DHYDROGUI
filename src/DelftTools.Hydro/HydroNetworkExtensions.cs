@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.SewerFeatures;
@@ -30,12 +31,37 @@ namespace DelftTools.Hydro
         {
             var connection = sewerConnection as SewerConnection;
             if (connection == null) return;
-            var manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
-                m.Compartments.Any(c => c.Name.Equals(connection.SourceCompartmentName, StringComparison.InvariantCultureIgnoreCase)));
-            connection.Source = manholeContainingCompartment;
-            manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
-                m.Compartments.Any(c => c.Name.Equals(connection.TargetCompartmentName, StringComparison.InvariantCultureIgnoreCase)));
-            connection.Target = manholeContainingCompartment;
+            var i = 0;
+            while ((connection.Source == null || connection.Target == null) && i < 5)
+            {
+                if (connection.Source == null)
+                {
+                    lock (hydroNetwork.Nodes)
+                    {
+                        var manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
+                            m.Compartments.Any(c =>
+                                c.Name.Equals(connection.SourceCompartmentName,
+                                    StringComparison.InvariantCultureIgnoreCase)));
+                        connection.Source = manholeContainingCompartment;
+                    }
+                }
+
+                if (connection.Target == null)
+                {
+                    lock (hydroNetwork.Nodes)
+                    {
+                        var manholeContainingCompartment = hydroNetwork.Manholes.FirstOrDefault(m =>
+                            m.Compartments.Any(c =>
+                                c.Name.Equals(connection.TargetCompartmentName,
+                                    StringComparison.InvariantCultureIgnoreCase)));
+                        connection.Target = manholeContainingCompartment;
+                    }
+                }
+
+                Thread.Sleep(50);
+                i++;
+            }
+            
         }
         public static void UpdateGeodeticDistancesOfChannels(this IHydroNetwork network)
         {

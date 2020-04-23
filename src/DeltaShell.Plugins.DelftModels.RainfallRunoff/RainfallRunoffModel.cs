@@ -518,7 +518,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                      modelParameter.ElementSet == ElementSet.GreenhouseElmSet ||
                      modelParameter.ElementSet == ElementSet.OpenWaterElmSet ||
                      modelParameter.ElementSet == ElementSet.SacramentoElmSet ||
-                     modelParameter.ElementSet == ElementSet.HbvElmSet)
+                     modelParameter.ElementSet == ElementSet.HbvElmSet ||
+                     modelParameter.ElementSet == ElementSet.NWRWElmSet)
             {
                 var coverage = CreateCatchmentCoverage(functionName, modelParameter.Name,
                                                                     modelParameter.Unit, true);

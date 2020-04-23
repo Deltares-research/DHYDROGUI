@@ -1,5 +1,6 @@
 ﻿using System;
-using DelftTools.Hydro;
+using System.Collections.Concurrent;
+using System.Linq;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using NUnit.Framework;
@@ -33,8 +34,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     DryWeatherFlowId = name
                 };
 
+                // setup when
+                var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
                 // when
-                nwrwDischargeData.SetCorrectLateralSurface(rrModel);
+                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
 
                 // then
                 var expectedValue = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
@@ -62,8 +65,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     LateralSurface = lateralSurface
                 };
 
+                // setup when
+                var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
+
                 // when
-                nwrwDischargeData.SetCorrectLateralSurface(rrModel);
+                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
 
                 // then
                 var expectedValue = lateralSurface / 86400; // from dm³/day to m³/s 
@@ -87,8 +93,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     LateralSurface = lateralSurface
                 };
 
+                // setup when
+                var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
+
                 // when
-                nwrwDischargeData.SetCorrectLateralSurface(rrModel);
+                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
 
                 // then
                 var expectedValue = lateralSurface / 86400; // from m³/day to m³/s
@@ -97,28 +106,27 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        public void SetCorrectLateralSurface_ModelNull_ThrowsArgumentException()
+        public void SetCorrectLateralSurface_DictionaryNull_ThrowsArgumentNullException()
         {
             // Call
             TestDelegate call = () => new NwrwDischargeData().SetCorrectLateralSurface(null);
 
             // Assert
-            Assert.That(call, Throws.ArgumentException);
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void SetCorrectLaterSurface_ModelNotRRModel_ThrowsArgumentException()
+        public void SetCorrectLaterSurface_DictionaryIsNull_ThrowsArgumentNullException()
         {
             // Setup
             var mocks = new MockRepository();
-            var invalidModel = mocks.Stub<IHydroModel>();
             mocks.ReplayAll();
 
             // Call
-            TestDelegate call = () => new NwrwDischargeData().SetCorrectLateralSurface(invalidModel);
+            TestDelegate call = () => new NwrwDischargeData().SetCorrectLateralSurface(null);
 
             // Assert
-            Assert.That(call, Throws.ArgumentException);
+            Assert.That(call, Throws.TypeOf<ArgumentNullException>());
             mocks.VerifyAll();
         }
     }

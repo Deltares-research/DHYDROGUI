@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 {
     public class GwswStructureOutletCompartment : OutletCompartment
     {
-        protected override void CopyExistingCompartmentPropertyValuesToNewCompartment(ICompartment existingCompartment)
+        protected override void CopyToExistingCompartmentPropertyValues(ICompartment existingCompartment)
         {
             ManholeLength = existingCompartment.ManholeLength;
             ManholeWidth = existingCompartment.ManholeWidth;

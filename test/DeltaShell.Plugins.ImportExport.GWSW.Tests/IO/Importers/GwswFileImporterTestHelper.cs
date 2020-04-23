@@ -77,12 +77,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
         protected static IList<GwswElement> GwswFileImportAsGwswElementsWorksCorrectly(GwswFileImporter importer, string filePath, bool continousTesting = false)
         {
-            var importedElementList = importer.ImportGwswElementList(filePath);
+            var importedElementList = importer.ImportGwswElementsFromGwswFiles(filePath);
             Assert.IsNotNull(importedElementList, string.Format("The .csv file {0}, could not be imported.", filePath));
 
             var fileAsStringList = File.ReadAllLines(filePath);
             var numberOfLines = fileAsStringList.Length - 1; // we should not include the header
-            var rowsCount = importedElementList.Count();
+            var rowsCount = importedElementList.SelectMany(e => e).Count();
             if (rowsCount != numberOfLines && !continousTesting)
             {
                 //Check there are no repeated columns in the .CSV
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 }
             }
 
-            return importedElementList.ToList();
+            return importedElementList.SelectMany(e => e).ToList();
         }
 
         protected static void CheckThatGwswAttributeValidationLogMessageIsReturned(string fileName, int lineNumber,

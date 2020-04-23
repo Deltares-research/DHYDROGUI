@@ -12,9 +12,11 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -464,7 +466,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             gwswImporter.CsvDelimeter = ';';
             gwswImporter.LoadFeatureFiles(folderPath);
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+                () => importedList = gwswImporter.ImportGwswElementsFromGwswFiles(filePath).SelectMany(e=>e).ToList(), message);
             Assert.IsFalse(importedList.Any());
         }
 
@@ -485,7 +487,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             gwswImporter.LoadFeatureFiles(folderPath);
             var importedList = new List<GwswElement>();
             TestHelper.AssertAtLeastOneLogMessagesContains(
-                () => importedList = gwswImporter.ImportGwswElementList(filePath).ToList(), message);
+                () => importedList = gwswImporter.ImportGwswElementsFromGwswFiles(filePath).SelectMany(e=>e).ToList(), message);
             Assert.IsFalse(importedList.Any()); //import is cancelled
         }
 
@@ -932,8 +934,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var folderPath = Path.GetDirectoryName(structuresPath);
             gwswImporter.CsvDelimeter = ';';
             gwswImporter.LoadFeatureFiles(folderPath);
-            gwswImporter.ImportItem(structuresPath, model);
-
+            var elements =  gwswImporter.ImportGwswElementsFromGwswFiles(structuresPath);
+            TypeUtils.CallPrivateMethod(gwswImporter, "ImportGwswNetworkInFmModel",elements,model);
+            
             //Check placeholders have been created.
             Assert.IsTrue(network.SewerConnections.Any());
             Assert.IsTrue(network.Structures.Any());
@@ -942,7 +945,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             // Now Load connections.
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            gwswImporter.ImportItem(connectionsPath, model);
+            
+            elements = gwswImporter.ImportGwswElementsFromGwswFiles(connectionsPath);
+            TypeUtils.CallPrivateMethod(gwswImporter, "ImportGwswNetworkInFmModel", elements, model);
 
             Assert.AreEqual((int) structuresPh.Count,
                 (int) network.Structures.Count(s => !(s is CompositeBranchStructure)));
@@ -1200,9 +1205,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.That((object) discretization.Locations.Values.Count, Is.EqualTo(3));
 
                 var coords = discretization.Geometry.Coordinates;
-                Assert.That((object) coords[0], Is.EqualTo(new Coordinate(10, 20, double.NaN)));
-                Assert.That((object) coords[1], Is.EqualTo(new Coordinate(30, 40, double.NaN)));
-                Assert.That((object) coords[2], Is.EqualTo(new Coordinate(23, 99, double.NaN)));
+                Assert.That(coords, Contains.Item(new Coordinate(10, 20, double.NaN)));
+                Assert.That(coords, Contains.Item(new Coordinate(30, 40, double.NaN)));
+                Assert.That(coords, Contains.Item(new Coordinate(23, 99, double.NaN)));
             }
             finally
             {

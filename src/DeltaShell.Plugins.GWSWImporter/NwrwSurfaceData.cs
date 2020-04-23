@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using GeoAPI.Geometries;
@@ -25,23 +23,29 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public IGeometry Geometry { get; set; }
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
+        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null) { return; }
-
-            if (Geometry == null)
+            if (rrModel == null)
             {
-                Log.Warn($"Could not add {NwrwSurfaceType} to {Name}, because the geometry of the catchment is not set.");
                 return;
             }
 
-            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
-            if (nwrwData == null)
+            if (Geometry == null)
             {
-                nwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name);
+                Log.Warn(
+                    $"Could not add {NwrwSurfaceType} to {Name}, because the geometry of the catchment is not set.");
+                return;
             }
 
+            if (!helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId.ContainsKey(Name))
+            {
+                NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name, helper);
+            }
+        }
+
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
             nwrwData.MeteoStationId = MeteoStationId;
             nwrwData.Catchment.Geometry = Geometry;
             nwrwData.Catchment.IsGeometryDerivedFromAreaSize = true;

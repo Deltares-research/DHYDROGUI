@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using GeoAPI.Geometries;
 using log4net;
@@ -25,18 +27,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public IGeometry Geometry { get; set; }
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
+        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
 
             if (Geometry == null)
             {
-                Log.Warn($"Could not add {DryWeatherFlowId} to {Name}, because the geometry of the catchment is not set.");
+                Log.Warn(
+                    $"Could not add {DryWeatherFlowId} to {Name}, because the geometry of the catchment is not set.");
                 return;
             }
 
-            if (DischargeType == DischargeType.Lateral) {  return; } // handled in the importer, requires FM knowledge
+            if (DischargeType == DischargeType.Lateral)
+            {
+                return;
+            } // handled in the importer, requires FM knowledge
 
             if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(DryWeatherFlowId)))
             {
@@ -44,12 +50,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return;
             }
 
-            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md => md.NodeOrBranchId.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
-            if (nwrwData == null)
+            if (!helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId.ContainsKey(Name))
             {
-                nwrwData = NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name);
+                NwrwData.CreateNewNwrwDataWithCatchment(rrModel, Name, helper);
             }
+        }
 
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
             AddDryWeatherFlowToNwrwCatchment(nwrwData);
 
             nwrwData.LateralSurface = LateralSurface;
@@ -65,7 +73,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             // Only two dry weather flow ids per catchment are supported.
             // First DWF definition must start with "inwoner", second must start with "bedrijf".
             // See issues FM1D2D-535 and FM1D2D-630.
-            
+
             IList<DryWeatherFlow> nwrwDataDryWeatherFlows = nwrwData.DryWeatherFlows;
 
             var dryweatherFlow = new DryWeatherFlow(DryWeatherFlowId)
@@ -90,21 +98,34 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// from Debiet.csv.
         /// </summary>
         /// <exception cref="ArgumentException">Thrown when the lateral surface could not be set.</exception>
-        public void SetCorrectLateralSurface(IHydroModel model)
+        public void SetCorrectLateralSurface(
+            ILookup<string, NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitionbyName)
         {
-            var rrModel = model as RainfallRunoffModel;
-            if (rrModel == null) throw new ArgumentException();
+            if (nwrwDryWeatherFlowDefinitionbyName == null)
+                throw new ArgumentNullException(nameof(nwrwDryWeatherFlowDefinitionbyName));
 
-            NwrwDryWeatherFlowDefinition dwf = rrModel.NwrwDryWeatherFlowDefinitions.FirstOrDefault(dwfd => dwfd.Name.Equals(DryWeatherFlowId));
 
-            if (string.IsNullOrWhiteSpace(DryWeatherFlowId) || dwf == null)
+            if (!string.IsNullOrWhiteSpace(DryWeatherFlowId) &&
+                !nwrwDryWeatherFlowDefinitionbyName.Contains(DryWeatherFlowId))
+            {
+                Log.Warn($"Cannot find NwrwDryWeatherFlowDefinition in RR model by name: {DryWeatherFlowId}");
+            }
+
+
+
+            if (string.IsNullOrWhiteSpace(DryWeatherFlowId) ||
+                !nwrwDryWeatherFlowDefinitionbyName.Contains(DryWeatherFlowId))
             {
                 LateralSurface /= 86400; // from m³/day to m³/s
             }
             else
             {
-                LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/h (LateralSurface is in dm³/h) to m³/s 
+                foreach (var dwf in nwrwDryWeatherFlowDefinitionbyName[DryWeatherFlowId])
+                {
+                    LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
+                }
             }
         }
     }
+
 }

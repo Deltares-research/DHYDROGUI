@@ -118,7 +118,10 @@ namespace DelftTools.Hydro.SewerFeatures
                             ManholeLength = 0.64,
                             ManholeWidth = 0.64
                         };
-                        manhole.Compartments.Add(newCompartment);
+                        lock (manhole.Compartments)
+                        {
+                            manhole.Compartments.Add(newCompartment);
+                        }
                         SourceCompartment = newCompartment;
                     }
                     else
@@ -138,7 +141,11 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void AfterSetSource()
         {
-            source?.OutgoingBranches.Add(this);
+            if (source == null) return;
+            lock (source.OutgoingBranches)
+            {
+                source?.OutgoingBranches.Add(this);
+            }
         }
 
         [DisplayName("To manhole")]
@@ -198,7 +205,10 @@ namespace DelftTools.Hydro.SewerFeatures
                             ManholeLength = 0.64,
                             ManholeWidth = 0.64
                         };
-                        manhole.Compartments.Add(newCompartment);
+                        lock (manhole.Compartments)
+                        {
+                            manhole.Compartments.Add(newCompartment);
+                        }
                         TargetCompartment = newCompartment;
                     }
                     else
@@ -218,7 +228,11 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void AfterTargetSet()
         {
-            target?.IncomingBranches.Add(this);
+            if(target == null) return;
+            lock (target.IncomingBranches)
+            {
+                target?.IncomingBranches.Add(this);
+            }
         }
 
         #endregion
@@ -425,29 +439,65 @@ namespace DelftTools.Hydro.SewerFeatures
         
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
+            AddOrUpdateGeometry(hydroNetwork, helper);
+            AddCrossSectionDefinition(hydroNetwork, helper);
+            if (helper != null && helper.SewerConnectionsByName.ContainsKey(Name))
+            {
+                Log.Warn($"SewerConnection {Name} already created");
+                return;
+            }
+            lock (hydroNetwork.Branches)
+            {
+                hydroNetwork.Branches.Add(this);
+            }
+            helper?.SewerConnectionsByName?.AddOrUpdate(Name, this, (existingName, oldSewerConnection) =>
+            {
+                return Geometry == null ? oldSewerConnection : this;
+            });
+
+
+        }
+
+        public void AddOrUpdateGeometry(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        {
             //hydroNetwork.Branches.RemoveAllWhere(sc => sc.Name == Name && sc is SewerConnection);
             //if(helper.SewerConnectionsByName.ContainsKey(Name)) return;
 
             IManhole sourceManhole = null;
-            if (helper != null && !string.IsNullOrEmpty(SourceCompartmentName) && !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
+            if (helper != null && !string.IsNullOrEmpty(SourceCompartmentName) &&
+                !helper.ManholesByCompartmentName.TryGetValue(SourceCompartmentName, out sourceManhole))
                 sourceManhole = null;
 
-            IManhole targetManhole= null;
-            if (helper != null && !string.IsNullOrEmpty(TargetCompartmentName) && !helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
+            IManhole targetManhole = null;
+            if (helper != null && !string.IsNullOrEmpty(TargetCompartmentName) &&
+                !helper.ManholesByCompartmentName.TryGetValue(TargetCompartmentName, out targetManhole))
                 targetManhole = null;
-            
-            if (sourceManhole == null && targetManhole == null)
+
+            if (sourceManhole == null || targetManhole == null)
                 hydroNetwork.FindAndConnectManholesInNetwork(this);
             else
             {
                 ConnectSourceCompartment(sourceManhole);
                 ConnectTargetCompartment(targetManhole);
             }
-            SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
 
-            AddCrossSectionDefinition(hydroNetwork);
-            hydroNetwork.Branches.Add(this);
-            //if (helper != null) helper.SewerConnectionsByName[Name] = this;
+            SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
+            if (Geometry != null)
+            {
+                foreach (var branchFeature in BranchFeatures.Where(bf => bf.Geometry == null))
+                {
+                    branchFeature.Geometry = HydroNetworkHelper.GetStructureGeometry(this, branchFeature.Chainage);
+                    if (branchFeature is ICompositeBranchStructure compositeBranchStructure)
+                    {
+                        foreach (var structure1D in compositeBranchStructure.Structures.Where(s => s.Geometry == null))
+                        {
+                            structure1D.Geometry = HydroNetworkHelper.GetStructureGeometry(this, structure1D.Chainage);
+                        }
+                    }
+                }
+            }
+            if(Geometry == null)
+                Geometry = new LineString(new []{new Coordinate(0,0),new Coordinate(0,1)}); //stupid placeholder.
         }
 
         private void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
@@ -468,7 +518,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork)
+        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
         }
         

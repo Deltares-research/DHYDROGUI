@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
+using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.IO;
 
@@ -83,7 +84,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (!regionExchangeInfos.Any()) return;
 
-            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r, r => r.AllHydroObjects.GroupBy(ho => TypeUtils.Unproxy(ho).GetType()).ToDictionary(g => g.Key, g => g.ToDictionary(ho => ho.Name, ho=> ho, StringComparer.InvariantCultureIgnoreCase)));
+            var regionObjectsLookup = new Dictionary<IHydroRegion, Dictionary<Type, Dictionary<string, IHydroObject>>>();
+            foreach (IRegion region in Region.SubRegions)
+            {
+                IHydroRegion hydroRegion = region as IHydroRegion;
+                if (hydroRegion != null)
+                {
+                    Dictionary<Type, Dictionary<string, IHydroObject>> dictionary = new Dictionary<Type, Dictionary<string, IHydroObject>>();
+                    foreach (var objects in hydroRegion.AllHydroObjects.GroupBy(ho => { return ((Object) TypeUtils.Unproxy(ho)).GetType(); }))
+                    {
+                        Dictionary<string, IHydroObject> dictionary1 = new Dictionary<string, IHydroObject>(StringComparer.InvariantCultureIgnoreCase);
+                        foreach (var o in objects) dictionary1.Add(o.Name, o);
+                        dictionary.Add(objects.Key, dictionary1);
+                    }
+
+                    regionObjectsLookup.Add(hydroRegion, dictionary);
+                }
+            }
+
             var regionByNameLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r.Name, StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var regionExchangeInfo in regionExchangeInfos)

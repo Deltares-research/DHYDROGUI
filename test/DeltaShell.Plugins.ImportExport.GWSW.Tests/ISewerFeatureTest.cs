@@ -1186,7 +1186,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [Test]
         public void GivenFmModel_WhenAddingStructureWeirAndThenConnectionWeir_ThenDiscretisationPointsHaveBeenAddedToTheModelNetwork()
         {
-            var fmModel = new WaterFlowFMModel { Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach() };
+            var fmModel = new WaterFlowFMModel();
+            fmModel.Network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach();
 
             var weirName = "myWeir";
             var structureWeir = new GwswStructureWeir(weirName);

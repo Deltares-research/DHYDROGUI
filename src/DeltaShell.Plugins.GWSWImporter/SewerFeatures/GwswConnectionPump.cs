@@ -1,5 +1,4 @@
 ﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 
@@ -15,25 +14,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 
         public string TargetCompartmentName { get; set; }
 
-        protected override ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
-        {
-            var sewerConnection = new SewerConnection(Name);
-            SetSewerConnectionProperties(sewerConnection);
-            var composite = sewerConnection.AddStructureToBranch(this);
-            composite.Name = HydroNetworkHelper.GetUniqueFeatureName(hydroNetwork, composite);
-            return sewerConnection;
-        }
-
         protected override void CopyPropertyValuesToExistingPump(IPump pump)
         {
             pump.DirectionIsPositive = DirectionIsPositive;
         }
 
-        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection)
+        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            sewerConnection.Length = Length;
             sewerConnection.SourceCompartmentName = SourceCompartmentName;
             sewerConnection.TargetCompartmentName = TargetCompartmentName;
+            sewerConnection.AddOrUpdateGeometry(hydroNetwork, helper);
+            sewerConnection.Length = Length;
         }
     }
 }

@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 Assert.IsTrue(network.CompositeBranchStructures.Any(cb => cb.Structures.Any(s => s.Name.Equals(structureId))));
             }
         }
-
+        /*
         [Test]
         public void GivenThreeCompartmentGwswElements_WhenGeneratingCompartments_ThenManholesAreCreatedCorrectly()
         {
@@ -298,7 +298,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.IsNotNull(outletCompartment);
             Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));
         }
-
+        */
         [Test]
         public void GivenNodeAndOutletGwswElement_WhenGeneratingOutletAndAddingToNetwork_ThenExistingCompartmentIsReplacedByOutletCompartment()
         {

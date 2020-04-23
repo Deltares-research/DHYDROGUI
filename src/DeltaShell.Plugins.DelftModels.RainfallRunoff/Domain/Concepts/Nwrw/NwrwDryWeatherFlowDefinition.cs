@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using DelftTools.Hydro;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         public IGeometry Geometry { get; set; }
 
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model)
+        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
@@ -35,6 +36,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             ConvertGwswUnitsToKernelUnits();
             rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
+        }
+
+        public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
+        {
+            //Nothing to initialize
         }
 
         private void ConvertGwswUnitsToKernelUnits()
@@ -54,14 +60,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             // of type 'CST' where VER_DAG is empty.
             if (DistributionType == DwfDistributionType.Variable)
             {
-                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
-                return true;
+                throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
+                //Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
+                //return true;
             }
 
             if (DistributionType == DwfDistributionType.Constant && DayNumber != default(int))
             {
-                Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
-                return true;
+                throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
+                //return true;
             }
 
             return false;

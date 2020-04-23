@@ -239,6 +239,7 @@
     <Compile Include="SewerConnectionExtensionMethods.cs" />
     <Compile Include="SewerConnectionSpecialConnectionType.cs" />
     <Compile Include="SewerConnectionWaterType.cs" />
+    <Compile Include="SewerFeatures\SewerImporterHelper.cs" />
     <Compile Include="Structure2DType.cs" />
     <Compile Include="Structures\ICompartment.cs" />
     <Compile Include="Structures\ICompositeNetworkPointFeature.cs" />

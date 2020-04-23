@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.Structures
@@ -157,40 +158,66 @@ namespace DelftTools.Hydro.Structures
         {
             return StructureType.Pump;
         }
-        
+
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            var sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(
-                sc => sc.BranchFeatures.Count >= 2
-                      && sc.BranchFeatures[1].Name == Name
-                      && sc.BranchFeatures[1] is IPump);
-            var pump = sewerConnection?.BranchFeatures.FirstOrDefault(bf => bf is IPump) as IPump;
-
-            if (pump != null)
+            ISewerConnection sewerConnection = null;
+            if (helper == null)
             {
-                hydroNetwork.Branches.Remove(sewerConnection);
-                CopyPropertyValuesToExistingPump(pump);
-                SetSewerConnectionProperties(sewerConnection);
+                //read from network.
+                sewerConnection = hydroNetwork.SewerConnections.FirstOrDefault(sc =>
+                    sc.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            if (sewerConnection == null &&
+                (helper == null || !helper.SewerConnectionsByName.TryGetValue(Name, out sewerConnection)))
+            {
+                sewerConnection = GetNewSewerConnectionWithPump(hydroNetwork, helper);
+                sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
+            }
+
+            var pumps = sewerConnection?.BranchFeatures.OfType<IPump>().ToArray();
+            if (pumps != null && pumps.Any())
+            {
+                SetSewerConnectionProperties(sewerConnection, hydroNetwork, helper);
+                pumps.ForEach(CopyPropertyValuesToExistingPump);
             }
             else
             {
-                sewerConnection = GetNewSewerConnectionWithPump(hydroNetwork);
+                //remove old bf and add this one
+                lock (hydroNetwork.BranchFeatures)
+                {
+                    sewerConnection?.BranchFeatures.RemoveAllWhere(bf =>
+                        bf.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)
+                        || bf is ICompositeBranchStructure compositeBranchStructure &&
+                        compositeBranchStructure.Structures.Any(s =>
+                            s.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)));
+
+                    var composite = sewerConnection.AddStructureToBranch(this, false);
+                    helper?.CompositeBranchStructures?.Enqueue(composite);
+                }
             }
 
-            sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
-            sewerConnection.UpdateBranchFeatureGeometries();
         }
 
-        protected virtual ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork)
+        private ISewerConnection GetNewSewerConnectionWithPump(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            return null;
+            if (helper == null || !helper.SewerConnectionsByName.TryGetValue(Name, out var sewerConnection))
+            {
+                sewerConnection = new SewerConnection(Name);
+                SetSewerConnectionProperties(sewerConnection, hydroNetwork, helper);
+            }
+
+            var composite = sewerConnection.AddStructureToBranch(this, false);
+            helper?.CompositeBranchStructures?.Enqueue(composite);
+            return sewerConnection;
         }
 
         protected virtual void CopyPropertyValuesToExistingPump(IPump pump)
         {
         }
 
-        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection)
+        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
         }
     }

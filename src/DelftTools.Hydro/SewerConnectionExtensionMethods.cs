@@ -15,7 +15,7 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="sewerConnection"></param>
         /// <param name="structure"></param>
-        public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure1D structure)
+        public static ICompositeBranchStructure AddStructureToBranch(this ISewerConnection sewerConnection, IStructure1D structure, bool generateUniqueName = true)
         {
             structure.Branch = sewerConnection;
             structure.Network = sewerConnection.Network;
@@ -33,7 +33,7 @@ namespace DelftTools.Hydro
             }
             if (structure.Name == null) structure.Name = sewerConnection.Name;
 
-            return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, sewerConnection);
+            return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, sewerConnection, generateUniqueName);
         }
 
         public static IEnumerable<IStructure1D> GetStructuresFromBranchFeatures(this ISewerConnection sewerConnection)

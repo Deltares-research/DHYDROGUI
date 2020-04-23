@@ -118,9 +118,15 @@ namespace DelftTools.Hydro.Structures
                 ManholeLength = 0.64,
                 ManholeWidth = 0.64
             };
-            newManhole.Compartments.Add(newCompartment);
+            lock (newManhole.Compartments)
+            {
+                newManhole.Compartments.Add(newCompartment);
+            }
 
-            network.Nodes.Add(newManhole);
+            lock (network.Nodes)
+            {
+                network.Nodes.Add(newManhole);
+            }
             return newManhole;
         }
 
@@ -137,8 +143,11 @@ namespace DelftTools.Hydro.Structures
                 ManholeWidth = 1,
                 BottomLevel = 0,
                 SurfaceLevel = 1
-            }; 
-            parentManhole.Compartments.Add(newCompartment);
+            };
+            lock (parentManhole.Compartments)
+            {
+                parentManhole.Compartments.Add(newCompartment);
+            }
             return newCompartment;
         }
 

@@ -99,7 +99,11 @@ namespace DelftTools.Hydro
             var link = new HydroLink(source, target);
             
             var commonRegion = GetCommonRegion(source, target);
-            commonRegion.Links.Add(link);
+
+            lock (commonRegion.Links)
+            {
+                commonRegion.Links.Add(link);
+            }
 
             return link;
         }
@@ -247,21 +251,26 @@ namespace DelftTools.Hydro
             {
                 return;
             }
-            var link = e.GetRemovedOrAddedItem() as HydroLink;
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.GetRemovedOrAddedItem() is HydroLink link)
             {
-                link.Source.Links.Remove(link);
-                link.Target.Links.Remove(link);
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                link.Source.Links.Add(link);
-                link.Target.Links.Add(link);
-            }
-            else
-            {
-                throw new NotSupportedException();
+                if (e.Action == NotifyCollectionChangedAction.Remove)
+                {
+                    link.Source.Links.Remove(link);
+                    link.Target.Links.Remove(link);
+                }
+                else if (e.Action == NotifyCollectionChangedAction.Add)
+                {
+                    lock (link.Source.Links)
+                        link.Source.Links.Add(link);
+                    
+                    lock (link.Target.Links)
+                        link.Target.Links.Add(link);
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
         }
 

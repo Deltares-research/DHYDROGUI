@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
@@ -18,11 +19,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
             weir.FlowDirection = FlowDirection;
         }
 
-        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection)
+        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            sewerConnection.Length = Length;
             sewerConnection.SourceCompartmentName = SourceCompartmentName;
             sewerConnection.TargetCompartmentName = TargetCompartmentName;
+            sewerConnection.AddOrUpdateGeometry(hydroNetwork, helper);
+            sewerConnection.Length = Length;
         }
     }
 }

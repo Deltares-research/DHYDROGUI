@@ -125,8 +125,12 @@ namespace DelftTools.Hydro.SewerFeatures
             var outlet = new OutletCompartment(compartment);
             outlet.TakeConnectionsOverFrom(compartment);
 
-            Compartments.Remove(compartment);
-            Compartments.Add(outlet);
+            lock (Compartments)
+            {
+                Compartments.Remove(compartment);
+                Compartments.Add(outlet);
+            }
+
             var incomingBranches = IncomingBranches;
             incomingBranches
                 .OfType<ISewerConnection>()
@@ -220,10 +224,12 @@ namespace DelftTools.Hydro.SewerFeatures
             manhole.Name = Name;
             manhole.Geometry = Geometry == null ? null : ((IGeometry)Geometry.Clone());
             manhole.Attributes = (IFeatureAttributeCollection)(Attributes != null ? Attributes.Clone() : null);
-
-            foreach (var nodeFeature in NodeFeatures)
+            lock (manhole.NodeFeatures)
             {
-                manhole.NodeFeatures.Add((INodeFeature)nodeFeature.Clone());
+                foreach (var nodeFeature in NodeFeatures)
+                {
+                    manhole.NodeFeatures.Add((INodeFeature) nodeFeature.Clone());
+                }
             }
 
             return manhole;

@@ -18,14 +18,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
         public double LevelTarget { get; set; }
         public SewerConnectionWaterType WaterType { get; set; }
 
-        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection)
+        protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            sewerConnection.LevelSource = LevelSource;
-            sewerConnection.LevelTarget = LevelTarget;
-            sewerConnection.Length = Length;
-            sewerConnection.WaterType = WaterType;
             sewerConnection.SourceCompartmentName = SourceCompartmentName;
             sewerConnection.TargetCompartmentName = TargetCompartmentName;
+            sewerConnection.AddOrUpdateGeometry(hydroNetwork, helper);
+            sewerConnection.Length = Length;
+            sewerConnection.LevelSource = LevelSource;
+            sewerConnection.LevelTarget = LevelTarget;
+            sewerConnection.WaterType = WaterType;
         }
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)

@@ -40,30 +40,67 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         {
             return TypeUtils.MemberwiseClone(this);
         }
+
         public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
         {
-            var sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css => string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            CrossSectionSectionType sewerSectionType = null;
+            lock (network.CrossSectionSectionTypes)
+            {
+                sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css =>
+                    string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName,
+                        StringComparison.InvariantCultureIgnoreCase));
+            }
+
             if (sewerSectionType == null)
             {
                 //sight.... this should be done somewhere on a higher level (where roughness sections can be synchronized with cross section sections)... but i am too tired to do this correctly because GWSW importer is a mess.
-                sewerSectionType = new CrossSectionSectionType { Name = RoughnessDataSet.SewerSectionTypeName };
-                network.CrossSectionSectionTypes.Add(sewerSectionType);
+                sewerSectionType = new CrossSectionSectionType {Name = RoughnessDataSet.SewerSectionTypeName};
+                lock (network.CrossSectionSectionTypes)
+                {
+                    network.CrossSectionSectionTypes.Add(sewerSectionType);
+                }
             }
+
+            Closed = this is ICrossSectionStandardShapeOpenClosed;
             var crossSectionDefinitionToAdd = new CrossSectionDefinitionStandard(this)
             {
                 Name = Name,
-                Sections = { new CrossSectionSection{ SectionType = sewerSectionType } }
+                Sections = {new CrossSectionSection {SectionType = sewerSectionType}},
             };
-
-            var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
-            pipesWithSameCrossSectionDefinitionId.ForEach(p =>
-            {
-                p.CrossSection = new CrossSection(crossSectionDefinitionToAdd);
-                p.Material = (SewerProfileMapping.SewerProfileMaterial)typeof(SewerProfileMapping.SewerProfileMaterial).GetEnumValueFromDescription(MaterialName);
-            });
             
-            network.SharedCrossSectionDefinitions.RemoveAllWhere(d =>string.Equals(d.Name, Name, StringComparison.InvariantCultureIgnoreCase));
-            network.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
+            lock (network.SharedCrossSectionDefinitions)
+            {
+                network.SharedCrossSectionDefinitions.RemoveAllWhere(d =>
+                        string.Equals(d.Name, Name, StringComparison.InvariantCultureIgnoreCase));
+                network.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
+            }
+
+            var sharedCrossSectionDefinitionToAdd = new CrossSectionDefinitionProxy(crossSectionDefinitionToAdd);
+            if (helper != null)
+            {
+                helper?.CrossSectionDefinitionsByPipe?.AddOrUpdate(Name, sharedCrossSectionDefinitionToAdd,
+                    (existingName, crossSectionDefinition) => { return crossSectionDefinition; });
+
+                var material = string.IsNullOrEmpty(MaterialName)
+                    ? SewerProfileMapping.SewerProfileMaterial.Unknown
+                    : (SewerProfileMapping.SewerProfileMaterial) typeof(SewerProfileMapping.SewerProfileMaterial)
+                        .GetEnumValueFromDescription(MaterialName);
+
+                helper?.SewerProfileMaterialsByPipe?.AddOrUpdate(Name, material,
+                    (existingName, oldMaterial) => { return oldMaterial; });
+            }
+            else
+            {
+                var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
+                pipesWithSameCrossSectionDefinitionId.ForEach(p =>
+                {
+                    p.CrossSection = new CrossSection(crossSectionDefinitionToAdd);
+                    p.Material =
+                        (SewerProfileMapping.SewerProfileMaterial) typeof(SewerProfileMapping.SewerProfileMaterial)
+                            .GetEnumValueFromDescription(MaterialName);
+                });
+            }
+
         }
     }
 }
