@@ -471,6 +471,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void
             TestImportFeature_WithUnknownAttribute_FromGwsw_WithPreviousMapping_DoesNotFail_AndLogMessageIsShown()
         {
@@ -888,6 +889,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
@@ -922,6 +924,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
+        [Category("Quarantine")]
         public void TestImportStructuresThenImportSewerConnectionsAssignsStructuresValues()
         {
             //Create network
