@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.IO;
 
@@ -54,6 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual void RelinkDataItems()
         {
+            var po = new ParallelOptions() { MaxDegreeOfParallelism = 2 * Environment.ProcessorCount };
             foreach (var exchangeInfo in modelExchangeInfos)
             {
                 var sourceModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.SourceModelName));
@@ -64,19 +69,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 var sourceItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
                 var targetItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
 
-                foreach (var exchange in exchangeInfo.Exchanges)
+                Parallel.ForEach(exchangeInfo.Exchanges, po, exchange =>
                 {
-                    var sourceItem = sourceItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
-                    var targetItem = targetItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.TargetName));
+                    var sourceItem = sourceItems.FirstOrDefault(di =>
+                        Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
+                    var targetItem = targetItems.FirstOrDefault(di =>
+                        Equals(ModelExchange.GetExchangeIdentifier(di), exchange.TargetName));
 
                     if (sourceItem == null || targetItem == null)
                     {
-                        continue;
+                        return;
                     }
 
-                    // link:
-                    targetItem.LinkTo(sourceItem);
-                }
+                    lock (sourceItem.LinkedBy)
+                    {
+                        // link:
+                        targetItem.LinkTo(sourceItem);
+                    }
+                });
             }
         }
 
@@ -84,75 +94,87 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (!regionExchangeInfos.Any()) return;
 
-            var regionObjectsLookup = new Dictionary<IHydroRegion, Dictionary<Type, Dictionary<string, IHydroObject>>>();
-            foreach (IRegion region in Region.SubRegions)
-            {
-                IHydroRegion hydroRegion = region as IHydroRegion;
-                if (hydroRegion != null)
-                {
-                    Dictionary<Type, Dictionary<string, IHydroObject>> dictionary = new Dictionary<Type, Dictionary<string, IHydroObject>>();
-                    foreach (var objects in hydroRegion.AllHydroObjects.GroupBy(ho => { return ((Object) TypeUtils.Unproxy(ho)).GetType(); }))
-                    {
-                        Dictionary<string, IHydroObject> dictionary1 = new Dictionary<string, IHydroObject>(StringComparer.InvariantCultureIgnoreCase);
-                        foreach (var o in objects) dictionary1.Add(o.Name, o);
-                        dictionary.Add(objects.Key, dictionary1);
-                    }
-
-                    regionObjectsLookup.Add(hydroRegion, dictionary);
-                }
-            }
-
+            var regionObjectsLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r, r => r.AllHydroObjects.GroupBy(ho => TypeUtils.Unproxy(ho).GetType()).ToDictionary(g => g.Key, g => g.ToDictionary(ho => ho.Name, ho => ho, StringComparer.InvariantCultureIgnoreCase)));
             var regionByNameLookup = Region.SubRegions.OfType<IHydroRegion>().ToDictionary(r => r.Name, StringComparer.InvariantCultureIgnoreCase);
-
-            foreach (var regionExchangeInfo in regionExchangeInfos)
+            var po = new ParallelOptions() { MaxDegreeOfParallelism = 2 * Environment.ProcessorCount };
+            var bubblingEnabled = EventSettings.BubblingEnabled;
+            try
             {
-                var sourceRegionFound = regionByNameLookup.TryGetValue(regionExchangeInfo.SourceRegionName, out var sourceRegion);
-                var targetRegionFound = regionByNameLookup.TryGetValue(regionExchangeInfo.TargetRegionName, out var targetRegion);
-                
-                if (!sourceRegionFound || !targetRegionFound)
+                EventSettings.BubblingEnabled = false;
+                foreach (var regionExchangeInfo in regionExchangeInfos)
                 {
-                    log.Error($"Could not restore links between {regionExchangeInfo.SourceRegionName} and {regionExchangeInfo.TargetRegionName}");
-                    continue;
-                }
+                    var sourceRegionFound =
+                        regionByNameLookup.TryGetValue(regionExchangeInfo.SourceRegionName, out var sourceRegion);
+                    var targetRegionFound =
+                        regionByNameLookup.TryGetValue(regionExchangeInfo.TargetRegionName, out var targetRegion);
 
-                foreach (var regionExchange in regionExchangeInfo.Exchanges)
-                {
-                    var sourceType = Type.GetType(regionExchange.SourceType);
-                    Dictionary<string, IHydroObject> sourceHydroObjectTypes = null;
-                    var hasSourceHydroObjectType = sourceType != null && regionObjectsLookup[sourceRegion].TryGetValue(sourceType, out sourceHydroObjectTypes);
-
-                    IHydroObject source = null;
-                    var hasSourceHydroObject = hasSourceHydroObjectType &&
-                                               sourceHydroObjectTypes.TryGetValue(regionExchange.SourceName,out source) && 
-                                               source.CanBeLinkSource;
-
-                    var targetType = Type.GetType(regionExchange.TargetType);
-                    Dictionary<string, IHydroObject> targetHydroObjectTypes = null;
-                    var hasTargetHydroObjectType = targetType != null && regionObjectsLookup[targetRegion].TryGetValue(targetType, out targetHydroObjectTypes);
-
-                    IHydroObject target = null;
-                    var hasTargetHydroObject = hasTargetHydroObjectType && 
-                                               targetHydroObjectTypes.TryGetValue(regionExchange.SourceName,out target) && 
-                                               target.CanBeLinkTarget;
-
-                    if (!hasSourceHydroObject || !hasTargetHydroObject)
+                    if (!sourceRegionFound || !targetRegionFound)
                     {
                         log.Error(
-                            $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
+                            $"Could not restore links between {regionExchangeInfo.SourceRegionName} and {regionExchangeInfo.TargetRegionName}");
                         continue;
                     }
 
-                    //var source = regionObjectsLookup[sourceRegion][regionExchange.SourceName].First(ho => ho.CanBeLinkSource);
-                    //var target = regionObjectsLookup[targetRegion][regionExchange.TargetName].First(ho => ho.CanBeLinkTarget);
-                    if (source.CanLinkTo(target))
+                    var linkGeometryByLinkname = new ConcurrentDictionary<string, IGeometry>();
+
+                    Parallel.ForEach(regionExchangeInfo.Exchanges, po, regionExchange =>
                     {
-                        Region.Links.Add(new HydroLink(source, target)
+                        var geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
+                        linkGeometryByLinkname.AddOrUpdate(regionExchange.LinkName, geometry, (s, g) => geometry);
+                    });
+                    Parallel.ForEach(regionExchangeInfo.Exchanges, po, regionExchange =>
+                    {
+                        var sourceType = Type.GetType(regionExchange.SourceType);
+                        Dictionary<string, IHydroObject> sourceHydroObjectTypes = null;
+                        var hasSourceHydroObjectType = sourceType != null && regionObjectsLookup[sourceRegion]
+                                                           .TryGetValue(sourceType, out sourceHydroObjectTypes);
+
+                        IHydroObject source = null;
+                        var hasSourceHydroObject = hasSourceHydroObjectType &&
+                                                   sourceHydroObjectTypes.TryGetValue(regionExchange.SourceName,
+                                                       out source) &&
+                                                   source.CanBeLinkSource;
+
+                        var targetType = Type.GetType(regionExchange.TargetType);
+                        Dictionary<string, IHydroObject> targetHydroObjectTypes = null;
+                        var hasTargetHydroObjectType = targetType != null && regionObjectsLookup[targetRegion]
+                                                           .TryGetValue(targetType, out targetHydroObjectTypes);
+
+                        IHydroObject target = null;
+                        var hasTargetHydroObject = hasTargetHydroObjectType &&
+                                                   targetHydroObjectTypes.TryGetValue(regionExchange.SourceName,
+                                                       out target) &&
+                                                   target.CanBeLinkTarget;
+
+                        if (!hasSourceHydroObject || !hasTargetHydroObject)
+                        {
+                            log.Error(
+                                $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
+                            return;
+                        }
+
+                        //var source = regionObjectsLookup[sourceRegion][regionExchange.SourceName].First(ho => ho.CanBeLinkSource);
+                        //var target = regionObjectsLookup[targetRegion][regionExchange.TargetName].First(ho => ho.CanBeLinkTarget);
+                        if (source.CanLinkTo(target))
+                        {
+                            IGeometry geometry = null;
+                            if (!linkGeometryByLinkname.TryGetValue(regionExchange.LinkName, out geometry))
+                                log.Warn($"No geometry found for {regionExchange.LinkName}");
+                            lock (Region.Links)
                             {
-                                Name = regionExchange.LinkName,
-                                Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt)
-                            });
-                    }
+                                Region.Links.Add(new HydroLink(source, target)
+                                {
+                                    Name = regionExchange.LinkName,
+                                    Geometry = geometry
+                                });
+                            }
+                        }
+                    });
                 }
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = bubblingEnabled;
             }
         }
 
@@ -226,28 +248,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 return Enumerable.Empty<RegionExchangeInfo>();
             }
 
-            var infos = new List<RegionExchangeInfo>();
+            var infos = new ConcurrentQueue<RegionExchangeInfo>();
 
             var sourceRegionsLinksGrouping = Region.Links.GroupBy(l => l.Source.Region);
-            foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)
+            var bubblingEnabled = EventSettings.BubblingEnabled;
+            try
             {
-                var sourceRegion = sourceRegionGroup.Key;
-                var targetRegionGrouping = sourceRegionGroup.GroupBy(l => l.Target.Region);
-
-                foreach (var targetRegionGroup in targetRegionGrouping)
+                EventSettings.BubblingEnabled = false;
+                var po = new ParallelOptions() {MaxDegreeOfParallelism = 2 * Environment.ProcessorCount };
+                foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)
                 {
-                    var targetRegion = targetRegionGroup.Key;
+                    var sourceRegion = sourceRegionGroup.Key;
+                    var targetRegionGrouping = sourceRegionGroup.GroupBy(l => l.Target.Region);
 
-                    infos.Add(new RegionExchangeInfo(sourceRegion, targetRegion)
+                    //foreach (var targetRegionGroup in targetRegionGrouping)
+                    
+                    Parallel.ForEach(targetRegionGrouping, po, targetRegionGroup =>
                     {
-                        Exchanges = targetRegionGroup.Select(l =>
+                        var targetRegion = targetRegionGroup.Key;
+
+                        infos.Enqueue(new RegionExchangeInfo(sourceRegion, targetRegion)
                         {
-                            var regionExchange = new RegionExchange(l);
-                            Region.Links.Remove(l);
-                            return regionExchange;
-                        }).ToList()
+                            Exchanges = targetRegionGroup.Select(l =>
+                            {
+                                var regionExchange = new RegionExchange(l);
+                                lock(Region.Links)
+                                    Region.Links.Remove(l);
+
+                                return regionExchange;
+                            }).ToList()
+                        });
                     });
                 }
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = bubblingEnabled;
             }
 
             return infos;

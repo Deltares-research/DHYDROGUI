@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using log4net;
@@ -89,8 +92,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             // relink all dataitems (between rtc and flowFM) for all hydromodels
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
             {
-                hm.RelinkDataItems();
-                hm.RelinkHydroRegionLinks();
+                var bubblingEnabled = EventSettings.BubblingEnabled;
+                try
+                {
+                    EventSettings.BubblingEnabled = false;
+                    hm.Models.OfType<IModelWithNetwork>().ForEach(modelWithNetwork =>
+                    {
+                        modelWithNetwork.UnSubscribeFromNetwork(modelWithNetwork.Network);
+                        modelWithNetwork.UnSubscribeLateralSourcesData();
+                        modelWithNetwork.UnSubscribeBoundaryConditions1D();
+                    });
+                    Task t = new Task(() =>
+                    {
+                        hm.RelinkDataItems();
+                        hm.RelinkHydroRegionLinks();
+                    });
+                    t.Start();
+                    while (!t.IsCompleted)
+                    {
+                        Thread.Sleep(400);
+                    }
+                }
+                finally
+                {
+                    hm.Models.OfType<IModelWithNetwork>().ForEach(modelWithNetwork =>
+                    {
+                        modelWithNetwork.SubscribeToNetwork(modelWithNetwork.Network);
+                        modelWithNetwork.SubscribeLateralSourcesData();
+                        modelWithNetwork.SubscribeBoundaryConditions1D();
+                    });
+                    EventSettings.BubblingEnabled = bubblingEnabled;
+                }
+
             });
         }
 
@@ -100,11 +133,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             // go through all hydro models and unlink all objects that link between rtc and flowFM, 
             // because flow is not saved in the database.
+
+            var bubblingEnabled = EventSettings.BubblingEnabled;
             foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
-                hydroModel.UnlinkAndRememberDataItems();
-                hydroModel.UnlinkAndRememberRegionLinks();
+                try
+                {
+                    EventSettings.BubblingEnabled = false;
+                    hydroModel.Models.OfType<IModelWithNetwork>().ForEach(modelWithNetwork =>
+                    {
+                        modelWithNetwork.UnSubscribeFromNetwork(modelWithNetwork.Network);
+                        modelWithNetwork.UnSubscribeLateralSourcesData();
+                        modelWithNetwork.UnSubscribeBoundaryConditions1D();
+                    });
+
+                    Task t = new Task(() =>
+                    {
+                        hydroModel.UnlinkAndRememberDataItems();
+                        hydroModel.UnlinkAndRememberRegionLinks();
+                    });
+                    t.Start();
+                    while (!t.IsCompleted)
+                    {
+                        Thread.Sleep(400);
+                    }
+                }
+                finally
+                {
+                    hydroModel.Models.OfType<IModelWithNetwork>().ForEach(modelWithNetwork =>
+                    {
+                        modelWithNetwork.SubscribeToNetwork(modelWithNetwork.Network);
+                        modelWithNetwork.SubscribeLateralSourcesData();
+                        modelWithNetwork.SubscribeBoundaryConditions1D();
+                    });
+                    EventSettings.BubblingEnabled = bubblingEnabled;
+                }
             }
+
+
         }
 
         private void ApplicationProjectSavedOrFailed(Project project)
