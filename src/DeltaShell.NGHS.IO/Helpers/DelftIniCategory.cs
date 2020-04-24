@@ -212,16 +212,16 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(T);
         }
-        public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false)
+        public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T))
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
+            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
 
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
             
             if(!isOptional)
                 throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
-            return default(T);
+            return defaultValue;
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
@@ -235,7 +235,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(IList<T>);
         }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ')
+        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char separator = ' ', IList<T> defaultValue = default(IList<T>))
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
@@ -247,7 +247,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             if (!isOptional)
                 throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
             
-            return default(IList<T>);
+            return defaultValue;
         }
     }
     #endregion
