@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using NSubstitute;
 using NUnit.Framework;
@@ -35,40 +36,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             Assert.That(mediator, Is.InstanceOf<IAnnounceDataComponentChanged>());
         }
 
-        [Test]
-        public void Constructor_SupportPointEditorViewModelNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> GetConstructorNullArgumentTestData()
         {
-            void Call() => new WaveBoundaryConditionEditorMediator(null, parametersSettingsViewModel, refreshViewModel, refreshGeometryView);
+            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
+            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
+            var refreshViewModel = Substitute.For<IRefreshViewModel>();
+            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
 
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("dataComponentIsEnabledDependentViewModel"));
+            yield return new TestCaseData(null, parametersSettingsViewModel, refreshViewModel, refreshGeometryView, "dataComponentIsEnabledDependentViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, null, refreshViewModel, refreshGeometryView, "dataComponentViewModelDependentViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, null, refreshGeometryView, "refreshViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, refreshViewModel, null, "refreshGeometryView");
         }
 
         [Test]
-        public void Constructor_SpecificParametersSettingsViewModelNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(GetConstructorNullArgumentTestData))]
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel,
+                                                                         IRefreshDataComponentViewModel dataComponentViewModelDependentViewModel,
+                                                                         IRefreshViewModel refreshViewModelParam,
+                                                                         IRefreshGeometryView refreshGeometryViewParam,
+                                                                         string expectedParamName)
         {
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, null, refreshViewModel, refreshGeometryView);
+            void Call() => new WaveBoundaryConditionEditorMediator(dataComponentIsEnabledDependentViewModel, dataComponentViewModelDependentViewModel, refreshViewModelParam, refreshGeometryViewParam);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("dataComponentViewModelDependentViewModel"));
-        }
-
-        [Test]
-        public void Constructor_RefreshViewModelNull_ThrowsArgumentNullException()
-        {
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, null, refreshGeometryView);
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("refreshViewModel"));
-        }
-
-        [Test]
-        public void Constructor_RefreshGeometryViewNull_ThrowsArgumentNullException()
-        {
-            void Call() => new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel, parametersSettingsViewModel, refreshViewModel, null);
-
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("refreshGeometryView"));
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [Test]
