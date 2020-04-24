@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
 {
     /// <summary>
     /// <see cref="IAnnounceSupportPointDataChanged"/> defines the
-    /// methods used to signal that the selected support point data has changed.
+    /// methods used to signal that support points have changed.
     /// </summary>
     public interface IAnnounceSupportPointDataChanged
     {
