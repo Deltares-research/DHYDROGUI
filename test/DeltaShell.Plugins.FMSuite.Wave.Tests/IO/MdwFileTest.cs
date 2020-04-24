@@ -210,10 +210,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 SpectralDomainData spectralData = modelDefinition.OuterDomain.SpectralDomainData;
                 Assert.That(spectralData.DirectionalSpaceType, Is.EqualTo(directionalSpaceType), "Directional space type");
                 Assert.That(spectralData.NDir, Is.EqualTo(expectedDomainData.NDir), "NDir");
-                Assert.That(spectralData.StartDir, Is.EqualTo(expectedDomainData.StartDir), "StartDir");
-                Assert.That(spectralData.EndDir, Is.EqualTo(expectedDomainData.EndDir), "EndDir");
-                Assert.That(spectralData.FreqMin, Is.EqualTo(expectedDomainData.FreqMin), "FreqMin");
-                Assert.That(spectralData.FreqMax, Is.EqualTo(expectedDomainData.FreqMax), "FreqMax");
+                Assert.That(spectralData.StartDir, Is.EqualTo(expectedDomainData.StartDir).Within(1e-5), "StartDir");
+                Assert.That(spectralData.EndDir, Is.EqualTo(expectedDomainData.EndDir).Within(1e-5), "EndDir");
+                Assert.That(spectralData.FreqMin, Is.EqualTo(expectedDomainData.FreqMin).Within(1e-5), "FreqMin");
+                Assert.That(spectralData.FreqMax, Is.EqualTo(expectedDomainData.FreqMax).Within(1e-5), "FreqMax");
                 Assert.That(spectralData.NFreq, Is.EqualTo(expectedDomainData.NFreq), "NFreq");
             }
         }
