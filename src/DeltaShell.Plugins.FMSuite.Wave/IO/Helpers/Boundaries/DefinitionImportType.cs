@@ -11,6 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         Coordinates,
 
         [Description(KnownWaveBoundariesFileConstants.OrientationDefinitionType)]
-        Oriented
+        Oriented,
+
+        [Description(KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType)]
+        SpectrumFile
     }
 }

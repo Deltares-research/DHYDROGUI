@@ -40,16 +40,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 throw new ArgumentException("Category is not an mdw boundary category.", nameof(boundaryCategory));
             }
 
-            var block = new BoundaryMdwBlock(boundaryCategory.GetPropertyValue(KnownWaveProperties.Name))
+            var block = new BoundaryMdwBlock {DefinitionType = boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition)};
+
+            if (block.DefinitionType == DefinitionImportType.SpectrumFile)
             {
-                DefinitionType = boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition),
-                XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX),
-                YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY),
-                XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX),
-                YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY),
-                SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportExportType>(KnownWaveProperties.SpectrumSpec),
-                Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist)
-            };
+                return block;
+            }
+
+            block.Name = boundaryCategory.GetPropertyValue(KnownWaveProperties.Name);
+            block.XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX);
+            block.YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY);
+            block.XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX);
+            block.YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY);
+            block.SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportExportType>(KnownWaveProperties.SpectrumSpec);
+            block.Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist);
 
             if (block.SpectrumType == SpectrumImportExportType.Parametrized)
             {
@@ -61,6 +65,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
 
             return block;
+        }
+
+        /// <summary>
+        /// Converts the specified <paramref name="boundaryCategory"/>
+        /// to a <see cref="OverallBoundaryMdwBlock"/>.
+        /// </summary>
+        /// <param name="boundaryCategory">The boundary delft ini category.</param>
+        /// <returns>
+        /// If the boundary is an overall boundary category, a new instance of <see cref="OverallBoundaryMdwBlock"/>;
+        /// otherwise <c>null</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="boundaryCategory"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the <paramref name="boundaryCategory"/> is not an mdw boundary category.
+        /// </exception>
+        public static OverallBoundaryMdwBlock ConvertOverallBoundary(DelftIniCategory boundaryCategory)
+        {
+            Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
+
+            if (boundaryCategory.Name != KnownWaveCategories.BoundaryCategory)
+            {
+                throw new ArgumentException("Category is not an mdw boundary category.", nameof(boundaryCategory));
+            }
+
+            return boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition) == DefinitionImportType.SpectrumFile
+                       ? new OverallBoundaryMdwBlock {OverallSpectrumFile = boundaryCategory.GetPropertyValue(KnownWaveProperties.OverallSpecFile)}
+                       : null;
         }
 
         private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)

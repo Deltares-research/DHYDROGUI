@@ -1,6 +1,4 @@
-﻿using System;
-using DelftTools.Utils;
-using DelftTools.Utils.Guards;
+﻿using DelftTools.Utils;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
@@ -9,26 +7,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public class BoundaryMdwBlock : INameable
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BoundaryMdwBlock" /> class.
-        /// </summary>
-        /// <param name="name"> The name of the wave boundary. </param>
-        public BoundaryMdwBlock(string name)
-        {
-            Ensure.NotNull(name, nameof(name));
-            if (name == string.Empty)
-            {
-                throw new ArgumentException("Argument cannot be empty.", nameof(name));
-            }
-
-            Name = name;
-        }
-
-        /// <summary>
-        /// Gets or sets the name of the wave boundary.
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the definition type.
         /// </summary>
@@ -110,8 +88,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         public double[] DirectionalSpreadings { get; set; }
 
         /// <summary>
-        /// Gets or sets the spectrum file paths the support points.
+        /// Gets or sets the spectrum file paths at the support points.
         /// </summary>
         public string[] SpectrumFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the wave boundary.
+        /// </summary>
+        public string Name { get; set; }
     }
 }

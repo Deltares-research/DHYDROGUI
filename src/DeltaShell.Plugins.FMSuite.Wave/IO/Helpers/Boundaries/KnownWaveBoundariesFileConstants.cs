@@ -51,6 +51,11 @@
         public const string OrientationDefinitionType = "orientation";
 
         /// <summary>
+        /// The spectrum file definition type value description.
+        /// </summary>
+        public const string SpectrumFileDefinitionType = "fromsp2file";
+
+        /// <summary>
         /// From file spectrum type value description.
         /// </summary>
         public const string FromFileSpectrumType = "from file";

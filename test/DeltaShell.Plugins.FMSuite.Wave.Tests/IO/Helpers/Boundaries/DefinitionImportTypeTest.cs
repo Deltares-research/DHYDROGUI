@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             {
                 {DefinitionImportType.Coordinates, 0},
                 {DefinitionImportType.Oriented, 1},
+                {DefinitionImportType.SpectrumFile, 2}
             };
     }
 }

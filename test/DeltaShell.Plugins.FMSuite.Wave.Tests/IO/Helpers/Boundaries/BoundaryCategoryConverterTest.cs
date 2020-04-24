@@ -178,8 +178,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
 
             category.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
             category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            category.AddProperty(KnownWaveProperties.Definition, random.NextEnumValue<DefinitionImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.ShapeType, random.NextEnumValue<ShapeImportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.PeriodType, random.NextEnumValue<PeriodImportExportType>().GetDescription());
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
