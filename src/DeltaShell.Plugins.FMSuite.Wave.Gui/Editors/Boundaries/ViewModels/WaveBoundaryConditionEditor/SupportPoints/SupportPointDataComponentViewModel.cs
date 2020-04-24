@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         /// <param name="conditionDefinition">The condition definition</param>
         /// <param name="parametersFactory">The parameters factory.</param>
-        /// <param name="announceSupportPointDataChanged"> </param>
+        /// <param name="announceSupportPointDataChanged">The object to announce changes to support points.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             {
                 selectedSupportPoint = value;
                 AnnounceSupportPointsChanged();
-                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
+                AnnounceSelectedSupportPointDataChanged();
             }
         }
 
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             if (supportPoint == SelectedSupportPoint)
             {
-                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
+                AnnounceSelectedSupportPointDataChanged();
             }
         }
 
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
             if (supportPoint == SelectedSupportPoint)
             {
-                AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
+                AnnounceSelectedSupportPointDataChanged();
             }
         }
 
@@ -239,8 +239,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             AnnounceSupportPointsChanged();
         }
 
-        private void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint) =>
-            announceSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(supportPoint);
+        private void AnnounceSelectedSupportPointDataChanged() =>
+            announceSupportPointDataChanged.AnnounceSelectedSupportPointDataChanged(SelectedSupportPoint);
 
         private void AnnounceSupportPointsChanged() =>
             announceSupportPointDataChanged.AnnounceSupportPointsChanged();
