@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.MapView
         /// </summary>
         /// <remarks>
         /// When set to true, the ObservedWidth and ObservedHeight changes are
-        /// pushed synced whenever an SizeChanged event occurs.
+        /// pushed synced whenever a SizeChanged event occurs.
         /// </remarks>
         public static readonly DependencyProperty ObserveProperty = DependencyProperty.RegisterAttached(
             "Observe",
