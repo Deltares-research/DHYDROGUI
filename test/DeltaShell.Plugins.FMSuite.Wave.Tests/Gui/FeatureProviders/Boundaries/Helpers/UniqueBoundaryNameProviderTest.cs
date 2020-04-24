@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
-        public void Constructor_BoundaryContainerNull_ThrowsArgumentNullException()
+        public void Constructor_BoundaryProviderNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new UniqueBoundaryNameProvider(null);
@@ -38,10 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
         [Test]
         [TestCaseSource(nameof(GetUniqueBoundaryNameTestData))]
-        public void GivenAnUniqueBoundaryNameProviderWithABoundaryContainer_WhenGetUniqueNameIsCalled_ThenTheExpectedResultIsReturned(IBoundaryProvider boundaryContainer, string expectedResult)
+        public void GetUniqueName_ExpectedResults(IBoundaryProvider boundaryProvider, string expectedResult)
         {
             // Given
-            var provider = new UniqueBoundaryNameProvider(boundaryContainer);
+            var provider = new UniqueBoundaryNameProvider(boundaryProvider);
 
             // When
             string result = provider.GetUniqueName();

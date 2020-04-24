@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
-        public void Constructor_BoundaryContainerNull_ThrowsArgumentNullException()
+        public void Constructor_BoundaryProviderNull_ThrowsArgumentNullException()
         {
             // Call
             void Call() => new BoundarySupportPointMapFeatureProvider(null, 
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         [Category(TestCategory.Integration)]
         [TestCaseSource(nameof(RemoveBoundaryCalls))]
-        public void GivenABoundarySupportPointMapFeatureProvider_WhenABoundaryIsRemovedFromTheBoundaryContainerAndNewSupportPointIsAdded_ThenFeaturesChangedIsNotCalled(Action<IBoundaryProvider> removeBoundary)
+        public void GivenABoundarySupportPointMapFeatureProvider_WhenABoundaryIsRemovedFromTheBoundaryProviderAndNewSupportPointIsAdded_ThenFeaturesChangedIsNotCalled(Action<IBoundaryProvider> removeBoundary)
         {
             // Setup
             IWaveBoundary boundary = CreateBoundary();
