@@ -637,7 +637,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
 
         [Test]
-        public void AddDefaultParameters_AnnounceSupportPointsDataChanged()
+        public void AddDefaultParameters_SupportPointNotSelected_OnlyAnnounceSupportPointsDataChanged()
         {
             // Setup
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
@@ -661,6 +661,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             mediator.Received(1).AnnounceSupportPointsChanged();
+            mediator.DidNotReceiveWithAnyArgs().AnnounceSelectedSupportPointDataChanged(null);
         }
 
         [Test]
