@@ -15,13 +15,5 @@ namespace DelftTools.Hydro.Roughness
     {
         IHydroNetwork Network { get; set; }
         IDiscretization NetworkDiscretization { get; set; }
-
-        void SubscribeToNetwork(IHydroNetwork network);
-        void UnSubscribeFromNetwork(IHydroNetwork network);
-        void SubscribeBoundaryConditions1D();
-        void UnSubscribeBoundaryConditions1D();
-        void SubscribeLateralSourcesData();
-        void UnSubscribeLateralSourcesData();
-
     }
 }

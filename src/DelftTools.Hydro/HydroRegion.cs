@@ -256,10 +256,8 @@ namespace DelftTools.Hydro
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    lock (link.Source.Links)
-                        link.Source.Links.Remove(link);
-                    lock (link.Target.Links)
-                        link.Target.Links.Remove(link);
+                    link.Source.Links.Remove(link);
+                    link.Target.Links.Remove(link);
                 }
                 else if (e.Action == NotifyCollectionChangedAction.Add)
                 {
