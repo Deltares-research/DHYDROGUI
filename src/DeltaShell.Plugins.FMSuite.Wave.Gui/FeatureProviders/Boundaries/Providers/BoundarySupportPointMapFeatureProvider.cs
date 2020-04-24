@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 {
     /// <summary>
     /// <see cref="BoundarySupportPointMapFeatureProvider" /> is responsible for showing
-    /// the appropriate boundary support points given a boundary container.
+    /// the appropriate boundary support points given a boundary provider.
     /// It provides the appropriate methods such that these features and their
     /// underlying data can be created through the Map.
     /// </summary>
@@ -40,11 +40,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// <summary>
         /// Initializes a new instance of the <see cref="BoundarySupportPointMapFeatureProvider"/> class.
         /// </summary>
-        /// <param name="boundaryProvider">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary provider.</param>
         /// <param name="waveBoundaryGeometryFactory">The geometry factory.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when any parameter is <c>null</c>.
+        /// Thrown when any parameter except the <paramref name="coordinateSystem"/> is <c>null</c>.
         /// </exception>
         public BoundarySupportPointMapFeatureProvider(IBoundaryProvider boundaryProvider,
                                                       ICoordinateSystem coordinateSystem,

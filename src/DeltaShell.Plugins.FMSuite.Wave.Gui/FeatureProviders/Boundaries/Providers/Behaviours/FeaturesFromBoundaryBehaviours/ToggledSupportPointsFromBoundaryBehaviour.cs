@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 {
     /// <summary>
     /// <see cref="SelectedSupportPointFromBoundaryBehaviour"/> defines the
-    /// behaviour to construct the selected support point feature.
+    /// behaviour to construct the active or inactive support point feature.
     /// </summary>
     /// <seealso cref="IFeaturesFromBoundaryBehaviour"/>
     public class ToggledSupportPointsFromBoundaryBehaviour : IFeaturesFromBoundaryBehaviour

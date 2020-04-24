@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// <param name="waveBoundaryGeometryFactory">The waveBoundaryGeometryFactory.</param>
         /// <param name="addBehaviour">The add behaviour.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when ay parameter is <c>null</c>.
+        /// Thrown when ay parameter except the <paramref name="coordinateSystem"/> is <c>null</c>.
         /// </exception>
         public BoundaryLineMapFeatureProvider(IBoundaryProvider boundaryProvider, 
                                               ICoordinateSystem coordinateSystem, 

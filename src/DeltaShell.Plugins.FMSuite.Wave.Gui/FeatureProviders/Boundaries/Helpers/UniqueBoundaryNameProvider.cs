@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         /// Creates a new <see cref="UniqueBoundaryNameProvider"/> with the given
         /// <paramref name="boundaryProvider"/>.
         /// </summary>
-        /// <param name="boundaryProvider">The boundary container.</param>
+        /// <param name="boundaryProvider">The boundary provider.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="boundaryProvider"/> is <c>null</c>.
         /// </exception>
