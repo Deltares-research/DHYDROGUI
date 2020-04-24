@@ -184,18 +184,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 };
             }
 
-            if (networkObjects is IEnumerable<Compartment>)
-            {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPoint),
-                    Shape = ShapeType.Ellipse,
-                    ShapeSize = 6,
-                    Fill = new SolidBrush(Color.LightSlateGray),
-                    Outline = new Pen(Color.FromArgb(255, Color.Black), 1f)
-                };
-            }
-
             return null;
         }
 
