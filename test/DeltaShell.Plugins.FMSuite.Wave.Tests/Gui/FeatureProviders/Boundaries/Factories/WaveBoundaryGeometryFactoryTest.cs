@@ -142,9 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            IGridBoundary gridBoundary = null;
-
-            gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
@@ -161,9 +158,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var gridBoundaryProvider = Substitute.For<IGridBoundaryProvider>();
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            IGridBoundary gridBoundary = null;
-
-            gridBoundaryProvider.GetGridBoundary().Returns(gridBoundary);
             var factory = new WaveBoundaryGeometryFactory(gridBoundaryProvider, calculatorProvider);
 
             // Call
@@ -214,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result, Is.Null);
         }
 
-        private static IEnumerable<TestCaseData> GetConstructBoundaryEndPointTestData()
+        private static IEnumerable<TestCaseData> GetConstructBoundaryEndPointsTestData()
         {
             IPoint CallStart(WaveBoundaryGeometryFactory factory, IWaveBoundary waveBoundary) => 
                 factory.ConstructBoundaryStartPoint(waveBoundary);
@@ -225,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         }
 
         [Test]
-        [TestCaseSource(nameof(GetConstructBoundaryEndPointTestData))]
+        [TestCaseSource(nameof(GetConstructBoundaryEndPointsTestData))]
         public void ConstructBoundaryEndPoint_ValidInput_ReturnsCorrectPoint(int firstIndex, int lastIndex, int indexOfInterest, Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint> callFunc)
         {
             // Setup
@@ -263,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result, Is.Not.Null);
 
             var equalityComparer = new Coordinate2DEqualityComparer();
-            Assert.That(equalityComparer.Equals(result?.Coordinate, expectedCoordinate), 
+            Assert.That(equalityComparer.Equals(result.Coordinate, expectedCoordinate), 
                         "Expected the last points coordinate to be equal to the expected coordinate.");
             gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[indexOfInterest]);
         }
