@@ -7,7 +7,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.Logging;
@@ -673,30 +672,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             BoundariesPerFileConverter.Convert(boundaryContainer, boundaryCategories);
 
             boundaryContainer.Boundaries.AddRange(waveBoundaries);
-        }
-
-        private static class BoundariesPerFileConverter
-        {
-            public static void Convert(IBoundariesPerFile boundariesPerFile, IEnumerable<DelftIniCategory> boundaryCategories)
-            {
-                Ensure.NotNull(boundariesPerFile, nameof(boundariesPerFile));
-                Ensure.NotNull(boundaryCategories, nameof(boundaryCategories));
-
-                if (boundaryCategories.Count() != 1)
-                {
-                    return;
-                }
-
-                OverallBoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.ConvertOverallBoundary(boundaryCategories.Single());
-
-                if (boundaryBlock == null)
-                {
-                    return;
-                }
-
-                boundariesPerFile.DefinitionPerFileUsed = true;
-                boundariesPerFile.FileNameForBoundariesPerFile = boundaryBlock.OverallSpectrumFile;
-            }
         }
 
         private static IDictionary<string, List<IFunction>> ReadBoundaryTimeSeriesData(IEnumerable<DelftIniCategory> mdwCategories, 

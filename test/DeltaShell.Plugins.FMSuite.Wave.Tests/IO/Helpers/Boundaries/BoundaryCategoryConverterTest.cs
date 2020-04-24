@@ -42,6 +42,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
+        public void Convert_SpectrumFileDefinitionType_ReturnsCorrectResult()
+        {
+            // Setup
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.SpectrumFile.GetDescription());
+            
+
+            // Call
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+
+            // Assert
+            Assert.That(result.Name, Is.Null);
+            Assert.That(result.DefinitionType, Is.EqualTo(DefinitionImportType.SpectrumFile));
+        }
+
+        [Test]
         [TestCaseSource(nameof(GetParameterizedTestCases))]
         public void Convert_ParameterizedImportType_ReturnsCorrectResult(string shapeTypeStr, ShapeImportType expectedShapeType,
                                                                          string periodTypeStr, PeriodImportExportType expectedPeriodType,

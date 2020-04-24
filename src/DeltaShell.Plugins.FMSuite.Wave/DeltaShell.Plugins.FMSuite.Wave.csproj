@@ -193,6 +193,7 @@
     <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\BcwTimeSeriesOfBoundaryCollector.cs" />
+    <Compile Include="IO\Helpers\Boundaries\BoundariesPerFileConverter.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
