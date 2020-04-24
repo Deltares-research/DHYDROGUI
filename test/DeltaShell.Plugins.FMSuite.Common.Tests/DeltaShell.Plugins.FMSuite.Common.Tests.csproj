@@ -135,6 +135,7 @@
     </Reference>
     <Reference Include="SharpMap.Api">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50103\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -265,6 +266,7 @@
     <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
       <Project>{4a0f7700-aa64-463f-a602-8c15e3886ec5}</Project>
       <Name>DeltaShell.NGHS.TestUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
