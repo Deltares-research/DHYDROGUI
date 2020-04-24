@@ -61,32 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             return new LineString(relevantCoordinates.ToArray());
         }
 
-        public IEnumerable<IPoint> ConstructBoundaryEndPoints(IWaveBoundary waveBoundary)
-        {
-            Ensure.NotNull(waveBoundary, nameof(waveBoundary));
-
-            IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
-
-            if (gridBoundary == null)
-            {
-                return Enumerable.Empty<IPoint>();
-            }
-
-            Coordinate firstCoordinate = GetCoordinate(waveBoundary.GeometricDefinition.StartingIndex,
-                                                       waveBoundary.GeometricDefinition.GridSide,
-                                                       gridBoundary);
-
-            Coordinate lastCoordinate = GetCoordinate(waveBoundary.GeometricDefinition.EndingIndex,
-                                                      waveBoundary.GeometricDefinition.GridSide,
-                                                      gridBoundary);
-
-            return new[]
-            {
-                new Point(firstCoordinate),
-                new Point(lastCoordinate)
-            };
-        }
-
         public IPoint ConstructBoundaryStartPoint(IWaveBoundary waveBoundary)
         {
             Ensure.NotNull(waveBoundary, nameof(waveBoundary));
