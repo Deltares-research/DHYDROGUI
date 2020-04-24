@@ -10,6 +10,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// </summary>
     public class BoundaryContainer : IBoundaryContainer
     {
+        private bool definitionPerFileUsed; 
+
         /// <summary>
         /// Get the boundaries defined on the current outer grid.
         /// </summary>
@@ -21,6 +23,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// within the model it is part of.
         /// </remarks>
         public IEventedList<IWaveBoundary> Boundaries { get; } = new EventedList<IWaveBoundary>();
+
+        public bool DefinitionPerFileUsed
+        {
+            get => definitionPerFileUsed;
+            set
+            {
+                if (value)
+                {
+                    Boundaries.Clear();
+                }
+                definitionPerFileUsed = value;
+            }
+        }
+
+        public string FileNameForBoundariesPerFile { get; set; } = string.Empty;
 
         public void UpdateGridBoundary(IGridBoundary gridBoundary)
         {

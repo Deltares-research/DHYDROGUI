@@ -22,6 +22,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.That(container.Boundaries, Is.Not.Null);
             Assert.That(container.Boundaries, Is.Empty);
             Assert.That(container.GetBoundarySnappingCalculator(), Is.Null);
+            Assert.That(container.FileNameForBoundariesPerFile, Is.Empty);
+            Assert.That(container.DefinitionPerFileUsed, Is.False);
+        }
+
+        [Test]
+        public void DefinitionPerFileUsedPropertySetToTrue_ShouldDeleteAllBoundaries()
+        {
+            // Setup
+            var container = new BoundaryContainer();
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+            container.Boundaries.Add(waveBoundary);
+            
+            // Call
+            container.DefinitionPerFileUsed = true;
+
+            // Assert
+            Assert.That(container.Boundaries, Is.Not.Null);
+            Assert.That(container.Boundaries, Is.Empty);
+            Assert.That(container.DefinitionPerFileUsed, Is.True);
+        }
+
+        [Test]
+        public void DefinitionPerFileUsedPropertySetToFalse_ShouldNotDeleteAllBoundaries()
+        {
+            // Setup
+            var container = new BoundaryContainer();
+            var waveBoundary = Substitute.For<IWaveBoundary>();
+            container.Boundaries.Add(waveBoundary);
+
+            // Call
+            container.DefinitionPerFileUsed = false;
+
+            // Assert
+            Assert.That(container.Boundaries[0], Is.SameAs(waveBoundary));
+            Assert.That(container.DefinitionPerFileUsed, Is.False);
         }
 
         [Test]

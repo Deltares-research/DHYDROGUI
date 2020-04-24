@@ -9,7 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// </summary>
     public interface IBoundaryContainer : IBoundarySnappingCalculatorProvider,
                                           IGridBoundaryProvider,
-                                          IBoundaryProvider
+                                          IBoundaryProvider,
+                                          IBoundariesPerFile
     {
         /// <summary>
         /// Updates the current <see cref="IGridBoundary"/> to
