@@ -182,6 +182,7 @@
     <Compile Include="IO\StructureFile.cs" />
     <Compile Include="MapLayers\AreaLayer.cs" />
     <Compile Include="MapLayers\AreaLayerStyles.cs" />
+    <Compile Include="MapLayers\CustomRenderers\CompartmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\LeveeBreachRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
     <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />

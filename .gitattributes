@@ -2825,6 +2825,7 @@ src/DeltaShell.Plugins.NetworkEditor/MapLayers/AreaLayer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/AreaLayerStyles.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/BranchFeatureRenderer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/CatchmentAnchorPointRenderer.cs -text
+src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/CompartmentRenderer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/CompositeStructureRenderer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/CrossSectionRenderer.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/CustomRenderers/DiffuseLateralSourceRenderer.cs -text

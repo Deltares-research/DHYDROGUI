@@ -711,7 +711,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 case IEnumerable<Compartment> compartments:
                     var compartmentLayer = CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
                         MaxVisibilityLayerValue);
-                    compartmentLayer.Selectable = false;
                     return compartmentLayer;
                 case IEnumerable<Orifice> orifices:
                     return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
@@ -1048,9 +1047,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new List<IFeatureRenderer>{new ArrowLineStringAdornerRenderer{ Orientation = Orientation.Forward , Opacity = 1, Size = 3}};
             }
 
+            if (type == typeof(Compartment))
+            {
+                return new List<IFeatureRenderer> { new CompartmentRenderer() };
+            }
+
             return new List<IFeatureRenderer>();
         }
-
+        
         private static Func<ILayer, IFeature> NewNetworkFeature<T>()
         {
             var type = typeof (T);
