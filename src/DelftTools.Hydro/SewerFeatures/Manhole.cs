@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
@@ -33,6 +34,8 @@ namespace DelftTools.Hydro.SewerFeatures
         /// The x-coordinate of this Manhole. This is equal tot the average of the x-coordinates
         /// of its compartments.
         /// </summary>
+        [DisplayName("X coordinate")]
+        [FeatureAttribute(Order = 5)]
         public double XCoordinate
         {
             get
@@ -46,6 +49,8 @@ namespace DelftTools.Hydro.SewerFeatures
         /// The y-coordinate of this Manhole. This is equal tot the average of the y-coordinates
         /// of its compartments.
         /// </summary>
+        [DisplayName("Y coordinate")]
+        [FeatureAttribute(Order = 5)]
         public double YCoordinate
         {
             get
@@ -286,5 +291,13 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         #endregion
+
+        [DisplayName("Compartments")]
+        [FeatureAttribute(Order = 2)]
+        public virtual int CompartmentCount
+        {
+            get => compartments.Count;
+        }
+
     }
 }

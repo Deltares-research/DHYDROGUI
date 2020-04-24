@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     public class ManholeProperties : ObjectProperties<Manhole>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(0)]
         public string Name
         {
@@ -19,7 +19,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("X coordinate")]
         [PropertyOrder(1)]
         public double X
         {
@@ -27,7 +28,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { HydroRegionEditorHelper.MoveNodeTo(data, value, Y); }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Y coordinate")]
         [PropertyOrder(2)]
         public double Y
         {
@@ -41,7 +43,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         #region Compartment 1
 
-        [Category("Manhole 1")]
+        [Category("Compartment 1")]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         [DynamicVisible]
         public string CompartmentOneName
@@ -50,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeOneIndex].Name = value; }
         }
 
-        [Category("Manhole 1")]
+        [Category("Compartment 1")]
         [PropertyOrder(1)]
         [DisplayName("Bottom level (m)")]
         [DynamicVisible]
@@ -60,9 +63,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeOneIndex].BottomLevel = value; }
         }
 
-        [Category("Manhole 1")]
-        [PropertyOrder(2)]
-        [DisplayName("Street level (m)")]
+        [Category("Compartment 1")]
+        [PropertyOrder(3)]
+        [DisplayName("Surface level (m)")]
         [DynamicVisible]
         public double CompartmentOneStreetLevel
         {
@@ -70,11 +73,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeOneIndex].SurfaceLevel = value; }
         }
 
+        [Category("Compartment 1")]
+        [PropertyOrder(4)]
+        [DisplayName("Floodable area (m²)")]
+        [DynamicVisible]
+        public double CompartmentOneFloodableArea
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.FloodableArea); }
+            set { data.Compartments[manholeOneIndex].FloodableArea = value; }
+        }
+
         #endregion
 
         #region Compartment 2
 
-        [Category("Manhole 2")]
+        [Category("Compartment 2")]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         [DynamicVisible]
         public string CompartmentTwoName
@@ -83,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeTwoIndex].Name = value; }
         }
 
-        [Category("Manhole 2")]
+        [Category("Compartment 2")]
         [PropertyOrder(1)]
         [DisplayName("Bottom level (m)")]
         [DynamicVisible]
@@ -93,11 +107,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeTwoIndex].BottomLevel = value; }
         }
 
+        [Category("Compartment 2")]
+        [PropertyOrder(3)]
+        [DisplayName("Surface level (m)")]
+        [DynamicVisible]
+        public double CompartmentTwoStreetLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.SurfaceLevel); }
+            set { data.Compartments[manholeTwoIndex].SurfaceLevel = value; }
+        }
+
+        [Category("Compartment 2")]
+        [PropertyOrder(4)]
+        [DisplayName("Floodable area (m²)")]
+        [DynamicVisible]
+        public double CompartmentTwoFloodableArea
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeTwoIndex, comp => comp.FloodableArea); }
+            set { data.Compartments[manholeTwoIndex].FloodableArea = value; }
+        }
+
         #endregion
 
         #region Compartment 3
 
-        [Category("Manhole 3")]
+        [Category("Compartment 3")]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         [DynamicVisible]
         public string CompartmentThreeName
@@ -106,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Compartments[manholeThreeIndex].Name = value; }
         }
 
-        [Category("Manhole 3")]
+        [Category("Compartment 3")]
         [PropertyOrder(1)]
         [DisplayName("Bottom level (m)")]
         [DynamicVisible]
@@ -114,6 +149,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.BottomLevel); }
             set { data.Compartments[manholeThreeIndex].BottomLevel = value; }
+        }
+
+        [Category("Compartment 3")]
+        [PropertyOrder(3)]
+        [DisplayName("Surface level (m)")]
+        [DynamicVisible]
+        public double CompartmentThreeStreetLevel
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeOneIndex, comp => comp.SurfaceLevel); }
+            set { data.Compartments[manholeThreeIndex].SurfaceLevel = value; }
+        }
+
+        [Category("Compartment 3")]
+        [PropertyOrder(4)]
+        [DisplayName("Floodable area (m²)")]
+        [DynamicVisible]
+        public double CompartmentThreeFloodableArea
+        {
+            get { return GetDoublePropertyFromCompartmentAtIndex(manholeThreeIndex, comp => comp.FloodableArea); }
+            set { data.Compartments[manholeThreeIndex].FloodableArea = value; }
         }
 
         #endregion
@@ -124,14 +179,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             var compartmentCount = data.Compartments.Count;
             switch (propertyName)
             {
-                case "CompartmentOneName":
-                case "CompartmentOneBottomLevel":
+                case nameof(CompartmentOneName):
+                case nameof(CompartmentOneBottomLevel):
+                case nameof(CompartmentOneStreetLevel):
+                case nameof(CompartmentOneFloodableArea):
                     return compartmentCount > 0;
-                case "CompartmentTwoName":
-                case "CompartmentTwoBottomLevel":
+                case nameof(CompartmentTwoName):
+                case nameof(CompartmentTwoBottomLevel):
+                case nameof(CompartmentTwoStreetLevel):
+                case nameof(CompartmentTwoFloodableArea):
                     return compartmentCount > 1;
-                case "CompartmentThreeName":
-                case "CompartmentThreeBottomLevel":
+                case nameof(CompartmentThreeName):
+                case nameof(CompartmentThreeBottomLevel):
+                case nameof(CompartmentThreeStreetLevel):
+                case nameof(CompartmentThreeFloodableArea):
                     return compartmentCount > 2;
                 default:
                     return false;

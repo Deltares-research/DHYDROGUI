@@ -85,19 +85,19 @@ namespace DelftTools.Hydro.Structures
 
         public virtual TimeSeries CapacityTimeSeries { get; protected set; }
 
-        [DisplayName("Switch-on delivery")]
+        [DisplayName("Start upstream")]
         [FeatureAttribute(Order = 7, ExportName = "OnDelivery")]
         public virtual double StartDelivery { get; set; }
 
-        [DisplayName("Switch-off delivery")]
+        [DisplayName("Stop upstream")]
         [FeatureAttribute(Order = 8, ExportName = "OffDelivery")]
         public virtual double StopDelivery { get; set; }
 
-        [DisplayName("Switch-on suction")]
+        [DisplayName("Start downstream")]
         [FeatureAttribute(Order = 9, ExportName = "OnSuction")]
         public virtual double StartSuction { get; set; }
 
-        [DisplayName("Switch-off suction")]
+        [DisplayName("Stop downstream")]
         [FeatureAttribute(Order = 10, ExportName = "OffSuction")]
         public virtual double StopSuction { get; set; }
 

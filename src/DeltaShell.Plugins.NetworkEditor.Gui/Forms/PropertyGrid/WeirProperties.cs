@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "WeirProperties_DisplayName")]
     public class WeirProperties : ObjectProperties<IWeir>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         public string Name
         {
@@ -25,7 +26,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         [PropertyOrder(1)]
         public string LongName
         {
@@ -34,17 +36,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Description("Level of the weir above datum.")]
-        [Category("General")]
-        [DisplayName("Crest Level")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Crest level")]
         [PropertyOrder(3)]
         public double CrestLevel
         {
             get { return data.CrestLevel; }
+           
+            
             set { data.CrestLevel = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Crest width")]
+        [PropertyOrder(3)]
+        public double CrestWidth
+        {
+            get { return data.CrestWidth; }
+
+
+            set { data.CrestWidth = value; }
+        }
+
         [Description("Indicates whether the weir has a movable gate.")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Has gate")]
         [PropertyOrder(6)]
         public bool Gate
@@ -54,8 +69,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Shape of the crest of the shape along the river.")]
-        [Category("General")]
-        [DisplayName("Crest Shape")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Crest shape")]
         [PropertyOrder(7)]
         public string CrestShape
         {
@@ -63,8 +78,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Description("Is flow in negative direction allowed.")]
-        [Category("General")]
-        [DisplayName("Allow Negative Flow")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Allow negative flow")]
         [PropertyOrder(8)]
         [DynamicReadOnly]
         public bool AllowNegativeFlow
@@ -74,8 +89,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Description("Is flow in positive direction allowed.")]
-        [Category("General")]
-        [DisplayName("Allow Positive Flow")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Allow positive flow")]
         [PropertyOrder(9)]
         [DynamicReadOnly]
         public bool AllowPositiveFlow
@@ -92,9 +107,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             return (data.WeirFormula is RiverWeirFormula || data.WeirFormula is GeneralStructureWeirFormula || data.WeirFormula is PierWeirFormula);
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
-        [PropertyOrder(10)]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
@@ -103,8 +119,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Channel in which the composite structure is located.")]
+        [DisplayName("Branch")]
         [PropertyOrder(11)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         public string Channel
         {
             get { return data.Branch.ToString(); }
@@ -112,8 +129,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Channel in which the composite structure is located.")]
+        [DisplayName("Composite structure")]
         [PropertyOrder(12)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         public string CompositeStructure
         {
             get { return data.ParentStructure.ToString(); }
@@ -122,8 +140,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Chainage of the weir in the channel on the map.")]
         [PropertyOrder(13)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         [DisplayFormat("0.00")]
         public double Chainage
         {
@@ -133,7 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Chainage of the weir in the channel as used in the simulation.")]
         [PropertyOrder(14)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage")]
         public double CompuChainage
         {
@@ -142,17 +160,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
+        [DisplayName("Y Offset")]
         [Description("OffsetY of the weir in the cross section profile.")]
-        [Category("Designer")]
-        [PropertyOrder(15)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [PropertyOrder(30)]
         public string YOffSet
         {
             get { return string.Format("{0:0.##}", data.OffsetY); }
             //set { weir.OffsetY = double.Parse(value); }
         }
 
-        [Category("General")]
-        [DisplayName("Flow Direction")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Flow direction")]
         [Description("Direction of the flow.")]
         [PropertyOrder(16)]
         [DynamicReadOnly]
@@ -162,9 +181,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.FlowDirection = value; }
         }
 
-        [Category("General")]
-        [DisplayName("Weir Formula")]
-        [Description("Formula used for the weir")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Weir formula")]
+        [Description("Formula used for the weir.")]
         [PropertyOrder(17)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public WeirFormulaProperties WeirFormula

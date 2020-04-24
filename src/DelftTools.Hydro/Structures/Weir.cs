@@ -75,6 +75,7 @@ namespace DelftTools.Hydro.Structures
         }
 
         [FeatureAttribute(Order = 6)]
+        [DisplayName("Crest width")]
         public virtual double CrestWidth
         {
             get
@@ -105,6 +106,7 @@ namespace DelftTools.Hydro.Structures
         }
 
         [FeatureAttribute(Order = 7)]
+        [DisplayName("Crest level")]
         public virtual double CrestLevel
         {
             get
@@ -222,7 +224,7 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Flow direction")]
         [FeatureAttribute(Order = 8, ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection { get; set; }
-        
+
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);

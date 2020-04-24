@@ -709,8 +709,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return CreateNetworkVisibilityVectorLayer<OutletCompartment>(outletCompartments, "Outlets",
                         hydroNetwork, MaxVisibilityLayerValue);
                 case IEnumerable<Compartment> compartments:
-                    return CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
+                    var compartmentLayer = CreateNetworkVisibilityVectorLayer<Compartment>(compartments, "Compartments", hydroNetwork,
                         MaxVisibilityLayerValue);
+                    compartmentLayer.Selectable = false;
+                    return compartmentLayer;
                 case IEnumerable<Orifice> orifices:
                     return CreateNetworkVisibilityVectorLayer<Orifice>(orifices, "Orifices", hydroNetwork,
                         MaxVisibilityLayerValue);
@@ -749,9 +751,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 case IEnumerable<IGate> gates:
                     return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
                         o => o is Channel && ((Channel) o).Gates.Any());
-                case IEnumerable<ICulvert> culverts:
-                    return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork,
-                        o => o is Channel && ((Channel) o).Culverts.Any());
+                
                 case IEnumerable<IBridge> bridges:
                     return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork,
                         o => o is Channel && ((Channel) o).Bridges.Any());

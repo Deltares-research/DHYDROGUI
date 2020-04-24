@@ -146,21 +146,21 @@ namespace DelftTools.Hydro.Structures
 
         [DynamicReadOnly]
         [DisplayName("Inlet loss coefficient")]
-        [FeatureAttribute(Order = 13, ExportName = "InLossCoef")]
+        [FeatureAttribute(Order = 8, ExportName = "InLossCoef")]
         public virtual double InletLossCoefficient { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Outlet loss coefficient")]
-        [FeatureAttribute(Order = 14, ExportName = "OutLossCoef")]
+        [FeatureAttribute(Order = 9, ExportName = "OutLossCoef")]
         public virtual double OutletLossCoefficient { get; set; }
 
         [DisplayName("Flow direction")]
-        [FeatureAttribute(Order = 12, ExportName = "FlowDir")]
+        [FeatureAttribute(Order = 7, ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection { get; set; }
         
         [DynamicReadOnly]
         [DisplayName("Roughness type")]
-        [FeatureAttribute(Order = 7, ExportName = "RoughType")]
+        [FeatureAttribute(Order = 13, ExportName = "RoughType")]
         public virtual BridgeFrictionType FrictionType
         {
             get { return FrictionTypeConverter.ConvertToBridgeFrictionType(FrictionDataType); }
@@ -172,7 +172,7 @@ namespace DelftTools.Hydro.Structures
         
         [DynamicReadOnly]
         [DisplayName("Roughness")]
-        [FeatureAttribute(Order = 8, ExportName = "Roughness")]
+        [FeatureAttribute(Order = 14, ExportName = "Roughness")]
         public virtual double Friction { get; set; }
 
         [DynamicReadOnly]
@@ -187,17 +187,17 @@ namespace DelftTools.Hydro.Structures
 
         [DynamicReadOnly]
         [DisplayName("Ground layer roughness")]
-        [FeatureAttribute(Order = 10, ExportName = "GLRoughness")]
+        [FeatureAttribute(Order = 11, ExportName = "GLRoughness")]
         public virtual double GroundLayerRoughness { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Ground layer thickness")]
-        [FeatureAttribute(Order = 11, ExportName = "GLThickness")]
+        [FeatureAttribute(Order = 12, ExportName = "GLThickness")]
         public virtual double GroundLayerThickness { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Ground layer")]
-        [FeatureAttribute(Order = 9, ExportName = "GroundLayer")]
+        [FeatureAttribute(Order = 10, ExportName = "GroundLayer")]
         public virtual bool GroundLayerEnabled { get; set; }
 
         [DisplayName("Shape")]

@@ -136,6 +136,7 @@
     <Compile Include="ASewerCompartmentGenerator.cs" />
     <Compile Include="ASewerProfileDefinitionReader.cs" />
     <Compile Include="CircleCrossSectionDefinitionGenerator.cs" />
+    <Compile Include="CompartmentShapeConverter.cs" />
     <Compile Include="CunetteCrossSectionShapeGenerator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="DefinitionsProvider.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Views\GwswImportDialog.xaml.cs">
       <DependentUpon>GwswImportDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WaterTypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

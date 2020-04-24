@@ -51,5 +51,9 @@ namespace DelftTools.Hydro
         {
             return StructureType.ObservationPoint;
         }
+
+        [DisplayName("Chainage")]
+        [FeatureAttribute(Order = 5)]
+        public override double Chainage { get => base.Chainage; set => base.Chainage = value; }
     }
 }

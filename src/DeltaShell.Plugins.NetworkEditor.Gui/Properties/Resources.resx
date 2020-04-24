@@ -220,15 +220,14 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Link" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAWJJREFUOE9joAuw
-        n/dypv3cFzFQLunAZsbjM2A8+xl5hlhMvndmxpP//0G0+aS7pBti3HfzTOfVP/8n3//3H8Q27L2BMES7
-        9cJMvfZLZ0A0Mh8dN5z58b9o35f/3dd//wfxdVrPQwzRqD91puvar/8gGsZvvfjzf/Xxr/+rjn39X3n0
-        6/+KI1/+F+z59D9jy3swbjz7HaxereZUDINC6YEzNSe+/gfRIANANEhDwrpX/4OXPPzvOfvGf5dpl/87
-        Tr4AxiA2SCxn9xuIHum8nWeazv34D6JBBoDo1AMf/3tuePHfdd3z/85rn/13XP3sv8mSx/815z0EY8/N
-        r8DqgTiGQTx900yxtI1nQDTIABgfHStv+f6fb/XX/3o7v/+HihEfGwLxq84I7Pj/X3r3//9gduJq0qKS
-        O3zRGZGd//+DaO6IxaSnA7aguWdAmCN4LumaQYDZb+ZMJt8Z5GmmMWBgAAA0TfYI6X3hzgAAAABJRU5E
-        rkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABYklEQVQ4T2OgC7Cf93Km/dwXMVAu6cBm
+        xuMzYDz7GXmGWEy+d2bGk///QbT5pLukG2Lcd/NM59U//yff//cfxDbsvYEwRLv1wky99ktnQDQyHx03
+        nPnxv2jfl//d13//B/F1Ws9DDNGoP3Wm69qv/yAaxm+9+PN/9fGv/6uOff1fefTr/4ojX/4X7Pn0P2PL
+        ezBuPPsdrF6t5lQMg0LpgTM1J77+B9EgA0A0SEPCulf/g5c8/O85+8Z/l2mX/ztOvgDGIDZILGf3G4ge
+        6bydZ5rO/fgPokEGgOjUAx//e2548d913fP/zmuf/Xdc/ey/yZLH/zXnPQRjz82vwOqBOIZBPH3TTLG0
+        jWdANMgAGB8dK2/5/p9v9df/eju//4eKER8bAvGrzgjs+P9fevf//2B24mrSopI7fNEZkZ3//4No7ojF
+        pKcDtqC5Z0CYI3gu6ZpBgNlv5kwm3xnkaaYxYGAAADRN9gjpfeHOAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="Network" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -626,5 +625,8 @@
   </data>
   <data name="RoughnessModelProperties_UseReverseRoughness_DisplayName" xml:space="preserve">
     <value>Use reverse roughness</value>
+  </data>
+  <data name="CompartmentProperties_DisplayName" xml:space="preserve">
+    <value>Compartment</value>
   </data>
 </root>

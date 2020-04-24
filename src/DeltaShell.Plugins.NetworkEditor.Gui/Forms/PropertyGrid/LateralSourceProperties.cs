@@ -13,7 +13,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "LateralSourceProperties_DisplayName")]
     public class LateralSourceProperties : ObjectProperties<LateralSource>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         [PropertyOrder(1)]
         public string LongName
         {
@@ -21,52 +22,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.LongName = value; }
         }
 
-        [Category("General")]
-        [PropertyOrder(2)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
+        [PropertyOrder(0)]
         public string Name
         {
             get { return data.Name; }
             set { data.Name = value; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
             get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
         }
 
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Channel in which the source is located.")]
-        [PropertyOrder(3)]
+        [PropertyOrder(1)]
         public string Channel
         {
             get { return data.Branch.ToString(); }
         }
 
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         [Description("Chainage of the source in the channel.")]
-        [DisplayName("Chainage (Map)")]
-        [PropertyOrder(3)]
+        [PropertyOrder(2)]
         public double Chainage
         {
             get { return NetworkHelper.MapChainage(data); }
         }
 
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage")]
         [Description("Chainage of the source in the channel as used in the simulation.")]
         [PropertyOrder(3)]
-        [DisplayName("Chainage")]
         public double CompuChainage
         {
             get { return data.Chainage; }
             set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
         }
 
+        [Category(PropertyWindowCategoryHelper.LateralDiffusionCategory)]
         [Description("Length of the reach segment of diffuse lateral into with it is discharging")]
-        [DisplayName("Length Diffuse Lateral")]
-        [Category("Lateral Diffusion")]
+        [DisplayName("Length")]
         [PropertyOrder(7)]
         public double LengthLateralSource
         {

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
@@ -15,25 +16,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return (SimpleWeirFormula) weirFormula; }
         }
 
-        [Category("General")]
-        [DisplayName("Is Gated")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Is gated")]
         public bool IsGated
         {
             get { return SimpleWeirFormula.IsGated; }
         }
 
-        [Category("General")]
-        [DisplayName("Discharge Coefficient")]
-        [Description("Discharge coefficient Ce")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Discharge coefficient")]
+        [Description("Discharge coefficient Ce.")]
         public double DischargeCoefficient
         {
             get { return SimpleWeirFormula.DischargeCoefficient; }
             set { SimpleWeirFormula.DischargeCoefficient = value; }
         }
 
-        [Category("General")]
-        [DisplayName("Lateral Contraction")]
-        [Description("Lateral contraction Cw")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Lateral contraction")]
+        [Description("Lateral contraction Cw.")]
         public double LateralContraction
         {
             get { return SimpleWeirFormula.LateralContraction; }

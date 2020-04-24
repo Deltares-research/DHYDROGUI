@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace DelftTools.Hydro
 {
@@ -93,7 +94,7 @@ namespace DelftTools.Hydro
         
         public virtual IEnumerable<ObservationPoint> ObservationPoints { get { return observationPoints; } }
 
-        [DisplayName("LongName")]
+        [DisplayName("Long name")]
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
 
@@ -182,5 +183,100 @@ namespace DelftTools.Hydro
         {
             return false; // no linking to / from channel yet
         }
+
+        [DynamicReadOnlyValidationMethod]
+        public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
+        {
+            if (propertyName == nameof(Length))
+            {
+                if (IsLengthCustom) return false;
+            }
+            return true;
+        }
+
+        #region MDE properties
+        [DisplayName("From node")]
+        [FeatureAttribute(Order = 5)]
+        [ReadOnly(true)]
+        public override INode Source { get => base.Source; set => base.Source = value; }
+
+        [DisplayName("To node")]
+        [FeatureAttribute(Order = 6)]
+        [ReadOnly(true)]
+        public override INode Target { get => base.Target; set => base.Target = value; }
+
+        [DisplayName("Geometry length")]
+        [FeatureAttribute(Order = 12)]
+        public override double GeometryLength { get => base.GeometryLength; }
+
+        [DisplayName("Has custom length")]
+        [FeatureAttribute(Order = 10)]
+        public override bool IsLengthCustom { get => base.IsLengthCustom; set => base.IsLengthCustom = value; }
+
+        [DisplayName("Length")]
+        [FeatureAttribute(Order = 11)]
+        [DynamicReadOnly]
+        public override double Length { get => base.Length; set => base.Length = value; }
+
+        [DisplayName("Order number")]
+        [FeatureAttribute(Order = 13)]
+        public override int OrderNumber { get => base.OrderNumber; set => base.OrderNumber = value; }
+
+        [DisplayName("Cross sections")]
+        [FeatureAttribute(Order = 30)]
+        public virtual int CrossSectionCount
+        {
+            get => CrossSections.Count();
+        }
+
+        [DisplayName("Structures")]
+        [FeatureAttribute(Order = 31)]
+        public virtual int StructureCount
+        {
+            get => Structures.Count();
+        }
+
+        [DisplayName("Pumps")]
+        [FeatureAttribute(Order = 32)]
+        public virtual int PumpCount
+        {
+            get => Pumps.Count();
+        }
+
+        [DisplayName("Culverts")]
+        [FeatureAttribute(Order = 33)]
+        public virtual int CulvertCount
+        {
+            get => Culverts.Count();
+        }
+
+        [DisplayName("Bridges")]
+        [FeatureAttribute(Order = 34)]
+        public virtual int BridgeCount
+        {
+            get => Bridges.Count();
+        }
+
+        [DisplayName("Weirs")]
+        [FeatureAttribute(Order = 35)]
+        public virtual int WeirCount
+        {
+            get => Weirs.Count();
+        }
+
+        [DisplayName("Gates")]
+        [FeatureAttribute(Order = 36)]
+        public virtual int GateCount
+        {
+            get => Gates.Count();
+        }
+
+        [DisplayName("Lateral sources")]
+        [FeatureAttribute(Order = 37)]
+        public virtual int LateralSourcesCount
+        {
+            get => BranchSources.Count();
+        }
+        #endregion
     }
 }

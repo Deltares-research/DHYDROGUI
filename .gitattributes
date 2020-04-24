@@ -2041,6 +2041,7 @@ src/DeltaShell.Plugins.GWSWImporter/ASewerCompartmentGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ASewerProfileDefinitionReader.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ArchCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CircleCrossSectionDefinitionGenerator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/CompartmentShapeConverter.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CunetteCrossSectionShapeGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefaultCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefinitionsProvider.cs -text
@@ -2103,6 +2104,7 @@ src/DeltaShell.Plugins.GWSWImporter/Views/DelimeterSelector.xaml -text
 src/DeltaShell.Plugins.GWSWImporter/Views/DelimeterSelector.xaml.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportDialog.xaml -text
 src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportDialog.xaml.cs -text
+src/DeltaShell.Plugins.GWSWImporter/WaterTypeConverter.cs -text
 src/DeltaShell.Plugins.GWSWImporter/app.config -text
 src/DeltaShell.Plugins.GWSWImporter/packages.config -text
 src/DeltaShell.Plugins.ImportExport.Sobek/BranchStructureBuilderBase.cs -text
@@ -2456,6 +2458,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ProjectExplorer/RoughnessSectionN
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/BridgeProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CatchmentProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/ChannelProperties.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CompartmentProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CompositeStructureProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionDefinitionProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionProperties.cs -text
@@ -2838,6 +2841,7 @@ src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/HydroNetworkFeatureEditor
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/BranchToCrossSectionRelationInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/CatchmentFeatureInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/ChannelInteractor.cs -text
+src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/CompartmentInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/CompositeStructureInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/CrossSectionInteractor.cs -text
 src/DeltaShell.Plugins.NetworkEditor/MapLayers/Editors/Interactors/DiffuseLateralSourceInteractor.cs -text
@@ -10735,6 +10739,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/windtest/windXYP.grd -tex
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/windtest/windY.amv -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/xyzFiles/largeSampleFile.xyz -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/App.config -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/CompartmentShapeConverterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/DeltaShell.Plugins.ImportExport.GWSW.Tests.csproj -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/DelimeterSelectorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Gui/Views/GwswImportDialogTest.cs -text
@@ -10757,6 +10762,7 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerFeatures/GwswOrificeTest.cs
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerProfileDefinitionGenerationTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerPumpGeneratorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerWeirGeneratorTest.cs -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/WaterTypeConverterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/packages.config -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/2Connection3Manholes/Knooppunt.csv -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/test-data/gwswFiles/2Connection3Manholes/Verbinding.csv -text

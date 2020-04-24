@@ -39,11 +39,11 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        [DisplayName("Level source")]
+        [DisplayName("Invert level begin")]
         [FeatureAttribute(ExportName = "Level source", Order = 15)]
         public double LevelSource { get; set; }
 
-        [DisplayName("Level target")]
+        [DisplayName("Invert level end")]
         [FeatureAttribute(ExportName = "Level target", Order = 16)]
         public double LevelTarget { get; set; }
 
@@ -52,7 +52,7 @@ namespace DelftTools.Hydro.SewerFeatures
         public SewerConnectionWaterType WaterType { get; set; }
 
         // This property is used in the NetworkLayerStyleFactory, do not remove :)
-        [DisplayName("Sewer Special Connection type")]
+        [DisplayName("Sewer special connection type")]
         [FeatureAttribute(ExportName = "Sewer Special Connection type", Order = 21)]
         [InvokeRequired]
         public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
@@ -60,7 +60,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #region Source and Target
 
         [DisplayName("From manhole")]
-        [FeatureAttribute(ExportName = "From manhole", Order = 10)]
+        [FeatureAttribute(ExportName = "From manhole", Order = 3)]
         [ReadOnly(true)]
         public override INode Source
         {
@@ -149,7 +149,7 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         [DisplayName("To manhole")]
-        [FeatureAttribute(ExportName = "To manhole", Order = 11)]
+        [FeatureAttribute(ExportName = "To manhole", Order = 3)]
         [ReadOnly(true)]
         public override INode Target
         {
@@ -238,7 +238,7 @@ namespace DelftTools.Hydro.SewerFeatures
         #endregion
 
         [DisplayName("From compartment")]
-        [FeatureAttribute(ExportName = "From compartment", Order = 12)]
+        [FeatureAttribute(ExportName = "From compartment", Order = 4)]
         [ReadOnly(true)]
         public ICompartment SourceCompartment
         {
@@ -266,7 +266,7 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         [DisplayName("To compartment")]
-        [FeatureAttribute(ExportName = "To compartment", Order = 13)]
+        [FeatureAttribute(ExportName = "To compartment", Order = 4)]
         [ReadOnly(true)]
         public ICompartment TargetCompartment
         {

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -208,5 +210,13 @@ namespace DelftTools.Hydro.Structures
         /// Placeholder for meta data
         /// </summary>
         public virtual object Tag { get; set; }
+
+        [FeatureAttribute]
+        [DisplayName("Structures")]
+        [PropertyOrder(10)]
+        public virtual int StructureCount
+        {
+            get => structures.Count;
+        }
     }
 }

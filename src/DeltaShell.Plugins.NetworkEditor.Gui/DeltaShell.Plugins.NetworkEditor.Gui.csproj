@@ -216,6 +216,7 @@
     <Compile Include="Forms\CrossSectionView\SimplifiedCoordinate.cs" />
     <Compile Include="Forms\CrossSectionView\StandardCrossSections\CrossSectionDefinitionStandardViewModel.cs" />
     <Compile Include="Forms\ProjectExplorer\RoughnessSectionNodePresenter.cs" />
+    <Compile Include="Forms\PropertyGrid\CompartmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ModelRoughnessProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
@@ -688,6 +689,7 @@
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\HydroNetworkCopyAndPasteHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
+    <Compile Include="Helpers\PropertyWindowCategoryHelper.cs" />
     <Compile Include="MapTools\CopyBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\LeveeBreachMapTool.cs" />
     <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />

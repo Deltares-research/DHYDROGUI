@@ -190,6 +190,7 @@
     <Compile Include="MapLayers\Editors\CatchmentFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\DrainageBasinFeatureEditor.cs" />
     <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
+    <Compile Include="MapLayers\Editors\Interactors\CompartmentInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\LateralSourceInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\HydroNodeInteractor.cs" />

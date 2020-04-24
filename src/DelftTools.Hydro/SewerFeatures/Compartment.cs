@@ -28,7 +28,8 @@ namespace DelftTools.Hydro.SewerFeatures
             Name = name;
         }
 
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 1)]
+        [DisplayName("Name")]
         public string Name
         {
             get { return name; }
@@ -63,37 +64,43 @@ namespace DelftTools.Hydro.SewerFeatures
         /// <summary>
         /// The shape of the manhole (either square or rectangular).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 2)]
+        [DisplayName("Shape")]
         public CompartmentShape Shape { get; set; }
 
         /// <summary>
         /// Length of manhole (m).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 3)]
+        [DisplayName("Length")]
         public double ManholeLength { get; set; }
 
         /// <summary>
         /// Width of manhole (m).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 4)]
+        [DisplayName("Width")]
         public double ManholeWidth { get; set; }
 
         /// <summary>
         /// The area at surface level that this manhole can flood (m2).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 5)]
+        [DisplayName("Floodable area")]
         public double FloodableArea { get; set; }
 
         /// <summary>
         /// The bottom level of the manhole compared to Dutch NAP (m).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 6)]
+        [DisplayName("Bottom level")]
         public double BottomLevel { get; set; }
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).
         /// </summary>
-        [FeatureAttribute]
+        [FeatureAttribute(Order = 7)]
+        [DisplayName("Surface level")]
         public double SurfaceLevel { get; set; }
         
         /// <summary>

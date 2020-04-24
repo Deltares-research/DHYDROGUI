@@ -15,14 +15,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return (GeneralStructureWeirFormula)weirFormula; }
         }
 
-        [DisplayName("Gate Opening")]
+        [DisplayName("Gate opening")]
         public double GateOpening
         {
             get { return GeneralStructureWeirFormula.GateOpening; }
             set { GeneralStructureWeirFormula.GateOpening = value; }
         }
 
-        [DisplayName("Positive Free Gate Flow")]
+        [DisplayName("Positive free gate flow")]
         public double PositiveFreeGateFlow
         {
             get { return GeneralStructureWeirFormula.PositiveFreeGateFlow; }
@@ -36,141 +36,141 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { GeneralStructureWeirFormula.PositiveDrownedGateFlow = value; }
         }
 
-        [DisplayName("Positive Free Weir Flow")]
+        [DisplayName("Positive free weir flow")]
         public double PositiveFreeWeirFlow
         {
             get { return GeneralStructureWeirFormula.PositiveFreeWeirFlow; }
             set { GeneralStructureWeirFormula.PositiveFreeWeirFlow = value; }
         }
 
-        [DisplayName("Positive Drowned Weir Flow")]
+        [DisplayName("Positive drowned weir flow")]
         public double PositiveDrownedWeirFlow
         {
             get { return GeneralStructureWeirFormula.PositiveDrownedWeirFlow; }
             set { GeneralStructureWeirFormula.PositiveDrownedWeirFlow = value; }
         }
 
-        [DisplayName("Positive Contraction Coefficient")]
+        [DisplayName("Positive contraction coefficient")]
         public double PositiveContractionCoefficient
         {
             get { return GeneralStructureWeirFormula.PositiveContractionCoefficient; }
             set { GeneralStructureWeirFormula.PositiveContractionCoefficient = value; }
         }
 
-        [DisplayName("Negative Free Gate Flow")]
+        [DisplayName("Negative free gate flow")]
         public double NegativeFreeGateFlow
         {
             get { return GeneralStructureWeirFormula.NegativeFreeGateFlow; }
             set { GeneralStructureWeirFormula.NegativeFreeGateFlow = value; }
         }
 
-        [DisplayName("Negative Drowned Gate Flow")]
+        [DisplayName("Negative drowned gate flow")]
         public double NegativeDrownedGateFlow
         {
             get { return GeneralStructureWeirFormula.NegativeDrownedGateFlow; }
             set { GeneralStructureWeirFormula.NegativeDrownedGateFlow = value; }
         }
 
-        [DisplayName("Negative Free Weir Flow")]
+        [DisplayName("Negative free weir flow")]
         public double NegativeFreeWeirFlow
         {
             get { return GeneralStructureWeirFormula.NegativeFreeWeirFlow; }
             set { GeneralStructureWeirFormula.NegativeFreeWeirFlow = value; }
         }
 
-        [DisplayName("Negative Drowned Weir Flow")]
+        [DisplayName("Negative drowned weir flow")]
         public double NegativeDrownedWeirFlow
         {
             get { return GeneralStructureWeirFormula.NegativeDrownedWeirFlow; }
             set { GeneralStructureWeirFormula.NegativeDrownedWeirFlow = value; }
         }
 
-        [DisplayName("Negative Contraction Coefficient")]
+        [DisplayName("Negative contraction coefficient")]
         public double NegativeContractionCoefficient
         {
             get { return GeneralStructureWeirFormula.NegativeContractionCoefficient; }
             set { GeneralStructureWeirFormula.NegativeContractionCoefficient = value; }
         }
 
-        [DisplayName("Width Left Side Of Structure")]
+        [DisplayName("Width left side of structure")]
         public double WidthLeftSideOfStructure
         {
             get { return GeneralStructureWeirFormula.WidthLeftSideOfStructure; }
             set { GeneralStructureWeirFormula.WidthLeftSideOfStructure = value; }
         }
 
-        [DisplayName("Width Structure Left Side")]
+        [DisplayName("Width structure left side")]
         public double WidthStructureLeftSide
         {
             get { return GeneralStructureWeirFormula.WidthStructureLeftSide; }
             set { GeneralStructureWeirFormula.WidthStructureLeftSide = value; }
         }
 
-        [DisplayName("Width Structure Centre")]
+        [DisplayName("Width structure centre")]
         public double WidthStructureCentre
         {
             get { return GeneralStructureWeirFormula.WidthStructureCentre; }
             set { GeneralStructureWeirFormula.WidthStructureCentre = value; }
         }
 
-        [DisplayName("Width Structure Right Side")]
+        [DisplayName("Width structure right side")]
         public double WidthStructureRightSide
         {
             get { return GeneralStructureWeirFormula.WidthStructureRightSide; }
             set { GeneralStructureWeirFormula.WidthStructureRightSide = value; }
         }
 
-        [DisplayName("Width Right Side Of Structure")]
+        [DisplayName("Width right side of structure")]
         public double WidthRightSideOfStructure
         {
             get { return GeneralStructureWeirFormula.WidthRightSideOfStructure; }
             set { GeneralStructureWeirFormula.WidthRightSideOfStructure = value; }
         }
 
-        [DisplayName("Bed Level Left Side Of Structure")]
+        [DisplayName("Bed level left side of structure")]
         public double BedLevelLeftSideOfStructure
         {
             get { return GeneralStructureWeirFormula.BedLevelLeftSideOfStructure; }
             set { GeneralStructureWeirFormula.BedLevelLeftSideOfStructure = value; }
         }
 
-        [DisplayName("Bed Level Left Side Structure")]
+        [DisplayName("Bed level left side structure")]
         public double BedLevelLeftSideStructure
         {
             get { return GeneralStructureWeirFormula.BedLevelLeftSideStructure; }
             set { GeneralStructureWeirFormula.BedLevelLeftSideStructure = value; }
         }
 
-        [DisplayName("Bed Level Structure Centre")]
+        [DisplayName("Bed level structure centre")]
         public double BedLevelStructureCentre
         {
             get { return GeneralStructureWeirFormula.BedLevelStructureCentre; }
             set { GeneralStructureWeirFormula.BedLevelStructureCentre = value; }
         }
 
-        [DisplayName("Bed Level Right Side Structure")]
+        [DisplayName("Bed level right side structure")]
         public double BedLevelRightSideStructure
         {
             get { return GeneralStructureWeirFormula.BedLevelRightSideStructure; }
             set { GeneralStructureWeirFormula.BedLevelRightSideStructure = value; }
         }
 
-        [DisplayName("Bed Level Right Side Of Structure")]
+        [DisplayName("Bed level right side of structure")]
         public double BedLevelRightSideOfStructure
         {
             get { return GeneralStructureWeirFormula.BedLevelRightSideOfStructure; }
             set { GeneralStructureWeirFormula.BedLevelRightSideOfStructure = value; }
         }
 
-        [DisplayName("Use Extra Resistance")]
-        [Description("Is extra resistance used")]
+        [DisplayName("Use extra resistance")]
+        [Description("Is extra resistance used.")]
         public bool UseExtraResistance
         {
             get { return GeneralStructureWeirFormula.UseExtraResistance; }
             set { GeneralStructureWeirFormula.UseExtraResistance = value; }
         }
 
-        [DisplayName("Extra Resistance")]
+        [DisplayName("Extra resistance")]
         public double ExtraResistance
         {
             get { return GeneralStructureWeirFormula.ExtraResistance; }

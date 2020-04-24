@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
@@ -15,8 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return (RiverWeirFormula)weirFormula; }
         }
 
-        [Category("General")]
-        [DisplayName("Correction Coefficient Pos")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Correction coefficient pos")]
         [Description("Correction coefficient flow direction(pos_cwcoef)")]
         public double CorrectionCoefficientPos
         {
@@ -24,8 +25,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { RiverWeirFormula.CorrectionCoefficientPos = value; }
         }
         
-        [Category("General")]
-        [DisplayName("Correction Coefficient Neg")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Correction coefficient neg")]
         [Description("Correction coefficient reverse direction(neg_cwcoef)")]
         public double CorrectionCoefficientNeg
         {
@@ -33,8 +34,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { RiverWeirFormula.CorrectionCoefficientNeg = value; }
         }
 
-        [Category("General")]
-        [DisplayName("Submerge Limit Pos")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Submerge limit pos")]
         [Description("Submerge coefficient flow direction(pos_slimlimit)")]
         public double SubmergeLimitPos
         {
@@ -42,8 +43,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { RiverWeirFormula.SubmergeLimitPos = value; }
         }
 
-        [Category("General")]
-        [DisplayName("Submerge Limit Neg")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Submerge limit neg")]
         [Description("Submerge coefficient reverse direction(neg_slimlimit)")]
         public double SubmergeLimitNeg
         {

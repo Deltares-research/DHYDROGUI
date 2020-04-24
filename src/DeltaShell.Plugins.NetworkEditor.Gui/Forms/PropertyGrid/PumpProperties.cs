@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "PumpProperties_DisplayName")]
     public class PumpProperties : ObjectProperties<IPump>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(1)]
         public string Name
         {
@@ -25,7 +26,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Category("General")]
+        [DisplayName("Long name")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(2)]
         public string LongName
         {
@@ -34,9 +36,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(3)]
-        [Description("Use a time series for the pump capacity or use a time constant value")]
+        [Description("Use a time series for the pump capacity or use a time constant value.")]
         [DisplayName("Capacity input")]
         public TimeDependency UseCapacityTimeSeries
         {
@@ -45,9 +47,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicReadOnly]
-        [Description("Capacity of the pump")]
+        [Description("Capacity of the pump.")]
         [DisplayName("Capacity")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(4)]
         public string Capacity
         {
@@ -70,9 +72,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Start level upstream")]
+        [Description("Start level upstream.")]
         [DisplayName("Start upstream")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(5)]
         public double StartDelivery
         {
@@ -81,9 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Stop level upstream")]
+        [Description("Stop level upstream.")]
         [DisplayName("Stop upstream")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(6)]
         public double StopDelivery
         {
@@ -92,9 +94,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Start level downstream")]
+        [Description("Start level downstream.")]
         [DisplayName("Start downstream")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(7)]
         public double StartSuction
         {
@@ -103,9 +105,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Stop level downstream")]
+        [Description("Stop level downstream.")]
         [DisplayName("Stop downstream")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(8)]
         public double StopSuction
         {
@@ -114,9 +116,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Category("General")]
+        [DisplayName("Attributes")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("All the (custom) attributes for this object.")]
-        [PropertyOrder(9)]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
@@ -126,7 +129,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Channel in which the composite structure is located.")]
         [PropertyOrder(10)]
-        [Category("Administration")]
+        [DisplayName("Branch")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         public string Channel
         {
             get { return data.Branch != null ? data.Branch.ToString() : ""; }
@@ -135,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Channel in which the composite structure is located.")]
         [PropertyOrder(11)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         public string CompositeStructure
         {
             get { return data.ParentStructure != null ? data.ParentStructure.ToString() : ""; }
@@ -144,8 +148,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Chainage of the pump in the channel on the map.")]
         [PropertyOrder(12)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         public double Chainage
         {
             get { return data.ParentStructure != null ? NetworkHelper.MapChainage(data.ParentStructure) : double.NaN; }
@@ -154,7 +158,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicVisible]
         [Description("Chainage of the pump in the channel as used in the simulation.")]
         [PropertyOrder(13)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage")]
         public double CompuChainage
         {
@@ -164,8 +168,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Y offset of the pump in the cross section profile.")]
-        [Category("Designer")]
-        [PropertyOrder(14)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Y offset")]
+        [PropertyOrder(30)]
         public string YOffSet
         {
             get { return string.Format("{0:0.##}", data.OffsetY); }
@@ -174,8 +179,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Z offset of the pump in the cross section profile.")]
-        [Category("Designer")]
-        [PropertyOrder(15)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Z offset")]
+        [PropertyOrder(31)]
         public string ZOffSet
         {
             get { return string.Format("{0:0.##}", data.OffsetZ); }
@@ -183,7 +189,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Direction in which the pump pumps. Positive is along the branch.")]
-        [Category("Designer")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Pump direction")]
         [PropertyOrder(16)]
         public PumpDirection PumpDirection
         {
@@ -193,7 +200,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicVisible]
         [Description("Direction in which the pump control acts.")]
-        [Category("Designer")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Control direction")]
         [PropertyOrder(17)]
         public PumpControlDirection ControlDirection
         {

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return weirFormula.Name; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Rectangular shape")]
         [Description("Freeform (false) /Rectangle (true)")]
         public bool IsRectangle
@@ -32,8 +33,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return weirFormula.IsRectangle; }
         }
 
-        [Category("General")]
-        [DisplayName("Has Flow Direction")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Has flow direction")]
         public bool HasFlowDirection
         {
             get { return weirFormula.HasFlowDirection; }

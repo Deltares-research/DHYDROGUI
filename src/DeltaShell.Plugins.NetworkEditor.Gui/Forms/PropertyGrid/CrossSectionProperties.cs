@@ -21,16 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     {
         #region Cross Section Properties
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [Description("Id of the cross section.")]
-        [Category("General")]
+        [PropertyOrder(1)]
         public string Name
         {
             get { return data.Name; }
             set { data.Name = value; }
         }
         
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         [Description("Name of the cross section.")]
-        [Category("General")]
+        [PropertyOrder(2)]
         public string LongName
         {
             get { return data.LongName; }
@@ -38,16 +42,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Branch to which this cross section belongs.")]
-        [Category("General")]
+        [PropertyOrder(1)]
         public string Branch
         {
             get { return data.Branch == null ? "<none>" : data.Branch.Name; }
         }
         
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [Description("Chainage of the bridge in the channel as used in the simulation.")]
-        [Category("General")]
         [DisplayName("Chainage")]
+        [PropertyOrder(3)]
         [DynamicReadOnly]
         public double CompuChainage
         {
@@ -55,16 +62,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         [Description("Chainage of the cross section on the branch.")]
-        [Category("General")]
-        [DisplayName("Chainage (Map)")]
+        [PropertyOrder(2)]
         public double GeometryChainage
         {
             get { return data.Branch.IsLengthCustom ? BranchFeature.SnapChainage(data.Branch.Geometry.Length, (data.Branch.Geometry.Length / data.Branch.Length) * data.Chainage) : data.Chainage; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
@@ -75,23 +85,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         #region Definition Properties
 
-        [Description("Id of the cross section definition")]
-        [Category("Definition")]
-        [DisplayName("Definition Id")]
-        public string DefinitionId
-        {
-            get { return data.Definition.IsProxy ? data.Definition.Name : ""; }
-        }
-
+        [Category(PropertyWindowCategoryHelper.DefinitionCategory)]
+        [DisplayName("Cross section type")]
         [Description("Type of the cross section definition.")]
-        [Category("Definition")]
+        [PropertyOrder(2)]
         public CrossSectionType CrossSectionType
         {
             get { return data.CrossSectionType; }
         }
         
+        [Category(PropertyWindowCategoryHelper.DefinitionCategory)]
+        [DisplayName("Thalweg")]
         [Description("Thalweg; offset in cross section where thalweg intersects channel.")]
-        [Category("Definition")]
+        [PropertyOrder(3)]
         [DynamicReadOnly]
         public double Thalweg
         {
@@ -103,22 +109,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
+        [Category(PropertyWindowCategoryHelper.MetricsCategory)]
+        [DisplayName("Lowest point")]
         [Description("Lowest level of the cross section (m)")]
-        [Category("Metrics")]
+        [PropertyOrder(1)]
         public double LowestPoint
         {
             get { return data.Definition.LowestPoint; }
         }
 
+        [Category(PropertyWindowCategoryHelper.MetricsCategory)]
+        [DisplayName("Highest point")]
         [Description("Highest level of the cross section (m)")]
-        [Category("Metrics")]
+        [PropertyOrder(2)]
         public double HighestPoint
         {
             get { return data.Definition.HighestPoint; }
         }
 
+        [Category(PropertyWindowCategoryHelper.MetricsCategory)]
+        [DisplayName("Width")]
         [Description("Width of the cross section (m)")]
-        [Category("Metrics")]
+        [PropertyOrder(3)]
         public double Width
         {
             get { return data.Definition.Width; }

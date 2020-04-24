@@ -13,7 +13,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "ObservationPointProperties_DisplayName")]
     public class ObservationPointProperties : ObjectProperties<ObservationPoint>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(1)]
         public string Name
         {
@@ -21,14 +22,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         public string LongName
         {
             get { return data.LongName; }
             set { data.LongName = value; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
@@ -36,7 +39,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
         }
 
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Channel in which the point is located.")]
         [PropertyOrder(2)]
         public string Channel
@@ -46,8 +50,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Description("Chainage of the point in the channel on the map.")]
         [PropertyOrder(3)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         public double Chainage
         {
             get { return NetworkHelper.MapChainage(data); }
@@ -55,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Description("Chainage of the point in the channel as used in the simulation.")]
         [PropertyOrder(4)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage")]
         public double CompuChainage
         {

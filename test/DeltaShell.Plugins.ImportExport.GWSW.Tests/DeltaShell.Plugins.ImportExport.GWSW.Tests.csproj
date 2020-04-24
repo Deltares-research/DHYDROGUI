@@ -121,6 +121,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompartmentShapeConverterTest.cs" />
     <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
     <Compile Include="IO\Importers\DefinitionsProviderTest.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="SewerProfileDefinitionGenerationTest.cs" />
     <Compile Include="SewerPumpGeneratorTest.cs" />
     <Compile Include="SewerWeirGeneratorTest.cs" />
+    <Compile Include="WaterTypeConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
@@ -66,8 +67,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())
             {
-                //Find type
-                sewerConnection.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
+                sewerConnection.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterType.GetValidStringValue());
             }
         }
 

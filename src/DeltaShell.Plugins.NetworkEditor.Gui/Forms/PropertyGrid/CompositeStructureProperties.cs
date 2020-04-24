@@ -11,6 +11,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "CompositeStructureProperties_DisplayName")]
     public class CompositeStructureProperties : ObjectProperties<ICompositeBranchStructure>
     {
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         public string Name
         {
@@ -18,6 +20,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         [PropertyOrder(1)]
         public string LongName
         {
@@ -25,14 +29,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.LongName = value; }
         }
 
-        [Description("Number of structures in the composite structure.")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Number of Structures")]
-        [PropertyOrder(2)]
+        [Description("Number of structures in the composite structure.")]
+        [PropertyOrder(10)]
         public float StructureCount
         {
             get { return data.Structures.Count; }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Channel in which the composite structure is located.")]
         [PropertyOrder(3)]
         public string Channel
@@ -40,19 +47,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data.Branch == null ? "Channel not set" : data.Branch.ToString(); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         [Description("Chainage of the composite structure in the channel on the map.")]
         [PropertyOrder(4)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
         public double Chainage
         {
             get { return NetworkHelper.MapChainage(data); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage")]
         [Description("Chainage of the composite structure in the channel as used in the simulation.")]
         [PropertyOrder(5)]
-        [Category("Administration")]
-        [DisplayName("Chainage")]
         public double CompuChainage
         {
             get { return data.ParentStructure != null ? data.ParentStructure.Chainage : data.Chainage; }

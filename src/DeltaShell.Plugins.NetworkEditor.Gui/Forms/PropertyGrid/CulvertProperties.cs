@@ -15,7 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "CulvertProperties_DisplayName")]
     public class CulvertProperties : ObjectProperties<ICulvert>
     {
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         public string Name
         {
@@ -23,7 +24,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
         
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
         [PropertyOrder(1)]
         public string LongName
         {
@@ -31,8 +33,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.LongName = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Length of the culvert (along the branch).")]
-        [Category("General")]
         [DisplayName("Length")]
         [PropertyOrder(2)]
         public double Length
@@ -41,31 +43,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Length = value; }
         }
 
-        [DynamicReadOnly]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [Description("Width of the culvert.")]
-        [Category("General")]
         [DisplayName("Width")]
         [PropertyOrder(3)]
+        [DynamicReadOnly]
         public double Width
         {
             get { return data.Width; }
             set { data.Width = value; }
         }
 
-        [DynamicReadOnly]
-        [Description("Height of the culvert.")]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [DisplayName("Height")]
+        [Description("Height of the culvert.")]
         [PropertyOrder(4)]
+        [DynamicReadOnly]
         public double Height
         {
             get { return data.Height; }
             set { data.Height = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Roughness type")]
-        [Description("Roughness type")]
-        [Category("General")]
+        [Description("Roughness type.")]
         [PropertyOrder(5)]
         public CulvertFrictionType FrictionType
         {
@@ -80,9 +82,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Roughness")]
-        [Description("Roughness")]
-        [Category("General")]
+        [Description("Roughness.")]
         [PropertyOrder(6)]
         public double Friction
         {
@@ -90,31 +92,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Friction = value; }
         }
         
-        [DynamicReadOnly]
-        [DisplayName("Groundlayer roughness")]
-        [Description("Groundlayer roughness")]
-        [Category("Groundlayer")]
+        [Category(PropertyWindowCategoryHelper.GroundLayerCategory)]
+        [DisplayName("Ground layer roughness")]
+        [Description("Ground layer roughness.")]
         [PropertyOrder(6)]
+        [DynamicReadOnly]
         public double GroundlayerRoughness
         {
             get { return data.GroundLayerRoughness; }
             set { data.GroundLayerRoughness = value; }
         }
 
-        [DynamicReadOnly]
-        [DisplayName("Groundlayer thickness")]
-        [Description("Groundlayer thickness")]
-        [Category("Groundlayer")]
+        [Category(PropertyWindowCategoryHelper.GroundLayerCategory)]
+        [DisplayName("Ground layer thickness")]
+        [Description("Ground layer thickness.")]
         [PropertyOrder(6)]
+        [DynamicReadOnly]
         public double GroundlayerThickness
         {
             get { return data.GroundLayerThickness; }
             set { data.GroundLayerThickness = value; }
         }
 
-        [DisplayName("Groundlayer enabled")]
-        [Description("Groundlayer enabled")]
-        [Category("Groundlayer")]
+        [Category(PropertyWindowCategoryHelper.GroundLayerCategory)]
+        [DisplayName("Ground layer enabled")]
+        [Description("Ground layer enabled.")]
         [PropertyOrder(6)]
         public bool GroundlayerEnabled
         {
@@ -122,8 +124,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.GroundLayerEnabled = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Allow negative flow")]
         [Description("Is negative flow possible.")]
-        [Category("Designer")]
         [PropertyOrder(7)]
         [DynamicReadOnly]
         public bool AllowNegativeFlow
@@ -132,8 +135,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.AllowNegativeFlow = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Allow positive flow")]
         [Description("Is positive flow possible.")]
-        [Category("Designer")]
         [PropertyOrder(8)]
         public bool AllowPositiveFlow
         {
@@ -141,9 +145,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.AllowPositiveFlow = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Culvert type")]
         [Description("The culvert can be siphon, inverted siphon or culvert.")]
-        [Category("General")]
-        [DisplayName("Culvert Type")]
         [DynamicReadOnly]
         [PropertyOrder(11)]
         public CulvertType CulvertType
@@ -151,17 +155,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data.CulvertType; }
             set { data.CulvertType = value; }
         }
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
-        [PropertyOrder(12)]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
             get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
         }
 
-        [Description("Inlet loss")]
-        [Category("Calculation")]
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
+        [DisplayName("Inlet loss coefficient")]
+        [Description("Inlet loss.")]
         [PropertyOrder(12)]
         public double InletLoss
         {
@@ -169,8 +175,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.InletLossCoefficient = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
+        [DisplayName("Inlet level")]
         [Description("Inlet level.")]
-        [Category("Calculation")]
         [PropertyOrder(13)]
         public double InletLevel
         {
@@ -178,8 +185,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.InletLevel = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
+        [DisplayName("Outlet loss coefficient")]
         [Description("Outlet loss.")]
-        [Category("Calculation")]
         [PropertyOrder(14)]
         public double OutletLoss
         {
@@ -187,8 +195,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.OutletLossCoefficient = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
+        [DisplayName("Outlet level")]
         [Description("Outlet level.")]
-        [Category("Calculation")]
         [PropertyOrder(15)]
         public double OutletLevel
         {
@@ -196,8 +205,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.OutletLevel = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
+        [DisplayName("Bendloss coefficient")]
         [Description("BendLoss coefficient of the culvert.")]
-        [Category("Calculation")]
         [PropertyOrder(16)]
         public double BendLossCoefficient
         {
@@ -205,43 +215,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.BendLossCoefficient = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Channel in which the composite structure is located.")]
         [PropertyOrder(17)]
-        [Category("Administration")]
         public string Channel
         {
             get { return data.Branch.ToString(); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Composite structure")]
         [Description("Composite structure in which the structure is located.")]
         [PropertyOrder(18)]
-        [Category("Administration")]
         public string CompositeStructure
         {
             get { return data.ParentStructure.ToString(); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         [Description("Chainage of the culvert in the channel on the map.")]
         [PropertyOrder(19)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
         public double Chainage
         {
             get { return NetworkHelper.MapChainage(data.ParentStructure); }
         }
 
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage")]
         [Description("Chainage of the culvert in the channel as used in the simulation.")]
         [PropertyOrder(20)]
-        [Category("Administration")]
-        [DisplayName("Chainage")]
         public double CompuChainage
         {
             get { return data.ParentStructure.Chainage; }
             set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Y offset")]
         [Description("OffsetY of the weir in the cross section profile.")]
-        [Category("Designer")]
         [PropertyOrder(21)]
         public string YOffSet
         {
@@ -249,8 +262,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.OffsetY = double.Parse(value); }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
         [DisplayName("Is gated")]
-        [Category("Calculation")]
         [PropertyOrder(22)]
         public bool IsGated
         {
@@ -258,28 +271,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.IsGated = value; }
         }
 
-        [DynamicReadOnly]
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
         [DisplayName("Gate initial opening")]
-        [Description("Initial opening of the gate")]
-        [Category("Calculation")]
+        [Description("Initial opening of the gate.")]
         [PropertyOrder(23)]
+        [DynamicReadOnly]
         public double GateInitialOpening
         {
             get { return data.GateInitialOpening; }
             set { data.GateInitialOpening = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
         [DisplayName("Gate lower edge")]
-        [Description("Initial opening of the gate")]
-        [Category("Calculation")]
+        [Description("Initial opening of the gate.")]
         [PropertyOrder(24)]
         public double GateLowerEdgeLevel
         {
             get { return data.GateLowerEdgeLevel; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
         [DisplayName("Siphon on level")]
-        [Category("Calculation")]
         [PropertyOrder(25)]
         public double SiphonOnLevel
         {
@@ -287,9 +300,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.SiphonOnLevel = value; }
         }
 
+        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
         [DynamicReadOnly]
         [DisplayName("Siphon off level")]
-        [Category("Calculation")]
         [PropertyOrder(25)]
         public double SiphonOffLevel
         {
@@ -297,9 +310,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.SiphonOffLevel = value; }
         }
 
-        [DisplayName("Geometry type")]
-        [Category("Shape")]
-        [PropertyOrder(25)]
+        [DisplayName("Shape")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
+        [PropertyOrder(1)]
         public CulvertGeometryType GeometryType
         {
             get { return data.GeometryType; }
@@ -308,8 +321,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Arc height")]
-        [Description("ArcHeight of the culvert (if shape arch)")]
-        [Category("Shape")]
+        [Description("ArcHeight of the culvert (if shape arch).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double ArcHeight
         {
@@ -319,8 +332,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Diameter")]
-        [Description("Diameter of the culvert (if shape round)")]
-        [Category("Shape")]
+        [Description("Diameter of the culvert (if shape round).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Diameter
         {
@@ -330,8 +343,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Radius")]
-        [Description("Radius of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Radius of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Radius
         {
@@ -341,8 +354,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Radius1")]
-        [Description("Radius1 of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Radius1 of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Radius1
         {
@@ -352,8 +365,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Radius2")]
-        [Description("Radius2 of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Radius2 of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Radius2
         {
@@ -363,8 +376,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Radius3")]
-        [Description("Radius3 of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Radius3 of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Radius3
         {
@@ -374,8 +387,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Angle")]
-        [Description("Angle of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Angle of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Angle
         {
@@ -385,8 +398,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [DynamicReadOnly]
         [DisplayName("Angle1")]
-        [Description("Angle1 of the culvert (if shape steel cunette)")]
-        [Category("Shape")]
+        [Description("Angle1 of the culvert (if shape steel cunette).")]
+        [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(25)]
         public double Angle1
         {
@@ -433,7 +446,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 return !IsGated;
             }
 
-            if (propertyName == "GroundLayerRoughness" || propertyName == "GroundLayerThickness")
+            if (propertyName == nameof(GroundlayerThickness) || propertyName == nameof(GroundlayerRoughness))
             {
                 return !data.GroundLayerEnabled;
             }

@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 
 namespace DelftTools.Hydro
 {
@@ -29,8 +29,8 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
 
-        [DisplayName("Y")]
-        [FeatureAttribute(Order = 4)]
+        [DisplayName("Y coordinate")]
+        [FeatureAttribute(Order = 10)]
         public virtual double YCoordinate
         {
             get
@@ -41,8 +41,8 @@ namespace DelftTools.Hydro
         }
 
 
-        [DisplayName("X")]
-        [FeatureAttribute(Order = 3)]
+        [DisplayName("X coordinate")]
+        [FeatureAttribute(Order = 9)]
         public virtual double XCoordinate
         {
             get
@@ -51,6 +51,21 @@ namespace DelftTools.Hydro
                 return point != null ? point.X : 0;
             }
         }
+
+        [DisplayName("Incoming branches")]
+        [FeatureAttribute(Order = 30)]
+        public double IncomingBranchesCount
+        {
+            get => IncomingBranches.Count;
+        }
+
+        [DisplayName("Outgoing branches")]
+        [FeatureAttribute(Order = 31)]
+        public double OutgoingBranchesCount
+        {
+            get => OutgoingBranches.Count;
+        }
+
 
         [Aggregation]
         public override IEventedList<IBranch> IncomingBranches

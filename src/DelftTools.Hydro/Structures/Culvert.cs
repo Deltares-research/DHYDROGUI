@@ -349,7 +349,6 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
         public virtual double BendLossCoefficient { get; set; }
 
-        [ReadOnly(true)]
         [DisplayName("Shape")]
         [FeatureAttribute(Order = 23, ExportName = "GeomType")]
         public virtual CulvertGeometryType GeometryType

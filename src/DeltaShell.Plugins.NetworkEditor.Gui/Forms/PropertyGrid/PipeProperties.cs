@@ -1,10 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
@@ -15,7 +18,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         #region Connection properties
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
         [PropertyOrder(0)]
         public string Name
         {
@@ -23,66 +27,70 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Name = value; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(1)]
-        [DisplayName("Begin manhole")]
+        [DisplayName("From manhole")]
         public string FromManhole
         {
             get { return data?.Source?.ToString() ?? string.Empty; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(2)]
-        [DisplayName("End manhole")]
+        [DisplayName("To manhole")]
         public string ToManhole
         {
             get { return data?.Target?.ToString() ?? string.Empty; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(3)]
-        [DisplayName("Begin compartment")]
+        [DisplayName("From compartment")]
         public string FromCompartment
         {
             get { return data?.SourceCompartment?.ToString() ?? string.Empty; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.RelationsCategory)]
         [PropertyOrder(4)]
-        [DisplayName("End compartment")]
+        [DisplayName("To compartment")]
         public string ToCompartment
         {
             get { return data?.TargetCompartment?.ToString() ?? string.Empty; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(5)]
         [DisplayName("Invert level begin (m)")]
         public double LevelStart
         {
             get { return data?.LevelSource ?? double.NaN; }
+            set { data.LevelSource = value; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(6)]
         [DisplayName("Invert level end (m)")]
         public double LevelTarget
         {
             get { return data?.LevelTarget ?? double.NaN; }
+            set { data.LevelTarget = value; }
         }
 
-        [Category("Connection properties")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(7)]
         [DisplayName("Water type")]
-        public string WaterType
+        [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
+        public SewerConnectionWaterType WaterType
         {
-            get { return data?.WaterType.ToString() ?? string.Empty; }
+            get { return data.WaterType; }
+            set { data.WaterType = value; }
         }
 
-        [Category("Connection properties")]
-        [PropertyOrder(8)]
-        [DisplayName("Length (m)")]
-        [Description("Length used for simulation when IsLengthCustom is true")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [PropertyOrder(3)]
+        [DisplayName("Length")]
+        [Description("Length used for simulation when IsLengthCustom is true.")]
         public string Length
         {
             get { return string.Format("{0:0.##}", data.Length); }
@@ -96,11 +104,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Geometry length")]
+        [Description("Length of the pipe on the map.")]
+        [PropertyOrder(4)]
+        public string GeometryLength
+        {
+            get { return string.Format("{0:0.##}", data.Geometry.Length); }
+        }
+
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Order number")]
+        [PropertyOrder(20)]
+        public int OrderNumber
+        {
+            get { return data.OrderNumber; }
+            set { data.OrderNumber = value; }
+        }
+
         #endregion
 
         #region Cross section
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(0)]
         [DisplayName("Name")]
         public string CrossSectionName
@@ -108,7 +134,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.ToString() ?? string.Empty; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(1)]
         [DisplayName("Shape")]
         public string CrossSectionShape
@@ -116,7 +142,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.Shape?.Type.ToString() ?? string.Empty; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(2)]
         [DisplayName("Diameter (m)")]
         [DynamicVisible]
@@ -125,7 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileDiameter() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(3)]
         [DisplayName("Width (m)")]
         [DynamicVisible]
@@ -134,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileWidth() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(4)]
         [DisplayName("Height (m)")]
         [DynamicVisible]
@@ -143,7 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileHeight() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(5)]
         [DisplayName("Arch height (m)")]
         [DynamicVisible]
@@ -152,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileArchHeight() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(6)]
         [DynamicVisible]
         public double Slope
@@ -160,7 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileSlope() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(7)]
         [DisplayName("Bottom width (m)")]
         [DynamicVisible]
@@ -169,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileBottomWidthB() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(8)]
         [DisplayName("Maximum flow width (m)")]
         [DynamicVisible]
@@ -178,7 +204,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data?.Profile?.GetProfileMaximumFlowWidth() ?? double.NaN; }
         }
 
-        [Category("Cross section properties")]
+        [Category(PropertyWindowCategoryHelper.CrossSectionCategory)]
         [PropertyOrder(9)]
         [DisplayName("Open or Closed profile")]
         [DynamicVisible]

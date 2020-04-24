@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel;
+using DelftTools.Utils;
 
 namespace DelftTools.Hydro
 {
+    [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
     public enum SewerConnectionWaterType
     {
-        [Description("NVT")] None, // => Transport riool leiding
-        [Description("HWA")] StormWater, // Hemel water afvoer (HWA) => Hemelwaterriool
-        [Description("DWA")] DryWater, // Droog water afvoer (DWA) => vuilwaterriool
-        [Description("GMD")] Combined // Gemengd riool
+        [Description("None")] None, // => Transport riool leiding
+        [Description("Storm water")] StormWater, // Hemel water afvoer (HWA) => Hemelwaterriool
+        [Description("Dry weather")] DryWater, // Droog water afvoer (DWA) => vuilwaterriool
+        [Description("Combined")] Combined // Gemengd riool
     }
 }

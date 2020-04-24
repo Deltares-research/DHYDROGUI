@@ -1,5 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if (nodeShapeAttribute.IsValidAttribute())
             {
-                compartment.Shape = nodeShapeAttribute.GetValueFromDescription<CompartmentShape>();
+                compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
             }
 
             var outletCompartment = compartment as OutletCompartment;

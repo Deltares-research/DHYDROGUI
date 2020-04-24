@@ -17,32 +17,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "RetentionProperties_DisplayName")]
     public class RetentionProperties : ObjectProperties<Retention>
     {
-        [Category("General")]
-        [PropertyOrder(1)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Long name")]
+        [PropertyOrder(2)]
         public string LongName
         {
             get { return data.LongName; }
             set { data.LongName = value; }
         }
 
-        [Category("General")]
-        [PropertyOrder(2)]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Name")]
+        [PropertyOrder(1)]
         public string Name
         {
             get { return data.Name; }
             set { data.Name = value; }
         }
 
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [DisplayName("Attributes")]
         [Description("All the (custom) attributes for this object.")]
-        [PropertyOrder(3)]
+        [PropertyOrder(99)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
             get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
         }
 
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Branch")]
         [Description("Channel in which the source is located.")]
         [PropertyOrder(3)]
         public string Channel
@@ -52,8 +56,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Description("Chainage of the retention in the channel on the map.")]
         [PropertyOrder(4)]
-        [Category("Administration")]
-        [DisplayName("Chainage (Map)")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
+        [DisplayName("Chainage (map)")]
         public double Chainage
         {
             get { return NetworkHelper.MapChainage(data); }
@@ -61,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Description("Chainage of the retention in the channel as used in the simulation.")]
         [PropertyOrder(5)]
-        [Category("Administration")]
+        [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage")]
         public double CompuChainage
         {
@@ -70,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
 
-        [Category("Retention")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Type")]
         [PropertyOrder(6)]
         public RetentionType Type
@@ -79,8 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Type = value; }
         }
 
-        [Category("Retention")]
-        [Description("Storage area (manhole)")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [Description("Storage area (manhole).")]
+        [DisplayName("Storage area")]
         [PropertyOrder(7)]
         [DynamicReadOnly]
         public double Area
@@ -89,8 +94,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set{data.StorageArea = value;}
         }
 
-        [Category("Retention")]
-        [Description("StreetStorageArea")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [Description("Street storage area.")]
+        [DisplayName("Street storage area")]
         [PropertyOrder(8)]
         [DynamicReadOnly]
         public double StreetStorageArea
@@ -99,8 +105,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set{data.StreetStorageArea = value;}
         }
 
-        [Category("Retention")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Bed level storage reservoir (manhole)")]
+        [DisplayName("Bed level")]
         [PropertyOrder(9)]
         [DynamicReadOnly]
         public double BedLevel
@@ -109,8 +116,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.BedLevel = value; }
         }
 
-        [Category("Retention")]
-        [Description("Street level")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
+        [Description("Street level.")]
+        [DisplayName("Street level")]
         [PropertyOrder(10)]
         [DynamicReadOnly]
         public double StreetLevel
@@ -118,9 +126,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return data.StreetLevel; }
             set { data.StreetLevel = value; }
         }
-        
-        [Category("Table")]
-        [Description("Storage bed definition")]
+
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
+        [Description("Storage bed definition.")]
         [PropertyOrder(11)]
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [DynamicReadOnly]
@@ -130,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Data = value; }
         }
 
-        [Category("Table")]
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
         [Description("Type")]
         [PropertyOrder(12)]
         [DynamicReadOnly]
@@ -140,8 +148,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.Data.Arguments[0].InterpolationType = value; }
         }
 
-        [Category("Table")]
-        [Description("Use storage as function of level")]
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
+        [Description("Use storage as function of level.")]
+        [DisplayName("Use table")]
         [PropertyOrder(13)]
         public bool UseTable
         {

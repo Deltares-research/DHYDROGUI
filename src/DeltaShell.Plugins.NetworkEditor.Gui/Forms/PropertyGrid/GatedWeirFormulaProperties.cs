@@ -4,6 +4,7 @@ using System.Globalization;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.ComponentModel;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
@@ -18,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return (GatedWeirFormula)weirFormula; }
         }
 
-        [DisplayName("Contraction Coefficient")]
+        [DisplayName("Contraction coefficient")]
         [Description("Contraction coefficient")]
         public double ContractionCoefficient
         {
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { GatedWeirFormula.ContractionCoefficient = value; }
         }
 
-        [DisplayName("Lateral Contraction")]
+        [DisplayName("Lateral contraction")]
         [Description("Lateral contraction Cw")]
         public double LateralContraction
         {
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Category("General")]
+        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Use a time series for the lower edge level or use a time constant gate opening")]
         [DisplayName("Gate opening type")]
         public TimeDependency UseCapacityTimeSeries

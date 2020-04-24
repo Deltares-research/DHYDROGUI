@@ -69,7 +69,7 @@ namespace DelftTools.Hydro
             get { return Network as IHydroNetwork; }
         }
 
-        [DisplayName("LongName")]
+        [DisplayName("Long name")]
         [FeatureAttribute(Order = 2)]
         public virtual string LongName { get; set; }
 
@@ -80,5 +80,9 @@ namespace DelftTools.Hydro
             if (Data != null)
                 yield return Data;
         }
+
+        [DisplayName("Chainage")]
+        [FeatureAttribute(Order = 3)]
+        public override double Chainage { get => base.Chainage; set => base.Chainage = value; }
     }
 }

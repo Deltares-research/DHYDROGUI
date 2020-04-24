@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         [ReadOnly(true)]
-        [DisplayName("Chainage [m]")]
+        [DisplayName("Chainage")]
         [DisplayFormat("0.00")]
         public double Chainage
         {
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         [DynamicReadOnly]
-        [DisplayName("Discharge coefficient (simple)")]
+        [DisplayName("Flow direction")]
         public FlowDirection FlowDirection
         {
             get { return Weir.FlowDirection; }

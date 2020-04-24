@@ -15,19 +15,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             get { return (FreeFormWeirFormula)weirFormula; }
         }
 
-        [DisplayName("Crest Width")]
+        [DisplayName("Crest width")]
         public double CrestWidth
         {
             get { return FreeFormWeirFormula.CrestWidth; }
         }
 
-        [DisplayName("Crest Level")]
+        [DisplayName("Crest level")]
         public double CrestLevel
         {
             get { return FreeFormWeirFormula.CrestLevel; }
         }
 
-        [DisplayName("Discharge Coefficient")]
+        [DisplayName("Discharge coefficient")]
         [Description("Discharge coefficient Ce")]
         public double DischargeCoefficient
         {

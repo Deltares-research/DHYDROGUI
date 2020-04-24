@@ -110,6 +110,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
             else if (feature is ICompositeBranchStructure)
                 featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
+            else if (feature is ICompartment)
+                featureInteractor = new CompartmentInteractor(layer, feature, vectorStyle, Network);
             else if (feature is IWeir)
                 featureInteractor = new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
             else if (feature is ICulvert)

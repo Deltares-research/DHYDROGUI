@@ -1,6 +1,7 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 
 namespace DeltaShell.Plugins.ImportExport.Gwsw
@@ -60,7 +61,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())
-                orifice.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
+                //orifice.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
+                orifice.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterType.GetValidStringValue());
         }
 
         private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)

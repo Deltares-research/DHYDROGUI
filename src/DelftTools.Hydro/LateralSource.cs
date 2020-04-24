@@ -66,7 +66,7 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 5)]
         public virtual bool IsDiffuse { get { return Length != 0; } }
 
-        [DisplayName("Length [m]")]
+        [DisplayName("Length")]
         [FeatureAttribute(Order = 6, ExportName = "Length")]
         public virtual double DiffuseLateralLength
         {
@@ -77,5 +77,9 @@ namespace DelftTools.Hydro
         {
             get { return true; }
         }
+
+        [DisplayName("Chainage")]
+        [FeatureAttribute(Order = 3)]
+        public override double Chainage { get => base.Chainage; set => base.Chainage = value; }
     }
 }

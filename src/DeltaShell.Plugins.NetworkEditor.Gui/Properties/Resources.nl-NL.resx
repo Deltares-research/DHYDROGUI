@@ -297,4 +297,7 @@
   <data name="RoughnessSectionProperties_RoughnessSection_DisplayName" xml:space="preserve">
     <value>#Ruwheid sectie</value>
   </data>
+  <data name="CompartmentProperties_DisplayName" xml:space="preserve">
+    <value>#Compartiment</value>
+  </data>
 </root>
