@@ -384,6 +384,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForUniformFileBasedConstantBoundary_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory()
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                var dataComponent = new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(string.Empty));
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+                string saveFilePath = Path.Combine(Path.Combine(tempDirectory.Path), "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, true);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(8));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, string.Empty);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void SaveTo_ForSpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied()
         {
             // Setup
@@ -434,6 +468,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, fileName1);
                 AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "1.0000000e+001");
                 AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, fileName2);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForSpatiallyVaryingFileBasedConstantBoundary_WithEmptyFilePaths_MdwFileShouldContainCorrectBoundaryCategory()
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                IEventedList<SupportPoint> supportPoints = boundary.GeometricDefinition.SupportPoints;
+                dataComponent.AddParameters(supportPoints[0], new FileBasedParameters(string.Empty));
+                dataComponent.AddParameters(supportPoints[1], new FileBasedParameters(string.Empty));
+
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, true);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(11));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000e+000");
+                AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, string.Empty);
+                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "1.0000000e+001");
+                AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, string.Empty);
             }
         }
 

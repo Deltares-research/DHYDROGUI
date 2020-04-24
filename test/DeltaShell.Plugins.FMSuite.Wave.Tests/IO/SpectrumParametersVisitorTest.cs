@@ -87,6 +87,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.Received(1).Add(filePath);
         }
 
+        [Test]
+        public void Visit_FileBasedParameters_WithEmptyFilePath_SetsCorrectSpectrumTypeAndFileName()
+        {
+            // Setup
+            var category = new DelftIniCategory("");
+            var filesManager = Substitute.For<IFilesManager>();
+            var visitor = new SpectrumParametersVisitor(category, filesManager);
+
+            var parameters = new FileBasedParameters(string.Empty);
+
+            // Call
+            visitor.Visit(parameters);
+
+            // Assert
+            DelftIniProperty property = category.Properties.Single();
+            Assert.That(property.Name, Is.EqualTo(KnownWaveProperties.SpectrumSpec));
+            Assert.That(property.Value, Is.EqualTo("from file"));
+            Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
+            Assert.That(visitor.SpectrumFile, Is.EqualTo(" "));
+            filesManager.DidNotReceiveWithAnyArgs().Add(string.Empty);
+        }
+
         [TestFixture]
         [TestFixture(typeof(DegreesDefinedSpreading))]
         [TestFixture(typeof(PowerDefinedSpreading))]

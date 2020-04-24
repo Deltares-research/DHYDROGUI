@@ -71,8 +71,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             SpectrumType = SpectrumImportExportType.FromFile;
             SetSpectrumProperty();
 
-            filesManager.Add(fileBasedParameters.FilePath);
-            SpectrumFile = Path.GetFileName(fileBasedParameters.FilePath);
+            string filePath = fileBasedParameters.FilePath;
+            if (filePath == string.Empty)
+            {
+                // this string should not be empty, because the DelftIniWriter
+                // only writes properties with values that are not null or empty.
+                SpectrumFile = " ";
+                return;
+            }
+
+            filesManager.Add(filePath);
+            SpectrumFile = Path.GetFileName(filePath);
         }
 
         private void SetSpectrumProperty()
