@@ -22,10 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                GeometryPreviewView.Dispose();
+                return;
             }
+
+            GeometryPreviewView.Dispose();
+            SupportPointEditorView.Dispose();
         }
 
         /// <summary>
