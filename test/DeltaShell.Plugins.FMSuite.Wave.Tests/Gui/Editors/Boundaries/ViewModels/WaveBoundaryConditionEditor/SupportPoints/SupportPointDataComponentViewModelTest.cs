@@ -665,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        public void RemoveParameters_AnnounceSupportPointsDataChanged()
+        public void RemoveParameters_SupportPointNotSelected_OnlyAnnounceSupportPointsDataChanged()
         {
             // Setup
             SupportPoint supportPoint = GetDefaultSupportPoint();
@@ -683,13 +683,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
 
-            viewModel.SelectedSupportPoint = supportPoint;
             mediator.ClearReceivedCalls();
             // Call
             viewModel.RemoveParameters(supportPoint);
 
             // Assert
             mediator.Received(1).AnnounceSupportPointsChanged();
+            mediator.DidNotReceiveWithAnyArgs().AnnounceSelectedSupportPointDataChanged(null);
         }
 
         [Test]

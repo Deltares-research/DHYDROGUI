@@ -12,7 +12,7 @@ using NetTopologySuite.Extensions.Features;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.FeaturesFromBoundaryBehaviours
 {
     /// <summary>
-    /// <see cref="SelectedSupportPointFromBoundaryBehaviour"/> defines the
+    /// <see cref="ToggledSupportPointsFromBoundaryBehaviour"/> defines the
     /// behaviour to construct the active or inactive support point feature.
     /// </summary>
     /// <seealso cref="IFeaturesFromBoundaryBehaviour"/>
