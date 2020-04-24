@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// <param name="coordinateSystem">The coordinate system.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="geometryFactory"/> or <paramref name="layerFactory"/>
-        /// are <c>null</c>.
+        /// is <c>null</c>.
         /// </exception>
         public GeometryPreviewMapConfigurator(IWaveBoundaryGeometryFactory geometryFactory,
                                               IWaveLayerFactory layerFactory,
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             ConstructSelectedSupportPointLayers(boundaryProvider, supportPointDataComponentViewModel, map);
 
             featuresContainer.SupportPointMapFeatureProvider.FeaturesChanged +=
-                (sender, Args) => refreshGeometryView.RefreshGeometryView();
+                (sender, args) => refreshGeometryView.RefreshGeometryView();
 
             map.ZoomToExtents();
         }
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                                                               geometryFactory);
             var inactiveSupportPointProvider =
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
-                                                       null,
+                                                       coordinateSystem,
                                                        inactiveSupportPointBehaviour);
 
             ILayer inactiveSupportPointLayer =
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             var selectedSupportPointProvider =
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
-                    null,
+                    coordinateSystem,
                     selectedSupportPointBehaviour);
 
             ILayer selectedSupportPointLayer =
