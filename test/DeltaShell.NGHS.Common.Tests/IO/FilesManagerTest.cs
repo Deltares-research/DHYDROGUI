@@ -72,13 +72,13 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
                 // Then
                 Assert.That(logHandler.ReceivedCalls().Count(), Is.EqualTo(1));
-                logHandler.Received(1).ReportWarning($"Could not find file at '{filePath}'.");
+                logHandler.Received(1).ReportError($"Could not find file at '{filePath}'.");
             }
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Add_And_CopyTo_FileExistsAtTarget_OverwritesFileAndLogsWarning()
+        public void Add_And_CopyTo_FileExistsAtTarget_OverwritesFile()
         {
             // Given
             var filesManager = new FilesManager();
@@ -106,8 +106,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 Assert.That(targetFilePath, Does.Exist);
                 Assert.That(File.ReadAllText(targetFilePath), Is.EqualTo(sourceFileContent));
 
-                Assert.That(logHandler.ReceivedCalls().Count(), Is.EqualTo(1));
-                logHandler.Received(1).ReportWarning($"File already exists at '{targetFilePath}' and will be overwritten.");
+                Assert.That(logHandler.ReceivedCalls().Count(), Is.EqualTo(0));
             }
         }
 

@@ -39,17 +39,12 @@ namespace DeltaShell.NGHS.Common.IO
             {
                 if (!file.Exists)
                 {
-                    logHandler.ReportWarning($"Could not find file at '{file.FullName}'.");
+                    logHandler.ReportError($"Could not find file at '{file.FullName}'.");
                     continue;
                 }
 
-                var targetFile = new FileInfo(Path.Combine(dirInfo.FullName, file.Name));
-                if (targetFile.Exists)
-                {
-                    logHandler.ReportWarning($"File already exists at '{targetFile.FullName}' and will be overwritten.");
-                }
-
-                file.CopyTo(targetFile.FullName, overwrite: true);
+                file.CopyTo(Path.Combine(dirInfo.FullName, file.Name),
+                            overwrite: true);
             }
         }
     }
