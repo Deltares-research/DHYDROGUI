@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     public interface IGeometryPreviewMapConfigurator
     {
         /// <summary>
-        /// Configures the provided <paramref name="map"/> to display the GeometryPreview layers..
+        /// Configures the provided <paramref name="map"/> to display the GeometryPreview layers.
         /// </summary>
         /// <param name="map">The map to configure.</param>
         /// <param name="boundaryProvider">The boundary provider.</param>
