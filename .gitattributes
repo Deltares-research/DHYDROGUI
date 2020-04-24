@@ -37201,7 +37201,6 @@ test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/HydroNetworkCopyAndPasteH
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/ImportExport/CrossSectionXYZCsvExportImportTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/ImportExport/CrossSectionYZCsvExportImportTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/ImportExport/CrossSectionZWCsvExportImportTest.cs -text
-test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/NHibernate/NHibernateCrossSectionTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/NHibernate/NHibernateDrainageBasinIntegrationTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/NHibernate/NHibernateHydroNetworkIntegrationTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/NHibernate/NHibernateHydroRegionIntegrationTest.cs -text

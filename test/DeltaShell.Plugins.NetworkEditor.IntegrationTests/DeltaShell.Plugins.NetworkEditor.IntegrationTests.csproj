@@ -207,7 +207,6 @@
     <Compile Include="ImportExport\CrossSectionXYZCsvExportImportTest.cs" />
     <Compile Include="ImportExport\CrossSectionYZCsvExportImportTest.cs" />
     <Compile Include="ImportExport\CrossSectionZWCsvExportImportTest.cs" />
-    <Compile Include="NHibernate\NHibernateCrossSectionTest.cs" />
     <Compile Include="NHibernate\NHibernateDrainageBasinIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateHydroNetworkIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateHydroRegionIntegrationTest.cs" />

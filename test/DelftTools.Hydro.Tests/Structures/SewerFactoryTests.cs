@@ -13,7 +13,6 @@ namespace DelftTools.Hydro.Tests.Structures
     public class SewerFactoryTests
     {
         [Test]
-        [Category("Quarantine")]
         public void GeneratingAPipe_CheckCrossSectionDefaultSettings()
         {
             var network = new HydroNetwork();
@@ -30,7 +29,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.That(csRoundShape.Type, Is.EqualTo(CrossSectionStandardShapeType.Circle));
 
             Assert.That(network.SharedCrossSectionDefinitions.Count, Is.EqualTo(1));
-            Assert.AreSame(((CrossSectionDefinitionProxy)retrievedPipe.CrossSectionDefinition).InnerDefinition, network.SharedCrossSectionDefinitions.First());
+            Assert.AreSame(((CrossSectionDefinitionProxy)retrievedPipe.CrossSectionDefinition), network.SharedCrossSectionDefinitions.First());
         }
 
         [Test]
