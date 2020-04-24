@@ -428,7 +428,6 @@
     <None Include="Resources\settings.png" />
     <None Include="Resources\hurricane_del.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="MapView\MapView.xaml">
       <SubType>Designer</SubType>
