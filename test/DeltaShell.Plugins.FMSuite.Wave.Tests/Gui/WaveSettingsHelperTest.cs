@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NSubstitute;
 using NUnit.Framework;
@@ -60,6 +61,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             AssertCategoryExists(wpfGuiCategories, "Numerical Parameters");
             AssertCategoryExists(wpfGuiCategories, "Output");
             AssertCategoryExists(wpfGuiCategories, "Domain specific settings");
+        }
+
+        [Test]
+        public void GetWpfGuiCategories_ShouldContainBoundariesSubCategoryInGeneralCategory()
+        {
+            // Setup
+            var waveModel = new WaveModel();
+
+            // Call
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Substitute.For<IGui>());
+
+            // Assert
+            WpfGuiCategory generalCategory = wpfGuiCategories.First(c => c.CategoryName == "General");
+            
+            WpfGuiSubCategory boundarySubCategory = generalCategory.SubCategories.FirstOrDefault(sc => sc.SubCategoryName == Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name);
+            Assert.NotNull(boundarySubCategory, "Subcategory boundaries does not exist in General");
+            
+            ObservableCollection<WpfGuiProperty> boundaryProperties = boundarySubCategory.Properties;
+            Assert.AreEqual(2, boundaryProperties.Count);
+            Assert.AreEqual(Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file,boundaryProperties[0].Label);
+            Assert.AreEqual(typeof(bool), boundaryProperties[0].ValueType);
+            Assert.AreEqual(string.Empty, boundaryProperties[0].ToolTip);
+
+            Assert.AreEqual(Resources.WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File, boundaryProperties[1].Label);
+            Assert.AreEqual(typeof(string), boundaryProperties[1].ValueType);
+            Assert.AreEqual(string.Empty, boundaryProperties[1].ToolTip);
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void GetWpfGuiCategories_SpectrumFileNameShouldBeEnabledDependentOnBoundaryDefinitionPerFileUsed(bool useDefinitionFile)
+        {
+            var waveModel = new WaveModel();
+            ObservableCollection<WpfGuiCategory> wpfGuiCategories = WaveSettingsHelper.GetWpfGuiCategories(waveModel, Substitute.For<IGui>());
+
+            // Act
+            waveModel.BoundaryContainer.DefinitionPerFileUsed = useDefinitionFile;
+
+            // Assert
+            WpfGuiProperty fileNameProperty = wpfGuiCategories.SelectMany(c => c.Properties)
+                                                             .Single(p => p.Label == Resources.WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File);
+            Assert.That(fileNameProperty.IsEnabled, Is.EqualTo(useDefinitionFile));
         }
 
         private static void AssertCategoryExists(IEnumerable<WpfGuiCategory> wpfGuiCategories, string categoryName)

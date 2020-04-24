@@ -147,6 +147,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spectrum files|*{0}.
+        /// </summary>
+        public static string SelectSp2FileButton_ButtonAction_Spectrum_Files___0_ {
+            get {
+                return ResourceManager.GetString("SelectSp2FileButton_ButtonAction_Spectrum_Files___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spatially Varying Constant Parameters.
         /// </summary>
         public static string SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle {
@@ -271,6 +280,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         public static string WaveModelNodePresenter_CreateValidationMenuItem_Validate___ {
             get {
                 return ResourceManager.GetString("WaveModelNodePresenter_CreateValidationMenuItem_Validate___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundaries.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum File:.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use boundary definition per file.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file", resourceCulture);
             }
         }
         

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
-using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
@@ -44,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             comFileGuiProperty.CustomCommand.ButtonFunction = SelectComFileButton.ButtonAction;
         }
 
-        private static void AddCustomWaveSettings(IHasCoordinateSystem model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)
+        private static void AddCustomWaveSettings(WaveModel model, IGui gui, IEnumerable<WpfGuiCategory> wpfCategories)
         {
             WpfGuiCategory generalCategory =
                 wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
@@ -61,11 +60,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         HasMaxValue = false,
                         HasMinValue = false,
                     });
-
                 coordSys.CustomCommand.TextBoxEnabled = false;
                 coordSys.CustomCommand.ButtonFunction = o => SetCoordinateSystemButton.ButtonAction(o, gui, WaveModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
+
+                var waveBoundariesPerFileUsed = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed,
+                                                                  (d, v) => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed = (bool)v)
+                {
+                    Category = KnownWaveCategories.GeneralCategory,
+                    SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
+                    Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file,
+                    ValueType = typeof(bool),
+                    ToolTip = string.Empty
+                });
+                generalCategory.AddWpfGuiProperty(waveBoundariesPerFileUsed);
+
+                var waveBoundariesPerFileName = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.FileNameForBoundariesPerFile,
+                                                                                      (d, v) => model.ModelDefinition.BoundaryContainer.FileNameForBoundariesPerFile = (string)v,
+                                                                       d=> model.BoundaryContainer.DefinitionPerFileUsed)
+                {
+                    Category = KnownWaveCategories.GeneralCategory,
+                    SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
+                    Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File,
+                    ValueType = typeof(string),
+                    ToolTip = string.Empty
+                });
+                waveBoundariesPerFileName.CustomCommand.TextBoxEnabled = false;
+                waveBoundariesPerFileName.CustomCommand.ButtonFunction = SelectSp2FileButton.ButtonAction;
+                generalCategory.AddWpfGuiProperty(waveBoundariesPerFileName);
             }
         }
 

@@ -157,6 +157,9 @@
   <data name="SelectComFileButton_ButtonAction_Communication_files___0_" xml:space="preserve">
     <value>Communication files|*{0}</value>
   </data>
+  <data name="SelectSp2FileButton_ButtonAction_Spectrum_Files___0_" xml:space="preserve">
+    <value>Spectrum files|*{0}</value>
+  </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame" xml:space="preserve">
     <value>Online-coupling time frame</value>
   </data>
@@ -219,5 +222,14 @@
   </data>
   <data name="UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
     <value>Uniform Time Dependent Parameters</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file" xml:space="preserve">
+    <value>Use boundary definition per file</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name" xml:space="preserve">
+    <value>Boundaries</value>
   </data>
 </root>
