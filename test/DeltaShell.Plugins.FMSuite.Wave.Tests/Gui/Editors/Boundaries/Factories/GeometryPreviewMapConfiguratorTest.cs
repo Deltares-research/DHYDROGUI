@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints;
@@ -177,6 +180,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
+        }
+
+        /// <summary>
+        /// GIVEN a GeometryPreviewMapConfigurator
+        ///   AND a map
+        ///   AND a BoundaryProvider
+        ///   AND a RefreshGeometryView
+        /// WHEN the map is configured by the configurator
+        ///  AND a support point is added to the boundary
+        /// THEN the refresh geometry view is called
+        /// </summary>
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAGeometryPreviewMapConfigurator_WhenAMapIsConfigured_ThenAddingSupportPointsToTheBoundaryWillRefreshTheMap()
+        {
+            // Given
+            var map = Substitute.For<IMap>();
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            var supportPoints = new EventedList<SupportPoint>();
+            geometricDefinition.SupportPoints.Returns(supportPoints);
+
+            var boundary = Substitute.For<IWaveBoundary>();
+            boundary.GeometricDefinition.Returns(geometricDefinition);
+
+            var boundaryList = new EventedList<IWaveBoundary> {boundary};
+
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
+            boundaryProvider.Boundaries.Returns(boundaryList);
+
+            var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
+            var layerFactory = Substitute.For<IWaveLayerFactory>();
+
+            var mapConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, layerFactory, null);
+            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
+
+            var supportPoint = new SupportPoint(10.0, geometricDefinition);
+
+            // When
+            mapConfigurator.ConfigureMap(map, boundaryProvider, GetViewModel(), refreshGeometryView);
+            supportPoints.Add(supportPoint);
+
+            // Then
+            refreshGeometryView.Received(1).RefreshGeometryView();
         }
     }
 }
