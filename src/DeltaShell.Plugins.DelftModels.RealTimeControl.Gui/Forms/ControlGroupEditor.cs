@@ -386,7 +386,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void CopyXmlToClipboard(object sender, EventArgs e)
         {
-            object tag = ((MenuItem) sender).Tag;
+            object tag = ((MenuItem)sender).Tag;
             if (tag is RtcBaseObject rtcObj)
             {
                 CopyXmlToClipboard(rtcObj);
@@ -400,7 +400,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             var stringBuilder = new StringBuilder();
             foreach (XElement xElement in listXElements)
             {
-                stringBuilder.Append(xElement+Environment.NewLine);
+                stringBuilder.Append(xElement + Environment.NewLine);
             }
 
             Clipboard.SetText(stringBuilder.ToString());

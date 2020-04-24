@@ -159,19 +159,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         }
 
         [Test]
-        public void Constructor_InitializesInstanceCorrectly()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void Name_SettingInvalidValue_LogsErrorAndMaintainsOriginalName(string invalidValue)
         {
+            // Setup
+            var controlGroup = new ControlGroup();
+            string originalName = controlGroup.Name;
+
+            // Precondition
+            Assert.IsNotEmpty(originalName);
+
             // Call
+            Action testAction = () => controlGroup.Name = invalidValue;
+           
+            // Assert
+            const string expectedErrorMessage =
+                "Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.";
+            TestHelper.AssertLogMessageIsGenerated(testAction, expectedErrorMessage, 1);
+
+            Assert.AreEqual(originalName, controlGroup.Name);
+        }
+
+        [Test]
+        public void Name_SettingValidValue_ErrorNotLoggedAndNameUpdated()
+        {
+            // Setup
+            const string validName = "ControlGroupName";
             var controlGroup = new ControlGroup();
 
+            // Call
+            Action testAction = () => controlGroup.Name = validName;
+
             // Assert
-            Assert.That(controlGroup.Name, Is.EqualTo(string.Empty));
-            Assert.That(controlGroup.Conditions, Is.Empty);
-            Assert.That(controlGroup.Rules, Is.Empty);
-            Assert.That(controlGroup.Inputs, Is.Empty);
-            Assert.That(controlGroup.Outputs, Is.Empty);
-            Assert.That(controlGroup.Signals, Is.Empty);
-            Assert.That(controlGroup.MathematicalExpressions, Is.Empty);
+            TestHelper.AssertLogMessagesCount(testAction, 0);
+            Assert.AreEqual(validName, controlGroup.Name);
         }
     }
 }

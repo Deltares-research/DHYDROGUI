@@ -95,7 +95,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             if (disposing)
             {
-                ViewModel.Dispose();
+                if (ViewModel?.DataModel != null)
+                {
+                    ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
+                }
+                ViewModel?.Dispose();
             }
 
             disposed = true;

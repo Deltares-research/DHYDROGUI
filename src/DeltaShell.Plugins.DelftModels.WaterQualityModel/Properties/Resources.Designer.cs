@@ -157,6 +157,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to default output parameters.
+        /// </summary>
+        public static string SubFileImporter_DefaultOutputParameters_Name {
+            get {
+                return ResourceManager.GetString("SubFileImporter_DefaultOutputParameters_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No sub file was imported: the selected sub file does not exist.
         /// </summary>
         public static string SubFileImporter_File_not_found {
@@ -184,6 +193,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to output parameters.
+        /// </summary>
+        public static string SubFileImporter_OutputParameters_Name {
+            get {
+                return ResourceManager.GetString("SubFileImporter_OutputParameters_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to parameters.
+        /// </summary>
+        public static string SubFileImporter_Parameters_Name {
+            get {
+                return ResourceManager.GetString("SubFileImporter_Parameters_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No sub file was imported: no file selection was made.
         /// </summary>
         public static string SubFileImporter_Path_not_set {
@@ -193,11 +220,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to processes.
+        /// </summary>
+        public static string SubFileImporter_Processes_Name {
+            get {
+                return ResourceManager.GetString("SubFileImporter_Processes_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Substance process library is not set.
         /// </summary>
         public static string SubFileImporter_Substance_process_library_not_set {
             get {
                 return ResourceManager.GetString("SubFileImporter_Substance_process_library_not_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to substances.
+        /// </summary>
+        public static string SubFileImporter_Substances_Name {
+            get {
+                return ResourceManager.GetString("SubFileImporter_Substances_Name", resourceCulture);
             }
         }
         

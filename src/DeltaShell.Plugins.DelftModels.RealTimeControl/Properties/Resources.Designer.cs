@@ -459,6 +459,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes..
+        /// </summary>
+        public static string RealTimeControlGroupErrorLogEmptyValue {
+            get {
+                return ResourceManager.GetString("RealTimeControlGroupErrorLogEmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken DataItem link detected in Model:{0}, Controlgroup:{1}, at the {2} linked to ({3}).{4}Connection to {5} must be manually re-established..
         /// </summary>
         public static string RealTimeControlModel_BrokenDataItemLinkDetected {

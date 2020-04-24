@@ -453,7 +453,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         {
             using (var clipboardMock = new ClipboardMock())
             {
-                clipboardMock.ContainsText_Returns(true);
                 clipboardMock.GetText_Returns_SetText();
 
                 EventedList<CrossSectionSectionType> sectionTypes = GetSectionTypesList(new[]

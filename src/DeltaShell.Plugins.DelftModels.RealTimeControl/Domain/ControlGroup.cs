@@ -7,15 +7,20 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
     public class ControlGroup : EditableObjectUnique<long>, ICloneable, IControlGroup, IItemContainer
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ControlGroup));
+        private string name;
+
         public ControlGroup()
         {
-            Name = string.Empty;
+            Name = "Control Group";
             Conditions = new EventedList<ConditionBase>();
             Rules = new EventedList<RuleBase>();
             Inputs = new EventedList<Input>();
@@ -23,8 +28,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             Signals = new EventedList<SignalBase>();
             MathematicalExpressions = new EventedList<MathematicalExpression>();
         }
-        
-        public string Name { get; set; }
+
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    name = value;
+                }
+                else
+                {
+                    Log.Error(Resources.RealTimeControlGroupErrorLogEmptyValue);
+                }
+                
+            }
+        }
         
         public IEventedList<RuleBase> Rules { get; protected set; }
         public IEventedList<ConditionBase> Conditions { get; protected set; }
