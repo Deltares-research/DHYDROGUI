@@ -3,6 +3,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using NSubstitute;
 using NUnit.Framework;
+using Rhino.Mocks.Constraints;
+using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
 {
@@ -83,6 +85,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
 
             // Assert
             refreshGeometryView.Received(1).RefreshGeometryView();
+        }
+
+        [Test]
+        public void AnnounceSupportPointsChanged_RefreshMapNotSet_DoesNotThrow()
+        {
+            // Setup
+            var selectedSupportPointDependentViewModel =
+                Substitute.For<IRefreshDataComponentViewModel>();
+            var mediator = new DataComponentChangeMediator(selectedSupportPointDependentViewModel);
+
+            // Call | Assert
+            void Call() => mediator.AnnounceSupportPointsChanged();
+            Assert.That(Call, Throws.Nothing);
         }
     }
 }
