@@ -197,7 +197,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             if (!Enum.TryParse(gwswElement?.ElementTypeName, out elementType)) return null;
 
             var lu = new Dictionary<SewerFeatureType, GwswElement> {{elementType, gwswElement}}.ToLookup(l => l.Key, l => l.Value);
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
+            var activityRunner = new ActivityRunner();
+            var gwswImporter = new GwswFileImporter(new DefinitionsProvider()) { ActivityRunner = activityRunner };
+            activityRunner.Activities.Add(new FileImportActivity(gwswImporter));
 
             var sewerEntities = SewerFeatureFactory.CreateSewerEntities(lu, gwswImporter);
             var sewerEntity = sewerEntities.FirstOrDefault() as T;
