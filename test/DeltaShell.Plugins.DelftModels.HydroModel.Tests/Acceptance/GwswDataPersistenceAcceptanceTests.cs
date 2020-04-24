@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Core;
 using DeltaShell.Plugins.ImportExport.Gwsw;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using log4net.Core;
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                     acceptanceModelName,
                     hydroModel,
                     preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
+                    preconditionExpectedCatchmentsCount, gui.Application);
 
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             string acceptanceModelName, 
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
-            int expectedCatchmentsCount)
+            int expectedCatchmentsCount, IApplication app)
         {
             var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
 
@@ -102,9 +102,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 FilesToImport = Directory.GetFiles(inputDataDirectory)
             };
 
+            var fileImportActivity = new FileImportActivity(fileImporter, hydroModel);
             fileImporter.LoadFeatureFiles(inputDataDirectory);
 
-            var errorMessages = TestHelper.GetAllRenderedMessages(() => fileImporter.ImportItem(null, hydroModel), Level.Error);
+            var errorMessages = TestHelper.GetAllRenderedMessages(() =>
+            {
+                app.ActivityRunner.Enqueue(fileImportActivity);
+
+                while (app.IsActivityRunningOrWaiting(fileImportActivity))
+                {
+                    Thread.Sleep(100);
+                    ((DeltaShellApplication)app).WaitMethod();
+                }
+
+            }, Level.Error);
 
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the GWSW model:{Environment.NewLine}{errorMessages}");
