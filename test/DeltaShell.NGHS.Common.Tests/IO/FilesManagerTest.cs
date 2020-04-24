@@ -56,7 +56,7 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void Add_And_CopyTo_SourceFileDoesNotExist_LogsWarning()
+        public void Add_And_CopyTo_SourceFileDoesNotExist_LogsError()
         {
             // Given
             var filesManager = new FilesManager();
