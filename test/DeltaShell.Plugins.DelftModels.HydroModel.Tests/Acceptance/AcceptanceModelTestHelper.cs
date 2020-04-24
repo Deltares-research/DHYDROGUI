@@ -66,8 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             app.Plugins.Add(new ToolboxApplicationPlugin());
 
             gui.Run();
-            gui.MainWindow.Show();
-
+            
             return gui;
         }
 
