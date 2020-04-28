@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// </summary>
         /// <param name="boundaryCategories">The boundary categories.</param>
         /// <param name="timeSeriesData">The time series data from the .bcw file. </param>
+        /// <param name="mdwDirPath">The path to the directory where the .mdw file is located.</param>
         /// <returns>
         /// The converted collection of <see cref="IWaveBoundary"/>
         /// </returns>
@@ -60,20 +61,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <paramref name="timeSeriesData"/> is <c>null</c>.
         /// </exception>
         public IEnumerable<IWaveBoundary> Convert(IEnumerable<DelftIniCategory> boundaryCategories,
-                                                  IDictionary<string, List<IFunction>> timeSeriesData)
+                                                  IDictionary<string, List<IFunction>> timeSeriesData,
+                                                  string mdwDirPath)
         {
             Ensure.NotNull(boundaryCategories, nameof(boundaryCategories));
             Ensure.NotNull(timeSeriesData, nameof(timeSeriesData));
+            Ensure.NotNull(mdwDirPath, nameof(mdwDirPath));
 
-            return CreateWaveBoundaries(boundaryCategories, timeSeriesData);
+            return CreateWaveBoundaries(boundaryCategories, timeSeriesData, mdwDirPath);
         }
 
         private IEnumerable<IWaveBoundary> CreateWaveBoundaries(IEnumerable<DelftIniCategory> boundaryCategories,
-                                                                IDictionary<string, List<IFunction>> timeSeriesData)
+                                                                IDictionary<string, List<IFunction>> timeSeriesData, 
+                                                                string mdwDirPath)
         {
             foreach (DelftIniCategory category in boundaryCategories)
             {
-                BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category);
+                BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category, mdwDirPath);
                 if (boundaryBlock.DefinitionType != DefinitionImportType.Coordinates)
                 {
                     continue;

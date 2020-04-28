@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(null, Substitute.For<IDictionary<string, List<IFunction>>>());
+            void Call() => converter.Convert(null, Substitute.For<IDictionary<string, List<IFunction>>>(), "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -83,11 +83,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), null);
+            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), null, "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("timeSeriesData"));
+        }
+
+        [Test]
+        public void Convert_MdwDirPathNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var converter = new WaveBoundaryConverter(Substitute.For<IImportBoundaryConditionDataComponentFactory>(),
+                                                      Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
+
+            // Call
+            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("mdwDirPath"));
         }
 
         [Test]
@@ -116,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
                                                   .ToList();
 
             // Assert
@@ -161,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData)
+            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path")
                                                   .ToList();
 
             // Assert
@@ -192,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var uniformDataComponent = new UniformDataComponent<FileBasedParameters>(parametersFactory.ConstructDefaultFileBasedParameters());
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
 
-            importDataComponentFactory.CreateUniformFileBasedComponent(mdwValues.SpectrumFiles.First())
+            importDataComponentFactory.CreateUniformFileBasedComponent(@"C:\path\" + mdwValues.SpectrumFiles.First())
                                       .Returns(uniformDataComponent);
 
             DelftIniCategory[] categories =
@@ -202,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path")
                                                   .ToList();
 
             // Assert
@@ -246,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
                                                   .ToList();
 
             // Assert
@@ -299,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData)
+            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path")
                                                   .ToList();
 
             // Assert
@@ -347,7 +362,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path")
                                                   .ToList();
 
             // Assert
@@ -387,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>()).ToList();
+            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path").ToList();
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);
@@ -412,7 +427,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
                                                   .ToList();
 
             // Assert
@@ -448,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
                                                   .ToList();
 
             // Assert
@@ -511,7 +526,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>())
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
                                                   .ToList();
 
             // Assert
@@ -611,7 +626,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                    MatchesParameters(thirdPair.Item2, mdw, 2);
         }
 
-        private static bool MatchesParameters(string p, MdwTestValues mdw, int i) => p == mdw.SpectrumFiles[i];
+        private static bool MatchesParameters(string p, MdwTestValues mdw, int i) => p == @"C:\path\" + mdw.SpectrumFiles[i];
 
         private static bool MatchesWaveEnergyFunction(IWaveEnergyFunction<T> f, BcwTestValues t, int i) =>
             f.DirectionComponent.Values.SequenceEqual(t.Directions[i]) &&

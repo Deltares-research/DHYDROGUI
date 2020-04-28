@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
@@ -18,11 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// to a <see cref="BoundaryMdwBlock"/>.
         /// </summary>
         /// <param name="boundaryCategory">The boundary delft ini category.</param>
+        /// <param name="mdwDirPath">The path to the directory where the .mdw file is located.</param>
         /// <returns>
         /// The created boundary mdw block.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/> is <c>null</c>.
+        /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when the <paramref name="boundaryCategory"/> is not an mdw boundary category.
@@ -31,9 +33,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Thrown when the <paramref name="boundaryCategory"/> contains properties without a valid
         /// enum equivalent.
         /// </exception>
-        public static BoundaryMdwBlock Convert(DelftIniCategory boundaryCategory)
+        public static BoundaryMdwBlock Convert(DelftIniCategory boundaryCategory, string mdwDirPath)
         {
             Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
+            Ensure.NotNull(mdwDirPath, nameof(mdwDirPath));
 
             if (boundaryCategory.Name != KnownWaveCategories.BoundaryCategory)
             {
@@ -61,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
             else if (block.SpectrumType == SpectrumImportExportType.FromFile)
             {
-                ConvertFileBasedProperties(boundaryCategory, block);
+                ConvertFileBasedProperties(boundaryCategory, block, mdwDirPath);
             }
 
             return block;
@@ -96,9 +99,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                        : null;
         }
 
-        private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)
+        private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block, string mdwDirPath)
         {
-            block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum);
+            block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum).Select(s => GetAbsolutePath(mdwDirPath, s)).ToArray();
+        }
+
+        private static string GetAbsolutePath(string mdwDirPath, string s)
+        {
+            return string.IsNullOrWhiteSpace(s) ? " " : Path.Combine(mdwDirPath, s);
         }
 
         private static void ConvertParameterizedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)

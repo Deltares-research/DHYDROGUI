@@ -1108,6 +1108,75 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                             endDate, 18, 20, 22, 24);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_FileBasedUniformBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\file_based-uniform.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(2));
+            AssertCorrectSupportPoint(geometricDefinition, 0);
+            AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            var dataComponent = conditionDefinition.DataComponent as UniformDataComponent<FileBasedParameters>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            Assert.That(dataComponent.Data.FilePath, Is.EqualTo(Path.Combine(Path.GetDirectoryName(mdwPath), "SpectrumFile.sp1")));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_FileBasedSpatiallyVaryingBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\file_based-spatially_varying.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
+            Assert.That(boundary.Name, Is.EqualTo("boundary_name"));
+            IWaveBoundaryGeometricDefinition geometricDefinition = boundary.GeometricDefinition;
+            Assert.That(geometricDefinition, Is.Not.Null);
+            IWaveBoundaryConditionDefinition conditionDefinition = boundary.ConditionDefinition;
+            Assert.That(conditionDefinition, Is.Not.Null);
+
+            AssertCorrectGeometricDefinition(geometricDefinition);
+
+            Assert.That(geometricDefinition.SupportPoints, Has.Count.EqualTo(3));
+            SupportPoint supportPoint1 = AssertCorrectSupportPoint(geometricDefinition, 0);
+            SupportPoint supportPoint2 = AssertCorrectSupportPoint(geometricDefinition, 50);
+            SupportPoint supportPoint3 = AssertCorrectSupportPoint(geometricDefinition, 100);
+
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(BoundaryConditionPeriodType.Mean));
+
+            var dataComponent = conditionDefinition.DataComponent as SpatiallyVaryingDataComponent<FileBasedParameters>;
+            Assert.That(dataComponent, Is.Not.Null);
+
+            IReadOnlyDictionary<SupportPoint, FileBasedParameters> data = dataComponent.Data;
+            Assert.That(data, Has.Count.EqualTo(3));
+
+            string pathRoot = Path.GetDirectoryName(mdwPath);
+            Assert.That(data[supportPoint1].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile1.sp1")));
+            Assert.That(data[supportPoint2].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile2.sp1")));
+            Assert.That(data[supportPoint3].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile3.sp1")));
+        }
+
         private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,
                                                             double height, double period, double direction, double spreading)
         {

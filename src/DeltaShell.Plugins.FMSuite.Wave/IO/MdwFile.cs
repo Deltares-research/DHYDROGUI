@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             IEnumerable<DelftIniCategory> boundaryCategories = mdwCategories.GetAllByName(KnownWaveCategories.BoundaryCategory).ToArray();
 
             IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(mdwCategories, mdwDirPath);
-            IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData);
+            IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath);
 
             OverallBoundaryCategoryConverter.Convert(boundaryContainer, boundaryCategories);
 

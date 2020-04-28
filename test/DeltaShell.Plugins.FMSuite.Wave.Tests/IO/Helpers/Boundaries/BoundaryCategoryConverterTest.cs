@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Convert_BoundaryCategoryNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => BoundaryCategoryConverter.Convert(null);
+            void Call() => BoundaryCategoryConverter.Convert(null, "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Convert_NoBoundaryCategory_ThrowsArgumentException()
         {
             // Call
-            void Call() => BoundaryCategoryConverter.Convert(new DelftIniCategory("category"));
+            void Call() => BoundaryCategoryConverter.Convert(new DelftIniCategory("category"), "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
@@ -46,12 +46,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-
             category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.SpectrumFile.GetDescription());
-            
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
 
             // Assert
             Assert.That(result.Name, Is.Null);
@@ -110,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingValue, ToString(spreading2));
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -167,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.Spectrum, spectrum2);
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, @"C:\path\to\mdw");
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
@@ -183,9 +181,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
             Assert.That(result.SpectrumFiles, Is.EqualTo(new[]
             {
-                spectrum1,
-                spectrum2
+                @"C:\path\to\mdw\" + spectrum1,
+                @"C:\path\to\mdw\" + spectrum2
             }));
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void Convert_FileBasedBoundaryWithoutSpectrumPath_ReturnsCorrectResult(string fileName)
+        {
+            // Setup
+            var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+
+            category.AddProperty(KnownWaveProperties.Name, "boundary_name");
+            category.AddProperty(KnownWaveProperties.Definition, DefinitionImportType.Coordinates.GetDescription());
+            category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.FromFile.GetDescription());
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, RandomDouble);
+            category.AddProperty(KnownWaveProperties.Spectrum, fileName);
+
+            // Call
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
+
+            // Assert
+            Assert.That(result.SpectrumFiles[0], Is.EqualTo(" "));
         }
 
         [Test]
@@ -202,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.DirectionalSpreadingType, random.NextEnumValue<SpreadingImportType>().GetDescription());
 
             // Call
-            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category);
+            BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
 
             // Assert
             Assert.That(result.XStartCoordinate, Is.NaN);
