@@ -669,7 +669,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(mdwCategories, mdwDirPath);
             IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData);
 
-            BoundariesPerFileConverter.Convert(boundaryContainer, boundaryCategories);
+            OverallBoundaryCategoryConverter.Convert(boundaryContainer, boundaryCategories);
 
             boundaryContainer.Boundaries.AddRange(waveBoundaries);
         }

@@ -362,7 +362,9 @@
     <Compile Include="IO\BcwFileTest.cs" />
     <Compile Include="IO\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryCategoryConverterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryMdwBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeTest.cs" />

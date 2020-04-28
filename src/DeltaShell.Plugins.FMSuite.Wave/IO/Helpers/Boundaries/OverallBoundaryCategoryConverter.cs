@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// Converter used to convert the overall boundaries defined by a spectrum file from <see cref="DelftIniCategory"/> objects
     /// to the <see cref="IBoundariesPerFile"/>.
     /// </summary>
-    public static class BoundariesPerFileConverter
+    public static class OverallBoundaryCategoryConverter
     {
         /// <summary>
         /// Converts the overall boundaries defined by a spectrum file from the <paramref name="boundaryCategories"/>
