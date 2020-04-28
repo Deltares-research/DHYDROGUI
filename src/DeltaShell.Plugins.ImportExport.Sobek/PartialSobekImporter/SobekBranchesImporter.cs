@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 compartment.Name = retention.Name;
                 compartment.ManholeLength = dimension;
                 compartment.ManholeWidth = dimension;
-                compartment.Shape = CompartmentShape.Square;
+                compartment.Shape = CompartmentShape.Round;
                 compartment.BottomLevel = retention.BedLevel;
                 compartment.FloodableArea = retention.StreetStorageArea;
                 compartment.SurfaceLevel = retention.StreetLevel;

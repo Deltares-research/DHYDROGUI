@@ -6,6 +6,6 @@ namespace DelftTools.Hydro
     {
         [Description("Unknown")] Unknown,
         [Description("Rectangular")] Rectangular,
-        [Description("Square")] Square
+        [Description("Round")] Round
     }
 }

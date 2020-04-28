@@ -9,8 +9,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
         [Test]
         [TestCase("unkNoWn", CompartmentShape.Unknown)]
-        [TestCase("rnd", CompartmentShape.Square)]
+        [TestCase("rnd", CompartmentShape.Round)]
+        [TestCase("rOund", CompartmentShape.Round)]
         [TestCase("RHK", CompartmentShape.Rectangular)]
+        [TestCase("rectangular", CompartmentShape.Rectangular)]
         public void GivenCompartmentShapeString_WhenCallingWaterTypeConverter_ThenReturnsCorrectCompartmentShapeType(
             string compartmentShapeString, CompartmentShape expectedCompartmentShape)
         {

@@ -20,8 +20,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             switch (compartmentShapeString.ToLower())
             {
                 case "rnd":
-                    return CompartmentShape.Square;
+                case "round":
+                    return CompartmentShape.Round;
                 case "rhk":
+                case "rectangular":
                     return CompartmentShape.Rectangular;
                 case "unknown":
                     return CompartmentShape.Unknown;

@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var yCoord = 15.0;
             var nodeLength = 14.0;
             var nodeWidth = 13.0;
-            var nodeShape = CompartmentShape.Square;
-            var nodeShapeAsString = nodeShape.GetDescription();
+            var nodeShape = CompartmentShape.Round;
+            var nodeShapeAsString = "rnd";
             var floodableArea = 11.0;
             var bottomLevel = 10.0;
             var surfaceLevel = 5.0;

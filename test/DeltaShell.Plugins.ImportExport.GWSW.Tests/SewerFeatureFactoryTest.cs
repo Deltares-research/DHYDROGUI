@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             #region create network
             const double manholeLength = 7.0;
             const double manholeWidth = 7.0;
-            const CompartmentShape compartmentShape = CompartmentShape.Square;
+            const CompartmentShape compartmentShape = CompartmentShape.Round;
             const double floodableArea = 45.67;
             const double bottomLevel = 0.01;
             const double surfaceLevel = 2.75;

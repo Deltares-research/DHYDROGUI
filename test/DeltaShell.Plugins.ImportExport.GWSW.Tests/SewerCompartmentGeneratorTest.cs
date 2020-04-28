@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var manholeId = "01001";
             var manholeLength = 7071;
             var manholeWidth = 7071;
-            var compartmentShape = CompartmentShape.Square;
+            var compartmentShape = CompartmentShape.Round;
             var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var manholeId = "01001";
             var manholeLength = 7071;
             var manholeWidth = 7071;
-            var compartmentShape = CompartmentShape.Square;
+            var compartmentShape = CompartmentShape.Round;
             var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var manholeId = "01001";
             var manholeLength = 7071;
             var manholeWidth = 7071;
-            var compartmentShape = CompartmentShape.Square;
+            var compartmentShape = CompartmentShape.Round;
             var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var manholeId = "01001";
             var manholeLength = 7071;
             var manholeWidth = 7071;
-            var compartmentShape = CompartmentShape.Square;
+            var compartmentShape = CompartmentShape.Round;
             var compartmentShapeAsString = compartmentShape.GetDescription();
             var nodeType = string.Empty;
             var floodableArea = 45.67;

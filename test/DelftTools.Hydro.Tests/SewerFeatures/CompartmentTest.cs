@@ -21,7 +21,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
         [Test]
         [TestCase(CompartmentShape.Unknown)]
-        [TestCase(CompartmentShape.Square)]
+        [TestCase(CompartmentShape.Round)]
         [TestCase(CompartmentShape.Rectangular)]
         public void GivenCompartment_DefaultEnumTypeIsUnknown(CompartmentShape shapeType)
         {
@@ -68,7 +68,7 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             var floodableArea = 1213.14;
             var bottomLevel = 1516.17;
             var geometry = new Point(1.0,2.0);
-            var shape = CompartmentShape.Square;
+            var shape = CompartmentShape.Round;
 
             var compartment = new Compartment()
             {
