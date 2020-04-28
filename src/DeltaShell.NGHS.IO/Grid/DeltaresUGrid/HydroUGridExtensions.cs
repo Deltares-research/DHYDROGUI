@@ -254,7 +254,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 var segment = segments[i];
 
                 mesh.EdgeBranchIds[i] = branchIdLookup[segment.Branch];
-                mesh.EdgeCenterPointOffset[i] = segment.Length / 2.0;
+                mesh.EdgeCenterPointOffset[i] = segment.Chainage + segment.Length / 2.0;
                 mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X;
                 mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y;
                 
@@ -271,7 +271,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             const double epsilonLocation = 1e-5;
             var branchLocations = discretization.GetLocationsForBranch(segment.Branch);
 
-            int[] indices = new int[2];
+            int[] indices = new int[]{-1,-1};
 
             for (int j = 0; j < branchLocations.Count; j++)
             {
