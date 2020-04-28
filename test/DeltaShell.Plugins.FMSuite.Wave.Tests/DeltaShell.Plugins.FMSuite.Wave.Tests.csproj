@@ -209,6 +209,7 @@
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelperTest.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
+    <Compile Include="Boundaries\Calculators\CartesianOrientationCalculatorHelperTest.cs" />
     <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparerTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactoryConstructTest.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactoryTest.cs" />
