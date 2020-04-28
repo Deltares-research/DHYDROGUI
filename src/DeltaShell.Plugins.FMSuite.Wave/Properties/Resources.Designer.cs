@@ -268,6 +268,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waves Model Boundaries.
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Waves_Model_Boundaries {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Waves_Model_Boundaries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Communications file &apos;{0}&apos; does not exist..
         /// </summary>
         public static string WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_ {

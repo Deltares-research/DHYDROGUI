@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 subReports.Add(report);
             }
 
-            return new ValidationReport("Waves Model Boundaries", subReports);
+            return new ValidationReport(Resources.WaveBoundariesValidator_Validate_Waves_Model_Boundaries, subReports);
         }
 
         private static IEnumerable<ValidationIssue> CollectAllValidationIssues(IWaveBoundary boundary, DateTime modelStartTime)
