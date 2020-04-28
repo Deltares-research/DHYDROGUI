@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             var compartmentId = "put1";
             var manholeId = "01001";
-            var unknownShapeValue = "UnkownValue";
+            var unknownShapeValue = "UnknownValue";
             var badGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Node.ToString(),
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var expectedLogMsg = string.Format(Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, unknownShapeValue);
+            var expectedLogMsg = string.Format(Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, unknownShapeValue);
             var compartment = TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedLogMsg);
             Assert.AreEqual(default(CompartmentShape), compartment.Shape);
         }

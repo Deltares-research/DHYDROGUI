@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         [Test]
         public void GetEnumTypeFromGwswAttribute_ReturnsCorrectValue_IfFound()
         {
-            var elementName = "DWA";
+            var elementName = "Dry weather";
             var attributeTest = new GwswAttribute
             {
                 ValueAsString = elementName,

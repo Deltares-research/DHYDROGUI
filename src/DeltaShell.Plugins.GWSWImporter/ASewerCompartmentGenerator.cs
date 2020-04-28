@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
@@ -82,9 +83,18 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if (nodeShapeAttribute.IsValidAttribute())
             {
-                compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
+                var nodeShapeString = nodeShapeAttribute.GetValidStringValue();
+                if (Enum.IsDefined(typeof(CompartmentShape), nodeShapeString))
+                {
+                    compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
+                }
+                else
+                {
+                    Log.WarnFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, nodeShapeString);
+                    compartment.Shape = CompartmentShape.Unknown;
+                }
             }
-
+            
             var outletCompartment = compartment as OutletCompartment;
             if (outletCompartment != null)
             {

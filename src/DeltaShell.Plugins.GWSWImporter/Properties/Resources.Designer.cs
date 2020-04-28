@@ -372,6 +372,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shape {0} is not a valid shape. Setting the shape to  &apos;unknown&apos;..
+        /// </summary>
+        public static string Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown {
+            get {
+                return ResourceManager.GetString("Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap StructureFeatureSmall {

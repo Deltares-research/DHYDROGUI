@@ -13,22 +13,24 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// Converts a string to a <see cref="SewerConnectionWaterType"/>. />
         /// </summary>
         /// <param name="waterTypeString"></param>
-        /// <exception cref="InvalidOperationException">When unknown string is provided.</exception>
         /// <returns>The corresponding <see cref="SewerConnectionWaterType"/>.</returns>
         public static SewerConnectionWaterType ConvertStringToSewerConnectionWaterType(string waterTypeString)
         {
             switch (waterTypeString.ToLower())
             {
                 case "gmd":
+                case "combined":
                     return SewerConnectionWaterType.Combined;
                 case "dwa":
+                case "dry weather":
                     return SewerConnectionWaterType.DryWater;
                 case "hwa":
+                case "storm water":
                     return SewerConnectionWaterType.StormWater;
                 case "nvt":
-                    return SewerConnectionWaterType.None;
+                case "none":
                 default:
-                    throw new InvalidOperationException($"{waterTypeString} is not a valid water type.");
+                    return SewerConnectionWaterType.None;
             }
         }
     }

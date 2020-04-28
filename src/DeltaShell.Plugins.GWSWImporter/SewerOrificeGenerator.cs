@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
 
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())
-                //orifice.WaterType = waterType.GetValueFromDescription<SewerConnectionWaterType>();
                 orifice.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterType.GetValidStringValue());
         }
 

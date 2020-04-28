@@ -750,7 +750,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 case IEnumerable<IGate> gates:
                     return CreateNetworkVectorLayer<Gate>(gates, "Gates", hydroNetwork,
                         o => o is Channel && ((Channel) o).Gates.Any());
-                
+                case IEnumerable<ICulvert> culverts:
+                    return CreateNetworkVectorLayer<Culvert>(culverts, "Culverts", hydroNetwork,
+                        o => o is Channel && ((Channel)o).Culverts.Any());
                 case IEnumerable<IBridge> bridges:
                     return CreateNetworkVectorLayer<Bridge>(bridges, "Bridges", hydroNetwork,
                         o => o is Channel && ((Channel) o).Bridges.Any());

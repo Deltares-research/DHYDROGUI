@@ -19,5 +19,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var actualCompartmentShapeType = CompartmentShapeConverter.ConvertStringToCompartmentShape(compartmentShapeString);
             Assert.That(actualCompartmentShapeType, Is.EqualTo(expectedCompartmentShape));
         }
+
+        [Test]
+        public void GivenInvalidCompartmentShapeString_WhenCallingWaterTypeConverter_ThenReturnsUnknownCompartmentShapeType()
+        {
+            var invalidCompartmentTypeString = "InvalidCompartmentShape";
+            var expectedCompartmentShape = CompartmentShape.Unknown;
+            var actualCompartmentShapeType = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentTypeString);
+            Assert.That(actualCompartmentShapeType, Is.EqualTo(expectedCompartmentShape));
+        }
     }
 }
