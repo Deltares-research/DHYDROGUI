@@ -227,15 +227,14 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 BranchOffsets = new double[locationCount],
 
                 EdgeBranchIds = new int[edgeCount],
+                EdgeNodes = new int[edgeCount *2],
                 EdgeCenterPointX = new double[edgeCount],
                 EdgeCenterPointY = new double[edgeCount],
                 EdgeCenterPointOffset = new double[edgeCount],
             };
 
-            var branchIdLookup = discretization.Network.Branches
-                .Select((b, i) => new {branch = b, index = i})
-                .ToDictionary(t => t.branch, t => t.index);
-
+            var branchIdLookup = discretization.Network.Branches.ToIndexDictionary();
+            
             for (int i = 0; i < locationCount; i++)
             {
                 var location = locations[i];
@@ -248,6 +247,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.NodeLongNames[i] = location.LongName;
             }
 
+            var locationIdLookup = locations.ToIndexDictionary();
+            var edgeNodeIndex = 0;
             for (int i = 0; i < edgeCount; i++)
             {
                 var segment = segments[i];
@@ -256,9 +257,39 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.EdgeCenterPointOffset[i] = segment.Length / 2.0;
                 mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X;
                 mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y;
+                
+                var indices = GetLocationIndices(discretization, segment, locationIdLookup);
+                mesh.EdgeNodes[edgeNodeIndex++] = indices[0];
+                mesh.EdgeNodes[edgeNodeIndex++] = indices[1];
             }
 
             return mesh;
+        }
+
+        private static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup)
+        {
+            const double epsilonLocation = 1e-5;
+            var branchLocations = discretization.GetLocationsForBranch(segment.Branch);
+
+            int[] indices = new int[2];
+
+            for (int j = 0; j < branchLocations.Count; j++)
+            {
+                var loc = branchLocations[j];
+                if (Math.Abs(loc.Chainage - segment.Chainage) < epsilonLocation)
+                {
+                    indices[0] = locationIdLookup[loc];
+                    continue;
+                }
+
+                if (Math.Abs(loc.Chainage - segment.EndChainage) < epsilonLocation)
+                {
+                    indices[1] = locationIdLookup[loc];
+                    return indices;
+                }
+            }
+
+            return indices;
         }
 
         #endregion
