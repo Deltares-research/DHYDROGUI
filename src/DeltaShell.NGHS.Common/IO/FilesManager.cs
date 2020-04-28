@@ -39,12 +39,17 @@ namespace DeltaShell.NGHS.Common.IO
                     continue;
                 }
 
-                string targetFilePath = Path.Combine(dirInfo.FullName, file.Name);
-                file.CopyTo(targetFilePath, overwrite: true);
+                var targetFile = new FileInfo(Path.Combine(dirInfo.FullName, file.Name));
+                if (file.FullName.Equals(targetFile.FullName))
+                {
+                    continue;
+                }
+
+                file.CopyTo(targetFile.FullName, overwrite: true);
 
                 if (switchTo)
                 {
-                    data.Item2?.Invoke(targetFilePath);
+                    data.Item2?.Invoke(targetFile.FullName);
                 }
             }
         }

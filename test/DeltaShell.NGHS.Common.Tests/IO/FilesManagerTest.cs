@@ -233,6 +233,30 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             }
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.Integration)]
+        public void Add_And_CopyTo_SameLocation_SwitchToActionIsNotInvoked(bool switchTo)
+        {
+            // Given
+            var filesManager = new FilesManager();
+            var logHandler = Substitute.For<ILogHandler>();
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string filePath = CreateFile(tempDir.Path, "file.txt");
+
+                // When
+                filesManager.Add(filePath, helper.Action);
+                filesManager.CopyTo(tempDir.Path, logHandler, switchTo);
+
+                // Then
+                Assert.That(filePath, Does.Exist);
+                Assert.That(logHandler.ReceivedCalls().Any(), Is.False);
+                Assert.That(helper.TimesInvoked, Is.EqualTo(0));
+            }
+        }
+
         private static string CreateFile(string dirPath, string fileName)
         {
             string filePath = Path.Combine(dirPath, fileName);
