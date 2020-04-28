@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 return;
             }
 
-            filesManager.Add(filePath);
+            filesManager.Add(filePath, s => fileBasedParameters.FilePath = s);
             SpectrumFile = Path.GetFileName(filePath);
         }
 

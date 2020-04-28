@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertProperty(properties[0], KnownWaveProperties.SpectrumSpec, "from file");
             AssertProperty(properties[1], KnownWaveProperties.Spectrum, fileName);
 
-            filesManager.Received(1).Add(filePath);
+            filesManager.Received(1).Add(filePath, Arg.Is<Action<string>>(a => MatchesAction(parameters, a)));
         }
 
         [Test]
@@ -129,9 +129,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             string filePath3 = $"D:\\some_directory\\{fileName3}";
 
             var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
-            dataComponent.AddParameters(GetSupportPoint(distance2), new FileBasedParameters(filePath2));
-            dataComponent.AddParameters(GetSupportPoint(distance3), new FileBasedParameters(filePath3));
-            dataComponent.AddParameters(GetSupportPoint(distance1), new FileBasedParameters(filePath1));
+
+            var parameters2 = new FileBasedParameters(filePath2);
+            dataComponent.AddParameters(GetSupportPoint(distance2), parameters2);
+            var parameters3 = new FileBasedParameters(filePath3);
+            dataComponent.AddParameters(GetSupportPoint(distance3), parameters3);
+            var parameters1 = new FileBasedParameters(filePath1);
+            dataComponent.AddParameters(GetSupportPoint(distance1), parameters1);
 
             // Call
             visitor.Visit(dataComponent);
@@ -149,9 +153,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertProperty(properties[5], KnownWaveProperties.CondSpecAtDist, distance3);
             AssertProperty(properties[6], KnownWaveProperties.Spectrum, fileName3);
 
-            filesManager.Received(1).Add(filePath1);
-            filesManager.Received(1).Add(filePath2);
-            filesManager.Received(1).Add(filePath3);
+            filesManager.Received(1).Add(filePath1, Arg.Is<Action<string>>(a => MatchesAction(parameters1, a)));
+            filesManager.Received(1).Add(filePath2, Arg.Is<Action<string>>(a => MatchesAction(parameters2, a)));
+            filesManager.Received(1).Add(filePath3, Arg.Is<Action<string>>(a => MatchesAction(parameters3, a)));
         }
 
         [TestFixture]
@@ -262,6 +266,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             Assert.That(property.Name, Is.EqualTo(name));
             Assert.That(property.Value, Is.EqualTo(value));
+        }
+
+        private static bool MatchesAction(FileBasedParameters parameters, Action<string> s)
+        {
+            const string setValue = "some_new_file_path";
+
+            s.Invoke(setValue);
+
+            return parameters.FilePath == setValue;
         }
     }
 }

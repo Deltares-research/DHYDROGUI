@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             if (!string.IsNullOrEmpty(targetDir))
             {
-                filesManager.CopyTo(targetDir, logHandler);
+                filesManager.CopyTo(targetDir, logHandler, switchTo);
             }
 
             logHandler.LogReport();

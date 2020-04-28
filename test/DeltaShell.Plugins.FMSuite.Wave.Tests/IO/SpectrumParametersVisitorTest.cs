@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(property.Value, Is.EqualTo("from file"));
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(fileName));
-            filesManager.Received(1).Add(filePath);
+            filesManager.Received(1).Add(filePath, Arg.Is<Action<string>>(a => MatchesAction(parameters, a)));
         }
 
         [Test]
@@ -106,7 +106,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(property.Value, Is.EqualTo("from file"));
             Assert.That(visitor.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(visitor.SpectrumFile, Is.EqualTo(" "));
-            filesManager.DidNotReceiveWithAnyArgs().Add(string.Empty);
+            filesManager.DidNotReceiveWithAnyArgs().Add(string.Empty, null);
+        }
+
+        private static bool MatchesAction(FileBasedParameters parameters, Action<string> s)
+        {
+            const string setValue = "some_new_file_path";
+
+            s.Invoke(setValue);
+
+            return parameters.FilePath == setValue;
         }
 
         [TestFixture]

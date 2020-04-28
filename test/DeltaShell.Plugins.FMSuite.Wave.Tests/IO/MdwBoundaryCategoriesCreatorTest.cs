@@ -160,7 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "from file");
             AssertProperty(properties[7], KnownWaveProperties.Spectrum, fileName);
 
-            filesManager.Received(1).Add(filePath);
+            FileBasedParameters parameters = ((UniformDataComponent<FileBasedParameters>)
+                                                 boundary.ConditionDefinition.DataComponent).Data;
+            filesManager.Received(1).Add(filePath, Arg.Is<Action<string>>(a => MatchesAction(parameters, a)));
         }
 
         [Test]
@@ -215,9 +217,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertProperty(properties[11], KnownWaveProperties.CondSpecAtDist, distance3);
             AssertProperty(properties[12], KnownWaveProperties.Spectrum, fileName3);
 
-            filesManager.Received(1).Add(filePath1);
-            filesManager.Received(1).Add(filePath2);
-            filesManager.Received(1).Add(filePath3);
+            List<FileBasedParameters> parameters = GetFileBasedParameters(boundary);
+            filesManager.Received(1).Add(filePath1, Arg.Is<Action<string>>(a => MatchesAction(parameters[0], a)));
+            filesManager.Received(1).Add(filePath2, Arg.Is<Action<string>>(a => MatchesAction(parameters[1], a)));
+            filesManager.Received(1).Add(filePath3, Arg.Is<Action<string>>(a => MatchesAction(parameters[2], a)));
+        }
+
+        private static List<FileBasedParameters> GetFileBasedParameters(IWaveBoundary boundary)
+        {
+            return ((SpatiallyVaryingDataComponent<FileBasedParameters>)
+                       boundary.ConditionDefinition.DataComponent)
+                   .Data.Select(d => d.Value).ToList();
         }
 
         private IWaveBoundary CreateWaveBoundary(out SupportPoint supportPoint1, out SupportPoint supportPoint2)
@@ -284,6 +294,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             Assert.That(property.Name, Is.EqualTo(name));
             Assert.That(property.Value, Is.EqualTo(value));
+        }
+
+        private static bool MatchesAction(FileBasedParameters parameters, Action<string> s)
+        {
+            const string setValue = "some_new_file_path";
+
+            s.Invoke(setValue);
+
+            return parameters.FilePath == setValue;
         }
 
         private class WaveBoundaryBuilder

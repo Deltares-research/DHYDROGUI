@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Logging;
 
@@ -13,38 +13,39 @@ namespace DeltaShell.NGHS.Common.IO
     /// <seealso cref="IFilesManager"/>
     public class FilesManager : IFilesManager
     {
-        private readonly IList<FileInfo> files = new List<FileInfo>();
+        private readonly IList<Tuple<FileInfo, Action<string>>> fileData = new List<Tuple<FileInfo, Action<string>>>();
 
-        public void Add(string filePath)
+        public void Add(string filePath, Action<string> switchToAction)
         {
             Ensure.NotNull(filePath, nameof(filePath));
 
-            var fileInfo = new FileInfo(filePath);
-            if (files.Any(f => f.FullName.Equals(fileInfo.FullName)))
-            {
-                return;
-            }
-
-            files.Add(fileInfo);
+            fileData.Add(new Tuple<FileInfo, Action<string>>(new FileInfo(filePath),
+                                                             switchToAction));
         }
 
-        public void CopyTo(string targetPath, ILogHandler logHandler)
+        public void CopyTo(string targetPath, ILogHandler logHandler, bool switchTo)
         {
             Ensure.NotNull(targetPath, nameof(targetPath));
             Ensure.NotNull(logHandler, nameof(logHandler));
 
             var dirInfo = new DirectoryInfo(targetPath);
 
-            foreach (FileInfo file in files)
+            foreach (Tuple<FileInfo, Action<string>> data in fileData)
             {
+                FileInfo file = data.Item1;
                 if (!file.Exists)
                 {
                     logHandler.ReportError($"Could not find file at '{file.FullName}'.");
                     continue;
                 }
 
-                file.CopyTo(Path.Combine(dirInfo.FullName, file.Name),
-                            overwrite: true);
+                string targetFilePath = Path.Combine(dirInfo.FullName, file.Name);
+                file.CopyTo(targetFilePath, overwrite: true);
+
+                if (switchTo)
+                {
+                    data.Item2?.Invoke(targetFilePath);
+                }
             }
         }
     }
