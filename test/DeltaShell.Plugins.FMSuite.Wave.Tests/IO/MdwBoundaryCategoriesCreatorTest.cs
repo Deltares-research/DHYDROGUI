@@ -223,6 +223,55 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.Received(1).Add(filePath3, Arg.Is<Action<string>>(a => MatchesAction(parameters[2], a)));
         }
 
+        [Test]
+        public void CreateCategories_WithFromSpectrumFileDefinedBoundaries_CreatesCorrectCategory()
+        {
+            // Setup
+            const string fileName = "file.txt";
+            string filePath = $"D:\\some_directory\\{fileName}";
+
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            boundaryContainer.DefinitionPerFileUsed = true;
+            boundaryContainer.FileNameForBoundariesPerFile = filePath;
+
+            var filesManager = Substitute.For<IFilesManager>();
+
+            // Call
+            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager);
+
+            // Assert
+            DelftIniCategory category = categories.Single();
+            DelftIniProperty[] properties = category.Properties.ToArray();
+            Assert.That(properties, Has.Length.EqualTo(2));
+            AssertProperty(properties[0], KnownWaveProperties.Definition, "fromsp2file");
+            AssertProperty(properties[1], KnownWaveProperties.OverallSpecFile, fileName);
+
+            filesManager.Received(1).Add(filePath, Arg.Is<Action<string>>(a => MatchesAction(boundaryContainer, a)));
+        }
+
+        [Test]
+        public void CreateCategories_WithFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_CreatesCorrectCategory()
+        {
+            // Setup
+            var boundaryContainer = Substitute.For<IBoundaryContainer>();
+            boundaryContainer.DefinitionPerFileUsed = true;
+            boundaryContainer.FileNameForBoundariesPerFile = string.Empty;
+
+            var filesManager = Substitute.For<IFilesManager>();
+
+            // Call
+            IEnumerable<DelftIniCategory> categories = MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager);
+
+            // Assert
+            DelftIniCategory category = categories.Single();
+            DelftIniProperty[] properties = category.Properties.ToArray();
+            Assert.That(properties, Has.Length.EqualTo(2));
+            AssertProperty(properties[0], KnownWaveProperties.Definition, "fromsp2file");
+            AssertProperty(properties[1], KnownWaveProperties.OverallSpecFile, " ");
+
+            filesManager.DidNotReceiveWithAnyArgs().Add(null, null);
+        }
+
         private static List<FileBasedParameters> GetFileBasedParameters(IWaveBoundary boundary)
         {
             return ((SpatiallyVaryingDataComponent<FileBasedParameters>)
@@ -303,6 +352,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             s.Invoke(setValue);
 
             return parameters.FilePath == setValue;
+        }
+
+        private static bool MatchesAction(IBoundaryContainer boundaryContainer, Action<string> s)
+        {
+            const string setValue = "some_new_file_path";
+
+            s.Invoke(setValue);
+
+            return boundaryContainer.FileNameForBoundariesPerFile == setValue;
         }
 
         private class WaveBoundaryBuilder

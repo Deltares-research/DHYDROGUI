@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -30,6 +31,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             Ensure.NotNull(boundaryContainer, nameof(boundaryContainer));
             Ensure.NotNull(filesManager, nameof(filesManager));
 
+            if (boundaryContainer.DefinitionPerFileUsed)
+            {
+                yield return CreateCategoryForFromSpectrumFileDefinedBoundaries(boundaryContainer,
+                                                                                filesManager);
+
+                yield break;
+            }
+
             foreach (IWaveBoundary boundary in boundaryContainer.Boundaries)
             {
                 var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -47,6 +56,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 yield return boundaryCategory;
             }
+        }
+
+        private static DelftIniCategory CreateCategoryForFromSpectrumFileDefinedBoundaries(IBoundaryContainer boundaryContainer, IFilesManager filesManager)
+        {
+            var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            boundaryCategory.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType);
+
+            string filePath = boundaryContainer.FileNameForBoundariesPerFile;
+            if (filePath == string.Empty)
+            {
+                // this string should not be empty, because the DelftIniWriter
+                // only writes properties with values that are not null or empty.
+                boundaryCategory.AddProperty(KnownWaveProperties.OverallSpecFile, " ");
+            }
+            else
+            {
+                filesManager.Add(filePath, s => boundaryContainer.FileNameForBoundariesPerFile = s);
+                boundaryCategory.AddProperty(KnownWaveProperties.OverallSpecFile, Path.GetFileName(filePath));
+            }
+
+            return boundaryCategory;
         }
     }
 }

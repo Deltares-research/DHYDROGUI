@@ -528,6 +528,77 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            boundaryContainer.DefinitionPerFileUsed = true;
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName = "file.txt";
+                string sourceFilePath = Path.Combine(sourceDir, fileName);
+                File.WriteAllText(sourceFilePath, sourceFilePath);
+
+                boundaryContainer.FileNameForBoundariesPerFile = sourceFilePath;
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath, Does.Exist);
+                string targetFilePath = Path.Combine(targetDir, fileName);
+                Assert.That(targetFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(2));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
+                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, fileName);
+
+                Assert.That(boundaryContainer.FileNameForBoundariesPerFile,
+                            Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            boundaryContainer.DefinitionPerFileUsed = true;
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                boundaryContainer.FileNameForBoundariesPerFile = string.Empty;
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(2));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
+                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, string.Empty);
+
+                Assert.That(boundaryContainer.FileNameForBoundariesPerFile, Is.EqualTo(string.Empty));
+            }
+        }
+
         private static void AssertPropertyLine(string line, string propertyName, string value)
         {
             string[] pair = line.Split('=');
