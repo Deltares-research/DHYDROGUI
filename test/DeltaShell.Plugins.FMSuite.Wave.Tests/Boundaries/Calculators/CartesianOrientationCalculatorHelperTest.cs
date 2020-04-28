@@ -97,13 +97,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
 
         private Tuple<double, double> GetDoubleValues()
         {
-            double lowerX0 = random.NextDouble() * 2000 - 1000;
-            double lowerX1 = random.NextDouble() * 2000 - 1000;
-
-            while (Math.Abs(lowerX0 - lowerX1) < 0.0000005)
-            {
-                lowerX1 = random.NextDouble() * 2000 - 1000;
-            }
+            double lowerX0 = random.NextDouble() * 2000 - 2000;
+            double lowerX1 = random.NextDouble() * 2000 + 2000;
 
             return lowerX0 < lowerX1 ? new Tuple<double, double>(lowerX0, lowerX1) : new Tuple<double, double>(lowerX1, lowerX0);
         }
