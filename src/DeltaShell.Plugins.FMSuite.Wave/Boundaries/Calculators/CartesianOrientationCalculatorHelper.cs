@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Guards;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -99,5 +101,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                                            Coordinate coordinate1) =>
             Vector2D.Create(coordinate1.Y - coordinate0.Y, 
                             coordinate0.X - coordinate1.X).Normalize();
+
+        /// <summary>
+        /// Gets the closest aligned value with the specified normal in the
+        /// provided <paramref name="valueNormalPairs"/> relative to the
+        /// <paramref name="referenceNormal"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="valueNormalPairs">The value normal pairs.</param>
+        /// <param name="referenceNormal">The reference normal.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>
+        /// The <typeparamref name="T"/> value in <paramref name="valueNormalPairs"/> of
+        /// which the normal aligns most with the provided <paramref name="referenceNormal"/>.
+        /// If <paramref name="valueNormalPairs"/> is empty, then <paramref name="defaultValue"/>
+        /// is returned.
+        /// </returns>
+        /// <exception cref=".ArgumentNullException">
+        /// Thrown when <paramref name="valueNormalPairs"/> or <paramref name="referenceNormal"/>
+        /// is <c>null</c>.
+        /// </exception>
+        internal static T GetClosestAlignedValueWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs, 
+                                                              Vector2D referenceNormal, 
+                                                              T defaultValue)
+        {
+            Ensure.NotNull(valueNormalPairs, nameof(valueNormalPairs));
+            Ensure.NotNull(referenceNormal, nameof(referenceNormal));
+
+            Vector2D referenceNormalized = referenceNormal.Normalize();
+
+            double largestDotProduct = -1.0;
+            T result = defaultValue;
+
+            foreach ((T value, Vector2D normal) in valueNormalPairs)
+            {
+                double dotProduct = normal.Normalize()
+                                          .Dot(referenceNormalized);
+
+                if (largestDotProduct >= dotProduct)
+                {
+                    continue;
+                }
+
+                largestDotProduct = dotProduct;
+                result = value;
+            }
+
+            return result;
+        }
+
+        private static void Deconstruct<T1, T2>(this Tuple<T1, T2> tuple, out T1 t1, out T2 t2)
+        {
+            t1 = tuple.Item1;
+            t2 = tuple.Item2;
+        }
     }
 }

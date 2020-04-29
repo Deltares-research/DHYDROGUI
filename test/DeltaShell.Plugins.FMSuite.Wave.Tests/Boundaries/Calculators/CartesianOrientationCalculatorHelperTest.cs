@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
@@ -210,6 +212,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Assert
             Assert.That(result.X, Is.EqualTo(expectedNormal.X).Within(1E-10));
             Assert.That(result.Y, Is.EqualTo(expectedNormal.Y).Within(1E-10));
+        }
+
+        private static IEnumerable<TestCaseData> GetClosestAlignedValueParameterNullData()
+        {
+            IEnumerable<Tuple<int, Vector2D>> pairs = Enumerable.Empty<Tuple<int, Vector2D>>();
+            var referenceNormal = Vector2D.Create(1.0, 0.0);
+
+            yield return new TestCaseData(null, referenceNormal, "valueNormalPairs");
+            yield return new TestCaseData(pairs, null, "referenceNormal");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetClosestAlignedValueParameterNullData))]
+        public void GetClosestAlignedValueWithNormal_ParameterNull_ThrowsArgumentNullException(IEnumerable<Tuple<int, Vector2D>> valueNormalPairs,
+                                                                                               Vector2D referenceNormal,
+                                                                                               string expectedParamName)
+        { 
+            // Call | Assert
+            void Call() => CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(valueNormalPairs, referenceNormal, 0); 
+
+            var exception = Assert.Throws<ArgumentNullException>(Call); 
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
+        }
+
+        private double GetRandomRotation() => (random.NextDouble() * 2 - 1)  * Math.PI;
+
+        private Tuple<double, Vector2D> GetValueNormalPair(Vector2D referenceNormal)
+        {
+            double rotation = GetRandomRotation();
+            double scalar = random.NextDouble() + 0.5;
+            Vector2D normal = referenceNormal.Multiply(scalar)
+                                             .Rotate(rotation);
+
+            return new Tuple<double, Vector2D>(rotation, normal);
+        }
+
+        [Test]
+        public void GetClosestAlignedValueWithNormal_ExpectedResults()
+        {
+            var referenceNormal = Vector2D.Create((random.NextDouble() + 0.1)  * 100,
+                                                  (random.NextDouble() + 0.1)  * 100);
+
+            Tuple<double, Vector2D>[] valueNormalPairs =
+                Enumerable.Range(0, 5).Select(_ => GetValueNormalPair(referenceNormal)).ToArray();
+
+            double expectedValue = valueNormalPairs.OrderBy(x => Math.Abs(x.Item1))
+                                                   .First().Item1;
+
+            // Call
+            double result = CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(valueNormalPairs,
+                                                                                                  referenceNormal,
+                                                                                                  0.0);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedValue));
         }
     }
 }
