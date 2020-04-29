@@ -141,32 +141,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
 
             yield return fromTreeShortcut;
-            
-            // boundary condition editor
-            var boundaryConditionViewInfo = new ViewInfo<WaveBoundaryCondition, WaveBoundaryConditionEditor>()
-            {
-                Description = "Boundary Condition Editor",
-                GetViewName = (v, o) => "Boundary Condition (" + o.Name + ")",
-                AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryConditions.Contains(o)),
-                AfterCreate = (v, o) =>
-                {
-                    WaveModel model = WaveModels.First(m => m.BoundaryConditions.Contains(o));
-                    v.BoundaryConditionEditor.BoundaryConditionFactory = new WaveBoundaryConditionFactory();
-
-                    var controller = new WaveBoundaryConditionEditorController
-                    {
-                        ImportIntoModelDirectory = model.ImportIntoModelDirectory,
-                        Model = model
-                    };
-                    v.BoundaryConditionEditor.Controller = controller;
-                    v.BoundaryConditionEditor.BoundaryConditionPropertiesControl =
-                        new WaveBoundaryConditionPropertiesControl {Controller = controller};
-
-                    v.BoundaryConditionEditor.ShowSupportPointChainages = true;
-                },
-                CloseForData = (v, o) => v.Data.Equals(o)
-            };
-            yield return boundaryConditionViewInfo;
 
             // Spatially varying boundary editor
             // This should be changed to the appropriate data context already.
