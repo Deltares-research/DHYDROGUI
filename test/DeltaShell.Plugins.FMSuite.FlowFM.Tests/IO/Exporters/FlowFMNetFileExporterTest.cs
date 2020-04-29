@@ -39,7 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
         [TestCase("simplebox_hex7_map.nc", "mesh2d_node_z")] // UGrid
         [TestCase("boundcond_test_map.nc", "NetNode_z")] // Non-UGrid
-        [Category("Quarantine")]
         public void TestExportNetFileWritesZValuesAtNodes(string netFile, string zValueVariableName)
         {
             const string testDir = "TestExport";

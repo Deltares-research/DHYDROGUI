@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, false, "11110.tim")]
         [TestCase(true, HeatFluxModelType.TransportOnly, true, true, true, "11111.tim")]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void TestExport_SourceAndSinks(bool useSalinity, HeatFluxModelType temperature, bool useMorSed, bool useSecFlow, bool tracersPresent, string fileName)
         {
             var expectedFile = TestHelper.GetTestFilePath(@"timFiles\" + fileName);
@@ -82,6 +81,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             // setup
             var sourceAndSink = new SourceAndSink();
             var fmModel = ConstructSourceAndSinkFlowFMModel(sourceAndSink, useSalinity, temperature, useMorSed, useSecFlow, tracersPresent);
+
+            // set model date to previously used default (01-01-2001)
+            var modelDefinition = fmModel.ModelDefinition;
+            modelDefinition.SetModelProperty(KnownProperties.RefDate, "2001-01-01");
 
             // do the export
             var exportedFile = Path.Combine(tempDir, fileName);
