@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
 
