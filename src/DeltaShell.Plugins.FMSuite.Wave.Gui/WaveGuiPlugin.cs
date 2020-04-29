@@ -265,46 +265,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private static void ImportTimesFromBoundaryCondition(WaveModel model)
         {
-            var dialog = new WaveBoundaryTimeSelectionDialog
-            {
-                Data = model.BoundaryConditions,
-                Text = "Select support point"
-            };
-            if (dialog.ShowDialog() == DialogResult.Cancel)
-            {
-                return;
-            }
-
-            IList<DateTime> selectedTimePoints = dialog.SelectedDateTimes;
-            IEnumerable<DateTime> uniqueTimePionts = selectedTimePoints.Except(model.TimePointData.TimePoints);
-
-            model.TimePointData.InputFields.Arguments[0].AddValues(uniqueTimePionts);
+            // TODO? Should this functionality be available?
         }
 
         private static void ExportTimesToBoundaryConditions(WaveModel model)
         {
-            IList<DateTime> timepoints = model.TimePointData.TimePoints;
-            if (!timepoints.Any())
-            {
-                return;
-            }
-
-            IEnumerable<WaveBoundaryCondition> timeDepBoundaries =
-                model.BoundaryConditions.Where(
-                    bc => bc.DataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
-
-            foreach (WaveBoundaryCondition boundary in timeDepBoundaries)
-            {
-                foreach (IFunction timeSeries in boundary.PointData)
-                {
-                    List<DateTime> uniqueValues =
-                        timepoints.Except(timeSeries.Arguments[0].GetValues<DateTime>()).ToList();
-                    if (uniqueValues.Any())
-                    {
-                        timeSeries.Arguments[0].AddValues(uniqueValues);
-                    }
-                }
-            }
+            // TODO? Should this functionality be available?
         }
 
         private bool IsModelObstacle(Feature2D f)
