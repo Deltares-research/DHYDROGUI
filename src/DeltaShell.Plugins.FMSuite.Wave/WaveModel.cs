@@ -19,7 +19,6 @@ using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
@@ -37,7 +36,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Geometries;
 using SharpMap.Api;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -710,18 +708,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public string ImportIntoModelDirectory(string filePath)
         {
             return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
-        }
-        
-        private static WaveBoundaryCondition CreateWaveBoundaryCondition(Feature2D f, WaveModel model)
-        {
-            // default condition: parameterized and uniform
-            var waveBoundaryCondition = (WaveBoundaryCondition)
-                new WaveBoundaryConditionFactory().CreateBoundaryCondition(f, WaveBoundaryCondition.WaveQuantityName,
-                                                                           BoundaryConditionDataType
-                                                                               .ParameterizedSpectrumConstant);
-            waveBoundaryCondition.Name = NamingHelper.GetUniqueName("BoundaryCondition" + "{0:D2}",
-                                                                    model.BoundaryConditions.OfType<INameable>());
-            return waveBoundaryCondition;
         }
 
         private void BuildWaveDomains(IEnumerable<IWaveDomainData> allDomains, string workingDirectory, WaveModel model)
