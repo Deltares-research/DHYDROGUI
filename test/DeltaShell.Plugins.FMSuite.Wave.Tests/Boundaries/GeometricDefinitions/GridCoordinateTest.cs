@@ -41,5 +41,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             Assert.That(exception, Has.Property("ParamName").EqualTo(expectedParamName));
         }
+
+        [Test]
+        public void Deconstruct_ExpectedResults()
+        {
+            // Setup
+            int expectedX = random.Next();
+            int expectedY = random.Next();
+
+            var coordinate = new GridCoordinate(expectedX, expectedY);
+
+            // Call
+            (int resultX, int resultY) = coordinate;
+
+            // Assert
+            Assert.That(resultX, Is.EqualTo(expectedX));
+            Assert.That(resultY, Is.EqualTo(expectedY));
+            
+        }
     }
 }
