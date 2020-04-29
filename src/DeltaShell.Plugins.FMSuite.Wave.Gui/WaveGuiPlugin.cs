@@ -167,9 +167,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
             yield return boundaryConditionViewInfo;
-            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, 
-                                                           FindBoundaryConditionForFeature,
-                                                           IsModelBoundary);
 
             // Spatially varying boundary editor
             // This should be changed to the appropriate data context already.
@@ -347,17 +344,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return WaveModels.First(m => m.Obstacles.Contains(f)) != null
                        ? WaveModels.First(m => m.Obstacles.Contains(f)).Obstacles
                        : null;
-        }
-
-        private bool IsModelBoundary(Feature2D f)
-        {
-            return WaveModels.FirstOrDefault(m => m.Boundaries.Contains(f)) != null;
-        }
-
-        private WaveBoundaryCondition FindBoundaryConditionForFeature(Feature2D f)
-        {
-            WaveModel model = WaveModels.FirstOrDefault(m => m.Boundaries.Contains(f));
-            return model != null ? model.BoundaryConditions.FirstOrDefault(bc => bc.Feature.Equals(f)) : null;
         }
 
         private IEnumerable<WaveModel> WaveModels => Gui != null
