@@ -227,7 +227,6 @@
     <Compile Include="IO\MdwFile.cs" />
     <Compile Include="IO\MdwBoundaryCategoryGeometryExtender.cs" />
     <Compile Include="IO\MdwBoundaryCategoriesCreator.cs" />
-    <Compile Include="IO\Sp2File.cs" />
     <Compile Include="IO\SpectrumDataComponentVisitor.cs" />
     <Compile Include="IO\SpectrumParametersVisitor.cs" />
     <Compile Include="IO\WaveBoundaryImportHelper.cs" />
