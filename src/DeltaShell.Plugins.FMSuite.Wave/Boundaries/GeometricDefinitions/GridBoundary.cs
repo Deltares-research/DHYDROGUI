@@ -18,6 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         private readonly IDiscreteGridPointCoverage observedGrid;
         private readonly IReadOnlyDictionary<GridSide, IReadOnlyList<GridCoordinate>> boundaries;
 
+        private readonly IReadOnlyList<GridSide> sides = new[]
+        {
+            GridSide.East,
+            GridSide.North,
+            GridSide.West,
+            GridSide.South
+        };
+
         /// <summary>
         /// Creates a new instance of the <see cref="GridBoundary"/>.
         /// </summary>
@@ -39,34 +47,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
             observedGrid = grid;
 
-            IReadOnlyList<GridCoordinate>[] sides = GetOrderedSides();
+            IReadOnlyList<GridCoordinate>[] orderedSides = GetOrderedSides();
 
-            int worldEastIndex = GetIndexOfWorldEast(sides);
+            int worldEastIndex = GetIndexOfWorldEast(orderedSides);
 
             boundaries = new Dictionary<GridSide, IReadOnlyList<GridCoordinate>>
             {
-                {GridSide.East,  sides[worldEastIndex]},
-                {GridSide.North, sides[(worldEastIndex + 1) % 4]},
-                {GridSide.West,  sides[(worldEastIndex + 2) % 4]},
-                {GridSide.South, sides[(worldEastIndex + 3) % 4]},
+                {GridSide.East,  orderedSides[worldEastIndex]},
+                {GridSide.North, orderedSides[(worldEastIndex + 1) % 4]},
+                {GridSide.West,  orderedSides[(worldEastIndex + 2) % 4]},
+                {GridSide.South, orderedSides[(worldEastIndex + 3) % 4]},
             };
         }
 
         public IEnumerable<GridBoundaryCoordinate> this[GridSide gridSide] =>
             Enumerable.Range(0, boundaries[gridSide].Count).Select(x => new GridBoundaryCoordinate(gridSide, x));
 
-        public IEnumerable<GridBoundaryCoordinate> GetGridEnvelope()
-        {
-            GridSide[] sides =
-            {
-                GridSide.East,
-                GridSide.North,
-                GridSide.West,
-                GridSide.South
-            };
-
-            return sides.SelectMany(x => this[x]);
-        }
+        public IEnumerable<GridBoundaryCoordinate> GetGridEnvelope() => sides.SelectMany(x => this[x]);
 
         public Coordinate GetWorldCoordinateFromBoundaryCoordinate(GridBoundaryCoordinate boundaryCoordinate)
         {
@@ -104,11 +101,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                                                                          .Select(m => new GridCoordinate(m, 0))
                                                                          .Where(x => !IsDryPoint(x));
 
-            IReadOnlyList<GridCoordinate>[] sides;
+            IReadOnlyList<GridCoordinate>[] result;
 
             if (isCounterClockWise)
             {
-                sides = new IReadOnlyList<GridCoordinate>[]
+                result = new IReadOnlyList<GridCoordinate>[]
                 {
                     coordinatesGridEast.ToList(),
                     coordinatesGridNorth.ToList(),
@@ -118,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             }
             else
             {
-                sides = new IReadOnlyList<GridCoordinate>[]
+                result = new IReadOnlyList<GridCoordinate>[]
                 {
                     coordinatesGridEast.Reverse().ToList(),
                     coordinatesGridSouth.Reverse().ToList(),
@@ -127,16 +124,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 };
             }
 
-            return sides;
+            return result;
         }
 
-        private int GetIndexOfWorldEast(IEnumerable<IReadOnlyList<GridCoordinate>> sides)
+        private int GetIndexOfWorldEast(IEnumerable<IReadOnlyList<GridCoordinate>> sideCoordinates)
         {
             Vector2D GetNormalFromSide(IReadOnlyList<GridCoordinate> x) =>
                 CartesianOrientationCalculatorHelper.GetNormal(observedGrid.GetCoordinateAt(x.First()), 
                                                                observedGrid.GetCoordinateAt(x.Last()));
 
-            Vector2D[] normals = sides.Select(GetNormalFromSide).ToArray();
+            Vector2D[] normals = sideCoordinates.Select(GetNormalFromSide).ToArray();
 
             var worldEastIndex = 0;
             var referenceEast = Vector2D.Create(1.0, 0.0);
@@ -161,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
         private bool IsDryPoint(GridCoordinate coordinate)
         {
-            Coordinate worldCoordinate = observedGrid.GetCoordinateAt(coordinate.X, coordinate.Y);
+            Coordinate worldCoordinate = observedGrid.GetCoordinateAt(coordinate);
             return WaveDomainHelper.IsDryPoint(worldCoordinate.X, worldCoordinate.Y);
         }
     }
