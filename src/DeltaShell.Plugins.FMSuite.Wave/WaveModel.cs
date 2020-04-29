@@ -51,7 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private IGeometry previousFeatureGeometry;
         private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
-        private IList<IDisposable> disposableItems = new List<IDisposable>();
         private string progressText;
 
         /// <summary>
@@ -477,9 +476,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// <param name="creationCode"> </param>
         private void BuildModel(Action<WaveModel> creationCode, bool loading)
         {
-            disposableItems.ForEach(d => d.Dispose());
-            disposableItems.Clear();
-
             creationCode(this);
             if (loading && !Equals(OuterDomain, ModelDefinition.OuterDomain))
             {
@@ -507,11 +503,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
             }
-            
-            disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(
-                                    Boundaries,
-                                    BoundaryConditions,
-                                    f => CreateWaveBoundaryCondition(f, this)));
         }
 
         private static void BuildModelFromMdw(WaveModel model, string mdwFilePath)
@@ -1089,12 +1080,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             RestoreEnvironment();
-            if (disposableItems != null)
-            {
-                disposableItems.ForEach(d => d.Dispose());
-                disposableItems.Clear();
-                disposableItems = null;
-            }
         }
 
         private static void RestoreEnvironment()
