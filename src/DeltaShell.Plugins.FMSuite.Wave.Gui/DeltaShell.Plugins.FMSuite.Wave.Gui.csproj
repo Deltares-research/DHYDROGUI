@@ -276,12 +276,6 @@
     <Compile Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.Designer.cs">
       <DependentUpon>WaveConstantParametersEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.Designer.cs">
-      <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterType.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\WindInputType.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataView.xaml.cs">
@@ -473,9 +467,6 @@
     <Resource Include="Resources\wall_brick.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.resx">
-      <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.resx">
       <DependentUpon>WaveConstantParametersEditor.cs</DependentUpon>
     </EmbeddedResource>

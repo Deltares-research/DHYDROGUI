@@ -324,7 +324,6 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\DomainSpecificSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\MainDomainSpecificDataViewModelTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataViewTest.cs" />
-    <Compile Include="Gui\Editors\WaveBoundaryConditionDataViewTest.cs" />
     <Compile Include="Gui\Editors\WaveModelViewWPFTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModelTest.cs" />
