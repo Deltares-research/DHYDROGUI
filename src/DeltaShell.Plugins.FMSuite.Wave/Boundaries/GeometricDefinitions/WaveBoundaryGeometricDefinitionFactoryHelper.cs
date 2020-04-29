@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using GeoAPI.Geometries;
+using NetTopologySuite.Mathematics;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -89,6 +91,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                                                              gridSideCandidate,
                                                              lengthCandidate)
                        : null;
+        }
+
+        /// <summary>
+        /// Gets the geometric definition of a boundary located at the specified <paramref name="orientation" />.
+        /// </summary>
+        /// <param name="orientation"> The world side of the grid at which the boundary should be located. </param>
+        /// <param name="calculator"> The boundary snapping calculator. </param>
+        /// <returns> The geometric definition. </returns>
+        public static IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryOrientationType orientation, 
+                                                                              IBoundarySnappingCalculator calculator)
+        {
+            IGridBoundary gridBoundary = calculator.GridBoundary;
+
+            GridSide side = gridBoundary.GetSideAlignedWithNormal(orientation.ToReferenceNormal());
+            int startIndex = gridBoundary[side].First().Index;
+            int endIndex = gridBoundary[side].Last().Index;
+
+            double length = calculator.CalculateDistanceBetweenBoundaryIndices(startIndex, endIndex, side);
+            return new WaveBoundaryGeometricDefinition(startIndex, endIndex, side, length);
+        }
+
+        private static Vector2D ToReferenceNormal(this BoundaryOrientationType orientationType)
+        {
+            switch (orientationType)
+            {
+                case BoundaryOrientationType.East:
+                    return Vector2D.Create(1.0, 0.0);
+                case BoundaryOrientationType.NorthEast:
+                    return Vector2D.Create(1.0, 1.0);
+                case BoundaryOrientationType.North:
+                    return Vector2D.Create(0.0, 1.0);
+                case BoundaryOrientationType.NorthWest:
+                    return Vector2D.Create(-1.0, 1.0);
+                case BoundaryOrientationType.West:
+                    return Vector2D.Create(-1.0, 0.0);
+                case BoundaryOrientationType.SouthWest:
+                    return Vector2D.Create(-1.0, -1.0);
+                case BoundaryOrientationType.South:
+                    return Vector2D.Create(0.0, -1.0);
+                case BoundaryOrientationType.SouthEast:
+                    return Vector2D.Create(1.0, -1.0);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(orientationType), orientationType, null);
+            }
         }
     }
 }

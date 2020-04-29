@@ -4,7 +4,9 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using GeoAPI.Geometries;
+using NetTopologySuite.Mathematics;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -180,6 +182,58 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                         new Coordinate(5.0, 5.0),
                     });
             }
+        }
+
+        private static IEnumerable<TestCaseData> GetGeometricDefinitionFromOrientationData()
+        {
+                yield return new TestCaseData(BoundaryOrientationType.East, Vector2D.Create(1.0, 0.0));
+                yield return new TestCaseData(BoundaryOrientationType.NorthEast, Vector2D.Create(1.0, 1.0));
+                yield return new TestCaseData(BoundaryOrientationType.North, Vector2D.Create(0.0, 1.0));
+                yield return new TestCaseData(BoundaryOrientationType.NorthWest, Vector2D.Create(-1.0, 1.0));
+                yield return new TestCaseData(BoundaryOrientationType.West, Vector2D.Create(-1.0, 0.0));
+                yield return new TestCaseData(BoundaryOrientationType.SouthWest, Vector2D.Create(-1.0, -1.0));
+                yield return new TestCaseData(BoundaryOrientationType.South, Vector2D.Create(0.0, -1.0));
+                yield return new TestCaseData(BoundaryOrientationType.SouthEast, Vector2D.Create(1.0, -1.0));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetGeometricDefinitionFromOrientationData))]
+        public void GetGeometricDefinition_Orientation(BoundaryOrientationType orientation, 
+                                                       Vector2D normal)
+        {
+            // Setup
+            const int startIndex = 0;
+            const int endIndex = 10;
+            const GridSide expectedSide = GridSide.South;
+            const double expectedLength = 3.0;
+
+            var startCoord = new GridBoundaryCoordinate(expectedSide, startIndex);
+            var endCoord = new GridBoundaryCoordinate(expectedSide, endIndex);
+
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+            calculator.GridBoundary[expectedSide].Returns(new[]
+            {
+                startCoord,
+                endCoord
+            });
+
+            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X - normal.X) < 0.0001 && 
+                                                                                   Math.Abs(n.Y - normal.Y) < 0.0001))
+                      .Returns(expectedSide);
+
+            calculator.CalculateDistanceBetweenBoundaryIndices(startIndex, endIndex, expectedSide)
+                      .Returns(expectedLength);
+
+            // Call
+            IWaveBoundaryGeometricDefinition geometricDefinition =
+                WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(orientation,
+                                                                                    calculator);
+
+            // Assert
+            Assert.That(geometricDefinition.StartingIndex, Is.EqualTo(startIndex));
+            Assert.That(geometricDefinition.EndingIndex, Is.EqualTo(endIndex));
+            Assert.That(geometricDefinition.GridSide, Is.EqualTo(expectedSide));
+            Assert.That(geometricDefinition.Length, Is.EqualTo(expectedLength));
         }
     }
 }
