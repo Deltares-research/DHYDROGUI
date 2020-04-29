@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
@@ -127,35 +128,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             return result;
         }
 
-        private int GetIndexOfWorldEast(IEnumerable<IReadOnlyList<GridCoordinate>> sideCoordinates)
+        private int GetIndexOfWorldEast(IReadOnlyList<IReadOnlyList<GridCoordinate>> sideCoordinates)
         {
-            Vector2D GetNormalFromSide(IReadOnlyList<GridCoordinate> x) =>
-                CartesianOrientationCalculatorHelper.GetNormal(observedGrid.GetCoordinateAt(x.First()), 
-                                                               observedGrid.GetCoordinateAt(x.Last()));
+            IEnumerable<Tuple<int, Vector2D>> normals = 
+                Enumerable.Range(0, sides.Count)
+                          .Select(x => new Tuple<int, Vector2D>(x, GetNormalFromSide(sideCoordinates[x])));
 
-            Vector2D[] normals = sideCoordinates.Select(GetNormalFromSide).ToArray();
-
-            var worldEastIndex = 0;
             var referenceEast = Vector2D.Create(1.0, 0.0);
-
-            double largestDotProduct = -1.0;
-
-            for (var i = 0; i < 4; i++)
-            {
-                double dotProduct = normals[i].Dot(referenceEast);
-
-                if (!(largestDotProduct < dotProduct))
-                {
-                    continue;
-                }
-
-                largestDotProduct = dotProduct;
-                worldEastIndex = i;
-            }
-
-            return worldEastIndex;
+            return CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(normals, referenceEast, 0);
         }
 
+        private Vector2D GetNormalFromSide(IEnumerable<GridCoordinate> coordinates) =>
+            CartesianOrientationCalculatorHelper.GetNormal(observedGrid.GetCoordinateAt(coordinates.First()),
+                                                           observedGrid.GetCoordinateAt(coordinates.Last()));
         private bool IsDryPoint(GridCoordinate coordinate)
         {
             Coordinate worldCoordinate = observedGrid.GetCoordinateAt(coordinate);
