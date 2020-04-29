@@ -24,6 +24,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     /// </summary>
     public static class HydroUGridExtensions
     {
+        private const int Digits = (int)1E6;
+
         #region Mesh2d
 
         /// <summary>
@@ -234,17 +236,17 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             };
 
             var branchIdLookup = discretization.Network.Branches.ToIndexDictionary();
-            
+
             for (int i = 0; i < locationCount; i++)
             {
                 var location = locations[i];
 
-                mesh.NodesX[i] = location.Geometry?.Coordinate.X ?? 0;
-                mesh.NodesY[i] = location.Geometry?.Coordinate.Y ?? 0;
+                mesh.NodesX[i] = location.Geometry?.Coordinate.X.RoundByDigits() ?? 0;
+                mesh.NodesY[i] = location.Geometry?.Coordinate.Y.RoundByDigits() ?? 0;
                 mesh.BranchIDs[i] = branchIdLookup[location.Branch];
                 mesh.BranchOffsets[i] = location.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(location.Chainage);
                 mesh.NodeIds[i] = location.Name;
-                mesh.NodeLongNames[i] = location.LongName;
+                mesh.NodeLongNames[i] = location.LongName ?? "";
             }
 
             var locationIdLookup = locations.ToIndexDictionary();
@@ -255,8 +257,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 mesh.EdgeBranchIds[i] = branchIdLookup[segment.Branch];
                 mesh.EdgeCenterPointOffset[i] = segment.Chainage + segment.Length / 2.0;
-                mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X;
-                mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y;
+                mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X.RoundByDigits();
+                mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y.RoundByDigits();
                 
                 var indices = GetLocationIndices(discretization, segment, locationIdLookup);
                 mesh.EdgeNodes[edgeNodeIndex++] = indices[0];
@@ -285,11 +287,39 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 if (Math.Abs(loc.Chainage - segment.EndChainage) < epsilonLocation)
                 {
                     indices[1] = locationIdLookup[loc];
-                    return indices;
+                    break;
                 }
             }
 
+            if (indices[0] == -1)
+            {
+                // no begin point found search neighboring branches
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Source, discretization);
+                indices[0] = firstLocation != null ? locationIdLookup[firstLocation] : -1;
+            }
+
+            if (indices[1] == -1)
+            {
+                // no end point found search neighboring branches
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Target, discretization);
+                indices[1] = firstLocation != null? locationIdLookup[firstLocation]: -1;
+            }
+
             return indices;
+        }
+
+        private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization)
+        {
+            var networkLocationsIn = node.IncomingBranches
+                .Select(b => new { branch = b, location = discretization.GetLocationsForBranch(b).LastOrDefault() })
+                .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < Digits)
+                .Select(l => l.location);
+
+            var networkLocationsOut = node.OutgoingBranches
+                .Select(b => discretization.GetLocationsForBranch(b).FirstOrDefault())
+                .Where(l => l != null && Math.Abs(l.Chainage) < Digits);
+
+            return networkLocationsIn.Concat(networkLocationsOut).FirstOrDefault();
         }
 
         #endregion
@@ -368,7 +398,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.BranchIds[i] = branch.Name;
                 mesh.BranchLongNames[i] = branch.Description ?? "";
                 mesh.BranchGeometryNodesCount[i] = branch.Geometry.Coordinates.Length;
-                mesh.BranchLengths[i] = branch.Length;
+                mesh.BranchLengths[i] = branch.IsLengthCustom ? branch.Length : branch.Length.RoundByDigits();
                 mesh.BranchOrder[i] = branch.OrderNumber;
                 mesh.BranchTypes[i] = (int) branch.GetBranchType();
 
@@ -376,7 +406,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 if (branch is ISewerConnection connection)
                 {
                     mesh.NodesTo[i] = nodeIndexLookup[connection.TargetCompartment ?? (object)connection.Target];
-                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment ?? (object)connection.Source];
+                    mesh.NodesFrom[i] = nodeIndexLookup[connection.SourceCompartment ?? (object)connection.Source]; 
                 }
                 else
                 {
@@ -391,8 +421,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 for (int j = 0; j < coordinates.Length; j++)
                 {
                     var coordinate = coordinates[j];
-                    geometryXData.Add(coordinate.X);
-                    geometryYData.Add(coordinate.Y);
+                    geometryXData.Add(coordinate.X.RoundByDigits());
+                    geometryYData.Add(coordinate.Y.RoundByDigits());
                 }
             }
 
@@ -428,8 +458,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         var offset = (manhole.Compartments.Count - 1) * 0.5;
                         var compartmentX = manhole.Geometry.Coordinate.X - offset + j;
 
-                        mesh.NodesX[addedNodeIndex] = compartmentX;
-                        mesh.NodesY[addedNodeIndex] = manhole.Geometry.Coordinate.Y;
+                        mesh.NodesX[addedNodeIndex] = compartmentX.RoundByDigits();
+                        mesh.NodesY[addedNodeIndex] = manhole.Geometry.Coordinate.Y.RoundByDigits();
                         mesh.NodeIds[addedNodeIndex] = compartment.Name;
                         mesh.NodeLongNames[addedNodeIndex] = manhole.LongName ?? "";
 
@@ -439,8 +469,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     continue;
                 }
 
-                mesh.NodesX[addedNodeIndex] = node.Geometry.Coordinate.X;
-                mesh.NodesY[addedNodeIndex] = node.Geometry.Coordinate.Y;
+                mesh.NodesX[addedNodeIndex] = node.Geometry.Coordinate.X.RoundByDigits();
+                mesh.NodesY[addedNodeIndex] = node.Geometry.Coordinate.Y.RoundByDigits();
                 mesh.NodeIds[addedNodeIndex] = node.Name;
 
                 if (node is IHydroNode hydroNode)
@@ -725,6 +755,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             var sourceIndex = blockIndex * blockSize;
             Array.Copy(fullArray, sourceIndex, objArray, 0, blockSize);
             return objArray;
+        }
+
+        private static double RoundByDigits(this double number)
+        {
+            return Math.Floor(number * Digits) / Digits;
         }
     }
 }
