@@ -16,10 +16,9 @@
         <fluent:RibbonTabItem Header="Map" Name="mapTab" Group="{Binding ElementName=geospatialContextualGroup}" fluent:KeyTip.Keys="M">
             <fluent:RibbonGroupBox Header="Waves Region 2D / 3D">
                 <fluent:ToggleButton x:Name="ButtonAddObstacle" ToolTip="Add a (2D) obstacle" Header="Add Obstacle" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Wave.Gui;component\Resources\wall_brick.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
+                <fluent:ToggleButton x:Name="ButtonAddBoundary" ToolTip="Add a (2D) wave boundary" Header="Add Wave Boundary" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddObsPoint" ToolTip="Add an observation point (2D)" Header="Add Observation Point" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\Observation.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddObsCrossSection" ToolTip="Add an observation cross-section (2D)" Header="Add Observation Cross-Section" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\ObservationCS.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
-                <!-- TODO: this should be renamed once everything is implemented -->
-                <fluent:ToggleButton x:Name="ButtonAddCustomBoundary" ToolTip="Add a spatial (2D) wave boundary" Header="Add Spatial Wave Boundary" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.Common.Gui;component\Resources\boundary.png" Size="Middle" SizeDefinition="Middle,Small,Small" />
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>

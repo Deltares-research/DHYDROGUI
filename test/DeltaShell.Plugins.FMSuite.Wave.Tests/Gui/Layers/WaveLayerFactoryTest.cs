@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             Assert.That(layer, Is.InstanceOf<GroupLayer>(),
                         $"Expected the result to be an instance of {nameof(GroupLayer)}");
-            Assert.That(layer.Name, Is.EqualTo(WaveLayerNames.SpatiallyVaryingBoundaryLayerName),
+            Assert.That(layer.Name, Is.EqualTo(WaveLayerNames.BoundaryLayerName),
                         "Expected the layer to have a different name.");
 
             var groupLayer = (GroupLayer) layer;

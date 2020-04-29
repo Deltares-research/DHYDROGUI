@@ -17,12 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// </summary>
         public const string BoundaryLayerName = "Boundaries";
 
-        // TODO update this.
-        /// <summary>
-        /// The boundary layer name
-        /// </summary>
-        public const string SpatiallyVaryingBoundaryLayerName = "Spatially Varying Boundaries";
-
         /// <summary>
         /// The boundary line layer name
         /// </summary>
@@ -37,11 +31,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         /// The boundary end points layer name
         /// </summary>
         public const string BoundaryStartPointsLayerName = "Start Points";
-
-        /// <summary>
-        /// The boundary condition layer name
-        /// </summary>
-        public const string BoundaryConditionLayerName = "Boundary Conditions";
 
         /// <summary>
         /// The boundary support points layer name

@@ -25,9 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         internal const string ObstacleToolName = "Obstacle Tool (Waves)";
         internal const string BoundaryToolName = "Boundary Tool (Waves)";
 
-        // TODO: This needs to be renamed once everything is implemented
-        internal const string CustomBoundaryToolName = "Spatially Varying Boundary Tool (Waves)";
-
         internal const string ObservationPointToolName = "Observation Point Tool (Waves)";
         internal const string ObservationCrossSectionToolName = "Observation Cross-Section Tool (Waves)";
 
@@ -53,9 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             tools.Cast<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             // TODO: This needs to be refactored
-            var boundaryTool = new GroupedLayerFeature2DLineTool(WaveLayerNames.SpatiallyVaryingBoundaryLayerName,
+            var boundaryTool = new GroupedLayerFeature2DLineTool(WaveLayerNames.BoundaryLayerName,
                                                                  WaveLayerNames.BoundaryLineLayerName,
-                                                                 CustomBoundaryToolName,
+                                                                 BoundaryToolName,
                                                                  BoundaryIcon);
 
             bool layerFilterBoundary(ILayer layer) =>

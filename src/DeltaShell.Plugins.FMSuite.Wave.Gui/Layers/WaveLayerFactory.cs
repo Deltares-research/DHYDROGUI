@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             Ensure.NotNull(featuresProviderContainer, nameof(featuresProviderContainer));
 
-            var groupLayer = new GroupLayer(WaveLayerNames.SpatiallyVaryingBoundaryLayerName)
+            var groupLayer = new GroupLayer(WaveLayerNames.BoundaryLayerName)
             {
                 LayersReadOnly = false,
             };

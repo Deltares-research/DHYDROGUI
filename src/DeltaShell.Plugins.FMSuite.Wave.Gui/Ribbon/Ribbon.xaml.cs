@@ -25,12 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
             mapTab.Group = geospatialContextualGroup;
 
             buttonCommands.Add(ButtonAddObstacle, new MapToolCommand(WaveMapViewDecorator.ObstacleToolName));
+            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(WaveMapViewDecorator.BoundaryToolName));
             buttonCommands.Add(ButtonAddObsPoint, new MapToolCommand(WaveMapViewDecorator.ObservationPointToolName));
-            buttonCommands.Add(ButtonAddObsCrossSection,
-                               new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
-
-            // TODO: this should be renamed to ButtonAddBoundary once everything is implemented.
-            buttonCommands.Add(ButtonAddCustomBoundary, new MapToolCommand(WaveMapViewDecorator.CustomBoundaryToolName));
+            buttonCommands.Add(ButtonAddObsCrossSection, new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));
         }
 
         public IEnumerable<ICommand> Commands => buttonCommands.Values;
@@ -53,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
                 ToggleButton button = buttonCommandPair.Key;
                 ICommand command = buttonCommandPair.Value;
 
-                if (Equals(button, ButtonAddCustomBoundary) && modelGroupLayer != null)
+                if (Equals(button, ButtonAddBoundary) && modelGroupLayer != null)
                 {
                     CurvilinearGrid curvilinearGrid = ((WaveModel)modelGroupLayer.Model).OuterDomain.Grid;
                     bool hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;

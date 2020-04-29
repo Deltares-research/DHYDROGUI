@@ -23,8 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string GeneralFolderName = "General";
         private const string AreaFolderName = "Area";
         private const string TimePointFolderName = "Time Frame";
-        // TODO (MWT) Remove this as part of clean up and renome added value below
-        private const string BoundaryFolderName = "Boundary Conditions";
+        private const string BoundaryFolderName = "Boundaries";
         private const string PhysicalProcessesName = "Physical Processes";
         private const string NumericalParametersName = "Numerical Parameters";
         private const string OutputParametersName = "Output Parameters";
@@ -32,8 +31,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private const string ObsPointNodeName = "Observation Points";
         private const string ObsCurveNodeName = "Observation Curves";
         private const string SpectralDomainName = "Spectral Domain";
-
-        private const string SpatiallyVariantBoundaryFolderName = "Boundaries";
 
         private static readonly Bitmap AreaImage = Resources.area2d;
         private static readonly Bitmap TimePointImage = Resources.timers;
@@ -81,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
                                                    ShortCutType.FeatureSet);
 
-            yield return new WaveModelTreeShortcut(SpatiallyVariantBoundaryFolderName, 
+            yield return new WaveModelTreeShortcut(BoundaryFolderName, 
                                                    BoundaryConditionsImage, 
                                                    model, 
                                                    model.BoundaryContainer.Boundaries, 
