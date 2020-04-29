@@ -13,7 +13,6 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
