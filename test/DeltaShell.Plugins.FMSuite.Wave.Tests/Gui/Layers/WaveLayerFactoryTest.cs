@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         "Expected the layer to have a different name.");
 
             var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(waveSnappedFeatures.ChildData.Count()),
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(0),
                         "Expected a different number of layers:");
         }
 
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         "Expected the layer to have a different name.");
 
             var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(waveSnappedFeatures.ChildData.Count()),
+            Assert.That(groupLayer.Layers.Count, Is.EqualTo(0),
                         "Expected a different number of layers:");
         }
 

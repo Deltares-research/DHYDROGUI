@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
             mapTab.Group = geospatialContextualGroup;
 
             buttonCommands.Add(ButtonAddObstacle, new MapToolCommand(WaveMapViewDecorator.ObstacleToolName));
-            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(WaveMapViewDecorator.BoundaryToolName));
             buttonCommands.Add(ButtonAddObsPoint, new MapToolCommand(WaveMapViewDecorator.ObservationPointToolName));
             buttonCommands.Add(ButtonAddObsCrossSection,
                                new MapToolCommand(WaveMapViewDecorator.ObservationCrossSectionToolName));

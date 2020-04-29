@@ -45,9 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             yield return new ObservationCrossSectionLayerSubProvider(factory);
             yield return new ObservationPointLayerSubProvider(factory);
             yield return new ObstacleLayerSubProvider(factory);
-            yield return new Sp2BoundaryLayerSubProvider(factory);
-            yield return new WaveBoundaryConditionLayerSubProvider();
-            yield return new WaveBoundaryLayerSubProvider(factory);
             yield return new WaveDomainDataLayerSubProvider(factory);
             yield return new WaveModelLayerSubProvider(factory);
             yield return new WaveSnappedFeaturesGroupLayerDataLayerSubProvider(factory);

@@ -45,8 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             // tools:
             tools.Add(
                 new Feature2DLineTool(WaveLayerNames.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
-            tools.Add(
-                new Feature2DLineTool(WaveLayerNames.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
             tools.Add(new Feature2DPointTool(WaveLayerNames.ObservationPointLayerName,
                                              ObservationPointToolName, ObservationPointIcon));
             tools.Add(new Feature2DLineTool(WaveLayerNames.ObservationCrossSectionLayerName,

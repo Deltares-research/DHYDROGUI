@@ -109,25 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             Ensure.NotNull(snappedFeatures, nameof(snappedFeatures));
 
-            var groupLayer = new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName);
-            foreach (FeatureCollection snappedFeaturesData in snappedFeatures.ChildData)
-            {
-                var vectorLayer = new VectorLayer("Boundaries")
-                {
-                    DataSource = snappedFeaturesData,
-                    NameIsReadOnly = true,
-                    Selectable = false,
-                    Style = new VectorStyle
-                    {
-                        Fill = Brushes.Gray,
-                        GeometryType = typeof(IPoint)
-                    }
-                };
-
-                groupLayer.Layers.Add(vectorLayer);
-            }
-
-            return groupLayer;
+            return new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName); // TODO can this be removed?
         }
 
         public ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false)

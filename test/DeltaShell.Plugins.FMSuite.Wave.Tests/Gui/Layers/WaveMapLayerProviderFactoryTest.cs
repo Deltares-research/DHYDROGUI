@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(12));
+            Assert.That(result.Count, Is.EqualTo(9));
 
             Assert.That(result.Any(x => x is BoundaryMapFeaturesContainerLayerSubProvider), 
                         $"Expected one {nameof(BoundaryMapFeaturesContainerLayerSubProvider)}");
@@ -44,12 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         $"Expected one {nameof(ObservationPointLayerSubProvider)}");
             Assert.That(result.Any(x => x is ObstacleLayerSubProvider),
                         $"Expected one {nameof(ObstacleLayerSubProvider)}");
-            Assert.That(result.Any(x => x is Sp2BoundaryLayerSubProvider),
-                        $"Expected one {nameof(Sp2BoundaryLayerSubProvider)}");
-            Assert.That(result.Any(x => x is WaveBoundaryConditionLayerSubProvider),
-                        $"Expected one {nameof(WaveBoundaryConditionLayerSubProvider)}");
-            Assert.That(result.Any(x => x is WaveBoundaryLayerSubProvider),
-                        $"Expected one {nameof(WaveBoundaryLayerSubProvider)}");
             Assert.That(result.Any(x => x is WaveDomainDataLayerSubProvider),
                         $"Expected one {nameof(WaveDomainDataLayerSubProvider)}");
             Assert.That(result.Any(x => x is WaveModelLayerSubProvider),

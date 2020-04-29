@@ -80,12 +80,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return model.OuterDomain;
             yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, model, model.TimePointData,
                                                    ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(BoundaryFolderName, 
-                                                   BoundaryConditionsImage, 
-                                                   model,
-                                                   model.BoundaryConditions, 
-                                                   ShortCutType.FeatureSet,
-                                                   model.BoundaryConditions);
 
             yield return new WaveModelTreeShortcut(SpatiallyVariantBoundaryFolderName, 
                                                    BoundaryConditionsImage, 
