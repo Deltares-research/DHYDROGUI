@@ -54,11 +54,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
                 ToggleButton button = buttonCommandPair.Key;
                 ICommand command = buttonCommandPair.Value;
 
-                if (Equals(button, ButtonAddBoundary) && modelGroupLayer != null)
+                if (Equals(button, ButtonAddCustomBoundary) && modelGroupLayer != null)
                 {
-                    CurvilinearGrid curvilinearGrid = ((WaveModel) modelGroupLayer.Model).OuterDomain.Grid;
+                    CurvilinearGrid curvilinearGrid = ((WaveModel)modelGroupLayer.Model).OuterDomain.Grid;
                     bool hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;
-                    button.IsEnabled = hasGrid && command.Enabled;
+                    bool boundaryDefinedByFile = ((WaveModel)modelGroupLayer.Model).BoundaryContainer.DefinitionPerFileUsed;
+                    button.IsEnabled = hasGrid && !boundaryDefinedByFile && command.Enabled;
                 }
                 else
                 {
