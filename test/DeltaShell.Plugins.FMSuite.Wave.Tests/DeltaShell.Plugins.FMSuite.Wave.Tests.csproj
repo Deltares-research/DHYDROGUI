@@ -313,7 +313,6 @@
     <Compile Include="Gui\FeatureProviders\Boundaries\Factories\WaveBoundaryFactoryTest.cs" />
     <Compile Include="Gui\FeatureProviders\Boundaries\Features\SupportPointFeatureTest.cs" />
     <Compile Include="Gui\FeatureProviders\MultiIEventedListAdapterTest.cs" />
-    <Compile Include="FunctionArgumentSyncerTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverterTest.cs" />
     <Compile Include="Gui\Converters\EnumToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverterTest.cs" />

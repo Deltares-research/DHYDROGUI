@@ -191,7 +191,6 @@
     <Compile Include="Boundaries\SpectralData\WavePeriodType.cs" />
     <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeType.cs" />
     <Compile Include="Boundaries\WaveBoundary.cs" />
-    <Compile Include="FunctionArgumentSyncer.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\BcwTimeSeriesOfBoundaryCollector.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryOrientationType.cs" />
