@@ -181,5 +181,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             // Assert
             Assert.That(result1, Is.EqualTo(result2), "Expected the same hash code:");
         }
+
+        [Test]
+        public void Deconstruct_ExpectedResults()
+        {
+            // Setup
+            var expectedSide = random.NextEnumValue<GridSide>();
+            int expectedIndex = random.Next();
+
+            var gridBoundaryCoordinate = new GridBoundaryCoordinate(expectedSide,
+                                                                    expectedIndex);
+
+            // Call
+            (GridSide gridSideResult, int indexResult) = gridBoundaryCoordinate;
+
+            // Assert
+            Assert.That(gridSideResult, Is.EqualTo(expectedSide));
+            Assert.That(indexResult, Is.EqualTo(expectedIndex));
+        }
     }
 }
