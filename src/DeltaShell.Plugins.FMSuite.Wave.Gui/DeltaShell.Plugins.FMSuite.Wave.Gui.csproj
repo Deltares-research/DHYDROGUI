@@ -301,12 +301,6 @@
       <DependentUpon>WaveDomainEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\WaveGridEditor.cs" />
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.Designer.cs">
-      <DependentUpon>WaveBoundaryConditionPropertiesControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\WaveMeteoDataEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -487,9 +481,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\MeteoFileSelectionControl.resx">
       <DependentUpon>MeteoFileSelectionControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.resx">
-      <DependentUpon>WaveBoundaryConditionPropertiesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaveDomainEditor.resx">
       <DependentUpon>WaveDomainEditor.cs</DependentUpon>
