@@ -665,68 +665,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAModelWithABoundaryCondition_WhenSavedAndLoaded_BoundaryConditionIsCorrectlyLoaded()
-        {
-            var tempDirPath = FileUtils.CreateTempDirectory();
-            var tempProjectFilePath = Path.Combine(tempDirPath, "Project.dsproj");
-
-            var mdwFilePath = string.Empty;
-
-            try
-            {
-                using (var app = GetConfiguredApplication(tempProjectFilePath))
-                {
-                    using (var model = new WaveModel())
-                    {
-                        var project = app.Project;
-                        project.RootFolder.Add(model);
-
-                        var boundary = new Feature2D
-                        {
-                            Geometry =
-                                new LineString(new[]
-                                    {new Coordinate(0, 0), new Coordinate(1, 0)}),
-                            Name = "boundary"
-                        };
-
-                        var boundaryConditionFactory = new WaveBoundaryConditionFactory();
-                        var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(boundary, "",
-                            BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
-
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
-                        boundaryCondition.DataPointIndices.Add(1);
-                        boundaryCondition.PointData[0].Arguments[0]
-                            .SetValues(new[] { refTime, refTime.AddDays(1) });
-
-                        model.Boundaries.Add(boundary);
-                        model.BoundaryConditions.Add((WaveBoundaryCondition)boundaryCondition);
-                     
-                        app.SaveProject();
-
-                        mdwFilePath = model.MdwFilePath;
-
-                        app.CloseProject();
-
-                    }
-
-                    using (var model = new WaveModel(mdwFilePath)) { 
-                                   
-                        var boundaries = model.Boundaries;
-                        var boundaryConditions = model.BoundaryConditions;
-
-                        Assert.IsNotNull(boundaryConditions);
-                        Assert.IsNotNull(boundaries);
-                    }
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(tempDirPath);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
         public void GivenAMdwFileWithObstacleFile_WhenImportedAndObstaclesRemoved_ThenObstacleFileShouldBeRemovedFromTheModeldefinitionProperties()
         {
 
