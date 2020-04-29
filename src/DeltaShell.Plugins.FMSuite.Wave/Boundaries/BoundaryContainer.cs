@@ -41,14 +41,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         public void UpdateGridBoundary(IGridBoundary gridBoundary)
         {
-            this.gridBoundary = gridBoundary;
-            snappingCalculator = this.gridBoundary != null ? new BoundarySnappingCalculator(this.gridBoundary) : null;
+            currentGridBoundary = gridBoundary;
+            snappingCalculator = currentGridBoundary != null ? new BoundarySnappingCalculator(this.currentGridBoundary) : null;
         }
 
         public IBoundarySnappingCalculator GetBoundarySnappingCalculator() => snappingCalculator;
-        private IBoundarySnappingCalculator snappingCalculator = null;
+        private IBoundarySnappingCalculator snappingCalculator;
 
-        public IGridBoundary GetGridBoundary() => gridBoundary;
-        private IGridBoundary gridBoundary = null;
+        public IGridBoundary GetGridBoundary() => currentGridBoundary;
+        private IGridBoundary currentGridBoundary;
     }
 }
