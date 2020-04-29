@@ -302,12 +302,6 @@
     </Compile>
     <Compile Include="Editors\WaveGridEditor.cs" />
     <Compile Include="Editors\WaveBoundaryConditionEditorController.cs" />
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.Designer.cs">
-      <DependentUpon>WaveBoundaryConditionEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -488,9 +482,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionDataView.resx">
       <DependentUpon>WaveBoundaryConditionDataView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.resx">
-      <DependentUpon>WaveBoundaryConditionEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveConstantParametersEditor.resx">
       <DependentUpon>WaveConstantParametersEditor.cs</DependentUpon>
