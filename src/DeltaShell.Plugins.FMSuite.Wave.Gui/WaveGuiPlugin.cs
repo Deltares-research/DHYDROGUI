@@ -259,8 +259,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
-
-            yield return new ViewInfo<WaveSpectralFileImporter, BoundaryConditionImportDialog>();
         }
 
         private static void ImportTimesFromBoundaryCondition(WaveModel model)

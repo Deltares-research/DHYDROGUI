@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             yield return new WaveGridFileImporter(Name, GetModels);
             yield return new WaveDepthFileImporter(Name, GetModels);
             yield return new WaveBoundaryFileImporter();
-            yield return new WaveSpectralFileImporter(GetModels);
             yield return new WavmFileImporter();
         }
 

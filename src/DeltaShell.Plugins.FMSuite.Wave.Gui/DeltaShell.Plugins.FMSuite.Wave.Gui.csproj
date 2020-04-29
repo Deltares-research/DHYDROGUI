@@ -332,7 +332,6 @@
     <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Features\SupportPointFeature.cs" />
     <Compile Include="FeatureProviders\MultiIEventedListAdapter.cs" />
-    <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
     <Compile Include="Forms\WaveSupportPointMode.cs" />
     <Compile Include="Forms\WaveSupportPointSelectionForm.cs">
       <SubType>Form</SubType>

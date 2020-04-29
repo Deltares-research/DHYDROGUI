@@ -217,7 +217,6 @@
     <Compile Include="IO\Importers\WaveDepthFileImporter.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporter.cs" />
     <Compile Include="IO\Importers\WaveModelFileImporter.cs" />
-    <Compile Include="IO\Importers\WaveSpectralFileImporter.cs" />
     <Compile Include="IO\Importers\WavmFileImporter.cs" />
     <Compile Include="IO\IForcingTypeDefinedParametersVisitor.cs" />
     <Compile Include="IO\IBoundaryConditionVisitor.cs" />
