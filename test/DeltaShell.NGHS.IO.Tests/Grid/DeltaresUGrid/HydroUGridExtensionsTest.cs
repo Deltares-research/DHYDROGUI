@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -257,7 +258,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             var branchIdList = networkGeometry.BranchIds.ToList();
 
             var branch1Index = branchIdList.IndexOf(branch.Name);
-            Assert.AreEqual(branch.Length, networkGeometry.BranchLengths[branch1Index]);
+            Assert.AreEqual(branch.Length, networkGeometry.BranchLengths[branch1Index], 1e-6);
             Assert.AreEqual(branch.OrderNumber, networkGeometry.BranchOrder[branch1Index]);
             Assert.AreEqual(branch.Description, networkGeometry.BranchLongNames[branch1Index]);
             Assert.AreEqual(2, networkGeometry.BranchGeometryNodesCount[branch1Index]);
@@ -363,13 +364,18 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             var network = CreateTestNetwork();
             var points = network.Branches.Where(b => b is IPipe || b is IChannel).SelectMany((b, i) =>
             {
-                return Enumerable.Range(0, 10).Select(j => new
+                return Enumerable.Range(0, 9).Select(j => new
                 {
                     branch = b,
-                    branchId = i,
                     chainage = j * (b.Length / 10.0),
                     name = $"{b.Name}_node{j}",
                     longname = $"{b.Name}_node{j}_long",
+                }).Plus(new
+                {
+                    branch = b,
+                    chainage = b.Length,
+                    name = $"{b.Name}_node{10}",
+                    longname = $"{b.Name}_node{10}_long",
                 });
             }).ToArray();
 
@@ -393,6 +399,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             // Assert
             Assert.AreEqual(50, mesh1d.NodeIds.Length);
+            Assert.AreEqual(45, mesh1d.EdgeBranchIds.Length);
 
             var branch1Node3Index = mesh1d.NodeIds.ToList().IndexOf("branch1_node3");
             Assert.AreEqual("branch1_node3_long", mesh1d.NodeLongNames[branch1Node3Index]);
@@ -403,8 +410,27 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual("pipe1_node2_long", mesh1d.NodeLongNames[pipe1Node2Index]);
             Assert.AreEqual(3, mesh1d.BranchIDs[pipe1Node2Index]);
             Assert.AreEqual(10, mesh1d.BranchOffsets[pipe1Node2Index]);
-        }
 
+            var expectedEdgeNodes = new[]
+            {
+                0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16,
+                16, 17, 17, 18, 18, 19, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 30, 31,
+                31, 32, 32, 33, 33, 34, 34, 35, 35, 36, 36, 37, 37, 38, 38, 39, 40, 41, 41, 42, 42, 43, 43, 44, 44, 45,
+                45, 46, 46, 47, 47, 48, 48, 49
+            };
+            Assert.AreEqual(expectedEdgeNodes, mesh1d.EdgeNodes);
+
+            var expectedEdgeIds = new[]
+            {
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                1, 1, 1, 1, 1, 1, 1, 1, 1,
+                2, 2, 2, 2, 2, 2, 2, 2, 2,
+                3, 3, 3, 3, 3, 3, 3, 3, 3,
+                4, 4, 4, 4, 4, 4, 4, 4, 4
+            };
+            Assert.AreEqual(expectedEdgeIds, mesh1d.EdgeBranchIds);
+        }
+        
         [Test]
         public void GivenUGridMeshAdapterTest_DoingCreateLinks_ShouldCreateValidLinks()
         {
