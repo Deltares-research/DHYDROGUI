@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.Periods, Is.Null);
             Assert.That(result.Directions, Is.Null);
             Assert.That(result.DirectionalSpreadings, Is.Null);
+            Assert.That(result.OrientationType, Is.Null);
         }
     }
 }

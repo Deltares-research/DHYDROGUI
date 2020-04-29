@@ -96,5 +96,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Gets or sets the name of the wave boundary.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the the orientation.
+        /// </summary>
+        public BoundaryOrientationType? OrientationType { get; set; } = null;
     }
 }
