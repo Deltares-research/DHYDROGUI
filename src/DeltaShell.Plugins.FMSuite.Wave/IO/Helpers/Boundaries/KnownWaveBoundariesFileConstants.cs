@@ -64,5 +64,56 @@
         /// The parametrized spectrum type value description.
         /// </summary>
         public const string ParametrizedSpectrumType = "parametric";
+
+        /// <summary>
+        /// The north boundary orientation type
+        /// </summary>
+        public const string NorthBoundaryOrientationType = "north";
+
+        /// <summary>
+        /// The north west boundary orientation type
+        /// </summary>
+        public const string NorthWestBoundaryOrientationType = "northwest";
+
+        /// <summary>
+        /// The west boundary orientation type
+        /// </summary>
+        public const string WestBoundaryOrientationType = "west";
+
+        /// <summary>
+        /// The south west boundary orientation type
+        /// </summary>
+        public const string SouthWestBoundaryOrientationType = "southwest";
+
+        /// <summary>
+        /// The south boundary orientation type
+        /// </summary>
+        public const string SouthBoundaryOrientationType = "south";
+
+        /// <summary>
+        /// The south east boundary orientation type
+        /// </summary>
+        public const string SouthEastBoundaryOrientationType = "southeast";
+
+        /// <summary>
+        /// The east boundary orientation type
+        /// </summary>
+        public const string EastBoundaryOrientationType = "east";
+
+        /// <summary>
+        /// The north east boundary orientation type
+        /// </summary>
+        public const string NorthEastBoundaryOrientationType = "northeast";
+
+        /// <summary>
+        /// The clockwise distance dir type
+        /// </summary>
+        public const string ClockwiseDistanceDirType = "clockwise";
+
+        /// <summary>
+        /// The counter clockwise distance dir type
+        /// </summary>
+        public const string CounterClockwiseDistanceDirType = "counter-clockwise";
+
     }
 }
