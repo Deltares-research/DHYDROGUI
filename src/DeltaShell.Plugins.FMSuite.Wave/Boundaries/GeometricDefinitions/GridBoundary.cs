@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             Ensure.NotNull(grid, nameof(grid));
             if (grid.Size1 < 2 || grid.Size2 < 2)
             {
-                throw new System.ArgumentException($"{nameof(grid)} should contain at least 2 points in each dimension.");
+                throw new ArgumentException($"{nameof(grid)} should contain at least 2 points in each dimension.");
             }
 
             observedGrid = grid;
@@ -73,6 +73,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             GridCoordinate gridCoordinate = boundaries[boundaryCoordinate.GridSide]
                                                       [boundaryCoordinate.Index];
             return observedGrid.GetCoordinateAt(gridCoordinate);
+        }
+
+        public GridSide GetSideAlignedWithNormal(Vector2D referenceNormal)
+        {
+            Ensure.NotNull(referenceNormal, nameof(referenceNormal));
+
+            IEnumerable<Tuple<GridSide, Vector2D>> normals =
+                sides.Select(side => new Tuple<GridSide, Vector2D>(side, GetNormalFromSide(boundaries[side])));
+
+            return CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(normals, referenceNormal, GridSide.East);
         }
 
         private IReadOnlyList<GridCoordinate>[] GetOrderedSides()

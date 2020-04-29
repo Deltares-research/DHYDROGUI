@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GeoAPI.Geometries;
+using NetTopologySuite.Mathematics;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
@@ -59,5 +60,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// Thrown when <paramref name="boundaryCoordinate"/> is <c>null</c>.
         /// </exception>
         Coordinate GetWorldCoordinateFromBoundaryCoordinate(GridBoundaryCoordinate boundaryCoordinate);
+
+        /// <summary>
+        /// Gets the side closest aligned with the specified <paramref name="referenceNormal"/>.
+        /// </summary>
+        /// <param name="referenceNormal">The reference normal.</param>
+        /// <returns>
+        /// The <see cref="GridSide"/> closest aligned with the specified <paramref name="referenceNormal"/>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="referenceNormal"/> is <c>null</c>;
+        /// </exception>
+        GridSide GetSideAlignedWithNormal(Vector2D referenceNormal);
     }
 }

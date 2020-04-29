@@ -4,8 +4,11 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using NetTopologySuite.Mathematics;
+using NetTopologySuite.Utilities;
 using NSubstitute;
 using NUnit.Framework;
+using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 {
@@ -251,6 +254,61 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             Assert.That(result, Is.Not.Null, "Expected the result not to be null.");
             Assert.That(result.X, Is.EqualTo(grid.X.Values[5, 4]), "Expected a different Coordinate.X value:");
             Assert.That(result.Y, Is.EqualTo(grid.Y.Values[5, 4]), "Expected a different Coordinate.Y value:");
+        }
+
+        [Test]
+        public void GetSideAlignedWithNormal_ReferenceNormalNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            GridBoundary gridBoundary = 
+                GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(3, 
+                                                                     3, 
+                                                                     out IDiscreteGridPointCoverage _);
+
+            // Call | Assert
+            void Call() => gridBoundary.GetSideAlignedWithNormal(null);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("referenceNormal"));
+        }
+
+        private static IEnumerable<TestCaseData> GetSideAlignedWithNormalData()
+        {
+            var referenceNormal = Vector2D.Create(1.0, 0.0);
+            
+            var sideConversion = new[]
+            {
+                GridSide.East,
+                GridSide.North,
+                GridSide.West,
+                GridSide.South
+            };
+
+            Vector2D GetNormal(int rot) => referenceNormal.Rotate(Degrees.ToRadians(rot));
+
+            // Create vectors starting at -40 until 310 degrees.
+            return Enumerable.Range(0, 36).Select(i => new TestCaseData(GetNormal(i * 10 - 40),
+                                                                        sideConversion[(i / 9)]));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetSideAlignedWithNormalData))]
+        public void GetSideAlignedWithNormal_ExpectedResults(Vector2D referenceNormal, GridSide expectedResult)
+        {
+            // Setup
+            const int expectedX = 6;
+            const int expectedY = 5;
+
+            GridBoundary gridBoundary = 
+                GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(expectedX, 
+                                                                     expectedY, 
+                                                                     out IDiscreteGridPointCoverage _);
+
+            // Call
+            GridSide result = gridBoundary.GetSideAlignedWithNormal(referenceNormal);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
         }
     }
 }
