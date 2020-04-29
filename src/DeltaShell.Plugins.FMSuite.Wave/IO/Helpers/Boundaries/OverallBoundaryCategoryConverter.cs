@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DelftIniObjects;
@@ -18,11 +19,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// </summary>
         /// <param name="boundariesPerFile">The <see cref="IBoundariesPerFile"/> to set the data on.</param>
         /// <param name="boundaryCategories">The collection of <see cref="DelftIniCategory"/> to get the data from.</param>
+        /// <param name="mdwDirPath">The path to the directory where the .mdw file is located.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when any parameter is <c>null</c>.</exception>
-        public static void Convert(IBoundariesPerFile boundariesPerFile, IEnumerable<DelftIniCategory> boundaryCategories)
+        public static void Convert(IBoundariesPerFile boundariesPerFile, IEnumerable<DelftIniCategory> boundaryCategories, string mdwDirPath)
         {
             Ensure.NotNull(boundariesPerFile, nameof(boundariesPerFile));
             Ensure.NotNull(boundaryCategories, nameof(boundaryCategories));
+            Ensure.NotNull(mdwDirPath, nameof(mdwDirPath));
 
             if (boundaryCategories.Count() != 1)
             {
@@ -37,7 +40,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
 
             boundariesPerFile.DefinitionPerFileUsed = true;
-            boundariesPerFile.FileNameForBoundariesPerFile = boundaryBlock.OverallSpectrumFile;
+
+            boundariesPerFile.FileNameForBoundariesPerFile = !string.IsNullOrEmpty(boundaryBlock.OverallSpectrumFile) 
+                                                                 ? Path.Combine(mdwDirPath, boundaryBlock.OverallSpectrumFile) 
+                                                                 : string.Empty;
         }
     }
 }

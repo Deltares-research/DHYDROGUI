@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Convert_BoundariesPerFileNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => OverallBoundaryCategoryConverter.Convert(null, Enumerable.Empty<DelftIniCategory>());
+            void Call() => OverallBoundaryCategoryConverter.Convert(null, Enumerable.Empty<DelftIniCategory>(), "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         public void Convert_BoundaryCategoriesNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => OverallBoundaryCategoryConverter.Convert(Substitute.For<IBoundariesPerFile>(), null);
+            void Call() => OverallBoundaryCategoryConverter.Convert(Substitute.For<IBoundariesPerFile>(), null, "path");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -35,13 +35,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_WithoutBoundaryCategories_ThrowsArgumentNullException()
+        public void Convert_MdwDirPathNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => OverallBoundaryCategoryConverter.Convert(Substitute.For<IBoundariesPerFile>(), Enumerable.Empty<DelftIniCategory>(), null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("mdwDirPath"));
+        }
+
+        [Test]
+        public void Convert_WithoutBoundaryCategories_DoesNotUpdateBoundariesPerFile()
         {
             // Setup
             var boundariesPerFile = new TestBoundariesPerFile();
 
             // Call
-            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, Enumerable.Empty<DelftIniCategory>());
+            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, Enumerable.Empty<DelftIniCategory>(), "path");
 
             // Assert
             Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
@@ -49,17 +60,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_WithoutMultipleBoundaryCategories_ThrowsArgumentNullException()
+        public void Convert_WithoutMultipleBoundaryCategories_DoesNotUpdateBoundariesPerFile()
         {
             // Setup
             var boundariesPerFile = new TestBoundariesPerFile();
 
             // Call
-            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new []
+            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new[]
             {
-                new DelftIniCategory(KnownWaveCategories.BoundaryCategory), 
+                new DelftIniCategory(KnownWaveCategories.BoundaryCategory),
                 new DelftIniCategory(KnownWaveCategories.BoundaryCategory)
-            });
+            }, "path");
 
             // Assert
             Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
@@ -67,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
-        public void Convert_WithNotOverallBoundaryCategory_ThrowsArgumentNullException()
+        public void Convert_WithNotOverallBoundaryCategory_DoesNotUpdateBoundariesPerFile()
         {
             // Setup
             var boundariesPerFile = new TestBoundariesPerFile();
@@ -75,14 +86,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             boundaryCategory.SetProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
 
             // Call
-            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new []
+            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new[]
             {
                 boundaryCategory
-            });
+            }, "path");
 
             // Assert
             Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.False);
+        }
+
+        [Test]
+        public void Convert_WithOverallBoundaryCategoryAndEmptyPath_BoundariesPerFileSetToEmptyPath()
+        {
+            // Setup
+            var boundariesPerFile = new TestBoundariesPerFile();
+            var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            boundaryCategory.SetProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType);
+            boundaryCategory.SetProperty(KnownWaveProperties.OverallSpecFile, string.Empty);
+
+            // Call
+            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new[]
+            {
+                boundaryCategory
+            }, @"C:\folder");
+
+            // Assert
+            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Empty);
+            Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.True);
         }
 
         [Test]
@@ -95,13 +126,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             boundaryCategory.SetProperty(KnownWaveProperties.OverallSpecFile, "spectrumFile.sp2");
 
             // Call
-            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new []
+            OverallBoundaryCategoryConverter.Convert(boundariesPerFile, new[]
             {
                 boundaryCategory
-            });
+            }, @"C:\folder");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.EqualTo("spectrumFile.sp2"));
+            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.EqualTo(@"C:\folder\spectrumFile.sp2"));
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.True);
         }
 
