@@ -380,13 +380,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            Func<BoundaryCondition, WaveModel> getModelFromBoundaryConditionFunc =
-                bc => WaveModels.FirstOrDefault(m => m.BoundaryConditions.Contains(bc));
-
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this}; // TODO: remove this
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
 

@@ -405,7 +405,6 @@
     <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
     <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
     <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
-    <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
     <Compile Include="NodePresenters\WavmFileFunctionStoreNodePresenter.cs" />
