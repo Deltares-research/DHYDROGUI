@@ -307,12 +307,6 @@
     <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.Designer.cs">
       <DependentUpon>WaveSpectrumFileSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.Designer.cs">
-      <DependentUpon>WaveSpectrumParametersEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\WaveTimePointEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -472,9 +466,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.resx">
       <DependentUpon>WaveSpectrumFileSelection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveSpectrumParametersEditor.resx">
-      <DependentUpon>WaveSpectrumParametersEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaveTimePointEditor.resx">
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
