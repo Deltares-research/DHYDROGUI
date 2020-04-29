@@ -25,6 +25,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     public static class HydroUGridExtensions
     {
         private const int Digits = (int)1E6;
+        private const double EpsilonLocation = 1e-5;
 
         #region Mesh2d
 
@@ -293,31 +294,33 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             if (indices[0] == -1)
             {
-                // no begin point found search neighboring branches
-                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Source, discretization);
+                // no begin point found, search neighboring branches
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Source, discretization, segment.Branch);
                 indices[0] = firstLocation != null ? locationIdLookup[firstLocation] : -1;
             }
 
             if (indices[1] == -1)
             {
-                // no end point found search neighboring branches
-                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Target, discretization);
+                // no end point found, search neighboring branches
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Target, discretization, segment.Branch);
                 indices[1] = firstLocation != null? locationIdLookup[firstLocation]: -1;
             }
 
             return indices;
         }
 
-        private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization)
+        private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization, IBranch originalBranch)
         {
             var networkLocationsIn = node.IncomingBranches
+                .Where(b => b != originalBranch)
                 .Select(b => new { branch = b, location = discretization.GetLocationsForBranch(b).LastOrDefault() })
-                .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < Digits)
+                .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < EpsilonLocation)
                 .Select(l => l.location);
 
             var networkLocationsOut = node.OutgoingBranches
+                .Where(b => b != originalBranch)
                 .Select(b => discretization.GetLocationsForBranch(b).FirstOrDefault())
-                .Where(l => l != null && Math.Abs(l.Chainage) < Digits);
+                .Where(l => l != null && Math.Abs(l.Chainage) < EpsilonLocation);
 
             return networkLocationsIn.Concat(networkLocationsOut).FirstOrDefault();
         }
