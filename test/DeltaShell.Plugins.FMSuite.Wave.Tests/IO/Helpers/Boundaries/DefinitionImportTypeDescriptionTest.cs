@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             {
                 {DefinitionImportType.Coordinates, KnownWaveBoundariesFileConstants.CoordinatesDefinitionType},
                 {DefinitionImportType.Oriented, KnownWaveBoundariesFileConstants.OrientationDefinitionType},
-                {DefinitionImportType.SpectrumFile, KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType},
+                {DefinitionImportType.SpectrumFile, KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType}
             };
     }
 }

@@ -255,27 +255,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             return Math.Floor(random.NextDouble() * factor) / factor;
         }
 
-        /// <summary>
-        /// Helper function for test <see cref="SaveUniformBoundaryWithTimeseries"/> and 
-        /// <see cref="LoadUniformBoundaryWithTimeseries"/>.
-        /// </summary>
-        /// <param name="mdwFile">The mdwfile to use for loading the WaveModelDefinition.</param>
-        /// <param name="mdwfilepath">The file path of the mdw file to load.</param>
-        /// <returns>The WaveModelDefinition coming from the mdw file.</returns>
-        private static WaveModelDefinition LoadUniformBoundaryWithTimeseriesFileMdwFile(MdwFile mdwFile, string mdwfilepath)
-        {
-            // load a file with uniform boundary conditions with a timeseries.
-            WaveModelDefinition modelDef = mdwFile.Load(mdwfilepath);
-
-            // test that the geometry of the boundary just contains 2 points
-            // and is uniform and a timeseries
-            Assert.AreEqual(modelDef.BoundaryConditions[1].Feature.Geometry.Coordinates.Length, 2);
-            Assert.AreEqual(modelDef.BoundaryConditions[1].SpatialDefinitionType,
-                            WaveBoundaryConditionSpatialDefinitionType.Uniform);
-            Assert.AreEqual(modelDef.BoundaryConditions[1].DataType, BoundaryConditionDataType.ParameterizedSpectrumTimeseries);
-            return modelDef;
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void SaveTo_ForUniformConstantBoundary_MdwFileShouldContainBoundaryCategoryWithoutBcwFile()
@@ -1263,6 +1242,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(data[supportPoint1].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile1.sp1")));
             Assert.That(data[supportPoint2].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile2.sp1")));
             Assert.That(data[supportPoint3].FilePath, Is.EqualTo(Path.Combine(pathRoot, "SpectrumFile3.sp1")));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_OverallFileBasedBoundary_LoadsBoundaryCorrectly()
+        {
+            // Setup
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\overall-file_based.mdw");
+
+            // Call
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
+            // Assert
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            Assert.That(boundaryContainer.Boundaries, Is.Empty);
+            Assert.That(boundaryContainer.DefinitionPerFileUsed, Is.True);
+            Assert.That(boundaryContainer.FileNameForBoundariesPerFile, Is.EqualTo(Path.Combine(Path.GetDirectoryName(mdwPath), "OverallSpectrumFile.sp2")));
         }
 
         private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,
