@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         public void UpdateGridBoundary(IGridBoundary gridBoundary)
         {
             currentGridBoundary = gridBoundary;
-            snappingCalculator = currentGridBoundary != null ? new BoundarySnappingCalculator(this.currentGridBoundary) : null;
+            snappingCalculator = currentGridBoundary != null ? new BoundarySnappingCalculator(currentGridBoundary) : null;
         }
 
         public IBoundarySnappingCalculator GetBoundarySnappingCalculator() => snappingCalculator;
