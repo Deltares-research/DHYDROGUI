@@ -233,7 +233,6 @@
     <Compile Include="IO\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
-    <Compile Include="Layers\WaveModelLayerStyles.cs" />
     <Compile Include="Layers\WaveSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
