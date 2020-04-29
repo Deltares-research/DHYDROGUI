@@ -301,7 +301,6 @@
       <DependentUpon>WaveDomainEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\WaveGridEditor.cs" />
-    <Compile Include="Editors\WaveBoundaryConditionEditorController.cs" />
     <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
